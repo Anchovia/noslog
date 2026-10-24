@@ -5,7 +5,7 @@
 ## 기본 태그
 
 - 높이 24 · `radius/control` · 좌우 8 · 글자 `nl-tag-label`.
-- 면 `surface/raised` + 1px `border/input` · 글자 `content/default`. 테두리가 바탕 · 카드 · 팝오버 어디서나 3 : 1 을 넘는다.
+- 면 `surface/surface` + 1px `border/input` · 글자 `content/default`. 테두리가 바탕 · 카드 · 팝오버 어디서나 3 : 1 을 넘는다.
 - 분류 · 표시에는 색을 쓰지 않는다(공지 분류 · 미션 종류 · 기여 라벨 · 「Admin」).
 - 한 줄에 태그는 하나. 누르지 않는 라벨은 이 하나만 쓴다. 알약 모양 라벨은 쓰지 않는다.
 - 강조형 `--strong` = 반전(면 `content/default` · 글자 `surface/canvas`). 한 줄에 하나까지.
@@ -15,7 +15,7 @@
 `nl-tag--status` + `data-tone`
 
 - 같은 면 · 같은 테두리에 글자만 알림 표시색이다. 면 색을 상태마다 만들지 않아 분류 태그와 무게가 같고, 태그 글자가 늘 상태 이름을 말한다.
-- 색 = `feedback/success-marker`(진행 중 · 공개 · 해결 · New) · `info-marker`(예정 · 수정 요청) · `warning-marker`(검토 대기 · 검토 중) · `danger-marker`(반려). 중립(종료 · 임시저장)은 기본 글자색.
+- 색 = `feedback/success-marker`(진행 중 · 공개 · 해결 · New) · `info-marker`(예정 · 수정 요청) · `warning-marker`(검토 대기 · 검토 중) · `feedback/destructive`(반려). 중립(종료 · 임시저장)은 기본 글자색.
 
 ## 글줄 안 태그
 
@@ -23,19 +23,19 @@
 
 ## 카테고리 변형
 
-악곡 상세 머리(자켓 밖). 크기는 태그 그대로, 면은 `surface/overlay` · 글자는 카테고리 색 · 경계 없음. 자켓 위 판과 같은 색이라 목록 카드와 이어진다.
+악곡 상세 머리(자켓 밖). 크기는 태그 그대로, 면은 `surface/surface` · 글자는 카테고리 색 · 경계 없음. 자켓 위 판과 같은 색이라 목록 카드와 이어진다.
 
 ## 상태 점
 
-`StatusDot` — 원 8 · 알림 표시색(성공 · 경고 · 위험 · 정보) · `empty` 는 빈 원(경계 `border/strong`). 늘 상태 글자와 함께 쓴다.
+`StatusDot` — 원 8 · 알림 표시색(성공 · 경고 · 위험 · 정보) · `empty` 는 빈 원(경계 `border/ring`). 늘 상태 글자와 함께 쓴다.
 
 ## 개수 배지
 
-`nl-filter-count` — 「필터」 트리거 안 적용 그룹 수. 개수 전용이라 태그와 다른 모양이다: 원 20 · 면 `surface/raised` · 글자 `nl-metadata`. 점수 핀의 「+N」 도 같은 모양 + 1px `border/default`.
+`nl-filter-count` — 「필터」 트리거 안 적용 그룹 수. 개수 전용이라 태그와 다른 모양이다: 원 20 · 면 `surface/surface` · 글자 `nl-metadata`. 점수 핀의 「+N」 도 같은 모양 + 1px `border/divider`.
 
 ## 새 소식 점
 
-`nl-unread-dot` — 점 8 · `feedback/danger-marker`. 아직 보지 않은 결과가 있을 때 메뉴 줄 · 탭 글자 · 구역 제목 뒤에. 접근 이름 「새 답변」 처럼 뜻을 붙인다. 열면 본 것으로 표시한다.
+`nl-unread-dot` — 점 8 · `feedback/destructive`. 아직 보지 않은 결과가 있을 때 메뉴 줄 · 탭 글자 · 구역 제목 뒤에. 접근 이름 「새 답변」 처럼 뜻을 붙인다. 열면 본 것으로 표시한다.
 
 ## 바뀐 기록
 

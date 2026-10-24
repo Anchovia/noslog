@@ -73,7 +73,7 @@ export const metadata: Metadata = {
 
 // 다크 전용(2026-10-01 메타데이터 점검 E2) — 주소창 색 = 바탕 토큰 surface/canvas, color-scheme 으로 스크롤바 · 기본 컨트롤도 어둡게
 export const viewport: Viewport = {
-    themeColor: "#111111",
+    themeColor: "#0a0a0a",
     colorScheme: "dark",
 };
 

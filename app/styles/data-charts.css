@@ -163,9 +163,9 @@
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-8);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
         var(--nl-overlay-shadow);
     position: absolute;
     width: max-content;

@@ -93,7 +93,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(-1)}
                         aria-label={t("editor.snap.previous")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
                     >
                         <ArrowUp className="nl-icon-small" />
                     </button>
@@ -101,7 +101,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(1)}
                         aria-label={t("editor.snap.next")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
                     >
                         <ArrowDown className="nl-icon-small" />
                     </button>
@@ -124,8 +124,8 @@ export default function SnapCheckSection() {
                             role="listitem"
                             className={`flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke px-nl-8 py-nl-8 ${
                                 isFocused
-                                    ? "border-nl-subdued bg-nl-raised"
-                                    : "border-nl-border"
+                                    ? "border-nl-subdued bg-nl-surface"
+                                    : "border-nl-divider"
                             }`}
                         >
                             <button

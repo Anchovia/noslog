@@ -80,13 +80,13 @@
         var(--nl-control-line, transparent);
     color: var(--nl-content-default);
 }
+/* 올림 = shadcn — 칩은 secondary/80, 고른 칩은 primary/90 */
 @media (hover: hover) {
     .noslog-ui .nl-chip:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
+    }
+    .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]):hover {
+        background: var(--nl-primary-hover);
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
@@ -95,13 +95,8 @@
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
 }
-.noslog-ui .nl-chip:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
-}
 .noslog-ui .nl-chip:disabled {
-    color: var(--nl-interaction-disabled-content);
-    background: var(--nl-interaction-disabled-bg);
+    opacity: var(--nl-disabled-opacity);
     box-shadow: none;
 }
 /* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
@@ -145,7 +140,7 @@
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pianist"] {
     --nl-tone: var(--nl-achievement-pianist);
 }
-/* 마우스를 올리면 기본 글자색 — hover 면(#2c2c2c) 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정) */
+/* 마우스를 올리면 기본 글자색 — hover 면 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정) */
 .noslog-ui
     .nl-chip[data-tone]:not([aria-pressed="true"], [aria-current]):not(
         :disabled
@@ -170,7 +165,7 @@
     color: inherit;
 }
 
-/* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = menu-set 면 + 굵기 + 체크 */
+/* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = 고른 면(surface/control) + 굵기 + 체크 */
 .noslog-ui .nl-sort-menu {
     display: flex;
     width: min(240px, calc(100vw - var(--nl-spacing-32)));
@@ -178,9 +173,9 @@
     overflow-y: auto;
     flex-direction: column;
     padding: var(--nl-spacing-8);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-select);
 }
@@ -221,23 +216,19 @@
     }
 }
 .noslog-ui .nl-sort-menu__item[aria-checked="true"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
     font-weight: var(--nl-type-weight-semibold);
 }
-.noslog-ui .nl-sort-menu__item:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
-}
 /* 마우스로 연 메뉴는 첫 항목에 흰 1px 을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-sort-menu__item:focus-visible {
     box-shadow: none;
 }
 .noslog-ui .nl-sort-menu__item:disabled {
-    color: var(--nl-interaction-disabled-content);
+    opacity: var(--nl-disabled-opacity);
 }
 .noslog-ui .nl-sort-menu__description {
     display: block;
@@ -369,16 +360,8 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-applied__token:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
     }
-}
-.noslog-ui .nl-applied__token:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 
 /* 팝오버 그릇(672+) — 떠 있는 창 규격: overlay 면 + border/overlay + 모서리 overlay + 그림자 */
@@ -391,9 +374,9 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--nl-spacing-16);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-popover);
 }
@@ -440,7 +423,4 @@
 }
 .noslog-ui .nl-selection-list__option input:checked ~ .nl-check__box > svg {
     visibility: visible;
-}
-.noslog-ui .nl-selection-list__option input:focus-visible ~ .nl-check__box {
-    border-color: var(--nl-focus-ring);
 }

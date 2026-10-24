@@ -181,9 +181,9 @@ export default function HeaderMenu({
                                     aria-current={isActive ? "page" : undefined}
                                     onClick={() => setOpenPathname(null)}
                                     className={cn(
-                                        "nl-hover-layer flex min-h-nl-control items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas px-nl-12 text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
+                                        "nl-hover-layer flex min-h-nl-control items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas px-nl-12 text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
                                         isActive &&
-                                            "border-nl-chart bg-nl-raised text-nl-content",
+                                            "border-nl-chart bg-nl-surface text-nl-content",
                                         item.href === "/admin" && "col-span-2"
                                     )}
                                 >

@@ -24,7 +24,7 @@ export default function ProfileAvatar({
             className={cn(
                 "flex shrink-0 items-center justify-center overflow-hidden rounded-nl-full border-nl-stroke bg-cover bg-center",
                 avatar
-                    ? "border-nl-border bg-nl-raised"
+                    ? "border-nl-divider bg-nl-surface"
                     : "border-nl-content bg-nl-canvas text-nl-content",
                 className
             )}

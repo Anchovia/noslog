@@ -14,49 +14,46 @@
 
 ## 색
 
-역할 이름으로만 쓴다. 값은 다크 값이다.
+역할 이름으로만 쓴다. 무채색 · 위험 색은 shadcn/ui 기본 neutral 다크 값 그대로다. 예외는 `border/input` 하나로, 경계 3 : 1 을 지키려 Spectrum 2 입력칸 값을 쓴다([결정](../decisions/2026-10-24-token-cleanup.md)). 값은 다크 값이다.
 
-| 역할                                                  | 값                     | 쓰는 곳                                                          |
-| ----------------------------------------------------- | ---------------------- | ---------------------------------------------------------------- |
-| `surface/canvas` · `sunken`                           | #111                   | 페이지 바탕, 트랙 · 자켓 빈자리, 세그먼트 판(sunken)             |
-| `surface/surface`                                     | #1b1b1b                | 카드, 입력칸                                                     |
-| `surface/raised` · `overlay`                          | #222                   | 떠 있는 창, 태그 면                                              |
-| `surface/control` · `control-selected`                | #2c2c2c · #393939      | 보조 버튼 · 칩 · 상자 고르기 · 꺼진 스위치 면 / 고른 세그먼트 칸 |
-| `content/default` · `subdued`                         | #dbdbdb · #afafaf      | 본문 · 보조 글자                                                 |
-| `content/strong`                                      | #f2f2f2                | 제목 글자(`content/interactive` 별칭)                            |
-| `content/interactive`                                 | #f2f2f2                | 제목 링크 · 동작 칸 글자                                         |
-| `content/pending`                                     | #8a8a8a                | 요청 중이라 잠시 보류된 값(opacity 로 흐리게 하지 않는다)        |
-| `content/tertiary` · `placeholder`                    | `content/pending` 별칭 | 흐린 메타 줄(3차 글자) · 자리표시자(입력 · 셀렉트 모두)          |
-| `content/disabled` · `interaction/disabled-content`   | #444                   | 비활성 글자 · 값 없는 줄                                         |
-| `border/divider` · `subtle`                           | #323232                | 구분선 · 세그먼트 트랙 · 빈자리 경계(`empty-slot`)               |
-| `border/default`                                      | #444                   | 카드 경계 · 떠 있는 면 위 누르는 면의 약한 선                    |
-| `border/input` · `strong`                             | #717171 · #8a8a8a      | 입력 · 태그 경계 / 입력칸 올림 · 선택 경계(목록 · 카드)          |
-| `border/overlay`                                      | #444                   | 떠 있는 창 경계                                                  |
-| `interaction/hover` · `selected-pressed` · `menu-set` | 흰 6% · 10% · 10%      | 올림 · 누름 · 목록에서 고른 행(제 면 위에 겹침)                  |
-| `primary/default` · `on-primary`                      | #dbdbdb · #111         | 주 버튼 면 · 그 위 글자                                          |
-| `surface/scrim`                                       | #000 60%               | 대화상자 뒤 가림막                                               |
-| `surface/media-scrim` · `content/on-media`            | #000 60% · #fff        | 사진 · 자켓 위 글자 판 · 그 위 글자                              |
-| `focus/ring`                                          | #fff                   | 포커스 선                                                        |
-| `identity-mark`                                       | #dbdbdb                | 고양이 원 아이콘 면                                              |
-| `stage/canvas`                                        | #070910                | 채보 무대 바탕(낙하형 · 전체 악보, 테마 무관)                    |
-| `hand/left` · `hand/right`                            | #4fc8dc · #e85f5d      | 채보 왼손 · 오른손(노트 · 범례). 눌린 건반은 흰색 45%            |
+| 역할                                           | 값(shadcn 이름)                                   | 쓰는 곳                                                           |
+| ---------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------- |
+| `surface/canvas`                               | #0a0a0a (background)                              | 페이지 바탕, 대화상자, 전체 화면 창                               |
+| `surface/surface`                              | #171717 (card · popover)                          | 카드, 떠 있는 창(메뉴 · 팝오버 · 툴팁), 태그 면                   |
+| `surface/control` · `control-hover`            | #262626 (secondary · muted · accent) · 80%        | 보조 버튼 · 칩 · 세그먼트 판 · 고른 목록 줄 · 스켈레톤 / 그 올림  |
+| `surface/input`                                | 흰 4.5% (input/30)                                | 입력칸 · 체크박스 면, 고른 세그먼트 칸(+ `border/input` 경계)     |
+| `content/default` · `subdued`                  | #fafafa · #a1a1a1 (foreground · muted-foreground) | 제목 · 본문 · 동작 글자 / 보조 · 메타 · 자리표시자 · 보류 중 값   |
+| `content/disabled`                             | `content/default` 50%                             | 비활성 글자 · 빈 자리 아이콘                                      |
+| `border/divider`                               | 흰 10% (border)                                   | 구분선 · 카드 경계 · 떠 있는 창 경계                              |
+| `border/input`                                 | #6d6d6d (Spectrum 2 입력칸 경계)                  | 입력 · 체크박스 경계, 꺼진 스위치 트랙                            |
+| `border/ring`                                  | #737373 (ring)                                    | 고른 경계(목록 · 카드), 강조 테두리                               |
+| `interaction/hover`                            | `surface/control` 50% (accent/50)                 | 면 없는 줄 · 고스트의 올림(제 면 위에 겹침)                       |
+| `primary/default` · `hover` · `on-primary`     | #e5e5e5 · 90% · #171717                           | 주 버튼 · 고른 칩 면 · 올림 · 그 위 글자                          |
+| `feedback/destructive` · `-surface` · `-hover` | oklch(0.704 0.191 22.216) · 60% · 90%             | 오류 글자 · 잘못된 칸 경계 · 위험 표시 / 채운 위험 버튼 · 그 올림 |
+| `surface/scrim`                                | #000 50%                                          | 대화상자 뒤 가림막                                                |
+| `surface/media-scrim` · `content/on-media`     | #000 60% · #fff                                   | 사진 · 자켓 위 글자 판 · 그 위 글자                               |
+| `focus/ring`                                   | #fff                                              | 포커스 선                                                         |
+| `identity-mark`                                | #dbdbdb                                           | 고양이 원 아이콘 면                                               |
+| `stage/canvas`                                 | #070910                                           | 채보 무대 바탕(낙하형 · 전체 악보, 테마 무관)                     |
+| `hand/left` · `hand/right`                     | #4fc8dc · #e85f5d                                 | 채보 왼손 · 오른손(노트 · 범례). 눌린 건반은 흰색 45%             |
 
 ### 도메인 색
 
 이미 있는 것만 쓴다. 새 색이 필요해 보이면 만들지 말고 시안으로 묻는다.
 
 - 난이도 글자 `difficulty/text-*` · 분류 `category/*` — 누르는 면(`surface/control`) 위에서도 4.5 : 1 을 넘게 명도만 올린 값이다.
-- 판정 `judgement/*` · 달성 `achievement/*` · 검정 `exam/*` · 상태 `feedback/*-marker` · `feedback/error-text` · 차트 `local-data/*`.
+- 판정 `judgement/*` · 달성 `achievement/*` · 검정 `exam/*` · 상태 `feedback/*-marker` · `feedback/destructive` · 차트 `local-data/*`.
 - 다른 뜻의 색을 빌린 별칭(패턴 경향 단계 · 등급 A+ · A · B · Grd 구간)은 각 부품 · 화면 문서에 적힌 것만 쓴다.
 
 ### 색 규칙
 
-- 상호작용 면(올림 · 누름 · 선택 · 비활성)은 그 상태일 때만 칠한다. 평소 요소에 칠하지 않는다.
-- 올림 · 누름 · 선택은 제 면 위에 겹친다. 면 색을 바꾸지 않고 `--nl-state-layer: var(--nl-interaction-…)` 와 `background-image: linear-gradient(var(--nl-state-layer), var(--nl-state-layer))` 로 칠한다. 그래서 바탕 · 카드 · 떠 있는 창 어디서나 한 단계씩 밝아진다. `--nl-state-layer` 는 `@property` 로 등록돼 있어 올림 움직임을 탄다.
+- 상호작용 면(올림 · 선택 · 비활성)은 그 상태일 때만 칠한다. 평소 요소에 칠하지 않는다.
+- 올림은 shadcn 방식이다. 면 있는 것은 제 면 색을 낮춘다(보조 · 칩 = `surface/control-hover`, 주 버튼 · 고른 칩 = `primary/hover`, 위험 = `feedback/destructive-hover`). 면 없는 줄 · 고스트는 `--nl-state-layer: var(--nl-interaction-hover)` 와 `background-image: linear-gradient(var(--nl-state-layer), var(--nl-state-layer))` 로 제 면 위에 겹친다. 누름 전용 값은 없다.
+- 고른 목록 줄은 `--nl-state-layer: var(--nl-surface-control)`(accent). 고른 세그먼트 칸 · 누른 알약은 제 면 위 `surface/input` + `border/input` 경계(shadcn tabs 다크 활성).
+- 비활성은 부품 전체 불투명도 `--nl-disabled-opacity`(50%)다. 올림 규칙은 `:not(:disabled)` 로 비활성에 걸리지 않게 한다.
 - 배경 그림을 이미 쓰는 요소(투표 줄의 구분선)와 `::selection` 만 `background-color` 로 칠한다.
-- 공용 부품의 올림 규칙이 면 색을 바꾸면(`.nl-button:hover`) 변형 쪽에서 제 면 색을 다시 적는다.
 - 대비는 글자 4.5 : 1, 글자 아닌 단서 3 : 1 이다. 색만으로 상태를 알리지 않는다 — 상태 색은 늘 상태 글자와 함께 쓴다.
-- 상태는 글자색으로 써도 된다. `feedback/*-marker` · `feedback/error-text` 처럼 다크 바탕에서 4.5 : 1 을 넘는 표시색만 쓴다.
+- 상태는 글자색으로 써도 된다. `feedback/*-marker` · `feedback/destructive` 처럼 다크 바탕에서 4.5 : 1 을 넘는 표시색만 쓴다.
 
 ## 글자
 
@@ -85,8 +82,8 @@
 
 - 굵기는 400 · 500 · 600 · 700 만.
 - 입력칸 글자는 모든 폭에서 16(그보다 작으면 iOS 가 확대한다).
-- 제목 클래스(`page-title` · `section-title` · `component-title` · `entity-title`) 글자색은 `content/strong`, 본문은 `content/default`.
-- 흐린 메타 줄(`metadata` + 흐림)은 `content/tertiary`. 칩 · 버튼 · 세그먼트 칸 안에서는 대비가 모자라 `content/subdued` 그대로.
+- 제목 클래스(`page-title` · `section-title` · `component-title` · `entity-title`) 글자색은 `content/default`, 본문은 `content/default`.
+- 흐린 메타 줄(`metadata` + 흐림)은 `content/subdued`. 칩 · 버튼 · 세그먼트 칸 안에서는 대비가 모자라 `content/subdued` 그대로.
 - 20 이상 제목과 `metric-display` 의 자간은 `--nl-type-tracking-title`(−0.02em). 글자 다듬기는 antialiased(맥 데스크톱만 차이).
 - 표의 조합 밖(16 굵게 + 고정폭, 태그 밖의 12 굵게)은 쓰지 않는다. 고정폭 숫자도 `metric-display` · `metric-value` 밖에서는 쓰지 않는다.
 
@@ -173,7 +170,6 @@ Lucide 실제 모양을 쓴다.
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 층        | `--nl-layer-above` 1 · `-sticky` 10 · `-search-preview` 30 · `-bottom-bar` 40 · `-header` 50 · `-progress` 60 · `-popover` 70 · `-overlay` 80 · `-dialog` 81 · `-select` 90 · `-fullscreen` 100 · `-fullscreen-dialog` 110 |
 | 밑줄 간격 | `--nl-underline-offset` 3                                                                                                                                                                                                  |
-| 후광      | `--nl-halo-control` 4 · `--nl-halo-slider` 6                                                                                                                                                                               |
 | 그릇 폭   | `--nl-container-narrow` 358(폭 390 − 16 × 2) · `--nl-container-compact` 640 · `--nl-container-reading` 768                                                                                                                 |
 | 그림자    | `--nl-overlay-shadow` — 떠 있는 창만                                                                                                                                                                                       |
 
@@ -181,8 +177,9 @@ Lucide 실제 모양을 쓴다.
 
 ## 포커스
 
-- 포커스 선은 `--nl-stroke-strong`(2) `focus/ring` 흰 선이다. 평소 경계(1)가 있는 칸은 경계 색을 바꾸고 안쪽 1 을 더해 2 로 만든다. 경계가 없는 요소는 포커스에서만 그린다.
-- 입력 · 셀렉트 · 검색 · 버튼은 여기에 바깥 후광(`--nl-halo-control`, `--nl-state-halo`)을 더한다.
+- 포커스는 `foundation.css` 의 공용 규칙 하나다. `--nl-stroke-strong`(2) `focus/ring` 흰 선 한 겹, 후광 · 두 겹 · 경계색 바꾸기는 없다. 부품 CSS 에 포커스 모양을 따로 쓰지 않는다.
+- 떨어진 요소(버튼 · 입력 · 셀렉트 · 링크 · 카드)는 바깥 간격 `--nl-stroke-strong`(2). 폭이 꽉 찬 줄 · 탭 · 세그먼트 칸 · 메뉴 항목 · 칩은 안쪽(−2)으로, 공용 규칙의 안쪽 목록에 클래스를 더한다.
+- 숨긴 입력이 포커스를 받는 부품(검색칸 · 마크다운 입력 · 단위 입력 · 체크박스)은 보이는 상자에 같은 선을 그린다. 상자 안 다른 버튼에 포커스가 있을 때는 그리지 않는다.
 - 사진 · 무대 위 버튼도 같은 공용 포커스를 쓴다.
 - 목록(셀렉트 목록 · 정렬 메뉴) 항목의 포커스 선은 키보드로 움직일 때만 보인다. 마지막 입력 방식을 `lib/input-modality.ts` 가 `<html data-input>` 에 적는다.
 
@@ -191,29 +188,31 @@ Lucide 실제 모양을 쓴다.
 - 올림(hover) 면은 포인터 장치에서만 칠한다. 모든 `:hover` 규칙은 `@media (hover: hover)` 안에 둔다(터치는 탭한 뒤 hover 가 남아 고른 것처럼 보인다). `:not(:hover)` 로 평소 색을 정하는 규칙은 밖에 둔다.
 - 누를 수 있는 것은 모두 반응한다.
 
-| 요소                                                                         | 올림 모양                                              |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------ |
-| 면이 있거나 칠할 자리가 있는 것(버튼 · 칩 · 세그먼트 칸 · 카드 · 줄 · 판 칸) | 제 면 위 `interaction/hover` 겹침. 모서리는 그 요소 것 |
-| 글자 링크(돌아가기 · 「원문 보기」 · 「전체 레벨 보기」 · 공지 제목)         | 밑줄(`--nl-underline-offset`)                          |
-| 면 없는 그림 카드(이벤트 · 빙고)                                             | 제목 밑줄                                              |
-| 입력 · 투표 줄                                                               | 경계 `border/strong`                                   |
-| 밑줄 탭 · 범례                                                               | 글자만                                                 |
-| 그림만 있는 서열 칸                                                          | 테두리                                                 |
-| 면 없는 구분선 목록 줄(프로필 기록 · 고정 기록)                              | 좌우 12 를 넓혀 칠함. 글자 선 · 구분선은 그대로        |
-| 고른 칸 · 지금 쪽                                                            | 반응 없음                                              |
+| 요소                                                                 | 올림 모양                                              |
+| -------------------------------------------------------------------- | ------------------------------------------------------ |
+| 면 있는 버튼 · 칩 · 셀렉트                                           | 제 면 색을 낮춤([색 규칙](#색-규칙))                   |
+| 면 없는 줄 · 고스트 · 카드 · 판 칸                                   | 제 면 위 `interaction/hover` 겹침. 모서리는 그 요소 것 |
+| 고르지 않은 세그먼트 칸                                              | 글자만 밝게                                            |
+| 글자 링크(돌아가기 · 「원문 보기」 · 「전체 레벨 보기」 · 공지 제목) | 밑줄(`--nl-underline-offset`)                          |
+| 면 없는 그림 카드(이벤트 · 빙고)                                     | 제목 밑줄                                              |
+| 투표 줄                                                              | 경계 `border/ring`                                     |
+| 밑줄 탭 · 범례                                                       | 글자만                                                 |
+| 그림만 있는 서열 칸                                                  | 테두리                                                 |
+| 면 없는 구분선 목록 줄(프로필 기록 · 고정 기록)                      | 좌우 12 를 넓혀 칠함. 글자 선 · 구분선은 그대로        |
+| 고른 칸 · 지금 쪽                                                    | 반응 없음                                              |
 
 - 전용 부품 클래스가 없는 줄 · 버튼은 공용 `.nl-hover-layer` 를 쓴다. 면 색을 바꾸는 `hover:bg-*` 는 쓰지 않는다.
-- 누름은 색 단계만 바뀐다. 크기 줄이기(scale)는 없다.
+- 누름 전용 색은 없다(shadcn). 크기 줄이기(scale)도 없다.
 - 바쁨(busy)은 비활성이 아니다. 버튼은 스피너 16 + 진행형 라벨, 화면 · 영역 로딩은 아래 「로딩」.
 
 ## 떠 있는 창
 
 목록 · 메뉴 · 팝오버 · 대화상자 · 차트 툴팁 · 알림 토스트 · 지도 아래 시트 · 지도 위 검색칸이 해당한다.
 
-- 면 `surface/overlay` · 1px `border/overlay` · 모서리 `radius/overlay` · 그림자 `--nl-overlay-shadow`.
+- 면 `surface/surface`(대화상자만 `surface/canvas` — shadcn dialog) · 1px `border/divider` · 모서리 `radius/overlay` · 그림자 `--nl-overlay-shadow`.
 - 헤더 메뉴 패널만 헤더에 붙는 위쪽 경계를 긋지 않는다. 그 밖에 예외는 없다.
 - 미디어 위 판(자켓 카테고리 · 서열 카드 난이도)은 떠 있는 창이 아니다.
-- 떠 있는 면 위의 누르는 면(보조 버튼 · 칩 · 상자 고르기 · 고르기 알약 · 업적 고르기 칸)에는 약한 선 `border/default` 를 더한다. 바탕색으로 뜨는 폰 전체 화면 입력 창 · 1055 이하 이미지 내보내기 창에는 더하지 않는다.
+- 떠 있는 면 위의 누르는 면(보조 버튼 · 칩 · 상자 고르기 · 고르기 알약 · 업적 고르기 칸)에는 약한 선 `border/divider` 를 더한다. 바탕색으로 뜨는 폰 전체 화면 입력 창 · 1055 이하 이미지 내보내기 창에는 더하지 않는다.
 
 ## 움직임
 
@@ -254,10 +253,10 @@ Lucide 실제 모양을 쓴다.
 - 사이트 안 이동 = 위쪽 진행 막대(`NavigationProgress`, 일반 · 관리자 셸에 하나씩). 사이트 안 링크를 누르고 `--nl-motion-delay-progress` 안에 끝나지 않으면 맨 위에 `--nl-stroke-strong` 두께 `primary/default` 막대가 80% 까지 차오르고, 새 화면이 오면 끝까지 채우고 사라진다. 이전 화면은 그대로 둔다(흐리게 하지 않는다). 다른 처리가 클릭을 막아 이동하지 않으면(저장 안 한 변경 안내 등) 뜨지 않는다.
 - 스켈레톤은 실제 부품의 틀 · 클래스를 그대로 써서 컨테이너 · 간격 · 안쪽 여백 · 높이가 저절로 같다. 제목 · 탭 · 필터 · 라벨처럼 고정된 부분은 실제 글자 · 실제 부품으로 두고, 이름 · 수치 · 사진 · 그래프 · 목록 자리만 스켈레톤으로 그린다. 부품마다 `…Skeleton` 을 부품 곁에 둔다.
 - 글자 자리 `SkeletonText` 는 그 글자 클래스를 받아 줄 높이(1lh)를 차지하고 막대는 글자 크기(1em)다. 폭은 25 · 50 · 75 · 100% 네 단계만. 짧은 값(순위 · 숫자)은 보이지 않는 표본 글자(「0,000」) 폭만큼이라 기준선 정렬 줄에서도 실제 글자와 같은 선에 선다. 값 칸에는 실제와 같은 글자 클래스를 붙인다.
-- 채움은 `border/subtle` 하나 · 모서리는 실제 부품 것 · 펄스(⑪). 입력 · 셀렉트 자리는 컨트롤 L 높이 · `radius/field`.
+- 채움은 `surface/control` 하나(shadcn skeleton 의 accent) · 모서리는 실제 부품 것 · 펄스(⑪). 입력 · 셀렉트 자리는 컨트롤 L 높이 · `radius/field`.
 - 스켈레톤 안에 스피너를 넣지 않는다. 모양을 모르는 한 덩어리(지도 등)만 그 자리 가운데 스피너 20.
 - 첫 진입(서버가 그림)은 지연 없이 스켈레톤. 화면 안 다시 불러오기는 `nl-loading-delay`(`--nl-motion-delay-skeleton`) 동안 숨겨 짧으면 번쩍이지 않게 한다. 최소 표시 시간은 두지 않는다.
-- 다시 불러오는 동안 이전 내용이 있으면 그 내용을 `content/pending` 으로 두고 스켈레톤 · 글자를 끼우지 않는다.
+- 다시 불러오는 동안 이전 내용이 있으면 그 내용을 `content/subdued` 로 두고 스켈레톤 · 글자를 끼우지 않는다.
 - 값의 뜻이 바뀌는 전환(지표 Grd ↔ 레이팅 · 기간 · 모드 Basic ↔ Recital)은 이전 내용을 두지 않는다. 처음 `--nl-motion-delay-skeleton` 동안만 흐린 색, 넘으면 같은 틀의 스켈레톤(그래프 면 · 요약 값 · 목록 줄, 라벨은 실제 글자). 같은 지표에 줄만 이어 붙는 「더 보기」 는 해당 없다.
 - 「…불러오는 중」 문장은 화면 읽기에만 한 번 알린다(`LoadingStatus`). 로딩 중인 영역은 `aria-busy`. 보이는 곳에 로딩 문장 한 줄만 두지 않는다.
 - 확인: 요청을 늦춰 스켈레톤일 때와 내용이 들어온 뒤 요소 위치 · 크기를 재서 비교한다(폭 390 · 1280).
@@ -292,10 +291,10 @@ viewport media query 로만 정하고, CSS 와 JS 가 같은 기준을 쓴다.
 
 ### 브라우저 색 · 이름 · 아이콘
 
-- `theme-color` = `surface/canvas`(#111) · `color-scheme: dark`, manifest 색도 #111.
+- `theme-color` = `surface/canvas`(#0a0a0a) · `color-scheme: dark`, manifest 색도 #0a0a0a.
 - 이름 「NosLog」 은 어디서나 사이트 글꼴 글자다(헤더 `section-title` · 홈 · 로그인 · 오류 페이지 `page-title`).
 - 얼굴은 고양이 원 아이콘(`components/layout/brand-mark.tsx`, 이미지는 `BrandMarkImage`). 채운 원 = `identity-mark` · 고양이 = `surface/canvas`. 테두리 원 변형은 쓰지 않는다.
-- 아이콘이 들어가는 곳: 앱 · 탭 아이콘(바탕 #111 + 지름 68% 상자, 192 · 512 maskable 겸용 — 상자가 안전 영역 80% 안) · 홈 머리(이름 위 40) · 프로필 카드(54 + 글자 28) · 공유 미리보기 오른쪽(220).
+- 아이콘이 들어가는 곳: 앱 · 탭 아이콘(바탕 #0a0a0a + 지름 68% 상자, 192 · 512 maskable 겸용 — 상자가 안전 영역 80% 안) · 홈 머리(이름 위 40) · 프로필 카드(54 + 글자 28) · 공유 미리보기 오른쪽(220).
 
 ## 바뀐 기록
 
@@ -309,3 +308,4 @@ viewport media query 로만 정하고, CSS 와 JS 가 같은 기준을 쓴다.
 - [2026-09-19 움직임 · 로딩](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19)
 - [2026-09-15 컨트롤 높이 두 단계 · 레이아웃 · 간격 역할값 · 글자](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-15)
 - [2026-10-24 문서 재정비 · 상태 글자색 허용](../decisions/2026-10-24-docs-structure.md)
+- [2026-10-24 토큰 정리 — 무채색 shadcn/ui · 포커스 한 겹 · 덧붙인 접근성 정리](../decisions/2026-10-24-token-cleanup.md)

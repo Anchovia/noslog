@@ -75,7 +75,7 @@
     background: var(--nl-feedback-warning-marker);
 }
 .noslog-ui .nl-exam-status__dot[data-tone="danger"] {
-    background: var(--nl-feedback-danger-marker);
+    background: var(--nl-feedback-destructive);
 }
 .noslog-ui .nl-exam-select {
     display: flex;
@@ -91,8 +91,8 @@
 /* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
    오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
-    background: var(--nl-surface-overlay);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    background: var(--nl-surface-surface);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-overlay);
     box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
@@ -127,7 +127,7 @@
 }
 .noslog-ui .nl-exam-select__option[data-state="checked"],
 .noslog-ui .nl-exam-rail [aria-current="true"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -170,7 +170,7 @@
     bottom: 0;
     left: calc(50% - var(--nl-stroke-default) / 2);
     width: var(--nl-stroke-default);
-    background: var(--nl-border-default);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-exam-passline:last-child .nl-exam-passline__mark::before {
     bottom: 50%;
@@ -184,7 +184,7 @@
     color: var(--nl-feedback-success-marker);
 }
 .noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
-    color: var(--nl-feedback-danger-marker);
+    color: var(--nl-feedback-destructive);
 }
 /* 여유 색(2026-09-22 M2, 사용자) — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
@@ -293,7 +293,7 @@
     inset: 0;
     overflow: hidden;
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-raised);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-exam-progress__fill {
     position: absolute;

@@ -10,7 +10,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
         <article className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
             <div className="flex items-start gap-nl-12">
                 <span
-                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-raised ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
+                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-surface ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
                 >
                     {user.role === "admin" ? (
                         <ShieldCheck className="nl-icon-small" aria-hidden />
@@ -75,7 +75,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                     </strong>
                 </div>
             </div>
-            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+            <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
                 <summary className="nl-emphasis-label flex cursor-pointer list-none items-center gap-nl-8 text-nl-content">
                     <DatabaseZap className="nl-icon-small" aria-hidden />
                     상세 데이터 적재율

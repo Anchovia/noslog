@@ -850,7 +850,7 @@ export default function Vid2bmapImportPanel({
 
             <div className="flex min-h-0 flex-1 flex-col gap-nl-16 overflow-y-auto p-nl-12">
                 <Section label="파일">
-                    <div className="flex items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border px-nl-8 py-nl-8">
+                    <div className="flex items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-divider px-nl-8 py-nl-8">
                         <FileArchive
                             className="nl-icon-small shrink-0 text-nl-subdued"
                             aria-hidden
@@ -864,7 +864,7 @@ export default function Vid2bmapImportPanel({
                         <button
                             type="button"
                             onClick={onReplaceFile}
-                            className="nl-metadata nl-hover-layer h-nl-24 shrink-0 rounded-nl-control border-nl-stroke border-nl-border px-nl-8"
+                            className="nl-metadata nl-hover-layer h-nl-24 shrink-0 rounded-nl-control border-nl-stroke border-nl-divider px-nl-8"
                         >
                             바꾸기
                         </button>
@@ -896,7 +896,7 @@ export default function Vid2bmapImportPanel({
                                 ).map(([label, value]) => (
                                     <div
                                         key={label}
-                                        className="bg-nl-raised px-nl-4 py-nl-8 text-center"
+                                        className="bg-nl-surface px-nl-4 py-nl-8 text-center"
                                     >
                                         <dd className="nl-emphasis-label">
                                             {value.toLocaleString("ko-KR")}
@@ -1238,7 +1238,7 @@ export default function Vid2bmapImportPanel({
                                     <ChevronLeft className="nl-icon-small" />
                                     1박
                                 </button>
-                                <output className="nl-metadata flex h-nl-32 flex-1 items-center justify-center rounded-nl-field border-nl-stroke border-nl-border">
+                                <output className="nl-metadata flex h-nl-32 flex-1 items-center justify-center rounded-nl-field border-nl-stroke border-nl-divider">
                                     첫 박자선 ={" "}
                                     {chartPositionLabel(
                                         loaded.firstBarTick,
@@ -1298,8 +1298,8 @@ export default function Vid2bmapImportPanel({
                                             }
                                             className={`nl-metadata flex min-h-nl-control-compact flex-col items-center justify-center rounded-nl-field border-nl-stroke ${
                                                 selected
-                                                    ? "border-nl-subdued bg-nl-raised"
-                                                    : "nl-hover-layer border-nl-border"
+                                                    ? "border-nl-subdued bg-nl-surface"
+                                                    : "nl-hover-layer border-nl-divider"
                                             }`}
                                         >
                                             1/{divisor}박
@@ -1450,7 +1450,7 @@ export default function Vid2bmapImportPanel({
                                     ).map(([label, value, swatch]) => (
                                         <div
                                             key={label}
-                                            className="flex items-center justify-between rounded-nl-field border-nl-stroke border-nl-border px-nl-8 py-nl-4"
+                                            className="flex items-center justify-between rounded-nl-field border-nl-stroke border-nl-divider px-nl-8 py-nl-4"
                                         >
                                             <dt className="nl-metadata flex items-center gap-nl-8">
                                                 <span
@@ -1482,7 +1482,7 @@ export default function Vid2bmapImportPanel({
                                                         moveFocus(-1)
                                                     }
                                                     aria-label="이전 곳"
-                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
+                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
                                                 >
                                                     <ArrowUp className="nl-icon-small" />
                                                 </button>
@@ -1490,7 +1490,7 @@ export default function Vid2bmapImportPanel({
                                                     type="button"
                                                     onClick={() => moveFocus(1)}
                                                     aria-label="다음 곳"
-                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
+                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
                                                 >
                                                     <ArrowDown className="nl-icon-small" />
                                                 </button>
@@ -1519,8 +1519,8 @@ export default function Vid2bmapImportPanel({
                                                         role="listitem"
                                                         className={`flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke px-nl-8 py-nl-8 ${
                                                             focused
-                                                                ? "border-nl-subdued bg-nl-raised"
-                                                                : "border-nl-border"
+                                                                ? "border-nl-subdued bg-nl-surface"
+                                                                : "border-nl-divider"
                                                         }`}
                                                     >
                                                         <button
@@ -1587,7 +1587,7 @@ export default function Vid2bmapImportPanel({
                                                                             choice ===
                                                                             value
                                                                                 ? "border-nl-content bg-nl-primary text-nl-on-primary"
-                                                                                : "nl-hover-layer border-nl-border"
+                                                                                : "nl-hover-layer border-nl-divider"
                                                                         }`}
                                                                     >
                                                                         {label}

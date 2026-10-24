@@ -62,9 +62,6 @@
     min-height: var(--nl-control-height);
     border-radius: var(--nl-radius-field);
 }
-.noslog-ui .nl-auth-language:focus-visible {
-    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
-}
 .noslog-ui .nl-auth-account {
     margin-top: var(--nl-spacing-32);
     display: flex;

@@ -20,7 +20,7 @@ export default function FeedbackReportCard({
                     href={imagePath}
                     target="_blank"
                     rel="noreferrer"
-                    className="relative block aspect-video bg-nl-raised"
+                    className="relative block aspect-video bg-nl-surface"
                 >
                     <Image
                         src={imagePath}
@@ -30,7 +30,7 @@ export default function FeedbackReportCard({
                         sizes="358px"
                         className="object-contain"
                     />
-                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-raised">
+                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-surface">
                         <ExternalLink className="nl-icon-small" aria-hidden />
                     </span>
                 </a>
@@ -83,7 +83,7 @@ export default function FeedbackReportCard({
                     {report.content}
                 </p>
                 {report.reply ? (
-                    <div className="rounded-nl-field bg-nl-raised p-nl-12">
+                    <div className="rounded-nl-field bg-nl-surface p-nl-12">
                         <p className="nl-metadata text-nl-subdued">
                             NosLog 답변
                         </p>

@@ -12,7 +12,7 @@
 ## 값이 없을 때
 
 - 값이 없는 칸은 만들지 않는다(「—」 칸 없음). 예외는 악곡 머리 「공식 레벨」 칸 하나 — 값이 없으면 흐린 「—」.
-- 새 값을 받는 중(`pending`)이면 이전 값을 그대로 두고 값 · 그레이드 숫자 · 진행 막대를 `content/pending` 으로.
+- 새 값을 받는 중(`pending`)이면 이전 값을 그대로 두고 값 · 그레이드 숫자 · 진행 막대를 `content/subdued` 으로.
 
 ## 값 색 `tone`
 
@@ -33,9 +33,9 @@
 `StatStrip footer` + `nl-action-group` — 수치 띠에 딸린 이동 링크 2–3개를 같은 상자 아래 칸에 둔다.
 
 - 칸 = 같은 폭 · 사이 1px 선(수치 띠와 같은 gap + divider) · 컨트롤 L 높이 · `surface/surface` 면.
-- 글자 `nl-emphasis-label` `content/interactive` + 끝 › 16 `content/subdued`(사이 4) — › 가 누를 곳 표시.
+- 글자 `nl-emphasis-label` `content/default` + 끝 › 16 `content/subdued`(사이 4) — › 가 누를 곳 표시.
 - 올림 `interaction/hover` · 누름 `selected-pressed`.
-- 없는 동작도 칸은 두고 글자 · › 모두 `interaction/disabled-content`, 반응 없음.
+- 없는 동작도 칸은 두고 칸 전체 불투명도 50%(`--nl-disabled-opacity`), 반응 없음.
 
 ## 바뀐 기록
 

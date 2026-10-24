@@ -20,7 +20,7 @@ export default function ExamSubmissionCard({
                     href={proofImagePath}
                     target="_blank"
                     rel="noreferrer"
-                    className="relative block aspect-video bg-nl-raised"
+                    className="relative block aspect-video bg-nl-surface"
                 >
                     <Image
                         src={proofImagePath}
@@ -30,12 +30,12 @@ export default function ExamSubmissionCard({
                         sizes="358px"
                         className="object-contain"
                     />
-                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-raised">
+                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-surface">
                         <ExternalLink className="nl-icon-small" />
                     </span>
                 </a>
             ) : (
-                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-raised px-nl-24 text-center text-nl-subdued">
+                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-surface px-nl-24 text-center text-nl-subdued">
                     보관 기간이 지나 증빙 이미지가 삭제되었습니다.
                 </div>
             )}

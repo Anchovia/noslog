@@ -24,7 +24,7 @@
 「진행 과정」 구역에 세 단계를 상자 없는 세로 목록으로 보인다.
 
 - 줄은 번호 원 24 →12→ 제목 `component-title` 이다. 줄 사이는 12.
-- 번호 원은 테두리 `border/default`, 숫자는 `emphasis-label` subdued 다. 로그인했을 때의 단계 번호 원과 크기 · 숫자 글자가 같다.
+- 번호 원은 테두리 `border/divider`, 숫자는 `emphasis-label` subdued 다. 로그인했을 때의 단계 번호 원과 크기 · 숫자 글자가 같다.
 
 ## 상태
 

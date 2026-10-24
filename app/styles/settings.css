@@ -48,7 +48,7 @@
     width: var(--nl-icon-medium);
     height: var(--nl-icon-medium);
     flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-border-strong);
+    border: var(--nl-stroke-strong) solid var(--nl-border-ring);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-radio-group__option input:checked {
@@ -63,18 +63,8 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
 }
-.noslog-ui .nl-radio-group__option input:focus-visible {
-    outline: none;
-    border-color: var(--nl-focus-ring);
-}
 .noslog-ui .nl-radio-group:disabled {
-    color: var(--nl-interaction-disabled-content);
-}
-.noslog-ui .nl-radio-group:disabled input {
-    border-color: var(--nl-interaction-disabled-border);
-}
-.noslog-ui .nl-radio-group:disabled input:checked::after {
-    background: var(--nl-interaction-disabled-content);
+    opacity: var(--nl-disabled-opacity);
 }
 
 .noslog-ui .nl-settings__form {
@@ -136,7 +126,7 @@
     width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
     touch-action: none;
     cursor: move;
 }
@@ -148,7 +138,7 @@
 .noslog-ui .nl-settings__crop-circle {
     position: absolute;
     inset: calc(31 / 302 * 100%);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-full);
     pointer-events: none;
 }
@@ -251,7 +241,7 @@
         display: block;
     }
     .noslog-ui .nl-settings__category--current {
-        --nl-state-layer: var(--nl-interaction-menu-set);
+        --nl-state-layer: var(--nl-surface-control);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -405,7 +395,7 @@
 }
 /* 뮤즈캣 로고 원(2026-10-21 시안) — 같은 원 40 에 밝은 면 · 캔버스 글자 「M」 */
 .noslog-ui .nl-settings__logo--mark {
-    background: var(--nl-content-interactive);
+    background: var(--nl-content-default);
     color: var(--nl-surface-canvas);
 }
 /* 촘촘한 설정 구역(뮤즈캣 상세 시안) — 제목 · 내용 사이 8 */

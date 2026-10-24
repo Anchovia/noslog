@@ -66,7 +66,7 @@ export const STAT_TONE_DARK_HEX: Partial<Record<StatTone, string>> = {
     "rank-1": EXAM_TIER_DARK_HEX.top,
     "rank-2": EXAM_TIER_DARK_HEX.high,
     "rank-3": EXAM_TIER_DARK_HEX.mid,
-    rank: "#afafaf", // content-subdued
+    rank: "#a1a1a1", // content-subdued
     "grade-1": "#70b8ff", // judgement-near
     "grade-2": "#4ccce6", // judgement-good
     "grade-3": "#ffca16", // judgement-just(S)

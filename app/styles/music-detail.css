@@ -249,7 +249,7 @@
 .noslog-ui .nl-facts__empty,
 /* 출처가 없는 값(2026-10-01 E2) — 확인된 값과 구분해 흐린 글자로 */
 .noslog-ui .nl-facts__value[data-verified="false"] {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-facts__action {
     display: flex;
@@ -452,12 +452,12 @@
 }
 
 /* 최근 판정 추이 선 색 — 판정 목록의 색 점과 같은 색 (2026-09-17 B).
-   MISS 빨강은 판정 색에 빨강이 없어 feedback/danger-marker 를 빌려 쓴다(결정 기록 예외) */
+   MISS 빨강은 판정 색에 빨강이 없어 feedback/destructive 를 빌려 쓴다(결정 기록 예외) */
 .noslog-ui .nl-performance-chart[data-metric="sjust"] {
     --nl-local-data-personal: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-performance-chart[data-metric="miss"] {
-    --nl-local-data-personal: var(--nl-feedback-danger-marker);
+    --nl-local-data-personal: var(--nl-feedback-destructive);
 }
 .noslog-ui .nl-performance-chart[data-metric="timing"] {
     --nl-local-data-fast: var(--nl-judgement-near);

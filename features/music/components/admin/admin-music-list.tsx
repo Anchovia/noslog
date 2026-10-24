@@ -113,7 +113,7 @@ export default function AdminMusicList({
                             }
                             className="nl-hover-layer -mx-nl-4 flex min-w-0 flex-1 items-center gap-nl-12 rounded-nl-field px-nl-4 py-nl-8"
                         >
-                            <span className="nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised text-nl-subdued">
+                            <span className="nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-surface text-nl-subdued">
                                 {music.categoryShort}
                             </span>
                             <span className="min-w-0 flex-1">

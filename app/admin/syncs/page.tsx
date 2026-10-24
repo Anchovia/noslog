@@ -126,7 +126,7 @@ export default async function AdminSyncsPage({
                         >
                             <div className="flex items-start gap-nl-12">
                                 <span
-                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised`}
+                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-surface`}
                                 >
                                     <Icon className="nl-icon-small" />
                                 </span>
@@ -180,7 +180,7 @@ export default async function AdminSyncsPage({
                                     </strong>
                                 </div>
                             </div>
-                            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+                            <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
                                 <summary className="nl-emphasis-label flex cursor-pointer list-none items-center justify-between text-nl-content">
                                     <span className="flex items-center gap-nl-8">
                                         <DatabaseZap className="nl-icon-small" />

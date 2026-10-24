@@ -35,7 +35,7 @@ export default function TierBandDropArea({
             ref={setNodeRef}
             className={cn(
                 "flex min-h-nl-64 flex-wrap items-center gap-nl-8 p-nl-12 transition-colors duration-nl-state",
-                isOver && "bg-nl-raised"
+                isOver && "bg-nl-surface"
             )}
         >
             <SortableContext
@@ -58,7 +58,7 @@ export default function TierBandDropArea({
                 aria-label={`${formatTierValue(band.value)} 구간에 채보 추가`}
                 title="채보 추가"
                 className={cn(
-                    "flex size-nl-48 shrink-0 cursor-pointer items-center justify-center rounded-nl-field border-nl-stroke border-dashed border-nl-disabled text-nl-disabled hover:border-nl-subdued hover:text-nl-subdued",
+                    "flex size-nl-48 shrink-0 cursor-pointer items-center justify-center rounded-nl-field border-nl-stroke border-dashed border-nl-input text-nl-disabled hover:border-nl-subdued hover:text-nl-subdued",
                     searchOpen &&
                         "border-nl-difficulty-real text-nl-difficulty-real"
                 )}

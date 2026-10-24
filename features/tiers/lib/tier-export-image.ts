@@ -195,12 +195,12 @@ export async function drawTierImage(input: TierExportInput) {
             `${fontWeight} ${px}px ${tokens.family}`;
         const colors = {
             canvas: tokens.color("var(--nl-surface-canvas)"),
-            sunken: tokens.color("var(--nl-surface-sunken)"),
-            overlay: tokens.color("var(--nl-surface-overlay)"),
+            sunken: tokens.color("var(--nl-surface-canvas)"),
+            overlay: tokens.color("var(--nl-surface-surface)"),
             text: tokens.color("var(--nl-content-default)"),
             subdued: tokens.color("var(--nl-content-subdued)"),
             divider: tokens.color("var(--nl-border-divider)"),
-            emptySlot: tokens.color("var(--nl-border-empty-slot)"),
+            emptySlot: tokens.color("var(--nl-border-divider)"),
             scrim: tokens.color("var(--nl-surface-media-scrim)"),
             onMedia: tokens.color("var(--nl-content-on-media)"),
             fullCombo: tokens.color("var(--nl-achievement-full-combo)"),

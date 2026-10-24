@@ -880,7 +880,7 @@ function ChartTimingEditorWorkspace({
                             <h1 className="nl-editor-title nl-emphasis-label truncate">
                                 {metadata.title}
                             </h1>
-                            <span className="nl-metadata rounded-nl-control bg-nl-raised px-nl-8 py-nl-4 text-nl-subdued">
+                            <span className="nl-metadata rounded-nl-control bg-nl-surface px-nl-8 py-nl-4 text-nl-subdued">
                                 {metadata.difficulty} · Lv {metadata.level}
                             </span>
                         </div>
@@ -969,7 +969,7 @@ function ChartTimingEditorWorkspace({
                                     <div
                                         role="menu"
                                         aria-label="채보 가져오기"
-                                        className="nl-editor-menu absolute top-full right-0 z-nl-popover mt-nl-8 flex flex-col gap-nl-4 rounded-nl-overlay border-nl-stroke border-nl-border bg-nl-raised p-nl-4 shadow-nl-overlay"
+                                        className="nl-editor-menu absolute top-full right-0 z-nl-popover mt-nl-8 flex flex-col gap-nl-4 rounded-nl-overlay border-nl-stroke border-nl-divider bg-nl-surface p-nl-4 shadow-nl-overlay"
                                     >
                                         <button
                                             type="button"
@@ -1209,7 +1209,7 @@ function ChartTimingEditorWorkspace({
                                 onClick={() => setEditorMode("timing")}
                                 className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                     editorMode === "timing"
-                                        ? "bg-nl-raised"
+                                        ? "bg-nl-surface"
                                         : "nl-hover-layer text-nl-subdued"
                                 }`}
                             >
@@ -1227,7 +1227,7 @@ function ChartTimingEditorWorkspace({
                                 onClick={() => setEditorMode("notes")}
                                 className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                     editorMode === "notes"
-                                        ? "bg-nl-raised"
+                                        ? "bg-nl-surface"
                                         : "nl-hover-layer text-nl-subdued"
                                 }`}
                             >
@@ -1241,7 +1241,7 @@ function ChartTimingEditorWorkspace({
                                     onClick={() => setEditorMode("review")}
                                     className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                         editorMode === "review"
-                                            ? "bg-nl-raised"
+                                            ? "bg-nl-surface"
                                             : "nl-hover-layer text-nl-subdued"
                                     }`}
                                 >
@@ -1277,7 +1277,7 @@ function ChartTimingEditorWorkspace({
                                     onClick={() => setNoteTool("select")}
                                     className={`nl-metadata flex min-h-nl-control-compact w-full items-center gap-nl-8 rounded-nl-field px-nl-8 text-left ${
                                         noteTool === "select"
-                                            ? "bg-nl-raised text-nl-content"
+                                            ? "bg-nl-surface text-nl-content"
                                             : "nl-hover-layer text-nl-subdued"
                                     }`}
                                 >
@@ -1295,7 +1295,7 @@ function ChartTimingEditorWorkspace({
                                             onClick={() => setNoteTool(value)}
                                             className={`nl-metadata min-h-nl-control-compact rounded-nl-field px-nl-4 ${
                                                 noteTool === value
-                                                    ? "bg-nl-raised text-nl-content"
+                                                    ? "bg-nl-surface text-nl-content"
                                                     : "nl-hover-layer text-nl-subdued"
                                             }`}
                                         >
@@ -1324,7 +1324,7 @@ function ChartTimingEditorWorkspace({
                                                         ? hand === "left"
                                                             ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
                                                             : "border-red-400/50 bg-red-400/10 text-red-200"
-                                                        : "border-nl-border text-nl-subdued"
+                                                        : "border-nl-divider text-nl-subdued"
                                                 }`}
                                             >
                                                 {t(`editor.hand.${hand}`)}
@@ -1344,8 +1344,8 @@ function ChartTimingEditorWorkspace({
                                             onClick={() => setNoteWidth(width)}
                                             className={`nl-metadata h-nl-32 rounded-nl-field border-nl-stroke ${
                                                 noteWidth === width
-                                                    ? "border-nl-subdued bg-nl-raised"
-                                                    : "border-nl-border text-nl-subdued"
+                                                    ? "border-nl-subdued bg-nl-surface"
+                                                    : "border-nl-divider text-nl-subdued"
                                             }`}
                                         >
                                             {width}
@@ -1436,7 +1436,7 @@ function ChartTimingEditorWorkspace({
                         {vid2bmapFile && editorMode === "notes" ? (
                             <dl
                                 aria-label="가져오기 미리보기 범례"
-                                className="nl-metadata pointer-events-none absolute top-nl-12 right-nl-12 flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas px-nl-12 py-nl-8 shadow-nl-overlay"
+                                className="nl-metadata pointer-events-none absolute top-nl-12 right-nl-12 flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas px-nl-12 py-nl-8 shadow-nl-overlay"
                             >
                                 <div className="flex items-center gap-nl-8">
                                     <dt className="h-nl-8 w-nl-16 bg-nl-warning" />
@@ -1451,7 +1451,7 @@ function ChartTimingEditorWorkspace({
                                     <dd>빠질 노트</dd>
                                 </div>
                                 <div className="flex items-center gap-nl-8">
-                                    <dt className="h-nl-8 w-nl-16 border-x-nl-stroke-strong border-nl-content bg-nl-raised" />
+                                    <dt className="h-nl-8 w-nl-16 border-x-nl-stroke-strong border-nl-content bg-nl-surface" />
                                     <dd>목록에서 고른 곳</dd>
                                 </div>
                                 {importTimingCount > 0 ? (
@@ -1462,7 +1462,7 @@ function ChartTimingEditorWorkspace({
                                 ) : null}
                             </dl>
                         ) : null}
-                        <div className="absolute top-nl-12 left-nl-12 flex items-center gap-nl-4 rounded-nl-field border-nl-stroke border-nl-border bg-nl-surface p-nl-4 shadow-nl-overlay">
+                        <div className="absolute top-nl-12 left-nl-12 flex items-center gap-nl-4 rounded-nl-field border-nl-stroke border-nl-divider bg-nl-surface p-nl-4 shadow-nl-overlay">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -1638,7 +1638,7 @@ function ChartTimingEditorWorkspace({
                             {t("chart.metronome")}
                         </label>
 
-                        <label className="flex h-nl-32 items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border px-nl-8">
+                        <label className="flex h-nl-32 items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-divider px-nl-8">
                             <Volume2
                                 className="nl-icon-small text-nl-subdued"
                                 aria-hidden

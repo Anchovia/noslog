@@ -92,7 +92,7 @@
     flex-shrink: 0;
 }
 .noslog-ui .nl-bingo-card__cover[data-empty="true"] {
-    border: var(--nl-stroke-default) solid var(--nl-border-empty-slot);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-card__body {
     display: flex;
@@ -126,7 +126,7 @@
     width: 6px;
     height: 6px;
     border-radius: 1px;
-    background: var(--nl-border-empty-slot);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-content-on-media);
@@ -180,7 +180,7 @@
     background: none;
 }
 .noslog-ui .nl-bingo-row-item > .nl-bingo-mini > span {
-    background: var(--nl-border-empty-slot);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-row-item > .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-content-default);
@@ -268,7 +268,7 @@
     width: 12px;
     height: 12px;
     border-radius: 2px;
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-bingo-legend i[data-kind="done"] {
@@ -276,15 +276,15 @@
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-legend i[data-kind="chance"] {
-    border: var(--nl-stroke-default) dashed var(--nl-border-strong);
+    border: var(--nl-stroke-default) dashed var(--nl-border-ring);
 }
 .noslog-ui .nl-bingo-legend i[data-kind="line"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
-    border-color: var(--nl-border-strong);
+    border-color: var(--nl-border-ring);
 }
 /* 칸 팝오버 — 필터 팝오버와 같은 DestinationPanel 계약(334 · overlay · border/overlay · 그림자) */
 .noslog-ui .nl-bingo-cell-popover {
@@ -292,9 +292,9 @@
     max-height: var(--radix-popover-content-available-height);
     overflow-y: auto;
     overscroll-behavior: contain;
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-popover);
 }
@@ -305,7 +305,7 @@
     padding: var(--nl-spacing-16);
 }
 .noslog-ui .nl-bingo-cell-detail[data-pending="true"] .nl-body {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-bingo-cell-detail__head {
     display: flex;
@@ -378,7 +378,7 @@
     padding: var(--nl-spacing-4);
     overflow: hidden;
     background: var(--nl-surface-surface);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-default);
     text-align: start;
@@ -422,20 +422,20 @@
 .noslog-ui .nl-bingo-board__line[data-state] {
     color: var(--nl-content-default);
 }
-/* 완성된 줄 — 면 menu-set + 테두리 strong (새 토큰 없음) */
+/* 완성된 줄 — 면 menu-set + 테두리 ring (새 토큰 없음) */
 .noslog-ui .nl-bingo-board__cell[data-line="true"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
-    border-color: var(--nl-border-strong);
+    border-color: var(--nl-border-ring);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-bingo-board__cell[data-line="true"][data-completed="true"] {
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-ring);
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-board__cell[data-completed="true"] {
@@ -444,11 +444,11 @@
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-board__cell[data-chance="true"] {
-    border: var(--nl-stroke-default) dashed var(--nl-border-strong);
+    border: var(--nl-stroke-default) dashed var(--nl-border-ring);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-bingo-board__cell[aria-pressed="true"] {
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-ring);
     border-color: transparent;
 }
 /* 칸 위치 — 미니 판에서 그 칸만 켬(목록 행 · 칸 상세 머리). 캔버스 · 창 위라 판 바탕 없이 칸만 */
@@ -462,7 +462,7 @@
     background: none;
 }
 .noslog-ui .nl-bingo-position > .nl-bingo-mini > span {
-    background: var(--nl-border-empty-slot);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-position > .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-content-default);
@@ -497,14 +497,14 @@
         var(--nl-spacing-16);
 }
 .noslog-ui .nl-bingo-mission[data-selected="true"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
 }
 .noslog-ui .nl-bingo-mission[aria-busy="true"] {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-bingo-mission[aria-busy="true"] .nl-muted {
     color: inherit;

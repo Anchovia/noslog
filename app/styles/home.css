@@ -181,7 +181,7 @@
     width: 100%;
     overflow: hidden;
     border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
 }
 .noslog-ui .nl-official-post__media img {
     display: block;
@@ -215,9 +215,9 @@
     z-index: var(--nl-layer-search-preview);
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
         var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-search-preview__list {
@@ -276,7 +276,7 @@
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
     border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-home-event img {
@@ -321,8 +321,4 @@
         text-decoration: underline;
         text-underline-position: under;
     }
-}
-.noslog-ui .nl-home-event:focus-visible {
-    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
-    outline-offset: var(--nl-spacing-4);
 }

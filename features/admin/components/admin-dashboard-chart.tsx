@@ -14,8 +14,8 @@ import {
 
 // 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay · 그림자 · 안쪽 8) · 본문 14 (2026-10-01 A)
 const TOOLTIP_STYLE = {
-    background: "var(--nl-surface-overlay)",
-    border: "1px solid var(--nl-border-overlay)",
+    background: "var(--nl-surface-surface)",
+    border: "1px solid var(--nl-border-divider)",
     borderRadius: "var(--nl-radius-overlay)",
     boxShadow: "var(--nl-overlay-shadow)",
     padding: "var(--nl-spacing-8)",
@@ -77,7 +77,7 @@ export default function AdminDashboardChart({
                         }}
                     />
                     <Tooltip
-                        cursor={{ stroke: "var(--nl-border-strong)" }}
+                        cursor={{ stroke: "var(--nl-border-ring)" }}
                         contentStyle={TOOLTIP_STYLE}
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [
@@ -184,7 +184,7 @@ export function AdminDashboardHours({
                     />
                     {emptyMessage ? null : (
                         <Tooltip
-                            cursor={{ fill: "var(--nl-surface-raised)" }}
+                            cursor={{ fill: "var(--nl-surface-surface)" }}
                             contentStyle={TOOLTIP_STYLE}
                             labelStyle={{ color: "var(--nl-content-subdued)" }}
                             formatter={(value) => [

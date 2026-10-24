@@ -27,8 +27,8 @@ const DIFFICULTIES = [
     ["real", "R"],
 ] as const;
 /** 칸 색 = 등급 색(랭크 분포와 같음, 2026-09-26 C2a · L1). 고른 칸 밖은 흐린 회색, 「안 함」 은 트랙 면 그대로 */
-const NONE = "var(--nl-surface-raised)";
-const DIMMED = "var(--nl-content-disabled)";
+const NONE = "var(--nl-surface-control)";
+const DIMMED = "var(--nl-border-input)";
 export const PROFILE_TIER_COLORS: Record<ProfileTierKey, string> = {
     pianist: "var(--nl-score-goal-pianist)",
     fc: "var(--nl-achievement-full-combo)",

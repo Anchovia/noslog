@@ -18,7 +18,7 @@
     justify-content: center;
     /* 따로 누르는 상자 — 높이는 컨트롤 높이, 모서리는 누르는 칸(field) */
     border-radius: var(--nl-radius-field);
-    color: var(--nl-content-interactive);
+    color: var(--nl-content-default);
 }
 @media (hover: hover) {
     .noslog-ui button.nl-pagination__item:hover {
@@ -38,7 +38,7 @@
 .noslog-ui .nl-pagination__item:disabled,
 .noslog-ui .nl-pagination__item[aria-disabled="true"] {
     background: transparent;
-    color: var(--nl-interaction-disabled-content);
+    opacity: var(--nl-disabled-opacity);
 }
 .noslog-ui .nl-ranking-panel {
     display: flex;
@@ -119,7 +119,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50% 50% 50% 0;
-    background: var(--nl-border-strong);
+    background: var(--nl-border-ring);
     transform: rotate(-45deg);
 }
 /* 내 핀 = 판정 JUST 노랑 — 세로선 · 「상위 N%」 대신 색으로만 내 위치를 가리킨다 (2026-09-18 사용자 결정) */
@@ -136,11 +136,10 @@
     top: calc(var(--nl-spacing-8) * -1);
     right: calc(var(--nl-spacing-12) * -1);
     padding-inline: var(--nl-spacing-4);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin:focus-visible {
-    outline-offset: var(--nl-spacing-4);
     border-radius: 50%;
 }
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.

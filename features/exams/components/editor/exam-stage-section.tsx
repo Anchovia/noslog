@@ -206,7 +206,7 @@ export default function ExamStageSection({
                 ))}
 
                 {stages.length === 0 ? (
-                    <div className="nl-metadata rounded-nl-field border-nl-stroke border-dashed border-nl-border py-nl-32 text-center text-nl-subdued">
+                    <div className="nl-metadata rounded-nl-field border-nl-stroke border-dashed border-nl-divider py-nl-32 text-center text-nl-subdued">
                         과제곡을 추가해주세요.
                     </div>
                 ) : null}

@@ -64,7 +64,7 @@ export default function MusicTranslationCoverage({
                     return (
                         <article
                             key={item.locale}
-                            className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-12"
+                            className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12"
                         >
                             <div className="flex items-center justify-between gap-nl-8">
                                 <strong className="nl-emphasis-label text-nl-content">
@@ -74,7 +74,7 @@ export default function MusicTranslationCoverage({
                                     승인 {completion}%
                                 </span>
                             </div>
-                            <div className="mt-nl-8 h-nl-4 overflow-hidden rounded-nl-full bg-nl-raised">
+                            <div className="mt-nl-8 h-nl-4 overflow-hidden rounded-nl-full bg-nl-surface">
                                 <div
                                     className="h-full rounded-nl-full bg-nl-chart"
                                     style={{ width: completion + "%" }}
@@ -106,7 +106,7 @@ export default function MusicTranslationCoverage({
                                                 "nl-metadata rounded-nl-field px-nl-8 py-nl-8 text-center " +
                                                 (active
                                                     ? "bg-nl-primary text-nl-on-primary"
-                                                    : "bg-nl-raised text-nl-subdued hover:text-nl-content")
+                                                    : "bg-nl-surface text-nl-subdued hover:text-nl-content")
                                             }
                                         >
                                             <span className="nl-emphasis-label block">

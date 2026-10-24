@@ -193,7 +193,7 @@ export default function TimingInspector() {
                             onClick={() => selectTimingPoint(point.id)}
                             className={`rounded-nl-field px-nl-12 py-nl-8 text-left transition-colors duration-nl-state ${
                                 point.id === selected.id
-                                    ? "bg-nl-raised text-nl-content"
+                                    ? "bg-nl-surface text-nl-content"
                                     : "nl-hover-layer text-nl-subdued"
                             }`}
                         >
@@ -289,9 +289,9 @@ export default function TimingInspector() {
                         </legend>
                         <div className="flex flex-col gap-nl-8">
                             <label
-                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-border px-nl-12 ${
+                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-divider px-nl-12 ${
                                     signaturePreset === "3/4"
-                                        ? "bg-nl-raised text-nl-content"
+                                        ? "bg-nl-surface text-nl-content"
                                         : "text-nl-subdued"
                                 }`}
                             >
@@ -309,9 +309,9 @@ export default function TimingInspector() {
                             </label>
 
                             <label
-                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-border px-nl-12 ${
+                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-divider px-nl-12 ${
                                     signaturePreset === "4/4"
-                                        ? "bg-nl-raised text-nl-content"
+                                        ? "bg-nl-surface text-nl-content"
                                         : "text-nl-subdued"
                                 }`}
                             >
@@ -329,9 +329,9 @@ export default function TimingInspector() {
                             </label>
 
                             <div
-                                className={`rounded-nl-field border-nl-stroke border-nl-border p-nl-12 ${
+                                className={`rounded-nl-field border-nl-stroke border-nl-divider p-nl-12 ${
                                     signaturePreset === "other"
-                                        ? "bg-nl-raised"
+                                        ? "bg-nl-surface"
                                         : ""
                                 }`}
                             >

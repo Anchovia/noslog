@@ -29,7 +29,7 @@
 
 `StackedBar` — 전체 중 부분(판정 비율)을 한 줄로, 줄을 겹쳐 나 · 평균을 비교한다.
 
-- 줄 = 라벨 `nl-metadata`(최소 40) · 트랙 8(`radius/control` · `surface/raised`). 줄 사이 8 · 열 사이 12. 조각 사이 틈 없음 · 빗금 없음.
+- 줄 = 라벨 `nl-metadata`(최소 40) · 트랙 8(`radius/control` · `surface/surface`). 줄 사이 8 · 열 사이 12. 조각 사이 틈 없음 · 빗금 없음.
 - 모든 줄에 라벨이 없으면 라벨 열 없이 막대만.
 - 줄들이 한 격자의 열을 나눠 써(subgrid) 라벨 폭이 달라도 막대 시작이 맞는다.
 - 줄 오른쪽 값 칸(`nl-metric-value`)은 선택이다. 한 줄이라도 주면 모든 줄에 준다.
@@ -39,7 +39,7 @@
 
 `BarList` — 항목 몇 개의 크기 비교.
 
-- 줄 = 라벨 `nl-control` · 트랙 8(`radius/control` · `surface/raised`) · 값 `nl-metric-value` 오른쪽. 줄 사이 8 · 열 사이 12. 채움 = 차트 단일 색.
+- 줄 = 라벨 `nl-control` · 트랙 8(`radius/control` · `surface/surface`) · 값 `nl-metric-value` 오른쪽. 줄 사이 8 · 열 사이 12. 채움 = 차트 단일 색.
 - 값이 없는 항목은 막대 없이 값 자리 「—」. 모두 없어도 빈 트랙을 그린다(문장으로 바꾸지 않는다).
 
 ## 진행 막대

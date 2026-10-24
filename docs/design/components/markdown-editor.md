@@ -4,8 +4,8 @@
 
 ## 모양
 
-- 상자 = 입력칸 경계 · `radius/field` · 면 `surface/surface`. 포커스는 입력칸처럼 상자 경계 + 후광.
-- 머리 줄 = 가라앉은 면(`surface/sunken`) + 아래 `border/divider`. 왼쪽 「쓰기 / 미리보기」 2단 탭, 오른쪽 서식 아이콘 버튼. 모두 컨트롤 L(한 줄 한 단계). 넘치면 가로 스크롤.
+- 상자 = 입력칸 경계 · `radius/field` · 면 `surface/input`. 입력에 포커스가 오면 상자에 [공용 포커스](../foundations.md#포커스) 선.
+- 머리 줄 = 가라앉은 면(`surface/canvas`) + 아래 `border/divider`. 왼쪽 「쓰기 / 미리보기」 2단 탭, 오른쪽 서식 아이콘 버튼. 모두 컨트롤 L(한 줄 한 단계). 넘치면 가로 스크롤.
 - 입력 = `nl-body` · 안쪽 8/12 · 처음 8줄, 35줄까지 늘고 그 뒤 스크롤.
 - 칸 아래 도움말 줄 = 왼쪽 안내(오류면 오류) · 오른쪽 「쓴 수 / 최대」. 쓴 수는 한도의 75% 를 넘을 때만 보인다. 넘겨도 입력은 막지 않고 게시만 막는다.
 
@@ -35,10 +35,10 @@
 | 요소       | 값                                                                                                               |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- |
 | 고정폭     | 기기 글꼴 `--nl-font-family-mono`(파일 추가 없음)                                                                |
-| 글 안 코드 | 면 `surface/raised` · `radius/control` · 안쪽 2/4 · 14                                                           |
-| 코드 덩이  | 면 `surface/sunken` · 경계 `border/subtle` · `radius/field` · 안쪽 12 · 넘치면 그 상자만 가로 스크롤             |
+| 글 안 코드 | 면 `surface/surface` · `radius/control` · 안쪽 2/4 · 14                                                          |
+| 코드 덩이  | 면 `surface/canvas` · 경계 `border/divider` · `radius/field` · 안쪽 12 · 넘치면 그 상자만 가로 스크롤            |
 | 표         | 칸 안쪽 8/12 · 줄 아래 `border/divider` · 머리 `content/subdued` 600 · 좁으면 표만 가로 스크롤(열을 줄이지 않음) |
-| 인용       | 왼쪽 2px `border/strong` + 안쪽 12 + 글자 `content/subdued`                                                      |
+| 인용       | 왼쪽 2px `border/ring` + 안쪽 12 + 글자 `content/subdued`                                                        |
 | 기울임     | 본문 `em` 만 `font-synthesis: style`                                                                             |
 
 ## 아래 고정 바

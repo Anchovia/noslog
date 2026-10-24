@@ -214,10 +214,10 @@ export default function TierBoard({
             <div
                 className={cn(
                     "flex flex-col gap-nl-12",
-                    isMutating && "pointer-events-none text-nl-pending"
+                    isMutating && "pointer-events-none text-nl-subdued"
                 )}
             >
-                <div className="sticky top-nl-64 z-nl-sticky flex min-h-nl-control items-center justify-between gap-nl-12 rounded-nl-container border-nl-stroke border-nl-border bg-nl-surface px-nl-12 py-nl-8 shadow-nl-overlay">
+                <div className="sticky top-nl-64 z-nl-sticky flex min-h-nl-control items-center justify-between gap-nl-12 rounded-nl-container border-nl-stroke border-nl-divider bg-nl-surface px-nl-12 py-nl-8 shadow-nl-overlay">
                     <span className="nl-metadata text-nl-subdued">
                         {changeCount > 0
                             ? `배치 변경 ${changeCount}건`

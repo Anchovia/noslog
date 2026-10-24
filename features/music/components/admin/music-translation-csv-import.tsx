@@ -198,9 +198,9 @@ export default function MusicTranslationCsvImport() {
             ) : null}
             {preview ? (
                 <div className="flex flex-col gap-nl-8">
-                    <div className="overflow-x-auto rounded-nl-field border-nl-stroke border-nl-border">
+                    <div className="overflow-x-auto rounded-nl-field border-nl-stroke border-nl-divider">
                         <table className="nl-admin-table-wide nl-metadata w-full text-left">
-                            <thead className="bg-nl-raised">
+                            <thead className="bg-nl-surface">
                                 <tr>
                                     <th className="p-nl-8">index</th>
                                     <th className="p-nl-8">원제</th>

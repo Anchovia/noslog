@@ -94,7 +94,7 @@
     padding: 0;
     border: 0;
     background: none;
-    color: var(--nl-content-interactive);
+    color: var(--nl-content-default);
     cursor: pointer;
 }
 /* 작성자 · 아이콘 동작 줄 = 컨트롤 높이 한 줄(접히지 않음) */
@@ -279,9 +279,9 @@
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     color: var(--nl-content-default);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-fullscreen-dialog);
 }
@@ -420,12 +420,12 @@
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-runnable-track {
     height: 4px;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-default);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-track {
     height: 4px;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-default);
+    background: var(--nl-border-divider);
 }
 /* 필터 슬라이더와 같은 채운 점 20 — 네이티브 range 는 손잡이 가장자리를 트랙 끝에 맞추므로
    상자 = 보이는 크기여야 끝에서 점과 트랙이 붙는다 (바 어디를 눌러도 이동하므로 조작 영역은 바 전체) */
@@ -444,32 +444,6 @@
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
-}
-.noslog-ui .nl-chart-stage__seek:active::-webkit-slider-thumb {
-    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover {
-        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-    }
-}
-.noslog-ui .nl-chart-stage__seek:active::-moz-range-thumb {
-    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover {
-        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-    }
-}
-.noslog-ui .nl-chart-stage__seek:focus-visible::-webkit-slider-thumb {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-.noslog-ui .nl-chart-stage__seek:focus-visible::-moz-range-thumb {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__option {
     display: inline-flex;
@@ -504,7 +478,7 @@
 }
 .noslog-ui .nl-chart-stage__error {
     margin: 0;
-    color: var(--nl-feedback-error-text);
+    color: var(--nl-feedback-destructive);
 }
 
 /* 전체 악보 — 세로 띠 본문 + 미니맵 (가로 스크롤 없음) */
@@ -560,14 +534,9 @@
     overflow-x: hidden;
     overscroll-behavior: contain;
     border-radius: var(--nl-radius-control);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     background: var(--nl-stage-canvas);
     outline: none;
-}
-/* 포커스 = 평소 경계(1)를 흰색으로 + 안쪽 1 을 더해 2 — 공용 포커스 선과 같은 두께 */
-.noslog-ui .nl-chart-strip__main:focus-visible {
-    border-color: var(--nl-focus-ring);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-chart-strip__columns {
     position: relative;
@@ -586,7 +555,7 @@
     left: var(--nl-spacing-4);
     display: flex;
     flex-direction: column;
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
     pointer-events: none;
 }
 /* 시작 BPM·박자 라벨 — 열 상자는 overflow hidden 이라 컨테이너 하단 여백 24 안에 둔다 */

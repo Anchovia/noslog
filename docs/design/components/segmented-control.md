@@ -8,8 +8,8 @@
 
 ## 모양
 
-- 판 = `surface/sunken` 면 + 1px `border/divider` · `radius/field`. 카드 위에서도 판이 보인다.
-- 고른 칸 = `surface/control-selected` 면 + `content/interactive` 글자 + 600 · 선 없음.
+- 판 = `surface/control` 면 · 선 없음 · `radius/field`(shadcn tabs 목록).
+- 고른 칸 = `surface/input` 면 + 1px `border/input` + `content/default` 글자 + 600(shadcn tabs 다크 활성). 고르지 않은 칸 올림은 글자만 밝게.
 - 고른 칸 안의 색 글자(난이도 레벨 숫자 · 난이도 이름)는 기본 글자색으로 돌린다(고른 칩과 같은 규칙).
 - 칸은 균등 분할.
 

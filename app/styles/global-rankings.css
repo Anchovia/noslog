@@ -44,7 +44,7 @@
 }
 .noslog-ui .nl-ranking-head {
     padding-bottom: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-ranking-head__rank,
 .noslog-ui .nl-player-row__rank {
@@ -82,7 +82,7 @@
     width: var(--nl-spacing-32);
     height: var(--nl-spacing-32);
     flex-shrink: 0;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-player-row__identity,
 .noslog-ui .nl-player-row__name {

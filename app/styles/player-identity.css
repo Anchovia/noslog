@@ -155,7 +155,7 @@
     clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
 .noslog-ui .nl-exam-badge[data-tier="none"] {
-    --nl-exam-badge-metal: var(--nl-border-default);
+    --nl-exam-badge-metal: var(--nl-border-divider);
 }
 .noslog-ui .nl-country-marker {
     display: inline-flex;
@@ -192,16 +192,10 @@
     font-weight: var(--nl-type-weight-regular);
 }
 @media (hover: hover) {
-    /* 올림 = 공용 .nl-compact-select:hover 의 겹치는 면(6%) 그대로 */
+    /* 올림 = 보조 버튼과 같은 secondary/80 */
     .noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
-        background-color: var(--nl-surface-control);
+        background: var(--nl-surface-control-hover);
     }
-}
-.noslog-ui .nl-compact-select.nl-compact-select--outlined:focus-visible {
-    outline: none;
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring),
-        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-compact-select--outlined svg {
     width: var(--nl-icon-medium);

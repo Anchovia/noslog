@@ -4,19 +4,15 @@
 @theme inline {
     --color-nl-canvas: var(--nl-surface-canvas);
     --color-nl-surface: var(--nl-surface-surface);
-    --color-nl-raised: var(--nl-surface-raised);
     --color-nl-control: var(--nl-surface-control);
     --color-nl-content: var(--nl-content-default);
     --color-nl-subdued: var(--nl-content-subdued);
-    --color-nl-interactive: var(--nl-content-interactive);
     --color-nl-divider: var(--nl-border-divider);
-    --color-nl-border: var(--nl-border-default);
     --color-nl-input: var(--nl-border-input);
     --color-nl-focus: var(--nl-focus-ring);
-    --color-nl-error: var(--nl-feedback-error-text);
+    --color-nl-error: var(--nl-feedback-destructive);
     /* 관리자 · 채보 에디터가 쓰던 옛 이름의 자리(2026-10-15 B5 2단계) — 있는 토큰만 가리킨다 */
     --color-nl-disabled: var(--nl-content-disabled);
-    --color-nl-pending: var(--nl-content-pending);
     --color-nl-primary: var(--nl-primary-default);
     --color-nl-on-primary: var(--nl-primary-on-primary);
     --color-nl-success: var(--nl-feedback-success-marker);

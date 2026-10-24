@@ -50,12 +50,8 @@
         );
     }
 }
-.noslog-ui .nl-tier-switch:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
-}
 .noslog-ui .nl-tier-switch[data-state="open"] {
-    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -180,7 +176,7 @@
     }
 }
 .noslog-ui .nl-tier-band-option[data-range-start="true"] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -237,7 +233,7 @@
     height: auto;
     aspect-ratio: 1;
     border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
     overflow: hidden;
 }
 .noslog-ui .nl-tier-card__outline {
@@ -245,7 +241,7 @@
     inset: 0;
     z-index: calc(var(--nl-layer-above) + 1);
     border-radius: inherit;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
     pointer-events: none;
 }
 /* 그 표의 기준 색(2026-09-14) — S 표 = JUST 노랑 · 990k 표 = 노랑과 ◆JUST 분홍 사이 살구 · Pianist 표 = ◆JUST 분홍.
@@ -289,7 +285,7 @@
     z-index: var(--nl-layer-above);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     white-space: nowrap;
 }
 .noslog-ui .nl-tier-card__difficulty[data-difficulty="normal"] {
@@ -339,7 +335,7 @@
     .noslog-ui
         :is(.nl-tier-card, .nl-tier-row):hover
         .nl-tier-card__outline:not([data-achievement]) {
-        box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+        box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-ring);
     }
 }
 /* 375 미만(4열 카드 66)은 판 글자를 약칭 N · H · EX · R 로 — 악곡 상세 난이도 선택과 같은 규칙 */
@@ -372,7 +368,7 @@
     width: 48px;
     height: 48px;
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
     overflow: hidden;
 }
 .noslog-ui .nl-tier-row__name,
@@ -395,10 +391,10 @@
     color: var(--nl-content-subdued);
 }
 .noslog-ui [data-pending="true"] .nl-tier-row {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui [data-pending="true"] .nl-tier-card {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-tier-guide {
     display: flex;
@@ -435,7 +431,7 @@
     width: 34px;
 }
 .noslog-ui .nl-tier-weight .nl-line-chart__grid {
-    stroke: var(--nl-border-default);
+    stroke: var(--nl-border-divider);
 }
 .noslog-ui .nl-tier-weight .nl-line-chart__line {
     stroke: var(--nl-local-data-single);

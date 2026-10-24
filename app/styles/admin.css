@@ -39,7 +39,7 @@
     min-width: 0;
 }
 .noslog-ui .nl-dashboard__pending-current[data-pending] {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui
     .nl-dashboard__pending-current[data-pending]
@@ -49,7 +49,7 @@
         .nl-body-secondary,
         .nl-metadata
     ) {
-    color: var(--nl-content-pending) !important;
+    color: var(--nl-content-subdued) !important;
 }
 .noslog-ui .nl-dashboard__pending-loading {
     position: relative;
@@ -61,8 +61,8 @@
 }
 /* 링크로 만든 세그먼트 — 선택 표시는 공용 [aria-checked] 규칙과 같다 */
 .noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"] {
-    border-color: var(--nl-border-strong);
-    background: var(--nl-surface-raised);
+    border-color: var(--nl-border-ring);
+    background: var(--nl-surface-surface);
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
 }
@@ -156,12 +156,8 @@
 }
 
 .noslog-ui .nl-dashboard__kpi[aria-current="true"] {
-    border-color: var(--nl-border-strong);
-    background: var(--nl-surface-raised);
-}
-.noslog-ui .nl-dashboard__kpi:focus-visible {
-    border-color: var(--nl-focus-ring);
-    outline: none;
+    border-color: var(--nl-border-ring);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-dashboard__delta {
     display: flex;
@@ -172,7 +168,7 @@
     color: var(--nl-feedback-success-marker);
 }
 .noslog-ui .nl-dashboard__delta [data-trend="down"] {
-    color: var(--nl-feedback-danger-marker);
+    color: var(--nl-feedback-destructive);
 }
 /* 시각별로 세지 않는 수치는 빈 틀 가운데에 공용 그래프 안내(nl-line-chart__state)를 둔다 */
 .noslog-ui .nl-dashboard__chart {
@@ -336,12 +332,7 @@
 .noslog-ui .nl-admin-nav__tab--current {
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
-    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1)
-        var(--nl-border-strong);
-}
-.noslog-ui .nl-admin-nav__tab:focus-visible {
-    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
-    outline-offset: calc(var(--nl-stroke-default) * -1);
+    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) var(--nl-border-ring);
 }
 
 /* 공지 관리 — 목록 */
@@ -402,12 +393,12 @@
     gap: var(--nl-spacing-4);
     min-height: 20px;
     padding-inline: var(--nl-spacing-8);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-admin-chip--live {
-    border-color: var(--nl-border-strong);
+    border-color: var(--nl-border-ring);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-admin-chip--warning {
@@ -415,8 +406,8 @@
     color: var(--nl-feedback-warning-marker);
 }
 .noslog-ui .nl-admin-chip--danger {
-    border-color: var(--nl-feedback-error-text);
-    color: var(--nl-feedback-error-text);
+    border-color: var(--nl-feedback-destructive);
+    color: var(--nl-feedback-destructive);
 }
 
 /* 공지 관리 — 편집 폼 */
@@ -443,7 +434,7 @@
     height: 6px;
     margin-inline-start: var(--nl-spacing-4);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-feedback-error-text);
+    background: var(--nl-feedback-destructive);
 }
 /* 도움말 줄 = 왼쪽 안내(오류면 오류) · 오른쪽 「쓴 수 / 최대」 */
 .noslog-ui .nl-admin-form__help-row {

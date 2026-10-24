@@ -56,7 +56,7 @@ html[data-theme="light"] {
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--nl-border-default);
+        border-color: var(--nl-border-divider);
     }
 
     /* 앱 전체에 선택된 테마와 기본 폰트를 적용 */
@@ -64,8 +64,8 @@ html[data-theme="light"] {
     body {
         min-height: 100vh;
         /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens.css 와 대조) */
-        background: #111111;
-        color: #dbdbdb;
+        background: #0a0a0a;
+        color: #fafafa;
         font-family: var(--font-sans);
         font-synthesis: none;
     }

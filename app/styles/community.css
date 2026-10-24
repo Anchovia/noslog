@@ -101,9 +101,6 @@
         background-color: var(--nl-interaction-hover);
     }
 }
-.noslog-ui button.nl-vote-row:active {
-    background-color: var(--nl-interaction-selected-pressed);
-}
 .noslog-ui .nl-vote-list__body {
     display: flex;
     flex-direction: column;
@@ -181,7 +178,7 @@
     margin-inline-start: auto;
 }
 .noslog-ui .nl-pattern-form__error {
-    color: var(--nl-feedback-error-text);
+    color: var(--nl-feedback-destructive);
 }
 /* 평가할 수 없을 때 — 목록 흐림 5px(투명도는 그대로) + 가운데 떠 있는 카드(떠 있는 창 규격: overlay 면 · 경계 · 모서리 overlay · 그림자).
    입력 영역 잠금에만 쓴다 (2026-09-17 L2) */
@@ -209,9 +206,9 @@
     max-width: 280px;
     padding: var(--nl-spacing-16) var(--nl-spacing-24);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
         var(--nl-overlay-shadow);
     text-align: center;
 }
@@ -303,7 +300,7 @@
     scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-opinion-row > .nl-avatar:has(> svg) {
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-opinion-row__content {
     display: flex;
@@ -398,14 +395,14 @@
     max-width: calc(100vw - var(--nl-spacing-32));
     padding: var(--nl-spacing-8);
     border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-overlay-shadow);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     z-index: var(--nl-layer-popover);
 }
 /* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
 .noslog-ui .nl-action-menu__item[data-destructive] {
-    color: var(--nl-feedback-error-text);
+    color: var(--nl-feedback-destructive);
 }
 .noslog-ui .nl-action-menu__item {
     display: flex;
@@ -464,13 +461,6 @@
         color: var(--nl-content-default);
     }
 }
-.noslog-ui .nl-opinion-like:is(button, a):active {
-    --nl-state-layer: var(--nl-interaction-selected-pressed);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
-}
 .noslog-ui .nl-opinion-like[data-static] {
     cursor: default;
 }
@@ -515,13 +505,6 @@
             var(--nl-state-layer)
         );
     }
-}
-.noslog-ui .nl-opinion-replies__toggle:active {
-    --nl-state-layer: var(--nl-interaction-selected-pressed);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
 }
 /* 답글 사진 스켈레톤 — 답글 줄 사진과 같은 24(간격 토큰) */
 .noslog-ui .nl-opinion-row[data-reply] > .nl-avatar.nl-skeleton {

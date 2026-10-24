@@ -4,9 +4,9 @@
 
 ## 모양
 
-- 면 `surface/surface` + 1px `border/input` · 모서리 `radius/field` · 높이 L.
-- 올림은 경계만 `border/strong`. 포커스는 [기초값 — 포커스](../foundations.md#포커스) 대로 경계 + 바깥 후광.
-- 글자는 모든 폭 `nl-body`(16/400). 자리표시자는 `content/placeholder`.
+- 면 `surface/input` + 1px `border/input` · 모서리 `radius/field` · 높이 L(shadcn input).
+- 올림 변화는 없다. 포커스는 [기초값 — 포커스](../foundations.md#포커스)의 공용 선.
+- 글자는 모든 폭 `nl-body`(16/400). 자리표시자는 `content/subdued`.
 - 칸 라벨 → 입력 · 값 8. 도움말 · 오류는 칸 아래 `nl-metadata--long`.
 
 ## 칸 안 잉크

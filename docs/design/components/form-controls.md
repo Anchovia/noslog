@@ -4,7 +4,7 @@
 
 ## 체크박스
 
-- 20 · `radius/control` · 테두리 `--nl-stroke-strong` `border/strong` · 체크 선 2.
+- 20 · `radius/control` · 테두리 `--nl-stroke-strong` `border/ring` · 체크 선 2.
 - 저장 버튼이 있는 폼의 켜기 · 끄기에 쓴다. 보이는 라벨 필수.
 
 ## 라디오
@@ -17,8 +17,8 @@
 
 ## 슬라이더
 
-- 높이 24 · 트랙 4 `border/default`(양끝 12 안쪽) · 채운 점 20(누르는 자리 24).
-- 올림 · 끌기 · 포커스에 후광 `--nl-halo-slider`. 올림 변화는 슬라이더에만 있다.
+- 높이 24 · 트랙 4 `border/divider`(양끝 12 안쪽) · 채운 점 20(누르는 자리 24).
+- 올림 · 끌기 변화는 없다. 포커스는 [공용 포커스](../foundations.md#포커스).
 - 아주 작은 척도(0–4 같은)에는 쓰지 않는다 — 숫자 척도.
 
 ## 스위치
@@ -33,9 +33,9 @@
 
 `ScalePicker` — 0~4 같은 짧은 척도. 슬라이더 대신 쓴다.
 
-- 숫자 버튼 한 줄 = 컨트롤 M 정사각 · `radius/field` · 1px `border/default` · 숫자 `nl-control` 흐림.
+- 숫자 버튼 한 줄 = 컨트롤 M 정사각 · `radius/field` · 1px `border/divider` · 숫자 `nl-control` 흐림.
 - 고른 값 = `primary/default` 면 + `on-primary` 600.
-- 값을 고른 줄의 나머지 숫자 = `content/pending` · 1px `border/divider`. 빈 줄은 그대로.
+- 값을 고른 줄의 나머지 숫자 = `content/subdued` · 1px `border/divider`. 빈 줄은 그대로.
 - 사이 8(375 미만 4). 양끝 말 라벨은 두지 않는다.
 - 같은 값을 다시 누르면 해제. 라디오 묶음 동작(방향키 이동 · 고른 값만 탭 순서).
 

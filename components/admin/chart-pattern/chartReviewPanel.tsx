@@ -146,7 +146,7 @@ export default function ChartReviewPanel({
                             className={`h-nl-4 rounded-nl-full ${
                                 index <= stepIndex
                                     ? "bg-nl-primary"
-                                    : "bg-nl-border"
+                                    : "bg-nl-divider"
                             }`}
                         />
                         {t(`contribution.draftStatus.${step}`)}
@@ -234,7 +234,7 @@ export default function ChartReviewPanel({
                                                     action: "resolve",
                                                 })
                                             }
-                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control border-nl-stroke border-nl-border px-nl-8 text-nl-subdued"
+                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control border-nl-stroke border-nl-divider px-nl-8 text-nl-subdued"
                                         >
                                             {t("editor.review.resolve")}
                                         </button>

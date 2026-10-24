@@ -41,7 +41,7 @@ function jacketSource(index: string, background: string | null) {
 
 function JacketBox({ src }: { src: string | null }) {
     return (
-        <div className="flex size-nl-64 shrink-0 items-center justify-center overflow-hidden rounded-nl-field bg-nl-raised">
+        <div className="flex size-nl-64 shrink-0 items-center justify-center overflow-hidden rounded-nl-field bg-nl-surface">
             {src ? (
                 <img src={src} alt="" className="size-full object-cover" />
             ) : (
@@ -169,7 +169,7 @@ export default function MusicJacketForm({
                 onChange={(event) => choose(event.target.files?.[0])}
             />
             {file && preview ? (
-                <div className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8">
+                <div className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-divider p-nl-8">
                     <div className="flex items-center gap-nl-12">
                         <JacketBox src={preview} />
                         <p className="nl-metadata min-w-0 flex-1 break-all text-nl-subdued">

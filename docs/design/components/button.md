@@ -22,7 +22,7 @@
 | 위험   | `feedback/destructive-surface` · `on-destructive` (채운 빨강 하나) | 되돌릴 수 없는 일을 확정하는 버튼         |
 
 - 누르는 것은 면으로 구분한다. 밝은 면(주) › 옅은 면(보조) › 글자만(고스트). 경계는 포커스 때만 그린다.
-- 떠 있는 면(`surface/overlay` — 창 · 아래 시트 · 필터 팝오버 · 뷰어 설정 창) 위의 보조 버튼에는 약한 선 `border/default` 를 더한다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)).
+- 떠 있는 면(`surface/surface` — 창 · 아래 시트 · 필터 팝오버 · 뷰어 설정 창) 위의 보조 버튼에는 약한 선 `border/divider` 를 더한다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)).
 - 위험 버튼은 확인 창 · 시트 안의 마지막(확정) 버튼에만 쓴다. 그 창을 여는 버튼 · 신고 버튼은 보조다. 빨간 테두리 · 빨간 글자 모양은 쓰지 않는다.
 
 ## 크기
@@ -35,7 +35,8 @@
 
 ## 상태
 
-- 올림 · 누름은 다른 누르는 것과 같은 겹침 층(`interaction/hover` · `selected-pressed`).
+- 올림 = shadcn — 주 `primary/hover`, 보조 `surface/control-hover`, 고스트 `interaction/hover`, 위험 `feedback/destructive-hover`. 누름 전용 색은 없다.
+- 비활성 = 불투명도 50%. 올림은 걸리지 않는다.
 - 바쁨 — `ActionButton busy`: 스피너 16 + 진행형 라벨, 다시 누를 수 없다. 비활성처럼 흐리게 하지 않는다.
 - 잠김 — 로그인이 필요한 동작은 `data-locked`. 비활성처럼 보이되 이유를 보여 준다.
 - 복사 성공은 누른 버튼 글자가 2초 「복사됨」 으로 바뀐다. 체크 표시 · 상자 없이 글자만, 알림은 화면 읽기로.

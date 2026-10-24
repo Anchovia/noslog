@@ -257,7 +257,7 @@ export default function NoteInspector() {
             >
                 {selectedNotes.length === 0 ? (
                     <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-nl-24 text-center">
-                        <div className="flex size-nl-48 items-center justify-center rounded-nl-full bg-nl-raised">
+                        <div className="flex size-nl-48 items-center justify-center rounded-nl-full bg-nl-surface">
                             <GitBranch className="nl-icon-small text-nl-subdued" />
                         </div>
                         <p className="nl-emphasis-label mt-nl-12">
@@ -269,7 +269,7 @@ export default function NoteInspector() {
                     </div>
                 ) : selectedNotes.length > 1 ? (
                     <div className="min-h-0 flex-1 overflow-y-auto p-nl-12">
-                        <div className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-12">
+                        <div className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
                             <strong className="nl-body-secondary">
                                 {t("editor.note.multiSelected", {
                                     count: selectedNotes.length.toLocaleString(
@@ -662,7 +662,7 @@ function HandSelector({
                             ? hand === "left"
                                 ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
                                 : "border-red-400/50 bg-red-400/10 text-red-200"
-                            : "border-nl-border text-nl-subdued"
+                            : "border-nl-divider text-nl-subdued"
                     }`}
                 >
                     {t(`editor.hand.${hand}`)}
@@ -685,7 +685,7 @@ function PathPointEditor({
 }) {
     const t = useTranslations();
     return (
-        <div className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-8">
+        <div className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-8">
             <div className="mb-nl-8 flex items-center justify-between">
                 <strong className="nl-metadata">
                     {t("editor.point.title", { index: index + 1 })}

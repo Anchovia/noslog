@@ -138,10 +138,6 @@
         );
     }
 }
-.noslog-ui .nl-announcements__adjacent-link:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
-}
 .noslog-ui .nl-announcement-body {
     display: flex;
     flex-direction: column;
@@ -191,7 +187,7 @@
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-announcement-body a {
-    color: var(--nl-content-interactive);
+    color: var(--nl-content-default);
     text-decoration: underline;
     text-underline-position: under;
 }
@@ -219,7 +215,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-strong);
+    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-ring);
     padding-inline-start: var(--nl-spacing-12);
     color: var(--nl-content-subdued);
 }
@@ -231,7 +227,7 @@
 /* 글 안의 코드(K1) = 옅은 면 + 모서리 4 */
 .noslog-ui .nl-announcement-body code {
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-raised);
+    background: var(--nl-surface-surface);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     font-family: var(--nl-font-family-mono);
     font-size: var(--nl-type-size-14);
@@ -241,9 +237,9 @@
     margin: 0;
     /* 세로 flex 안에서 줄지 않으면 글 전체가 넘친다 — 이 상자만 줄여 놓고 안에서 민다 */
     min-width: 0;
-    border: var(--nl-stroke-default) solid var(--nl-border-subtle);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-field);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-canvas);
     padding: var(--nl-spacing-12);
     overflow-x: auto;
 }
@@ -377,7 +373,7 @@
     width: 100%;
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-field);
     background: none;
     color: var(--nl-content-default);
@@ -385,7 +381,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-poll__option:hover:not(:disabled) {
-        border-color: var(--nl-border-strong);
+        border-color: var(--nl-border-ring);
     }
 }
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
@@ -434,7 +430,7 @@
     display: block;
     height: 100%;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-strong);
+    background: var(--nl-border-ring);
 }
 .noslog-ui .nl-poll__bar i[data-mine] {
     background: var(--nl-content-default);
