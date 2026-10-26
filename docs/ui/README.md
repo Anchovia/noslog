@@ -23,7 +23,7 @@ npm run storybook -- --port 6007
 기존 `npm test`는 Node 기반 단위 테스트를 그대로 실행한다. 브라우저 부품 검사는
 `npm run test:storybook`으로 별도 실행하며 CI에서도 필수 작업으로 실행한다.
 
-Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다. 다른 리포와 비교한 옛 기록은 [보관 문서](../archive/frontend-comparison.md)에 있다.
+Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 
 ## 부품 선택
 
