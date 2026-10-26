@@ -112,6 +112,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 리포지토리로 알 수 있는 사실은 묻지 않고 코드 · 테스트 · 실제 브라우저로 확인한다.
 - 컨텍스트를 작게 둔다. 넓은 조사 · 파일 훑기는 서브에이전트에 맡기고, 작업이 바뀌면 새 세션으로 넘긴다([결정](docs/decisions/2026-10-24-claude-efficiency.md)).
+- Claude Code 는 `.claude/hooks` 가 강제한다. 매 메시지마다 `AGENTS.md` · `docs/ai-check.md` 원문을 파일마다 따로 다시 넣고, 한글이 20% 아래인 마지막 답은 막아 한국어로 다시 쓰게 한다([결정](docs/decisions/2026-10-27-rule-enforcement-hooks.md)).
 - 토큰 · 공용 부품으로만 만든다. 규칙은 [기초값 — 토큰 · 공용 부품으로만](docs/design/foundations.md#토큰--공용-부품으로만). 공통 규칙은 공용 소스(`tokens.css` · `foundation.css` · `components/ui`)에서 고친다.
 - 결정이 나면 같은 작업에서 코드 → 가이드 해당 문서 한 곳 → [결정 파일](docs/decisions/README.md) 하나 → 테스트 기대값을 맞춘다.
 - 바꾼 화면은 [가이드 「확인」](docs/design/README.md#확인)대로 잰다. 시안이 있으면 같은 폭으로 나란히 대조하고 바꾼 동작을 눌러 본다. 실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
