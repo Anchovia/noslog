@@ -68,7 +68,6 @@ export default function AnnouncementDeleteButton({
                     <ActionButton
                         type="button"
                         variant="danger"
-                        destructiveFilled
                         busy={isPending}
                         busyLabel="삭제 중"
                         onClick={handleDelete}

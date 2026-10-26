@@ -83,7 +83,6 @@ export default function EventDeleteButton({
                     </ActionButton>
                     <ActionButton
                         variant="danger"
-                        destructiveFilled
                         busy={busy}
                         busyLabel={t("events.delete.deleting")}
                         onClick={() => void remove()}

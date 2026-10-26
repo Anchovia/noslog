@@ -459,14 +459,11 @@ function ChartCommentRow({
                     </time>
                 </span>
                 {comment.resolved ? (
-                    <span
-                        className="nl-tag nl-tag--status nl-tag--inline"
-                        data-tone="success"
-                    >
+                    <span className="nl-tag nl-tag--status" data-tone="success">
                         {t("contribution.comment.resolved")}
                     </span>
                 ) : (
-                    <span className="nl-tag nl-tag--inline">
+                    <span className="nl-tag">
                         {t(
                             isChartCommentKind(comment.kind)
                                 ? `contribution.comment.kind.${comment.kind}`

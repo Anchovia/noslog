@@ -19,7 +19,7 @@ interface SegmentedControlProps<Value extends string> {
     options: readonly SegmentOption<Value>[];
     /** 세그먼트를 아이콘만으로 그린다 — 라벨은 aria-label·title 로 유지 (Material 3·HIG: 한 컨트롤 안에서 아이콘·텍스트 혼용 금지) */
     iconOnly?: boolean;
-    /** M 단계(폰 36 · 데스크톱 32) — 결과 줄처럼 상자 없는 인라인 자리 */
+    /** 작은 단계(작은 컨트롤 높이) — 결과 줄처럼 상자 없는 인라인 자리 */
     size?: "sm";
     className?: string;
 }

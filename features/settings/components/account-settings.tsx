@@ -192,7 +192,6 @@ export default function AccountSettings({
                                 </Button>
                                 <ActionButton
                                     variant="danger"
-                                    destructiveFilled
                                     type="submit"
                                     form={formId}
                                     busy={busy}

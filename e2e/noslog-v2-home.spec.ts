@@ -106,10 +106,10 @@ for (const locale of ["ko", "ja", "en"]) {
                     1
                 );
                 expect(measured.navigation.x).toBeCloseTo(measured.search.x, 1);
-                // 페이지 제목은 뷰포트 1056 부터 32/40(가이드 「글자」) — 검색 폭(최대 640)과 기준이 다르다
+                // 페이지 제목은 모든 폭 32/40(가이드 「글자」, 2026-10-25)
                 await expect(
                     page.locator(".nl-home-identity .nl-page-title")
-                ).toHaveCSS("font-size", width >= 1056 ? "32px" : "24px");
+                ).toHaveCSS("font-size", "32px");
                 if (columns === 4)
                     expect(measured.navigation.width).toBeLessThanOrEqual(640);
                 const firstRow = measured.tiles.slice(0, columns);
@@ -124,13 +124,11 @@ for (const locale of ["ko", "ja", "en"]) {
                     expect(tile.iconWidth).toBe(20);
                     expect(tile.gap).toBe(8);
                     expect([12, 14]).toContain(tile.textSize);
-                    expect(tile.textWeight).toBe(
-                        tile.textSize === 12 ? "400" : "500"
-                    );
-                    expect(tile.radius).toBe("12px");
+                    expect(tile.textWeight).toBe("400");
+                    expect(tile.radius).toBe("6px");
                     expect(tile.background).toBe(
                         theme === "dark"
-                            ? "rgb(23, 23, 23)"
+                            ? "rgb(10, 10, 10)"
                             : "rgb(255, 255, 255)"
                     );
                     expect(tile.height).toBe(

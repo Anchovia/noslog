@@ -44,7 +44,7 @@
 }
 .noslog-ui .nl-ranking-head {
     padding-bottom: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-ranking-head__rank,
 .noslog-ui .nl-player-row__rank {
@@ -62,8 +62,7 @@
 }
 .noslog-ui .nl-player-row {
     height: 48px;
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
-    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-player-row__rank {
     white-space: nowrap;
@@ -136,7 +135,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -148,9 +147,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-player-row__value {
     margin-left: auto;
@@ -172,7 +168,7 @@
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
     background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 /* 곡 상세 채보 랭킹(ranking.css)의 로그인 줄 — 이 페이지와 무관하지만 이 규칙에 기대고 있어 이전 그대로 둔다 */
 .noslog-ui .nl-ranking-login {

@@ -4,10 +4,11 @@
 
 ## 모양
 
-- 면 `surface/input` + 1px `border/input` · 모서리 `radius/field` · 높이 L(shadcn input).
-- 올림 변화는 없다. 포커스는 [기초값 — 포커스](../foundations.md#포커스)의 공용 선.
-- 글자는 모든 폭 `nl-body`(16/400). 자리표시자는 `content/subdued`.
-- 칸 라벨 → 입력 · 값 8. 도움말 · 오류는 칸 아래 `nl-metadata--long`.
+- 입력 · 셀렉트 · 검색 · 단위 입력 모두 면 `surface/input` + 1px 실제 테두리 `border/input` · 모서리 `radius/control` · 높이 L.
+- 올리면 테두리가 `border/input-hover` 로 밝아진다. 포커스는 흰 2 선 한 줄을 테두리에 붙여(간격 0) 그린다([기초값 — 포커스](../foundations.md#포커스)).
+- 글자는 모든 폭 `nl-body`(14/400). 자리표시자 · 입력 아이콘은 `content/tertiary`.
+- 칸 라벨은 `control`(14/400) · `content/subdued`. 칸 라벨 → 입력 · 값 4. 도움말 · 오류는 칸 아래 `nl-metadata--long`.
+- 칸이 둘 이상 이어지면 칸 사이는 24 다. 공용 규칙이 맞추므로 화면 CSS 가 덮어쓰지 않는다.
 
 ## 칸 안 잉크
 
@@ -21,12 +22,12 @@
 | 범위 셀렉트 라벨 | 12 (바깥 4 + 버튼 8) · 꺾쇠 16                    |
 | 지우기 ×         | 20, 오른쪽 12 (중심 22 = 셀렉트 꺾쇠와 같은 자리) |
 
-검색창 안 범위 셀렉트 · 지우기는 4px 안쪽 층이다. 면만 M 정사각(모서리 `radius/control`)이고 잉크는 위 규칙을 따른다. 누르는 높이는 검색창 그대로다.
+검색창 안 범위 셀렉트 · 지우기는 4px 안쪽 층이다. 면만 M 정사각(모서리 `radius/small`)이고 잉크는 위 규칙을 따른다. 누르는 높이는 검색창 그대로다.
 
 ## 변형
 
 - 폼 `Select` 는 Radix(`value` · `onValueChange` · `options`, react-hook-form 은 `Controller`). 펼친 목록은 [목록 · 메뉴](./menu.md).
-- `CompactSelect` — 줄 안 작은 셀렉트. 크기는 버튼과 같은 L · M(`size="sm"`), 모양은 보조 버튼과 같은 옅은 면 · 선 없음. `outlined` 는 설정 줄 오른쪽(화면 설정 · 국가/지역)에서만.
+- `CompactSelect` — 줄 안 작은 셀렉트. 크기는 버튼과 같은 L · M(`size="sm"`)이고 기본은 면이 없다. `outlined` 는 보조 버튼과 같은 면 · 선 없음이고 설정 줄 오른쪽(화면 설정 · 국가/지역)에서만 쓴다.
 - 떠 있는 검색 `SearchField floating` — 지도 위 검색칸. 떠 있는 창 경계 + 그림자.
 - 단위 붙은 입력칸 `UnitInput` — 입력칸과 같은 상자 안 오른쪽에 단위 글자(`nl-body-secondary` 흐림). 포커스는 상자 전체.
 - 숫자 스테퍼는 [폼 컨트롤](./form-controls.md#숫자-스테퍼).
@@ -42,6 +43,10 @@
 
 ## 바뀐 기록
 
+- [2026-10-27 가이드 고를 곳 — `CompactSelect` 기본 · outlined · 칸 라벨 400](../../decisions/2026-10-27-guide-choices.md)
+- [2026-10-26 Geist 색 · 모서리 · 포커스 — 라벨 회색 · 자리표시자 · 올림 경계 · 포커스 한 줄](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 1px 실제 테두리 · 포커스 테두리 + 링 · 글자 14 · 라벨 4 · 칸 사이 24](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-10-24 토큰 정리 — 무채색 shadcn/ui · 포커스 한 겹 · 덧붙인 접근성 정리](../../decisions/2026-10-24-token-cleanup.md)
 - [2026-10-21 자리표시자 = 대기 글자 값 · 떠 있는 검색](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-21)
 - [2026-09-18 피드백 창 — 보내기 늘 켬 · 자리표시자 없음 · 파일 줄](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-18)
 - [2026-09-16 칸 안 잉크 12 · 8](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16)

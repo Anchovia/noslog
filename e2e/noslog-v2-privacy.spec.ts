@@ -96,11 +96,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator(".nl-privacy-contents__compact")
         ).not.toHaveAttribute("open", "");
+        // 머리글에 가리지 않음 — 전역 scroll-padding 이 헤더 높이만큼 비운다(2026-10-27 가이드 고를 곳 27)
+        const headerBottom = await page
+            .locator(".nl-header")
+            .evaluate((el) => el.getBoundingClientRect().bottom);
         expect(
             await page
                 .locator("#privacy-storage")
                 .evaluate((el) => el.getBoundingClientRect().top)
-        ).toBeGreaterThanOrEqual(60);
+        ).toBeGreaterThanOrEqual(headerBottom);
         await expect(
             page.getByRole("link", {
                 name: "sodacandy77@naver.com",

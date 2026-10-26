@@ -4,8 +4,8 @@
 
 ## 모양
 
-- 칸 = 값(`nl-component-title` 조합 16/24 · 600) 위, 라벨(`nl-metadata` 흐림) 아래.
-- 칸 면 `surface/surface` · 칸 안쪽 위아래 12 · 좌우 8 · 칸 최소 64 · 칸 사이 1px `border/divider`(gap + divider 바탕이라 좁아서 줄바꿈해도 선이 맞음) · 상자 모서리 `radius/container`.
+- 칸 = 값(`nl-entity-title` 조합 16/24 · 600) 위, 라벨(`nl-metadata` 흐림) 아래.
+- 칸 면 `surface/surface` · 칸 안쪽 위아래 12 · 좌우 8 · 칸 최소 64 · 칸 사이 1px `border/divider`(gap + divider 바탕이라 좁아서 줄바꿈해도 선이 맞음) · 상자 모서리 `radius/control`.
 - 큰 숫자(32) 대신 이것을 쓴다. 새 글자 단계를 만들지 않는다.
 - 넓은 폭 세로 목록 변형 `nl-stat-strip--wide-list` — 칸 = 컨트롤 높이 · 라벨 왼쪽 · 값 오른쪽 · 안쪽 12.
 
@@ -26,6 +26,7 @@
 | 등급         | S 노랑 · P 분홍 · A+ · A · B 는 별칭 `--nl-score-grade-*`(A+ = `difficulty/text-expert` · A = `difficulty/expert` · B = `local-data/single`, 막대 색에만)                                           |
 | 최대 콤보    | FC(fc_type 2 이상 · Pianist)면 `achievement/full-combo` 초록                                                                                                                                        |
 
+- 단계가 이어지는 값(서열 값)은 `tone` 대신 항목 `color` 로 값 글자색을 직접 준다.
 - 같은 Grd · 레이팅 숫자는 어디서나 같은 색이다(보이는 숫자 기준). 프로필 머리 수치 상자 · 유저 랭킹 값 · 성장 추이 요약 줄(시작 · 현재) · 공유 카드(이미지라 `STAT_TONE_DARK_HEX` 다크 값, 테스트가 토큰과 대조).
 
 ## 아래 동작 줄
@@ -34,11 +35,14 @@
 
 - 칸 = 같은 폭 · 사이 1px 선(수치 띠와 같은 gap + divider) · 컨트롤 L 높이 · `surface/surface` 면.
 - 글자 `nl-emphasis-label` `content/default` + 끝 › 16 `content/subdued`(사이 4) — › 가 누를 곳 표시.
-- 올림 `interaction/hover` · 누름 `selected-pressed`.
+- 올림 `interaction/row`.
 - 없는 동작도 칸은 두고 칸 전체 불투명도 50%(`--nl-disabled-opacity`), 반응 없음.
 
 ## 바뀐 기록
 
+- [2026-10-26 Geist 색 · 모서리 · 포커스](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 모서리 4 · 값 글자 조합 이름](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-10-24 토큰 정리 — 무채색 shadcn/ui · 포커스 한 겹 · 덧붙인 접근성 정리](../../decisions/2026-10-24-token-cleanup.md)
 - [2026-10-01 수치 띠 칸 위아래 12](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
 - [2026-09-26 등급 색 A+ · A · B](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-26)
 - [2026-09-19 Grd 구간 색](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19)

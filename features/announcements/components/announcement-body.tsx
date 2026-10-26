@@ -199,7 +199,7 @@ export default function AnnouncementBody({
                             <table>{children}</table>
                         </div>
                     ),
-                    // 본문 폭 · 모서리 8 · 원래 비율. 설명([ ] 글)은 화면 읽기용으로만 (시안 I1)
+                    // 본문 폭 · 모서리 4 · 원래 비율. 설명([ ] 글)은 화면 읽기용으로만 (시안 I1)
                     img: ({ src, alt }) => {
                         const image =
                             typeof src === "string"

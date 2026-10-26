@@ -269,7 +269,7 @@ export default function NoteInspector() {
                     </div>
                 ) : selectedNotes.length > 1 ? (
                     <div className="min-h-0 flex-1 overflow-y-auto p-nl-12">
-                        <div className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
+                        <div className="rounded-nl-control border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
                             <strong className="nl-body-secondary">
                                 {t("editor.note.multiSelected", {
                                     count: selectedNotes.length.toLocaleString(
@@ -657,7 +657,7 @@ function HandSelector({
                     key={hand}
                     type="button"
                     onClick={() => onChange(hand)}
-                    className={`nl-metadata min-h-nl-control-compact rounded-nl-field border-nl-stroke ${
+                    className={`nl-metadata min-h-nl-control-compact rounded-nl-control border-nl-stroke ${
                         value === hand
                             ? hand === "left"
                                 ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
@@ -685,7 +685,7 @@ function PathPointEditor({
 }) {
     const t = useTranslations();
     return (
-        <div className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-8">
+        <div className="rounded-nl-control border-nl-stroke border-nl-divider bg-nl-canvas p-nl-8">
             <div className="mb-nl-8 flex items-center justify-between">
                 <strong className="nl-metadata">
                     {t("editor.point.title", { index: index + 1 })}

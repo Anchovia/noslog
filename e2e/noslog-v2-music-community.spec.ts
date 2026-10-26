@@ -576,9 +576,9 @@ for (const locale of ["ko", "ja", "en"])
                         )
                     )
                     .toBe(true);
-                // 숫자 버튼 = 컨트롤 M 정사각(36 · 1056 이상 32)
+                // 숫자 버튼 = 작은 컨트롤 정사각(32 · 1056 이상 24)
                 const option = page.locator(".nl-scale-picker__option").first();
-                const size = width >= 1056 ? "32px" : "36px";
+                const size = width >= 1056 ? "24px" : "32px";
                 await expect(option).toHaveCSS("height", size);
                 await expect(option).toHaveCSS("width", size);
                 if (width === 320 || width === 1280) {

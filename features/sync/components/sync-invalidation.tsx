@@ -51,11 +51,7 @@ export default function SyncInvalidation({
             title={t("sync.invalidate")}
             description={t("sync.invalidateHelp")}
             variant="confirm"
-            trigger={
-                <Button variant="danger" destructiveFilled>
-                    {t("sync.invalidate")}
-                </Button>
-            }
+            trigger={<Button variant="danger">{t("sync.invalidate")}</Button>}
             onOpenAutoFocus={(event) => {
                 event.preventDefault();
                 cancel.current?.focus();
@@ -82,7 +78,6 @@ export default function SyncInvalidation({
                     </button>
                     <ActionButton
                         variant="danger"
-                        destructiveFilled
                         busy={pending}
                         busyLabel={t("sync.regenerating")}
                         onClick={invalidate}

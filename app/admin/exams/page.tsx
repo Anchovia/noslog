@@ -6,12 +6,6 @@ import Badge from "@/components/ui/badge";
 import { foundationButtonClass } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
 
-function getModeVariant(mode: string) {
-    if (mode === "basic") return "basic" as const;
-    if (mode === "recital") return "recital" as const;
-    return "default" as const;
-}
-
 export default async function AdminExamsPage({
     searchParams,
 }: {
@@ -107,7 +101,7 @@ export default async function AdminExamsPage({
             </form>
 
             {exams.length > 0 ? (
-                <section className="overflow-hidden rounded-nl-container bg-nl-surface">
+                <section className="overflow-hidden rounded-nl-control bg-nl-surface">
                     {exams.map((exam) => (
                         <Link
                             key={exam.id}
@@ -116,7 +110,7 @@ export default async function AdminExamsPage({
                         >
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-nl-8">
-                                    <Badge variant={getModeVariant(exam.mode)}>
+                                    <Badge>
                                         {exam.mode === "event"
                                             ? "Event"
                                             : `${exam.mode === "basic" ? "Basic" : "Recital"} ${exam.grade}급`}
@@ -125,7 +119,7 @@ export default async function AdminExamsPage({
                                         variant={
                                             exam.status === "published"
                                                 ? "success"
-                                                : "outline"
+                                                : "default"
                                         }
                                     >
                                         {exam.status === "published"
@@ -150,7 +144,7 @@ export default async function AdminExamsPage({
                     ))}
                 </section>
             ) : (
-                <div className="nl-metadata rounded-nl-container bg-nl-surface px-nl-24 py-nl-64 text-center text-nl-subdued">
+                <div className="nl-metadata rounded-nl-control bg-nl-surface px-nl-24 py-nl-64 text-center text-nl-subdued">
                     조건에 맞는 검정이 없습니다.
                 </div>
             )}

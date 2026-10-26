@@ -41,9 +41,8 @@
     --spacing-nl-control-compact: var(--nl-control-height-compact);
     --spacing-nl-header: var(--nl-header-height);
     --spacing-nl-stroke: var(--nl-stroke-default);
+    --radius-nl-small: var(--nl-radius-small);
     --radius-nl-control: var(--nl-radius-control);
-    --radius-nl-field: var(--nl-radius-field);
-    --radius-nl-container: var(--nl-radius-container);
     --radius-nl-overlay: var(--nl-radius-overlay);
     --radius-nl-full: var(--nl-radius-full);
     --font-nl-sans: var(--nl-font-family);

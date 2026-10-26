@@ -34,9 +34,11 @@ export default function PrivacyContents({
         function update() {
             if (anchor.current?.scrollY === window.scrollY) return;
             anchor.current = null;
-            const readingTop = targets[0]
-                ? parseFloat(getComputedStyle(targets[0]).scrollMarginTop) + 1
-                : 0;
+            // 읽는 선 = 헤더에 가리지 않는 첫 줄(전역 scroll-padding-top) 바로 아래
+            const readingTop =
+                (parseFloat(
+                    getComputedStyle(document.documentElement).scrollPaddingTop
+                ) || 0) + 1;
             const current =
                 targets.findLast(
                     (target) => target.getBoundingClientRect().top <= readingTop

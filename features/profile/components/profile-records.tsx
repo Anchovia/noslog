@@ -89,7 +89,6 @@ export default function ProfileRecords({
                     }))}
                 />
                 <SortMenu
-                    variant="ghost"
                     size="sm"
                     label={t("discovery.sortLabel")}
                     value={sort}

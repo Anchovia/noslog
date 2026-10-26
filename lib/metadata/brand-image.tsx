@@ -11,9 +11,9 @@ import {
  * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens.css 를 읽어 확인한다
  */
 export const BRAND_IMAGE_DARK_HEX = {
-    background: "#0a0a0a", // surface-canvas
-    surface: "#171717", // surface-surface
-    border: "rgba(255, 255, 255, 0.1)", // border-divider
+    background: "#000000", // surface-canvas
+    surface: "#0a0a0a", // surface-surface
+    border: "#1f1f1f", // border-divider
     primary: "#dbdbdb", // identity-mark (워드마크 · N 로고)
     secondary: "#a1a1a1", // content-subdued
 } as const;

@@ -6,16 +6,16 @@
     gap: var(--nl-spacing-8);
     height: var(--nl-control-height);
     min-width: 0;
-    padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-field);
+    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    /* 입력칸과 같은 실제 테두리(그림자로 그리지 않는다) */
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-input);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
 }
-/* 떠 있는 검색(지도 위) — 떠 있는 창 경계 + 그림자(2026-10-21 전면 대조 ③). 포커스는 공용 선 */
+/* 떠 있는 검색(지도 위) — 떠 있는 창 경계 + 그림자(2026-10-21 전면 대조 ③). 포커스는 공용 규칙 */
 .noslog-ui .nl-search--floating {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
-        var(--nl-overlay-shadow);
+    border-color: var(--nl-border-elevated);
+    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-search__divider {
     width: var(--nl-stroke-default);
@@ -40,13 +40,13 @@
 }
 /* 앞 범위 셀렉트: 바깥 4 + 버튼 안쪽 8 = 라벨 12. 면은 4 에서 시작 */
 .noslog-ui .nl-search:has(> .nl-compact-select:first-child) {
-    padding-left: var(--nl-spacing-4);
+    padding-left: calc(var(--nl-spacing-4) - var(--nl-stroke-default));
 }
-/* 지우기: 면 M 정사각(폰 36 · 데스크톱 32) · 누르는 높이는 검색창 그대로.
+/* 지우기: 면 = 작은 컨트롤 정사각 · 누르는 높이는 검색창 그대로.
    오른쪽 바깥 여백 = 12 − (면 − 아이콘 20) / 2 → 아이콘 오른쪽 끝이 12, 중심 22 = 셀렉트 꺾쇠와 같은 자리 */
 .noslog-ui .nl-search:has(> .nl-search__clear) {
     padding-right: calc(
-        var(--nl-spacing-12) -
+        var(--nl-spacing-12) - var(--nl-stroke-default) -
             (var(--nl-control-height-compact) - var(--nl-icon-medium)) / 2
     );
 }
@@ -69,9 +69,9 @@
 .noslog-ui .nl-search__clear::before {
     content: "";
     position: absolute;
-    inset: var(--nl-spacing-4) 0;
+    inset: calc(var(--nl-spacing-4) - var(--nl-stroke-default)) 0;
     z-index: calc(var(--nl-layer-above) * -1);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
 }
 @media (hover: hover) {
     .noslog-ui .nl-search > .nl-compact-select:hover {
@@ -97,13 +97,14 @@
     align-items: center;
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-4) var(--nl-spacing-8);
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     flex-shrink: 0;
     white-space: nowrap;
 }
 /* M 크기(size="sm") — 한 줄이 M 인 결과 줄 등. 같은 줄 한 단계 규칙 */
 .noslog-ui .nl-compact-select--compact {
     min-height: var(--nl-control-height-compact);
+    padding-block: 0;
 }
 .noslog-ui .nl-compact-select svg {
     width: var(--nl-icon-small);
@@ -121,18 +122,31 @@
 .noslog-ui .nl-compact-select:disabled {
     opacity: var(--nl-disabled-opacity);
 }
-/* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양 — 패널 overlay · 경계 border/overlay · 행 40 · 행 사이 4
+/* 상자 있는 CompactSelect = 보조 버튼과 같은 면 · 선 없음 */
+.noslog-ui .nl-compact-select--outlined {
+    gap: var(--nl-spacing-8);
+    padding-inline: var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-regular);
+}
+@media (hover: hover) {
+    /* 올림 = 보조 버튼과 같은 secondary/80 */
+    .noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
+        background: var(--nl-surface-control-hover);
+    }
+}
+.noslog-ui .nl-compact-select--outlined svg {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+}
+/* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양(판 · 항목 값은 foundation.css 「메뉴 한 모양」) · 행 사이 4
    선택 = 고른 면(surface/control) + 600 + 오른쪽 체크 16 · 마우스 위치 = hover 면 · 키보드 위치 = 흰 1px (2026-09-14 M2) */
 .noslog-ui .nl-select-menu {
-    z-index: var(--nl-layer-select);
     width: 240px;
     max-height: var(--radix-select-content-available-height);
     max-width: calc(100vw - var(--nl-spacing-32));
-    padding: var(--nl-spacing-8);
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
-    box-shadow: var(--nl-overlay-shadow);
 }
 /* 폼 셀렉트 목록은 트리거 폭이 최소 폭 */
 .noslog-ui .nl-select-menu--field {
@@ -144,15 +158,11 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
-/* 메뉴 · 목록 행 = 컨트롤 높이(폰 44 · 데스크톱 40) — 부품 결정 ⑥ */
 .noslog-ui .nl-select-option {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
     cursor: default;
 }
 .noslog-ui .nl-select-option svg {
@@ -161,7 +171,7 @@
     flex-shrink: 0;
 }
 .noslog-ui .nl-select-option[data-highlighted] {
-    --nl-state-layer: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-menu);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -172,7 +182,7 @@
     outline: none;
 }
 .noslog-ui .nl-select-option[data-state="checked"] {
-    --nl-state-layer: var(--nl-surface-control);
+    --nl-state-layer: var(--nl-interaction-menu);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)

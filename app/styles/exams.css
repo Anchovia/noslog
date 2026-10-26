@@ -1,6 +1,6 @@
 .noslog-ui .nl-exams {
     display: grid;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
     min-width: 0;
     overflow-wrap: anywhere;
@@ -11,9 +11,9 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
-    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-section-gap));
 }
-/* 구역 사이 · 구역 제목 → 내용 = 구역 간격 토큰(1055 이하 32 · 12, 1056 이상 48 · 16 — 2026-10-01 D1) */
+/* 구역 사이 · 구역 제목 → 내용 = 구역 간격 토큰(모든 폭 32 · 제목 → 내용 1055 이하 12, 1056 이상 16) */
 .noslog-ui .nl-exams__content,
 .noslog-ui .nl-exam-navigation,
 .noslog-ui .nl-exams__personal {
@@ -91,35 +91,33 @@
 /* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
    오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
-    background: var(--nl-surface-surface);
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
-    z-index: var(--nl-layer-popover);
     width: var(--radix-select-trigger-width);
     max-height: var(--radix-select-content-available-height);
     overflow: auto;
-    padding: var(--nl-spacing-8);
 }
 .noslog-ui.nl-exam-select__popup [data-radix-select-viewport] {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-exam-select__option,
 .noslog-ui .nl-exam-rail button {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-12);
     min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    padding: 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
 }
+.noslog-ui .nl-exam-select__option {
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    text-align: start;
+}
 .noslog-ui .nl-exam-select__option[data-highlighted] {
-    --nl-state-layer: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-menu);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -186,9 +184,9 @@
 .noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
     color: var(--nl-feedback-destructive);
 }
-/* 여유 색(2026-09-22 M2, 사용자) — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
+/* 여유 색 — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. 상태라 표시색만: + = 성공 초록 · − = 알림 파랑. 부호 · ✓/✗ 는 그대로 */
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
-    color: var(--nl-local-data-slow);
+    color: var(--nl-feedback-success-marker);
 }
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="behind"] {
     color: var(--nl-feedback-info-marker);
@@ -200,13 +198,13 @@
     padding-inline-end: var(--nl-spacing-16);
     width: 100%;
     min-height: var(--nl-exam-jacket-size);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     text-align: start;
 }
 @media (hover: hover) {
     .noslog-ui .nl-exam-stage__row:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -217,7 +215,7 @@
     width: var(--nl-exam-jacket-size);
     height: var(--nl-exam-jacket-size);
     flex-shrink: 0;
-    border-radius: var(--nl-radius-container) 0 0 var(--nl-radius-container);
+    border-radius: var(--nl-radius-control) 0 0 var(--nl-radius-control);
 }
 .noslog-ui .nl-exam-stage__identity {
     flex: 1;
@@ -265,14 +263,14 @@
     text-align: end;
 }
 /* 합격까지(2026-09-22 P2-a) — 상자 surface · 안쪽 16 · 사이 12.
-   막대 = 트랙 8(모서리 4 · raised) 위에 곡별 베스트 조각(차트 범주 색 1 · 2 · 3, 조각 사이 2 틈),
+   막대 = 공용 진행 막대 트랙(8 · 모서리 4 · divider) 위에 곡별 베스트 조각(차트 범주 색 1 · 2 · 3, 조각 사이 2 틈),
    합격선 눈금 = 2 × 16 기본 글자색, 아래 눈금 이름 · 값, 범례 「색 · 곡 · 점수」 */
 .noslog-ui .nl-exam-practice {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     min-width: 0;
 }
@@ -292,8 +290,8 @@
     position: absolute;
     inset: 0;
     overflow: hidden;
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-exam-progress__fill {
     position: absolute;
@@ -410,10 +408,6 @@
         grid-row: 1 / 3;
         gap: var(--nl-spacing-16);
     }
-    /* 레일 226 안 3세그먼트(Basic·Recital·Event) — 항목 인셋 16 이면 Recital 이 줄바꿈되어 8 로 */
-    .noslog-ui .nl-exam-navigation > .nl-segments .nl-segments__item {
-        padding-inline: var(--nl-spacing-8);
-    }
     .noslog-ui .nl-exams__content {
         grid-column: 2;
         grid-row: 2;
@@ -426,7 +420,7 @@
         flex-direction: column;
         gap: var(--nl-spacing-4);
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-container);
+        border-radius: var(--nl-radius-control);
         padding: var(--nl-spacing-8);
     }
     .noslog-ui .nl-exams__personal {
@@ -446,7 +440,7 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
-/* 합격 인증 C2(2026-09-22) — 1055 이하는 페이지 구역(제목 20 → 내용 12). 1056 이상 두 열에서는 옆 「합격까지」 상자와 같은 상자라
+/* 합격 인증 — 1055 이하는 페이지 구역(구역 제목 → 내용 12). 1056 이상 두 열에서는 옆 「합격까지」 상자와 같은 상자라
    제목도 상자 제목 16 → 내용 8(2026-10-01 D6 — 가이드 「상자 안 제목은 component-title」, 「합격까지」 와 같게) */
 .noslog-ui .nl-exam-proof {
     overflow-wrap: anywhere;
@@ -454,7 +448,7 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-exam-proof {
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-container);
+        border-radius: var(--nl-radius-control);
         padding: var(--nl-spacing-16);
     }
     .noslog-ui .nl-exam-proof > h3 {
@@ -488,7 +482,7 @@
     width: 100%;
     max-height: 360px;
     object-fit: contain;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
 }
 .noslog-ui .nl-exam-proof__secondary {
     display: grid;

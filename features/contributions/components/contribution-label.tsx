@@ -27,7 +27,7 @@ export default function ContributionLabel({
                 title={t("contribution.label.operator")}
                 description={t("contribution.label.operatorHelp")}
             >
-                <span className="nl-tag nl-tag--inline">
+                <span className="nl-tag">
                     {t("contribution.label.operator")}
                 </span>
             </TermHelp>
@@ -52,7 +52,7 @@ export default function ContributionLabel({
                       })
             }
         >
-            <span className="nl-tag nl-tag--inline">
+            <span className="nl-tag">
                 <span className="nl-contribution-label__prefix">
                     {t("contribution.label.prefix")}
                 </span>

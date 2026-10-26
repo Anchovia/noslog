@@ -4,7 +4,7 @@ const viewBox = `${WORDMARK_VIEWBOX.x} ${WORDMARK_VIEWBOX.y} ${WORDMARK_VIEWBOX.
 
 /**
  * NosLog 워드마크(2026-10-14) — 헤더 · 홈 · 로그인 · 복구 화면의 글자 「NosLog」 자리.
- * 모양은 캐시되는 파일 하나를 불러 쓰고, 색은 로고 색(identity-mark), 높이는 그 자리 글자 크기 × 17/16(layout.css `nl-logo`).
+ * 모양은 캐시되는 파일 하나를 불러 쓰고, 색은 감싼 자리가 정하고(헤더는 content/default), 높이는 그 자리 글자 크기 × 17/16(layout.css `nl-logo`).
  * 감싼 링크에 이미 이름(aria-label)이 있으면 `decorative` 로 읽지 않게 한다
  */
 export default function Wordmark({

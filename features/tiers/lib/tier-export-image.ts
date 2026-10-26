@@ -216,8 +216,8 @@ export async function drawTierImage(input: TierExportInput) {
 
         const padding = space(32);
         const gap = space(8);
-        const radius = tokens.px("--nl-radius-container");
-        const plateRadius = tokens.px("--nl-radius-control");
+        const radius = tokens.px("--nl-radius-control");
+        const plateRadius = tokens.px("--nl-radius-small");
         const titleFont = font(size(32), weight("bold"));
         const subtitleFont = font(size(14), weight("regular"));
         const bandFont = font(size(20), weight("bold"));

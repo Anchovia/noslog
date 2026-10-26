@@ -29,7 +29,7 @@ function draftStatusLabel(status: DraftStatus) {
 
 function tabClass(active: boolean) {
     return (
-        "rounded-nl-field px-nl-12 py-nl-8 nl-emphasis-label  transition-colors duration-nl-state " +
+        "rounded-nl-control px-nl-12 py-nl-8 nl-emphasis-label  transition-colors duration-nl-state " +
         (active
             ? "bg-nl-primary text-nl-on-primary"
             : "bg-nl-surface text-nl-subdued nl-hover-layer")
@@ -118,7 +118,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
                     reviewable={status === "pending"}
                 />
             ) : (
-                <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                     해당하는 제안이 없습니다.
                 </p>
             )}
@@ -145,7 +145,7 @@ async function ChartDrafts({ status: raw }: { status?: string }) {
             {drafts.length ? (
                 <ChartDraftReviewList drafts={drafts} />
             ) : (
-                <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                     해당하는 채보 초안이 없습니다.
                 </p>
             )}

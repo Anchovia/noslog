@@ -135,7 +135,7 @@
     width: 24px;
     height: 24px;
     transform: translate(-50%, -50%);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     cursor: default;
 }
 /* 툴팁 속 선 이름 = 기본 글자색 + 앞에 그 선의 색 점 8(2026-10-15 — 선 색 글자는 툴팁 면 위 대비 4.5 미달,
@@ -165,7 +165,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
     position: absolute;
     width: max-content;
@@ -180,8 +180,12 @@
 .noslog-ui .nl-chart-table th,
 .noslog-ui .nl-chart-table td {
     padding-block: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-default);
     text-align: start;
+}
+/* 표 머리 = 보조 글자(Geist gray-900) */
+.noslog-ui .nl-chart-table thead th {
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-chart-table tbody th {
     font-weight: var(--nl-type-weight-regular);

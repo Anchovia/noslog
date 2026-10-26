@@ -28,7 +28,7 @@ export async function expectFormContract(
     input: HTMLElement,
     expectations: { height?: string } = {}
 ) {
-    await waitFor(() => expect(getComputedStyle(input).fontSize).toBe("16px"));
+    await waitFor(() => expect(getComputedStyle(input).fontSize).toBe("14px"));
     if (expectations.height)
         expect(getComputedStyle(input).height).toBe(expectations.height);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(

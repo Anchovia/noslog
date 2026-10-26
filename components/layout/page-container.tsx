@@ -29,7 +29,7 @@ export function PageHeading({
             <div className="nl-page-heading__copy">
                 <h1 className="nl-page-title">{title}</h1>
                 {description ? (
-                    <p className="nl-body-secondary nl-muted">{description}</p>
+                    <p className="nl-metadata nl-muted">{description}</p>
                 ) : null}
             </div>
             {action}

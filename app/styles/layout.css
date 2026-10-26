@@ -98,12 +98,17 @@
     z-index: var(--nl-layer-header);
     height: var(--nl-header-height);
     flex-shrink: 0;
-    background: var(--nl-surface-surface);
+    /* 헤더 = 바탕 면 + 아래 구분선. 가운데 띠(__bar)도 바탕 면 */
+    background: var(--nl-surface-canvas);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
 }
 .noslog-ui .nl-header__interaction {
     position: relative;
+}
+/* 앵커 · 포커스 이동이 sticky 헤더에 가리지 않게 — 스크롤하는 요소가 html 이라 전역 한 곳에 둔다 */
+html:has(.noslog-ui .nl-header) {
+    scroll-padding-top: var(--nl-header-height);
 }
 /* ⑫ 헤더 숨김 — 나타날 때 감속 · 숨을 때 가속 */
 .noslog-ui .nl-header {
@@ -123,10 +128,10 @@
     padding: var(--nl-spacing-8) var(--nl-layout-margin);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
-    background: var(--nl-surface-surface);
+    background: var(--nl-surface-canvas);
 }
 .noslog-ui .nl-wordmark {
-    color: var(--nl-identity-mark);
+    color: var(--nl-content-default);
     flex-shrink: 0;
 }
 /* NosLog 아이콘(2026-10-15 B) — 채운 원 = 로고 색, 고양이 = 바탕색. 크기는 감싼 칸이 정한다 */
@@ -150,14 +155,14 @@
     gap: var(--nl-spacing-8);
     align-items: center;
 }
-/* 헤더 오른쪽 프로필 · 로그인 · ≡ = 컨트롤 높이(폰 · 중간 폭 44, 1056 이상 40 — 같은 줄 메뉴와 한 단계, 2026-10-01 D7) */
+/* 헤더 오른쪽 프로필 · 로그인 · ≡ = 컨트롤 높이(같은 줄 메뉴와 한 단계, 2026-10-01 D7) */
 .noslog-ui .nl-account {
     display: flex;
     width: var(--nl-control-height);
     height: var(--nl-control-height);
     border-radius: var(--nl-radius-full);
 }
-/* 사진은 칸을 채운다 — 1056 이상 40 에서 44 로 넘치지 않게(2026-10-15 토큰 점검 A) */
+/* 사진은 칸을 채운다 — 컨트롤 높이가 바뀌어도 넘치지 않게(2026-10-15 토큰 점검 A) */
 .noslog-ui .nl-account > .nl-avatar {
     width: 100%;
     height: 100%;
@@ -168,7 +173,7 @@
     align-items: center;
     justify-content: center;
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-nav-trigger {
     display: flex;
@@ -177,7 +182,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-nav-trigger > svg {
     width: var(--nl-icon-large);
@@ -197,7 +202,7 @@
 .noslog-ui .nl-nav-scrim {
     position: fixed;
     inset: var(--nl-header-height) 0 0;
-    background: var(--nl-surface-scrim);
+    background: var(--nl-surface-nav-scrim);
 }
 .noslog-ui .nl-destinations {
     position: absolute;
@@ -209,12 +214,13 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-8);
+    /* 폰은 헤더 바로 아래에 붙으므로 위 모서리 · 위 선이 없다 */
     border-radius: 0 0 var(--nl-radius-overlay) var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     box-shadow:
-        inset var(--nl-stroke-default) 0 var(--nl-border-divider),
-        inset calc(var(--nl-stroke-default) * -1) 0 var(--nl-border-divider),
-        inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-divider),
+        inset var(--nl-stroke-default) 0 var(--nl-border-elevated),
+        inset calc(var(--nl-stroke-default) * -1) 0 var(--nl-border-elevated),
+        inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
     max-height: calc(100dvh - var(--nl-header-height) - var(--nl-spacing-16));
     overflow-y: auto;
@@ -231,7 +237,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-destination:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-menu);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -239,11 +245,6 @@
     }
 }
 .noslog-ui .nl-destination[aria-current="page"] {
-    --nl-state-layer: var(--nl-surface-control);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-destinations__divider {
@@ -303,16 +304,7 @@
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
     }
 }
-/* 1056 이상 좌우 여백 32 — 컨테이너(1200)에 못 미치는 1056–1263 에서만 보인다 */
-@media (min-width: 1056px) {
-    .noslog-ui .nl-main,
-    .noslog-ui .nl-header__interaction,
-    .noslog-ui .nl-footer__content,
-    .noslog-ui.nl-recovery-minimal {
-        --nl-layout-margin: var(--nl-grid-margin-wide);
-    }
-}
-/* 12 로 줄이면 굵기도 metadata 400 — 지금 줄은 고른 면(surface/control)이 표시한다(2026-10-15 토큰 점검 A, 12 굵게 금지) */
+/* 12 로 줄이면 굵기도 metadata 400 — 지금 줄은 굵기 대신 고른 면(surface/control)이 표시한다(12 굵게 금지) */
 @media (max-width: 359px) {
     .noslog-ui .nl-destination,
     .noslog-ui .nl-destination[aria-current="page"] {
@@ -320,11 +312,15 @@
         line-height: var(--nl-type-line-height-16);
         font-weight: var(--nl-type-weight-regular);
     }
+    .noslog-ui .nl-destination[aria-current="page"] {
+        background: var(--nl-surface-control);
+    }
 }
 /* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */
 @media (min-width: 1056px) {
     .noslog-ui .nl-destination {
         min-height: var(--nl-control-height);
+        padding-block: 0;
     }
     .noslog-ui .nl-header__nav {
         display: flex;
@@ -338,7 +334,7 @@
         align-items: center;
         height: var(--nl-control-height);
         padding-inline: var(--nl-spacing-12);
-        border-radius: var(--nl-radius-field);
+        border-radius: var(--nl-radius-control);
         color: var(--nl-content-subdued);
         white-space: nowrap;
     }
@@ -358,13 +354,15 @@
         width: 488px;
         border-radius: var(--nl-radius-overlay);
         box-shadow:
-            inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
+            0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
             var(--nl-overlay-shadow);
     }
 }
-/* 1056 이상 ≡ 창은 설정 · 피드백 · 관리자만(S1) — 한 열, 폭은 두 열 창(488)의 한 칸(232) + 안쪽 8 × 2 */
+/* 1056 이상 ≡ 창은 설정 · 피드백 · 관리자만(S1) — 한 열, 폭은 두 열 창(488)의 한 칸(232) + 안쪽 8 × 2.
+   위치는 ≡ 버튼 바로 아래(헤더 가운데 컨트롤의 아래 끝) */
 @media (min-width: 1056px) {
     .noslog-ui .nl-destinations {
+        top: calc((var(--nl-header-height) + var(--nl-control-height)) / 2);
         width: 248px;
         grid-template-columns: minmax(0, 1fr);
     }

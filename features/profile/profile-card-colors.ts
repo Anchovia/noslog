@@ -5,15 +5,15 @@
  */
 export const PROFILE_CARD_DARK_HEX = {
     /** 기본 글자 · N 로고 테두리 */
-    ink: "#fafafa", // content-default
+    ink: "#ededed", // content-default
     /** 국기 테두리 */
-    flagBorder: "#fafafa", // content-default
+    flagBorder: "#ededed", // content-default
     /** 라벨 · 모드 · 기준일 · 아래 줄 글자 · 지구본 */
     subdued: "#a1a1a1", // content-subdued
     /** 칸 사이 세로선 */
-    divider: "rgba(255, 255, 255, 0.1)", // border-divider
+    divider: "#1f1f1f", // border-divider
     /** 사진 없는 아바타 면 */
-    emptySurface: "#171717", // surface-surface
+    emptySurface: "#0a0a0a", // surface-surface
     /** 아바타 링 · 장식 */
     gold: "#d6b56d", // exam-tier-top
     /** 아래 줄 「P」(score-goal-pianist) */

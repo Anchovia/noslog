@@ -32,7 +32,7 @@ import type { OwnerPrivateFields } from "@/features/profile/server/owner-private
 import type { ProfileHeaderContext } from "@/features/profile/server/profile-overview-service";
 import { gradeBandTone, rankTone } from "@/lib/music/score-tone";
 
-/** 본인용 공유 · 설정 = 공용 보조 아이콘 버튼 M(2026-09-26 D4 — 폰 36 · 1056 이상 32) */
+/** 본인용 공유 · 설정 = 공용 보조 아이콘 버튼 작게(2026-09-26 D4) */
 const ownerActionClass = foundationButtonClass({
     variant: "secondary",
     size: "icon-sm",

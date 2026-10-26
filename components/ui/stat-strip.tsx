@@ -33,7 +33,7 @@ export interface StatStripItem {
 
 /**
  * 수치 띠 — 핵심 숫자 몇 개를 한 줄에. 값 16/24 · 600 · tabular 위, 라벨 metadata 아래, 칸 사이 1px divider.
- * 상자 surface · 모서리 8 · 칸 안쪽 8/12. 최대 5칸, 넘치면 줄바꿈. 악곡 상세 머리 · 내 기록 요약 (2026-09-16)
+ * 상자 surface · 모서리 4 · 칸 안쪽 8/12. 최대 5칸, 넘치면 줄바꿈. 악곡 상세 머리 · 내 기록 요약 (2026-09-16)
  */
 export default function StatStrip({
     items,

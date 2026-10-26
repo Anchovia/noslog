@@ -114,7 +114,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-dashboard__panel-head {
@@ -140,7 +140,7 @@
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-12);
     border: var(--nl-stroke-default) solid transparent;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     color: inherit;
     text-decoration: none;
@@ -192,7 +192,7 @@
 .noslog-ui .nl-dashboard__bar {
     position: absolute;
     inset: 2px auto 2px 0;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-local-data-bucket-1);
 }
 .noslog-ui .nl-dashboard__list > li > :not(.nl-dashboard__bar) {
@@ -221,13 +221,13 @@
     gap: var(--nl-spacing-12);
     min-height: 44px;
     padding-inline: var(--nl-spacing-4);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     color: inherit;
     text-decoration: none;
 }
 @media (hover: hover) {
     .noslog-ui .nl-dashboard__todo-item:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -394,7 +394,7 @@
     min-height: 20px;
     padding-inline: var(--nl-spacing-8);
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-admin-chip--live {
@@ -473,7 +473,7 @@
     display: block;
     /* 탭 밑줄과 같은 두께 2 */
     height: var(--nl-spacing-2);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     margin-top: var(--nl-spacing-4);
 }
 /* 가입자 · 손님 비율 한 줄 */
@@ -481,7 +481,7 @@
     display: flex;
     /* 막대 목록 트랙과 같은 높이 8 */
     height: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     overflow: hidden;
 }
 .noslog-ui .nl-dashboard__split > span {

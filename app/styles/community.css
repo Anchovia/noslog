@@ -47,15 +47,15 @@
     padding-block: var(--nl-spacing-8);
 }
 .noslog-ui .nl-tier-history li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
-/* 서열 투표 목록 — 카드(surface · 모서리 8 · 안쪽 좌우 16) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px divider.
+/* 서열 투표 목록 — 카드(surface · 모서리 6 · 안쪽 좌우 16) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px 줄 선(border/row).
    여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
 .noslog-ui .nl-vote-list {
     display: flex;
     flex-direction: column;
     padding-inline: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-vote-row {
@@ -69,7 +69,7 @@
 }
 .noslog-ui .nl-vote-list > .nl-vote-row + .nl-vote-row,
 .noslog-ui .nl-vote-list__body + .nl-vote-row {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-vote-row > span:last-child {
     display: flex;
@@ -81,7 +81,7 @@
     margin-inline: calc(var(--nl-spacing-12) * -1);
     padding-inline: var(--nl-spacing-12);
     width: calc(100% + var(--nl-spacing-24));
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 /* 넓힌 줄의 구분선은 글자 선 안쪽에만(면만 넓힌다) */
 .noslog-ui .nl-vote-list > button.nl-vote-row + button.nl-vote-row,
@@ -89,8 +89,8 @@
 .noslog-ui .nl-vote-list__body + button.nl-vote-row {
     border-top: 0;
     background-image: linear-gradient(
-        var(--nl-border-divider),
-        var(--nl-border-divider)
+        var(--nl-border-row),
+        var(--nl-border-row)
     );
     background-repeat: no-repeat;
     background-position: var(--nl-spacing-12) 0;
@@ -98,7 +98,7 @@
 }
 @media (hover: hover) {
     .noslog-ui button.nl-vote-row:hover {
-        background-color: var(--nl-interaction-hover);
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-vote-list__body {
@@ -141,7 +141,7 @@
 }
 .noslog-ui .nl-vote-distribution__slot > span {
     width: 100%;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-local-data-bucket-2);
 }
 .noslog-ui .nl-vote-distribution__slot > span[data-rank="0"] {
@@ -208,7 +208,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
     text-align: center;
 }
@@ -277,7 +277,7 @@
 .noslog-ui .nl-opinions > .nl-disclosure__body > .nl-heading-row {
     margin-bottom: var(--nl-spacing-8);
 }
-/* 의견 제목 줄(공용 제목 줄) → 12 → 작성 칸 → 8 → 목록 · 빈 안내 (의견이 둘 이상이면 목록 위 왼쪽에 정렬 — 최신순 · 좋아요순) */
+/* 의견 제목 줄(공용 제목 줄) → 16 → 작성 칸 → 8 → 목록 · 빈 안내 (의견이 둘 이상이면 목록 위 왼쪽에 정렬 — 최신순 · 좋아요순) */
 .noslog-ui .nl-opinions__body {
     display: flex;
     flex-direction: column;
@@ -297,7 +297,6 @@
     align-items: start;
     column-gap: var(--nl-spacing-12);
     min-width: 0;
-    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-opinion-row > .nl-avatar:has(> svg) {
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
@@ -390,38 +389,6 @@
     gap: var(--nl-spacing-8);
     margin-top: var(--nl-spacing-12);
 }
-.noslog-ui .nl-action-menu {
-    min-width: 160px;
-    max-width: calc(100vw - var(--nl-spacing-32));
-    padding: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
-    box-shadow: var(--nl-overlay-shadow);
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    z-index: var(--nl-layer-popover);
-}
-/* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
-.noslog-ui .nl-action-menu__item[data-destructive] {
-    color: var(--nl-feedback-destructive);
-}
-.noslog-ui .nl-action-menu__item {
-    display: flex;
-    align-items: center;
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    width: 100%;
-    text-align: start;
-    border-radius: var(--nl-radius-control);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-action-menu__item:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
 @media (min-width: 1056px) {
     .noslog-ui .nl-music-detail .nl-community-columns {
         display: grid;
@@ -445,7 +412,7 @@
     min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-8);
     border: 0;
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     background: none;
     color: var(--nl-content-subdued);
     text-decoration: none;
@@ -493,7 +460,7 @@
     margin-inline-start: calc(var(--nl-spacing-8) * -1);
     padding-inline: var(--nl-spacing-8);
     border: 0;
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     background: none;
     color: var(--nl-content-default);
 }

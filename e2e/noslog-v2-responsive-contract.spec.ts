@@ -50,8 +50,7 @@ for (const locale of ["ko", "ja", "en"]) {
                     // 영역 탭은 모든 폭에서 탭 — 좁으면 탭 줄만 가로 스크롤(부품 결정 ② 2026-09-14)
                     tabs: true,
                     // 전역 좌우 여백 16 / 24 / 32(1056 이상) — 가이드 「셸과 레이아웃」
-                    padding:
-                        width >= 1056 ? "32px" : width >= 672 ? "24px" : "16px",
+                    padding: width >= 672 ? "24px" : "16px",
                     overflow: false,
                 });
             if ([390, 672, 1470].includes(width)) {

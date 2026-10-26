@@ -37,7 +37,7 @@ export default function TierBandCard({
     );
 
     return (
-        <article className="overflow-hidden rounded-nl-container border-l-nl-stroke-strong border-nl-difficulty-real bg-nl-surface">
+        <article className="overflow-hidden rounded-nl-control border-l-nl-stroke-strong border-nl-difficulty-real bg-nl-surface">
             <TierBandHeader band={band} />
             <TierBandDropArea
                 band={band}

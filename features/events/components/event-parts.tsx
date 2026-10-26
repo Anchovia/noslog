@@ -59,7 +59,7 @@ export function EventStatusTag({
     );
 }
 
-// 대표 이미지 2.4 : 1 · 모서리 8. 이미지가 없으면 같은 비율의 빈 면(가라앉은 면)
+// 대표 이미지 2.4 : 1 · 모서리 4. 이미지가 없으면 같은 비율의 빈 면(가라앉은 면)
 export function EventBanner({
     src,
     sizes,

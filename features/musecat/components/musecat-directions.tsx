@@ -42,7 +42,6 @@ export default function MusecatDirections({
             <ModalDialog
                 open={step === "confirm"}
                 onOpenChange={(open) => setStep(open ? "confirm" : "none")}
-                sheet
                 size="small"
                 variant="confirm"
                 title={t("musecat.closedDirections.title")}
@@ -64,7 +63,6 @@ export default function MusecatDirections({
             <ModalDialog
                 open={step === "menu"}
                 onOpenChange={(open) => setStep(open ? "menu" : "none")}
-                sheet
                 size="small"
                 title={t("arcades.directions")}
             >

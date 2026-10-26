@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ExternalLink, Flag } from "lucide-react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { useId, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -104,7 +104,6 @@ export default function MusecatGameCard({
             username={viewer.username}
             trigger={
                 <Button size="sm" variant="secondary">
-                    <Flag className="nl-icon-small" aria-hidden />
                     {t("musecat.fault.title")}
                 </Button>
             }
@@ -115,7 +114,6 @@ export default function MusecatGameCard({
             variant="secondary"
             onClick={() => viewer.requireConnection("fault")}
         >
-            <Flag className="nl-icon-small" aria-hidden />
             {t("musecat.fault.title")}
         </Button>
     );

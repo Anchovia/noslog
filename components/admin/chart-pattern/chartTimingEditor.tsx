@@ -880,7 +880,7 @@ function ChartTimingEditorWorkspace({
                             <h1 className="nl-editor-title nl-emphasis-label truncate">
                                 {metadata.title}
                             </h1>
-                            <span className="nl-metadata rounded-nl-control bg-nl-surface px-nl-8 py-nl-4 text-nl-subdued">
+                            <span className="nl-metadata rounded-nl-small bg-nl-surface px-nl-8 py-nl-4 text-nl-subdued">
                                 {metadata.difficulty} · Lv {metadata.level}
                             </span>
                         </div>
@@ -978,7 +978,7 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 importInputRef.current?.click();
                                             }}
-                                            className="nl-hover-layer rounded-nl-field px-nl-12 py-nl-8 text-left"
+                                            className="nl-hover-layer rounded-nl-control px-nl-12 py-nl-8 text-left"
                                         >
                                             <span className="nl-metadata block">
                                                 NosLog 채보 파일
@@ -995,7 +995,7 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 vid2bmapInputRef.current?.click();
                                             }}
-                                            className="nl-hover-layer rounded-nl-field px-nl-12 py-nl-8 text-left"
+                                            className="nl-hover-layer rounded-nl-control px-nl-12 py-nl-8 text-left"
                                         >
                                             <span className="nl-metadata block">
                                                 영상 추출 결과
@@ -1207,7 +1207,7 @@ function ChartTimingEditorWorkspace({
                             <button
                                 type="button"
                                 onClick={() => setEditorMode("timing")}
-                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
+                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-control px-nl-12 text-left ${
                                     editorMode === "timing"
                                         ? "bg-nl-surface"
                                         : "nl-hover-layer text-nl-subdued"
@@ -1225,7 +1225,7 @@ function ChartTimingEditorWorkspace({
                             <button
                                 type="button"
                                 onClick={() => setEditorMode("notes")}
-                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
+                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-control px-nl-12 text-left ${
                                     editorMode === "notes"
                                         ? "bg-nl-surface"
                                         : "nl-hover-layer text-nl-subdued"
@@ -1239,7 +1239,7 @@ function ChartTimingEditorWorkspace({
                                 <button
                                     type="button"
                                     onClick={() => setEditorMode("review")}
-                                    className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
+                                    className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-control px-nl-12 text-left ${
                                         editorMode === "review"
                                             ? "bg-nl-surface"
                                             : "nl-hover-layer text-nl-subdued"
@@ -1275,7 +1275,7 @@ function ChartTimingEditorWorkspace({
                                 <button
                                     type="button"
                                     onClick={() => setNoteTool("select")}
-                                    className={`nl-metadata flex min-h-nl-control-compact w-full items-center gap-nl-8 rounded-nl-field px-nl-8 text-left ${
+                                    className={`nl-metadata flex min-h-nl-control-compact w-full items-center gap-nl-8 rounded-nl-control px-nl-8 text-left ${
                                         noteTool === "select"
                                             ? "bg-nl-surface text-nl-content"
                                             : "nl-hover-layer text-nl-subdued"
@@ -1293,7 +1293,7 @@ function ChartTimingEditorWorkspace({
                                             key={value}
                                             type="button"
                                             onClick={() => setNoteTool(value)}
-                                            className={`nl-metadata min-h-nl-control-compact rounded-nl-field px-nl-4 ${
+                                            className={`nl-metadata min-h-nl-control-compact rounded-nl-control px-nl-4 ${
                                                 noteTool === value
                                                     ? "bg-nl-surface text-nl-content"
                                                     : "nl-hover-layer text-nl-subdued"
@@ -1319,7 +1319,7 @@ function ChartTimingEditorWorkspace({
                                                 onClick={() =>
                                                     setNoteHand(hand)
                                                 }
-                                                className={`nl-metadata h-nl-32 rounded-nl-field border-nl-stroke ${
+                                                className={`nl-metadata h-nl-32 rounded-nl-control border-nl-stroke ${
                                                     noteHand === hand
                                                         ? hand === "left"
                                                             ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
@@ -1342,7 +1342,7 @@ function ChartTimingEditorWorkspace({
                                             key={width}
                                             type="button"
                                             onClick={() => setNoteWidth(width)}
-                                            className={`nl-metadata h-nl-32 rounded-nl-field border-nl-stroke ${
+                                            className={`nl-metadata h-nl-32 rounded-nl-control border-nl-stroke ${
                                                 noteWidth === width
                                                     ? "border-nl-subdued bg-nl-surface"
                                                     : "border-nl-divider text-nl-subdued"
@@ -1375,7 +1375,7 @@ function ChartTimingEditorWorkspace({
                                                         revision
                                                     )
                                                 }
-                                                className="nl-hover-layer rounded-nl-field px-nl-8 py-nl-8 text-left"
+                                                className="nl-hover-layer rounded-nl-control px-nl-8 py-nl-8 text-left"
                                             >
                                                 <span className="nl-metadata flex items-center justify-between">
                                                     <strong>
@@ -1436,7 +1436,7 @@ function ChartTimingEditorWorkspace({
                         {vid2bmapFile && editorMode === "notes" ? (
                             <dl
                                 aria-label="가져오기 미리보기 범례"
-                                className="nl-metadata pointer-events-none absolute top-nl-12 right-nl-12 flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas px-nl-12 py-nl-8 shadow-nl-overlay"
+                                className="nl-metadata pointer-events-none absolute top-nl-12 right-nl-12 flex flex-col gap-nl-4 rounded-nl-control border-nl-stroke border-nl-divider bg-nl-canvas px-nl-12 py-nl-8 shadow-nl-overlay"
                             >
                                 <div className="flex items-center gap-nl-8">
                                     <dt className="h-nl-8 w-nl-16 bg-nl-warning" />
@@ -1462,7 +1462,7 @@ function ChartTimingEditorWorkspace({
                                 ) : null}
                             </dl>
                         ) : null}
-                        <div className="absolute top-nl-12 left-nl-12 flex items-center gap-nl-4 rounded-nl-field border-nl-stroke border-nl-divider bg-nl-surface p-nl-4 shadow-nl-overlay">
+                        <div className="absolute top-nl-12 left-nl-12 flex items-center gap-nl-4 rounded-nl-control border-nl-stroke border-nl-divider bg-nl-surface p-nl-4 shadow-nl-overlay">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -1624,7 +1624,7 @@ function ChartTimingEditorWorkspace({
                             </select>
                         </label>
 
-                        <label className="nl-check nl-control nl-hover-layer rounded-nl-field px-nl-8">
+                        <label className="nl-check nl-control nl-hover-layer rounded-nl-control px-nl-8">
                             <input
                                 type="checkbox"
                                 checked={metronomeEnabled}
@@ -1638,7 +1638,7 @@ function ChartTimingEditorWorkspace({
                             {t("chart.metronome")}
                         </label>
 
-                        <label className="flex h-nl-32 items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-divider px-nl-8">
+                        <label className="flex h-nl-32 items-center gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider px-nl-8">
                             <Volume2
                                 className="nl-icon-small text-nl-subdued"
                                 aria-hidden
@@ -1662,7 +1662,7 @@ function ChartTimingEditorWorkspace({
                             </span>
                         </label>
 
-                        <label className="nl-check nl-control nl-hover-layer rounded-nl-field px-nl-8">
+                        <label className="nl-check nl-control nl-hover-layer rounded-nl-control px-nl-8">
                             <input
                                 type="checkbox"
                                 checked={pianoVisible}

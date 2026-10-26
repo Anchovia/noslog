@@ -64,8 +64,8 @@ html[data-theme="light"] {
     body {
         min-height: 100vh;
         /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens.css 와 대조) */
-        background: #0a0a0a;
-        color: #fafafa;
+        background: #000000;
+        color: #ededed;
         font-family: var(--font-sans);
         font-synthesis: none;
     }

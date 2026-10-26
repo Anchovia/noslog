@@ -94,7 +94,7 @@ export default function HomeSearch() {
                 (viewport?.offsetTop ?? 0) +
                 (viewport?.height ?? window.innerHeight);
             // 미리보기 = 검색칸 아래 8 · 안쪽 16 위아래 · 화면 끝 16, 카드 64 사이 8(home.css · entity.css)
-            // 「전체 결과」 줄 = 큰 L 높이(1055 이하 44 · 1056 이상 40, 2026-10-15 사용자 B)
+            // 「전체 결과」 줄 = 컨트롤 높이
             const gap = readTokenPixels(anchor!, "--nl-spacing-8");
             const inset = readTokenPixels(anchor!, "--nl-spacing-16");
             const row = readTokenPixels(anchor!, "--nl-spacing-64") + gap;

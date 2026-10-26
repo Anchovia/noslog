@@ -28,7 +28,7 @@
     text-align: center;
 }
 .noslog-ui .nl-auth-actions {
-    margin-top: var(--nl-spacing-48);
+    margin-top: var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -60,10 +60,10 @@
     align-items: center;
     padding-inline: var(--nl-spacing-12);
     min-height: var(--nl-control-height);
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-auth-account {
-    margin-top: var(--nl-spacing-32);
+    margin-top: var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
@@ -77,11 +77,11 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-/* 세로 폼 칸 사이 16(2026-10-01 — 창 · 작성 폼과 같게) */
+/* 폼 묶음 사이 24 — 공용 폼 칸 사이와 같다. 온보딩 닉네임은 설명 줄 때문에 div 로 감싸 공용 규칙이 안 걸린다 */
 .noslog-ui .nl-auth-form {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-24);
     margin-top: var(--nl-spacing-24);
 }
 .noslog-ui .nl-auth-field-description {
@@ -102,14 +102,13 @@
     text-align: center;
 }
 .noslog-ui .nl-auth-reason {
-    margin-top: var(--nl-spacing-32);
+    margin-top: var(--nl-spacing-16);
 }
-/* 온보딩 두 단계의 발 버튼(2026-10-01 C) — 주 버튼 아래 「이전」, 사이 12 */
+/* 발 버튼 — 주 버튼 아래 「이전」 · 「거부」, 사이 12. 폼 묶음 사이 24 를 그대로 쓴다 */
 .noslog-ui .nl-auth-steps {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-    margin-top: var(--nl-spacing-8);
 }
 .noslog-ui .nl-auth-steps .nl-auth-submit {
     margin-top: 0;

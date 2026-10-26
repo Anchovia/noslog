@@ -31,7 +31,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-selection-list__option:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -137,6 +137,10 @@
     align-items: center;
     gap: var(--nl-spacing-8);
 }
+/* 발 버튼이 없는 읽기 창은 머리 × 만 닫는다 — 빈 발 막대를 남기지 않는다 */
+.noslog-ui .nl-full-dialog__footer:empty {
+    display: none;
+}
 /* 발 = 왼쪽 「초기화」 고스트 L(잉크를 16 선에 맞추려 패딩 15+경계 1 만큼 당김) + 남는 폭의 주 액션 (2026-09-16) */
 .noslog-ui .nl-full-dialog__footer > .nl-button {
     flex: 1 1 0;
@@ -146,12 +150,19 @@
     flex: none;
     margin-left: calc(-1 * var(--nl-spacing-16));
 }
+/* 글 쓰는 입력 창 = 주 액션 오른쪽 글자 폭(Google 피드백 보내기 폰 실측, 2026-10-26 사용자) */
+.noslog-ui .nl-full-dialog--form > .nl-full-dialog__footer {
+    justify-content: flex-end;
+}
+.noslog-ui .nl-full-dialog--form > .nl-full-dialog__footer > .nl-button {
+    flex: none;
+}
 .noslog-ui .nl-filter-miss {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
 }
-/* 제목 → 개수(메타 글줄) 8 → 검색 16 (역할값). 검색줄 = 검색(남는 폭) + 폰에서는 ☰ 필터 44 (2026-09-16 E′ · R2) */
+/* 제목 → 개수(메타 글줄) 8 → 검색 16 (역할값). 검색줄 = 검색(남는 폭) + 폰에서는 ☰ 필터 버튼 */
 .noslog-ui .nl-discovery__heading {
     display: flex;
     flex-direction: column;
@@ -222,13 +233,6 @@
     gap: var(--nl-spacing-8);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-filter-trigger {
-    padding-left: var(--nl-spacing-12);
-    padding-right: var(--nl-spacing-8);
-    /* 같은 행에 서는 세그먼트·체크박스·셀렉트와 항상 같은 높이 — control-height (모바일 44 / 데스크톱 40) */
-    height: var(--nl-control-height);
-    min-height: var(--nl-control-height);
-}
 .noslog-ui .nl-discovery__toolbar > .nl-segments--icons {
     margin-left: auto;
 }
@@ -273,8 +277,8 @@
     align-items: center;
     text-align: center;
 }
-/* 채보 줄(2026-09-25 A2 · R1 · I2 · D1) — 악곡 목록 줄(nl-music-card--list) 틀에 자켓 80 정사각 · 세 줄(이름 · 아티스트 · 메타).
-   세 줄 68 + 위아래 4 가 자켓 80 안에 가운데로 선다 */
+/* 채보 줄 — 악곡 목록 줄(nl-music-card--list) 틀에 자켓 80 정사각 · 세 줄(이름 · 아티스트 · 메타).
+   세 줄 + 위아래 4 가 자켓 80 안에 가운데로 선다 */
 .noslog-ui .nl-chart-row {
     min-height: 80px;
 }
@@ -287,7 +291,7 @@
 .noslog-ui .nl-chart-row .nl-music-card__body {
     padding-block: var(--nl-spacing-4);
 }
-/* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 높이 24 · raised · 모서리 4 · 난이도 글자색 */
+/* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 높이 24 · 카드 위 판(surface/control) · 모서리 4 · 난이도 글자색 */
 .noslog-ui .nl-chart-chip {
     display: inline-flex;
     flex-shrink: 0;
@@ -295,8 +299,8 @@
     align-items: center;
     height: 24px;
     padding-inline: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-surface-control);
     white-space: nowrap;
 }
 .noslog-ui .nl-chart-chip.nl-skeleton {
@@ -314,7 +318,7 @@
         gap: var(--nl-spacing-16);
     }
 }
-/* 4열은 672(Intermediate 경계)부터 — 카드 최소 156. 5열 단계는 Intermediate 상단 → Wide(레일 등장) 역전 때문에 두지 않는다 (1200 셸에서 Wide 결과 영역 890) */
+/* 4열은 672(Intermediate 경계)부터 — 카드 최소 156. 5열 단계는 Intermediate 상단 → Wide(레일 등장) 역전 때문에 두지 않는다 */
 @container results (min-width: 672px) {
     .noslog-ui .nl-discovery__items--grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));

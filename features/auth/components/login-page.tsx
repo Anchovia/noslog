@@ -65,7 +65,7 @@ export default async function LoginPage({
                         NosLog
                     </Link>
                 </h1>
-                <p className="nl-body nl-muted">{t("home.tagline")}</p>
+                <p className="nl-metadata nl-muted">{t("home.tagline")}</p>
             </div>
             <div className="nl-auth-actions">
                 {destination && !errorKey ? (

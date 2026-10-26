@@ -164,7 +164,7 @@ export default async function EditTierListPage({
             </section>
 
             {current ? (
-                <details className="group rounded-nl-container bg-nl-surface p-nl-12">
+                <details className="group rounded-nl-control bg-nl-surface p-nl-12">
                     <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
                         서열표 정보
                     </summary>
@@ -188,7 +188,7 @@ export default async function EditTierListPage({
                 <>
                     <form
                         method="get"
-                        className="grid grid-cols-2 gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
+                        className="grid grid-cols-2 gap-nl-8 rounded-nl-control bg-nl-surface p-nl-12"
                     >
                         <input
                             name="q"

@@ -103,7 +103,6 @@ export function MusecatConnectPrompt({
             onOpenChange={onOpenChange}
             title={t(ACTION_TITLE[action])}
             size="small"
-            sheet
             footer={
                 <>
                     <ActionButton

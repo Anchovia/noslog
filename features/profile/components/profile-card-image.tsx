@@ -24,6 +24,7 @@ import {
     getProfileCardInitial,
     getProfileCardMode,
 } from "@/features/profile/profile-card-model";
+import { TOKEN_VALUES } from "@/lib/design-token-values";
 import { formatToComma } from "@/lib/format-number";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
@@ -48,6 +49,7 @@ const {
     fullCombo,
     s: goalS,
 } = PROFILE_CARD_DARK_HEX;
+const { spacing: space, typeSize, weight } = TOKEN_VALUES;
 // 값 색(Grd 구간 · 순위) — 화면과 같은 규칙, 카드는 이미지라 다크 값으로(2026-09-19)
 const toneHex = (tone: StatTone | undefined) =>
     (tone && STAT_TONE_DARK_HEX[tone]) ?? ink;
@@ -289,10 +291,10 @@ function CardExamPlate({
                 position: "relative",
                 display: "flex",
                 alignItems: "center",
-                gap: 8,
+                gap: space[8],
                 height: 44,
                 padding: "0 16px",
-                fontSize: 24,
+                fontSize: typeSize[24],
                 // ImageResponse 는 undefined 스타일 값을 문자열로 바꾸다 던진다
                 ...(!concave && fill ? { background: fill } : {}),
                 ...(concave ? {} : { border: `${plateLine}px solid ${metal}` }),
@@ -325,7 +327,7 @@ function CardExamPlate({
             <span
                 style={{
                     color: tier === "low" ? ink : metal,
-                    fontWeight: 700,
+                    fontWeight: weight.bold,
                 }}
             >
                 {label}
@@ -372,7 +374,7 @@ export default function ProfileCardImage({
                 borderRadius: 24,
                 color: ink,
                 fontFamily: "Pretendard JP",
-                fontWeight: 400,
+                fontWeight: weight.regular,
                 backgroundImage:
                     "linear-gradient(152.300527deg, #1a1a26 0%, #0b0b10 42.857%, #241b0c 71.429%)",
             }}
@@ -428,7 +430,7 @@ export default function ProfileCardImage({
                     height: 132,
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: 24,
+                    gap: space[24],
                 }}
             >
                 <div
@@ -453,7 +455,7 @@ export default function ProfileCardImage({
                             alignItems: "center",
                             justifyContent: "center",
                             fontSize: 42,
-                            fontWeight: 700,
+                            fontWeight: weight.bold,
                             color: subdued,
                         }}
                     >
@@ -497,7 +499,7 @@ export default function ProfileCardImage({
                                     maxWidth: 500,
                                     flexShrink: 1,
                                     fontSize: 46,
-                                    fontWeight: 700,
+                                    fontWeight: weight.bold,
                                     overflow: "hidden",
                                     whiteSpace: "nowrap",
                                     textOverflow: "ellipsis",
@@ -524,13 +526,18 @@ export default function ProfileCardImage({
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 16,
+                        gap: space[16],
                         flexShrink: 0,
                     }}
                 >
                     {/* 앱 아이콘과 같은 고양이 원(2026-10-15 B) + 글자 「NosLog」 */}
                     <BrandMarkImage size={54} circle={ink} />
-                    <span style={{ fontSize: 28, fontWeight: 700 }}>
+                    <span
+                        style={{
+                            fontSize: typeSize[28],
+                            fontWeight: weight.bold,
+                        }}
+                    >
                         NosLog
                     </span>
                 </div>
@@ -546,7 +553,11 @@ export default function ProfileCardImage({
                 }}
             >
                 <div
-                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: space[8],
+                    }}
                 >
                     <span
                         style={{
@@ -566,7 +577,7 @@ export default function ProfileCardImage({
                                 : subdued,
                             fontSize: data.grade ? 120 : 54,
                             lineHeight: data.grade ? "156px" : "70px",
-                            fontWeight: 700,
+                            fontWeight: weight.bold,
                         }}
                     >
                         {data.grade ? formatToComma(data.grade) : "-"}
@@ -578,7 +589,7 @@ export default function ProfileCardImage({
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 8,
+                            gap: space[8],
                         }}
                     >
                         <span
@@ -593,7 +604,7 @@ export default function ProfileCardImage({
                         <span
                             style={{
                                 fontSize: 54,
-                                fontWeight: 700,
+                                fontWeight: weight.bold,
                                 lineHeight: "70px",
                                 color: toneHex(rankTone(data.globalRank)),
                             }}
@@ -607,14 +618,14 @@ export default function ProfileCardImage({
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 8,
+                            gap: space[8],
                         }}
                     >
                         <span
                             style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 8,
+                                gap: space[8],
                                 color: subdued,
                                 fontSize: 19,
                                 lineHeight: "29px",
@@ -626,7 +637,7 @@ export default function ProfileCardImage({
                         <span
                             style={{
                                 fontSize: 54,
-                                fontWeight: 700,
+                                fontWeight: weight.bold,
                                 lineHeight: "70px",
                                 color: toneHex(rankTone(data.countryRank)),
                             }}
@@ -647,10 +658,16 @@ export default function ProfileCardImage({
                     width: 1072,
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: 24,
+                    gap: space[24],
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: space[24],
+                    }}
+                >
                     {[
                         { label: "P", value: user.score_p, color: pianist },
                         {
@@ -665,7 +682,7 @@ export default function ProfileCardImage({
                             style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 24,
+                                gap: space[24],
                             }}
                         >
                             {index ? <Divider /> : null}
@@ -674,7 +691,7 @@ export default function ProfileCardImage({
                                     display: "flex",
                                     gap: 10,
                                     fontSize: 26,
-                                    fontWeight: 700,
+                                    fontWeight: weight.bold,
                                     whiteSpace: "nowrap",
                                 }}
                             >
@@ -691,7 +708,7 @@ export default function ProfileCardImage({
                             style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 24,
+                                gap: space[24],
                             }}
                         >
                             <Divider />
@@ -710,7 +727,7 @@ export default function ProfileCardImage({
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "flex-end",
-                        gap: 4,
+                        gap: space[4],
                         minWidth: 0,
                         flex: 1,
                         color: subdued,

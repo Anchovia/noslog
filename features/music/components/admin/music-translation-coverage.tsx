@@ -30,7 +30,7 @@ export default function MusicTranslationCoverage({
     activeStatus?: MusicTranslationStatus | "missing";
 }) {
     return (
-        <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16">
+        <section className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16">
             <div className="flex items-start justify-between gap-nl-12">
                 <div>
                     <h2 className="nl-component-title text-nl-content">
@@ -64,7 +64,7 @@ export default function MusicTranslationCoverage({
                     return (
                         <article
                             key={item.locale}
-                            className="rounded-nl-field border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12"
+                            className="rounded-nl-control border-nl-stroke border-nl-divider bg-nl-canvas p-nl-12"
                         >
                             <div className="flex items-center justify-between gap-nl-8">
                                 <strong className="nl-emphasis-label text-nl-content">
@@ -103,7 +103,7 @@ export default function MusicTranslationCoverage({
                                                 active ? "page" : undefined
                                             }
                                             className={
-                                                "nl-metadata rounded-nl-field px-nl-8 py-nl-8 text-center " +
+                                                "nl-metadata rounded-nl-control px-nl-8 py-nl-8 text-center " +
                                                 (active
                                                     ? "bg-nl-primary text-nl-on-primary"
                                                     : "bg-nl-surface text-nl-subdued hover:text-nl-content")

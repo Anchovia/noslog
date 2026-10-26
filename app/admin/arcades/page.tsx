@@ -59,7 +59,7 @@ export default async function AdminArcadesPage() {
                     />
                 ))}
                 {arcades.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         등록된 오락실이 없습니다.
                     </p>
                 ) : null}

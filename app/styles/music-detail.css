@@ -29,7 +29,7 @@
     flex: none;
     width: 80px;
     height: 80px;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-music-entity__copy {
     position: relative;
@@ -90,7 +90,7 @@
     height: var(--nl-type-line-height-32);
 }
 /* 그레이드 — 수치 상자 맨 위 칸(surface · 안쪽 8/12 · 줄과 막대 사이 8). 위 줄 = 왼쪽 「그레이드」 control,
-   오른쪽 내 Grd = 정수 24/32 · 700, 소수 16/24 · 600 + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
+   오른쪽 내 Grd = 정수 page-title--fixed, 소수 component-title + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
    기록 없음 「—」 · 로그아웃이면 오른쪽에 「로그인하고 보기 ›」 (2026-09-18) */
 .noslog-ui .nl-my-best {
     display: flex;
@@ -145,16 +145,17 @@
     align-items: baseline;
     gap: var(--nl-spacing-4);
 }
-/* 정수 = nl-page-title nl-page-title--fixed(24/32 · 700) · 소수 = nl-component-title(16/24 · 600) — 글자 클래스로(2026-10-01) */
-/* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽. 자켓 밖이라 크기는 태그 규격(높이 24 · 좌우 8 · 모서리 4),
-   면(overlay)과 카테고리 글자색은 자켓 판 그대로 · 경계 없음. 배지 → 제목 4 (2026-09-18 C) */
+/* 정수 = nl-page-title nl-page-title--fixed · 소수 = nl-component-title — 글자 클래스로 */
+/* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽. 자켓 밖이라 크기 · 모서리 · 글자는 태그 그대로(높이 = 태그 · 좌우 8 · 원 · nl-tag-label),
+   면과 카테고리 글자색은 자켓 판 그대로 · 경계 없음. 배지 → 제목 4 */
 .noslog-ui .nl-music-entity__category {
     position: static;
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
-    height: 24px;
+    height: var(--nl-icon-medium);
     padding: 0 var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
     margin-bottom: calc(var(--nl-spacing-4) - var(--nl-spacing-8));
 }
 /* 접은 글자가 있을 때만 — 글자 묶음 전체를 누르면 펼침 · 접힘 */
@@ -164,7 +165,7 @@
     padding: 0;
     border: 0;
     background: none;
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     cursor: pointer;
 }
 /* 난이도 세그먼트 — 공용 세그먼트 규격(L) 그대로, 항목 = 이름 + 색 레벨 숫자(사이 8 · 항목 안쪽 4). 375 미만은 약칭 */
@@ -204,7 +205,7 @@
 }
 .noslog-ui .nl-overview__card {
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-detail-panel {
@@ -220,10 +221,10 @@
 }
 .noslog-ui .nl-facts > div {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-16);
-    padding-block: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-facts > div:last-child {
@@ -309,10 +310,6 @@
 .noslog-ui .nl-analysis-content .nl-detail-panel {
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-performance-selector .nl-segments__item {
-    padding-inline: var(--nl-spacing-4);
-    white-space: nowrap;
-}
 .noslog-ui .nl-analysis-values dd {
     display: flex;
     flex-direction: column;
@@ -364,27 +361,28 @@
 .noslog-ui .nl-recent-plays {
     list-style: none;
     padding: 0 var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-recent-plays > li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-recent-play {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: 0 var(--nl-spacing-12);
     /* 펼침 올림 규칙 — 줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로 */
     margin-inline: calc(var(--nl-spacing-12) * -1);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     list-style: none;
     cursor: pointer;
 }
 @media (hover: hover) {
     .noslog-ui .nl-recent-play:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)

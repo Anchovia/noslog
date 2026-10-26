@@ -171,9 +171,7 @@ export default function ExamDashboard({
         <div className="nl-exams">
             <header className="nl-exams__identity">
                 <h1 className="nl-page-title">{t("exams.title")}</h1>
-                <p className="nl-body-secondary nl-muted">
-                    {t("exams.description")}
-                </p>
+                <p className="nl-metadata nl-muted">{t("exams.description")}</p>
             </header>
             <ExamNavigation
                 mode={mode}

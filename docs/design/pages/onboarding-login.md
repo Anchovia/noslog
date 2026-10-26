@@ -1,6 +1,6 @@
 # 가입 온보딩 · 로그인
 
-주소 `/onboarding` · `/login` · 코드 `features/auth/components` · `features/profile/components/onboarding-form.tsx`
+주소 `/onboarding` · `/login` · 코드 `features/auth/components` · `features/profile/components/onboarding-form.tsx` · `onboarding-form-view.tsx`
 
 ## 구성
 
@@ -42,6 +42,7 @@
 | 6    | 「이전」. 보조 버튼, 폭 가득 |
 
 칸 · 체크박스 모양은 [입력](../components/field.md) · [폼 조작](../components/form-controls.md)을 따른다.
+온보딩 그릇은 `--nl-container-narrow` 폭에 위 48 · 아래 24 다. 제목 · 설명 끝 → 첫 내용은 16 이다([기초값 — 간격](../foundations.md#간격)). 닉네임 설명은 칸 →8→ 아래에 둔다.
 
 ## 상태
 
@@ -55,4 +56,5 @@
 
 ## 바뀐 기록
 
+- [2026-10-27 가이드 고를 곳 — 설명 끝 → 첫 내용 16](../../decisions/2026-10-27-guide-choices.md)
 - [2026-10-01 가입 온보딩 두 단계 · 닉네임 미리 확인 · 로그인 화면 제목과 오류 줄](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)

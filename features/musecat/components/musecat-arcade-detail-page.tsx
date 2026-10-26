@@ -28,7 +28,6 @@ import BackLink from "@/components/ui/back-link";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import IconRow, { IconRows } from "@/components/ui/icon-row";
-import StatusDot from "@/components/ui/status-dot";
 import {
     arcadeOpenState,
     arcadeScheduleHint,
@@ -284,8 +283,10 @@ export default function MusecatArcadeDetailPage({
                         </BackLink>
                         {data.closed ? (
                             <span className="nl-musecat-status">
-                                <span className="nl-tag nl-musecat-status">
-                                    <StatusDot tone="danger" />
+                                <span
+                                    className="nl-tag nl-tag--status"
+                                    data-tone="danger"
+                                >
                                     {t("musecat.closedTag")}
                                 </span>
                             </span>

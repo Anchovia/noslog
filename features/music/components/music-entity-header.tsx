@@ -272,7 +272,7 @@ export default function MusicEntityHeader({
                 >
                     {/* 카테고리 = 제목 바로 위 왼쪽 (자켓 위 겹침에서 이동 · 2026-09-17) */}
                     <span
-                        className="nl-jacket__category nl-metadata nl-music-entity__category"
+                        className="nl-jacket__category nl-tag-label nl-music-entity__category"
                         lang="en"
                         data-category={music.category_short}
                     >

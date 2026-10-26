@@ -6,7 +6,7 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     padding-block: var(--nl-spacing-12);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__category > span {
     display: flex;
@@ -22,51 +22,6 @@
 .noslog-ui .nl-settings__category .nl-settings__name--wide {
     display: none;
 }
-.noslog-ui .nl-radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
-.noslog-ui .nl-radio-group legend {
-    margin-bottom: var(--nl-spacing-12);
-}
-/* 창 안 폼의 라디오 묶음 = 제목이 칸 라벨 모양 · 라벨 → 선택지 8(FormField 와 같음, 2026-09-26 점검 C1) */
-.noslog-ui .nl-radio-group--field legend {
-    margin-bottom: var(--nl-spacing-8);
-}
-.noslog-ui .nl-radio-group__option {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height);
-    cursor: pointer;
-}
-/* 링 + 점 — 원 20(icon-medium) · 2px 링 안에 점 8. 마우스를 올려도 모양은 그대로(Carbon·Primer·shadcn). 줄 = 컨트롤 높이(1056 이상 40) */
-.noslog-ui .nl-radio-group__option input {
-    appearance: none;
-    width: var(--nl-icon-medium);
-    height: var(--nl-icon-medium);
-    flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-border-ring);
-    border-radius: var(--nl-radius-full);
-}
-.noslog-ui .nl-radio-group__option input:checked {
-    border-color: var(--nl-primary-default);
-}
-.noslog-ui .nl-radio-group__option input:checked::after {
-    content: "";
-    display: block;
-    width: var(--nl-spacing-8);
-    height: var(--nl-spacing-8);
-    margin: var(--nl-spacing-4);
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-primary-default);
-}
-.noslog-ui .nl-radio-group:disabled {
-    opacity: var(--nl-disabled-opacity);
-}
-
 .noslog-ui .nl-settings__form {
     display: flex;
     flex-direction: column;
@@ -155,7 +110,7 @@
     gap: var(--nl-spacing-8);
     padding: var(--nl-spacing-16);
     background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-account-consequences > dl {
     display: flex;
@@ -211,7 +166,7 @@
     .noslog-ui .nl-settings__layout {
         display: grid;
         grid-template-columns:
-            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
             minmax(0, var(--nl-container-reading));
         gap: var(--nl-spacing-16);
         align-items: start;
@@ -230,7 +185,7 @@
     }
     .noslog-ui .nl-settings__category {
         min-height: var(--nl-control-height);
-        padding: var(--nl-spacing-12) var(--nl-spacing-16);
+        padding: 0 var(--nl-spacing-16);
         border: 0;
         border-radius: var(--nl-radius-control);
     }
@@ -281,11 +236,11 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__rows > * {
     padding-block: var(--nl-spacing-12);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__row {
     display: grid;
@@ -320,7 +275,7 @@
 }
 @media (hover: hover) {
     .noslog-ui button.nl-settings__row:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)

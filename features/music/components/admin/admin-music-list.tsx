@@ -93,7 +93,7 @@ export default function AdminMusicList({
                 />
             </div>
             <section
-                className="overflow-hidden rounded-nl-container bg-nl-surface"
+                className="overflow-hidden rounded-nl-control bg-nl-surface"
                 aria-busy={searching}
             >
                 {musics.map((music, index) => (
@@ -111,9 +111,9 @@ export default function AdminMusicList({
                                 "/admin/music/" +
                                 encodeURIComponent(music.index)
                             }
-                            className="nl-hover-layer -mx-nl-4 flex min-w-0 flex-1 items-center gap-nl-12 rounded-nl-field px-nl-4 py-nl-8"
+                            className="nl-hover-layer -mx-nl-4 flex min-w-0 flex-1 items-center gap-nl-12 rounded-nl-control px-nl-4 py-nl-8"
                         >
-                            <span className="nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-surface text-nl-subdued">
+                            <span className="nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-surface text-nl-subdued">
                                 {music.categoryShort}
                             </span>
                             <span className="min-w-0 flex-1">

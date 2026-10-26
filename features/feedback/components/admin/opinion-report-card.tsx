@@ -10,7 +10,7 @@ export default function OpinionReportCard({
     report: AdminOpinionReport;
 }) {
     return (
-        <article className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+        <article className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
             <div className="flex items-start justify-between gap-nl-12">
                 <p className="nl-metadata flex flex-wrap items-center gap-x-nl-8 text-nl-subdued">
                     <span>
@@ -57,7 +57,7 @@ export default function OpinionReportCard({
                 {report.snapshot}
             </p>
             {report.explanation ? (
-                <div className="rounded-nl-field bg-nl-surface p-nl-12">
+                <div className="rounded-nl-control bg-nl-surface p-nl-12">
                     <p className="nl-metadata text-nl-subdued">추가 설명</p>
                     <p className="nl-control break-words whitespace-pre-wrap text-nl-content">
                         {report.explanation}

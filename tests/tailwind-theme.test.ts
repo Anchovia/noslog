@@ -24,7 +24,7 @@ describe("NosLog Tailwind aliases", () => {
                 "gap-nl-16",
                 "bg-nl-canvas",
                 "h-nl-control",
-                "rounded-nl-field",
+                "rounded-nl-control",
             ])
         );
         const declarations = new Map<string, Record<string, string>>();
@@ -47,8 +47,8 @@ describe("NosLog Tailwind aliases", () => {
         expect(declarations.get(".h-nl-control")?.height).toBe(
             "var(--nl-control-height)"
         );
-        expect(declarations.get(".rounded-nl-field")?.["border-radius"]).toBe(
-            "var(--nl-radius-field)"
+        expect(declarations.get(".rounded-nl-control")?.["border-radius"]).toBe(
+            "var(--nl-radius-control)"
         );
         expect(aliases).not.toMatch(/--(?:text|font-weight)-/);
     });

@@ -4,8 +4,8 @@
 
 ## 모양
 
-- 항목 = 컨트롤 높이 정사각(좁은 · 중간 폭 44, 넓은 폭 40) · `radius/field`.
-- 지금 쪽 = `primary/default` 면 + `on-primary` 글자 + 600 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
+- 항목 = 컨트롤 높이 정사각 · `radius/control`.
+- 지금 쪽 = `surface/control` 면 + `content/default` 글자 + 600 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
 
 ## 동작
 
@@ -15,6 +15,8 @@
 
 ## 바뀐 기록
 
+- [2026-10-26 Geist 색 · 모서리 · 포커스 — 지금 쪽 #1a1a1a](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 모서리 4](../../decisions/2026-10-25-design-system-cluster.md)
 - [2026-10-24 컨트롤 높이 토큰을 따름](../../decisions/2026-10-24-conflict-choices.md)
 - [2026-10-21 지금 쪽 = 주 면 반전](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-21)
 - [2026-10-15 순위표 한 쪽 20명](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-15)

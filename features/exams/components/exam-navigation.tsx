@@ -34,6 +34,7 @@ export default function ExamNavigation({
     return (
         <div className="nl-exam-navigation">
             <SegmentedControl
+                className="nl-segments--dense"
                 label={t("exams.title")}
                 value={mode}
                 onValueChange={onModeChange}

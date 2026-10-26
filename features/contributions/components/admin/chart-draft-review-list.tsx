@@ -34,7 +34,7 @@ export default function ChartDraftReviewList({
                 return (
                     <article
                         key={draft.id}
-                        className="flex items-center gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
+                        className="flex items-center gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16"
                     >
                         <div className="flex min-w-0 flex-1 flex-col gap-nl-4">
                             <Link

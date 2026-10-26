@@ -302,7 +302,7 @@ export default function OverviewPanel({
                                             {/* 출처가 없는 값은 「확인 전」(2026-10-01 E2) — 추정값과 확인된 값을 구분한다 */}
                                             {fact.value !== null &&
                                             !sourced.has(fact.field) ? (
-                                                <span className="nl-tag nl-tag--inline">
+                                                <span className="nl-tag">
                                                     {t(
                                                         "contribution.unverified"
                                                     )}

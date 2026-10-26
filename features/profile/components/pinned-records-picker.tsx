@@ -148,7 +148,6 @@ export default function PinnedRecordsPicker({
                     <>
                         <Button
                             variant="secondary"
-                            className="nl-dialog__reset"
                             disabled={!draft.length}
                             onClick={() => {
                                 setDraft([]);

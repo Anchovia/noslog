@@ -107,7 +107,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.x).toBe(0);
                 }
                 // 전역 좌우 여백 16 (672 미만) / 24 / 32 (1056 이상)
-                const padding = width < 672 ? 16 : width < 1056 ? 24 : 32;
+                const padding = width < 672 ? 16 : 24;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
@@ -191,6 +191,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     triggerBox.x + triggerBox.width,
                     1
                 );
+                // 1056 이상은 ≡ 버튼 바로 아래(2026-10-26 간격 · 크기 맞춤)
+                if (width >= 1056)
+                    expect(panelBox.y).toBeCloseTo(
+                        triggerBox.y + triggerBox.height,
+                        1
+                    );
             } else {
                 expect(panelBox.x).toBe(16);
                 await expect(

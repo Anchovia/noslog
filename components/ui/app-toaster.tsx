@@ -14,7 +14,7 @@ export default function AppToaster() {
     return (
         <div className="noslog-ui">
             <Toaster
-                position="bottom-center"
+                position="top-center"
                 duration={3000}
                 visibleToasts={3}
                 offset={16}

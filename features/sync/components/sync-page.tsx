@@ -150,7 +150,7 @@ export default function SyncPage({
                 className="nl-sync-page nl-sync-page--guest"
             >
                 <h1 className="nl-page-title">{t("sync.title")}</h1>
-                <p className="nl-body nl-muted">{t("sync.description")}</p>
+                <p className="nl-metadata nl-muted">{t("sync.description")}</p>
                 <div className="nl-sync-columns">
                     <div className="nl-sync-column">
                         <section className="nl-sync-zone">

@@ -93,7 +93,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(-1)}
                         aria-label={t("editor.snap.previous")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                     >
                         <ArrowUp className="nl-icon-small" />
                     </button>
@@ -101,7 +101,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(1)}
                         aria-label={t("editor.snap.next")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-divider"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                     >
                         <ArrowDown className="nl-icon-small" />
                     </button>
@@ -112,7 +112,7 @@ export default function SnapCheckSection() {
                 tabIndex={0}
                 onKeyDown={handleListKey}
                 aria-label={t("editor.snap.list")}
-                className="flex min-h-0 flex-col gap-nl-4 overflow-y-auto rounded-nl-field focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
+                className="flex min-h-0 flex-col gap-nl-4 overflow-y-auto rounded-nl-control focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
             >
                 {items.map((item, index) => {
                     const note = notesById.get(item.id);
@@ -122,7 +122,7 @@ export default function SnapCheckSection() {
                         <div
                             key={item.id}
                             role="listitem"
-                            className={`flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke px-nl-8 py-nl-8 ${
+                            className={`flex flex-col gap-nl-4 rounded-nl-control border-nl-stroke px-nl-8 py-nl-8 ${
                                 isFocused
                                     ? "border-nl-subdued bg-nl-surface"
                                     : "border-nl-divider"
@@ -162,7 +162,7 @@ export default function SnapCheckSection() {
                                 <button
                                     type="button"
                                     onClick={() => snap([item.id])}
-                                    className="nl-metadata h-nl-24 self-start rounded-nl-control border-nl-stroke border-nl-content bg-nl-primary px-nl-8 text-nl-on-primary"
+                                    className="nl-metadata h-nl-24 self-start rounded-nl-small border-nl-stroke border-nl-content bg-nl-primary px-nl-8 text-nl-on-primary"
                                 >
                                     {t("editor.snap.one")}
                                 </button>

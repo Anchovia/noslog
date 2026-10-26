@@ -7,7 +7,7 @@
 `nl-poll-section` = 제목 「투표」 + 「선택」 →12→
 
 - 만들기 전 = 「투표 만들기」 보조 버튼.
-- 만든 뒤 = 요약 카드(면 `surface/surface` · `radius/container` · 안쪽 12) — 질문 `nl-emphasis-label` · 오른쪽 「고치기 · 지우기」 고스트 M →4→ 「선택지 n개 · 한 개만 고름 · 마감」 `nl-metadata`.
+- 만든 뒤 = 요약 카드(면 `surface/surface` · `radius/control` · 안쪽 12) — 질문 `nl-emphasis-label` · 오른쪽 「고치기 · 지우기」 고스트 M →4→ 「선택지 n개 · 한 개만 고름 · 마감」 `nl-metadata`.
 
 ## 만들기 창
 
@@ -20,11 +20,14 @@
 
 `nl-poll` = 질문 `nl-emphasis-label` → 마감 · 익명 `nl-metadata` → 고르는 줄 또는 결과 → 아래 줄 「N명 참여」 + 버튼.
 
-- 고르는 줄 = 경계 1px · `radius/field` · 컨트롤 높이. 고른 줄은 `--nl-stroke-strong` 경계 + 600.
-- 결과 = 라벨 + 오른쪽 퍼센트 →4→ 막대 트랙 8. 내 표는 ✓ + 밝은 채움.
+- 고르는 줄 = 경계 1px · `radius/control` · 컨트롤 높이. 고른 줄은 `--nl-stroke-strong` `border/ring` 경계 + 600.
+- 결과 = 라벨 + 오른쪽 퍼센트 →4→ 진행 막대([그래프](./charts.md#진행-막대)). 내 표는 ✓ + 밝은 채움.
 - 한 개만 고르는 투표는 누르면 바로 저장, 여러 개는 「투표하기」.
 - 로그아웃 · 마감은 결과만(고르는 줄을 보여 주지 않는다). 표를 낸 사람에게는 「다시 고르기」.
 
 ## 바뀐 기록
 
+- [2026-10-27 가이드 고를 곳 — 고른 줄 경계 `border/ring` · 결과 막대는 진행 막대](../../decisions/2026-10-27-guide-choices.md)
+- [2026-10-26 Geist 색 · 모서리 · 포커스](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 모서리 4](../../decisions/2026-10-25-design-system-cluster.md)
 - [2026-09-23 글에 투표 붙이기](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23)

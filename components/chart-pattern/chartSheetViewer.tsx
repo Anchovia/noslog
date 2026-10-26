@@ -495,7 +495,7 @@ export default function ChartSheetViewer({
                     </div>
                 </div>
             </header>
-            {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 48 */}
+            {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 */}
             <header className="nl-chart-viewer__head nl-chart-viewer__head--compact">
                 <div className="nl-chart-viewer__titles">
                     <h1 className="nl-page-title nl-chart-viewer__compact-title">
@@ -535,7 +535,6 @@ export default function ChartSheetViewer({
                 open={infoOpen}
                 onOpenChange={setInfoOpen}
                 title={t("chart.info")}
-                sheet
             >
                 <div className="nl-chart-viewer__info-sheet">
                     <div className="nl-chart-viewer__titles">

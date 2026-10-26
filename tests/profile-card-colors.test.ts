@@ -11,8 +11,10 @@ describe("프로필 공유 카드 색", () => {
     const dark = css.slice(0, css.indexOf("}"));
     const token = (name: string) =>
         dark.match(new RegExp(`--nl-${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
-    // 반투명 토큰(rgb(255 255 255 / 10%))은 이미지가 읽는 rgba(255, 255, 255, 0.1) 꼴로 맞춰 비교한다
+    // 반투명 토큰(rgb(255 255 255 / 10%))은 이미지가 읽는 rgba(255, 255, 255, 0.1) 꼴로 맞춰 비교한다. 불투명 hex 토큰은 그대로
     const rgba = (name: string) => {
+        const solid = token(name);
+        if (solid) return solid;
         const [r, g, b, a] =
             dark
                 .match(new RegExp(`--nl-${name}:\\s*rgb\\(([^)]+)\\)`))?.[1]

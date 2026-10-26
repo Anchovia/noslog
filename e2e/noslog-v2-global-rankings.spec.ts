@@ -341,8 +341,8 @@ for (const locale of ["ko", "ja", "en"])
                     .evaluate(
                         (element) => element.getBoundingClientRect().width
                     );
-                // 쪽 번호 칸 = 컨트롤 높이(1056 이상 40), 사이 8 — 다섯 칸 또는 일곱 칸
-                const item = width >= 1056 ? 40 : 44;
+                // 쪽 번호 칸 = 컨트롤 높이(폰 40 · 1056 이상 32), 사이 8 — 다섯 칸 또는 일곱 칸
+                const item = width >= 1056 ? 32 : 40;
                 const wide = item * 7 + 8 * 6;
                 await expect(
                     page.locator(".nl-pagination__controls")
@@ -491,10 +491,10 @@ for (const locale of ["ko", "ja", "en"])
                         truncated: true,
                     });
                 else expect(long.truncated).toBe(false);
-                expect(geometry.regionHeight).toBe(width >= 1056 ? 40 : 44);
-                // 상자 고르기 = 옅은 면 · 선 없음(2026-09-30 K1) — 면은 shadcn secondary(2026-10-24 토큰 정리)
+                expect(geometry.regionHeight).toBe(width >= 1056 ? 32 : 40);
+                // 상자 고르기 = 보조 버튼과 같은 면 + 선(2026-10-26 Geist secondary — 면 background-100)
                 expect(geometry.regionFill).toBe(
-                    theme === "dark" ? "rgb(38, 38, 38)" : "rgb(245, 245, 245)"
+                    theme === "dark" ? "rgb(10, 10, 10)" : "rgb(255, 255, 255)"
                 );
                 // 순위도 metric-value(500) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
                 expect(geometry.firstWeight).toBe("500");

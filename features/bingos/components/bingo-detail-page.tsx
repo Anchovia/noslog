@@ -537,7 +537,6 @@ export default function BingoDetailPage({
                                     </Button>
                                     <ActionButton
                                         variant="danger"
-                                        destructiveFilled
                                         busy={state.resetting}
                                         onClick={async () => {
                                             if (await state.reset())

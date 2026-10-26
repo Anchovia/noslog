@@ -20,7 +20,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import ResponsiveDialog from "@/components/ui/responsive-dialog";
-import StatusDot from "@/components/ui/status-dot";
 import type { MusecatSettings } from "@/features/partner/server/partner-settings-data";
 
 const ITEMS = ["summary", "ranks", "song_records", "recent_plays"] as const;
@@ -144,8 +143,7 @@ function StatusLine({ settings }: { settings: MusecatSettings }) {
     if (!tone) return null;
     return (
         <>
-            <span className="nl-tag nl-musecat-status">
-                <StatusDot tone={tone} />
+            <span className="nl-tag nl-tag--status" data-tone={tone}>
                 {t(label)}
             </span>
             <p className="nl-body-secondary nl-muted">{t(body)}</p>
@@ -363,7 +361,6 @@ export function MusecatConnectionDetail({
                         onOpenChange={(next) => {
                             if (!busy) setConfirmOpen(next);
                         }}
-                        sheet
                         size="small"
                         variant="confirm"
                         title={t("partner.settings.disconnectTitle")}

@@ -14,6 +14,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
+    /* 머리 → 본문 = 페이지 제목 → 첫 내용 16 (글 간격 24 에서 당긴다) */
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
 }
 .noslog-ui .nl-announcements__heading h1 {
     min-width: 0;
@@ -26,8 +28,7 @@
     gap: var(--nl-spacing-4) var(--nl-spacing-12);
     align-items: center;
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
-        var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-announcement-row > .nl-announcement-meta {
@@ -80,7 +81,7 @@
         text-underline-offset: var(--nl-underline-offset);
     }
 }
-/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
+/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 4 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
 .noslog-ui .nl-announcements__pinned {
     display: flex;
     flex-direction: column;
@@ -89,7 +90,7 @@
 /* 면 가장자리 = 페이지 내용 선(제목 · 칩과 같은 선), 글자는 면 안쪽 12 (목록 항목 카드) */
 .noslog-ui .nl-announcements__pinned .nl-announcement-row {
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     box-shadow: none;
 }
@@ -123,7 +124,7 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-announcements__adjacent-link[data-side="newer"] {
@@ -131,7 +132,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-announcements__adjacent-link:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -167,12 +168,12 @@
 .noslog-ui .nl-announcement-body__items > dd {
     margin: var(--nl-spacing-8) 0 0;
 }
-/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
+/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 6 · 원래 비율 */
 .noslog-ui .nl-announcement-body__image {
     display: block;
     max-width: 100%;
     height: auto;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 /* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤). 번호 목록도 같은 들여쓰기(2026-09-26 감사) */
 .noslog-ui .nl-announcement-body ul {
@@ -226,7 +227,7 @@
 }
 /* 글 안의 코드(K1) = 옅은 면 + 모서리 4 */
 .noslog-ui .nl-announcement-body code {
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-surface-surface);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     font-family: var(--nl-font-family-mono);
@@ -238,7 +239,7 @@
     /* 세로 flex 안에서 줄지 않으면 글 전체가 넘친다 — 이 상자만 줄여 놓고 안에서 민다 */
     min-width: 0;
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-canvas);
     padding: var(--nl-spacing-12);
     overflow-x: auto;
@@ -260,10 +261,18 @@
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
+/* 표 줄 = 목록 행(한 줄일 때 컨트롤 높이 · 아래 선 포함). 여러 줄 칸은 그만큼 늘어난다 */
 .noslog-ui .nl-announcement-body th,
 .noslog-ui .nl-announcement-body td {
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-default);
+    padding: calc(
+            (
+                    var(--nl-control-height) - var(--nl-type-line-height-20) -
+                        var(--nl-stroke-default)
+                ) /
+                2
+        )
+        var(--nl-spacing-12);
     text-align: start;
     vertical-align: top;
 }
@@ -292,7 +301,7 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-poll-section__card-head {
@@ -314,7 +323,7 @@
     gap: var(--nl-spacing-16);
     min-width: 0;
 }
-/* 「고급」 안의 칸도 칸 사이 16(2026-10-01 — 세로 폼 칸 사이는 모두 16) */
+/* 「고급」 안의 칸도 만들기 창과 같은 칸 사이 16 */
 .noslog-ui .nl-poll-builder .nl-disclosure__body {
     display: flex;
     flex-direction: column;
@@ -349,7 +358,7 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-poll > p {
@@ -374,7 +383,7 @@
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     background: none;
     color: var(--nl-content-default);
     text-align: start;
@@ -385,7 +394,7 @@
     }
 }
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
-    border-color: var(--nl-content-default);
+    border-color: var(--nl-border-ring);
     border-width: var(--nl-stroke-strong);
     padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
@@ -418,18 +427,18 @@
 .noslog-ui .nl-poll__label svg {
     flex-shrink: 0;
 }
-/* 진행 막대 — 검정 · 빙고와 같은 규격(트랙 8 · 모서리 full) */
+/* 진행 막대 — 공용 규격(트랙 8 · 모서리 4 · 트랙 divider) */
 .noslog-ui .nl-poll__bar {
     display: block;
     height: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-full);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-border-divider);
     overflow: hidden;
 }
 .noslog-ui .nl-poll__bar i {
     display: block;
     height: 100%;
-    border-radius: var(--nl-radius-full);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-border-ring);
 }
 .noslog-ui .nl-poll__bar i[data-mine] {

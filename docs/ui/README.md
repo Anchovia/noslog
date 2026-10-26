@@ -41,7 +41,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다. 다�
 | `Checkbox`         | 저장하는 폼의 켜기·끄기. 보이는 `label` 필수                                |
 | `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                                   |
 | `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화                 |
-| `SurfaceCard`      | 면 카드(면 · 모서리 container · 안쪽 12/16, `roomy` 16)                     |
+| `SurfaceCard`      | 면 카드(1px 테두리 · 모서리 control · 안쪽 16)                              |
 | `StatusDot`        | 상태 색 점 8. 늘 상태 글자와 함께                                           |
 | `UnitInput`        | 단위 붙은 입력칸(「1 대」 · 「500 원」)                                     |
 | `IconRow`          | 아이콘 정보 줄(아이콘 · 본문 + 보조 줄 · 끝 동작), `IconRows` 안에서 구분선 |
@@ -90,7 +90,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다. 다�
 
 ```tsx
 <div className="noslog-ui">
-    <section className="flex flex-col gap-nl-16 rounded-nl-container bg-nl-surface p-nl-16">
+    <section className="rounded-nl-container flex flex-col gap-nl-16 bg-nl-surface p-nl-16">
         <p className="nl-body text-nl-content">...</p>
     </section>
 </div>
@@ -134,7 +134,7 @@ Storybook은 실제 페이지의 레이아웃·데이터·권한·저장 흐름 
 [서열 변경 이미지](./tier-change-images.md)는 곡 검색·PNG 생성·첨부·입력 변경 시 미리보기 해제·첨부 실패/재시도를 검사한다.
 실제 DB·Blob·로그인·OAuth·redirect를 실행하지 않는다.
 
-온보딩 · 제보 스토리의 `Contract*`(사이드바에 숨김)는 320 · 671 · 672 · 1055 · 1056px에서 입력 글자 16px · 가로 넘침 · 입력 높이 · 창 전환 경계를 검사한다. 스크린샷 비교는 2026-10-15 폐지했다.
+온보딩 · 제보 스토리의 `Contract*`(사이드바에 숨김)는 320 · 671 · 672 · 1055 · 1056px에서 입력 글자 14px · 가로 넘침 · 입력 높이 · 창 전환 경계를 검사한다. 스크린샷 비교는 2026-10-15 폐지했다.
 관리자용 `Badge` 는 공용 태그(`nl-tag`)와 같다. 자동 검사를 끄거나 예외를 늘려 통과시키지 않는다.
 
 전체 재배치의 한글 A안은 `Features/Announcements/TierRebalanceImageBuilder`에서 확인한다. [서열 변경 공지 이미지](tier-change-images.md)의 입력 계약과 전체 CSV 안내를 따른다.

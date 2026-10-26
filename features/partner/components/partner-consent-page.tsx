@@ -69,7 +69,7 @@ export default async function PartnerConsentPage({
                 <h1 className="nl-page-title">
                     {t("partner.consent.title", { client: data.clientName })}
                 </h1>
-                <p className="nl-body-secondary nl-muted">
+                <p className="nl-metadata nl-muted">
                     {t("partner.consent.subtitle")}
                 </p>
             </div>

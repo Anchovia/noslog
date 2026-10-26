@@ -1,52 +1,10 @@
-.noslog-ui .nl-pagination {
-    width: 100%;
-    min-width: 0;
-    display: flex;
-    justify-content: center;
-}
-.noslog-ui .nl-pagination__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-pagination__item {
-    display: flex;
-    flex-shrink: 0;
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
-    align-items: center;
-    justify-content: center;
-    /* 따로 누르는 상자 — 높이는 컨트롤 높이, 모서리는 누르는 칸(field) */
-    border-radius: var(--nl-radius-field);
-    color: var(--nl-content-default);
-}
-@media (hover: hover) {
-    .noslog-ui button.nl-pagination__item:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
-/* 현재 쪽 = 고른 칩과 같은 주 면 + 그 위 글자(2026-10-21 전면 대조 ⑥ — GitHub 다크) */
-.noslog-ui .nl-pagination__item[aria-current="page"] {
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-pagination__item:disabled,
-.noslog-ui .nl-pagination__item[aria-disabled="true"] {
-    background: transparent;
-    opacity: var(--nl-disabled-opacity);
-}
 .noslog-ui .nl-ranking-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
-/* 점수 자 — 제목도 면도 없이 svg 80(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued (2026-09-18 V1+V4) */
+/* 점수 자 — 제목도 면도 없이 svg(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued */
 .noslog-ui .nl-score-scatter {
     display: flex;
     flex-direction: column;
@@ -130,7 +88,7 @@
     position: absolute;
     inset: var(--nl-stroke-strong);
 }
-/* 「+N」 = 필터 개수 배지 모양(원 20 · raised · metadata) + 사진과 떼는 1px 경계. 늘 핀 오른쪽 위 — 끝에서도 자리를 바꾸지 않는다 (2026-09-18 K1 · 사용자 지적) */
+/* 「+N」 = 필터 개수 배지 모양(nl-filter-count) + 사진과 떼는 1px 경계. 늘 핀 오른쪽 위 — 끝에서도 자리를 바꾸지 않는다 */
 .noslog-ui .nl-score-pin__count {
     position: absolute;
     top: calc(var(--nl-spacing-8) * -1);
@@ -180,12 +138,9 @@
     width: calc(7ch + 0.66em);
     margin-left: auto;
     margin-right: calc(var(--nl-full-combo-slot) + var(--nl-spacing-8));
-    font-size: var(--nl-type-size-14);
-    font-weight: var(--nl-type-weight-semibold);
 }
+/* 머리 라벨 글자는 머리 줄의 metadata 클래스 그대로 */
 .noslog-ui .nl-chart-leaderboard .nl-ranking-head__value > span {
-    font-size: var(--nl-type-size-12);
-    font-weight: var(--nl-type-weight-regular);
     white-space: nowrap;
 }
 /* 순위표 줄 메달 = 기본 아이콘 20(2026-10-15 토큰 점검 A — 18 은 아이콘 단계 밖) */
@@ -216,7 +171,7 @@
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     box-shadow: inset 0 0 0 var(--nl-stroke-default)
         var(--nl-achievement-full-combo);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
 }
 /* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 내 순위) → 12 → 목록 */
 .noslog-ui .nl-ranking-section {
@@ -224,9 +179,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
     min-width: 0;
-}
-.noslog-ui .nl-ranking-list {
-    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 /* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
 .noslog-ui .nl-chart-leaderboard__empty {
@@ -236,6 +188,6 @@
     min-height: 48px;
     margin: 0;
     padding-inline: var(--nl-ranking-inset);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     text-align: center;
 }

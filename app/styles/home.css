@@ -1,15 +1,14 @@
 .noslog-ui .nl-home {
     --nl-home-search-width: var(--nl-container-compact);
-    gap: var(--nl-spacing-32);
-    padding-block-start: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
 }
 /* 묶음(2026-09-28 인상 점검 B4 — 근접의 법칙): 검색 · 타일은 「어디로 갈지 찾기」 한 묶음이라 16,
    새 소식(공지 · 이벤트 · 공식 소식)은 다른 덩어리라 48. 구역끼리는 32 그대로 */
 .noslog-ui .nl-home > .nl-home-navigation {
-    margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+    margin-top: calc(var(--nl-spacing-16) - var(--nl-section-gap));
 }
 .noslog-ui .nl-home > .nl-home-updates {
-    margin-top: calc(var(--nl-spacing-48) - var(--nl-spacing-32));
+    margin-top: calc(var(--nl-spacing-48) - var(--nl-section-gap));
 }
 .noslog-ui .nl-home-hero,
 .noslog-ui .nl-home-navigation,
@@ -47,6 +46,10 @@
     position: relative;
     width: 100%;
 }
+/* 메인 검색은 모든 폭 크게(40) */
+.noslog-ui .nl-home-search > .nl-search {
+    --nl-control-height: var(--nl-control-height-large);
+}
 .noslog-ui .nl-home-destinations {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -62,7 +65,7 @@
     width: 100%;
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-home-tile__label {
@@ -103,7 +106,7 @@
 }
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-official-post {
@@ -112,7 +115,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-official-post__author {
@@ -180,7 +183,7 @@
     display: block;
     width: 100%;
     overflow: hidden;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-canvas);
 }
 .noslog-ui .nl-official-post__media img {
@@ -217,7 +220,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-search-preview__list {
@@ -230,7 +233,7 @@
     min-height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
 }
 .noslog-ui .nl-search-preview [aria-selected="true"] {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
@@ -249,7 +252,7 @@
         padding: var(--nl-spacing-24);
     }
 }
-/* 진행 중인 이벤트(2026-09-18 H1) — 큰 배너 카드(2.4 : 1 · 모서리 8) 위에 제목 · 기간. 카드 사이 8.
+/* 진행 중인 이벤트 — 큰 배너 카드(2.4 : 1 · 카드 모서리) 위에 제목 · 기간. 카드 사이 8.
    글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 하고,
    같은 자리에 흐림(뒤를 흐리게)을 위로 갈수록 옅게 깔아 경계가 딱딱하게 서지 않는다 */
 .noslog-ui .nl-home-events__list {
@@ -257,7 +260,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-/* 진행 중인 이벤트가 없을 때 — 안내 한 줄 + 오른쪽 「이벤트 글쓰기」 글자 링크(2026-09-28 인상 점검 A3 — 빈 상자 대신, 공지 제목 줄 링크와 같은 모양) */
+/* 진행 중인 이벤트가 없을 때 — 빈 상자 대신 안내 한 줄 */
 .noslog-ui .nl-home-events__empty {
     display: flex;
     flex-wrap: wrap;
@@ -275,7 +278,7 @@
     max-width: 100%;
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }

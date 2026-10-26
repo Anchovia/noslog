@@ -89,7 +89,7 @@ describe("TSX design token checks", () => {
     it("allows nl aliases, zero, keywords, fractions and non-class strings", () => {
         expect(
             inspect(
-                '<div className={cn("gap-nl-16 p-0 m-0 w-full min-w-0 size-full left-1/2 rounded-nl-field opacity-0 z-auto shrink-0 flex-1 grid-cols-2 nl-body md:px-nl-24", open && "rounded-none")} data-rank="top-10" />'
+                '<div className={cn("gap-nl-16 p-0 m-0 w-full min-w-0 size-full left-1/2 rounded-nl-control opacity-0 z-auto shrink-0 flex-1 grid-cols-2 nl-body md:px-nl-24", open && "rounded-none")} data-rank="top-10" />'
             )
         ).toEqual([]);
     });

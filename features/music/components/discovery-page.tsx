@@ -296,7 +296,7 @@ export default function DiscoveryPage({
                 ]}
             />
         ) : null;
-    // 폰 필터 트리거 — 검색줄 오른쪽 아이콘 버튼 44, 적용 개수는 오른쪽 위 배지(오락실과 같은 부품)
+    // 폰 필터 트리거 — 검색줄 오른쪽 아이콘 버튼(컨트롤 높이 정사각), 적용 개수는 오른쪽 위 배지(오락실과 같은 부품)
     const viewSwitchCompact =
         query.scope === "music" ? (
             <SegmentedControl

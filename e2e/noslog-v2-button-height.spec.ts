@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
 
 for (const locale of ["ko", "ja", "en"] as const) {
-    // 버튼은 입력칸과 같은 --nl-control-height — 1056px 미만 44 · 이상 40 (2026-09-14 H2)
+    // 버튼은 입력칸과 같은 --nl-control-height — 1056px 미만 40 · 이상 32 (2026-10-25)
     test(`${locale} standard buttons follow the control height across page modes`, async ({
         page,
     }) => {
@@ -10,7 +10,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(`/${locale}/music`);
         for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1280]) {
             await page.setViewportSize({ width, height: 900 });
-            const height = width >= 1056 ? 40 : 44;
+            const height = width >= 1056 ? 32 : 40;
             const more = page
                 .locator("button.nl-button")
                 .filter({ hasText: /20/ })

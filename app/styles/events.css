@@ -41,16 +41,16 @@
     }
 }
 .noslog-ui .nl-event-card:focus-visible {
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
-/* 대표 이미지 2.4 : 1 · 모서리 8. 없으면 같은 비율의 가라앉은 면 */
+/* 대표 이미지 2.4 : 1 · 모서리 6. 없으면 같은 비율의 가라앉은 면 */
 .noslog-ui .nl-event-banner {
     position: relative;
     width: 100%;
     max-width: 100%;
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
@@ -76,7 +76,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-/* 글쓰기 — 칸 사이 16. 아래 버튼 줄은 공용 nl-form-bar(왼쪽 「삭제」 · 오른쪽 저장 상태 → 임시저장 → 게시 요청) */
+/* 글쓰기 — 칸 사이는 공용 폼 칸 규칙(24). 아래 버튼 줄은 공용 nl-form-bar(왼쪽 「삭제」 · 오른쪽 저장 상태 → 임시저장 → 게시 요청) */
 .noslog-ui .nl-events__form {
     display: flex;
     flex-direction: column;

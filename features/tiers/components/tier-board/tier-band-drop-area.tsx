@@ -58,7 +58,7 @@ export default function TierBandDropArea({
                 aria-label={`${formatTierValue(band.value)} 구간에 채보 추가`}
                 title="채보 추가"
                 className={cn(
-                    "flex size-nl-48 shrink-0 cursor-pointer items-center justify-center rounded-nl-field border-nl-stroke border-dashed border-nl-input text-nl-disabled hover:border-nl-subdued hover:text-nl-subdued",
+                    "flex size-nl-48 shrink-0 cursor-pointer items-center justify-center rounded-nl-control border-nl-stroke border-dashed border-nl-input text-nl-disabled hover:border-nl-subdued hover:text-nl-subdued",
                     searchOpen &&
                         "border-nl-difficulty-real text-nl-difficulty-real"
                 )}

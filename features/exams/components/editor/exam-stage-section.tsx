@@ -65,7 +65,7 @@ export default function ExamStageSection({
                 {stages.map((stage, index) => (
                     <article
                         key={stage.id ?? stage.musicIndex}
-                        className="rounded-nl-container bg-nl-surface p-nl-12"
+                        className="rounded-nl-control bg-nl-surface p-nl-12"
                     >
                         <div className="flex items-start gap-nl-8">
                             <span className="nl-metadata mt-nl-4 w-nl-32 shrink-0 text-nl-subdued">
@@ -206,7 +206,7 @@ export default function ExamStageSection({
                 ))}
 
                 {stages.length === 0 ? (
-                    <div className="nl-metadata rounded-nl-field border-nl-stroke border-dashed border-nl-divider py-nl-32 text-center text-nl-subdued">
+                    <div className="nl-metadata rounded-nl-control border-nl-stroke border-dashed border-nl-divider py-nl-32 text-center text-nl-subdued">
                         과제곡을 추가해주세요.
                     </div>
                 ) : null}

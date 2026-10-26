@@ -32,7 +32,7 @@
     color: var(--nl-content-subdued);
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-medium);
+    font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-filter-group__aside button::before,
 .noslog-ui .nl-filter-group__aside a::before {
@@ -48,8 +48,7 @@
     }
 }
 
-/* 칩: 높이 36 · 선택 = raised + border/strong + 체크 + 굵기 (세그먼트 선택 언어)
-   모서리 = 누르는 칸의 radius/field 8 — 누르지 않는 태그(.nl-tag)는 4 그대로 (2026-09-14 B안) */
+/* 칩: 높이 = 작은 컨트롤 · 모서리 알약(태그와 같음, 2026-10-26 사용자) */
 .noslog-ui .nl-chips {
     display: flex;
     flex-wrap: wrap;
@@ -73,27 +72,27 @@
     gap: var(--nl-spacing-4);
     min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-field);
-    /* 옅은 면 · 선 없음(2026-09-30 K1). 떠 있는 면 위에서만 약한 선(W1 — foundation.css 의 --nl-control-line) */
-    background: var(--nl-surface-control);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default)
-        var(--nl-control-line, transparent);
+    border-radius: var(--nl-radius-full);
+    /* 칩 = Geist 바탕 면 + 입력 경계 선(gray-alpha-400) */
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
     color: var(--nl-content-default);
 }
-/* 올림 = shadcn — 칩은 secondary/80, 고른 칩은 primary/90 */
+/* 올림 = 보조 버튼과 같은 gray-200 */
 @media (hover: hover) {
     .noslog-ui .nl-chip:hover {
         background: var(--nl-surface-control-hover);
     }
     .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]):hover {
-        background: var(--nl-primary-hover);
+        background: var(--nl-surface-control-hover);
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
-   고른 칩 = 주 면 + 그 위 글자로 뒤집는다(2026-10-21 전면 대조 ⑥ — YouTube · Spotify 다크). 굵기는 그대로 500 — 고를 때 폭이 늘어 줄이 다시 흐르지 않게 */
+   고른 칩 = Geist 고른 세그먼트 칸과 같은 gray-100 면 · 선 없음(2026-10-26 사용자). 굵기는 그대로 — 고를 때 폭이 늘어 줄이 다시 흐르지 않게 */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
+    background: var(--nl-surface-control);
+    box-shadow: none;
+    color: var(--nl-content-default);
 }
 .noslog-ui .nl-chip:disabled {
     opacity: var(--nl-disabled-opacity);
@@ -132,7 +131,7 @@
     --nl-tone: var(--nl-category-cljz);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="s"] {
-    --nl-tone: var(--nl-judgement-just);
+    --nl-tone: var(--nl-score-goal-s);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="fc"] {
     --nl-tone: var(--nl-achievement-full-combo);
@@ -165,19 +164,13 @@
     color: inherit;
 }
 
-/* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = 고른 면(surface/control) + 굵기 + 체크 */
+/* 정렬 메뉴: 판 · 항목은 foundation.css 「메뉴 한 모양」 · 소제목 metadata subdued · 선택 = 고른 면(surface/control) + 굵기 + 체크 */
 .noslog-ui .nl-sort-menu {
     display: flex;
     width: min(240px, calc(100vw - var(--nl-spacing-32)));
     max-height: var(--radix-popover-content-available-height);
     overflow-y: auto;
     flex-direction: column;
-    padding: var(--nl-spacing-8);
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
-    box-shadow: var(--nl-overlay-shadow);
-    z-index: var(--nl-layer-select);
 }
 .noslog-ui .nl-sort-menu__group,
 .noslog-ui .nl-sort-menu__section {
@@ -195,20 +188,12 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
     text-align: left;
     color: var(--nl-content-default);
 }
-/* 시트 요약 줄처럼 M 단계에 놓인 정렬 트리거(size="sm") — 트리거 기본 높이(L · discovery.css 의 고정 height)보다 우선 */
-.noslog-ui .nl-button--compact.nl-filter-trigger {
-    height: var(--nl-control-height-compact);
-    min-height: var(--nl-control-height-compact);
-}
 @media (hover: hover) {
     .noslog-ui .nl-sort-menu__item:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-menu);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -216,7 +201,7 @@
     }
 }
 .noslog-ui .nl-sort-menu__item[aria-checked="true"] {
-    --nl-state-layer: var(--nl-surface-control);
+    --nl-state-layer: var(--nl-interaction-menu);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
@@ -225,6 +210,7 @@
 }
 /* 마우스로 연 메뉴는 첫 항목에 흰 1px 을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-sort-menu__item:focus-visible {
+    outline: none;
     box-shadow: none;
 }
 .noslog-ui .nl-sort-menu__item:disabled {
@@ -247,6 +233,11 @@
 }
 .noslog-ui .nl-sort-menu__section .nl-chip {
     padding-inline: var(--nl-spacing-8);
+}
+/* 정렬 · 필터 트리거 = 셀렉트와 같은 잉크 자리(왼쪽 12 · 꺾쇠 쪽 8). 높이는 버튼 크기(size)가 정한다 */
+.noslog-ui .nl-filter-trigger {
+    padding-left: var(--nl-spacing-12);
+    padding-right: var(--nl-spacing-8);
 }
 .noslog-ui .nl-filter-trigger__label {
     min-width: 0;
@@ -310,10 +301,9 @@
     gap: var(--nl-spacing-4);
     min-height: var(--nl-control-height-compact);
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
-    border-radius: var(--nl-radius-field);
-    background: var(--nl-surface-control);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default)
-        var(--nl-control-line, transparent);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-applied__token[data-tone="normal"] {
@@ -347,7 +337,7 @@
     --nl-tone: var(--nl-category-cljz);
 }
 .noslog-ui .nl-applied__token[data-tone="s"] {
-    --nl-tone: var(--nl-judgement-just);
+    --nl-tone: var(--nl-score-goal-s);
 }
 .noslog-ui .nl-applied__token[data-tone="fc"] {
     --nl-tone: var(--nl-achievement-full-combo);
@@ -374,7 +364,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--nl-spacing-16);
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     box-shadow: var(--nl-overlay-shadow);
@@ -408,7 +398,7 @@
     gap: var(--nl-spacing-16);
 }
 
-/* 레일(Wide)의 세로 목록 — 체크박스 20 상시 노출, 행 40, 우측 개수 */
+/* 레일(Wide)의 세로 목록 — 체크박스 16 상시 노출, 행 = 컨트롤 높이, 우측 개수 */
 .noslog-ui .nl-selection-list__option .nl-check__box {
     margin-right: var(--nl-spacing-4);
 }

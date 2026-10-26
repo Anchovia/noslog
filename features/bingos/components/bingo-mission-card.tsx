@@ -47,12 +47,12 @@ export default function BingoMissionCard({
 
     return (
         <details
-            className="group rounded-nl-container bg-nl-surface p-nl-12"
+            className="group rounded-nl-control bg-nl-surface p-nl-12"
             open={isOpen || shouldOpen}
             onToggle={(event) => setIsOpen(event.currentTarget.open)}
         >
             <summary className="flex cursor-pointer list-none items-center gap-nl-12">
-                <span className="nl-emphasis-label flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-surface">
+                <span className="nl-emphasis-label flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-surface">
                     {getBingoEditorCellLabel(position)}
                 </span>
                 <strong className="nl-emphasis-label min-w-0 flex-1 truncate text-nl-content">

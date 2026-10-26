@@ -53,13 +53,11 @@ export function DiscoverySortMenu({
     query,
     onChange,
     signedIn,
-    variant,
     size,
 }: {
     query: DiscoveryQuery;
     onChange: (query: DiscoveryQuery) => void;
     signedIn: boolean;
-    variant?: "secondary" | "ghost";
     size?: "sm";
 }) {
     const t = useTranslations();
@@ -152,7 +150,6 @@ export function DiscoverySortMenu({
     };
     return (
         <SortMenu
-            variant={variant}
             size={size}
             label={t("discovery.sortLabel")}
             value={value}

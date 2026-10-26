@@ -32,7 +32,7 @@ export default async function AdminSubmissionsPage({
                     <Link
                         key={item}
                         href={`/admin/submissions?status=${item}`}
-                        className={`nl-emphasis-label rounded-nl-field px-nl-12 py-nl-8 ${status === item ? "bg-nl-primary text-nl-on-primary" : "bg-nl-surface text-nl-subdued"}`}
+                        className={`nl-emphasis-label rounded-nl-control px-nl-12 py-nl-8 ${status === item ? "bg-nl-primary text-nl-on-primary" : "bg-nl-surface text-nl-subdued"}`}
                     >
                         {item === "pending"
                             ? "대기"
@@ -51,7 +51,7 @@ export default async function AdminSubmissionsPage({
                     />
                 ))}
                 {submissions.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         해당하는 인증이 없습니다.
                     </p>
                 ) : null}

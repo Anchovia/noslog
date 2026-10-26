@@ -14,7 +14,7 @@ export default function ExamSubmissionCard({
     const proofImagePath = `/api/admin/private-images/exam/${submission.id}`;
 
     return (
-        <article className="overflow-hidden rounded-nl-container bg-nl-surface">
+        <article className="overflow-hidden rounded-nl-control bg-nl-surface">
             {submission.hasProofImage ? (
                 <a
                     href={proofImagePath}
@@ -30,7 +30,7 @@ export default function ExamSubmissionCard({
                         sizes="358px"
                         className="object-contain"
                     />
-                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-surface">
+                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-control bg-nl-surface">
                         <ExternalLink className="nl-icon-small" />
                     </span>
                 </a>
@@ -61,7 +61,7 @@ export default function ExamSubmissionCard({
                         reviewerNote={submission.reviewerNote ?? ""}
                     />
                 ) : submission.reviewerNote ? (
-                    <p className="nl-metadata rounded-nl-field bg-nl-canvas px-nl-12 py-nl-8 text-nl-subdued">
+                    <p className="nl-metadata rounded-nl-control bg-nl-canvas px-nl-12 py-nl-8 text-nl-subdued">
                         심사 메모: {submission.reviewerNote}
                     </p>
                 ) : null}

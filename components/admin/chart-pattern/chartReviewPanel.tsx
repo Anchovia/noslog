@@ -195,7 +195,7 @@ export default function ChartReviewPanel({
                     {comments.map((comment) => (
                         <li
                             key={comment.id}
-                            className="flex flex-col gap-nl-4 rounded-nl-field bg-nl-canvas px-nl-8 py-nl-8"
+                            className="flex flex-col gap-nl-4 rounded-nl-control bg-nl-canvas px-nl-8 py-nl-8"
                         >
                             <div className="nl-metadata flex flex-wrap items-center gap-x-nl-8 gap-y-nl-4 text-nl-subdued">
                                 <button
@@ -234,7 +234,7 @@ export default function ChartReviewPanel({
                                                     action: "resolve",
                                                 })
                                             }
-                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control border-nl-stroke border-nl-divider px-nl-8 text-nl-subdued"
+                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-small border-nl-stroke border-nl-divider px-nl-8 text-nl-subdued"
                                         >
                                             {t("editor.review.resolve")}
                                         </button>
@@ -249,7 +249,7 @@ export default function ChartReviewPanel({
                                                     action: "delete",
                                                 })
                                             }
-                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control px-nl-8 text-nl-error"
+                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-small px-nl-8 text-nl-error"
                                         >
                                             {t("editor.review.delete")}
                                         </button>
