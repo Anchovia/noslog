@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import {
     type ChangeEvent,
+    type CSSProperties,
     useCallback,
     useEffect,
     useEffectEvent,
@@ -64,7 +65,6 @@ import { useMetronomeVolume } from "./useMetronomeVolume";
 import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
-    jacketUrl: string | null;
     /** 밖에서 재생 위치 옮기기(채보 의견 시각 · 주소 `?t=`) — key 가 바뀔 때마다, 처음 그릴 때도 한 번 */
     seekRequest?: { timeMs: number; key: number } | null;
     /** 진행 막대 눈금(채보 의견 시각, 2026-09-24 D1) */
@@ -861,7 +861,6 @@ function renderPlaybackFrame({
 
 export default function FallingChartViewer({
     document,
-    jacketUrl,
     seekRequest,
     markers,
     onTimeChange,
@@ -1395,18 +1394,20 @@ export default function FallingChartViewer({
                 aria-label={t("chart.position")}
                 className="nl-chart-stage__seek"
             />
-            {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
+            {/* 의견 시각 눈금 — 누르는 건 의견 목록의 시각 */}
             {markers?.map((timeMs, index) => (
                 <span
                     key={`${timeMs}-${index}`}
                     aria-hidden
                     className="nl-chart-stage__marker"
-                    style={{
-                        left: `calc(10px + (100% - 20px) * ${Math.min(
-                            1,
-                            Math.max(0, timeMs / Math.max(1, durationMs))
-                        )})`,
-                    }}
+                    style={
+                        {
+                            "--nl-marker-at": Math.min(
+                                1,
+                                Math.max(0, timeMs / Math.max(1, durationMs))
+                            ),
+                        } as CSSProperties
+                    }
                 />
             ))}
         </div>
@@ -1467,14 +1468,6 @@ export default function FallingChartViewer({
                         togglePlayback();
                     }}
                 >
-                    {jacketUrl ? (
-                        <div
-                            aria-hidden
-                            className="nl-chart-stage__art"
-                            style={{ backgroundImage: `url("${jacketUrl}")` }}
-                        />
-                    ) : null}
-                    <div aria-hidden className="nl-chart-stage__scrim" />
                     <div
                         ref={hostRef}
                         role="img"

@@ -9,9 +9,10 @@ import {
     useState,
 } from "react";
 
-const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
+import { readTokenPixels } from "@/lib/design-tokens";
+
+const DESKTOP_MEDIA_QUERY = "(min-width: 1056px)";
 const TOP_SCROLL_THRESHOLD = 8;
-const HIDE_SCROLL_THRESHOLD = 56;
 const DIRECTION_THRESHOLD = 4;
 
 export default function ScrollAwareHeader({
@@ -29,6 +30,7 @@ export default function ScrollAwareHeader({
 }
 
 function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
+    const headerRef = useRef<HTMLElement>(null);
     const previousScrollYRef = useRef(0);
     const animationFrameRef = useRef<number | null>(null);
     const [isVisible, setIsVisible] = useState(true);
@@ -36,6 +38,11 @@ function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const desktopMedia = window.matchMedia(DESKTOP_MEDIA_QUERY);
+        // 헤더 높이만큼 내려간 뒤부터 숨긴다
+        const hideThreshold = readTokenPixels(
+            headerRef.current!,
+            "--nl-header-height"
+        );
 
         function resetForViewport() {
             previousScrollYRef.current = window.scrollY;
@@ -57,7 +64,7 @@ function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
                 if (currentScrollY <= TOP_SCROLL_THRESHOLD) {
                     setIsVisible(true);
                 } else if (
-                    currentScrollY >= HIDE_SCROLL_THRESHOLD &&
+                    currentScrollY >= hideThreshold &&
                     directionDelta > DIRECTION_THRESHOLD
                 ) {
                     setIsVisible(false);
@@ -100,10 +107,11 @@ function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
 
     return (
         <header
+            ref={headerRef}
             data-scroll-state={isVisible ? "visible" : "hidden"}
             onFocusCapture={handleFocus}
             onBlurCapture={handleBlur}
-            className={`sticky top-0 z-nl-header flex h-nl-header items-center border-b-nl-stroke border-nl-divider bg-nl-surface px-nl-12 transition-transform duration-nl-move ease-nl-enter motion-reduce:transition-none min-[390px]:px-nl-16 lg:translate-y-0 ${
+            className={`sticky top-0 z-nl-header flex h-nl-header items-center border-b-nl-stroke border-nl-divider bg-nl-canvas px-nl-16 transition-transform duration-nl-move ease-nl-enter motion-reduce:transition-none min-[672px]:px-nl-24 min-[1056px]:translate-y-0 ${
                 isVisible ? "translate-y-0" : "-translate-y-full"
             }`}
         >

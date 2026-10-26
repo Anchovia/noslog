@@ -165,12 +165,8 @@ export default function ProfileIdentity({
                 <Avatar
                     src={user.avatar}
                     alt={t("common.profileImage", { name })}
-                    size={108}
+                    size="profile"
                     loading="eager"
-                    style={{
-                        width: "var(--nl-profile-avatar-size)",
-                        height: "var(--nl-profile-avatar-size)",
-                    }}
                     fallbackInitial={initialForName(user.username, locale)}
                     initialClassName="nl-display"
                     className="nl-profile-identity__avatar"

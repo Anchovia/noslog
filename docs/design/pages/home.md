@@ -31,7 +31,7 @@
 
 카드는 큰 배너 카드다. 비율 2.4 : 1 · 모서리 `radius/control` · 카드 사이 8.
 배너 위에 제목 `entity-title` · 기간 `body-secondary` 를 흰 글자(`content/on-media`)로 얹는다.
-글자 자리는 `surface/media-scrim` 층을 깔고, 층의 위 32 는 투명에서 번진다. 같은 모양으로 옅어지는 흐림 12 를 더한다.
+글자 자리는 `surface/media-scrim` 층을 깔고, 층의 위 32 는 투명에서 번진다.
 
 진행 중인 이벤트가 없으면 안내 한 줄(`body-secondary` 흐림)만 둔다.
 
@@ -60,7 +60,6 @@
 | 홈 로고 원        | 40                                                                                          | 머리 고양이 원 아이콘(설정 연결 로고 원과 같은 값) |
 | 이벤트 배너 비율  | 2.4 : 1                                                                                     | 진행 중인 이벤트 카드                              |
 | 배너 글자 층 번짐 | 32                                                                                          | `surface/media-scrim` 층 위쪽                      |
-| 배너 글자 층 흐림 | 12                                                                                          | 글자 자리 뒤                                       |
 | 고정 핀           | 16                                                                                          | 고정 공지 줄 날짜 앞                               |
 | 푸터 한 줄 기준   | 840                                                                                         | 푸터                                               |
 | 목적지 타일       | `surface/surface` 면 · 선 없음 · `radius/control` · 최소 컨트롤 높이 · 안쪽 12(672 이상 24) | 목적지 타일                                        |
@@ -73,6 +72,7 @@
 
 ## 바뀐 기록
 
+- [2026-10-27 배너 글자 층 흐림 뺌](../../decisions/2026-10-27-token-audit-choices.md)
 - [2026-10-26 홈 검색 모든 폭 40 · 헤더 → 첫 요소 24](../../decisions/2026-10-26-spacing-size-alignment.md)
 - [2026-10-26 Geist 색 · 모서리 — 목적지 타일 면 · 선 없음](../../decisions/2026-10-26-geist-color-radius.md)
 - [2026-10-25 체계 묶음 — 모서리 4](../../decisions/2026-10-25-design-system-cluster.md)

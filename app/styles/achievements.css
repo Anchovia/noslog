@@ -1,5 +1,9 @@
 /* 업적(2026-09-24 T2 · I1 · L2 · K1 · P5 · D1 · B1 · C1 · E1) — 색은 검정 명판 금속 사다리 토큰(exam/tier-*)을 그대로 불러 쓴다 */
 
+/* 목록 육각 폭 44 — 육각 · 사다리 들여쓰기 · 격자 칸 · 프로필 한 줄 칸 수(JS)가 같은 값을 쓴다 */
+.noslog-ui {
+    --nl-achievement-hex-row-width: 44px;
+}
 /* 육각 — 테두리 = 금속 색(동 mid · 은 high · 금 top), 못 얻은 것은 입력 경계 선 + 흐린 그림(테두리는 선이라 카드 면 위에서도 보이게) */
 .noslog-ui .nl-achievement-hex {
     --nl-achievement-metal: var(--nl-border-input);
@@ -54,7 +58,7 @@
 }
 /* 목록 48 · 그림 24(강조) */
 .noslog-ui .nl-achievement-hex[data-size="row"] {
-    width: 44px;
+    width: var(--nl-achievement-hex-row-width);
     height: 48px;
 }
 .noslog-ui .nl-achievement-hex[data-size="row"] .nl-achievement-hex__icon {
@@ -149,7 +153,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     margin: 0;
-    padding: 0 0 0 calc(44px + var(--nl-spacing-12));
+    padding: 0 0 0
+        calc(var(--nl-achievement-hex-row-width) + var(--nl-spacing-12));
     list-style: none;
 }
 .noslog-ui .nl-achievement-ladder__step {
@@ -310,7 +315,10 @@
 /* 촘촘한 격자 — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8. 칸 = 육각 폭이라 사이가 늘 8 */
 .noslog-ui .nl-achievement-dense {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 44px);
+    grid-template-columns: repeat(
+        auto-fill,
+        var(--nl-achievement-hex-row-width)
+    );
     gap: var(--nl-spacing-12) var(--nl-spacing-8);
     margin: 0;
     padding: 0;

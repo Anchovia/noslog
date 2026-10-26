@@ -114,7 +114,6 @@ export default function ScorePins({
                             <Avatar
                                 src={lead.user.avatar}
                                 fallbackName={lead.user.username}
-                                size={group.me ? 28 : 24}
                                 className="nl-score-pin__photo"
                             />
                             {single ? null : (

@@ -236,7 +236,7 @@ function ReplyRow({
     });
     return (
         <article className="nl-opinion-row" data-reply="">
-            <Avatar src={reply.user.avatar} size={24} />
+            <Avatar src={reply.user.avatar} size="small" />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
                     <IntentLink

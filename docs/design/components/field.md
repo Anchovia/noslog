@@ -30,6 +30,7 @@
 - `CompactSelect` — 줄 안 작은 셀렉트. 크기는 버튼과 같은 L · M(`size="sm"`)이고 기본은 면이 없다. `outlined` 는 보조 버튼과 같은 면 · 선 없음이고 설정 줄 오른쪽(화면 설정 · 국가/지역)에서만 쓴다.
 - 떠 있는 검색 `SearchField floating` — 지도 위 검색칸. 떠 있는 창 경계 + 그림자.
 - 단위 붙은 입력칸 `UnitInput` — 입력칸과 같은 상자 안 오른쪽에 단위 글자(`nl-body-secondary` 흐림). 포커스는 상자 전체.
+- 여러 줄 입력칸(`textarea`)은 최소 높이 96.
 - 숫자 스테퍼는 [폼 컨트롤](./form-controls.md#숫자-스테퍼).
 
 ## 첨부

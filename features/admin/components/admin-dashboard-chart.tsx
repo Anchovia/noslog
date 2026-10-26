@@ -15,7 +15,7 @@ import {
 // 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay · 그림자 · 안쪽 8) · 본문 14 (2026-10-01 A)
 const TOOLTIP_STYLE = {
     background: "var(--nl-surface-surface)",
-    border: "1px solid var(--nl-border-divider)",
+    border: "var(--nl-stroke-default) solid var(--nl-border-divider)",
     borderRadius: "var(--nl-radius-overlay)",
     boxShadow: "var(--nl-overlay-shadow)",
     padding: "var(--nl-spacing-8)",
@@ -92,14 +92,12 @@ export default function AdminDashboardChart({
                         type="linear"
                         dataKey="value"
                         stroke={color}
-                        strokeWidth={2}
-                        // 점은 가리킨 자리만 — 바탕색 채움 + 2px 테두리(공용 선 그래프와 같은 규격, 2026-10-01)
+                        // 선 · 점 테두리 두께는 admin.css(--nl-stroke-strong). 점은 가리킨 자리만 — 바탕색 채움 + 테두리(공용 선 그래프와 같은 규격, 2026-10-01)
                         dot={false}
                         activeDot={{
                             r: 4,
                             fill: "var(--nl-surface-canvas)",
                             stroke: color,
-                            strokeWidth: 2,
                         }}
                         isAnimationActive={false}
                     />

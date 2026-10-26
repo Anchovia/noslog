@@ -184,7 +184,7 @@ test("Home shows the two live events closing first under the announcements", asy
     expect(order.findIndex((name) => name.includes("nl-home-events"))).toBe(
         announcements + 1
     );
-    // 글자 아래 어두운 층 + 흐림
+    // 글자 아래 어두운 층만, 흐림 없음
     const caption = section.locator(".nl-home-event__caption").first();
     expect(
         await caption.evaluate((el) => getComputedStyle(el).backgroundImage)
@@ -193,7 +193,7 @@ test("Home shows the two live events closing first under the announcements", asy
         await caption.evaluate(
             (el) => getComputedStyle(el, "::before").backdropFilter
         )
-    ).toBe("blur(12px)");
+    ).toBe("none");
     await expectNoHorizontalOverflow(page);
 });
 

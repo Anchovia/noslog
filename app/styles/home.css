@@ -289,7 +289,6 @@
     position: absolute;
     inset-inline: 0;
     bottom: 0;
-    isolation: isolate;
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
@@ -299,19 +298,6 @@
         to bottom,
         transparent,
         var(--nl-surface-media-scrim) var(--nl-spacing-32)
-    );
-}
-.noslog-ui .nl-home-event__caption::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: calc(var(--nl-layer-above) * -1);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    mask-image: linear-gradient(
-        to bottom,
-        transparent,
-        #000 var(--nl-spacing-32)
     );
 }
 .noslog-ui .nl-home-event__caption > * {

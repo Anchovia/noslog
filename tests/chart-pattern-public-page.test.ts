@@ -102,7 +102,6 @@ describe("공개 채보 페이지", () => {
             level: 1,
             revision: 3,
             document: publishedDocument,
-            jacketUrl: "/jackets/music.webp",
             backHref: "/ko/music/music-index/normal?tab=detail",
             source: {
                 author: {

@@ -263,7 +263,8 @@
     background: var(--nl-surface-canvas);
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
-/* 불러오는 동안의 사진 자리 — 실제 사진과 같은 변수 크기(인라인 대신) */
+/* 프로필 머리 사진(Avatar size="profile")과 불러오는 동안의 사진 자리 — 같은 변수 크기 */
+.noslog-ui .nl-avatar--profile,
 .noslog-ui .nl-profile-identity__avatar.nl-skeleton {
     width: var(--nl-profile-avatar-size);
     height: var(--nl-profile-avatar-size);

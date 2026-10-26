@@ -1,13 +1,14 @@
 /* 관리자 셸 — 헤더 아래 가로 탭 */
 .noslog-ui .nl-admin-nav {
     position: sticky;
-    top: 60px;
-    z-index: 40;
+    top: var(--nl-header-height);
+    /* 관리자 화면 안의 sticky 머리(서열표 구간 머리 등)보다 위 */
+    z-index: calc(var(--nl-layer-sticky) + var(--nl-layer-above));
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
 }
-/* 스크롤로 사이트 헤더가 숨으면 맨 위에 붙는다 — 60 에 남으면 헤더가 빠진 자리가 빈다(서열표 구간 헤더와 같은 규칙) */
+/* 스크롤로 사이트 헤더가 숨으면 맨 위에 붙는다 — 헤더 높이에 남으면 헤더가 빠진 자리가 빈다(서열표 구간 헤더와 같은 규칙) */
 .noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-admin-nav {
     top: 0;
 }
@@ -175,6 +176,11 @@
     position: relative;
     height: 160px;
 }
+.noslog-ui
+    .nl-dashboard__chart
+    :is(.recharts-line-curve, .recharts-active-dot circle) {
+    stroke-width: var(--nl-stroke-strong);
+}
 .noslog-ui .nl-dashboard__list {
     display: flex;
     flex-direction: column;
@@ -191,7 +197,7 @@
 /* 합계 비율 막대 — 글자 뒤에 깔린다 */
 .noslog-ui .nl-dashboard__bar {
     position: absolute;
-    inset: 2px auto 2px 0;
+    inset: var(--nl-spacing-2) auto var(--nl-spacing-2) 0;
     border-radius: var(--nl-radius-small);
     background: var(--nl-local-data-bucket-1);
 }
@@ -239,8 +245,8 @@
     margin-left: auto;
 }
 .noslog-ui .nl-dashboard__todo-dot {
-    width: 8px;
-    height: 8px;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
     flex-shrink: 0;
     border-radius: 50%;
     background: var(--nl-feedback-warning-marker);
@@ -252,7 +258,7 @@
 }
 /* 16 아이콘을 20 줄 첫 줄 가운데에 — 아이콘 광학 보정 2 */
 .noslog-ui .nl-dashboard__clear > svg {
-    margin-top: 2px;
+    margin-top: var(--nl-spacing-2);
     flex-shrink: 0;
 }
 @media (min-width: 672px) {

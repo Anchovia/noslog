@@ -84,11 +84,6 @@ const allowedGradients: Allowed[] = [
         reason: "채보 뷰어 조작 줄 판",
     },
     {
-        file: "chartViewer.css",
-        selector: ".nl-chart-stage__scrim",
-        reason: "채보 무대 뒤 원형 빛",
-    },
-    {
         file: "player-identity.css",
         selector: ".nl-exam-badge__arc",
         reason: "Recital 명판 파인 모서리",
@@ -102,16 +97,6 @@ const allowedGradients: Allowed[] = [
 
 // 흐림 · 글자 그림자 · 그림자 필터
 const allowedEffects: Allowed[] = [
-    {
-        file: "home.css",
-        selector: ".nl-home-event__caption::before",
-        reason: "홈 이벤트 배너 글자 뒤 흐림",
-    },
-    {
-        file: "chartViewer.css",
-        selector: ".nl-chart-stage__art",
-        reason: "채보 무대 뒤 자켓 흐림",
-    },
     {
         file: "community.css",
         selector: ".nl-pattern-lock",

@@ -219,6 +219,8 @@
     --nl-control-height: 40px;
     --nl-control-height-compact: 32px;
     --nl-control-height-large: 40px;
+    /* 뒤로 링크 누르는 높이 — 모든 폭 같은 값. 채보 뷰어 무대 폭 계산도 이 값을 뺀다 */
+    --nl-back-link-height: 44px;
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;

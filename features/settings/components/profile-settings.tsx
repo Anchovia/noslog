@@ -268,7 +268,7 @@ export default function ProfileSettings({
                             <Avatar
                                 src={avatar || null}
                                 alt={t("settings.avatar")}
-                                size={64}
+                                size="large"
                             />
                             <div className="nl-settings__row-copy">
                                 <p className="nl-control">

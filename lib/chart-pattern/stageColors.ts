@@ -4,6 +4,21 @@
  */
 export const STAGE_CANVAS = "#070910";
 
+/** 전체 악보 그림 색 — 무대와 따로 정한 값(가이드 「채보 뷰어」 캔버스 색 표) */
+export const SHEET_COLORS = {
+    columnBackground: "#111117",
+    laneLine: "#20202a",
+    laneGroupLine: "#343441",
+    beatLine: "#2a2a34",
+    beatAccentLine: "#656574",
+    measureNumber: "#c2c2cc",
+    measureDetail: "#8e8e9a",
+    trillDiamond: "#f2c75c",
+    noteOutline: "#f7f7f2",
+    noteFace: "rgba(247,247,242,.96)",
+    noteHighlight: "#fff8df",
+} as const;
+
 export const HAND_COLORS = {
     left: "#4fc8dc",
     right: "#e85f5d",

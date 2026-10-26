@@ -21,6 +21,7 @@ import {
 import Button from "@/components/ui/button";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/cn";
+import { readTokenPixels } from "@/lib/design-tokens";
 
 import {
     PADDING_BOTTOM,
@@ -51,9 +52,6 @@ import { useFullscreen } from "./useFullscreen";
  */
 
 const MINI_SCALE_COMPACT = 0.16;
-const MINI_WIDTH_COMPACT = 64;
-const MINI_WIDTH_WIDE = 96;
-const FRAME_HEIGHT_COMPACT = 560;
 const MAIN_SCALE_MAX = 2;
 
 export default function ChartSheetStrip({
@@ -75,7 +73,9 @@ export default function ChartSheetStrip({
     const fullscreen = useFullscreen(stripRef);
     const miniRef = useRef<HTMLDivElement | null>(null);
     const [mainWidth, setMainWidth] = useState(PANEL_WIDTH);
-    const [viewportHeight, setViewportHeight] = useState(FRAME_HEIGHT_COMPACT);
+    // 둘 다 첫 레이아웃(그리기 전)에서 실제 요소 · CSS 변수로 읽는다
+    const [viewportHeight, setViewportHeight] = useState(0);
+    const [miniWidth, setMiniWidth] = useState(0);
     const [scrollTop, setScrollTop] = useState<number | null>(null);
     // Compact 오버레이 열림 — 탭으로 열고, 바깥을 탭하면 닫힌다(누르는 동안만 열리던 방식은 손가락이 노트를 가려 사용자 기각)
     const [miniOpen, setMiniOpen] = useState(false);
@@ -90,7 +90,6 @@ export default function ChartSheetStrip({
     const columnHeight = Math.round(contentHeight * mainScale);
     const padTop = Math.round(PADDING_TOP * mainScale);
     const columnWidth = Math.round(PANEL_WIDTH * mainScale);
-    const miniWidth = wide ? MINI_WIDTH_WIDE : MINI_WIDTH_COMPACT;
     const miniScale = wide ? miniWidth / PANEL_WIDTH : MINI_SCALE_COMPACT;
     const miniColumnHeight = Math.round(PANEL_HEIGHT * miniScale);
     // 첫 열은 마디선 아래 inset(5) 만큼 더 잘라 그 밑의 BPM 글자 윗부분이 비치지 않게 한다
@@ -101,6 +100,13 @@ export default function ChartSheetStrip({
     const startMarker = measureMarkers[0];
     // 띠는 위가 곡의 끝, 아래가 시작 — DOM 순서는 마지막 열부터
     const reversed = useMemo(() => [...panels].reverse(), [panels]);
+
+    // 미니맵 폭은 폭 단계마다 CSS(--nl-chart-mini-width)가 정한다
+    useLayoutEffect(() => {
+        const strip = stripRef.current;
+        if (!strip) return;
+        setMiniWidth(readTokenPixels(strip, "--nl-chart-mini-width"));
+    }, [wide]);
 
     // 폭은 첫 레이아웃에서 동기로 읽고, 이후 변화는 ResizeObserver 로 따라간다
     useLayoutEffect(() => {
@@ -403,7 +409,6 @@ export default function ChartSheetStrip({
                         "nl-chart-strip__mini",
                         miniOpen && "nl-chart-strip__mini--active"
                     )}
-                    style={{ width: miniWidth }}
                     aria-hidden
                     onPointerDown={onMiniPointerDown}
                     onPointerMove={onMiniPointerMove}

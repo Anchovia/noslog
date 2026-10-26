@@ -6,7 +6,6 @@ import { useTranslations } from "@/components/i18n/locale-provider";
 interface ProfileAvatarProps {
     avatar: string | null;
     username: string | null;
-    size?: number;
     className?: string;
 }
 
@@ -14,7 +13,6 @@ interface ProfileAvatarProps {
 export default function ProfileAvatar({
     avatar,
     username,
-    size = 32,
     className,
 }: ProfileAvatarProps) {
     const t = useTranslations();
@@ -22,17 +20,14 @@ export default function ProfileAvatar({
     return (
         <span
             className={cn(
-                "flex shrink-0 items-center justify-center overflow-hidden rounded-nl-full border-nl-stroke bg-cover bg-center",
+                "nl-metadata flex size-nl-32 shrink-0 items-center justify-center overflow-hidden rounded-nl-full border-nl-stroke bg-cover bg-center",
                 avatar
                     ? "border-nl-divider bg-nl-surface"
                     : "border-nl-content bg-nl-canvas text-nl-content",
                 className
             )}
             style={{
-                width: size,
-                height: size,
                 backgroundImage: avatar ? `url(${avatar})` : undefined,
-                fontSize: Math.max(9, Math.round(size * 0.38)),
             }}
             aria-label={t("common.profileImage", {
                 name: username || t("common.unnamedUser"),

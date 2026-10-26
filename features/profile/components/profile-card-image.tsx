@@ -49,7 +49,7 @@ const {
     fullCombo,
     s: goalS,
 } = PROFILE_CARD_DARK_HEX;
-const { spacing: space, typeSize, weight } = TOKEN_VALUES;
+const { spacing: space, typeSize, weight, stroke } = TOKEN_VALUES;
 // 값 색(Grd 구간 · 순위) — 화면과 같은 규칙, 카드는 이미지라 다크 값으로(2026-09-19)
 const toneHex = (tone: StatTone | undefined) =>
     (tone && STAT_TONE_DARK_HEX[tone]) ?? ink;
@@ -71,7 +71,7 @@ function CountryFlag({
             style={{
                 width,
                 height,
-                border: `1px solid ${flagBorder}`,
+                border: `${stroke.default}px solid ${flagBorder}`,
                 borderRadius: 2,
                 objectFit: "cover",
             }}
@@ -83,7 +83,12 @@ function CountryFlag({
 function Divider() {
     return (
         <div
-            style={{ width: 1, height: 26, background: divider, flexShrink: 0 }}
+            style={{
+                width: stroke.default,
+                height: 26,
+                background: divider,
+                flexShrink: 0,
+            }}
         />
     );
 }
@@ -293,7 +298,7 @@ function CardExamPlate({
                 alignItems: "center",
                 gap: space[8],
                 height: 44,
-                padding: "0 16px",
+                padding: `0 ${space[16]}px`,
                 fontSize: typeSize[24],
                 // ImageResponse 는 undefined 스타일 값을 문자열로 바꾸다 던진다
                 ...(!concave && fill ? { background: fill } : {}),
@@ -406,7 +411,7 @@ export default function ProfileCardImage({
                     width: 1040,
                     height: 1040,
                     borderRadius: "50%",
-                    border: `1px solid ${profileCardAlpha(gold, 0.12)}`,
+                    border: `${stroke.default}px solid ${profileCardAlpha(gold, 0.12)}`,
                 }}
             />
             <div
@@ -417,14 +422,14 @@ export default function ProfileCardImage({
                     width: 720,
                     height: 720,
                     borderRadius: "50%",
-                    border: `2px solid ${profileCardAlpha(gold, 0.24)}`,
+                    border: `${stroke.strong}px solid ${profileCardAlpha(gold, 0.24)}`,
                 }}
             />
             <div
                 style={{
                     display: "flex",
                     position: "absolute",
-                    left: 64,
+                    left: space[64],
                     top: 54,
                     width: 1072,
                     height: 132,
@@ -546,7 +551,7 @@ export default function ProfileCardImage({
                 style={{
                     display: "flex",
                     position: "absolute",
-                    left: 64,
+                    left: space[64],
                     top: 258,
                     alignItems: "flex-end",
                     gap: 54,
@@ -583,7 +588,13 @@ export default function ProfileCardImage({
                         {data.grade ? formatToComma(data.grade) : "-"}
                     </span>
                 </div>
-                <div style={{ width: 1, height: 92, background: divider }} />
+                <div
+                    style={{
+                        width: stroke.default,
+                        height: 92,
+                        background: divider,
+                    }}
+                />
                 <div style={{ display: "flex", gap: 62 }}>
                     <div
                         style={{
@@ -653,7 +664,7 @@ export default function ProfileCardImage({
                 style={{
                     display: "flex",
                     position: "absolute",
-                    left: 64,
+                    left: space[64],
                     top: 522,
                     width: 1072,
                     alignItems: "center",

@@ -27,7 +27,11 @@ import {
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
 import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
-import { HAND_COLORS, STAGE_CANVAS } from "@/lib/chart-pattern/stageColors";
+import {
+    HAND_COLORS,
+    SHEET_COLORS,
+    STAGE_CANVAS,
+} from "@/lib/chart-pattern/stageColors";
 import {
     trillHexes,
     trillSolidSpan,
@@ -63,7 +67,6 @@ interface ChartSheetViewerProps {
     revision: number | null;
     document: ChartDocument;
     backHref: string;
-    jacketUrl: string | null;
     preview?: boolean;
     /** 출처 표기(2026-09-24 C2) — 공개 채보만. extracted = 영상 추출 버전에서 나온 채보 */
     source?: ChartSource;
@@ -136,7 +139,6 @@ export default function ChartSheetViewer({
     revision,
     document,
     backHref,
-    jacketUrl,
     preview = false,
     source,
     contribution,
@@ -289,7 +291,7 @@ export default function ChartSheetViewer({
             <p className="nl-chart-viewer__byline nl-body-secondary">
                 <Avatar
                     src={source.author.avatar}
-                    size={32}
+                    size="compact"
                     fallbackName={source.author.name}
                 />
                 {prefixed
@@ -429,7 +431,6 @@ export default function ChartSheetViewer({
                         ) : (
                             <FallingChartViewer
                                 document={document}
-                                jacketUrl={jacketUrl}
                                 seekRequest={seekRequest}
                                 markers={contribution ? markers : undefined}
                                 onTimeChange={clock.set}
@@ -635,7 +636,9 @@ export function drawPanel(
     for (let lane = 0; lane <= CHART_LANE_COUNT; lane += 1) {
         const x = MEASURE_GUTTER_WIDTH + lane * laneWidth + 0.5;
         const isGroupBoundary = isChartLaneGroupBoundary(lane);
-        context.strokeStyle = isGroupBoundary ? "#343441" : "#20202a";
+        context.strokeStyle = isGroupBoundary
+            ? SHEET_COLORS.laneGroupLine
+            : SHEET_COLORS.laneLine;
         context.lineWidth = isGroupBoundary ? 1 : 0.5;
         context.beginPath();
         context.moveTo(x, PADDING_TOP);
@@ -655,7 +658,9 @@ export function drawPanel(
             (beat.accent
                 ? yForMeasureTime(beat.timeMs)
                 : yForTime(beat.timeMs)) + 0.5;
-        context.strokeStyle = beat.accent ? "#656574" : "#2a2a34";
+        context.strokeStyle = beat.accent
+            ? SHEET_COLORS.beatAccentLine
+            : SHEET_COLORS.beatLine;
         context.lineWidth = beat.accent ? 1.2 : 0.7;
         context.beginPath();
         context.moveTo(beat.accent ? 3 : MEASURE_GUTTER_WIDTH, y);
@@ -693,7 +698,7 @@ export function drawPanel(
     }
     context.restore();
 
-    context.fillStyle = "#111117";
+    context.fillStyle = SHEET_COLORS.columnBackground;
     context.fillRect(0, 0, PANEL_WIDTH, PADDING_TOP);
     context.fillRect(
         0,
@@ -701,7 +706,7 @@ export function drawPanel(
         PANEL_WIDTH,
         PADDING_BOTTOM
     );
-    context.fillStyle = "#8e8e9a";
+    context.fillStyle = SHEET_COLORS.measureDetail;
     context.font = "10px ui-monospace, monospace";
     context.textBaseline = "middle";
     context.fillText(
@@ -744,7 +749,7 @@ function drawMeasureAnnotations(
     context.textAlign = "left";
     for (const marker of visibleMarkers) {
         const y = yForMeasureTime(marker.timeMs) + 0.5;
-        context.fillStyle = "#c2c2cc";
+        context.fillStyle = SHEET_COLORS.measureNumber;
         context.font = "600 8px ui-monospace, monospace";
         context.textBaseline = "bottom";
         context.fillText(String(marker.measureNumber), 4, y - 2);
@@ -755,7 +760,7 @@ function drawMeasureAnnotations(
         )
             continue;
         let detailY = y + 2;
-        context.fillStyle = "#8e8e9a";
+        context.fillStyle = SHEET_COLORS.measureDetail;
         context.font = "9px ui-monospace, monospace";
         context.textBaseline = "top";
         if (marker.showBpm) {
@@ -888,14 +893,14 @@ function drawSheetNote(
             centerX - 2.5,
             yForRenderedTick(note.tick) + 1,
             3.3,
-            "#f2c75c"
+            SHEET_COLORS.trillDiamond
         );
         drawSheetDiamond(
             context,
             centerX + 2.5,
             yForRenderedTick(note.tick) - 3,
             2.4,
-            "#f2c75c"
+            SHEET_COLORS.trillDiamond
         );
         return;
     }
@@ -930,7 +935,7 @@ function drawSheetNote(
         context.fill();
         context.stroke();
         context.globalAlpha = 0.72;
-        context.strokeStyle = "#f7f7f2";
+        context.strokeStyle = SHEET_COLORS.noteOutline;
         context.lineWidth = 0.9;
         context.beginPath();
         context.moveTo(
@@ -978,7 +983,7 @@ function drawSheetCap(
     context.save();
     context.shadowColor = handColor;
     context.shadowBlur = 2;
-    context.fillStyle = "rgba(247,247,242,.96)";
+    context.fillStyle = SHEET_COLORS.noteFace;
     context.strokeStyle = handColor;
     context.lineWidth = 0.7;
     context.beginPath();
@@ -1017,7 +1022,7 @@ function drawSheetDiamond(
 ) {
     context.save();
     context.fillStyle = color;
-    context.strokeStyle = "#fff8df";
+    context.strokeStyle = SHEET_COLORS.noteHighlight;
     context.lineWidth = 0.8;
     context.beginPath();
     context.moveTo(centerX, centerY - size);

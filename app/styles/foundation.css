@@ -163,9 +163,21 @@ html[data-theme="light"] .noslog-ui,
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
 }
+.noslog-ui .nl-avatar--small {
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+}
 .noslog-ui .nl-avatar--compact {
     width: var(--nl-spacing-32);
     height: var(--nl-spacing-32);
+}
+.noslog-ui .nl-avatar--medium {
+    width: var(--nl-control-height-large);
+    height: var(--nl-control-height-large);
+}
+.noslog-ui .nl-avatar--large {
+    width: var(--nl-spacing-64);
+    height: var(--nl-spacing-64);
 }
 
 .noslog-ui .nl-button {

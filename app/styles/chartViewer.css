@@ -219,7 +219,7 @@
     min-width: 0;
 }
 /* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
-   빼는 높이 = 헤더 높이 + 위 여백 24 + 돌아가기 44 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
+   빼는 높이 = 헤더 높이 + 위 여백 24 + 돌아가기 높이 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
     display: flex;
     flex-direction: column;
@@ -228,8 +228,9 @@
         calc(
             (
                     100dvh - var(--nl-header-height) - var(--nl-spacing-24) -
-                        44px - var(--nl-spacing-24) - var(--nl-control-height) -
-                        var(--nl-spacing-12) - var(--nl-spacing-16)
+                        var(--nl-back-link-height) - var(--nl-spacing-24) -
+                        var(--nl-control-height) - var(--nl-spacing-12) -
+                        var(--nl-spacing-16)
                 ) *
                 16 / 9
         )
@@ -362,34 +363,6 @@
         );
     }
 }
-.noslog-ui .nl-chart-stage__art {
-    position: absolute;
-    inset: -20px;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.25;
-    filter: blur(24px);
-    transform: scale(1.1);
-}
-/* 무대 위 원형 빛 → 가장자리 어둠 — 둘 다 무대 검정에서 섞는다(2026-09-26) */
-.noslog-ui .nl-chart-stage__scrim {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at 50% 18%,
-        color-mix(
-            in srgb,
-            color-mix(
-                    in srgb,
-                    var(--nl-stage-canvas),
-                    var(--nl-content-on-media) 25%
-                )
-                22%,
-            transparent
-        ),
-        color-mix(in srgb, var(--nl-stage-canvas) 96%, transparent) 72%
-    );
-}
 .noslog-ui .nl-chart-stage__host {
     position: absolute;
     inset: 0;
@@ -403,8 +376,15 @@
     min-width: 0;
     margin-inline: var(--nl-spacing-8);
 }
+/* 손잡이 지름 20 — 손잡이 · 눈금 자리가 같은 값을 쓴다 */
+.noslog-ui .nl-chart-stage__seek-track,
+.noslog-ui .nl-chart-stage__seek {
+    --nl-chart-seek-thumb: 20px;
+}
 /* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
 .noslog-ui .nl-chart-stage__marker {
+    /* 시각 / 길이 — 눈금마다 인라인으로 준다 */
+    --nl-marker-at: 0;
     position: absolute;
     top: 50%;
     width: var(--nl-stroke-strong);
@@ -413,6 +393,11 @@
     background: var(--nl-feedback-warning-marker);
     transform: translate(-50%, -50%);
     pointer-events: none;
+    /* 손잡이 중심이 움직이는 폭(양끝 반지름 안쪽)에 맞춘다. --nl-marker-at = 시각 / 길이 */
+    left: calc(
+        var(--nl-chart-seek-thumb) / 2 + (100% - var(--nl-chart-seek-thumb)) *
+            var(--nl-marker-at)
+    );
 }
 .noslog-ui .nl-chart-stage__seek {
     flex: 1;
@@ -440,16 +425,16 @@
    상자 = 보이는 크기여야 끝에서 점과 트랙이 붙는다 (바 어디를 눌러도 이동하므로 조작 영역은 바 전체) */
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: var(--nl-chart-seek-thumb);
+    height: var(--nl-chart-seek-thumb);
     margin-top: calc(var(--nl-spacing-8) * -1);
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: var(--nl-chart-seek-thumb);
+    height: var(--nl-chart-seek-thumb);
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
@@ -492,10 +477,15 @@
 
 /* 전체 악보 — 세로 띠 본문 + 미니맵 (가로 스크롤 없음) */
 .noslog-ui .nl-chart-strip {
+    /* 미니맵 폭 — JS 가 이 값으로 축소 배율을 정한다 */
+    --nl-chart-mini-width: 64px;
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     min-width: 0;
+}
+.noslog-ui .nl-chart-strip[data-layout="wide"] {
+    --nl-chart-mini-width: 96px;
 }
 /* 읽기 한 줄 — 현재 시각(보이는 영역 아래 끝) / 전체 길이 */
 .noslog-ui .nl-chart-strip__position {
@@ -579,6 +569,7 @@
    썸네일 30% · 누르는 동안·hover 전체 높이 · 100%), 672+ 는 옆 레일. 뷰포트 사각형은 위치 단서라 항상 100% */
 .noslog-ui .nl-chart-strip__mini {
     position: absolute;
+    width: var(--nl-chart-mini-width);
     top: var(--nl-spacing-16);
     right: var(--nl-spacing-16);
     height: 40%;
@@ -744,10 +735,10 @@
             calc(
                 (
                         100dvh - var(--nl-header-height) -
-                            var(--nl-spacing-24) - 44px - var(--nl-spacing-24) -
-                            var(--nl-control-height) - var(--nl-spacing-12) -
-                            var(--nl-control-height) - var(--nl-spacing-12) -
-                            var(--nl-spacing-16)
+                            var(--nl-spacing-24) - var(--nl-back-link-height) -
+                            var(--nl-spacing-24) - var(--nl-control-height) -
+                            var(--nl-spacing-12) - var(--nl-control-height) -
+                            var(--nl-spacing-12) - var(--nl-spacing-16)
                     ) *
                     16 / 9
             )

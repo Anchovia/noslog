@@ -353,7 +353,7 @@
     padding-bottom: 0;
 }
 .noslog-ui .nl-opinion-composer > .nl-avatar {
-    margin-top: calc((var(--nl-control-height) - 32px) / 2);
+    margin-top: calc((var(--nl-control-height) - var(--nl-spacing-32)) / 2);
 }
 .noslog-ui .nl-opinion-composer__body {
     display: flex;

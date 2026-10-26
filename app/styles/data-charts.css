@@ -26,7 +26,6 @@
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-line-chart__series {
-    height: 120px;
     width: 100%;
     position: relative;
 }

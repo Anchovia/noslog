@@ -42,13 +42,13 @@
 .noslog-ui .nl-container--reading {
     max-width: var(--nl-container-reading);
 }
-/* 상위 페이지로 돌아가는 링크 — SET-42: chevron 16 · gap 8 · 타겟 44. 폭은 내용만큼 (빈 공간 클릭이 이동으로 이어지지 않게) */
+/* 상위 페이지로 돌아가는 링크 — 폭은 내용만큼 (빈 공간 클릭이 이동으로 이어지지 않게) */
 .noslog-ui .nl-back-link {
     display: flex;
     width: fit-content;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 44px;
+    min-height: var(--nl-back-link-height);
 }
 @media (hover: hover) {
     .noslog-ui .nl-back-link:hover {

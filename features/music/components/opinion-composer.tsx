@@ -133,7 +133,7 @@ export default function OpinionComposer({
                     setFocused(false);
             }}
         >
-            {inline ? null : <Avatar src={avatar} size={32} />}
+            {inline ? null : <Avatar src={avatar} size="compact" />}
             <div className="nl-opinion-composer__body">
                 <textarea
                     id={`${id}-input`}

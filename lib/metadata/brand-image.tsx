@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+import { TOKEN_VALUES } from "@/lib/design-token-values";
 import {
     BRAND_MARK_CAT_PATH,
     BRAND_MARK_CIRCLE,
@@ -19,6 +20,7 @@ export const BRAND_IMAGE_DARK_HEX = {
 } as const;
 
 const colors = BRAND_IMAGE_DARK_HEX;
+const { spacing: space, typeSize, weight, stroke } = TOKEN_VALUES;
 
 /** 이미지용 NosLog 아이콘(2026-10-15 B) — 채운 원(로고 색) 안의 고양이(바탕색). 화면은 components/layout/brand-mark.tsx */
 export function BrandMarkImage({
@@ -85,12 +87,12 @@ export function createSocialImage() {
                 style={{
                     alignItems: "center",
                     background: colors.surface,
-                    border: `2px solid ${colors.border}`,
+                    border: `${stroke.strong}px solid ${colors.border}`,
                     borderRadius: "24px",
                     display: "flex",
                     height: "100%",
                     justifyContent: "space-between",
-                    padding: "64px 72px",
+                    padding: `${space[64]}px 72px`,
                     width: "100%",
                 }}
             >
@@ -105,7 +107,7 @@ export function createSocialImage() {
                         style={{
                             display: "flex",
                             fontSize: 72,
-                            fontWeight: 700,
+                            fontWeight: weight.bold,
                         }}
                     >
                         NosLog
@@ -114,7 +116,7 @@ export function createSocialImage() {
                         style={{
                             color: colors.secondary,
                             display: "flex",
-                            fontSize: 32,
+                            fontSize: typeSize[32],
                         }}
                     >
                         NOSTALGIA Records · Rankings · Tier Lists
@@ -123,8 +125,8 @@ export function createSocialImage() {
                         style={{
                             color: colors.secondary,
                             display: "flex",
-                            fontSize: 24,
-                            marginTop: "32px",
+                            fontSize: typeSize[24],
+                            marginTop: space[32],
                         }}
                     >
                         noslog.app

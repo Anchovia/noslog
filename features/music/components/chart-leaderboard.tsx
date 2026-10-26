@@ -95,7 +95,7 @@ function ChartLeaderboardRow({
             <Avatar
                 src={row.user.avatar}
                 fallbackName={row.user.username}
-                size={32}
+                size="compact"
             />
             <div className="nl-player-row__identity">
                 <div className="nl-player-row__name">
