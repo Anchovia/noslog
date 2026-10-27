@@ -14,7 +14,7 @@
     --nl-section-gap: var(--nl-spacing-32);
     --nl-section-title-gap: var(--nl-spacing-12);
     /* 모서리(2026-10-26 Vercel Geist) — 작은 칸(체크박스 · 세그먼트 칸 · 상자 안 항목) 4,
-       컨트롤 · 카드 · 메뉴 항목 · 툴팁 6(material-base), 대화상자 · 메뉴 · 팝오버 · 토스트 12(material-modal · menu), 배지 · 칩 원 */
+       컨트롤 · 카드 · 메뉴 항목 6(material-base), 대화상자 · 메뉴 · 팝오버 · 토스트 12(material-modal · menu), 배지 · 칩 원 */
     --nl-radius-small: 4px;
     --nl-radius-control: 6px;
     --nl-radius-overlay: 12px;
@@ -74,9 +74,9 @@
     /* 가림막 — 대화상자 overlay-backdrop 80% · 헤더 메뉴(≡) 뒤 50%(비교 시안대로) */
     --nl-surface-scrim: rgb(0 0 0 / 80%);
     --nl-surface-nav-scrim: rgb(0 0 0 / 50%);
-    /* 툴팁 = 반전 테마(background-100 · gray-1000), 배지 = gray-500 · contrast-fg */
-    --nl-surface-inverse: #ffffff;
-    --nl-content-on-inverse: #171717;
+    /* 툴팁 = Spotify 웹 툴팁 면 · 글자(다크 서비스 22곳 중 18곳이 어두운 면), 배지 = gray-500 · contrast-fg */
+    --nl-surface-inverse: #282828;
+    --nl-content-on-inverse: #ffffff;
     --nl-surface-tag: #454545;
     --nl-content-on-tag: #ffffff;
     /* 글자 gray-1000 · 보조 · 라벨 gray-900 · 자리표시자 · 비활성 · 입력 아이콘 gray-700 */
@@ -214,6 +214,9 @@
     /* 떠 있는 창 그림자(2026-10-21 전면 대조 ⑦ — Primer · Atlassian · Spotify 처럼 넓고 진하게) */
     --nl-overlay-shadow:
         0 2px 6px rgb(0 0 0 / 24%), 0 8px 24px rgb(0 0 0 / 48%);
+    /* 툴팁 그림자 — Spotify 웹 툴팁 값 그대로 */
+    --nl-tooltip-shadow:
+        0 16px 24px rgb(0 0 0 / 30%), 0 6px 8px rgb(0 0 0 / 20%);
     /* 컨트롤 높이 세 단계(2026-10-25 105곳 집계 1위) — 기본: 버튼 · 입력 · 셀렉트 · 검색 · 메뉴 항목,
        작게(compact): 칩 · 인라인 보조, 크게(large): size="lg" 버튼. 폰 값은 아래, 1056 이상은 미디어 쿼리 */
     --nl-control-height: 40px;
@@ -333,7 +336,7 @@ html[data-theme="light"] .noslog-ui,
     font-size: var(--nl-type-size-24);
     line-height: var(--nl-type-line-height-32);
     font-weight: var(--nl-type-weight-semibold);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
     color: var(--nl-content-default);
 }
@@ -476,7 +479,7 @@ html:has(.noslog-ui) [data-sonner-toaster] {
     /* 거리 — 대화상자 · 토스트가 떠오르는 만큼 */
     --nl-motion-distance: 8px;
 }
-/* 동작 줄이기 — 시간을 모두 0 으로(한 곳). 스피너 한 바퀴만 남긴다: 멈추면 고장처럼 보인다 */
+/* 동작 줄이기 — 시간을 모두 0 으로(한 곳). 스피너 한 바퀴와 위쪽 진행 막대 차오름은 남긴다: 멈추면 고장처럼 보인다 */
 @media (prefers-reduced-motion: reduce) {
     .noslog-ui,
     html:has(.noslog-ui) [data-sonner-toaster] {

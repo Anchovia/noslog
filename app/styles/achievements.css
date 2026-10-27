@@ -252,7 +252,7 @@
     box-shadow: none;
 }
 .noslog-ui .nl-achievement-picker__choice:disabled {
-    border-color: transparent;
+    box-shadow: none;
     cursor: not-allowed;
     opacity: var(--nl-disabled-opacity);
 }
@@ -272,13 +272,15 @@
     height: 32px;
 }
 /* 머리 배지 정보 창(M1, osu! 메달 창 순서) — 분류 → 큰 육각 → 제목 → 조건 →구분선→ 달성 인원 · 달성일, 가운데 정렬 · 폭 240 · 안쪽 16 */
-/* 업적 카드 팝오버는 툴팁이 아니라 카드 — 떠 있는 면 그대로(툴팁 반전 색을 쓰지 않는다) */
+/* 업적 카드 팝오버는 툴팁이 아니라 카드 — 떠 있는 면 그대로(툴팁 면 · 그림자를 쓰지 않는다) */
 .noslog-ui.nl-term__popover.nl-achievement-card-popover {
     width: 240px;
     padding: var(--nl-spacing-16);
     border-color: var(--nl-border-elevated);
+    border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-surface);
     color: var(--nl-content-default);
+    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-achievement-card {
     display: flex;

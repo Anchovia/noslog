@@ -6,7 +6,7 @@
 
 ## 용어 뜻
 
-`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(반전 색 = 면 `surface/inverse` · 글자 `content/on-inverse` · `radius/control` · 그림자 · 최대 280 · 안쪽 12 · 제목 `nl-control` + 설명 `nl-body-secondary`).
+`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(면 `surface/inverse` #282828 · 글자 `content/on-inverse` · `radius/small` · 그림자 `--nl-tooltip-shadow` · 최대 280 · 안쪽 4 8 · 제목 `nl-control` + 설명 `nl-body-secondary`).
 
 - 오락실 기체 상태 이유만 줄 끝을 맞추려고 ? 없이 점선.
 - `plain` 변형은 창 안 내용을 자유롭게 둔다(기여 라벨 · 업적 배지 정보 카드). 업적 배지 정보 카드는 카드라 떠 있는 창 규격이다.
@@ -27,8 +27,9 @@
 
 ## 바뀐 기록
 
-- [2026-10-26 Geist 색 · 모서리 · 포커스 — 툴팁 흰 면 · 모서리 6](../../decisions/2026-10-26-geist-color-radius.md)
-- [2026-10-25 체계 묶음 — 용어 도움말 창 반전 색 · 모서리 4](../../decisions/2026-10-25-design-system-cluster.md)
-- [2026-10-01 도움말 한 번에 하나 · 누르면 닫힘](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
+- [2026-10-27 툴팁 어두운 회색 면(Spotify)](../../decisions/2026-10-27-tooltip-dark-surface.md)
+- [2026-10-26 Geist 색 · 모서리 · 포커스 — 툴팁 면 · 모서리](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 용어 도움말 창 색 · 모서리](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-10-01 도움말 여는 개수 · 닫는 법](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
 - [2026-09-22 제목 옆 ⓘ 없앰(서열표)](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-22)
-- [2026-09-15 도움말 두 모양](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-15)
+- [2026-09-15 도움말 모양](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-15)
