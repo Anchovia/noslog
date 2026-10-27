@@ -111,6 +111,9 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 리포지토리로 알 수 있는 사실은 묻지 않고 코드 · 테스트 · 실제 브라우저로 확인한다.
 - 컨텍스트를 작게 둔다. 넓은 조사 · 파일 훑기는 서브에이전트에 맡기고, 작업이 바뀌면 새 세션으로 넘긴다([결정](docs/decisions/2026-10-24-claude-efficiency.md)).
+    - 새 세션: 다른 기능 · 화면으로 옮길 때, 같은 실수를 되풀이할 때, 앞 내용을 무시하라고 해야 할 때. 이어 간다: 방금 끝낸 일을 이어 짓기, 같은 파일을 거듭 고치기, 마지막 결과 다듬기.
+    - 애매하면 새 세션이다. 앱이 「애매하면 이어지는 작업」 이라고 해도 이 줄을 따른다.
+    - 훅이 「세션 넘기기」 글을 넣으면(75분 넘게 쉰 10만 토큰 넘는 세션) 이어 가지 않고 한 것 · 남은 것 요약을 넘겨 새 세션으로 연다([결정](docs/decisions/2026-10-27-session-handoff-hook.md)).
 - Claude Code 는 `.claude/hooks` 가 강제한다. 매 메시지마다 `AGENTS.md` · `docs/ai-check.md` 원문을 파일마다 따로 다시 넣고, 한글이 20% 아래인 마지막 답은 막아 한국어로 다시 쓰게 한다([결정](docs/decisions/2026-10-27-rule-enforcement-hooks.md)).
 - 토큰 · 공용 부품으로만 만든다. 규칙은 [기초값 — 토큰 · 공용 부품으로만](docs/design/foundations.md#토큰--공용-부품으로만). 공통 규칙은 공용 소스(`tokens.css` · `foundation.css` · `components/ui`)에서 고친다.
 - 결정이 나면 같은 작업에서 코드 → 가이드 해당 문서 한 곳 → [결정 파일](docs/decisions/README.md) 하나 → 이 결정이 바꾼 옛 결정의 상태 줄 · 색인 표시 → 테스트 기대값을 맞춘다.

@@ -5,6 +5,9 @@ export const KOREAN_MIN_RATIO = 0.2;
 export const KOREAN_MIN_LETTERS = 40;
 // Claude Code 훅 출력 문자열 하나의 한도. 넘으면 2,000자 미리보기만 들어간다(code.claude.com/docs/en/hooks).
 export const HOOK_CONTEXT_MAX_CHARS = 10_000;
+// Claude Code 터미널판 내장 「new task? /clear」 안내와 같은 기준 — docs/decisions/2026-10-27-session-handoff-hook.md
+export const HANDOFF_IDLE_MINUTES = 75;
+export const HANDOFF_MIN_TOKENS = 100_000;
 
 /** 코드 블록 · 인라인 코드 · 인용 줄 · URL 처럼 답한 언어와 상관없는 부분을 뺀 글. */
 export function stripNonProse(text) {
@@ -73,6 +76,48 @@ export function lastAssistantText(entries) {
         .filter((block) => block?.type === "text")
         .map((block) => block.text);
     return texts.length ? texts.join("\n") : null;
+}
+
+/** 하네스가 넣은 메시지(<task-notification> · <side-sessions-event> 같은 태그로 시작). 막거나 안내하면 보고가 묻힌다. */
+export function isMachinePrompt(prompt) {
+    return /^\s*<[a-z]/i.test(prompt ?? "");
+}
+
+/** 마지막 답 시각과 지금 컨텍스트 토큰 수. 답 뒤에 압축됐으면 압축 뒤 크기를 쓴다. */
+export function lastTurnState(entries) {
+    const index = entries.findLastIndex(isAssistant);
+    if (index < 0) return null;
+    const last = entries[index];
+    const usage = last.message.usage ?? {};
+    let tokens =
+        (usage.input_tokens ?? 0) +
+        (usage.cache_read_input_tokens ?? 0) +
+        (usage.cache_creation_input_tokens ?? 0);
+    const compacted = entries
+        .slice(index + 1)
+        .findLast((entry) => entry.subtype === "compact_boundary");
+    if (compacted) {
+        const after = compacted.compactMetadata?.postTokens;
+        if (typeof after !== "number") return null;
+        tokens = after;
+    }
+    return { at: Date.parse(last.timestamp), tokens };
+}
+
+/** 오래 쉰 긴 세션이면 에이전트에게 넣을 글, 아니면 null. */
+export function judgeHandoff(entries, { prompt = "", now = Date.now() } = {}) {
+    if (isMachinePrompt(prompt)) return null;
+    const state = lastTurnState(entries);
+    if (!state || Number.isNaN(state.at)) return null;
+    const minutes = Math.floor((now - state.at) / 60_000);
+    if (minutes < HANDOFF_IDLE_MINUTES || state.tokens < HANDOFF_MIN_TOKENS)
+        return null;
+    return [
+        "===== 세션 넘기기 (훅이 잰 값) =====",
+        `마지막 답 뒤 ${minutes}분 쉬었고 컨텍스트는 ${Math.round(state.tokens / 1000)}k 토큰이다(기준 ${HANDOFF_IDLE_MINUTES}분 · ${HANDOFF_MIN_TOKENS / 1000}k).`,
+        "AGENTS.md 「일하는 방식」 대로 이 세션에서 이어 가지 않는다.",
+        "한 것 · 남은 것을 요약해 새 세션으로 넘기고, 이 메시지에는 넘긴 결과만 답한다.",
+    ].join("\n");
 }
 
 /** 파일 끝만 읽어 줄과 파일 크기를 돌려준다. assistant 줄이 없으면 더 크게 한 번 더 읽는다. */

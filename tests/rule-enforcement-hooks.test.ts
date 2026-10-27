@@ -6,10 +6,15 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
+    HANDOFF_IDLE_MINUTES,
+    HANDOFF_MIN_TOKENS,
     HOOK_CONTEXT_MAX_CHARS,
     hangulRatio,
+    isMachinePrompt,
+    judgeHandoff,
     judgeKorean,
     lastAssistantText,
+    lastTurnState,
     parseTail,
 } from "../.claude/hooks/rules.mjs";
 
@@ -104,6 +109,96 @@ describe("세션 기록 읽기", () => {
     });
 });
 
+describe("세션 넘기기 판정", () => {
+    const answeredAt = "2026-10-27T01:00:00.000Z";
+    const minutesLater = (minutes: number) =>
+        Date.parse(answeredAt) + minutes * 60_000;
+    const longSession = [
+        { type: "user", timestamp: "2026-10-27T00:59:00.000Z" },
+        assistant("a", [{ type: "text", text: "이전 답" }], {
+            timestamp: answeredAt,
+        }),
+    ];
+
+    it("마지막 답 시각과 input · 캐시 읽기 · 캐시 쓰기를 더한 컨텍스트 크기를 읽는다", () => {
+        expect(lastTurnState(longSession)).toEqual({
+            at: Date.parse(answeredAt),
+            tokens: 600_502,
+        });
+    });
+
+    it("기준보다 오래 쉰 긴 세션이면 쉰 시간 · 크기와 넘기라는 글을 준다", () => {
+        const context = judgeHandoff(longSession, {
+            prompt: "다음 작업 해 줘",
+            now: minutesLater(83),
+        });
+        expect(context).toContain("83분 쉬었고 컨텍스트는 601k 토큰");
+        expect(context).toContain("새 세션으로 넘기고");
+    });
+
+    it("기준보다 덜 쉬었거나 짧은 세션이면 넣지 않는다", () => {
+        expect(
+            judgeHandoff(longSession, {
+                prompt: "이어서",
+                now: minutesLater(HANDOFF_IDLE_MINUTES - 1),
+            })
+        ).toBeNull();
+        const shortSession = [
+            assistant("a", [{ type: "text", text: "이전 답" }], {
+                timestamp: answeredAt,
+                message: {
+                    id: "a",
+                    model: "claude-opus-5-5",
+                    content: [],
+                    usage: { input_tokens: HANDOFF_MIN_TOKENS - 1 },
+                },
+            }),
+        ];
+        expect(
+            judgeHandoff(shortSession, {
+                prompt: "이어서",
+                now: minutesLater(200),
+            })
+        ).toBeNull();
+    });
+
+    it("답 뒤에 압축됐으면 압축 뒤 크기로 판정한다", () => {
+        const compacted = [
+            ...longSession,
+            {
+                type: "system",
+                subtype: "compact_boundary",
+                compactMetadata: { preTokens: 600_502, postTokens: 26_650 },
+            },
+        ];
+        expect(lastTurnState(compacted)?.tokens).toBe(26_650);
+        expect(
+            judgeHandoff(compacted, {
+                prompt: "이어서",
+                now: minutesLater(200),
+            })
+        ).toBeNull();
+    });
+
+    it("하네스가 넣은 메시지 · 답이 없는 새 세션에는 넣지 않는다", () => {
+        expect(isMachinePrompt("<task-notification>\n<task-id>")).toBe(true);
+        expect(isMachinePrompt("<side-sessions-event>")).toBe(true);
+        expect(isMachinePrompt("다음 작업 해 줘")).toBe(false);
+        expect(
+            judgeHandoff(longSession, {
+                prompt: "<task-notification>",
+                now: minutesLater(200),
+            })
+        ).toBeNull();
+        expect(
+            judgeHandoff([{ type: "user" }], {
+                prompt: "첫 메시지",
+                now: minutesLater(200),
+            })
+        ).toBeNull();
+    });
+});
+
 describe("훅 스크립트", () => {
     const directory = mkdtempSync(join(tmpdir(), "noslog-hooks-"));
     const run = (script: string, input: unknown) =>
@@ -126,6 +221,48 @@ describe("훅 스크립트", () => {
             })
         );
         expect(output.decision).toBe("block");
+    });
+
+    it("session-handoff 는 오래 쉰 긴 세션에 넘기기 글을 넣고, 기록이 없으면 아무것도 쓰지 않는다", () => {
+        const transcript = join(directory, "idle.jsonl");
+        writeFileSync(
+            transcript,
+            `${JSON.stringify(
+                assistant("a", [{ type: "text", text: korean }], {
+                    timestamp: "2026-10-27T01:00:00.000Z",
+                })
+            )}\n`
+        );
+        const output = JSON.parse(
+            run("session-handoff.mjs", {
+                hook_event_name: "UserPromptSubmit",
+                prompt: "다음 작업 해 줘",
+                transcript_path: transcript,
+            })
+        );
+        expect(output.hookSpecificOutput.additionalContext).toContain(
+            "새 세션으로 넘기고"
+        );
+        expect(
+            run("session-handoff.mjs", {
+                hook_event_name: "UserPromptSubmit",
+                prompt: "첫 메시지",
+                transcript_path: join(directory, "missing.jsonl"),
+            })
+        ).toBe("");
+    });
+
+    it("settings.json 은 UserPromptSubmit 에 session-handoff 훅을 건다", () => {
+        const settings = JSON.parse(
+            readFileSync(".claude/settings.json", "utf8")
+        );
+        const commands = settings.hooks.UserPromptSubmit.flatMap(
+            (entry: { hooks: { command: string }[] }) =>
+                entry.hooks.map((hook) => hook.command)
+        );
+        expect(commands).toContainEqual(
+            expect.stringMatching(/session-handoff\.mjs"$/)
+        );
     });
 
     const ruleFiles = ["AGENTS.md", "docs/ai-check.md"];
