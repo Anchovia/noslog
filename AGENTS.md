@@ -35,8 +35,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 명령은 지어내지 않고 `package.json` 스크립트를 쓴다.
 
 - `npm run typecheck` · `npm run lint` · `npm test`(파일 하나는 `npx vitest run tests/<파일>`) · `npm run build` · 공용 UI 를 바꾸면 `npm run test:storybook`.
-- e2e — 화면 · 흐름을 바꿨고 관련 스펙이 있으면 그 스펙 하나를 로컬에서 돌린다(전체는 먼저 묻는다). 사용자의 localhost:3000 에는 돌리지 않는다.
-  돌리기 전에 [e2e 로컬 실행](docs/operations/e2e-local.md)을 읽는다(Claude 는 `/e2e-local`).
+- e2e — 화면 · 흐름을 바꿨고 관련 스펙이 있으면 그 스펙 하나를 로컬에서 돌린다. 돌리기 전에 [e2e 로컬 실행](docs/operations/e2e-local.md)을 읽는다(Claude 는 `/e2e-local`).
 
 ## 사용자 규칙
 
@@ -84,7 +83,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 ## 릴리스
 
-버전을 올리거나 릴리스 명령을 주기 전에 [릴리스](docs/operations/release.md)를 읽는다(Claude 는 `/release`). 태그 이름은 다시 못 쓰니 PR 이 `main` 에 합쳐진 것부터 확인한다.
+버전을 올리거나 릴리스 명령을 주기 전에 [릴리스](docs/operations/release.md)를 읽는다(Claude 는 `/release`).
 
 ## 손대지 않는 곳
 
@@ -114,13 +113,12 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - 컨텍스트를 작게 둔다. 넓은 조사 · 파일 훑기는 서브에이전트에 맡기고, 작업이 바뀌면 새 세션으로 넘긴다([결정](docs/decisions/2026-10-24-claude-efficiency.md)).
 - Claude Code 는 `.claude/hooks` 가 강제한다. 매 메시지마다 `AGENTS.md` · `docs/ai-check.md` 원문을 파일마다 따로 다시 넣고, 한글이 20% 아래인 마지막 답은 막아 한국어로 다시 쓰게 한다([결정](docs/decisions/2026-10-27-rule-enforcement-hooks.md)).
 - 토큰 · 공용 부품으로만 만든다. 규칙은 [기초값 — 토큰 · 공용 부품으로만](docs/design/foundations.md#토큰--공용-부품으로만). 공통 규칙은 공용 소스(`tokens.css` · `foundation.css` · `components/ui`)에서 고친다.
-- 결정이 나면 같은 작업에서 코드 → 가이드 해당 문서 한 곳 → [결정 파일](docs/decisions/README.md) 하나 → 테스트 기대값을 맞춘다.
-- 바꾼 화면은 [가이드 「확인」](docs/design/README.md#확인)대로 잰다. 시안이 있으면 같은 폭으로 나란히 대조하고 바꾼 동작을 눌러 본다. 실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
+- 결정이 나면 같은 작업에서 코드 → 가이드 해당 문서 한 곳 → [결정 파일](docs/decisions/README.md) 하나 → 이 결정이 바꾼 옛 결정의 상태 줄 · 색인 표시 → 테스트 기대값을 맞춘다.
+- 바꾼 화면은 [가이드 「확인」](docs/design/README.md#확인)대로 잰다.
 - 끝내기 전 검사 — 바꾼 것에 따라 더한다.
     - 코드(ts · tsx · css): `npm run typecheck` · `npm run lint` · `npm test` 전체(관련 파일만 고르지 않는다).
     - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
     - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
     - 문서만(md): `npx prettier --check <파일>` · `npx vitest run tests/docs-links.test.ts`(링크 · 경로 · 결정 목록).
 - 끝내기 전 정리 — 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의 ko · en · ja 세 곳 모두 → [AI 티 확인](docs/ai-check.md) 다시 보기 → 커밋 제목 · 파일별 `git add`.
-- 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 지켜져 필요 없어진 줄은 뺀다.

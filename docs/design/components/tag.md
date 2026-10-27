@@ -6,7 +6,7 @@
 
 - 높이 20 · `radius/full`(알약) · 좌우 8 · 글자 `nl-tag-label`. 이름 · 값 글줄(20) 안에서도 줄을 늘리지 않는다. 페이지 CSS 가 태그 높이 · 여백을 덮어쓰지 않는다.
 - 면 `surface/tag` · 글자 `content/on-tag` · 테두리 없음.
-- 분류 · 표시에는 색을 쓰지 않는다(공지 분류 · 미션 종류 · 기여 라벨 · 「Admin」).
+- 분류 · 표시에는 색을 쓰지 않는다(공지 분류 · 미션 종류 · 기여 라벨).
 - 한 줄에 태그는 하나. 누르지 않는 라벨은 이 하나만 쓴다.
 - 강조형 `--strong` = 반전(주 버튼과 같은 면 `primary/default` · 글자 `primary/on-primary`). 한 줄에 하나까지.
 - 관리자 `Badge` 의 변형은 기본 하나와 상태 셋(success · danger · score = 경고)이다. 모양이 같은 변형(outline · basic · recital)은 기본으로 합친다.
@@ -36,9 +36,10 @@
 
 ## 바뀐 기록
 
+- [2026-10-27 운영자 태그 「Admin」 없앰](../../decisions/2026-10-27-admin-tag-removal.md)
 - [2026-10-27 가이드 고를 곳 — 반전 태그 색 · `Badge` 변형 합침](../../decisions/2026-10-27-guide-choices.md)
 - [2026-10-26 Geist 색 · 모서리 · 포커스 — 배지 면 · 알약 · 상태 태그는 카드 면 + 둘레 선](../../decisions/2026-10-26-geist-color-radius.md)
-- [2026-10-25 체계 묶음 — 태그 높이 20 · 글줄 안 태그 변형 없앰](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-10-25 체계 묶음 — 태그 높이 · 글줄 안 태그 변형 없앰](../../decisions/2026-10-25-design-system-cluster.md)
 - [2026-10-24 토큰 정리 — 무채색 shadcn/ui · 포커스 한 겹 · 덧붙인 접근성 정리](../../decisions/2026-10-24-token-cleanup.md)
 - [2026-10-24 상태 태그 글자색 · 점 규칙 정리](../../decisions/2026-10-24-conflict-choices.md)
 - [2026-10-15 태그 글자 표 · 글줄 안 태그](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-15)

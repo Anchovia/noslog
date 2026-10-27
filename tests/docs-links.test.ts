@@ -114,4 +114,86 @@ describe("결정 기록 목록", () => {
         });
         expect(wrong).toEqual([]);
     });
+
+    // 새 결정이 옛 결정을 바꾸면 옛 파일 상태 줄과 README 표시를 함께 고친다. 한쪽만 고치면 옛 값이 「유효」 로 읽힌다.
+    it("결정 파일 상태 줄과 README 표 표시가 같다", () => {
+        const [active, replaced = ""] = index.split("## 대체됨");
+        const kindOf = (status: string) =>
+            status.startsWith("일부 대체됨")
+                ? "일부 대체됨"
+                : status.startsWith("대체됨")
+                  ? "대체됨"
+                  : "유효";
+        const wrong = decisionFiles.flatMap((name) => {
+            const status =
+                readFileSync(join(dir, name), "utf8").match(
+                    /^- 상태: (.*)$/m
+                )?.[1] ?? "";
+            const link = `(./${name})`;
+            const row =
+                active.split("\n").find((line) => line.includes(link)) ?? "";
+            const listed = replaced.includes(link)
+                ? "대체됨"
+                : row.includes("(일부 대체됨)")
+                  ? "일부 대체됨"
+                  : "유효";
+            const kind = kindOf(status);
+            return kind === listed
+                ? []
+                : [`${name}: 파일 ${kind} · 표 ${listed}`];
+        });
+        expect(wrong).toEqual([]);
+    });
+});
+
+describe("가이드 「바뀐 기록」", () => {
+    // 링크 제목에 값을 적으면 결정이 바뀐 뒤 옛 값이 가이드 옆에 남는다. 값은 가이드 본문에만 둔다.
+    // 「」 안 화면 문구와 「24곳 · 3단계」 같은 개수는 값이 아니다.
+    const value =
+        /\d+\s*(?:px|%|ms)|#[0-9a-fA-F]{3,8}\b|\d+\s*[:×]\s*\d+|`(?:--|nl-)[^`]*`|`[^`]*\/[^`]*`|(?<![\d.])\d+(?![\d.]|\s*(?:곳|건|단계|개|명|종|칸|단|번째|일|월|년))/;
+
+    it("링크 제목에 크기 · 색 · 토큰 값이 없다", () => {
+        const wrong = markdownFiles(join(root, "docs/design")).flatMap(
+            (file) => {
+                const text = readFileSync(file, "utf8");
+                const start = text.indexOf("## 바뀐 기록");
+                if (start < 0) return [];
+                return text
+                    .slice(start)
+                    .split("\n")
+                    .flatMap((line) => {
+                        const title = line.match(
+                            /^- \[\d{4}-\d{2}-\d{2} (.+?)\]\(/
+                        )?.[1];
+                        if (!title) return [];
+                        return value.test(title.replace(/「[^」]*」/g, ""))
+                            ? [`${rel(file)} → ${title}`]
+                            : [];
+                    });
+            }
+        );
+        expect(wrong).toEqual([]);
+    });
+});
+
+describe("조사 원문", () => {
+    // 조사는 그것을 쓴 결정의 「근거」 에서 가리킨다(보관 기록은 백틱 경로로 적은 곳도 있다). 아무도 가리키지 않는 조사는 숫자를 다시 확인할 길이 끊긴다.
+    it("docs/research 파일마다 다른 문서가 가리킨다", () => {
+        const research = join(root, "docs/research");
+        const sources = [
+            ...files,
+            join(root, "docs/decisions/archive/2026-09-10_2026-10-23.md"),
+        ].map((file) => ({ file, text: readFileSync(file, "utf8") }));
+        const orphans = readdirSync(research)
+            .filter((name) => name.endsWith(".md"))
+            .filter(
+                (name) =>
+                    !sources.some(
+                        ({ file, text }) =>
+                            file !== join(research, name) &&
+                            text.includes(`research/${name}`)
+                    )
+            );
+        expect(orphans).toEqual([]);
+    });
 });

@@ -75,9 +75,9 @@
 
 - [2026-10-27 홈 공지 줄은 폰에서도 한 줄 · 제목 말줄임](../../decisions/2026-10-27-home-announcement-one-line.md)
 - [2026-10-27 배너 글자 층 흐림 뺌](../../decisions/2026-10-27-token-audit-choices.md)
-- [2026-10-26 홈 검색 모든 폭 40 · 헤더 → 첫 요소 24](../../decisions/2026-10-26-spacing-size-alignment.md)
-- [2026-10-26 Geist 색 · 모서리 — 목적지 타일 면 · 선 없음](../../decisions/2026-10-26-geist-color-radius.md)
-- [2026-10-25 체계 묶음 — 모서리 4](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-10-26 홈 검색 높이 · 헤더와 첫 요소 사이](../../decisions/2026-10-26-spacing-size-alignment.md)
+- [2026-10-26 Geist 색 · 모서리 — 목적지 타일 면 · 선](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 모서리](../../decisions/2026-10-25-design-system-cluster.md)
 - [2026-09-18 홈에 진행 중인 이벤트 두 장](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-18)
 - [2026-09-19 공식 소식 수집 분리](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19)
 - [2026-09-28 중대 공지 배너 없앰 · 고정 줄 핀 · 묶음 간격](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-28)
