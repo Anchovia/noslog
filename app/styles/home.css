@@ -104,6 +104,23 @@
     flex-direction: column;
     gap: var(--nl-section-title-gap);
 }
+/* 홈 공지는 폭과 상관없이 「태그 · 제목 · 날짜」 한 줄. 좁은 폭에서 두 줄이면 새 소식 구역이 길어져서, 제목만 한 줄 말줄임 */
+.noslog-ui .nl-home-announcements > ul {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.noslog-ui .nl-home-announcements > ul > li,
+.noslog-ui .nl-home-announcements .nl-announcement-row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-areas: "meta title date";
+}
+.noslog-ui .nl-home-announcements .nl-announcement-row__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-control);
