@@ -31,3 +31,9 @@ Neon 무료 플랜의 compute 한도(프로젝트당 월 100 CU-hours)가 홈페
 - 개발 데이터 시험(2026-10-28): 빈 DB 에 마이그레이션 86개 59초(5432) · 개발 덤프 3.2 MB 복원 72초 · 78개 표 행 수 일치 · 6432 로 운영 빌드 성공.
 - 같은 빌드 · 캐시 없이 91페이지를 20개씩 동시에(로컬 한국): Neon p50 2.80초 · p95 8.02초 / PS-5 6432 p50 1.41초 · p95 3.90초. 오류 0, DB 연결 최대 11.
 - 남은 한계: 운영 크기 데이터 · 실제 동기화 API · 레이팅 전원 재계산은 시험하지 않았다.
+
+## 바뀌는 곳
+
+- 문서: `README.md` 기술 스택 · 배포, `AGENTS.md` 운영 DB 정의, `docs/design/product-rules.md` 「데이터 보관과 운영자 정보」, `docs/code-style.md` 마이그레이션 주소, 이전 순서는 [운영 DB 이전](../operations/db-migration-planetscale.md)
+- 코드: `vercel.json` · `prisma.config.ts` · `.env.example` · `lib/prisma-pg.ts` 주석
+- 처리방침: `features/privacy/content/policyCopy.json` · `versions/2026-09-26.json` · `privacy-content.ts` · `tests/privacy-history.test.ts`

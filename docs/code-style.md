@@ -328,8 +328,10 @@ verification. Report the actual checks and any unverified runtime conditions.
 - The schema lives in `prisma/schema/*.prisma`, one file per area (users,
   records, music, contributions, tiers, community, content, feedback, arcades,
   bingos, exams, analytics). `prisma.config.ts` gives the CLI the schema folder,
-  the migrations folder, and `DATABASE_URL`; the app connects through the `pg`
-  driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
+  the migrations folder, and `DATABASE_MIGRATION_URL` (falling back to
+  `DATABASE_URL`). In production the app uses the PgBouncer port and migrations
+  use the direct port, because `migrate deploy` takes a session lock. The app
+  connects through the `pg` driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
   Every adapter passes `PRISMA_PG_SESSION_OPTIONS` (`lib/prisma-pg.ts`), which
   fixes the session time zone to UTC: adapter-pg 7.10 reads a `timestamptz`
   offset as `+00:00`, so a non-UTC session shifts times.
