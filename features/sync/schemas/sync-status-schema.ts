@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ACHIEVEMENT_TIERS } from "@/features/achievements/achievement-definitions";
+
 const syncAttemptSchema = z.object({
     id: z.number().int().positive(),
     status: z.enum([
@@ -22,7 +24,7 @@ const syncAttemptSchema = z.object({
         .array(
             z.object({
                 key: z.string(),
-                tier: z.number().int().min(1).max(3),
+                tier: z.literal(ACHIEVEMENT_TIERS),
             })
         )
         .max(100)
