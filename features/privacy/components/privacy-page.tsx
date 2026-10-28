@@ -84,7 +84,7 @@ export default function PrivacyPage({
                 <h1 className="nl-page-title">{copy.title}</h1>
                 <p className="nl-metadata nl-muted">{copy.dates}</p>
                 {period ? (
-                    <p className="nl-metadata nl-muted">{period}</p>
+                    <p className="nl-body-secondary nl-muted">{period}</p>
                 ) : null}
             </header>
             <div className="nl-privacy-summary">

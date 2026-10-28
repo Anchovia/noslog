@@ -200,7 +200,7 @@ export default function MusicTranslationCsvImport() {
                 <div className="flex flex-col gap-nl-8">
                     <div className="overflow-x-auto rounded-nl-control border-nl-stroke border-nl-divider">
                         <table className="nl-admin-table-wide nl-metadata w-full text-left">
-                            <thead className="bg-nl-surface">
+                            <thead className="bg-nl-control">
                                 <tr>
                                     <th className="p-nl-8">index</th>
                                     <th className="p-nl-8">원제</th>

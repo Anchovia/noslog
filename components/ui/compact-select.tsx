@@ -40,7 +40,7 @@ export default function CompactSelect<Value extends string>({
     container?: HTMLElement | null;
 }) {
     const selected = options.find((option) => option.value === value);
-    const openState = useSelectOpen();
+    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
         <Select.Root
             {...openState}
@@ -69,6 +69,7 @@ export default function CompactSelect<Value extends string>({
                 <div className="noslog-ui">
                     <Select.Content
                         className="nl-select-menu"
+                        onEscapeKeyDown={onEscapeKeyDown}
                         position="popper"
                         sideOffset={overlayPosition.sideOffset}
                         align="start"
@@ -80,7 +81,7 @@ export default function CompactSelect<Value extends string>({
                                     key={option.value}
                                     value={option.value}
                                     disabled={option.disabled}
-                                    className="nl-select-option nl-body-secondary"
+                                    className="nl-select-option"
                                 >
                                     <Select.ItemText>
                                         {option.label}

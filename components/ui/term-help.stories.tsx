@@ -37,6 +37,26 @@ export const Default: Story = {
                 screen.queryByText("악곡의 기존 성취 설명")
             ).not.toBeInTheDocument()
         );
+        // 다시 열기 막음(200ms)은 누름 닫기에만 — Escape 뒤 곧바로 Enter 로 다시 연다
+        await userEvent.keyboard("{Enter}");
+        await expect(
+            await screen.findByText("악곡의 기존 성취 설명")
+        ).toBeVisible();
+        // 창 제목 = 부품 제목 16/24 · 600
+        const title = screen.getByText("Pianist", { selector: "strong" });
+        await expect(title).toHaveClass("nl-component-title");
+        const style = getComputedStyle(title);
+        await expect([
+            style.fontSize,
+            style.lineHeight,
+            style.fontWeight,
+        ]).toEqual(["16px", "24px", "600"]);
+        await userEvent.keyboard("{Escape}");
+        await waitFor(() =>
+            expect(
+                screen.queryByText("악곡의 기존 성취 설명")
+            ).not.toBeInTheDocument()
+        );
     },
 };
 export const Plain: Story = { args: { plain: true } };

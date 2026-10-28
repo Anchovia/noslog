@@ -85,7 +85,7 @@ export default function ActionMenu({
                     >
                         {items.map((item) => (
                             <button
-                                className="nl-action-menu__item nl-body-secondary"
+                                className="nl-action-menu__item"
                                 role="menuitem"
                                 type="button"
                                 key={item.label}

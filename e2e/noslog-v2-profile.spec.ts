@@ -246,9 +246,9 @@ for (const locale of ["ko", "ja", "en"]) {
                 );
                 expect(best.x).toBeCloseTo(progress.x, 0);
                 if (recent) expect(recent.x).toBeCloseTo(progress.x, 0);
-                // 구역 사이 = --nl-section-gap, 1056 이상 48(가이드 · 2026-10-01 D1)
+                // 구역 사이 = --nl-section-gap, 모든 폭 32(가이드 「간격」)
                 expect(best.y - progress.y - progress.height).toBeCloseTo(
-                    48,
+                    32,
                     0
                 );
                 if (recent) expect(recent.y).toBeGreaterThan(best.y);

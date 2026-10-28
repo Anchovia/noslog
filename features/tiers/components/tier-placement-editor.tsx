@@ -94,7 +94,7 @@ export default function TierPlacementEditor({
                             className="size-nl-48 shrink-0 rounded-nl-control"
                         />
                         <span className="min-w-0 flex-1">
-                            <strong className="nl-body-secondary block truncate">
+                            <strong className="nl-emphasis-label block truncate">
                                 {entry.chart.music.title}
                             </strong>
                             <span className="nl-metadata block truncate text-nl-subdued">

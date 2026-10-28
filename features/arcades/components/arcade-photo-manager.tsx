@@ -156,7 +156,7 @@ export default function ArcadePhotoManager({
             </p>
             {photos.map((photo, index) => (
                 <div key={photo.id} className="flex items-center gap-nl-8">
-                    <div className="relative size-nl-64 shrink-0 overflow-hidden rounded-nl-control bg-nl-surface">
+                    <div className="relative size-nl-64 shrink-0 overflow-hidden rounded-nl-control bg-nl-control">
                         <Image
                             src={photo.url}
                             alt={photo.alt}
@@ -222,7 +222,7 @@ export default function ArcadePhotoManager({
             />
             {file && preview ? (
                 <div className="grid gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-8">
-                    <div className="relative aspect-video overflow-hidden rounded-nl-control bg-nl-surface">
+                    <div className="relative aspect-video overflow-hidden rounded-nl-control bg-nl-control">
                         <Image
                             src={preview}
                             alt=""

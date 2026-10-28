@@ -31,6 +31,20 @@ test("검정 선택을 바꾸고 뒤로가기로 이전 과제곡을 복원한�
     await expect(
         page.getByRole("heading", { name: "Basic 10급", exact: true })
     ).toBeVisible();
+    // 로그아웃이면 합격 인증은 제목 줄 끝 제목 링크 하나(빙고 · 이벤트 · 투표와 같은 모양)
+    const proofRow = page
+        .locator(".nl-exam-proof .nl-heading-row")
+        .filter({ hasText: "합격 인증" });
+    const proofLogin = proofRow.getByRole("link", {
+        name: "로그인하고 인증하기",
+        exact: true,
+    });
+    await expect(proofLogin).toHaveClass(/nl-heading-link/);
+    await expect(proofLogin).toHaveAttribute(
+        "href",
+        "/ko/login?returnTo=%2Fko%2Fexams%2Fbasic-10"
+    );
+    await expect(page.locator(".nl-exam-proof .nl-button")).toHaveCount(0);
     await page
         .getByRole("combobox", { name: "검정 선택", exact: true })
         .click();
@@ -48,6 +62,41 @@ test("검정 선택을 바꾸고 뒤로가기로 이전 과제곡을 복원한�
     await expect(
         page.getByRole("heading", { name: "Basic 10급", exact: true })
     ).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+    // 1056 이상 상자에서 로그아웃 제목 줄은 하나뿐이라 위아래 안쪽이 같다
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const insets = await page
+        .locator(".nl-exam-proof")
+        .first()
+        .evaluate((box) => {
+            const outer = box.getBoundingClientRect();
+            const row = box.querySelector(".nl-heading-row")!;
+            const inner = row.getBoundingClientRect();
+            return [inner.top - outer.top, outer.bottom - inner.bottom];
+        });
+    expect(insets).toEqual([16, 16]);
+});
+
+test("개발자 문서 표는 칸 글자를 중간에서 꺾지 않고 표만 가로로 민다", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/ko/developer");
+    await expectPageLoaded(page);
+    const cells = page.locator(".nl-announcement-body :is(th, td)");
+    await expect(cells.first()).toBeVisible();
+    // 본문은 anywhere 라도 표 칸은 normal — 긴 코드 칸은 칸 대신 표 둘레가 가로로 민다
+    const wraps = await cells.evaluateAll((nodes) =>
+        nodes.map((node) => getComputedStyle(node).overflowWrap)
+    );
+    expect([...new Set(wraps)]).toEqual(["normal"]);
+    expect(
+        await page
+            .locator(".nl-announcement-body__table")
+            .evaluateAll((tables) =>
+                tables.some((table) => table.scrollWidth > table.clientWidth)
+            )
+    ).toBe(true);
     await expectNoHorizontalOverflow(page);
 });
 

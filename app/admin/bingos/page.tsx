@@ -35,7 +35,7 @@ export default async function AdminBingosPage() {
                         className={`nl-hover-layer flex min-h-nl-64 items-center gap-nl-12 px-nl-12 ${index > 0 ? "border-t-nl-stroke border-nl-divider" : ""}`}
                     >
                         <span
-                            className={`nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-surface ${bingo.status === "published" ? "text-nl-success" : "text-nl-subdued"}`}
+                            className={`nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-control ${bingo.status === "published" ? "text-nl-success" : "text-nl-subdued"}`}
                         >
                             {bingo.requiredLines}줄
                         </span>

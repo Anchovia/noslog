@@ -126,7 +126,7 @@ export default async function AdminSyncsPage({
                         >
                             <div className="flex items-start gap-nl-12">
                                 <span
-                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-surface`}
+                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-control`}
                                 >
                                     <Icon className="nl-icon-small" />
                                 </span>

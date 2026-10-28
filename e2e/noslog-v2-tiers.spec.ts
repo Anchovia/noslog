@@ -199,6 +199,11 @@ test("stages all three filter groups, cancels ranges, and commits once", async (
     const dialog = page.getByRole("dialog", { name: "서열표 조건" });
     // 0곡 구간은 목록에서 뺀다(2026-09-22) — 곡이 있는 14.5 · 14.4 · 14.3 만
     await expect(dialog.getByRole("checkbox")).toHaveCount(3);
+    // 목록 높이는 줄 수로 — 폰은 컨트롤 높이 40 × 8줄이라 맨 아래 줄이 반만 보이지 않는다
+    await expect(dialog.locator(".nl-tier-band-options")).toHaveCSS(
+        "height",
+        "320px"
+    );
     await dialog
         .getByRole("button", { name: "범위 선택", exact: true })
         .click();
@@ -289,6 +294,36 @@ test("list rows keep 48 jackets, the goal outline and the contribution", async (
     expect(jacket!.height).toBeCloseTo(48, 0);
     await expect(fc).toContainText("Expert 12");
     await expect(fc).toContainText("975,422");
+    // 키 포커스 = 올림과 같은 좌우 12 넓힌 면, 선은 그 면의 안쪽 −2 · 모서리 8(줄 상자에는 긋지 않음)
+    await fc.focus();
+    // 마우스로 보기를 바꾼 뒤라 키보드로 한 칸 갔다 돌아와야 :focus-visible 이 된다
+    await page.keyboard.press("Shift+Tab");
+    await page.keyboard.press("Tab");
+    await expect(fc).toBeFocused();
+    const focus = await fc.evaluate((element) => {
+        const row = getComputedStyle(element);
+        const face = getComputedStyle(element, "::before");
+        return {
+            visible: element.matches(":focus-visible"),
+            rowOutline: row.outlineStyle,
+            faceOutline: [
+                face.outlineStyle,
+                face.outlineWidth,
+                face.outlineOffset,
+            ],
+            faceRadius: face.borderTopLeftRadius,
+            faceFill: face.backgroundImage !== "none",
+            faceInset: [face.left, face.right],
+        };
+    });
+    expect(focus).toEqual({
+        visible: true,
+        rowOutline: "none",
+        faceOutline: ["solid", "2px", "-2px"],
+        faceRadius: "8px",
+        faceFill: true,
+        faceInset: ["-12px", "-12px"],
+    });
     await expect(fc).toContainText("공식 Grd +0.42");
     // 공식 Grd 가 없을 때만 NosLog 레이팅 — 한 줄에 하나
     await expect(fc).not.toContainText("NosLog 레이팅");
@@ -358,7 +393,35 @@ test("all four tier lists update the link context and guide without removing the
     await expect(
         page.getByText("Recital Pianist · 1곡 기준", { exact: true })
     ).toBeVisible();
+    // 운영자 설명은 한국어 데이터 글이라 화면 언어와 상관없이 한국어 줄바꿈
+    await expect(
+        page
+            .locator(".nl-tier-guide")
+            .getByText("Basic 모드에서 S 달성을 목표로 하는 통합 서열표", {
+                exact: true,
+            })
+    ).toHaveAttribute("lang", "ko");
     await expect(page.locator(".nl-tier-weight")).toBeVisible();
+});
+
+// 넓은 폭 구간 목록은 컨트롤 높이 32 × 11줄, 발 없는 안내 창은 본문 아래도 32
+test("wide band list keeps whole rows and the footless guide closes at 32", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await prepare(page);
+    // 넓은 폭은 필터가 왼쪽 판에 바로 놓인다
+    await expect(page.locator(".nl-tier-band-options")).toHaveCSS(
+        "height",
+        "352px"
+    );
+    await page
+        .getByRole("button", { name: "S 서열표 안내", exact: true })
+        .click();
+    const guide = page.getByRole("dialog", { name: "S 서열표 안내" });
+    const body = guide.locator(".nl-dialog__body");
+    await expect(body).toHaveCSS("padding-bottom", "32px");
+    await expect(guide.locator(".nl-dialog__footer")).toHaveCount(0);
 });
 
 test("calculation guidance preserves chart geometry and keyboard access to exact values", async ({
@@ -628,6 +691,40 @@ test("exports the current view as a JPEG and remembers the display options", asy
     ).toBeChecked();
 });
 
+// 이미지 내보내기 창은 떠 있는 대화상자(672 이상)의 안쪽 32 · 닫기 규칙을 받지 않고 제 값을 쓴다
+for (const width of [800, 1280]) {
+    test(`export window keeps its own insets at ${width}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await prepare(page);
+        await page
+            .getByRole("button", { name: "서열표 더보기", exact: true })
+            .click();
+        await page.getByRole("menuitem", { name: "이미지로 내보내기" }).click();
+        const dialog = page.getByRole("dialog", { name: "서열표 내보내기" });
+        const header = dialog.locator(".nl-dialog__header");
+        const body = dialog.locator(".nl-dialog__body");
+        const close = dialog.getByRole("button", { name: "닫기" });
+        await expect(body).toHaveCSS("padding-left", "0px");
+        await expect(body).toHaveCSS("padding-top", "0px");
+        await expect(close).toHaveCSS("border-top-left-radius", "8px");
+        const closeBox = (await close.boundingBox())!;
+        expect(closeBox.width).toBe(closeBox.height);
+        if (width < 1056) {
+            // 1055 이하 = 전체 화면 · 머리는 전체 화면 창 헤더 높이 · 이미지는 화면 폭 끝까지
+            await expect(header).toHaveCSS("padding-left", "16px");
+            expect((await header.boundingBox())!.height).toBe(56);
+            const preview = dialog.locator(".nl-tier-export__preview img");
+            await expect(preview).toBeVisible({ timeout: 30_000 });
+            const box = (await preview.boundingBox())!;
+            expect([box.x, box.width]).toEqual([0, width]);
+        } else {
+            await expect(header).toHaveCSS("padding-top", "0px");
+            await expect(header).toHaveCSS("padding-left", "24px");
+            expect(closeBox.height).toBe(32);
+        }
+    });
+}
+
 test("unpublished lists and request failures retain the scope controls", async ({
     page,
 }) => {
@@ -644,7 +741,7 @@ test("unpublished lists and request failures retain the scope controls", async (
         "서열 데이터를 불러오지 못했습니다."
     );
     await expect(
-        page.getByRole("button", { name: "다시 불러오기", exact: true })
+        page.getByRole("button", { name: "다시 시도", exact: true })
     ).toBeVisible();
 });
 
@@ -689,9 +786,7 @@ test("band failures stay local and retry without losing the selected scope", asy
             },
         });
     });
-    await first
-        .getByRole("button", { name: "다시 불러오기", exact: true })
-        .click();
+    await first.getByRole("button", { name: "다시 시도", exact: true }).click();
     await expect(first.locator(".nl-tier-card")).toHaveCount(1);
     await expect(page).toHaveURL(/goal=s/);
 });
@@ -780,6 +875,22 @@ for (const locale of ["ko", "ja", "en"])
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );
+                    // 구간 머리 아래 선 → 첫 카드 · 행 = section-title-gap(12, 1056 이상 16). 머리가 붙기 전인 맨 위에서 잰다
+                    const bandGap = await page.evaluate(() => {
+                        scrollTo(0, 0);
+                        const band = document.querySelector(
+                            ".nl-tier-band:has(.nl-tier-card, .nl-tier-row)"
+                        )!;
+                        return (
+                            band
+                                .querySelector(".nl-tier-card, .nl-tier-row")!
+                                .getBoundingClientRect().top -
+                            band
+                                .querySelector(".nl-tier-band__header")!
+                                .getBoundingClientRect().bottom
+                        );
+                    });
+                    expect(bandGap).toBeCloseTo(width >= 1056 ? 16 : 12, 1);
                     if (width === 320 || width === 1280) {
                         const axe = await new AxeBuilder({ page })
                             .include(".nl-tiers")

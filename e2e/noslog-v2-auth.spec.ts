@@ -129,3 +129,17 @@ for (const locale of ["ko", "ja", "en"] as const) {
         );
     });
 }
+
+test("Discord 버튼은 올려도 흰 글자 대비 4.5 : 1 을 지키는 Discord 면 그대로다", async ({
+    page,
+}) => {
+    await page.goto("/ko/login");
+    const discord = page.locator(".nl-auth-discord");
+    await expect(discord).toBeVisible();
+    const resting = await discord.evaluate(
+        (element) => getComputedStyle(element).backgroundColor
+    );
+    await discord.hover();
+    await expect(discord).toHaveCSS("background-image", "none");
+    await expect(discord).toHaveCSS("background-color", resting);
+});

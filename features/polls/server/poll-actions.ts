@@ -29,6 +29,11 @@ export async function votePoll(pollId: number, optionIds: number[]) {
             event: "poll.vote.failed",
             routeType: "action",
         });
-        return { success: false, message: t("poll.voteFailed") };
+        // 서버 · 연결 문제만 같은 표를 다시 보내 볼 수 있다(마감 · 개수 초과는 다시 보내도 같다)
+        return {
+            success: false,
+            message: t("poll.voteFailed"),
+            retryable: true,
+        };
     }
 }

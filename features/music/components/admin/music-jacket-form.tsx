@@ -41,7 +41,7 @@ function jacketSource(index: string, background: string | null) {
 
 function JacketBox({ src }: { src: string | null }) {
     return (
-        <div className="flex size-nl-64 shrink-0 items-center justify-center overflow-hidden rounded-nl-control bg-nl-surface">
+        <div className="flex size-nl-64 shrink-0 items-center justify-center overflow-hidden rounded-nl-control bg-nl-control">
             {src ? (
                 <img src={src} alt="" className="size-full object-cover" />
             ) : (

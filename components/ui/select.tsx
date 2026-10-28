@@ -58,7 +58,7 @@ export function Select({
     "aria-describedby"?: string;
 }) {
     const hasEmpty = options.some((option) => option.value === "");
-    const openState = useSelectOpen();
+    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
         <SelectPrimitive.Root
             {...openState}
@@ -85,6 +85,7 @@ export function Select({
                 <div className="noslog-ui">
                     <SelectPrimitive.Content
                         className="nl-select-menu nl-select-menu--field"
+                        onEscapeKeyDown={onEscapeKeyDown}
                         position="popper"
                         sideOffset={overlayPosition.sideOffset}
                         align="start"
@@ -96,7 +97,7 @@ export function Select({
                                     key={toItem(option.value)}
                                     value={toItem(option.value)}
                                     disabled={option.disabled}
-                                    className="nl-select-option nl-body-secondary"
+                                    className="nl-select-option"
                                 >
                                     <SelectPrimitive.ItemText>
                                         {option.label}

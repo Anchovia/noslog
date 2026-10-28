@@ -127,6 +127,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 exact: true,
             })
         ).toBeVisible();
+        // 날짜 · 적용 기간 두 줄은 모두 쪽 제목 아래 설명 줄 16/24
+        const identityLines = page.locator(".nl-privacy-identity > p");
+        await expect(identityLines).toHaveCount(2);
+        for (const line of await identityLines.all()) {
+            await expect(line).toHaveCSS("font-size", "16px");
+            await expect(line).toHaveCSS("line-height", "24px");
+        }
         await page
             .getByRole("link", {
                 name: privacyHistoryCopy[locale].title,

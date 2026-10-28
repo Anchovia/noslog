@@ -76,7 +76,8 @@ export default function TierRatingGuide({
         >
             <div className="nl-tier-guide">
                 {overview.list?.description ? (
-                    <p className="nl-body-secondary">
+                    // 운영자가 한국어로 쓰는 데이터 글이라 화면 언어와 상관없이 한국어 줄바꿈(낱말 단위)
+                    <p className="nl-body-secondary" lang="ko">
                         {overview.list.description}
                     </p>
                 ) : null}
@@ -99,7 +100,7 @@ export default function TierRatingGuide({
                                 <dt className="nl-body-secondary nl-muted">
                                     {t("tiers.guideUpdated")}
                                 </dt>
-                                <dd className="nl-body-secondary">
+                                <dd className="nl-control">
                                     {new Intl.DateTimeFormat(locale, {
                                         year: "numeric",
                                         month: "2-digit",

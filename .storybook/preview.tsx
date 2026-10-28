@@ -1,12 +1,16 @@
 import "@/app/globals.css";
 
 import type { Preview } from "@storybook/nextjs-vite";
+import { sb } from "storybook/test";
 
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 
 import { contractViewports } from "./responsive-contract";
+
+// 서버 동작은 DB 에 닿으므로 스토리에서는 가짜로 바꾸고, 결과는 각 스토리가 정한다
+sb.mock(import("../features/polls/server/poll-actions.ts"));
 
 const preview: Preview = {
     tags: ["autodocs"],

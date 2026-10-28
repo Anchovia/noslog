@@ -63,7 +63,7 @@ export default function TermHelp({
         if (closeTimer.current) clearTimeout(closeTimer.current);
     }
 
-    /** 열기 — 먼저 열린 다른 도움말은 바로 닫는다(늦게 닫혀 겹치면 번쩍인다). 닫은 직후 200ms 는 다시 열지 않는다 */
+    /** 열기 — 먼저 열린 다른 도움말은 바로 닫는다(늦게 닫혀 겹치면 번쩍인다). 누름으로 닫은 직후 200ms 는 다시 열지 않는다(Escape 닫힘은 closedAt 을 0 으로 둔다) */
     function openNow() {
         cancelClose();
         if (Date.now() - closedAt.current < REOPEN_GUARD_MS) return false;
@@ -130,6 +130,12 @@ export default function TermHelp({
                         if (trigger.current?.contains(event.target as Node))
                             event.preventDefault();
                     }}
+                    onEscapeKeyDown={(event) => {
+                        // Escape 는 누름이 아니라 같은 손짓으로 다시 열리는 깜빡임이 없다 — 막음 없이 닫는다
+                        event.preventDefault();
+                        closeNow.current();
+                        closedAt.current = 0;
+                    }}
                     onOpenAutoFocus={(event) => event.preventDefault()}
                     onCloseAutoFocus={(event) => event.preventDefault()}
                     onMouseEnter={cancelClose}
@@ -142,7 +148,9 @@ export default function TermHelp({
                 >
                     {content ?? (
                         <>
-                            <strong className="nl-control">{title}</strong>
+                            <strong className="nl-component-title">
+                                {title}
+                            </strong>
                             <p className="nl-body-secondary">{description}</p>
                         </>
                     )}

@@ -20,7 +20,7 @@ export default function ExamSubmissionCard({
                     href={proofImagePath}
                     target="_blank"
                     rel="noreferrer"
-                    className="relative block aspect-video bg-nl-surface"
+                    className="relative block aspect-video bg-nl-control"
                 >
                     <Image
                         src={proofImagePath}
@@ -35,7 +35,7 @@ export default function ExamSubmissionCard({
                     </span>
                 </a>
             ) : (
-                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-surface px-nl-24 text-center text-nl-subdued">
+                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-control px-nl-24 text-center text-nl-subdued">
                     보관 기간이 지나 증빙 이미지가 삭제되었습니다.
                 </div>
             )}

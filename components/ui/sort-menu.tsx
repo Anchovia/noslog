@@ -116,7 +116,7 @@ export default function SortMenu<Value extends string>({
                                     role="menuitemradio"
                                     aria-checked={option.value === value}
                                     disabled={option.disabled}
-                                    className="nl-sort-menu__item nl-body-secondary"
+                                    className="nl-sort-menu__item"
                                     onClick={() => {
                                         onValueChange(option.value);
                                         if (

@@ -153,6 +153,29 @@ for (const locale of ["ko", "ja", "en"]) {
                     await expect(page.locator(".nl-exam-select")).toBeVisible({
                         visible: width < 1056,
                     });
+                    if (width >= 1056) {
+                        // 지금 급 = 검정 선택 목록 고른 줄과 같은 surface/control 면 · 600. 토큰 값은 테마마다 달라 그 자리에서 읽는다
+                        const current = await page
+                            .locator('.nl-exam-rail [aria-current="true"]')
+                            .evaluate((element) => {
+                                const probe = document.createElement("span");
+                                probe.style.backgroundColor =
+                                    "var(--nl-surface-control)";
+                                element.parentElement!.append(probe);
+                                const surface =
+                                    getComputedStyle(probe).backgroundColor;
+                                probe.remove();
+                                const style = getComputedStyle(element);
+                                return {
+                                    fill: style.backgroundColor,
+                                    surface,
+                                    weight: style.fontWeight,
+                                };
+                            });
+                        expect(current.surface).not.toBe("rgba(0, 0, 0, 0)");
+                        expect(current.fill).toBe(current.surface);
+                        expect(current.weight).toBe("600");
+                    }
                 }
                 if (item.route === "/privacy") {
                     await expect(

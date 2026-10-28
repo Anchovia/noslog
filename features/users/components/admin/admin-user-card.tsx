@@ -10,7 +10,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
         <article className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
             <div className="flex items-start gap-nl-12">
                 <span
-                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-surface ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
+                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-control ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
                 >
                     {user.role === "admin" ? (
                         <ShieldCheck className="nl-icon-small" aria-hidden />

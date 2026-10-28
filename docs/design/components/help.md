@@ -6,7 +6,7 @@
 
 ## 용어 뜻
 
-`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(면 `surface/inverse` #282828 · 글자 `content/on-inverse` · `radius/small` · 그림자 `--nl-tooltip-shadow` · 최대 280 · 안쪽 4 8 · 제목 `nl-control` + 설명 `nl-body-secondary`).
+`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(면 `surface/inverse` #282828 · 글자 `content/on-inverse` · `radius/small` · 그림자 `--nl-tooltip-shadow` · 최대 280 · 안쪽 4 8 · 제목 `nl-component-title` + 설명 `nl-body-secondary`).
 
 - 오락실 기체 상태 이유만 줄 끝을 맞추려고 ? 없이 점선.
 - `plain` 변형은 창 안 내용을 자유롭게 둔다(기여 라벨 · 업적 배지 정보 카드). 업적 배지 정보 카드는 카드라 떠 있는 창 규격이다.
@@ -22,11 +22,12 @@
 ## 동작
 
 - 한 번에 하나만 열린다. 옆 배지 · 라벨로 옮기면 먼저 것이 바로 닫히고 그 자리에서 내용만 바뀐다.
-- 열려 있을 때 같은 것을 누르면 닫힌다. 닫은 직후 200ms 는 다시 열지 않는다.
+- 열려 있을 때 같은 것을 누르면 닫힌다. 누름으로 닫은 직후 200ms 는 다시 열지 않는다. Escape 로 닫은 뒤에는 막지 않고 곧바로 다시 열린다.
 - 용어 도움말은 움직임 없이 즉시 뜬다. 업적 배지 정보 카드만 떠 있는 메뉴 페이드(③).
 
 ## 바뀐 기록
 
+- [2026-10-28 전수 검수 — 도움말 제목 글자 · Escape 뒤 다시 열기](../../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-27 툴팁 어두운 회색 면(Spotify)](../../decisions/2026-10-27-tooltip-dark-surface.md)
 - [2026-10-26 Geist 색 · 모서리 · 포커스 — 툴팁 면 · 모서리](../../decisions/2026-10-26-geist-color-radius.md)
 - [2026-10-25 체계 묶음 — 용어 도움말 창 색 · 모서리](../../decisions/2026-10-25-design-system-cluster.md)

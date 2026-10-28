@@ -8,17 +8,26 @@ const REOPEN_GUARD_MS = 200;
 /**
  * 셀렉트 열림 상태(2026-10-01 사용자) — 열린 채로 트리거를 누르면 닫히고 끝나야 한다.
  * Radix 는 「바깥 누름으로 닫기」 와 「트리거 누름으로 열기」 가 같은 누름에서 잇달아 일어나
- * 목록이 깜빡이며 다시 열린다. 닫힌 직후 잠깐은 열기 요청을 받지 않는다.
+ * 목록이 깜빡이며 다시 열린다. 누름으로 닫힌 직후 잠깐은 열기 요청을 받지 않는다.
+ * Escape 는 누름이 아니라 이 깜빡임이 없다 — 막지 않아 키보드로 곧바로 다시 열 수 있다.
+ * root 는 Root 에, onEscapeKeyDown 은 Content 에 넘긴다.
  */
 export function useSelectOpen() {
     const [open, setOpen] = useState(false);
     const closedAt = useRef(0);
     return {
-        open,
-        onOpenChange: (next: boolean) => {
-            if (next && Date.now() - closedAt.current < REOPEN_GUARD_MS) return;
-            if (!next) closedAt.current = Date.now();
-            setOpen(next);
+        root: {
+            open,
+            onOpenChange: (next: boolean) => {
+                if (next && Date.now() - closedAt.current < REOPEN_GUARD_MS)
+                    return;
+                if (!next) closedAt.current = Date.now();
+                setOpen(next);
+            },
+        },
+        onEscapeKeyDown: (event: KeyboardEvent) => {
+            event.preventDefault();
+            setOpen(false);
         },
     };
 }
