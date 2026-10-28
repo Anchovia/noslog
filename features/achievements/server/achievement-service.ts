@@ -7,9 +7,11 @@ import {
     ACHIEVEMENT_DEFINITIONS,
     ACHIEVEMENT_MUSIC_CATEGORIES,
     ACHIEVEMENT_SHOWCASE_SIZE,
+    type AchievementChartRow,
     type AchievementMetrics,
     type AchievementRecords,
     type AchievementTier,
+    chartAchievementMetrics,
     examGradeScore,
     getAchievementDefinition,
     newAchievementTiers,
@@ -40,6 +42,7 @@ export async function collectAchievementMetrics(
     userId: number
 ): Promise<AchievementMetrics> {
     const categoryCodes = Object.values(ACHIEVEMENT_MUSIC_CATEGORIES);
+    const sRank = Prisma.join(S_RANKS);
     const [
         [plays],
         categories,
@@ -49,10 +52,12 @@ export async function collectAchievementMetrics(
         opinions,
         patternEvaluations,
         helpfulReceived,
+        charts,
+        [revived],
     ] = await Promise.all([
         db.$queryRaw<PlayCounts[]>`
             SELECT
-                count(*) FILTER (WHERE play.rank IN (${Prisma.join(S_RANKS)}))::int AS s_rank,
+                count(*) FILTER (WHERE play.rank IN (${sRank}))::int AS s_rank,
                 count(*) FILTER (WHERE play.score >= 990000)::int AS score_990k,
                 count(*) FILTER (WHERE play.fc_type >= 2 OR play.score >= 1000000)::int AS full_combo,
                 count(*) FILTER (WHERE play.fc_type = 3 OR play.score >= 1000000)::int AS pianist,
@@ -113,6 +118,41 @@ export async function collectAchievementMetrics(
                 evaluation: { userId, excluded: false },
             },
         }),
+        // 곡 묶음 · 한 곡 완주 · 레벨 사다리 — 모든 채보에 그 사람의 기록을 붙인다(기록 없는 채보도 「모든 난이도」 판정에 필요)
+        db.$queryRaw<AchievementChartRow[]>`
+            SELECT chart.music_idx AS "musicIndex",
+                chart.difficulty::text AS difficulty,
+                chart.level,
+                coalesce(play.rank IN (${sRank}), false) AS "sRank",
+                coalesce(play.fc_type >= 2 OR play.score >= 1000000, false) AS "fullCombo",
+                coalesce(play.fc_type = 3 OR play.score >= 1000000, false) AS pianist
+            FROM music_charts chart
+            LEFT JOIN play_data play
+                ON play.chart_id = chart.id AND play.user_id = ${userId}`,
+        // 30일 넘게 다른 의견이 없던 채보(나온 지 30일 안 된 채보는 빼고)에 단 의견 중 남에게 「도움이 돼요」 를 받은 것
+        db.$queryRaw<{ revived: number }[]>`
+            SELECT count(*)::int AS revived
+            FROM community_chart_evaluations mine
+            JOIN music_charts chart ON chart.id = mine.chart_id
+            WHERE mine.user_id = ${userId}
+                AND mine.excluded = false
+                AND mine.opinion_hidden = false
+                AND mine.opinion IS NOT NULL
+                AND mine.opinion_created_at IS NOT NULL
+                AND (chart.released_at IS NULL
+                    OR chart.released_at <= mine.opinion_created_at - interval '30 days')
+                AND NOT EXISTS (
+                    SELECT 1 FROM community_chart_evaluations other
+                    WHERE other.chart_id = mine.chart_id
+                        AND other.id <> mine.id
+                        AND other.excluded = false
+                        AND other.opinion_hidden = false
+                        AND other.opinion IS NOT NULL
+                        AND other.opinion_created_at < mine.opinion_created_at
+                        AND other.opinion_created_at > mine.opinion_created_at - interval '30 days')
+                AND EXISTS (
+                    SELECT 1 FROM community_opinion_helpful_votes vote
+                    WHERE vote.evaluation_id = mine.id AND vote.user_id <> ${userId})`,
     ]);
 
     const category = (code: string) => {
@@ -142,6 +182,8 @@ export async function collectAchievementMetrics(
         categoryOrg: category(ACHIEVEMENT_MUSIC_CATEGORIES.categoryOrg),
         categoryClJz: category(ACHIEVEMENT_MUSIC_CATEGORIES.categoryClJz),
         categoryVar: category(ACHIEVEMENT_MUSIC_CATEGORIES.categoryVar),
+        ...chartAchievementMetrics(charts),
+        revivedOpinions: { value: revived?.revived ?? 0 },
     };
 }
 

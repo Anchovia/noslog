@@ -1,3 +1,9 @@
+import {
+    ACHIEVEMENT_SONG_SETS,
+    type AchievementSongSet,
+    type AchievementSongSetKey,
+} from "@/features/achievements/achievement-song-sets";
+
 /**
  * 업적(2026-09-24 T2 · K1 · R1 · P5 · N1 · D1) — 동기화한 기록 · 활동으로 자동 판정하는 단계형 업적.
  * 한 업적 = 동 I · 은 II · 금 III · 플래티넘 IV · 다이아 V 다섯 단계(2026-09-25). 숨긴 업적 · 플레이 횟수 · 연속 일수 · 운 조건은 두지 않는다
@@ -8,13 +14,14 @@
 export const ACHIEVEMENT_CATEGORIES = [
     "skill",
     "collection",
+    "songSet",
+    "season",
     "challenge",
     "community",
 ] as const;
 export type AchievementCategory = (typeof ACHIEVEMENT_CATEGORIES)[number];
 
-/** 판정에 쓰는 값 — 서버가 한 번에 모아 온다 */
-export const ACHIEVEMENT_METRICS = [
+const BASE_ACHIEVEMENT_METRICS = [
     "sRankCharts",
     "score990kCharts",
     "fullComboCharts",
@@ -31,8 +38,25 @@ export const ACHIEVEMENT_METRICS = [
     "categoryOrg",
     "categoryClJz",
     "categoryVar",
+    "allDifficultySongs",
+    "levelLadder",
+    "revivedOpinions",
 ] as const;
-export type AchievementMetric = (typeof ACHIEVEMENT_METRICS)[number];
+
+export const ACHIEVEMENT_SONG_SET_KEYS = Object.keys(
+    ACHIEVEMENT_SONG_SETS
+) as AchievementSongSetKey[];
+export type AchievementSongSetMetric = `songSet:${AchievementSongSetKey}`;
+export function songSetMetric(key: AchievementSongSetKey) {
+    return `songSet:${key}` as const;
+}
+export type AchievementMetric =
+    (typeof BASE_ACHIEVEMENT_METRICS)[number] | AchievementSongSetMetric;
+/** 판정에 쓰는 값 — 서버가 한 번에 모아 온다 */
+export const ACHIEVEMENT_METRICS: readonly AchievementMetric[] = [
+    ...BASE_ACHIEVEMENT_METRICS,
+    ...ACHIEVEMENT_SONG_SET_KEYS.map(songSetMetric),
+];
 
 /** 값 하나 — total 이 있으면 기준은 비율(0–1)이다(카테고리처럼 곡 수가 바뀌는 것) */
 export interface AchievementMetricValue {
@@ -58,7 +82,7 @@ export interface AchievementDefinition {
      */
     thresholds: Readonly<Partial<Record<AchievementTier, number>>>;
     /** 검정처럼 「급」 으로 읽는 값 — 화면에서 기준을 급수로 보인다 */
-    unit?: "count" | "grade" | "ratio" | "exam";
+    unit?: "count" | "grade" | "ratio" | "exam" | "lamp";
 }
 
 /** 검정 급수(10 → 1)를 올라가는 값으로 — 7급 = 4 · 5급 = 6 · 3급 = 8 · 2급 = 9 · 1급 = 10(업적 기준 7 · 5 · 3 · 2 · 1급, 2026-09-25) */
@@ -68,6 +92,49 @@ export function examGradeScore(grade: number | null): number {
 export function examGradeFromScore(score: number): number {
     return 11 - score;
 }
+
+/** 한 곡 업적의 램프 — 1 S 이상 · 2 풀콤보 · 3 Pianist */
+export const ACHIEVEMENT_LAMPS = { s: 1, fullCombo: 2, pianist: 3 } as const;
+
+/**
+ * 곡 묶음 업적의 등급 — 곡 수로 단계. 10곡 이상은 I–V(20 · 40 · 60 · 80 · 100%),
+ * 5–9곡은 I–III(⅓ · ⅔ · 전부), 2–4곡은 전부 채운 금 III 하나, 한 곡은 S → 풀콤보 → Pianist
+ */
+export function songSetThresholds(
+    count: number
+): Partial<Record<AchievementTier, number>> {
+    if (count === 1)
+        return {
+            1: ACHIEVEMENT_LAMPS.s,
+            2: ACHIEVEMENT_LAMPS.fullCombo,
+            3: ACHIEVEMENT_LAMPS.pianist,
+        };
+    if (count >= 10) {
+        const [t1, t2, t3, t4] = [0.2, 0.4, 0.6, 0.8].map((ratio) =>
+            Math.ceil(count * ratio)
+        );
+        return { 1: t1, 2: t2, 3: t3, 4: t4, 5: count };
+    }
+    if (count >= 5)
+        return {
+            1: Math.ceil(count / 3),
+            2: Math.ceil((count * 2) / 3),
+            3: count,
+        };
+    return { 3: count };
+}
+
+const SONG_SET_DEFINITIONS: AchievementDefinition[] =
+    ACHIEVEMENT_SONG_SET_KEYS.map((key) => {
+        const set = ACHIEVEMENT_SONG_SETS[key];
+        return {
+            key,
+            category: set.category,
+            metric: songSetMetric(key),
+            thresholds: songSetThresholds(set.songs.length),
+            ...(set.songs.length === 1 ? { unit: "lamp" as const } : {}),
+        };
+    });
 
 export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
     // 실력
@@ -113,6 +180,20 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         metric: "basicGrade",
         thresholds: { 1: 6000, 2: 6500, 3: 7000, 4: 7500, 5: 8000 },
     },
+    // 한 곡의 모든 난이도를 S 이상으로 채운 곡 수
+    {
+        key: "all-difficulty",
+        category: "skill",
+        metric: "allDifficultySongs",
+        thresholds: { 1: 1, 2: 10, 3: 50, 4: 150, 5: 300 },
+    },
+    // Lv.1 부터 이어서 레벨마다 S 이상 채보가 있는 가장 높은 레벨(Real 의 ◆ 는 레벨이 아니라 뺀다)
+    {
+        key: "level-ladder",
+        category: "skill",
+        metric: "levelLadder",
+        thresholds: { 1: 4, 2: 8, 3: 10, 4: 11, 5: 12 },
+    },
     // 수집 — 카테고리 곡 중 S 이상을 받은 곡(난이도 무관)의 비율
     {
         key: "category-bm",
@@ -142,6 +223,7 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         thresholds: { 1: 0.1, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1 },
         unit: "ratio",
     },
+    ...SONG_SET_DEFINITIONS,
     // 도전
     {
         key: "exam-basic",
@@ -175,6 +257,13 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         category: "community",
         metric: "patternEvaluations",
         thresholds: { 1: 10, 2: 50, 3: 100, 4: 200, 5: 500 },
+    },
+    // 30일 넘게 의견이 없던 채보에 단 첫 의견 중 「도움이 돼요」 를 받은 것
+    {
+        key: "revived-opinion",
+        category: "community",
+        metric: "revivedOpinions",
+        thresholds: { 1: 1, 2: 10, 3: 30 },
     },
 ];
 
@@ -273,7 +362,7 @@ export function achievementProgress(
             ? Math.ceil(threshold * (metric.total ?? 0))
             : threshold;
     const ratio =
-        definition.unit === "exam"
+        definition.unit === "exam" || definition.unit === "lamp"
             ? current >= threshold
                 ? 1
                 : 0
@@ -281,6 +370,67 @@ export function achievementProgress(
               ? Math.min(1, Math.max(0, current / target))
               : 0;
     return { nextTier, target, current, ratio };
+}
+
+/** 채보 한 줄 — 그 사람의 기록이 없으면 셋 다 false */
+export interface AchievementChartRow {
+    musicIndex: string;
+    difficulty: string;
+    level: number;
+    sRank: boolean;
+    fullCombo: boolean;
+    pianist: boolean;
+}
+
+function chartLamp(row: AchievementChartRow) {
+    if (row.pianist) return ACHIEVEMENT_LAMPS.pianist;
+    if (row.fullCombo) return ACHIEVEMENT_LAMPS.fullCombo;
+    return row.sRank ? ACHIEVEMENT_LAMPS.s : 0;
+}
+
+/** 모든 채보와 그 사람의 램프로 곡 묶음 · 한 곡 완주 · 레벨 사다리 값을 낸다 */
+export function chartAchievementMetrics(
+    rows: readonly AchievementChartRow[]
+): Pick<
+    AchievementMetrics,
+    AchievementSongSetMetric | "allDifficultySongs" | "levelLadder"
+> {
+    const songs = new Map<string, AchievementChartRow[]>();
+    for (const row of rows)
+        songs.set(row.musicIndex, [...(songs.get(row.musicIndex) ?? []), row]);
+    const songSets = Object.fromEntries(
+        ACHIEVEMENT_SONG_SET_KEYS.map((key) => {
+            const set: AchievementSongSet = ACHIEVEMENT_SONG_SETS[key];
+            const charts = (musicIndex: string) =>
+                (songs.get(musicIndex) ?? []).filter(
+                    (row) =>
+                        !set.difficulty || row.difficulty === set.difficulty
+                );
+            const value =
+                set.songs.length === 1
+                    ? Math.max(0, ...charts(set.songs[0]).map(chartLamp))
+                    : set.songs.filter((musicIndex) =>
+                          charts(musicIndex).some((row) => row.sRank)
+                      ).length;
+            return [songSetMetric(key), { value }];
+        })
+    ) as Record<AchievementSongSetMetric, AchievementMetricValue>;
+    const levels = new Set(
+        rows
+            .filter((row) => row.sRank && row.difficulty !== "Real")
+            .map((row) => row.level)
+    );
+    let ladder = 0;
+    while (levels.has(ladder + 1)) ladder += 1;
+    return {
+        ...songSets,
+        allDifficultySongs: {
+            value: [...songs.values()].filter((charts) =>
+                charts.every((row) => row.sRank)
+            ).length,
+        },
+        levelLadder: { value: ladder },
+    };
 }
 
 /** 프로필 머리 자동 진열(P5) — 고른 것이 없을 때 높은 단계 · 달성 인원이 적은 순으로 3개 */
@@ -320,11 +470,11 @@ export const ACHIEVEMENT_TIER_TOTAL = achievementStepTotal(
 );
 
 /**
- * 점수 비공개(2026-09-18 S3) 프로필을 남이 볼 때는 점수에서 나온 업적(실력 · 수집)을 보이지 않는다 —
+ * 점수 비공개(2026-09-18 S3) 프로필을 남이 볼 때는 점수에서 나온 업적(실력 · 수집 · 곡 묶음 · 계절)을 보이지 않는다 —
  * 단계만으로도 기록 범위가 드러나서. 도전 · 커뮤니티는 기여처럼 그대로 보인다.
  */
 export const SCORE_BASED_ACHIEVEMENT_CATEGORIES: readonly AchievementCategory[] =
-    ["skill", "collection"];
+    ["skill", "collection", "songSet", "season"];
 
 export function visibleAchievementDefinitions(scoresHidden: boolean) {
     return scoresHidden

@@ -74,7 +74,8 @@ function AchievementRow({
     const progress = metrics
         ? achievementProgress(definition, metrics[definition.metric], tier)
         : null;
-    const showNumbers = definition.unit !== "exam";
+    const showNumbers =
+        definition.unit !== "exam" && definition.unit !== "lamp";
     const number = (value: number) => value.toLocaleString(locale);
     const steps = achievementSteps(definition);
     const shownTier = progress?.nextTier ?? (tier || steps[0]?.tier || 1);
@@ -97,7 +98,7 @@ function AchievementRow({
                     <span className="nl-body-secondary nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
                             ? showNumbers
-                                ? `${text.condition(key, shownTier)} — ${t(
+                                ? `${text.condition(key, shownTier)} · ${t(
                                       "achievement.progress",
                                       {
                                           current: number(progress.current),

@@ -16,8 +16,13 @@ import {
     newAchievementTiers,
     summarizeAchievements,
     visibleAchievementDefinitions,
+    ACHIEVEMENT_SONG_SET_KEYS,
+    type AchievementChartRow,
     type AchievementRecords,
+    chartAchievementMetrics,
+    songSetThresholds,
 } from "@/features/achievements/achievement-definitions";
+import { ACHIEVEMENT_SONG_SETS } from "@/features/achievements/achievement-song-sets";
 
 const sRank = getAchievementDefinition("s-rank")!;
 const categoryBM = getAchievementDefinition("category-bm")!;
@@ -242,8 +247,9 @@ describe("점수 비공개(남이 볼 때)", () => {
         expect(Object.keys(visible.recipients)).toEqual(["opinion:1"]);
         const summary = summarizeAchievements(visible, true);
         expect(summary.earned).toBe(1);
+        // 분모는 보이는 업적이 가진 단계 수의 합(커뮤니티 업적도 다섯 단계가 아닌 것이 있다)
         expect(summary.total).toBe(
-            visibleAchievementDefinitions(true).length * 5
+            achievementStepTotal(visibleAchievementDefinitions(true))
         );
         expect(
             visibleAchievementDefinitions(true).every(
@@ -267,5 +273,109 @@ describe("머리 배지 도움말(2026-09-25)", () => {
             achievedAt: "2026-09-22T00:00:00.000Z",
             recipients: 30,
         });
+    });
+});
+
+describe("곡 묶음 업적", () => {
+    const row = (
+        musicIndex: string,
+        difficulty: string,
+        level: number,
+        lamp: Partial<AchievementChartRow> = {}
+    ): AchievementChartRow => ({
+        musicIndex,
+        difficulty,
+        level,
+        sRank: false,
+        fullCombo: false,
+        pianist: false,
+        ...lamp,
+    });
+
+    it("곡 수로 단계를 나눈다 — 10곡 이상 다섯 · 5–9곡 셋 · 2–4곡 금 하나 · 한 곡은 램프", () => {
+        expect(songSetThresholds(21)).toEqual({
+            1: 5,
+            2: 9,
+            3: 13,
+            4: 17,
+            5: 21,
+        });
+        expect(songSetThresholds(7)).toEqual({ 1: 3, 2: 5, 3: 7 });
+        expect(songSetThresholds(4)).toEqual({ 3: 4 });
+        expect(songSetThresholds(1)).toEqual({ 1: 1, 2: 2, 3: 3 });
+    });
+
+    it("묶음마다 곡이 겹치지 않고, 묶음 업적은 곡 묶음 · 계절 분류다", () => {
+        for (const key of ACHIEVEMENT_SONG_SET_KEYS) {
+            const songs = ACHIEVEMENT_SONG_SETS[key].songs;
+            expect(new Set(songs).size).toBe(songs.length);
+            expect(["songSet", "season"]).toContain(
+                getAchievementDefinition(key)?.category
+            );
+        }
+    });
+
+    it("묶음 곡 중 아무 난이도 S 이상인 곡 수를 센다", () => {
+        const [first, second] = ACHIEVEMENT_SONG_SETS.chopin.songs;
+        const metrics = chartAchievementMetrics([
+            row(first, "Normal", 2, { sRank: true }),
+            row(first, "Expert", 9, { sRank: true }),
+            row(second, "Expert", 10),
+        ]);
+        expect(metrics["songSet:chopin"]).toEqual({ value: 1 });
+    });
+
+    it("난이도를 정한 묶음은 그 난이도 기록만 센다", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS["hard-normal"].songs;
+        expect(
+            chartAchievementMetrics([row(song, "Expert", 12, { sRank: true })])[
+                "songSet:hard-normal"
+            ]
+        ).toEqual({ value: 0 });
+        expect(
+            chartAchievementMetrics([row(song, "Normal", 7, { sRank: true })])[
+                "songSet:hard-normal"
+            ]
+        ).toEqual({ value: 1 });
+    });
+
+    it("한 곡 업적은 가장 높은 램프 — S 1 · 풀콤보 2 · Pianist 3", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS.mei.songs;
+        const metrics = chartAchievementMetrics([
+            row(song, "Hard", 8, { sRank: true }),
+            row(song, "Expert", 11, { sRank: true, fullCombo: true }),
+        ]);
+        expect(metrics["songSet:mei"]).toEqual({ value: 2 });
+        const mei = getAchievementDefinition("mei")!;
+        expect(mei.unit).toBe("lamp");
+        expect(newAchievementTiers(mei, metrics["songSet:mei"], 0)).toEqual([
+            1, 2,
+        ]);
+        expect(achievementProgress(mei, { value: 2 }, 2)).toMatchObject({
+            nextTier: 3,
+            ratio: 0,
+        });
+    });
+
+    it("한 곡 완주는 그 곡의 모든 채보가 S 이상인 곡만 센다", () => {
+        const metrics = chartAchievementMetrics([
+            row("a", "Normal", 2, { sRank: true }),
+            row("a", "Hard", 5, { sRank: true }),
+            row("b", "Normal", 2, { sRank: true }),
+            row("b", "Real", 2),
+        ]);
+        expect(metrics.allDifficultySongs).toEqual({ value: 1 });
+    });
+
+    it("레벨 사다리는 Lv.1 부터 끊기지 않은 가장 높은 레벨이고 Real 의 ◆ 는 세지 않는다", () => {
+        const levels = [1, 2, 3, 5].map((level) =>
+            row(`m${level}`, "Expert", level, { sRank: true })
+        );
+        expect(
+            chartAchievementMetrics([
+                ...levels,
+                row("r", "Real", 4, { sRank: true }),
+            ]).levelLadder
+        ).toEqual({ value: 3 });
     });
 });

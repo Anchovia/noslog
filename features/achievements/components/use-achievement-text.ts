@@ -42,6 +42,8 @@ export function useAchievementText() {
                 category: CATEGORY_NAMES[key] ?? key,
                 percent: Math.round(threshold * 100),
             });
+        if (definition.unit === "lamp")
+            return t(`achievement.condition.${key}.${threshold}` as MessageKey);
         if (definition.unit === "exam")
             return t("achievement.condition.exam", {
                 mode: key === "exam-recital" ? "Recital" : "Basic",
