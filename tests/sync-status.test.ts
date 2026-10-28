@@ -167,6 +167,17 @@ describe("P8 safe own-account sync status", () => {
             { key: "s-rank", tier: 1 },
         ]);
     });
+    it("업적의 가장 높은 단계(5)까지 그대로 싣는다", async () => {
+        mocks.achievements.mockResolvedValue([
+            { key: "pianist", tier: 5 },
+            { key: "s-rank", tier: 4 },
+        ]);
+        const result = await getSyncStatus(7, now);
+        expect(result.attempts[0].newAchievements).toEqual([
+            { key: "pianist", tier: 5 },
+            { key: "s-rank", tier: 4 },
+        ]);
+    });
     it("완료되지 않은 시도에는 업적을 찾지 않는다", async () => {
         mocks.attempts.mockResolvedValue([
             { ...attempt, status: "processing", completedAt: null },
