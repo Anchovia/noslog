@@ -49,10 +49,10 @@ NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 �
 | 영역   | 사용                                                                            |
 | ------ | ------------------------------------------------------------------------------- |
 | 앱     | Next.js 16.3(App Router) · React 19.2 · TypeScript 5.9                          |
-| 데이터 | PostgreSQL 16(Neon) · Prisma 7.10(pg 어댑터) · Zod 4                            |
+| 데이터 | PostgreSQL 17(PlanetScale) · Prisma 7.10(pg 어댑터) · Zod 4                     |
 | 화면   | Tailwind CSS 4 · TanStack Query 5 · React Hook Form · PixiJS 8                  |
 | 로그인 | Discord OAuth · iron-session                                                    |
-| 운영   | Vercel(Fluid compute, sin1) · Vercel Blob · Vercel Cron · Gemini API(번역)      |
+| 운영   | Vercel(Fluid compute, icn1) · Vercel Blob · Vercel Cron · Gemini API(번역)      |
 | 검사   | Vitest 4 · Playwright · Storybook 10 · ESLint · Prettier · prisma-lint · Squawk |
 
 ## 로컬 개발
@@ -60,7 +60,7 @@ NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 �
 ### 준비 사항
 
 - Node.js 24.x(`.node-version`, `engines`), npm 11.16.0(`packageManager` 는 버전 기록일 뿐 자동으로 바꾸지 않음)
-- PostgreSQL 16 또는 Neon PostgreSQL
+- PostgreSQL 16 이상
 
 ### 설치
 
@@ -156,6 +156,7 @@ docs/                 디자인, 기능, 운영, 코드 스타일 문서
 - [공용 UI 가이드](docs/ui/README.md): 부품 선택과 스토리 작성
 - [협업 컨벤션](docs/CONVENTION.md): 브랜치 · 커밋 · PR 규칙
 - [공식 X 소식 수집 운영](docs/operations/official-x-sync.md): GitHub Actions와 관련 Secret 설정
+- [운영 DB 이전](docs/operations/db-migration-planetscale.md): Neon → PlanetScale 서울 이전 순서 · 되돌리기
 - [이슈 템플릿](.github/ISSUE_TEMPLATE): 버그, 기능 제안, 데이터 수정 요청
 - [Pull Request 템플릿](.github/pull_request_template.md): 변경 사항과 확인 항목
 
@@ -194,7 +195,7 @@ GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행
 
 ## 배포와 릴리스
 
-NosLog는 Vercel(함수 지역 sin1)에서 운영하며 데이터베이스는 Neon PostgreSQL을 사용합니다. Production 배포에는 Production DB, 공개·비공개 Blob 저장소, Cron Secret과 서비스 인증 환경변수가 필요합니다.
+NosLog는 Vercel(함수 지역 icn1)에서 운영하며 데이터베이스는 PlanetScale Postgres(서울)를 사용합니다. 앱은 `DATABASE_URL`(PgBouncer 6432)로, 배포 때 마이그레이션은 `DATABASE_MIGRATION_URL`(직접 연결 5432)로 붙습니다. Production 배포에는 Production DB, 공개·비공개 Blob 저장소, Cron Secret과 서비스 인증 환경변수가 필요합니다.
 
 - 자동 배포는 `main` 브랜치만 합니다(`vercel.json`). 다른 브랜치는 미리보기 빌드를 만들지 않습니다.
 - 배포 빌드(`vercel-build`)는 `prisma migrate deploy`를 먼저 실행하므로, 마이그레이션은 `main` 병합과 함께 운영 DB에 적용됩니다. DB 이름을 바꾸는 등 옛 코드와 같이 돌 수 없는 변경은 `MAINTENANCE_MODE`로 점검 화면을 켜고 배포합니다.

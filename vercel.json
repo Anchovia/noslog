@@ -1,7 +1,7 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "buildCommand": "npm run vercel-build",
-    "regions": ["sin1"],
+    "regions": ["icn1"],
     "git": {
         "deploymentEnabled": {
             "**": false,

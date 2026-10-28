@@ -4,11 +4,11 @@ import version20260913 from "@/features/privacy/content/versions/2026-09-13.json
 import version20260920 from "@/features/privacy/content/versions/2026-09-20.json";
 import version20260922 from "@/features/privacy/content/versions/2026-09-22.json";
 import version20260925 from "@/features/privacy/content/versions/2026-09-25.json";
+import version20260926 from "@/features/privacy/content/versions/2026-09-26.json";
 import { privacyCopySchema } from "@/features/privacy/schemas/privacy-copy-schema";
 import type { Locale } from "@/lib/i18n/routing";
 
-// Visual copy from P15 (2026-09-02). Legal/operational release blockers in
-// handoff 82 remain open; the four warning blocks must not be removed.
+// 법률 검토가 끝나기 전까지 「법률 검토 대기」 경고 블록은 지우지 않는다
 export function getPrivacyCopy(locale: Locale) {
     return privacyCopySchema.parse(copy[locale]);
 }
@@ -16,6 +16,12 @@ export function getPrivacyCopy(locale: Locale) {
 // 이전 시행 버전 — 새 시행 버전을 낼 때 직전 policyCopy.json 을 versions/{시행일}.json 으로 손대지 않고 보관하고
 // 여기 맨 앞에 한 줄 더한다. until 은 다음 버전 시행 전날(서울 기준). 지어낸 날짜나 지운 문서로 이력을 만들지 않는다
 export const PRIVACY_PREVIOUS_VERSIONS = [
+    {
+        id: "2026-09-26",
+        effective: "2026-09-26",
+        until: "2026-10-27",
+        copy: version20260926,
+    },
     {
         id: "2026-09-25",
         effective: "2026-09-25",
