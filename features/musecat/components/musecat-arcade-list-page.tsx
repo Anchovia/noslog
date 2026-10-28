@@ -14,6 +14,7 @@ import ActionButton from "@/components/ui/action-button";
 import FilterChips from "@/components/ui/filter-chips";
 import Pagination from "@/components/ui/pagination";
 import SearchField from "@/components/ui/search-field";
+import { StatusMessage } from "@/components/ui/status-message";
 import {
     findPlace,
     reverseGeocode,
@@ -384,18 +385,23 @@ export default function MusecatArcadeListPage({
                     />
                 ) : null}
                 {failed ? (
-                    <div className="nl-heading-row" data-sheet-peek>
-                        <span className="nl-body-secondary nl-muted">
-                            {t("musecat.list.failed")}
-                        </span>
-                        <ActionButton
-                            variant="ghost"
-                            size="sm"
-                            className="nl-heading-row__end"
-                            onClick={() => setAttempt((value) => value + 1)}
-                        >
-                            {t("musecat.list.retry")}
-                        </ActionButton>
+                    <div data-sheet-peek>
+                        <StatusMessage
+                            severity="info"
+                            tone="quiet"
+                            title={t("musecat.list.failed")}
+                            action={
+                                <ActionButton
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                        setAttempt((value) => value + 1)
+                                    }
+                                >
+                                    {t("musecat.list.retry")}
+                                </ActionButton>
+                            }
+                        />
                     </div>
                 ) : null}
                 {result && items.length ? (

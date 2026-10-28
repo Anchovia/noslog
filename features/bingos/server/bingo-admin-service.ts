@@ -29,15 +29,11 @@ function toNullableDate(value: string) {
     return value ? new Date(`${value}T00:00:00.000Z`) : null;
 }
 
+// 스키마가 JSON 형식을 이미 확인했다 — 틀린 글은 저장 전에 칸 오류로 돌아간다
 function parseRuleConfig(value: string) {
     if (!value) return Prisma.DbNull;
-
-    try {
-        const parsed = JSON.parse(value) as Prisma.InputJsonValue | null;
-        return parsed === null ? Prisma.JsonNull : parsed;
-    } catch {
-        return { value } satisfies Prisma.InputJsonValue;
-    }
+    const parsed = JSON.parse(value) as Prisma.InputJsonValue | null;
+    return parsed === null ? Prisma.JsonNull : parsed;
 }
 
 function bingoData(input: BingoSaveValues) {

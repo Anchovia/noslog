@@ -294,7 +294,7 @@ export default function FeedbackDialogView({
                     <TextArea
                         id="feedback-content"
                         maxLength={1000}
-                        // 5줄 = 글자 24 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 144 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
+                        // 5줄 = 줄 높이 20 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 124 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
                         rows={5}
                         readOnly={isSubmitting}
                         aria-invalid={Boolean(errors.content)}
@@ -396,7 +396,6 @@ export default function FeedbackDialogView({
                 onOpenChange={changeOpen}
                 title={t("feedback.title")}
                 size="small"
-                className="nl-feedback-dialog"
                 onCloseAutoFocus={onCloseAutoFocus}
                 trigger={triggerNode}
                 footer={
@@ -425,7 +424,6 @@ export default function FeedbackDialogView({
             onOpenChange={changeOpen}
             title={t("feedback.title")}
             size="large"
-            className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}
             footer={fullScreenFooter}

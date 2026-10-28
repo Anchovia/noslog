@@ -54,8 +54,8 @@ export function chartCommentsOptions(
 }
 
 /**
- * 공개 채보 뷰어의 「채보 의견」 구역(2026-09-24 D1) — 머리 아래 구역 하나.
- * 제목 줄 →12→ 쓰기 칸(1055 이하만 — 1056 이상은 무대 바로 아래, 2026-10-15 L2) →16→ 목록(의견 목록 줄 문법, 아바타 없이).
+ * 공개 채보 뷰어의 「채보 의견」 구역 — 머리 아래 구역 하나.
+ * 제목 줄 →16→ 쓰기 칸(1055 이하만 — 1056 이상은 무대 바로 아래) →8→ 목록(의견 목록 줄 문법, 아바타 없이).
  * 시각을 누르면 뷰어가 그 시각으로 가고 주소에 `?t=` 가 붙는다. 「해결」 · 가리기는 운영자만.
  */
 export default function ChartComments({
@@ -99,7 +99,8 @@ export default function ChartComments({
                         count: all.length,
                     })}
                 </h2>
-                {all.length ? (
+                {/* 로그아웃이면 필터 자리에 로그인 링크 */}
+                {signedIn && all.length ? (
                     <SegmentedControl
                         size="sm"
                         label={t("contribution.comment.filterLabel")}

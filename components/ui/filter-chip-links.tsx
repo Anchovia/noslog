@@ -1,12 +1,12 @@
 import { Check } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
+import IntentLink from "@/components/ui/intent-link";
 import { cn } from "@/lib/cn";
 
 /**
- * 주소로 거르는 필터 칩 — 모양은 FilterChips(높이 36 · 선택 = 면 · 경계 · 체크 · 굵기)와 같고 항목이 링크다.
- * 서버에서 그려지고 주소가 곧 상태라 새로고침 · 공유 · 뒤로 가기에 그대로 남는다. 하나만 고른다.
+ * 주소로 거르는 필터 칩 — 모양은 FilterChips(작은 컨트롤 높이 · 선택 = 고른 면 · 선 없음 · 체크)와 같고 항목이 링크다.
+ * 주소가 곧 상태라 새로고침 · 공유 · 뒤로 가기에 그대로 남는다. 하나만 고른다. 미리 불러오기는 공용 링크(IntentLink) 규칙.
  */
 export default function FilterChipLinks({
     label,
@@ -25,9 +25,8 @@ export default function FilterChipLinks({
     return (
         <nav aria-label={label} className={cn("nl-chips", className)}>
             {options.map((option) => (
-                <Link
+                <IntentLink
                     key={option.key}
-                    prefetch={false}
                     href={option.href}
                     className="nl-chip nl-control"
                     aria-current={option.selected ? "page" : undefined}
@@ -36,7 +35,7 @@ export default function FilterChipLinks({
                         <Check className="nl-icon-small" aria-hidden />
                     ) : null}
                     <span>{option.label}</span>
-                </Link>
+                </IntentLink>
             ))}
         </nav>
     );

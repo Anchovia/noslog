@@ -57,7 +57,7 @@ export default function OpinionReportCard({
                 {report.snapshot}
             </p>
             {report.explanation ? (
-                <div className="rounded-nl-control bg-nl-surface p-nl-12">
+                <div className="rounded-nl-control bg-nl-control p-nl-12">
                     <p className="nl-metadata text-nl-subdued">추가 설명</p>
                     <p className="nl-control break-words whitespace-pre-wrap text-nl-content">
                         {report.explanation}

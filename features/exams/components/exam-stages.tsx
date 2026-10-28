@@ -13,6 +13,7 @@ import MusicJacket from "@/components/music/music-jacket";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { getExamPractice } from "@/features/exams/exam-practice";
+import { cn } from "@/lib/cn";
 import { localizePath } from "@/lib/i18n/routing";
 
 function StageRow({
@@ -79,12 +80,16 @@ function StageRow({
                     <span className="nl-metadata nl-muted">
                         {t("exams.stage.myBest")}
                     </span>
+                    {/* 기록이 없으면 값 자리만 흐린 「—」 */}
                     <span
-                        className="nl-exam-stage__best nl-metric-value"
+                        className={cn(
+                            "nl-exam-stage__best nl-metric-value",
+                            stage.bestValue === null && "nl-muted"
+                        )}
                         data-sign={sign ?? undefined}
                     >
                         {stage.bestValue === null
-                            ? t("exams.stage.noRecord")
+                            ? "—"
                             : stage.bestValue.toLocaleString(locale)}
                     </span>
                 </span>

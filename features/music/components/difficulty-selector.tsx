@@ -36,7 +36,7 @@ export default function DifficultySelector({
     ];
     return (
         <SegmentedControl
-            className="nl-difficulty-selector nl-segments--wide-vertical"
+            className="nl-difficulty-selector nl-segments--dense nl-segments--wide-vertical"
             label={t("music.difficulty")}
             value={value}
             onValueChange={onValueChange}

@@ -38,7 +38,7 @@ export default async function PartnerConsentPage({
                     <h1 className="nl-page-title">
                         {t("partner.consent.errorTitle")}
                     </h1>
-                    <p className="nl-body nl-muted">
+                    <p className="nl-metadata nl-muted">
                         {t(`partner.consent.error.${data.code}`)}
                     </p>
                     <p className="nl-metadata nl-muted">
@@ -47,7 +47,7 @@ export default async function PartnerConsentPage({
                 </div>
                 <Link
                     prefetch={false}
-                    className="nl-auth-browse nl-control"
+                    className="nl-auth-browse nl-control nl-link"
                     href={localizePath("/", locale)}
                 >
                     {t("partner.consent.home")}
@@ -61,7 +61,7 @@ export default async function PartnerConsentPage({
         <AuthShell>
             <div className="nl-auth-head">
                 <span
-                    className="nl-settings__logo nl-settings__logo--mark nl-section-title"
+                    className="nl-settings__logo nl-settings__logo--mark nl-component-title"
                     aria-hidden
                 >
                     {data.clientName.slice(0, 1)}

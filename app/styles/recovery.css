@@ -37,6 +37,11 @@
 .noslog-ui .nl-recovery-minimal__content > h1 + p {
     margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-32));
 }
+/* 설명 끝(점검 시각이 있으면 그 끝) → 버튼 16 */
+.noslog-ui .nl-recovery-minimal__content > h1 + p,
+.noslog-ui .nl-recovery-minimal__content > .nl-recovery__timing {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-recovery__timing {
     display: flex;
     flex-direction: column;

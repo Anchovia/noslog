@@ -20,7 +20,7 @@ const meta = {
         docs: {
             description: {
                 component:
-                    "면 카드 — 1px 테두리 · 모서리 4 · 안쪽 16 · 안 사이 8.",
+                    "면 카드 — 1px 테두리 · 모서리 6 · 안쪽 16 · 안 사이 8.",
             },
         },
     },

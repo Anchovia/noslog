@@ -52,7 +52,7 @@ export default function SortableTierChart({
             className={cn(
                 "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-control border-nl-stroke-strong bg-nl-surface bg-cover bg-center active:cursor-grabbing",
                 getTierDifficultyBorder(entry.chart.difficulty),
-                selected && "ring-nl-stroke-strong ring-nl-difficulty-real",
+                selected && "ring-nl-stroke-strong ring-nl-ring",
                 isDragging && "opacity-0"
             )}
             {...attributes}

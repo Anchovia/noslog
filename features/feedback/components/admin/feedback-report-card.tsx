@@ -83,7 +83,7 @@ export default function FeedbackReportCard({
                     {report.content}
                 </p>
                 {report.reply ? (
-                    <div className="rounded-nl-control bg-nl-surface p-nl-12">
+                    <div className="rounded-nl-control bg-nl-control p-nl-12">
                         <p className="nl-metadata text-nl-subdued">
                             NosLog 답변
                         </p>

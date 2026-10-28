@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ListFilter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import {
@@ -194,6 +194,7 @@ export default function ArcadeDiscoveryPage({
     // 내 주변만 보기·가까운 순 — 위치 권한을 받아 origin 을 잡고, 성공했을 때만 켠다
     // URL 로 들고 들어왔는데 위치가 없으면 한 번 요청한다 (실패하면 켜진 상태만 남고 거리 정렬은 빠진다)
     const requestedFromUrl = useRef(false);
+    const requestNearbyFromUrl = useEffectEvent(() => nearby(() => undefined));
     useEffect(() => {
         if (
             (!values.near && values.sort !== "distance") ||
@@ -202,8 +203,7 @@ export default function ArcadeDiscoveryPage({
         )
             return;
         requestedFromUrl.current = true;
-        nearby(() => undefined);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        requestNearbyFromUrl();
     }, [values.near, values.sort, origin]);
     function nearby(onSuccess: () => void) {
         if (!navigator.geolocation || !window.isSecureContext) {

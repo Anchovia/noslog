@@ -64,8 +64,8 @@ html[data-theme="light"] {
     body {
         min-height: 100vh;
         /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens.css 와 대조) */
-        background: #000000;
-        color: #ededed;
+        background: #111111;
+        color: #dbdbdb;
         font-family: var(--font-sans);
         font-synthesis: none;
     }
@@ -89,11 +89,12 @@ html[data-theme="light"] {
         cursor: not-allowed;
     }
 
-    /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤 */
+    /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤.
+       셸 바깥(관리자 · 에디터)은 토큰을 못 읽어 content/tertiary · weight-regular 값을 쓴다. 셸 안은 foundation.css 가 토큰으로 덮는다 */
     input::placeholder,
     textarea::placeholder {
-        color: var(--nl-content-subdued);
-        font-weight: var(--nl-type-weight-regular);
+        color: #8a8a8a;
+        font-weight: 400;
         opacity: 1;
     }
 }

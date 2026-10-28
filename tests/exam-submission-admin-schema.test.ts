@@ -42,6 +42,25 @@ describe("관리자 검정 인증 심사 스키마", () => {
         expect(result.error.issues[0]?.path).toEqual(["status"]);
     });
 
+    it("사유 없는 반려를 거부하고 사유 없는 승인은 받는다", () => {
+        const rejected = examSubmissionReviewSchema.safeParse({
+            submissionId: 50,
+            status: "rejected",
+            reviewerNote: "   ",
+        });
+        expect(rejected.success).toBe(false);
+        if (rejected.success) return;
+        expect(rejected.error.issues[0]?.path).toEqual(["reviewerNote"]);
+
+        expect(
+            examSubmissionReviewSchema.safeParse({
+                submissionId: 50,
+                status: "approved",
+                reviewerNote: "",
+            }).success
+        ).toBe(true);
+    });
+
     it("양의 정수가 아닌 인증 ID를 거부한다", () => {
         const result = examSubmissionReviewSchema.safeParse({
             submissionId: 0,

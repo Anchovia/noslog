@@ -84,7 +84,7 @@ export default function ProfileAchievements({
             className="nl-profile-section nl-profile-achievements"
             aria-labelledby="profile-achievements-title"
         >
-            <div className="nl-profile-section__header">
+            <div className="nl-heading-row">
                 <h2
                     id="profile-achievements-title"
                     className="nl-section-title"
@@ -136,7 +136,7 @@ export default function ProfileAchievements({
                         ) : null}
                     </ul>
                     {summary.recent.length ? (
-                        <p className="nl-metadata nl-muted">
+                        <p className="nl-profile-achievements__recent nl-metadata nl-muted">
                             {t("achievement.recent")} ·{" "}
                             {/* 가장 최근 하나만(2026-09-26, 사용자) */}
                             {text.titled(
@@ -148,9 +148,7 @@ export default function ProfileAchievements({
                 </>
             ) : (
                 <p className="nl-body-secondary nl-muted">
-                    {isOwner
-                        ? t("achievement.emptyOwner")
-                        : t("achievement.empty")}
+                    {t("achievement.empty")}
                 </p>
             )}
         </section>

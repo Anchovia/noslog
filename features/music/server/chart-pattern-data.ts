@@ -131,7 +131,6 @@ export function getPublicChartPattern(
                     publishedBy: {
                         select: {
                             username: true,
-                            role: true,
                             avatar: true,
                         },
                     },

@@ -44,10 +44,10 @@ describe("프로필 설정 스키마", () => {
         expect(result.error.flatten().fieldErrors.username).toEqual([message]);
     });
 
-    it("닉네임과 Discord 태그를 저장 형식으로 정규화한다", () => {
+    it("닉네임은 대소문자를 그대로 두고 Discord 태그만 저장 형식으로 정규화한다", () => {
         const result = schemaFor("ko").parse(validSettings);
 
-        expect(result.username).toBe("CAROL");
+        expect(result.username).toBe("carol");
         expect(result.discordUsername).toBe("carol_01");
     });
 

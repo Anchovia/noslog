@@ -61,9 +61,11 @@ export default function ExperienceSettings() {
                 }
                 // Locale lives in the root layout; a full navigation refreshes both
                 // its provider and <html lang> after the preference is committed.
-                // eslint-disable-next-line @next/next/no-location-assign-relative-destination
                 window.location.assign(
-                    `${localizePath("/settings", value)}?${params}`
+                    new URL(
+                        `${localizePath("/settings", value)}?${params}`,
+                        window.location.origin
+                    ).href
                 );
             } catch {
                 setError(t("settings.preferenceFailed"));

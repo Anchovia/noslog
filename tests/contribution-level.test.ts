@@ -36,23 +36,19 @@ describe("contributionLevel", () => {
 });
 
 describe("nameLabelFor", () => {
-    it("운영자는 점수와 상관없이 역할 라벨", () => {
-        expect(nameLabelFor("admin", 0)).toEqual({ kind: "operator" });
-    });
-
     it("이름 옆은 Lv.3 부터, 프로필은 Lv.1 부터", () => {
-        expect(nameLabelFor("user", 29)).toBeNull();
-        expect(nameLabelFor("user", 30)).toEqual({
+        expect(nameLabelFor(29)).toBeNull();
+        expect(nameLabelFor(30)).toEqual({
             kind: "level",
             level: 3,
             points: 30,
         });
-        expect(nameLabelFor("user", 1, 1)).toEqual({
+        expect(nameLabelFor(1, 1)).toEqual({
             kind: "level",
             level: 1,
             points: 1,
         });
-        expect(nameLabelFor("user", 0, 1)).toBeNull();
+        expect(nameLabelFor(0, 1)).toBeNull();
     });
 });
 

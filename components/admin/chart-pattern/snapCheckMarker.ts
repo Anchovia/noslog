@@ -1,9 +1,10 @@
 import type { Graphics } from "pixi.js";
 
 import type { ChartNote } from "@/lib/chart-pattern/schema";
+import { EDITOR_COLORS, hexToNumber } from "@/lib/chart-pattern/stageColors";
 
-/** 격자 밖 노트 표시 색 = --nl-feedback-warning-marker(다크) — 선택(노랑) · 충돌(빨강) 과 구분되는 점선 */
-const OFF_GRID_COLOR = 0xfbc828;
+/** 격자 밖 노트 표시 색 = 경고 표시색 — 선택(노랑) · 충돌(빨강) 과 구분되는 점선 */
+const OFF_GRID_COLOR = hexToNumber(EDITOR_COLORS.warning);
 const DASH = 4;
 const GAP = 3;
 

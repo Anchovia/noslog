@@ -12,6 +12,7 @@ import type { Application, Graphics } from "pixi.js";
 
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
+    EDITOR_COLORS,
     HAND_COLORS,
     hexToNumber,
     STAGE_CANVAS,
@@ -160,30 +161,31 @@ const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const DURATION_RESIZE_HIT_RADIUS_PX = 7;
 const MOVE_DRAG_THRESHOLD_PX = 4;
 
+// 무대 바탕 · 손 색은 공개 뷰어와 같은 토큰 값, 나머지는 에디터 캔버스 상수(Pixi 는 CSS 변수를 못 읽는다)
 const colors = {
-    // 무대 바탕 · 손 색 = 공개 뷰어와 같은 토큰 값(2026-10-15 B5)
     background: hexToNumber(STAGE_CANVAS),
-    laneStrong: 0x30333c,
-    laneWeak: 0x1b1f27,
-    snapWhite: 0xe7e9ee,
-    snapRed: 0xa75a62,
-    snapPurpleStrong: 0x806b9a,
-    snapBlue: 0x52769b,
-    snapPurpleWeak: 0x685a78,
-    snapYellow: 0x75673f,
-    snapGrayStrong: 0x555a63,
-    snapGray: 0x464b54,
-    snapGrayWeak: 0x383d45,
+    laneStrong: hexToNumber(EDITOR_COLORS.laneStrong),
+    laneWeak: hexToNumber(EDITOR_COLORS.laneWeak),
+    snapWhite: hexToNumber(EDITOR_COLORS.snapWhite),
+    snapRed: hexToNumber(EDITOR_COLORS.snapRed),
+    snapPurpleStrong: hexToNumber(EDITOR_COLORS.snapPurpleStrong),
+    snapBlue: hexToNumber(EDITOR_COLORS.snapBlue),
+    snapPurpleWeak: hexToNumber(EDITOR_COLORS.snapPurpleWeak),
+    snapYellow: hexToNumber(EDITOR_COLORS.snapYellow),
+    snapGrayStrong: hexToNumber(EDITOR_COLORS.snapGrayStrong),
+    snapGray: hexToNumber(EDITOR_COLORS.snapGray),
+    snapGrayWeak: hexToNumber(EDITOR_COLORS.snapGrayWeak),
     left: hexToNumber(HAND_COLORS.left),
     right: hexToNumber(HAND_COLORS.right),
-    noteFace: 0xf7f7f2,
-    noteShadow: 0x121820,
-    judgment: 0x79df62,
-    preview: 0xfacc15,
-    selection: 0xf2c75c,
-    conflict: 0xf0646d,
-    pianoRail: 0x252a34,
-    pianoEdge: 0x969aa5,
+    noteFace: hexToNumber(EDITOR_COLORS.noteFace),
+    noteShadow: hexToNumber(EDITOR_COLORS.noteShadow),
+    judgment: hexToNumber(EDITOR_COLORS.judgment),
+    preview: hexToNumber(EDITOR_COLORS.preview),
+    selection: hexToNumber(EDITOR_COLORS.selection),
+    conflict: hexToNumber(EDITOR_COLORS.conflict),
+    pianoRail: hexToNumber(EDITOR_COLORS.pianoRail),
+    pianoEdge: hexToNumber(EDITOR_COLORS.pianoEdge),
+    pianoKeyLine: hexToNumber(EDITOR_COLORS.pianoKeyLine),
 };
 
 /** 트릴 몸통(B′) — 칠 자리 투명도 · 옅어지는 쪽을 나눌 띠 수(공개 뷰어 낙하형과 같은 방식) */
@@ -302,7 +304,7 @@ function drawEditorPiano(
                           : chartPianoColors.pressedRight,
                 alpha: activeHand === undefined ? 0.96 : 0.9,
             })
-            .stroke({ color: 0x565a63, width: 0.65, alpha: 0.72 });
+            .stroke({ color: colors.pianoKeyLine, width: 0.65, alpha: 0.72 });
     }
 
     const blackAfter = new Set([0, 1, 3, 4, 5]);

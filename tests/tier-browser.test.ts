@@ -211,6 +211,14 @@ describe("Tier browser request and data contract", () => {
         // 기록 없는 곡이 먼저, 그다음 낮은 점수 · 같은 점수는 서열표 순
         expect(order("score")).toEqual([0, 1, 3, 2]);
         expect(entries.map((item) => item.position)).toEqual([2, 0, 1, 3]);
+        // Real 은 레벨 숫자(1–3)가 달라 레벨 순에서 맨 끝 한 묶음
+        const real = { ...entry(4, 3, "え", null) };
+        real.chart = { ...real.chart, difficulty: "Real" };
+        expect(
+            sortTierBrowserEntries([real, ...entries], "level").map(
+                (item) => item.position
+            )
+        ).toEqual([0, 1, 2, 3, 4]);
     });
     it("narrows band counts and band entries to songs matching the search", async () => {
         mocks.music.mockResolvedValue([{ index: "stulti" }]);

@@ -32,8 +32,8 @@ export interface StatStripItem {
 }
 
 /**
- * 수치 띠 — 핵심 숫자 몇 개를 한 줄에. 값 16/24 · 600 · tabular 위, 라벨 metadata 아래, 칸 사이 1px divider.
- * 상자 surface · 모서리 4 · 칸 안쪽 8/12. 최대 5칸, 넘치면 줄바꿈. 악곡 상세 머리 · 내 기록 요약 (2026-09-16)
+ * 수치 띠 — 핵심 숫자 몇 개를 한 줄에. 값 16/24 · 600 위, 라벨 metadata 아래, 칸 사이 1px divider.
+ * 칸 면 surface · 상자 모서리 control · 칸 안쪽 위아래 12 · 좌우 8. 최대 5칸, 넘치면 줄바꿈. 악곡 상세 머리 · 내 기록 요약
  */
 export default function StatStrip({
     items,
@@ -46,11 +46,11 @@ export default function StatStrip({
     items: (StatStripItem | null | false | undefined)[];
     label?: string;
     className?: string;
-    /** 같은 상자 위 칸(아래 선 1px) — 이 수치를 보는 사람의 값 한 줄(예: 내 최고 기록) (2026-09-17 B3) */
+    /** 같은 상자 위 칸(아래 선 1px) — 이 수치를 보는 사람의 값 한 줄(예: 내 최고 기록) */
     header?: ReactNode;
-    /** 같은 상자 아래 칸(구분선 1px 위) — 이 수치에 딸린 이동 링크 줄(`nl-action-group`) (2026-09-17 I1C) */
+    /** 같은 상자 아래 칸(구분선 1px 위) — 이 수치에 딸린 이동 링크 줄(`nl-action-group`) */
     footer?: ReactNode;
-    /** 새 값을 받는 중 — 이전 값을 그대로 두고 content/pending 색으로(느린 교체 규칙, 2026-09-18) */
+    /** 새 값을 받는 중 — 이전 값을 그대로 두고 content/subdued 색으로(느린 교체 규칙) */
     pending?: boolean;
 }) {
     const visible = items.filter((item): item is StatStripItem =>
@@ -98,7 +98,7 @@ export default function StatStrip({
 }
 
 /**
- * 수치 띠 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 칸 틀에 라벨은 실제 글자, 값 자리만 스켈레톤
+ * 수치 띠 스켈레톤 —같은 칸 틀에 라벨은 실제 글자, 값 자리만 스켈레톤
  */
 export function StatStripSkeleton({
     labels,

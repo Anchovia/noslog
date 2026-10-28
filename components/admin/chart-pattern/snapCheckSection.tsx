@@ -12,7 +12,8 @@ import { chartPositionLabel } from "@/lib/chart-pattern/vid2bmap";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
-import { foundationButtonClass } from "@/components/ui/button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
+import IconButton from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
 
 /** 「12마디 3½박」(관리자 영상 추출 창과 같은 표기) → 에디터 언어로(ko · ja · en) */
@@ -82,29 +83,27 @@ export default function SnapCheckSection() {
             <div className="flex items-center justify-between gap-nl-8">
                 <h3 className="nl-metadata flex items-center gap-nl-8">
                     {t("editor.snap.title")}
-                    <span className="nl-admin-chip nl-admin-chip--warning">
+                    <span className="nl-tag nl-tag--status" data-tone="warning">
                         {t("editor.snap.count", {
                             count: items.length.toLocaleString(locale),
                         })}
                     </span>
                 </h3>
                 <span className="flex gap-nl-4">
-                    <button
-                        type="button"
+                    <IconButton
+                        size="compact"
+                        label={t("editor.snap.previous")}
                         onClick={() => moveFocus(-1)}
-                        aria-label={t("editor.snap.previous")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                     >
-                        <ArrowUp className="nl-icon-small" />
-                    </button>
-                    <button
-                        type="button"
+                        <ArrowUp className="nl-icon-small" aria-hidden />
+                    </IconButton>
+                    <IconButton
+                        size="compact"
+                        label={t("editor.snap.next")}
                         onClick={() => moveFocus(1)}
-                        aria-label={t("editor.snap.next")}
-                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                     >
-                        <ArrowDown className="nl-icon-small" />
-                    </button>
+                        <ArrowDown className="nl-icon-small" aria-hidden />
+                    </IconButton>
                 </span>
             </div>
             <div
@@ -112,7 +111,7 @@ export default function SnapCheckSection() {
                 tabIndex={0}
                 onKeyDown={handleListKey}
                 aria-label={t("editor.snap.list")}
-                className="flex min-h-0 flex-col gap-nl-4 overflow-y-auto rounded-nl-control focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
+                className="flex min-h-0 flex-col gap-nl-4 overflow-y-auto rounded-nl-control"
             >
                 {items.map((item, index) => {
                     const note = notesById.get(item.id);
@@ -124,7 +123,7 @@ export default function SnapCheckSection() {
                             role="listitem"
                             className={`flex flex-col gap-nl-4 rounded-nl-control border-nl-stroke px-nl-8 py-nl-8 ${
                                 isFocused
-                                    ? "border-nl-subdued bg-nl-surface"
+                                    ? "border-transparent bg-nl-control"
                                     : "border-nl-divider"
                             }`}
                         >
@@ -159,13 +158,13 @@ export default function SnapCheckSection() {
                                 </span>
                             </button>
                             {isFocused ? (
-                                <button
-                                    type="button"
+                                <Button
+                                    size="sm"
+                                    className="self-start"
                                     onClick={() => snap([item.id])}
-                                    className="nl-metadata h-nl-24 self-start rounded-nl-small border-nl-stroke border-nl-content bg-nl-primary px-nl-8 text-nl-on-primary"
                                 >
                                     {t("editor.snap.one")}
-                                </button>
+                                </Button>
                             ) : null}
                         </div>
                     );

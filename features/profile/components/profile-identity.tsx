@@ -217,12 +217,8 @@ export default function ProfileIdentity({
                             </span>
                         )}
                         {/* 기여 라벨(2026-09-24 P1) — 프로필에서는 Lv.1 부터, 누르면 아래 「기여」 구역으로 */}
-                        {user.role === "admin" ? (
-                            <a href="#profile-contribution" className="nl-tag">
-                                {t("contribution.label.operator")}
-                            </a>
-                        ) : contributionLevel(user.contribution?.points ?? 0)
-                              .level ? (
+                        {contributionLevel(user.contribution?.points ?? 0)
+                            .level ? (
                             <a href="#profile-contribution" className="nl-tag">
                                 <span className="nl-contribution-label__prefix">
                                     {t("contribution.label.prefix")}
@@ -237,11 +233,7 @@ export default function ProfileIdentity({
                         ) : null}
                         {/* 업적 진열(2026-09-24 B1) — 명판 · 라벨 뒤에 이어서. 명판 줄이기 폭 계산에는 넣지 않는다(넘치면 다음 줄) */}
                         {achievements ? (
-                            <AchievementShowcase
-                                userId={user.id}
-                                summary={achievements}
-                                isOwner={isOwner}
-                            />
+                            <AchievementShowcase summary={achievements} />
                         ) : null}
                     </ExamBadgeGroup>
                 </div>
@@ -266,7 +258,9 @@ export default function ProfileIdentity({
                                         {lastPlayedValue.private ? (
                                             <Lock aria-hidden />
                                         ) : null}
-                                        {t("profile.meta.lastPlayed")}{" "}
+                                        <span className="nl-metadata">
+                                            {t("profile.meta.lastPlayed")}
+                                        </span>{" "}
                                         <MetaValue
                                             item={lastPlayedValue}
                                             onlyMe={onlyMe}
@@ -276,7 +270,9 @@ export default function ProfileIdentity({
                                 {isOwner && sync ? (
                                     "distance" in sync ? (
                                         <span>
-                                            {t("profile.meta.synced")}{" "}
+                                            <span className="nl-metadata">
+                                                {t("profile.meta.synced")}
+                                            </span>{" "}
                                             <span className="nl-profile-identity__value">
                                                 {sync.distance}
                                             </span>
@@ -344,7 +340,9 @@ export default function ProfileIdentity({
                                         {nostalgia.private ? (
                                             <Lock aria-hidden />
                                         ) : null}
-                                        NOSTALGIA{" "}
+                                        <span className="nl-metadata">
+                                            NOSTALGIA
+                                        </span>{" "}
                                         <MetaValue
                                             item={nostalgia}
                                             onlyMe={onlyMe}
@@ -440,7 +438,7 @@ export default function ProfileIdentity({
                                         key={key}
                                         className="nl-profile-headline__rank"
                                     >
-                                        {/* 라벨 control 14 + 앞에 표시(세계 = 지구본 16 · 국가 = 국기), 순위 = component-title 16/600(2026-09-26, 사용자) */}
+                                        {/* 라벨 control + 앞에 표시(세계 = 지구본 16 · 국가 = 국기), 순위 = component-title — 중요한 값이라 한 단계 크게 */}
                                         <dt className="nl-control nl-muted">
                                             {key === "world" ? (
                                                 <Globe aria-hidden />

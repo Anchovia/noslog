@@ -18,7 +18,7 @@ const THUMB_HINT = 96;
 /**
  * 뮤즈캣 오락실 목록 줄(2026-10-22 목록 시안 안 A — 지도 · 장소 찾기 23곳 실측, 왼쪽 썸네일 = MapQuest · 올리브영 · 다이소 · 여기어때 · Trip.com · Booking).
  * 왼쪽 썸네일(사진이 없으면 회색 칸 + 핀 — MapQuest) → 이름 + 뮤즈캣 로고 + 거리(버거킹 · 다이소) →
- * 이름 오른쪽에 정보를 준 회사 로고(사용자 2026-10-22 — 실측 0곳이지만 고름) → 태그(대수 · 고장 · 폐업) → 주소 → 영업 상태(「영업 중」 초록 · 「영업 종료」 빨강 + 시각 — Google · Yahoo · Bing)
+ * 이름 오른쪽에 정보를 준 회사 로고 → 상태 태그(폐업 · 고장) 하나 + 대수 → 주소 → 영업 상태(「영업 중」 초록 · 「영업 종료」 빨강 + 시각 — Google · Yahoo · Bing)
  */
 export default function MusecatListRow({
     arcade,
@@ -81,20 +81,25 @@ export default function MusecatListRow({
                         </span>
                     ) : null}
                 </span>
+                {/* 한 줄에 태그 하나 — 상태(폐업이 고장보다 먼저) 태그 하나 + 대수는 메타 글자 */}
                 <span className="nl-musecat-result__source">
-                    {closed ? (
-                        <span className="nl-tag">{t("musecat.closedTag")}</span>
+                    {closed || openFlags ? (
+                        <span
+                            className="nl-tag nl-tag--status"
+                            data-tone="danger"
+                        >
+                            {closed
+                                ? t("musecat.closedTag")
+                                : t("musecat.fault.count", {
+                                      count: openFlags,
+                                  })}
+                        </span>
                     ) : null}
-                    <span className="nl-tag">
+                    <span className="nl-body-secondary nl-muted">
                         {t("musecat.list.nostalgiaCount", {
                             count: nostalgiaCount,
                         })}
                     </span>
-                    {openFlags ? (
-                        <span className="nl-tag nl-musecat-flagged">
-                            {t("musecat.fault.count", { count: openFlags })}
-                        </span>
-                    ) : null}
                 </span>
                 <span className="nl-body-secondary nl-muted nl-musecat-result__address">
                     {arcade.address ?? arcade.region}

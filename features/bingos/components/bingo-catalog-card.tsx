@@ -106,7 +106,7 @@ export default function BingoCatalogCard({
                         meta
                     )}
                     {isAuthenticated ? (
-                        // 진행 막대 = 상세 진행 막대와 같은 규격(높이 4 · border/divider 트랙 · local-data/single)
+                        // 진행 막대 = 상세 진행 막대와 같은 규격(트랙 8 · border/divider · local-data/single), 움직이지 않는다
                         <span className="nl-bingo-summary__bar" aria-hidden>
                             <i style={{ width: `${completed.size * 4}%` }} />
                         </span>

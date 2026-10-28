@@ -234,7 +234,7 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     await openCommunity(page, { data, guest: true });
     await page.locator("button.nl-vote-row").first().click();
     await expect(
-        page.locator(".nl-vote-distribution table tbody tr")
+        page.locator(".nl-vote-distribution .nl-bar-list__row")
     ).toHaveCount(9);
     // 자격이 없으면 입력도 이유 문장도 없다(2026-09-16 A) — 로그아웃은 펼친 내용 첫 줄의 제목 링크(D · 09-18 아코디언)
     await expect(page.locator(".nl-vote-form")).toHaveCount(0);
@@ -280,46 +280,20 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     await expect(page.locator(".nl-vote-form")).toHaveCount(0);
 });
 
-test("Goal distributions preserve observed values and global bar scale while paging", async ({
+test("Goal distributions list every observed value as bars on one scale", async ({
     page,
 }) => {
     await openCommunity(page);
     const rows = page.locator("button.nl-vote-row");
     await rows.nth(1).click();
-    await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
+    const distribution = page.locator(".nl-vote-distribution");
+    await expect(distribution).toHaveCount(1);
+    // 분포 = 막대 목록 — 나온 값마다 한 줄, 넘김 없이 모두 보인다
+    await expect(distribution.locator(".nl-bar-list__row")).toHaveCount(9);
+    await expect(distribution).not.toContainText("12.1");
     await expect(
-        page.locator(".nl-vote-distribution table tbody tr")
-    ).toHaveCount(9);
-    await expect(page.locator(".nl-vote-distribution table")).not.toContainText(
-        "12.1"
-    );
-    const before = await page
-        .locator(".nl-vote-distribution__value")
-        .evaluateAll((nodes) =>
-            nodes.map((n) => ({
-                value: n.lastElementChild?.textContent,
-                height: n
-                    .querySelector(".nl-vote-distribution__slot > span")
-                    ?.getBoundingClientRect().height,
-            }))
-        );
-    await page
-        .getByRole("button", { name: "다음 투표 값", exact: true })
-        .click();
-    const after = await page
-        .locator(".nl-vote-distribution__value")
-        .evaluateAll((nodes) =>
-            nodes.map((n) => ({
-                value: n.lastElementChild?.textContent,
-                height: n
-                    .querySelector(".nl-vote-distribution__slot > span")
-                    ?.getBoundingClientRect().height,
-            }))
-        );
-    after.forEach((entry) => {
-        const previous = before.find((item) => item.value === entry.value);
-        if (previous) expect(entry.height).toBe(previous.height);
-    });
+        distribution.getByRole("button", { name: "다음 투표 값" })
+    ).toHaveCount(0);
     // 펼치면 바로 셀렉트 줄 — 내 투표가 기본값 (2026-09-18)
     await expect(page.locator(".nl-vote-contribution select")).toHaveValue(
         "13.2"
@@ -660,9 +634,11 @@ test("A new opinion starts as one line, expands on focus, and cancels back", asy
         )
         .toBeLessThan(50);
     await input.focus();
+    // 버튼은 늘 켜 두고 빈 값은 칸 아래 오류로 알린다
+    await page.getByRole("button", { name: "의견 작성" }).click();
     await expect(
-        page.getByRole("button", { name: "의견 작성" })
-    ).toBeDisabled();
+        page.getByRole("alert").filter({ hasText: "의견을 입력해 주세요." })
+    ).toBeVisible();
     await input.fill("a".repeat(121));
     await page.getByRole("button", { name: "의견 작성" }).click();
     await expect(

@@ -7,27 +7,31 @@ import {
     discoverySearchParams,
 } from "@/features/music/schemas/discovery-schema";
 import { readApiResponse } from "@/lib/api/response";
+import type { Locale } from "@/lib/i18n/routing";
 
 async function fetchDiscovery(
     query: DiscoveryQuery,
     offset: number,
+    locale: Locale,
     signal: AbortSignal
 ) {
     const params = discoverySearchParams(query);
     params.set("offset", String(offset));
+    params.set("locale", locale);
     const response = await fetch(`/api/discovery?${params}`, { signal });
     return discoveryPageSchema.parse(await readApiResponse(response));
 }
 
 export function discoveryOptions(
     query: DiscoveryQuery,
-    accountId: number | null
+    accountId: number | null,
+    locale: Locale
 ) {
     return infiniteQueryOptions({
-        queryKey: ["discovery", accountId, query],
+        queryKey: ["discovery", accountId, locale, query],
         initialPageParam: 0,
         queryFn: ({ pageParam, signal }) =>
-            fetchDiscovery(query, pageParam, signal),
+            fetchDiscovery(query, pageParam, locale, signal),
         getNextPageParam: (page) => page.nextOffset,
         staleTime: 60_000,
         retry: false,

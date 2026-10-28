@@ -52,7 +52,7 @@ export interface PollBuilderLabels {
 }
 
 /**
- * 투표 만들기 창 (2026-09-23 W1) — 고르는 방법 → 질문 → 선택지 → 익명 → 「자세히」(마감 · 결과 공개 · 선택지 추가).
+ * 투표 만들기 창 — 고르는 방법 → 질문 → 선택지 → 익명 → 「자세히」(마감 · 결과 공개 · 선택지 추가).
  * 미리보기는 두지 않는다(Discourse · Strawpoll 둘 다 없음). 엔터 · 「선택지 추가」 · 여러 줄 붙여넣기 세 경로를 모두 준다.
  * 표가 들어온 뒤(`locked`)에는 마감 시각과 선택지 추가만 열어 둔다.
  */
@@ -83,7 +83,7 @@ export default function PollBuilderDialog({
     const [error, setError] = useState<PollValidationError | null>(null);
     const [paste, setPaste] = useState(false);
     const [pasted, setPasted] = useState("");
-    // 엔터로 만든 칸으로 커서를 옮긴다 — 안 옮기면 앞 칸에 계속 써진다(2026-09-23 확인)
+    // 엔터로 만든 칸으로 커서를 옮긴다 — 안 옮기면 앞 칸에 계속 써진다
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
 
     const setOption = (index: number, text: string) =>
@@ -143,21 +143,23 @@ export default function PollBuilderDialog({
         onOpenChange(false);
     };
 
-    const footer = (
-        <>
-            <ActionButton variant="secondary" onClick={close}>
-                {labels.cancel}
-            </ActionButton>
-            <ActionButton onClick={save}>{labels.submit}</ActionButton>
-        </>
-    );
+    const submit = <ActionButton onClick={save}>{labels.submit}</ActionButton>;
 
+    // 폰 전체 화면은 머리 × 가 닫기를 맡아 발에 주 동작 하나만 둔다
     return (
         <ResponsiveDialog
             open={open}
             onOpenChange={(next) => (next ? onOpenChange(true) : close())}
             title={labels.title}
-            footer={footer}
+            modalFooter={
+                <>
+                    <ActionButton variant="secondary" onClick={close}>
+                        {labels.cancel}
+                    </ActionButton>
+                    {submit}
+                </>
+            }
+            fullScreenFooter={submit}
         >
             <div className="nl-poll-builder">
                 {locked ? (

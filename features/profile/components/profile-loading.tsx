@@ -258,7 +258,7 @@ function ProgressSkeleton() {
                         ]}
                     />
                     {/* 셀렉트 값은 스크립트가 돈 뒤 채워져 빈 칸으로 보이므로 같은 모양의 정적 트리거로 */}
-                    <span className="nl-compact-select nl-control nl-compact-select--outlined nl-compact-select--compact">
+                    <span className="nl-compact-select nl-control nl-compact-select--compact">
                         <span>{t("profile.range.90")}</span>
                         <ChevronDown aria-hidden />
                     </span>

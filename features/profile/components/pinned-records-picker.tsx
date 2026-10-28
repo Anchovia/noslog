@@ -28,8 +28,8 @@ function parse(value: string): Draft[] {
 }
 
 /**
- * 설정 「프로필」 탭의 「고정 기록」 칸(2026-09-26 S2) — 「프로필 업적」 칸과 같은 모양(값 + 「변경」 → 창, 「저장」 때 함께 저장).
- * 창(2026-09-26 P1) = 고른 것 순번 알약 한 줄(× 로 빼기 · 누르면 그 기록의 한 줄 소감 칸) →12→ 기록 찾기(검색 칸 + 고르기 목록).
+ * 설정 「프로필」 탭의 「고정 기록」 칸 — 「프로필 업적」 칸과 같은 모양(값 + 「변경」 → 창, 「적용」 하는 순간 저장).
+ * 창 = 고른 것 순번 알약 한 줄(× 로 빼기 · 누르면 그 기록의 한 줄 소감 칸) →16→ 기록 찾기(검색 칸 + 고르기 목록).
  * 빈 값 = 자동(베스트 상위 3곡)
  */
 export default function PinnedRecordsPicker({
@@ -179,7 +179,6 @@ export default function PinnedRecordsPicker({
                 }
             >
                 <div className="nl-pinned-picker">
-                    {/* 고른 칩 →8→ 쓰는 법 한 줄(2026-09-26 점검 D2 — 시안 P1: 칩을 눌러 소감) */}
                     <div className="nl-settings__pick-group">
                         <ol className="nl-pick-slots">
                             {Array.from(
@@ -393,7 +392,7 @@ export default function PinnedRecordsPicker({
                                         </span>
                                         {picked ? (
                                             <Check
-                                                className="nl-icon nl-pick-row__check"
+                                                className="nl-icon-small nl-pick-row__check"
                                                 aria-hidden
                                             />
                                         ) : null}

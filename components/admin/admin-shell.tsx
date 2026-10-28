@@ -33,6 +33,9 @@ export default function AdminShell({
         return (
             // 에디터 옛 셸도 .noslog-ui 안 — 밖이면 nl 토큰이 풀리지 않는다(2026-10-15 B5 2단계)
             <div className="noslog-ui min-h-screen bg-nl-canvas">
+                <Suspense fallback={null}>
+                    <NavigationProgress />
+                </Suspense>
                 <div className="nl-admin-phone-frame mx-auto flex min-h-screen w-full flex-col bg-nl-canvas">
                     {legacySkipLink}
                     {legacyHeader}

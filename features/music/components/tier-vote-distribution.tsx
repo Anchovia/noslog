@@ -1,124 +1,35 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
-
 import { useTranslations } from "@/components/i18n/locale-provider";
-import IconButton from "@/components/ui/icon-button";
+import BarList from "@/components/ui/bar-list";
 import type { CommunityData } from "@/features/music/schemas/community-schema";
-import useElementWidth from "@/lib/hooks/use-element-width";
 
+/** 서열 투표 분포 = 막대 목록 — 나온 값마다 한 줄(낮은 값부터), 막대 길이 = 그 값의 표 수. 한 눈금이라 넘김이 없다 */
 export default function TierVoteDistribution({
     scope,
 }: {
     scope: CommunityData["scopes"][number];
 }) {
     const t = useTranslations();
-    const { ref, width } = useElementWidth<HTMLDivElement>();
-    const [shift, setShift] = useState(0);
-    const capacity = Math.max(1, Math.min(5, Math.floor((width + 8) / 40)));
     const values = scope.distribution;
     const max = Math.max(1, ...values.map((entry) => entry.count));
-    const counts = [...new Set(values.map((entry) => entry.count))].sort(
-        (a, b) => b - a
-    );
-    const center = values.reduce(
-        (nearest, entry, index) =>
-            Math.abs(entry.value - (scope.average ?? 0)) <
-            Math.abs(values[nearest].value - (scope.average ?? 0))
-                ? index
-                : nearest,
-        0
-    );
-    const end = Math.max(0, values.length - capacity);
-    const initial = Math.max(
-        0,
-        Math.min(end, center - Math.floor(capacity / 2))
-    );
-    const start = Math.max(0, Math.min(end, initial + shift));
-    const visible = values.slice(start, start + capacity);
     const name =
         scope.mode === "basic"
             ? `Basic ${t(`community.goal.${scope.goal}`)}`
             : "Recital";
+    const label = t("community.distribution", { scope: name });
     return (
-        <section
-            className="nl-vote-distribution"
-            aria-label={t("community.distribution", { scope: name })}
-        >
-            <div className="nl-vote-distribution__window">
-                <IconButton
-                    label={t("community.previousValue")}
-                    disabled={start === 0}
-                    onClick={() => setShift(start - initial - 1)}
-                >
-                    <ChevronLeft className="nl-icon" aria-hidden />
-                </IconButton>
-                <div
-                    ref={ref}
-                    className="nl-vote-distribution__values"
-                    aria-hidden
-                >
-                    {visible.map((entry) => (
-                        <div
-                            key={entry.value}
-                            className="nl-vote-distribution__value"
-                        >
-                            <span className="nl-metric-value">
-                                {entry.count}
-                            </span>
-                            <div className="nl-vote-distribution__slot">
-                                <span
-                                    data-rank={Math.min(
-                                        2,
-                                        counts.indexOf(entry.count)
-                                    )}
-                                    style={{
-                                        height: `${(entry.count / max) * 100}%`,
-                                    }}
-                                />
-                            </div>
-                            <span className="nl-metadata nl-muted">
-                                {entry.value.toFixed(1)}
-                            </span>
-                        </div>
-                    ))}
-                </div>
-                <IconButton
-                    label={t("community.nextValue")}
-                    disabled={start === end}
-                    onClick={() => setShift(start - initial + 1)}
-                >
-                    <ChevronRight className="nl-icon" aria-hidden />
-                </IconButton>
-            </div>
-            <p className="sr-only" role="status">
-                {visible.length
-                    ? t("community.valueRange", {
-                          first: visible[0].value.toFixed(1),
-                          last: visible.at(-1)!.value.toFixed(1),
-                      })
-                    : null}
-            </p>
-            <table className="sr-only">
-                <caption>
-                    {t("community.distribution", { scope: name })}
-                </caption>
-                <thead>
-                    <tr>
-                        <th scope="col">{t("community.voteValue")}</th>
-                        <th scope="col">{t("ranking.playerCount")}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {values.map((entry) => (
-                        <tr key={entry.value}>
-                            <th scope="row">{entry.value.toFixed(1)}</th>
-                            <td>{entry.count}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <section className="nl-vote-distribution" aria-label={label}>
+            <BarList
+                label={label}
+                max={max}
+                rows={values.map((entry) => ({
+                    key: String(entry.value),
+                    label: entry.value.toFixed(1),
+                    value: entry.count,
+                    display: entry.count,
+                }))}
+            />
         </section>
     );
 }

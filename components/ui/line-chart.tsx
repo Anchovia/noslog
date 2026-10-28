@@ -254,6 +254,7 @@ export default function LineChart({
                     {showValueAxis ? (
                         <div
                             className="nl-line-chart__y nl-metadata nl-muted"
+                            style={frameStyle}
                             aria-hidden
                         >
                             {ticks.map((tick, index) => (

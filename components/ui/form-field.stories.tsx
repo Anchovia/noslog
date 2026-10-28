@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     render: (args) => (
         <FormField {...args}>
-            <Input id={args.id} placeholder="닉네임을 입력하세요" />
+            <Input id={args.id} />
         </FormField>
     ),
 };

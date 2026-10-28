@@ -47,9 +47,8 @@ function worstDisruption(flags: MusecatFlag[]) {
 }
 
 /**
- * NOSTALGIA 게임 카드(뮤즈캣 시안 PAGE 2 · 3, 2026-10-21 전면 대조 ①) — 면 카드 하나 안에
- * 이름 → 대수 · 요금 · 위치 메타 → 고장 상태(색 점) → 새 버전 확인 → NosLog 기체 특징 판 → 「고장 내용 보기 · 고장 신고」(보조 버튼).
- * 고장 내용은 같은 카드 안에서 펼친다(정도 · 내용 · 처음 신고 · 해결 투표, 내 신고는 거두기)
+ * 게임 한 줄(구분선 목록) — 이름 · 대수 → 요금 · 위치 → 고장 상태 글자 → 「자세히」.
+ * 펼치면 고장 내용(정도 · 내용 · 처음 신고 · 해결 투표, 내 신고는 거두기) → 새 버전 확인 → NosLog 기체 특징 판 → 「고장 신고」(보조 버튼)
  */
 export default function MusecatGameCard({
     data,
@@ -61,9 +60,13 @@ export default function MusecatGameCard({
     viewer: MusecatGameViewer;
 }) {
     const t = useTranslations();
+    const locale = useLocale();
     const { arcade } = data;
     const [open, setOpen] = useState(false);
     const [visitRequired, setVisitRequired] = useState(false);
+    const [answering, setAnswering] = useState<"still_old" | "updated" | null>(
+        null
+    );
     const [busy, startTransition] = useTransition();
     const worst = worstDisruption(game.flags);
     const featured = arcade.cabinets.find(
@@ -71,9 +74,10 @@ export default function MusecatGameCard({
             cabinet.featureNote || Object.values(cabinet.features).some(Boolean)
     );
     function answerCampaign(result: "still_old" | "updated") {
-        if (!game.campaign) return;
+        if (!game.campaign || busy) return;
         if (!viewer.requireConnection("campaign")) return;
         const campaign = game.campaign;
+        setAnswering(result);
         startTransition(async () => {
             const response = await checkMusecatCampaign({
                 slug: arcade.slug,
@@ -118,7 +122,20 @@ export default function MusecatGameCard({
         </Button>
     );
     const detailsId = useId();
-    const sub = [...game.prices.map((price) => price.text), game.location]
+    // 금액이 숫자로 오면 보는 사람의 언어 · 통화 형식으로 쓴다(뮤즈캣 글은 한국어 「원」 이라)
+    const priceLabel = (price: MusecatGame["prices"][number]) =>
+        price.amount === null
+            ? price.text
+            : [
+                  price.label,
+                  new Intl.NumberFormat(locale, {
+                      style: "currency",
+                      currency: price.currency,
+                  }).format(price.amount),
+              ]
+                  .filter(Boolean)
+                  .join(" ");
+    const sub = [...game.prices.map(priceLabel), game.location]
         .filter(Boolean)
         .join(" · ");
     const traits = game.nostalgia ? featured : undefined;
@@ -191,7 +208,7 @@ export default function MusecatGameCard({
                                     <ActionButton
                                         size="sm"
                                         variant="secondary"
-                                        disabled={busy}
+                                        busy={busy && answering === "still_old"}
                                         onClick={() =>
                                             answerCampaign("still_old")
                                         }
@@ -201,7 +218,7 @@ export default function MusecatGameCard({
                                     <ActionButton
                                         size="sm"
                                         variant="secondary"
-                                        disabled={busy}
+                                        busy={busy && answering === "updated"}
                                         onClick={() =>
                                             answerCampaign("updated")
                                         }
@@ -258,6 +275,7 @@ function FlagDetail({
     const t = useTranslations();
     const locale = useLocale();
     const [busy, startTransition] = useTransition();
+    const [pending, setPending] = useState<string | null>(null);
     const [voted, setVoted] = useState(flag.resolution?.myVote ?? null);
     const [now] = useState(() => new Date());
     const days = daysAgo(flag.createdAt, now) ?? 0;
@@ -268,7 +286,12 @@ function FlagDetail({
                   -days,
                   "day"
               );
-    function run(action: () => Promise<{ ok: boolean; error?: string }>) {
+    function run(
+        key: string,
+        action: () => Promise<{ ok: boolean; error?: string }>
+    ) {
+        if (busy) return;
+        setPending(key);
         startTransition(async () => {
             const result = await action().catch(() => ({
                 ok: false,
@@ -326,7 +349,7 @@ function FlagDetail({
                             variant="secondary"
                             busy={busy}
                             onClick={() =>
-                                run(() =>
+                                run("withdraw", () =>
                                     withdrawMusecatFault({
                                         slug: data.arcade.slug,
                                         gameId: game.id,
@@ -348,7 +371,7 @@ function FlagDetail({
                                     key={reaction}
                                     size="sm"
                                     variant="secondary"
-                                    disabled={busy}
+                                    busy={busy && pending === reaction}
                                     aria-pressed={
                                         voted ===
                                         (reaction === "fixed"
@@ -356,7 +379,7 @@ function FlagDetail({
                                             : "wrong")
                                     }
                                     onClick={() =>
-                                        run(async () => {
+                                        run(reaction, async () => {
                                             const result =
                                                 await reactMusecatFault({
                                                     slug: data.arcade.slug,

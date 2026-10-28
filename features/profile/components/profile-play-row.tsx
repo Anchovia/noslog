@@ -102,7 +102,7 @@ export default function ProfilePlayRow({
                 ) : null}
                 {play.newBest ? (
                     <span
-                        className="nl-profile-play-row__new nl-tag nl-tag--status nl-metadata"
+                        className="nl-profile-play-row__new nl-tag nl-tag--status"
                         data-tone="success"
                     >
                         {t("profile.newBest")}

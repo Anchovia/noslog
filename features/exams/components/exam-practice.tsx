@@ -1,14 +1,12 @@
 "use client";
 
-import { Target } from "lucide-react";
-
 import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
 import { getStageLabel } from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import { getExamPractice } from "@/features/exams/exam-practice";
 
 /**
- * 합격까지(2026-09-22 P2-a) — 내 베스트를 곡별 조각(차트 범주 색 1 · 2 · 3)으로 쌓은 막대 위에
+ * 합격까지 — 내 베스트를 곡별 조각(차트 범주 색, 곡 순서대로)으로 쌓은 막대 위에
  * 공식 합격선 눈금(1차 · 2차 · 합격)을 긋는다. 색만으로 구분하지 않게 아래에 「색 · 곡 · 점수」 범례를 늘 둔다
  */
 function Margin({ value }: { value: number }) {
@@ -151,17 +149,20 @@ export default function ExamPractice({ exam }: { exam: ExamDashboardItem }) {
                             aria-hidden
                         />
                         {getStageLabel(stage, index, exam.stages.length)}
-                        <span className="nl-metric-value">
+                        {/* 기록이 없으면 값 자리만 흐린 「—」 */}
+                        <span
+                            className="nl-metric-value"
+                            data-empty={stage.bestValue === null || undefined}
+                        >
                             {stage.bestValue === null
-                                ? t("exams.stage.noRecord")
+                                ? "—"
                                 : stage.bestValue.toLocaleString(locale)}
                         </span>
                     </li>
                 ))}
             </ul>
             {priority && !(complete && remaining === 0) ? (
-                <p className="nl-exam-practice__priority nl-metadata nl-muted">
-                    <Target className="nl-icon-small" aria-hidden />
+                <p className="nl-metadata nl-muted">
                     {t("exams.simulation.practiceFirst", {
                         stage: `${getStageLabel(
                             exam.stages[priority.index],

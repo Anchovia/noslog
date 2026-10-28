@@ -74,9 +74,9 @@ describe("개인정보처리방침 이전 버전", () => {
             );
             expect(text("public")).toContain(
                 {
-                    ko: "실력 · 수집 업적",
-                    ja: "実力・コレクションの実績",
-                    en: "skill or collection achievements",
+                    ko: "실력 · 수집 · 곡 묶음 · 계절 업적",
+                    ja: "実力・コレクション・楽曲セット・季節の実績",
+                    en: "skill, collection, song set or season achievements",
                 }[locale]
             );
             // 2026-09-26 — 고정 기록의 이용 · 공개 · 보유, 업적 기준 변경 뒤 다시 판정하면 단계를 지움

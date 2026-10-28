@@ -76,7 +76,7 @@ function nostalgiaGame(arcade: PublicArcade): MusecatGame {
             (amount !== null
                 ? [
                       {
-                          label: null,
+                          label: unit,
                           amount,
                           currency: arcade.currencyCode,
                           text: `${unit} ${amount.toLocaleString("ko-KR")}${arcade.currencyCode === "KRW" ? "원" : ` ${arcade.currencyCode}`}`,

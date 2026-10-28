@@ -17,7 +17,7 @@ const difficulties = ["normal", "hard", "expert", "real"] as const;
 
 /**
  * 난이도 판 4칸 — 고정 순서(Normal · Hard · Expert · Real), 없는 난이도는 자리만 비워 열을 지킨다.
- * 판 24(목록 · 격자) / 20(촘촘) · raised 면 · 숫자는 metric-value 14 tabular 에 난이도 글자색 (2026-09-16 L2).
+ * 판 24(목록) / 20(격자 · 촘촘) · 카드 위 판 면(surface/control) · 숫자는 metric-value 에 난이도 글자색.
  */
 function DifficultyLevels({ music }: { music: MusicResult }) {
     return (

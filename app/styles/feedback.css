@@ -32,7 +32,7 @@
 .noslog-ui .nl-feedback-done p {
     margin: 0;
 }
-/* 내 제보 — 줄 위아래 12 · 아래 줄 선, 상태 · 날짜 한 줄 →4→ 내용 →8→ 답변 상자(면 surface · 모서리 4 · 안쪽 12) */
+/* 내 제보 — 줄 위아래 12 · 아래 줄 선, 상태 · 날짜 한 줄 →4→ 내용 →8→ 답변 상자(면 surface · 모서리 8 · 안쪽 12) */
 .noslog-ui .nl-feedback-mine__row {
     display: flex;
     flex-direction: column;

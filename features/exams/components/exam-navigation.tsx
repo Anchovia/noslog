@@ -51,7 +51,10 @@ export default function ExamNavigation({
             ) : null}
             {selected ? (
                 <div className="nl-exam-select">
-                    <label className="nl-control" htmlFor="exam-select">
+                    <label
+                        className="nl-control nl-muted"
+                        htmlFor="exam-select"
+                    >
                         {t("exams.select")}
                     </label>
                     <Select.Root
@@ -64,7 +67,7 @@ export default function ExamNavigation({
                         }}
                     >
                         <Select.Trigger
-                            className="nl-input nl-exam-select__trigger"
+                            className="nl-input nl-select nl-exam-select__trigger"
                             id="exam-select"
                         >
                             {/* 고른 급의 상태는 급 머리 태그에 있어 트리거에는 두지 않는다(2026-09-22 사용자) */}

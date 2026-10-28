@@ -85,7 +85,7 @@ export default async function LoginPage({
             </div>
             <Link
                 prefetch={false}
-                className="nl-auth-browse nl-control"
+                className="nl-auth-browse nl-control nl-link"
                 href={publicContext ? returnPath : home}
             >
                 {t("auth.browseWithoutLogin")}

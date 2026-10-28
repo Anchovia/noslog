@@ -225,7 +225,7 @@ export async function saveSettingsPrivacy(
             routePath: "/settings",
             routeType: "action",
         });
-        return { success: false, message: t("settings.saveError") };
+        return { success: false, message: t("settings.privacySaveError") };
     }
     // 랭킹 줄에 영향을 주는 건 점수 비공개뿐 — 나머지 스위치는 본인 프로필만
     refreshPublicIdentity(session.id, {

@@ -28,12 +28,12 @@ const keys = (
     );
 
 describe("업적 정렬(2026-09-25)", () => {
-    it("분류 순 = 정의 순서", () => {
+    it("분류 순 = 정의 순서, 못 얻은 업적은 뒤", () => {
         expect(keys("category")).toEqual([
             "s-rank",
             "score-990k",
-            "pianist",
             "opinion",
+            "pianist",
         ]);
     });
 

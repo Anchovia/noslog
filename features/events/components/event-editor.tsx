@@ -22,6 +22,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import IconButton from "@/components/ui/icon-button";
 import MarkdownEditor from "@/components/ui/markdown-editor";
@@ -46,6 +47,7 @@ import {
 import { uploadGrantedImage } from "@/lib/uploads/client-image-upload";
 
 import EventDeleteButton from "./event-delete-button";
+import { EventBanner } from "./event-parts";
 
 type SaveMode = "draft" | "submit";
 const DIALOG_FIELDS = ["startDate", "endDate", "bannerUrl"] as const;
@@ -248,11 +250,11 @@ export default function EventEditor({
                 </span>
                 {bannerSrc ? (
                     <div className="nl-events__banner-field">
-                        {/* 목록 카드와 같은 2.4 : 1 로 미리 보인다 */}
-                        <div className="nl-event-banner">
-                            {/* eslint-disable-next-line @next/next/no-img-element -- 올리기 전 blob: 미리보기 */}
-                            <img src={bannerSrc} alt="" />
-                        </div>
+                        {/* 목록 카드와 같은 2.4 : 1 로 미리 보인다. 올리기 전 blob: 주소는 next/image 가 최적화 없이 그린다 */}
+                        <EventBanner
+                            src={bannerSrc}
+                            sizes="(min-width: 672px) 600px, 100vw"
+                        />
                         <IconButton
                             label={t("events.form.removeBanner")}
                             variant="secondary"
@@ -452,6 +454,9 @@ export default function EventEditor({
             ) : null}
             <div className="nl-form-bar">
                 <div>
+                    <ButtonLink href={href("/events/mine")} variant="ghost">
+                        {t("events.actions.leave")}
+                    </ButtonLink>
                     {event.id !== undefined ? (
                         <EventDeleteButton
                             id={event.id}

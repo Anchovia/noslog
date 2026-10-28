@@ -6,6 +6,7 @@ import { confirmCabinetRunning } from "@/app/(site)/gamecenter/actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
+import StatusDot, { type StatusDotTone } from "@/components/ui/status-dot";
 import { StatusMessage } from "@/components/ui/status-message";
 import TermHelp from "@/components/ui/term-help";
 import { daysAgo } from "@/features/arcades/arcade-discovery";
@@ -36,6 +37,13 @@ export function cabinetState(cabinet: ArcadeCabinet): CabinetState {
     if (cabinet.availability === "unavailable") return "unavailable";
     if (cabinet.condition === "caution") return "caution";
     return cabinet.condition === "normal" ? "normal" : "available";
+}
+
+/** 상태 점 색 — 가동 · 양호 초록 · 보통 노랑 · 주의 · 이용 불가 빨강 · 미확인 빈 원 */
+export function cabinetDotTone(state: CabinetState): StatusDotTone {
+    if (state === "unknown") return "empty";
+    if (state === "caution" || state === "unavailable") return "danger";
+    return state === "normal" ? "warning" : "success";
 }
 
 /** 「가동 · 양호」·「가동 · 주의」·「이용 불가」·「미확인」 */
@@ -77,11 +85,10 @@ export function CabinetStateText({ cabinet }: { cabinet: ArcadeCabinet }) {
 }
 
 /**
- * 기체 한 대 = 구분선으로 나눈 한 줄. 실제 오락실 표기(1번기·2번기)를 따르고, 위치 메모·상태(색 점 + 글자)·신선도를 같이 둔다.
+ * 기체 한 대 = 면 카드 하나. 실제 오락실 표기(1번기·2번기)를 따르고, 위치 메모·상태(색 점 + 글자)·신선도를 같이 둔다.
  * 「가동 확인」 은 로그인 이용자의 한 번 누르기 — 카드의 주 액션이라 흰 버튼(목록 카드 「자세히 보기」 와 같은 서열),
- * 「고장 신고」 는 이 기체를 대상으로 신고 레이어를 여는 빨간 테두리 버튼(사용자 결정). 둘 다 글자만 —
- * 폰 상세 22곳 중 주 버튼 글자만 15 (2026-09-15).
- * 확인한 사람 수·신고 건수는 각 버튼 글자 오른쪽의 흐린 숫자 — 시각 줄에는 시각만 남긴다.
+ * 「고장 신고」 는 이 기체를 대상으로 신고 창을 여는 보조 버튼. 둘 다 글자만.
+ * 확인한 사람 수·신고 건수는 각 버튼 글자 오른쪽 숫자(버튼 글자색) — 시각 줄에는 시각만 남긴다.
  */
 export default function ArcadeCabinetRow({
     arcade,
@@ -168,7 +175,7 @@ export default function ArcadeCabinetRow({
                         className="nl-control nl-arcade-cabinet__state"
                         data-state={state}
                     >
-                        <span className="nl-arcade-cabinet__dot" aria-hidden />
+                        <StatusDot tone={cabinetDotTone(state)} />
                         <CabinetStateText cabinet={cabinet} />
                     </span>
                     {/* 한 줄 글로 이어 쓴다 — 조각마다 간격을 주고 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}

@@ -62,7 +62,7 @@ export default function AchievementInfoBadge({
                 tier={tier}
                 size="large"
             />
-            <strong className="nl-section-title">
+            <strong className="nl-component-title">
                 {text.titled(achievementKey, tier)}
             </strong>
             <p className="nl-body-secondary">

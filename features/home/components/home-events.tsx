@@ -3,19 +3,19 @@ import Image from "next/image";
 
 import IntentLink from "@/components/ui/intent-link";
 import { eventPeriod } from "@/features/events/components/event-parts";
-import type { PublicEventItem } from "@/features/events/server/event-service";
+import type { getHomeLiveEvents } from "@/features/events/server/event-service";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 
-// 홈 「진행 중인 이벤트」 (2026-09-18 H1) — 공지사항 바로 아래, 늘 보인다(이벤트로 가는 길). 큰 배너 카드 위에 제목 · 기간을 얹는다.
-// 진행 중인 이벤트가 없으면 안내 한 줄 + 「이벤트 글쓰기」 글자 링크(2026-09-28 인상 점검 A3)
-// 글자 아래는 어두운 층(media-scrim) + 위로 갈수록 옅어지는 흐림 — 경계가 딱딱하게 보이지 않게
+// 홈 「진행 중인 이벤트」 — 공지사항 바로 아래, 늘 보인다(이벤트로 가는 길). 큰 배너 카드 위에 제목 · 기간을 얹는다.
+// 글자 아래는 어두운 층(media-scrim)만 — 위쪽이 투명에서 번져 경계가 딱딱하게 보이지 않는다
 export default async function HomeEvents({
-    events,
+    events: live,
 }: {
-    events: PublicEventItem[];
+    events: Awaited<ReturnType<typeof getHomeLiveEvents>>;
 }) {
     const { locale, t } = await getServerI18n();
+    const events = live.status === "ready" ? live.events : [];
     return (
         <section className="nl-home-update nl-home-events">
             <div className="nl-heading-row">
@@ -28,7 +28,12 @@ export default async function HomeEvents({
                     <ChevronRight aria-hidden />
                 </IntentLink>
             </div>
-            {events.length ? (
+            {live.status === "error" ? (
+                // 불러오지 못하면 빈 목록 안내와 구별해 공식 소식과 같은 상태 상자로 알린다
+                <p className="nl-home-news-state nl-body-secondary nl-muted">
+                    {t("home.liveEventsError")}
+                </p>
+            ) : events.length ? (
                 <ul className="nl-home-events__list">
                     {events.map((event, index) => (
                         <li key={event.id}>

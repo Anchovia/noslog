@@ -153,7 +153,8 @@ function toGame(value: unknown, currency: string): MusecatGame | null {
             ? item.cabinet
             : localized(item.cabinet);
     const title = [localized(version), cabinet].filter(Boolean).join(" ");
-    const price = priceText(item.price ?? version.price_default, currency);
+    const rawPrice = item.price ?? version.price_default;
+    const price = priceText(rawPrice, currency);
     return {
         id: item.id,
         title: title || localized(item.game) || series || "?",
@@ -161,7 +162,14 @@ function toGame(value: unknown, currency: string): MusecatGame | null {
         quantity: Number(item.quantity ?? 1),
         location: text(item.location),
         prices: price
-            ? [{ label: null, amount: null, currency, text: price }]
+            ? [
+                  {
+                      label: null,
+                      amount: typeof rawPrice === "number" ? rawPrice : null,
+                      currency,
+                      text: price,
+                  },
+              ]
             : [],
         flags: list(item.flags)
             .map(toFlag)

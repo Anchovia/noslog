@@ -54,7 +54,7 @@
     pointer-events: none;
 }
 .noslog-ui .nl-score-pin {
-    --nl-pin-size: 28px;
+    --nl-pin-size: calc(var(--nl-spacing-24) + var(--nl-stroke-strong) * 2);
     position: absolute;
     width: var(--nl-pin-size);
     height: var(--nl-pin-size);
@@ -70,7 +70,7 @@
     );
 }
 .noslog-ui .nl-score-pin[data-me] {
-    --nl-pin-size: 32px;
+    --nl-pin-size: var(--nl-spacing-32);
     z-index: var(--nl-layer-above);
 }
 .noslog-ui .nl-score-pin__shape {
@@ -98,7 +98,7 @@
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin:focus-visible {
-    border-radius: 50%;
+    border-radius: var(--nl-radius-full);
 }
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
@@ -154,26 +154,27 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-/* FC 칸 = 폭 24(태그 높이와 같은 값) · 이름 글줄 20 높이(FC 태그 16 + 2 × 2). 머리 「점수」 도 이 폭을 읽는다 */
+/* FC 칸 = 폭 24 · 이름 글줄(ui — 18, CJK 21) 높이. FC 표시도 글줄 높이에 글자 가운데. 머리 「점수」 도 이 폭을 읽는다 */
 .noslog-ui .nl-chart-leaderboard,
 .noslog-ui .nl-full-combo-slot {
-    --nl-full-combo-slot: 24px;
+    --nl-full-combo-slot: var(--nl-spacing-24);
 }
 .noslog-ui .nl-full-combo-slot {
     display: block;
     width: var(--nl-full-combo-slot);
-    min-height: var(--nl-type-line-height-20);
+    min-height: var(--nl-type-line-height-ui);
 }
 .noslog-ui .nl-full-combo {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--nl-spacing-2) var(--nl-spacing-4);
+    min-height: var(--nl-type-line-height-ui);
+    padding: 0 var(--nl-spacing-4);
     box-shadow: inset 0 0 0 var(--nl-stroke-default)
         var(--nl-achievement-full-combo);
     border-radius: var(--nl-radius-small);
 }
-/* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 내 순위) → 12 → 목록 */
+/* 순위 구역 — 제목 줄 없음. 로그아웃일 때만 로그인 링크 한 줄 → 12 → 목록 */
 .noslog-ui .nl-ranking-section {
     display: flex;
     flex-direction: column;
@@ -185,7 +186,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
+    min-height: var(--nl-spacing-48);
     margin: 0;
     padding-inline: var(--nl-ranking-inset);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);

@@ -5,10 +5,19 @@
     --color-nl-canvas: var(--nl-surface-canvas);
     --color-nl-surface: var(--nl-surface-surface);
     --color-nl-control: var(--nl-surface-control);
+    --color-nl-elevated: var(--nl-surface-elevated);
+    --color-nl-control-hover: var(--nl-surface-control-hover);
+    --color-nl-input-surface: var(--nl-surface-input);
+    --color-nl-strong: var(--nl-content-strong);
     --color-nl-content: var(--nl-content-default);
     --color-nl-subdued: var(--nl-content-subdued);
+    --color-nl-tertiary: var(--nl-content-tertiary);
     --color-nl-divider: var(--nl-border-divider);
+    --color-nl-row: var(--nl-border-row);
+    --color-nl-elevated-border: var(--nl-border-elevated);
+    --color-nl-ring: var(--nl-border-ring);
     --color-nl-input: var(--nl-border-input);
+    --color-nl-input-hover: var(--nl-border-input-hover);
     --color-nl-focus: var(--nl-focus-ring);
     --color-nl-error: var(--nl-feedback-destructive);
     /* 관리자 · 채보 에디터가 쓰던 옛 이름의 자리(2026-10-15 B5 2단계) — 있는 토큰만 가리킨다 */
@@ -43,6 +52,7 @@
     --spacing-nl-stroke: var(--nl-stroke-default);
     --radius-nl-small: var(--nl-radius-small);
     --radius-nl-control: var(--nl-radius-control);
+    --radius-nl-large: var(--nl-radius-large);
     --radius-nl-overlay: var(--nl-radius-overlay);
     --radius-nl-full: var(--nl-radius-full);
     --font-nl-sans: var(--nl-font-family);
@@ -60,6 +70,7 @@
     --z-index-nl-fullscreen: var(--nl-layer-fullscreen);
     --z-index-nl-fullscreen-dialog: var(--nl-layer-fullscreen-dialog);
     --shadow-nl-overlay: var(--nl-overlay-shadow);
+    --shadow-nl-card: var(--nl-card-shadow);
     --transition-duration-nl-state: var(--nl-motion-duration-state);
     --transition-duration-nl-move: var(--nl-motion-duration-move);
     --ease-nl-enter: var(--nl-ease-enter);

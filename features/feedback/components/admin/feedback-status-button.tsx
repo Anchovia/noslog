@@ -62,7 +62,7 @@ export default function FeedbackStatusButton({
             )}
         >
             {status === "open" ? (
-                <Check className="nl-icon-small text-nl-success" aria-hidden />
+                <Check className="nl-icon-small" aria-hidden />
             ) : (
                 <RotateCcw className="nl-icon-small" aria-hidden />
             )}

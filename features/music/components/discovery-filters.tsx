@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import {
@@ -232,6 +234,7 @@ export default function DiscoveryFilters({
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
+    const search = useSearchParams().toString();
     const rail = variant === "rail";
     function changeRecords(records: DiscoveryQuery["records"]) {
         const addedUnplayed =
@@ -321,7 +324,7 @@ export default function DiscoveryFilters({
             label: "Pianist",
             tone: "pianist" as const,
         },
-    ].map((option) => ({ ...option, disabled: !signedIn }));
+    ];
     const selectedDifficulties = query.difficulties.map(
         (range) => range.difficulty
     );
@@ -383,6 +386,7 @@ export default function DiscoveryFilters({
                     />
                 ))}
             </FilterGroup>
+            {/* 로그아웃이면 고를 수 없는 선택지를 숨기고 제목 줄 오른쪽에 로그인 링크만 둔다 */}
             <FilterGroup
                 label={t("discovery.personalRecords")}
                 aside={
@@ -402,20 +406,30 @@ export default function DiscoveryFilters({
                                 })
                         )
                     ) : (
-                        <IntentLink href={href("/login")}>
-                            {t("common.login")}
+                        <IntentLink
+                            className="nl-heading-link nl-control"
+                            href={href(
+                                `/login?returnTo=${encodeURIComponent(
+                                    href(`/music${search ? `?${search}` : ""}`)
+                                )}`
+                            )}
+                        >
+                            {t("discovery.recordsLogin")}
+                            <ChevronRight aria-hidden />
                         </IntentLink>
                     )
                 }
             >
-                <Choice
-                    hideLabel
-                    label={t("music.filter.status")}
-                    multiple
-                    value={query.records}
-                    onValueChange={changeRecords}
-                    options={recordOptions}
-                />
+                {signedIn ? (
+                    <Choice
+                        hideLabel
+                        label={t("music.filter.status")}
+                        multiple
+                        value={query.records}
+                        onValueChange={changeRecords}
+                        options={recordOptions}
+                    />
+                ) : null}
             </FilterGroup>
             {/* MISS 수는 「내 기록」 과 다른 조건이라 제 구역으로(2026-10-01 사용자) — 카테고리 · 난이도와 같은 제목 · 간격 */}
             {signedIn && !query.records.includes("unplayed") ? (

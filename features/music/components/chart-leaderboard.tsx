@@ -19,7 +19,7 @@ import type { ChartRankingRow } from "@/features/music/schemas/chart-ranking-sch
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { scoreTone } from "@/lib/music/score-tone";
 
-/** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
+/** 등급 메달 — 순위표는 아이콘 20, 작은 자리는 16 */
 export function ScoreGrade({
     rank,
     size = 20,

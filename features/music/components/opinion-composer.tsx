@@ -2,13 +2,9 @@
 
 import { useId, useRef, useState } from "react";
 
-import {
-    useLocalizedHref,
-    useTranslations,
-} from "@/components/i18n/locale-provider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Avatar from "@/components/ui/avatar";
-import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import useCommunityMutation from "@/features/music/hooks/use-community-mutation";
 import type { CommunityData } from "@/features/music/schemas/community-schema";
@@ -21,32 +17,27 @@ const LIMIT = 120;
 
 /**
  * 의견 작성 칸 — 의견 구역 맨 위(새 의견) 또는 내 의견 줄 안(수정).
- * 쉬는 상태는 아바타 32 + 한 줄 입력(L), 누르면 여러 줄 · 글자 수 · 「취소 · 의견 저장」(M)으로 펼친다(2026-09-16 C1).
+ * 쉬는 상태는 아바타 32 + 한 줄 입력(L), 누르면 여러 줄 · 글자 수 · 「취소 · 의견 작성」(M)으로 펼친다.
  * 의견은 패턴 평가와 같은 행에 저장되므로, 저장할 때 슬라이더는 서버에 저장돼 있던 값을 그대로 보낸다 — 이 칸은 의견만 바꾼다.
  */
 export default function OpinionComposer({
     chartId,
     data,
-    accountId,
     avatar,
-    returnTo,
     inline = false,
     first = false,
     onDone,
 }: {
     chartId: number;
     data: CommunityData;
-    accountId?: number;
     avatar?: string | null;
-    returnTo: string;
     /** 내 의견 줄 안에서 고칠 때 — 아바타 없이 처음부터 펼친다 */
     inline?: boolean;
-    /** 아직 의견이 하나도 없을 때 — 빈 안내 문장 대신 자리표시자가 할 일을 말한다 (2026-09-18 E2) */
+    /** 아직 의견이 하나도 없을 때 — 빈 안내 문장 대신 자리표시자가 할 일을 말한다 */
     first?: boolean;
     onDone?: () => void;
 }) {
     const t = useTranslations();
-    const href = useLocalizedHref();
     const id = useId();
     const saved = data.currentEvaluation?.opinion ?? "";
     const [value, setValue] = useState(inline ? saved : "");
@@ -54,29 +45,15 @@ export default function OpinionComposer({
     const [error, setError] = useState<string | null>(null);
     const container = useRef<HTMLDivElement>(null);
     const mutation = useCommunityMutation(chartId);
-    if (!accountId || !data.canEvaluate || data.currentEvaluation?.excluded)
+    // 로그아웃이면 패널이 작성 칸 대신 제목 줄 로그인 링크를 둔다 — 여기는 로그인한 사람만 온다
+    if (!data.canEvaluate || data.currentEvaluation?.excluded)
         return (
             <p className="nl-body-secondary nl-muted">
                 {t(
-                    !accountId
-                        ? "community.opinionLogin"
-                        : data.currentEvaluation?.excluded
-                          ? "community.action.unavailable"
-                          : "community.opinionRecord"
+                    data.currentEvaluation?.excluded
+                        ? "community.action.unavailable"
+                        : "community.opinionRecord"
                 )}
-                {!accountId ? (
-                    <>
-                        {" "}
-                        <IntentLink
-                            className="nl-link"
-                            href={href(
-                                `/login?returnTo=${encodeURIComponent(returnTo)}`
-                            )}
-                        >
-                            {t("common.login")}
-                        </IntentLink>
-                    </>
-                ) : null}
             </p>
         );
     const expanded = inline || focused || value !== "";
@@ -88,6 +65,11 @@ export default function OpinionComposer({
         onDone?.();
     };
     const save = async () => {
+        // 버튼은 늘 켜 두고 빈 값 · 넘친 값은 칸 아래 오류로 알린다
+        if (!trimmed && !saved) {
+            setError(t("community.opinionEmpty"));
+            return;
+        }
         if (trimmed.length > LIMIT) {
             setError(t("community.opinionTooLong"));
             return;
@@ -196,7 +178,6 @@ export default function OpinionComposer({
                             </ActionButton>
                             <ActionButton
                                 size="sm"
-                                disabled={!trimmed && !saved}
                                 busy={mutation.isPending}
                                 busyLabel={t("community.saving")}
                                 onClick={() => void save()}

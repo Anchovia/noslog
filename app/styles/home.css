@@ -30,11 +30,11 @@
     gap: var(--nl-spacing-12);
     text-align: center;
 }
-/* 홈 머리 마크 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) — 크기 40 은 예전 N 원 그대로 */
+/* 홈 머리 마크 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) — 크기 40 은 예전 N 원 그대로(큰 아바타와 같은 토큰) */
 .noslog-ui .nl-home-mark {
     display: flex;
-    width: 40px;
-    height: 40px;
+    width: var(--nl-control-height-large);
+    height: var(--nl-control-height-large);
 }
 /* 제목 → 설명 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-home-identity__copy {
@@ -65,8 +65,10 @@
     width: 100%;
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-12);
+    /* 면은 바탕보다 한 단계(surface) · 글자 medium, 올림 면 gray-200 · 글자 gray-900 */
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
+    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-home-tile__label {
     max-width: 100%;
@@ -75,7 +77,7 @@
 }
 .noslog-ui .nl-home-tile__label[data-fit="compact"],
 .noslog-ui .nl-home-tile__label[data-fit="wrap"] {
-    /* 좁을 때는 metadata 조합(12/16 · 400) 그대로 — 12 굵게 금지 */
+    /* 좁을 때는 한 줄에 맞추려고 줄인 글자라 굵기 · 자간을 더하지 않는다(medium 이면 칸 밖으로 넘친다) */
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
     font-weight: var(--nl-type-weight-regular);
@@ -84,13 +86,19 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+.noslog-ui .nl-home-tile:is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+/* 누름 = Spectrum 2 pressScale. 원근은 max(높이, 폭 ÷ 3, 24) 인데 칸 높이 · 폭을 CSS 로 못 읽어 컨트롤 높이로 쓴다 */
+.noslog-ui .nl-home-tile:active {
+    transform: perspective(max(var(--nl-control-height), var(--nl-spacing-24)))
+        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
+}
 @media (hover: hover) {
     .noslog-ui .nl-home-tile:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-home-updates {
@@ -121,6 +129,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* 공식 소식 · 상태 상자 = 바탕보다 한 단계 밝은 면 · 둘레 · 그림자 없음 · 모서리 control.
+   상태 상자는 소식 카드 자리를 대신하므로 같은 값 */
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-control);
@@ -194,7 +204,6 @@
 .noslog-ui .nl-official-post__toggle {
     flex: none;
     margin-inline-start: auto;
-    padding-inline: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
 }
 .noslog-ui .nl-official-post__media {
     display: block;
@@ -213,15 +222,23 @@
     display: flex;
     justify-content: flex-end;
 }
+/* 「게시물 보기」 = 단독 링크(Spectrum 2 secondary 링크, .nl-link 와 같은 값) */
 .noslog-ui .nl-official-post__footer a {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-4);
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-medium);
+    text-underline-offset: var(--nl-underline-offset);
+}
+.noslog-ui .nl-official-post__footer a:focus-visible {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
 }
 @media (hover: hover) {
     .noslog-ui .nl-official-post__footer a:hover {
+        color: var(--nl-content-strong);
         text-decoration: underline;
-        text-underline-offset: var(--nl-underline-offset);
     }
 }
 .noslog-ui .nl-official-post__footer svg {
@@ -234,8 +251,8 @@
     inset-inline: 0;
     z-index: var(--nl-layer-search-preview);
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
@@ -250,8 +267,21 @@
     min-height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
-    border-radius: var(--nl-radius-small);
+    /* Spectrum 2 메뉴 항목 — 모서리 medium · 글자 medium, 올림 = 면 gray-200 · 글자 gray-900 */
+    border-radius: var(--nl-radius-control);
+    font-weight: var(--nl-type-weight-medium);
 }
+.noslog-ui .nl-search-preview__all:active {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-search-preview__all:hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+/* 키보드로 가리킨 항목(aria-activedescendant)은 키 포커스라 포커스 선(흰 2px 한 줄) 그대로 */
 .noslog-ui .nl-search-preview [aria-selected="true"] {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     outline-offset: calc(var(--nl-stroke-strong) * -1);
@@ -270,8 +300,8 @@
     }
 }
 /* 진행 중인 이벤트 — 큰 배너 카드(2.4 : 1 · 카드 모서리) 위에 제목 · 기간. 카드 사이 8.
-   글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 하고,
-   같은 자리에 흐림(뒤를 흐리게)을 위로 갈수록 옅게 깔아 경계가 딱딱하게 서지 않는다 */
+   글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 해
+   경계가 딱딱하게 서지 않는다. 흐림은 두지 않는다 */
 .noslog-ui .nl-home-events__list {
     display: flex;
     flex-direction: column;
@@ -295,9 +325,10 @@
     max-width: 100%;
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-canvas);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
+    /* 누르는 카드 = Spectrum 2 primary 카드 — elevated 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-home-event img {
     object-fit: cover;
@@ -321,6 +352,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+/* 제목 클래스의 기본 글자색 대신 미디어 위 흰 글자 */
+.noslog-ui .nl-home-event__caption > .nl-entity-title {
+    color: var(--nl-content-on-media);
 }
 @media (hover: hover) {
     .noslog-ui .nl-home-event:hover .nl-entity-title {

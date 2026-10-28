@@ -24,7 +24,7 @@ export default async function MaintenanceContent() {
                     <h1 className="nl-page-title">
                         {t("maintenance.heading")}
                     </h1>
-                    <p className="nl-body nl-muted">
+                    <p className="nl-metadata nl-muted">
                         {t("maintenance.description")}
                     </p>
                     {expectedEnd || updatedAt ? (

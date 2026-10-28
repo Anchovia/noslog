@@ -6,8 +6,8 @@ import { LoadingStatus } from "@/components/ui/skeleton";
 import { BingoCatalogCardSkeleton } from "./bingo-catalog-card";
 
 /**
- * 빙고 목록 불러오기(2026-09-19 로딩 시안 S1) — 실제 목록과 같은 틀: 제목(실제 글자) →24→ 검색칸 자리(컨트롤 L) →24→ 카드 격자.
- * 안내 문장은 화면 읽기에만
+ * 빙고 목록 불러오기 — 실제 목록과 같은 틀: 제목(실제 글자) →16→ 검색칸 자리(컨트롤 L) →12→ 결과 줄 자리(M) →12→ 카드 격자.
+ * 로그인 여부를 아직 몰라 상태 칩 줄은 두지 않는다. 안내 문장은 화면 읽기에만
  */
 export default function BingoCatalogLoading() {
     const t = useTranslations();
@@ -22,6 +22,12 @@ export default function BingoCatalogLoading() {
                 >
                     <span className="nl-skeleton nl-skeleton-control" />
                 </div>
+            </div>
+            <div
+                className="nl-filter-control-block nl-bingo-catalog__controls"
+                aria-hidden="true"
+            >
+                <div className="nl-bingo-catalog__summary-row" />
             </div>
             <ul className="nl-bingo-catalog__grid" aria-hidden="true">
                 {Array.from({ length: 6 }, (_, index) => (

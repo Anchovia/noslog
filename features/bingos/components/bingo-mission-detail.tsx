@@ -78,8 +78,9 @@ export default function BingoMissionDetail({
             <div className="nl-bingo-cell-detail__head">
                 {/* 위치 = 작은 판에서 그 칸만 켬(보이는 좌표 없이, 2026-09-22) — 글은 화면 읽기에만 */}
                 <BingoPosition position={cell.position} label={label} />
+                {/* 한 줄에 태그는 하나 — 미션 종류는 흐린 메타 글자, 태그는 상태(완료됨 · 찬스)만 */}
                 {typeKey ? (
-                    <span className="nl-tag nl-metadata">{t(typeKey)}</span>
+                    <span className="nl-metadata nl-muted">{t(typeKey)}</span>
                 ) : null}
                 {isAuthenticated && checked ? (
                     <span className="nl-tag nl-tag--strong nl-metadata">

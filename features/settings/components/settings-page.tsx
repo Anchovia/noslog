@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-import { getMusecatMode } from "@/features/musecat/server/musecat-mode";
 import { MusecatConnectionDetail } from "@/features/partner/components/musecat-connection-settings";
 import { getMusecatSettings } from "@/features/partner/server/partner-settings-data";
 import { settingsCategorySchema } from "@/features/settings/schemas/settings-schema";
@@ -87,11 +86,8 @@ export default async function SettingsPage({
         <SettingsLayout
             category={category}
             authenticated={Boolean(user)}
-            subpage={
-                category === "connections" &&
-                params.partner === "musecat" &&
-                getMusecatMode() !== "off"
-            }
+            // 뮤즈캣 상세는 모드가 꺼져도 연결 기록이 있으면 보이고(없으면 아래에서 연결로 돌려보낸다), 제목 · 뒤로는 상세가 그린다
+            subpage={category === "connections" && params.partner === "musecat"}
         >
             {category && category !== "experience" ? (
                 <Suspense

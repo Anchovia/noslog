@@ -51,22 +51,35 @@ export default function GlobalError({
               localeFromAcceptLanguage(navigator.languages.join(",")));
     const [loaded, setLoaded] = useState<{
         locale: Locale;
+        messagesLocale: Locale;
         messages: Messages;
     } | null>(null);
     useEffect(() => {
         if (path === null) return;
         let active = true;
+        // 그 언어 카탈로그를 못 받으면 기본 언어 카탈로그로라도 「다시 시도」 · 홈 이동을 보인다
         loadMessages[locale]()
-            .then((messages) => {
-                if (active) setLoaded({ locale, messages });
+            .then((messages) => ({ messagesLocale: locale, messages }))
+            .catch((loadError: unknown) => {
+                recordClientError(loadError, "global-error-messages");
+                return loadMessages[DEFAULT_LOCALE]().then((messages) => ({
+                    messagesLocale: DEFAULT_LOCALE,
+                    messages,
+                }));
             })
-            .catch(() => {});
+            .then(({ messagesLocale, messages }) => {
+                if (active) setLoaded({ locale, messagesLocale, messages });
+            })
+            .catch((loadError: unknown) => {
+                recordClientError(loadError, "global-error-messages");
+            });
         return () => {
             active = false;
         };
     }, [path, locale]);
     // 카탈로그가 오기 전에는 경로를 모를 때처럼 언어 중립 화면만 그림
-    const messages = loaded?.locale === locale ? loaded.messages : null;
+    const current = loaded?.locale === locale ? loaded : null;
+    const messages = current?.messages ?? null;
     const t = messages ? createTranslator(messages) : null;
     useEffect(() => recordClientError(error, "global-error-boundary"), [error]);
     const bare = path ? stripLocaleFromPath(path) : "";
@@ -77,7 +90,7 @@ export default function GlobalError({
         return <LegacyGlobalError error={error} reset={reset} />;
     }
     return (
-        <html lang={locale} data-theme="dark">
+        <html lang={current?.messagesLocale ?? locale} data-theme="dark">
             <head>
                 <meta
                     name="viewport"
@@ -99,7 +112,7 @@ export default function GlobalError({
                                 <h1 className="nl-page-title">
                                     {t("recovery.fatalTitle")}
                                 </h1>
-                                <p className="nl-body nl-muted">
+                                <p className="nl-metadata nl-muted">
                                     {t("common.retryLater")}
                                 </p>
                                 <div className="nl-recovery__actions">

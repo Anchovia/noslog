@@ -193,7 +193,7 @@ export default function TimingInspector() {
                             onClick={() => selectTimingPoint(point.id)}
                             className={`rounded-nl-control px-nl-12 py-nl-8 text-left transition-colors duration-nl-state ${
                                 point.id === selected.id
-                                    ? "bg-nl-surface text-nl-content"
+                                    ? "bg-nl-control text-nl-content"
                                     : "nl-hover-layer text-nl-subdued"
                             }`}
                         >
@@ -291,7 +291,7 @@ export default function TimingInspector() {
                             <label
                                 className={`nl-radio-group__option nl-hover-layer rounded-nl-control border-nl-stroke border-nl-divider px-nl-12 ${
                                     signaturePreset === "3/4"
-                                        ? "bg-nl-surface text-nl-content"
+                                        ? "bg-nl-control text-nl-content"
                                         : "text-nl-subdued"
                                 }`}
                             >
@@ -311,7 +311,7 @@ export default function TimingInspector() {
                             <label
                                 className={`nl-radio-group__option nl-hover-layer rounded-nl-control border-nl-stroke border-nl-divider px-nl-12 ${
                                     signaturePreset === "4/4"
-                                        ? "bg-nl-surface text-nl-content"
+                                        ? "bg-nl-control text-nl-content"
                                         : "text-nl-subdued"
                                 }`}
                             >
@@ -331,7 +331,7 @@ export default function TimingInspector() {
                             <div
                                 className={`rounded-nl-control border-nl-stroke border-nl-divider p-nl-12 ${
                                     signaturePreset === "other"
-                                        ? "bg-nl-surface"
+                                        ? "bg-nl-control"
                                         : ""
                                 }`}
                             >
@@ -451,7 +451,9 @@ export default function TimingInspector() {
                 <section className="mt-nl-16 border-t-nl-stroke border-nl-divider pt-nl-16">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="nl-metadata">Tap BPM</h3>
+                            <h3 className="nl-metadata">
+                                {t("editor.timing.tapTitle")}
+                            </h3>
                             <p className="nl-metadata mt-nl-4 text-nl-subdued">
                                 {t("editor.timing.tapHelp")}
                             </p>
@@ -473,8 +475,9 @@ export default function TimingInspector() {
                     </button>
                 </section>
 
+                {/* 실행 취소로 되돌릴 수 있어 확인 창 없이 보조 버튼 */}
                 <Button
-                    variant="danger"
+                    variant="secondary"
                     size="sm"
                     className="mt-nl-16 w-full"
                     onClick={deleteSelected}

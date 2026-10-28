@@ -1,6 +1,7 @@
 "use client";
 
 import * as Popover from "@radix-ui/react-popover";
+import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type {
@@ -323,6 +324,20 @@ export default function BingoDetailPage({
                         title={t("bingo.missions")}
                         meta={bingo.cells.length}
                     >
+                        {/* 제목 줄이 펼침 줄이라 로그인 링크는 내용 첫 줄의 제목 링크(로그아웃 상태 규칙) */}
+                        {!bingo.isAuthenticated ? (
+                            <div className="nl-heading-row">
+                                <IntentLink
+                                    className="nl-heading-link nl-control"
+                                    href={href(
+                                        `/login?returnTo=${encodeURIComponent(href(`/bingo/${bingo.id}`))}`
+                                    )}
+                                >
+                                    {t("bingo.loginLink")}
+                                    <ChevronRight aria-hidden />
+                                </IntentLink>
+                            </div>
+                        ) : null}
                         {bingo.isAuthenticated ? (
                             <FilterChips
                                 label={t("bingo.filter")}
@@ -476,21 +491,14 @@ export default function BingoDetailPage({
                             })}
                         </ul>
                         {!state.filtered.length ? (
-                            <p className="nl-body-secondary" role="status">
+                            <p
+                                className="nl-body-secondary nl-muted"
+                                role="status"
+                            >
                                 {t("bingo.noMissions")}
                             </p>
                         ) : null}
                     </Disclosure>
-                    {!bingo.isAuthenticated ? (
-                        <IntentLink
-                            className="nl-button nl-button--primary"
-                            href={href(
-                                `/login?returnTo=${encodeURIComponent(href(`/bingo/${bingo.id}`))}`
-                            )}
-                        >
-                            {t("bingo.loginToSave")}
-                        </IntentLink>
-                    ) : null}
                     {bingo.isAuthenticated ? (
                         <ModalDialog
                             open={resetOpen}
@@ -555,12 +563,11 @@ export default function BingoDetailPage({
                                 })}
                             </p>
                             {state.resetError ? (
-                                <p
+                                <StatusMessage
+                                    severity="danger"
                                     role="alert"
-                                    className="nl-body-secondary nl-field__error"
-                                >
-                                    {state.resetError}
-                                </p>
+                                    title={state.resetError}
+                                />
                             ) : null}
                         </ModalDialog>
                     ) : null}

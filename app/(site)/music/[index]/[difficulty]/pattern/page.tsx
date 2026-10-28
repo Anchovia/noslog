@@ -127,10 +127,7 @@ export default async function PublicChartPatternPage({
                             id: null,
                             name: pattern.publishedBy.username,
                             avatar: pattern.publishedBy.avatar ?? null,
-                            label:
-                                pattern.publishedBy.role === "admin"
-                                    ? { kind: "operator" }
-                                    : null,
+                            label: null,
                         }
                       : null,
                 // 유저 기여 채보만 — 출처 창에 「공개 · 운영자 이름」 을 따로 적는다

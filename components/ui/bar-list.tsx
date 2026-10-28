@@ -15,8 +15,8 @@ export interface BarListRow {
 }
 
 /**
- * 가로 막대 목록 — 항목 몇 개의 크기를 길이로 비교(레이더 대신 · 2026-09-16).
- * 줄 = 라벨 control 14/500 · 트랙 8(모서리 4 · raised 면) · 값 metric-value, 줄 사이 8. 색은 차트 단일 색(줄마다 color 로 바꿀 수 있음).
+ * 가로 막대 목록 — 항목 몇 개의 크기를 길이로 비교(레이더 대신).
+ * 줄 = 라벨 control · 트랙 8(모서리 4 · surface/control 면) · 값 metric-value, 줄 사이 8. 색은 차트 단일 색(줄마다 color 로 바꿀 수 있음).
  */
 export default function BarList({
     rows,
@@ -60,7 +60,7 @@ export default function BarList({
 }
 
 /**
- * 막대 목록 스켈레톤(2026-09-19 로딩 시안 S1) — 항목 이름은 고정 글자라 실제 글자 그대로, 막대 트랙은 빈 채로,
+ * 막대 목록 스켈레톤 —항목 이름은 고정 글자라 실제 글자 그대로, 막대 트랙은 빈 채로,
  * 값 자리만 스켈레톤
  */
 export function BarListSkeleton({

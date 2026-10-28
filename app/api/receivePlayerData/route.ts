@@ -39,8 +39,8 @@ const responseCopy = {
         jsonOnly: "JSON 형식의 요청만 허용됩니다.",
         tooLarge: "전송된 데이터가 너무 큽니다.",
         invalidPayload: "전송된 데이터 형식이 올바르지 않습니다.",
-        invalidToken: "연동 토큰이 올바르지 않습니다.",
-        expiredToken: "연동 토큰이 만료되었습니다. 다시 등록해주세요.",
+        invalidToken: "동기화 토큰이 올바르지 않습니다.",
+        expiredToken: "동기화 토큰이 만료되었습니다. 다시 등록해주세요.",
         loginRequired: "NOSTALGIA 로그인 상태를 확인해주세요.",
         processing:
             "이미 동기화를 처리하고 있습니다. 잠시 후 다시 시도해주세요.",
@@ -54,8 +54,8 @@ const responseCopy = {
         jsonOnly: "JSON形式のリクエストのみ許可されています。",
         tooLarge: "送信されたデータが大きすぎます。",
         invalidPayload: "送信されたデータ形式が正しくありません。",
-        invalidToken: "連携トークンが正しくありません。",
-        expiredToken: "連携トークンの期限が切れました。再登録してください。",
+        invalidToken: "同期トークンが正しくありません。",
+        expiredToken: "同期トークンの期限が切れました。再登録してください。",
         loginRequired: "NOSTALGIAのログイン状態を確認してください。",
         processing: "同期を処理中です。しばらくしてから再試行してください。",
         cooldown:

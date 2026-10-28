@@ -82,6 +82,7 @@ describe("아이콘 · 공유 이미지 색", () => {
             surface: token("surface-surface"),
             border: rgba("border-divider"),
             primary: token("identity-mark"),
+            text: token("content-default"),
             secondary: token("content-subdued"),
         });
     });

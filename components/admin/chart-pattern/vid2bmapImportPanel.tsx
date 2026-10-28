@@ -7,7 +7,6 @@ import {
     ChevronLeft,
     ChevronRight,
     FileArchive,
-    TriangleAlert,
     X,
 } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useState } from "react";
@@ -62,7 +61,9 @@ import {
     useChartEditorStore,
     useChartEditorStoreApi,
 } from "./chartEditorStore";
-import { foundationButtonClass } from "@/components/ui/button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
+import IconButton from "@/components/ui/icon-button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { cn } from "@/lib/cn";
 
 /** 패널에 보여 줄 격자(한 박 나누기). 추천 격자가 여기 없으면 끝에 더한다 */
@@ -861,13 +862,14 @@ export default function Vid2bmapImportPanel({
                         <span className="nl-metadata shrink-0 text-nl-subdued">
                             {formatFileSize(file.size)}
                         </span>
-                        <button
-                            type="button"
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            className="shrink-0"
                             onClick={onReplaceFile}
-                            className="nl-metadata nl-hover-layer h-nl-24 shrink-0 rounded-nl-small border-nl-stroke border-nl-divider px-nl-8"
                         >
                             바꾸기
-                        </button>
+                        </Button>
                     </div>
                 </Section>
 
@@ -912,29 +914,14 @@ export default function Vid2bmapImportPanel({
                             !warnings.some(
                                 (warning) => warning.kind === "bpmMismatch"
                             ) ? (
-                                <p className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued">
-                                    <Check
-                                        className="nl-icon-small mt-nl-4 shrink-0 text-nl-success"
-                                        aria-hidden
-                                    />
+                                <p className="nl-metadata nl-metadata--long text-nl-subdued">
                                     박자선 {counts.bars.toLocaleString("ko-KR")}
                                     개 · 간격으로 본 BPM {estimatedBpm} ≈ 시작
                                     타이밍 {startBpm}
                                 </p>
                             ) : null}
                             {officialNoteCount !== null ? (
-                                <p className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued">
-                                    {judgments === officialNoteCount ? (
-                                        <Check
-                                            className="nl-icon-small mt-nl-4 shrink-0 text-nl-success"
-                                            aria-hidden
-                                        />
-                                    ) : (
-                                        <TriangleAlert
-                                            className="nl-icon-small mt-nl-4 shrink-0 text-nl-warning"
-                                            aria-hidden
-                                        />
-                                    )}
+                                <p className="nl-metadata nl-metadata--long text-nl-subdued">
                                     {judgments === officialNoteCount
                                         ? `판정 수 ${judgments.toLocaleString("ko-KR")} = 공식 노트 수`
                                         : `판정 수 ${judgments.toLocaleString("ko-KR")} · 공식 ${officialNoteCount.toLocaleString("ko-KR")}(${judgments > officialNoteCount ? "+" : "−"}${Math.abs(judgments - officialNoteCount).toLocaleString("ko-KR")}) — ${judgments > officialNoteCount ? "더 읽은" : "놓친"} 노트가 있을 수 있어요`}
@@ -943,11 +930,7 @@ export default function Vid2bmapImportPanel({
                             {replaceProposal ? (
                                 // 영상과 어긋난 기존 타이밍 포인트(2026-09-25 B) — 템포 제안과 같은 카드
                                 <div className="flex flex-col gap-nl-4">
-                                    <p className="nl-metadata flex items-center gap-nl-8">
-                                        <TriangleAlert
-                                            className="nl-icon-small shrink-0 text-nl-warning"
-                                            aria-hidden
-                                        />
+                                    <p className="nl-metadata">
                                         {replaceTiming
                                             ? "기존 타이밍 포인트를 영상 타이밍으로"
                                             : `기존 타이밍 포인트 ${extraTimingPoints.length}개가 제안을 막았어요`}
@@ -1005,11 +988,7 @@ export default function Vid2bmapImportPanel({
                             offsetProposal ? (
                                 // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
                                 <div className="flex flex-col gap-nl-4">
-                                    <p className="nl-metadata flex items-center gap-nl-8">
-                                        <TriangleAlert
-                                            className="nl-icon-small shrink-0 text-nl-warning"
-                                            aria-hidden
-                                        />
+                                    <p className="nl-metadata">
                                         {chartPositionLabel(
                                             baseOrigin.tick,
                                             baseTimingPoints
@@ -1152,12 +1131,8 @@ export default function Vid2bmapImportPanel({
                                                 )
                                             }
                                             title="캔버스에서 이 위치 보기"
-                                            className="nl-metadata nl-link flex items-center gap-nl-8 text-left hover:underline"
+                                            className="nl-metadata nl-link text-left hover:underline"
                                         >
-                                            <TriangleAlert
-                                                className="nl-icon-small shrink-0 text-nl-warning"
-                                                aria-hidden
-                                            />
                                             {tempoTitle(change, timingPoints)}
                                         </button>
                                         <p className="nl-metadata text-nl-subdued">
@@ -1197,12 +1172,8 @@ export default function Vid2bmapImportPanel({
                             {visibleWarnings.map((warning, index) => (
                                 <p
                                     key={`${warning.kind}-${index}`}
-                                    className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued"
+                                    className="nl-metadata nl-metadata--long text-nl-subdued"
                                 >
-                                    <TriangleAlert
-                                        className="nl-icon-small mt-nl-4 shrink-0 text-nl-warning"
-                                        aria-hidden
-                                    />
                                     {warningText(warning, timingPoints)}
                                 </p>
                             ))}
@@ -1476,24 +1447,28 @@ export default function Vid2bmapImportPanel({
                                                     : ""}
                                             </span>
                                             <span className="flex gap-nl-4">
-                                                <button
-                                                    type="button"
+                                                <IconButton
+                                                    size="compact"
+                                                    label="이전 곳"
                                                     onClick={() =>
                                                         moveFocus(-1)
                                                     }
-                                                    aria-label="이전 곳"
-                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                                                 >
-                                                    <ArrowUp className="nl-icon-small" />
-                                                </button>
-                                                <button
-                                                    type="button"
+                                                    <ArrowUp
+                                                        className="nl-icon-small"
+                                                        aria-hidden
+                                                    />
+                                                </IconButton>
+                                                <IconButton
+                                                    size="compact"
+                                                    label="다음 곳"
                                                     onClick={() => moveFocus(1)}
-                                                    aria-label="다음 곳"
-                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-small border-nl-stroke border-nl-divider"
                                                 >
-                                                    <ArrowDown className="nl-icon-small" />
-                                                </button>
+                                                    <ArrowDown
+                                                        className="nl-icon-small"
+                                                        aria-hidden
+                                                    />
+                                                </IconButton>
                                             </span>
                                         </div>
                                         <div
@@ -1501,7 +1476,7 @@ export default function Vid2bmapImportPanel({
                                             tabIndex={0}
                                             onKeyDown={handleListKey}
                                             aria-label="달라진 곳"
-                                            className="nl-editor-file-list flex flex-col gap-nl-4 overflow-y-auto rounded-nl-control focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
+                                            className="nl-editor-file-list flex flex-col gap-nl-4 overflow-y-auto rounded-nl-control"
                                         >
                                             {items.map((item, index) => {
                                                 const choice =
@@ -1519,7 +1494,7 @@ export default function Vid2bmapImportPanel({
                                                         role="listitem"
                                                         className={`flex flex-col gap-nl-4 rounded-nl-control border-nl-stroke px-nl-8 py-nl-8 ${
                                                             focused
-                                                                ? "border-nl-subdued bg-nl-surface"
+                                                                ? "border-transparent bg-nl-control"
                                                                 : "border-nl-divider"
                                                         }`}
                                                     >
@@ -1543,58 +1518,32 @@ export default function Vid2bmapImportPanel({
                                                                 )}
                                                             </span>
                                                         </button>
-                                                        <div
-                                                            role="radiogroup"
-                                                            aria-label="고르기"
-                                                            className="grid grid-cols-2 gap-nl-4"
-                                                        >
-                                                            {(
-                                                                [
-                                                                    [
-                                                                        "current",
-                                                                        currentLabel,
-                                                                    ],
-                                                                    [
-                                                                        "incoming",
-                                                                        incomingLabel,
-                                                                    ],
-                                                                ] as const
-                                                            ).map(
-                                                                ([
-                                                                    value,
-                                                                    label,
-                                                                ]) => (
-                                                                    <button
-                                                                        key={
-                                                                            value
-                                                                        }
-                                                                        type="button"
-                                                                        role="radio"
-                                                                        aria-checked={
-                                                                            choice ===
-                                                                            value
-                                                                        }
-                                                                        onClick={() => {
-                                                                            choose(
-                                                                                item,
-                                                                                value
-                                                                            );
-                                                                            setFocusIndex(
-                                                                                index
-                                                                            );
-                                                                        }}
-                                                                        className={`nl-metadata h-nl-24 rounded-nl-small border-nl-stroke ${
-                                                                            choice ===
-                                                                            value
-                                                                                ? "border-nl-content bg-nl-primary text-nl-on-primary"
-                                                                                : "nl-hover-layer border-nl-divider"
-                                                                        }`}
-                                                                    >
-                                                                        {label}
-                                                                    </button>
-                                                                )
-                                                            )}
-                                                        </div>
+                                                        <SegmentedControl<Vid2bmapChoice>
+                                                            size="sm"
+                                                            label="고르기"
+                                                            value={choice}
+                                                            onValueChange={(
+                                                                value
+                                                            ) => {
+                                                                choose(
+                                                                    item,
+                                                                    value
+                                                                );
+                                                                setFocusIndex(
+                                                                    index
+                                                                );
+                                                            }}
+                                                            options={[
+                                                                {
+                                                                    value: "current",
+                                                                    label: currentLabel,
+                                                                },
+                                                                {
+                                                                    value: "incoming",
+                                                                    label: incomingLabel,
+                                                                },
+                                                            ]}
+                                                        />
                                                     </div>
                                                 );
                                             })}

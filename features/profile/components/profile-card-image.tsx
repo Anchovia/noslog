@@ -535,8 +535,8 @@ export default function ProfileCardImage({
                         flexShrink: 0,
                     }}
                 >
-                    {/* 앱 아이콘과 같은 고양이 원(2026-10-15 B) + 글자 「NosLog」 */}
-                    <BrandMarkImage size={54} circle={ink} />
+                    {/* 앱 아이콘과 같은 고양이 원(원 = identity-mark, 이미지 기본값) + 글자 「NosLog」 */}
+                    <BrandMarkImage size={54} />
                     <span
                         style={{
                             fontSize: typeSize[28],

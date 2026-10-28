@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 
 import {
     useLocalizedHref,
@@ -70,14 +70,15 @@ export default function PatternEvaluationForm({
         !data.canEvaluate ||
         Boolean(data.currentEvaluation?.excluded);
 
-    // 서버 값이 바뀌면(다른 곳에서 저장 · 삭제) 저장 대기 중이 아닐 때만 따라간다
+    // 서버 값이 바뀌면(다른 곳에서 저장 · 삭제) 저장 대기 중이 아닐 때만 따라간다 — 값 묶음(serverKey)이 바뀔 때만 본다
     const serverRatings = ratingsOf(data);
     const serverKey = PATTERN_AXES.map((axis) => serverRatings[axis]).join();
-    useEffect(() => {
+    const followServer = useEffectEvent(() => {
         if (timer.current !== null || mutation.isPending) return;
         setRatings(ratingsOf(data));
-        // serverKey 가 바뀔 때만
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+    useEffect(() => {
+        followServer();
     }, [serverKey]);
     // 「저장됨」 은 잠깐만 — 그 뒤엔 제목 줄 오른쪽이 「선택 해제」 로 돌아온다
     useEffect(() => {

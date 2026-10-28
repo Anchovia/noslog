@@ -27,9 +27,7 @@ export default function ChartDraftReviewList({
                 const level =
                     draft.user.label?.kind === "level"
                         ? ` · 기여 Lv.${draft.user.label.level}`
-                        : draft.user.label?.kind === "operator"
-                          ? " · 운영자"
-                          : "";
+                        : "";
                 const at = draft.submittedAt ?? draft.reviewedAt;
                 return (
                     <article

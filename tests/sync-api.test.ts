@@ -338,7 +338,7 @@ describe("POST /api/receivePlayerData", () => {
         const data = await response.json();
 
         expect(response.status).toBe(401);
-        expect(data.message).toBe("연동 토큰이 올바르지 않습니다.");
+        expect(data.message).toBe("동기화 토큰이 올바르지 않습니다.");
     });
 
     it("선택한 언어로 동기화 API 결과를 반환한다", async () => {

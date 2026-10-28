@@ -83,13 +83,6 @@ export default function PerformanceChart({
                     { value: "timing", label: "FAST/SLOW" },
                 ]}
             />
-            {chartPoints.length ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("music.judgement.playBasis", {
-                        count: chartPoints.length,
-                    })}
-                </p>
-            ) : null}
             <LineChart
                 key={metric}
                 points={chartPoints}

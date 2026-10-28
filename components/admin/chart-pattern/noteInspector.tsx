@@ -289,7 +289,7 @@ export default function NoteInspector() {
                             />
                         </label>
                         <Button
-                            variant="danger"
+                            variant="secondary"
                             size="sm"
                             className="mt-nl-16 w-full"
                             onClick={deleteSelected}
@@ -613,8 +613,9 @@ export default function NoteInspector() {
                             </section>
                         ) : null}
 
+                        {/* 노트 삭제는 실행 취소로 되돌릴 수 있어 확인 창 없이 보조 버튼 */}
                         <Button
-                            variant="danger"
+                            variant="secondary"
                             size="sm"
                             className="mt-nl-16 w-full"
                             onClick={deleteSelected}
@@ -656,14 +657,10 @@ function HandSelector({
                 <button
                     key={hand}
                     type="button"
+                    aria-pressed={value === hand}
+                    data-hand={hand}
                     onClick={() => onChange(hand)}
-                    className={`nl-metadata min-h-nl-control-compact rounded-nl-control border-nl-stroke ${
-                        value === hand
-                            ? hand === "left"
-                                ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
-                                : "border-red-400/50 bg-red-400/10 text-red-200"
-                            : "border-nl-divider text-nl-subdued"
-                    }`}
+                    className="nl-editor-hand nl-metadata min-h-nl-control-compact rounded-nl-control border-nl-stroke border-nl-divider text-nl-subdued"
                 >
                     {t(`editor.hand.${hand}`)}
                 </button>

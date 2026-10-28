@@ -51,7 +51,7 @@ export default function AnnouncementDeleteButton({
             title="공지 삭제"
             description={`「${title}」 공지와 번역을 모두 삭제합니다. 되돌릴 수 없습니다.`}
             trigger={
-                <ActionButton type="button" variant="danger">
+                <ActionButton type="button" variant="secondary">
                     삭제
                 </ActionButton>
             }

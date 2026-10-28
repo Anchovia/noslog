@@ -13,7 +13,7 @@ export const SITE_URL =
     serverEnv.APP_URL?.replace(/\/$/, "") || "https://noslog.app";
 // 설명은 그 페이지를 요약한다(Google 메타 설명 · 2026-10-01 메타데이터 점검 B) — 이 값은 홈과 설명이 없는 페이지에만
 export const SITE_DESCRIPTION =
-    "NOSTALGIA 플레이 기록을 연동해 Grd · 레이팅 · 순위를 보고, 악곡 서열표 · 검정 · 빙고 · 오락실 정보를 찾는 비공식 기록 사이트입니다.";
+    "NOSTALGIA 플레이 기록을 동기화해 Grd · 레이팅 · 순위를 보고, 악곡 서열표 · 검정 · 빙고 · 오락실 정보를 찾는 비공식 기록 사이트입니다.";
 const SITE_DESCRIPTIONS: Record<Locale, string> = {
     ko: SITE_DESCRIPTION,
     ja: "NOSTALGIAのプレー記録を連携してGrd・レーティング・順位を確認し、楽曲の難易度表・検定・ビンゴ・ゲームセンター情報を探せる非公式の記録サイトです。",

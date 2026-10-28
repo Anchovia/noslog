@@ -17,6 +17,7 @@ import Button from "@/components/ui/button";
 import CompactSelect from "@/components/ui/compact-select";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { StatusMessage } from "@/components/ui/status-message";
 import AchievementShowcasePicker from "@/features/achievements/components/achievement-showcase-picker";
 import PinnedRecordsPicker from "@/features/profile/components/pinned-records-picker";
 import type {
@@ -88,6 +89,11 @@ export default function ProfileSettings({
     // 닉네임만 명시 저장 — 바꿨을 때만 칸 옆 「저장」(Enter = 저장 · Esc = 되돌림)
     const usernameChanged = username !== savedProfile.username;
     const [saved, setSaved] = useState("");
+    // 네트워크 · 서버 문제로 실패한 한 칸 저장 — 「다시 시도」 가 같은 값을 다시 보낸다
+    const [retry, setRetry] = useState<{
+        field: keyof SettingsProfileFormValues;
+        change: Partial<SettingsProfileFormValues>;
+    } | null>(null);
     const [crop, setCrop] = useState<File | null>(null);
     const [staged, setStaged] = useState<{ file: File; url: string } | null>(
         null
@@ -137,6 +143,7 @@ export default function ProfileSettings({
         change: Partial<SettingsProfileFormValues>
     ) {
         setSaved("");
+        setRetry(null);
         clearErrors("root");
         clearErrors(field);
         const revert = () => {
@@ -145,6 +152,7 @@ export default function ProfileSettings({
         };
         if (!navigator.onLine) {
             revert();
+            setRetry({ field, change });
             applyFormRootError(
                 setError,
                 field === "username"
@@ -173,6 +181,7 @@ export default function ProfileSettings({
                 if (field === "username") setFocus("username");
                 else revert();
                 applyFormRootError(setError, result.message);
+                if (!result.fieldErrors) setRetry({ field, change });
                 return false;
             }
             // 다른 칸을 저장해도 고치던 닉네임은 그대로 둔다
@@ -187,6 +196,7 @@ export default function ProfileSettings({
         } catch {
             revert();
             applyFormRootError(setError, t("settings.saveError"));
+            setRetry({ field, change });
             return false;
         } finally {
             setBusy(false);
@@ -274,7 +284,7 @@ export default function ProfileSettings({
                                 <p className="nl-control">
                                     {t("settings.avatar")}
                                 </p>
-                                <p className="nl-field__help">
+                                <p className="nl-metadata nl-muted">
                                     {t("settings.avatarFormat")}
                                 </p>
                                 {errors.avatar ? (
@@ -324,7 +334,7 @@ export default function ProfileSettings({
                     <FormField
                         id="settings-nickname"
                         label={t("onboarding.nickname")}
-                        help={t("settings.nicknameHelp")}
+                        help={t("onboarding.nicknameHelp")}
                         error={errors.username?.message}
                     >
                         <div className="nl-settings__inline-save">
@@ -453,7 +463,7 @@ export default function ProfileSettings({
                         {selectedArcade &&
                         "is_active" in selectedArcade &&
                         !selectedArcade.is_active ? (
-                            <p className="nl-field__help">
+                            <p className="nl-metadata nl-muted">
                                 {t("settings.arcadeUnavailable")}
                             </p>
                         ) : null}
@@ -485,23 +495,52 @@ export default function ProfileSettings({
                         error={errors.pinnedRecords?.message}
                     />
                 </div>
-                {/* 맨 아래 「저장」 없음(2026-10-01 B) — 칸마다 바로 저장, 성공은 바뀐 값 자체로 보이고 화면 읽기에만 알린다 */}
+                {/* 맨 아래 「저장」 없음 — 칸마다 바로 저장하고, 저장 상태(저장 중 · 저장됨 · 실패 + 다시 시도)는 이 한 곳에 보인다 */}
                 <div className="nl-settings__save">
                     {errors.root?.server ? (
-                        <p
+                        <StatusMessage
+                            tone="quiet"
+                            severity="danger"
                             role="alert"
-                            className="nl-body-secondary nl-field__error"
+                            title={errors.root.server.message}
+                            action={
+                                retry ? (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        disabled={busy}
+                                        onClick={() => {
+                                            const { field, change: next } =
+                                                retry;
+                                            if (field !== "username")
+                                                setValue(
+                                                    field,
+                                                    next[field] ?? ""
+                                                );
+                                            void commit(field, next);
+                                        }}
+                                    >
+                                        {t("common.retry")}
+                                    </Button>
+                                ) : null
+                            }
+                        />
+                    ) : (
+                        <p
+                            role="status"
+                            className={
+                                busy || saved
+                                    ? "nl-body-secondary nl-muted"
+                                    : "sr-only"
+                            }
                         >
-                            {errors.root.server.message}
+                            {busy ? t("settings.saving") : saved}
                         </p>
-                    ) : null}
-                    <p role="status" className="sr-only">
-                        {saved}
-                    </p>
+                    )}
                     <div className="nl-settings__foot">
                         <a
                             href={href(`/profile/${user.id}`)}
-                            className="nl-control"
+                            className="nl-control nl-link"
                         >
                             {t("settings.viewProfile")}
                         </a>
@@ -568,7 +607,7 @@ export default function ProfileSettings({
                                 setCountry(null);
                             }}
                         >
-                            {t("settings.changeArcade")}
+                            {t("settings.changeCountry")}
                         </Button>
                     </>
                 }

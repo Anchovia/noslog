@@ -119,11 +119,6 @@ export default function JudgementAnalysis({
                         <h3 className="nl-component-title">
                             {t("music.recent.judgement")}
                         </h3>
-                        {complete || !record ? null : (
-                            <p className="nl-body-secondary nl-muted">
-                                {t("music.judgement.syncRequired")}
-                            </p>
-                        )}
                         <dl className="nl-facts nl-analysis-values nl-body-secondary">
                             {shownKeys.map((key) => (
                                 <div key={key}>

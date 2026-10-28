@@ -129,22 +129,22 @@ export default function SyncAttemptSummary({
     if (compact)
         return (
             <p className="nl-metadata nl-muted nl-sync-history-facts">
-                <span>
-                    {t(
+                {/* 숫자는 라벨과 함께 — 항목 단위로 줄을 바꾼다 */}
+                {[
+                    t(
                         attempt.scope === "full"
                             ? "sync.scope.full"
                             : "sync.scope.recent"
-                    )}
-                </span>
-                {duration ? <span>{duration}</span> : null}
-                <span>
-                    <span className="sr-only">{t("sync.received")}: </span>
-                    {attempt.receivedPlays.toLocaleString(locale)} ·{" "}
-                    <span className="sr-only">{t("sync.newPlays")}: </span>
-                    {attempt.insertedPlays.toLocaleString(locale)} ·{" "}
-                    <span className="sr-only">{t("sync.changedCharts")}: </span>
-                    {attempt.changedRecords.toLocaleString(locale)}
-                </span>
+                    ),
+                    duration,
+                    `${t("sync.received")} ${attempt.receivedPlays.toLocaleString(locale)}`,
+                    `${t("sync.newPlays")} ${attempt.insertedPlays.toLocaleString(locale)}`,
+                    `${t("sync.changedCharts")} ${attempt.changedRecords.toLocaleString(locale)}`,
+                ]
+                    .filter(Boolean)
+                    .map((part, index) => (
+                        <span key={index}>{index ? `· ${part}` : part}</span>
+                    ))}
             </p>
         );
     return (

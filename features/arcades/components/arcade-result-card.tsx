@@ -11,6 +11,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import { foundationButtonClass } from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
+import StatusDot from "@/components/ui/status-dot";
 import {
     arcadeCabinetSummary,
     arcadeDirections,
@@ -25,6 +26,7 @@ import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
 
 import {
+    cabinetDotTone,
     cabinetLabel,
     cabinetState,
     CabinetStateText,
@@ -75,10 +77,14 @@ function ArcadeOpenLine({ arcade, now }: { arcade: PublicArcade; now: Date }) {
     ].filter(Boolean);
     return (
         <>
-            <span
-                className="nl-arcade-result__dot"
-                data-open={open}
-                aria-hidden
+            <StatusDot
+                tone={
+                    open === "open"
+                        ? "success"
+                        : open === "closed"
+                          ? "danger"
+                          : "empty"
+                }
             />
             <span>
                 {open === "unknown" ? (
@@ -290,9 +296,8 @@ function ArcadeResultMore({
                                 className="nl-arcade-result__machine-state nl-arcade-cabinet__state"
                                 data-state={cabinetState(cabinet)}
                             >
-                                <span
-                                    className="nl-arcade-cabinet__dot"
-                                    aria-hidden
+                                <StatusDot
+                                    tone={cabinetDotTone(cabinetState(cabinet))}
                                 />
                                 <CabinetStateText cabinet={cabinet} />
                             </span>

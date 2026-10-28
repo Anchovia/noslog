@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
+    colorConstantFiles,
     inspectTsxTokens,
     reachableTsxFiles,
 } from "../tooling/design/tsx-tokens.mjs";
@@ -89,13 +90,32 @@ describe("TSX design token checks", () => {
     it("allows nl aliases, zero, keywords, fractions and non-class strings", () => {
         expect(
             inspect(
-                '<div className={cn("gap-nl-16 p-0 m-0 w-full min-w-0 size-full left-1/2 rounded-nl-control opacity-0 z-auto shrink-0 flex-1 grid-cols-2 nl-body md:px-nl-24", open && "rounded-none")} data-rank="top-10" />'
+                '<div className={cn("gap-nl-16 p-0 m-0 w-full min-w-0 size-full left-1/2 rounded-nl-control opacity-0 z-auto shrink-0 flex-1 grid-cols-2 nl-body data-[state=open]:px-nl-24 aria-selected:text-nl-content", open && "rounded-none")} data-rank="top-10" />'
             )
         ).toEqual([]);
     });
+    // 폭 단계는 CSS media query(672 · 1056)로만, 색은 nl 별칭만 — 변형 앞부분도 본다
+    it("rejects breakpoint variants and Tailwind palette colors", () => {
+        expect(
+            inspect(
+                '<div className="md:px-nl-24 min-[672px]:gap-nl-8 max-sm:hidden bg-red-400/10 text-cyan-200 hover:border-white" />'
+            )
+        ).toHaveLength(6);
+    });
+    // 캔버스 · Pixi 색은 정본 상수 파일에서만 숫자로, CSS 변수는 nl 토큰 이름만
+    it("rejects color literals outside shared constants and non-nl CSS variables", () => {
+        const source =
+            'const PALETTE = { ink: "#ededed" }; context.fillStyle = "#fff"; graphics.fill({ color: 0x1c2029 }); style.getPropertyValue("--color-bg"); element.style.setProperty("--nl-spacing-4", value); const text = "var(--color-text)";';
+        expect(inspectTsxTokens("fixture.ts", source, tokens)).toHaveLength(5);
+        expect(
+            inspectTsxTokens("fixture.ts", source, tokens, {
+                allowColorLiterals: true,
+            })
+        ).toHaveLength(2);
+    });
 
     it("keeps public TSX token references and literal appearance values consistent", () => {
-        // 공개 TSX = 관리자 밖 라우트(app/, /admin 제외)가 import 로 닿는 모든 TSX. 관리자만 쓰는 부품은 저절로 빠진다.
+        // 공개 TSX = 관리자 밖 라우트(app/, /admin 제외)가 import 로 닿는 모든 TSX · TS(선언 · 테스트 · 스토리 제외). 관리자만 쓰는 부품은 저절로 빠진다.
         // 관리자 · 채보 에디터(admin · editor 경로)는 tests/admin-tsx-tokens.test.ts 가 같은 검사로 본다(B5 2단계). 공개 채보 뷰어(chart-pattern)는 여기서 본다.
         // 고정 크기 이미지(Satori — 프로필 카드 · 공유 미리보기)는 CSS 토큰을 못 읽는 별도 계약이다.
         const files = reachableTsxFiles(resolve("."), {
@@ -132,12 +152,44 @@ describe("TSX design token checks", () => {
         for (const { source } of sources)
             for (const match of source.matchAll(/["'](--nl-[\w-]+)["']\s*:/g))
                 declared.add(match[1]);
+        // 토큰으로 옮길 수 없는 자리만 — 이유와 함께
+        const allowed = [
+            {
+                file: "app/layout.tsx",
+                match: 'color literal "#111111"',
+                reason: "주소창 theme-color 메타 값은 CSS 밖이라 변수를 못 읽는다(surface/canvas 다크 값)",
+            },
+            {
+                file: "app/manifest.ts",
+                match: 'color literal "#111111"',
+                reason: "manifest 바탕 · 테마 색은 JSON 이라 변수를 못 읽는다(surface/canvas 다크 값)",
+            },
+        ];
+        const violations = sources.flatMap(({ file, source }) =>
+            inspectTsxTokens(file, source, declared, {
+                allowColorLiterals: colorConstantFiles.has(file),
+            })
+        );
+        const isAllowed = (violation: string) =>
+            allowed.some(
+                ({ file, match }) =>
+                    violation.startsWith(`${file}:`) &&
+                    violation.includes(match)
+            );
+        expect(violations.filter((violation) => !isAllowed(violation))).toEqual(
+            []
+        );
         expect(
-            sources.flatMap(({ file, source }) =>
-                inspectTsxTokens(file, source, declared)
+            allowed.filter(
+                ({ file, match }) =>
+                    !violations.some(
+                        (violation) =>
+                            violation.startsWith(`${file}:`) &&
+                            violation.includes(match)
+                    )
             )
         ).toEqual([]);
-        // 300개 남짓을 import 로 따라가며 파싱한다 — 전체 테스트와 함께 돌면 5초를 넘길 때가 있다
+        // 650개 남짓(TSX · TS)을 import 로 따라가며 파싱한다 — 전체 테스트와 함께 돌면 5초를 넘길 때가 있다
     }, 30_000);
 
     // 올림 면은 제 면 위 6% 겹침 — 면 색을 바꾸는 hover:bg-* 대신 공용 nl-hover-layer(2026-10-15 hover 점검).

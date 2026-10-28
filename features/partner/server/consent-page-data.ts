@@ -1,10 +1,7 @@
 import "server-only";
 
 import type { OAuthScope } from "@/features/partner/server/oauth-authorize";
-import {
-    findActiveGrant,
-    getClientName,
-} from "@/features/partner/server/oauth-service";
+import { getClientName } from "@/features/partner/server/oauth-service";
 import type { PartnerShareItemName } from "@/features/partner/server/partner-outbox";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
@@ -48,7 +45,7 @@ export async function getConsentPageData(
     const { session, pending } = await readPendingConsent();
     if (!pending) return { kind: "error", code: "expired" };
     if (!session.id) return { kind: "login" };
-    const [clientName, user, grant] = await Promise.all([
+    const [clientName, user] = await Promise.all([
         getClientName(pending.clientId),
         db.user.findUnique({
             where: { id: session.id },
@@ -59,7 +56,6 @@ export async function getConsentPageData(
                 hidePlayActivity: true,
             },
         }),
-        findActiveGrant(session.id, pending.clientId),
     ]);
     if (!clientName || !user) return { kind: "error", code: "invalid_client" };
     return {
@@ -71,8 +67,8 @@ export async function getConsentPageData(
         wantsRecords: (pending.scopes as OAuthScope[]).includes(
             "nostalgia:read"
         ),
-        // 다시 묻는 경우에는 지금 보내는 항목을 미리 고른다. 처음은 모두 해제(법 · GDPR 기준)
-        initialItems: grant?.sharedItems ?? [],
+        // 처음이든 다시 묻든 모두 해제 — 동의는 매번 직접 고른 것만(법 · GDPR 기준)
+        initialItems: [],
         scoresPrivate: user.hidePlayScores,
         activityPrivate: user.hidePlayActivity,
     };

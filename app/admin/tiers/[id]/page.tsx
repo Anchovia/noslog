@@ -196,7 +196,7 @@ export default async function EditTierListPage({
                             placeholder="곡 제목 · 아티스트 · 식별자"
                             className="nl-input col-span-2"
                         />
-                        <div className="col-span-2 grid grid-cols-1 gap-nl-8 md:grid-cols-3">
+                        <div className="nl-admin-filter-row col-span-2 grid gap-nl-8">
                             <select
                                 name="difficulty"
                                 defaultValue={difficulty}

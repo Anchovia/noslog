@@ -11,7 +11,7 @@ import {
 /**
  * 업적 페이지 정렬(2026-09-25, 악곡 · 서열표와 같은 결과 줄의 SortMenu) — 분류 순(기본) · 높은 등급 순 ·
  * 최근 달성 순 · 희귀한 순(얻은 등급의 달성 인원 적은 순) · 다음 단계에 가까운 순(본인만, 진행 비율 높은 순).
- * 못 얻은 업적은 등급 · 최근 · 희귀 정렬에서 뒤로, 같은 값끼리는 분류 순.
+ * 못 얻은 업적은 분류 · 등급 · 최근 · 희귀 정렬에서 뒤로, 같은 값끼리는 분류 순.
  */
 export const ACHIEVEMENT_SORTS = [
     "category",
@@ -34,10 +34,12 @@ export function sortAchievementDefinitions(
             index,
         ])
     );
+    const highest = highestAchievementTiers(records.earned);
+    // 분류 순 = 얻은 업적 먼저, 그 안에서 정의 순서
     const byCategory = (a: AchievementDefinition, b: AchievementDefinition) =>
+        Number(!highest.has(a.key)) - Number(!highest.has(b.key)) ||
         (order.get(a.key) ?? 0) - (order.get(b.key) ?? 0);
     if (sort === "category") return [...definitions].sort(byCategory);
-    const highest = highestAchievementTiers(records.earned);
     const latest = new Map<string, string>();
     for (const item of records.earned) {
         const current = latest.get(item.key);

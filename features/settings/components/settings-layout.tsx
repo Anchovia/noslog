@@ -98,11 +98,6 @@ export default async function SettingsLayout({
                             </a>
                         ))}
                     </nav>
-                    {!authenticated ? (
-                        <p className="nl-body-secondary nl-muted nl-settings__guest-note">
-                            {t("settings.guestSummary")}
-                        </p>
-                    ) : null}
                 </div>
                 <div className="nl-settings__detail">
                     <BackLink

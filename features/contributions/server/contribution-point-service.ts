@@ -105,7 +105,7 @@ export async function getContributionTotal(userId: number) {
 }
 
 /**
- * 이름 옆 라벨을 여러 사람 한 번에 — 운영자는 「운영자」, 그 밖에는 minLevel 이상의 「기여 Lv.N」.
+ * 이름 옆 라벨을 여러 사람 한 번에 — minLevel 이상의 「기여 Lv.N」.
  * 라벨이 없는 사람은 Map 에 null.
  */
 export async function getNameLabels(
@@ -120,14 +120,14 @@ export async function getNameLabels(
     const [users, totals] = await Promise.all([
         db.user.findMany({
             where: { id: { in: ids } },
-            select: { id: true, role: true },
+            select: { id: true },
         }),
         getContributionTotals(ids),
     ]);
     for (const user of users) {
         labels.set(
             user.id,
-            nameLabelFor(user.role, totals.get(user.id)?.points ?? 0, minLevel)
+            nameLabelFor(totals.get(user.id)?.points ?? 0, minLevel)
         );
     }
     return labels;

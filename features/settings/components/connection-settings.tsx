@@ -10,6 +10,7 @@ import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
 import DiscordIcon from "@/components/ui/discord-icon";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { StatusMessage } from "@/components/ui/status-message";
 import { MusecatConnectionRow } from "@/features/partner/components/musecat-connection-settings";
 import type { MusecatSettings } from "@/features/partner/server/partner-settings-data";
 
@@ -108,9 +109,11 @@ export default function ConnectionSettings({
                 ) : null}
             </div>
             {errorMessage && !confirmChange ? (
-                <p role="alert" className="nl-body-secondary nl-field__error">
-                    {errorMessage}
-                </p>
+                <StatusMessage
+                    severity="danger"
+                    role="alert"
+                    title={errorMessage}
+                />
             ) : null}
             {!error && (result === "refresh" || result === "change") ? (
                 <p role="status" className="nl-body-secondary">
@@ -158,12 +161,11 @@ export default function ConnectionSettings({
                 }
             >
                 {localError ? (
-                    <p
+                    <StatusMessage
+                        severity="danger"
                         role="alert"
-                        className="nl-body-secondary nl-field__error"
-                    >
-                        {localError}
-                    </p>
+                        title={localError}
+                    />
                 ) : null}
             </ModalDialog>
         </div>

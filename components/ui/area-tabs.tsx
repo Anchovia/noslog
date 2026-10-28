@@ -30,11 +30,14 @@ export default function AreaTabs<Value extends string>({
         const row = list.current;
         const active = row?.querySelector<HTMLElement>('[data-state="active"]');
         if (!row || !active) return;
-        const left = active.offsetLeft;
-        const right = left + active.offsetWidth;
-        if (left < row.scrollLeft) row.scrollLeft = left;
+        // 탭 폭이 글자 폭이라 소수점이 생긴다 — 반올림하는 offset 값 대신 실제 상자로 잰다
+        const rowBox = row.getBoundingClientRect();
+        const box = active.getBoundingClientRect();
+        const left = box.left - rowBox.left + row.scrollLeft;
+        const right = left + box.width;
+        if (left < row.scrollLeft) row.scrollLeft = Math.floor(left);
         else if (right > row.scrollLeft + row.clientWidth)
-            row.scrollLeft = right - row.clientWidth;
+            row.scrollLeft = Math.ceil(right - row.clientWidth);
     }, [value]);
     return (
         <Tabs.Root

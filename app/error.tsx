@@ -45,7 +45,9 @@ export default function ErrorPage({
                     <meta name="robots" content="noindex" />
                     <p className="nl-page-title">NosLog</p>
                     <h1 className="nl-page-title">{t("common.pageError")}</h1>
-                    <p className="nl-body nl-muted">{t("common.retryLater")}</p>
+                    <p className="nl-metadata nl-muted">
+                        {t("common.retryLater")}
+                    </p>
                     <div className="nl-recovery__actions">
                         <RecoveryAction
                             label={t("common.retry")}

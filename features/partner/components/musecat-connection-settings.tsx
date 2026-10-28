@@ -111,7 +111,7 @@ export function MusecatConnectionRow({
     );
 }
 
-/** 상태 줄 — 정상(연결됨)이면 그리지 않고 메타 줄이 말한다. 다시 연결 필요 · 해제 중 · 반영 중만 색 점 태그 + 한 줄 설명(2026-10-21 전면 대조 ⑫) */
+/** 상태 줄 — 정상(연결됨)이면 그리지 않고 메타 줄이 말한다. 다시 연결 필요 · 해제 중 · 반영 중만 상태 태그(글자만) + 한 줄 설명 */
 function StatusLine({ settings }: { settings: MusecatSettings }) {
     const t = useTranslations();
     const pending = settings.records?.pending ?? [];
@@ -153,7 +153,7 @@ function StatusLine({ settings }: { settings: MusecatSettings }) {
 
 /**
  * 뮤즈캣 연결 상세(시안 ②) — 로고 「M」 · 이름 · 「날짜 연결 · 뮤즈캣 계정 이름」 → 상태 줄 →
- * 「뮤즈캣이 볼 수 있는 내 기록」(줄 목록 · 공개 범위 · 「보낼 항목 바꾸기」) ─ 「NosLog 가 쓰는 내 뮤즈캣 계정」 ─ 채운 빨강 「연결 끊기」.
+ * 「뮤즈캣에 보내는 기록」(설정 줄 목록 · 공개 범위 · 「보낼 항목 바꾸기」) ─ 「NosLog 가 뮤즈캣에서 쓰는 것」 ─ 보조 「연결 끊기」(확인 창의 확정만 채운 빨강).
  * 뒤로 「‹ 연결」 은 설정 틀이 그린다. 값은 모두 토큰 · 공용 부품
  */
 export function MusecatConnectionDetail({
@@ -240,17 +240,17 @@ export function MusecatConnectionDetail({
                             <h2 className="nl-component-title">
                                 {t("partner.settings.sharedTitle")}
                             </h2>
-                            <ul className="nl-musecat-lines">
+                            <ul className="nl-settings__rows">
                                 {LISTED.map((item) => {
                                     const sent =
                                         records.sharedItems.includes(item);
-                                    // 줄 = 항목 이름 · 오른쪽 「보냄」 / 「안 보냄」(대기 글자색)
+                                    // 설정 줄 목록 — 항목 이름 · 오른쪽 「보냄」(기본 글자) / 「안 보냄」(흐림)
                                     return (
                                         <li
                                             key={item}
-                                            className="nl-musecat-line"
+                                            className="nl-settings__row"
                                         >
-                                            <span className="nl-body nl-musecat-line__copy">
+                                            <span className="nl-control">
                                                 {t(
                                                     `partner.consent.item.${item}`
                                                 )}
@@ -258,8 +258,8 @@ export function MusecatConnectionDetail({
                                             <span
                                                 className={
                                                     sent
-                                                        ? "nl-metadata nl-muted"
-                                                        : "nl-metadata nl-musecat-pending"
+                                                        ? "nl-metadata"
+                                                        : "nl-metadata nl-muted"
                                                 }
                                             >
                                                 {t(
@@ -306,7 +306,7 @@ export function MusecatConnectionDetail({
                         ) : (
                             <>
                                 {/* 쓰는 것 줄 — 무엇을 · 어떻게(보기 / 내 이름으로 올림) */}
-                                <ul className="nl-musecat-lines">
+                                <ul className="nl-settings__rows">
                                     {(
                                         [
                                             ["arcades", "read"],
@@ -316,9 +316,9 @@ export function MusecatConnectionDetail({
                                     ).map(([scope, mode]) => (
                                         <li
                                             key={scope}
-                                            className="nl-musecat-line"
+                                            className="nl-settings__row"
                                         >
-                                            <span className="nl-body nl-musecat-line__copy">
+                                            <span className="nl-control">
                                                 {t(
                                                     `partner.settings.scope.${scope}`
                                                 )}

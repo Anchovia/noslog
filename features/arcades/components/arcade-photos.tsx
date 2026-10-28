@@ -1,10 +1,5 @@
 "use client";
-import {
-    ChevronLeft,
-    ChevronRight,
-    Image as ImageIcon,
-    LayoutGrid,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
@@ -270,7 +265,6 @@ export default function ArcadePhotos({
                                 openViewer(event.currentTarget, 0)
                             }
                         >
-                            <LayoutGrid className="nl-icon" aria-hidden />
                             {t("arcades.photoAll", { count: visible.length })}
                         </button>
                     </>

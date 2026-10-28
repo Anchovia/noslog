@@ -21,8 +21,8 @@ function splitKeys(value: string) {
 }
 
 /**
- * 설정 「프로필」 탭의 「프로필 업적」 칸(2026-09-25 D1) — 선호 오락실 칸과 같은 모양(값 + 「변경」 → 창).
- * 창에서 고른 값은 폼에 들어가고 「저장」 때 함께 저장된다. 빈 값 = 자동(높은 단계 → 달성 인원 적은 순).
+ * 설정 「프로필」 탭의 「프로필 업적」 칸 — 선호 오락실 칸과 같은 모양(값 + 「변경」 → 창).
+ * 창에서 「적용」 하는 순간 그 칸이 저장된다. 빈 값 = 자동(높은 단계 → 달성 인원 적은 순).
  */
 export default function AchievementShowcasePicker({
     records,
@@ -116,9 +116,6 @@ export default function AchievementShowcasePicker({
                 open={open}
                 onOpenChange={setOpen}
                 title={t("achievement.settings.label")}
-                description={t("achievement.settings.dialogHelp", {
-                    max: ACHIEVEMENT_SHOWCASE_SIZE,
-                })}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     changeButton.current?.focus();

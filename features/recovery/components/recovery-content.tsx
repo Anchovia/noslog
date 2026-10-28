@@ -18,7 +18,7 @@ export default function RecoveryContent({ reset }: { reset?: () => void }) {
             {reset ? <title>{`${title} | NosLog`}</title> : null}
             <meta name="robots" content="noindex" />
             <h1 className="nl-page-title">{title}</h1>
-            <p className="nl-body nl-muted">
+            <p className="nl-metadata nl-muted">
                 {t(reset ? "common.retryLater" : "common.notFoundDescription")}
             </p>
             <div className="nl-recovery__actions">

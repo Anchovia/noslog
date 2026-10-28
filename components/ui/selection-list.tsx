@@ -88,7 +88,7 @@ export default function SelectionList<Value extends string>({
                         ) : null}
                     </span>
                     {!multiple && value.includes(option.value) ? (
-                        <Check className="nl-icon" aria-hidden />
+                        <Check className="nl-icon-small" aria-hidden />
                     ) : null}
                 </label>
             ))}
