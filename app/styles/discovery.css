@@ -187,20 +187,6 @@
     align-items: center;
     text-align: center;
 }
-/* 채보 줄 — 악곡 목록 줄(nl-music-card--list) 틀에 자켓 80 정사각 · 두 줄(이름 · 아티스트).
-   두 줄이 자켓 80 안에 가운데로 선다 */
-.noslog-ui .nl-chart-row {
-    min-height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
-}
-.noslog-ui .nl-chart-row > .nl-jacket {
-    width: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
-    height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
-    min-height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
-    align-self: flex-start;
-}
-.noslog-ui .nl-chart-row .nl-music-card__body {
-    padding-block: var(--nl-spacing-4);
-}
 /* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 높이 24 · 카드 위 판(surface/control) · 모서리 4 · 난이도 글자색 */
 .noslog-ui .nl-chart-chip {
     display: inline-flex;
