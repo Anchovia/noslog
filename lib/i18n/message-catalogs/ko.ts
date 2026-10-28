@@ -167,6 +167,14 @@ export const koMessages = {
         "서로 가까우면서 어긋난 타이밍을 구분하여 연주하는 부담입니다.",
     "pattern.definition.chords":
         "박자(마디 길이)가 바뀌는 구간을 따라가는 부담입니다.",
+    "pattern.basisDifficulty": "{difficulty} 기준",
+    "pattern.basisAll": "전곡 기준",
+    "pattern.switchToDifficulty": "{difficulty} 기준으로 보기",
+    "pattern.switchToAll": "전곡 기준으로 보기",
+    "pattern.computed":
+        "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
+    "pattern.computedMissing":
+        "공개 채보가 없는 곡과, 영상에서 추출해 박자표를 알 수 없는 채보의 변박은 「—」로 표시합니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
@@ -2209,7 +2217,7 @@ export const koMessages = {
     "achievement.name.last-stop": "종착역입니다",
     "achievement.name.fate-motif": "빠바바밤",
     "achievement.name.wedding": "결혼식 축주",
-    "achievement.name.megalovania": "와! 샌즈!",
+    "achievement.name.megalovania": "와 샌즈",
     "achievement.name.bad-apple": "배드애플",
     "achievement.name.scarlet-sisters": "홍마관 자매",
     "achievement.name.marasy": "마라시 채널",
@@ -2295,7 +2303,7 @@ export const koMessages = {
     "achievement.condition.megalovania.1": "MEGALOVANIA S 이상",
     "achievement.condition.megalovania.2": "MEGALOVANIA 풀콤보",
     "achievement.condition.megalovania.3": "MEGALOVANIA PIANIST",
-    "achievement.condition.bad-apple": "Bad Apple!! 모든 난이도 S 이상",
+    "achievement.condition.bad-apple": "Bad Apple 모든 난이도 S 이상",
     "achievement.condition.scarlet-sisters":
         "홍마관 자매 테마 S 이상 {count}곡",
     "achievement.condition.marasy": "まらしぃ 편곡 S 이상 {count}곡",

@@ -170,6 +170,14 @@ export const enMessages = {
         "The burden of distinguishing and playing closely displaced timings.",
     "pattern.definition.chords":
         "The burden of following sections where the meter (bar length) changes.",
+    "pattern.basisDifficulty": "{difficulty} charts",
+    "pattern.basisAll": "All charts",
+    "pattern.switchToDifficulty": "Compare with {difficulty} charts",
+    "pattern.switchToAll": "Compare with all charts",
+    "pattern.computed":
+        "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
+    "pattern.computedMissing":
+        "Shows “—” for songs without a published chart, and for meter changes on charts extracted from video, where the time signature is unknown.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
@@ -2340,7 +2348,7 @@ export const enMessages = {
     "achievement.condition.megalovania.2": "Full combo on MEGALOVANIA",
     "achievement.condition.megalovania.3": "PIANIST on MEGALOVANIA",
     "achievement.condition.bad-apple":
-        "S or better on every difficulty of Bad Apple!!",
+        "S or better on every difficulty of Bad Apple",
     "achievement.condition.scarlet-sisters":
         "S or better on {count} Scarlet sisters themes",
     "achievement.condition.marasy":

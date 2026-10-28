@@ -379,3 +379,66 @@ describe("곡 묶음 업적", () => {
         ).toEqual({ value: 3 });
     });
 });
+
+describe("조건을 정한 곡 묶음", () => {
+    const row = (
+        musicIndex: string,
+        difficulty: string,
+        lamp: Partial<AchievementChartRow> = {}
+    ): AchievementChartRow => ({
+        musicIndex,
+        difficulty,
+        level: 10,
+        sRank: false,
+        fullCombo: false,
+        pianist: false,
+        ...lamp,
+    });
+
+    it("모든 난이도 묶음은 그 곡의 채보가 하나라도 모자라면 세지 않고, 단계는 금 하나다", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS["bad-apple"].songs;
+        const s = { sRank: true };
+        expect(
+            chartAchievementMetrics([
+                row(song, "Normal", s),
+                row(song, "Hard", s),
+                row(song, "Expert"),
+            ])["songSet:bad-apple"]
+        ).toEqual({ value: 0 });
+        expect(
+            chartAchievementMetrics([
+                row(song, "Normal", s),
+                row(song, "Hard", s),
+                row(song, "Expert", s),
+            ])["songSet:bad-apple"]
+        ).toEqual({ value: 1 });
+        const definition = getAchievementDefinition("bad-apple")!;
+        expect(definition.thresholds).toEqual({ 3: 1 });
+        expect(definition.unit).toBeUndefined();
+    });
+
+    it("풀콤보 기준 묶음은 S 만으로는 세지 않는다", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS.bells.songs;
+        expect(
+            chartAchievementMetrics([row(song, "Expert", { sRank: true })])[
+                "songSet:bells"
+            ]
+        ).toEqual({ value: 0 });
+        expect(
+            chartAchievementMetrics([
+                row(song, "Expert", { sRank: true, fullCombo: true }),
+            ])["songSet:bells"]
+        ).toEqual({ value: 1 });
+    });
+
+    it("Expert 로 정한 한 곡 업적은 다른 난이도의 램프를 보지 않는다", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS.bumblebee.songs;
+        expect(
+            chartAchievementMetrics([
+                row(song, "Hard", { sRank: true, pianist: true }),
+                row(song, "Expert", { sRank: true }),
+            ])["songSet:bumblebee"]
+        ).toEqual({ value: 1 });
+        expect(getAchievementDefinition("bumblebee")?.unit).toBe("lamp");
+    });
+});

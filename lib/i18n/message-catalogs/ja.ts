@@ -168,6 +168,14 @@ export const jaMessages = {
         "近接してずれたタイミングを区別して演奏する負担です。",
     "pattern.definition.chords":
         "拍子(小節の長さ)が変わる区間についていく負担です。",
+    "pattern.basisDifficulty": "{difficulty}基準",
+    "pattern.basisAll": "全曲基準",
+    "pattern.switchToDifficulty": "{difficulty}基準で表示",
+    "pattern.switchToAll": "全曲基準で表示",
+    "pattern.computed":
+        "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
+    "pattern.computedMissing":
+        "公開譜面がない曲と、動画から抽出して拍子がわからない譜面の変拍子は「—」で表示します。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",
@@ -2317,7 +2325,7 @@ export const jaMessages = {
     "achievement.condition.megalovania.1": "MEGALOVANIA S以上",
     "achievement.condition.megalovania.2": "MEGALOVANIA フルコンボ",
     "achievement.condition.megalovania.3": "MEGALOVANIA PIANIST",
-    "achievement.condition.bad-apple": "Bad Apple!!の全難易度でS以上",
+    "achievement.condition.bad-apple": "Bad Appleの全難易度でS以上",
     "achievement.condition.scarlet-sisters":
         "紅魔館の姉妹のテーマでS以上 {count}曲",
     "achievement.condition.marasy": "まらしぃアレンジでS以上 {count}曲",

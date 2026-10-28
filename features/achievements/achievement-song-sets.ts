@@ -5,7 +5,11 @@
  */
 export interface AchievementSongSet {
     category: "songSet" | "season";
-    difficulty?: "Normal";
+    difficulty?: "Normal" | "Expert";
+    /** 곡의 채보 모두가 기준을 넘어야 그 곡을 센다(「모든 난이도」 업적) */
+    everyChart?: boolean;
+    /** 곡을 세는 기준 — 없으면 S 이상 */
+    lamp?: "fullCombo";
     songs: readonly string[];
 }
 
@@ -452,6 +456,160 @@ export const ACHIEVEMENT_SONG_SETS = {
             "68007c8d68fbdba159124dc1606045a8", // 協奏曲「世界の果てに約束の凱歌を」～28の鍵盤のための～
             "d89fc256c59c636f3d551fa013768f5d", // 零と弌の鍵の唄
             "20ffd09cc0a40225a74447e807756116", // モノクロモーメント
+        ],
+    },
+    "garbage-truck": {
+        category: "songSet",
+        songs: [
+            "2f3324b29853c1ffbcb677fdcf6760ec", // エリーゼのために
+            "dd4d80a2466a1079d30c0bb6e816af4d", // 乙女の祈り
+            "dbaf8e326202f9c962a455ce7c19faa4", // 人形の夢と目覚め
+        ],
+    },
+    "sports-day": {
+        category: "songSet",
+        songs: [
+            "b45d155a7d3a5732f1a69f4dad0a02c9", // クシコス・ポスト
+            "0b40c005ac6c517ddbbe0ff52c50e8bd", // ウィリアム・テル序曲
+            "696504137e7e3006bb6aa18580d966e2", // ラデツキー行進曲
+            "c7ff3303eb80b59445ca5e4ef4013573", // トリッチ・トラッチ・ポルカ
+        ],
+    },
+    "cartoon-classics": {
+        category: "songSet",
+        songs: [
+            "c88f3f90009f8ad88c2304d9a5cdb3fe", // ハンガリー狂詩曲第2番
+            "0b40c005ac6c517ddbbe0ff52c50e8bd", // ウィリアム・テル序曲
+            "cd4d316f5f01e1d577e663207f975eba", // 春の歌
+            "c6b441ce60c6c9671ccfad5687d8a518", // ワルキューレの騎行
+            "36e81658370f16786fae59c65e5fb118", // 山の魔王の宮殿にて
+        ],
+    },
+    organ: {
+        category: "songSet",
+        songs: [
+            "44ba70d2d93a96d08eff922aa22e28ed", // トッカータとフーガ ニ短調
+            "d46c4f0752473042ffbbd63329c4c512", // 小フーガ ト短調 BWV578
+        ],
+    },
+    "last-stop": {
+        category: "songSet",
+        songs: [
+            "50f4f382a533e9afb6a30ab25a5b1079", // トルコ行進曲
+            "15d4eb0c15adf2ca545e891c38882274", // アイネ・クライネ・ナハトムジク第1楽章
+        ],
+    },
+    "fate-motif": {
+        category: "songSet",
+        songs: [
+            "6a95ceea9a19310ed4cb2bcf2e97a707", // 交響曲第5番第1楽章"運命"
+        ],
+    },
+    wedding: {
+        category: "songSet",
+        songs: [
+            "2e59e73aa615ed5f3db0f612152c2231", // 結婚行進曲
+            "3c7da67e3560df7b66f8318553cbb697", // 主よ、人の望みの喜びよ
+            "2f58ac9d471d9dbb9b4904192827c16f", // アヴェ・マリア
+            "fdeed4055452c67a7fefbbcab228bf62", // 愛の挨拶
+        ],
+    },
+    megalovania: {
+        category: "songSet",
+        songs: [
+            "39cf43e73c9dace2fe6738e350717e56", // MEGALOVANIA
+        ],
+    },
+    "bad-apple": {
+        category: "songSet",
+        everyChart: true,
+        songs: [
+            "17bba0319c67ee802e25feebd7c3526e", // Bad Apple!! feat. nomico
+        ],
+    },
+    "scarlet-sisters": {
+        category: "songSet",
+        songs: [
+            "49fcdb015cf32f183c6c09a4eeda7f1c", // 亡き王女の為のセプテット
+            "0665df5ef855795655cf5fc94ee7b053", // U.N.オーエンは彼女なのか？
+        ],
+    },
+    marasy: {
+        category: "songSet",
+        songs: [
+            "504cedf034dbc5d20562371ad36b72a2", // Evans
+            "af604ac415232e33979cc1bade81762b", // Moonstone
+            "c91b6a1d2d4e7d2f295e2400ca34ebb4", // アスノヨゾラ哨戒班
+            "09b2f243c49bc3d92ca7a70a567cde9f", // ウミユリ海底譚
+            "ffd59363a75f2c4e29821d7f59c090fd", // セツナトリップ
+            "21064019f1794507559b85113b832bc1", // ナイト・オブ・ナイツ
+            "684f2ad749aafaf23c813231322fff82", // ロストワンの号哭
+            "f303d1cc6e9ec337ca5342190b4ecdfa", // 凛として咲く花の如く
+            "1dfac8a7a18283651af981ff0f6a3b81", // 千本桜
+            "a93ba9cc34b4ff9237a437c4fdb47960", // 夢ハ夢ノママデ
+        ],
+    },
+    wakhmaninov: {
+        category: "songSet",
+        songs: [
+            "818b48940c2d17325904fbab68689046", // ピアノ協奏曲第1番“蠍火”
+            "9aa62c3e810f1f7781cafd151e8c0439", // ピアノ独奏無言歌 "灰燼"
+            "dbce4a7b77cb2f0a80a431164bdb6584", // ワルツ第17番 ト短調”大犬のワルツ”
+            "2317fc0e71d3f39c6346e15bb21d2fc1", // virkatoの主題によるperson09風超絶技巧変奏曲
+        ],
+    },
+    "grand-slam": {
+        category: "songSet",
+        songs: [
+            "f303d1cc6e9ec337ca5342190b4ecdfa", // 凛として咲く花の如く
+            "8ad61202d4da074e7c0a88b217735bad", // 凛として咲く花の如く ～ひなビタ♪ edition～
+        ],
+    },
+    "demon-kings": {
+        category: "songSet",
+        difficulty: "Expert",
+        songs: [
+            "be03c65ed737a7805dde4d1deb53474e", // 魔王
+            "160889038ac8aa9936605e2bf8fbe300", // ambages
+            "36e81658370f16786fae59c65e5fb118", // 山の魔王の宮殿にて
+        ],
+    },
+    "piano-concertos": {
+        category: "songSet",
+        songs: [
+            "bd8a09b514519664420ca5e4c023e5e2", // ピアノ協奏曲第1番第1楽章
+            "548a12c3ab2fac8bb336e7cf2ae902d6", // ピアノ協奏曲第2番第1楽章
+            "fafafc96f6a22ee35fbae8acb5319978", // ピアノ協奏曲第1楽章
+            "818b48940c2d17325904fbab68689046", // ピアノ協奏曲第1番“蠍火”
+        ],
+    },
+    erlkonig: {
+        category: "songSet",
+        everyChart: true,
+        lamp: "fullCombo",
+        songs: [
+            "be03c65ed737a7805dde4d1deb53474e", // 魔王
+        ],
+    },
+    bells: {
+        category: "songSet",
+        lamp: "fullCombo",
+        songs: [
+            "7f4d50f868741e26283e08b9b8d50699", // ラ・カンパネラ
+            "19a325778e743c140372d0ec500b73e2", // 前奏曲 Op.3-2 「鐘」
+        ],
+    },
+    "minute-waltz": {
+        category: "songSet",
+        songs: [
+            "0ff2ac56c4fd26219090d5b5cfcad29c", // 小犬のワルツ
+        ],
+    },
+    bumblebee: {
+        category: "songSet",
+        difficulty: "Expert",
+        songs: [
+            "26db1890305f125eeb0ab1dc5c8ac3b4", // 熊蜂の飛行
         ],
     },
 } as const satisfies Record<string, AchievementSongSet>;

@@ -124,15 +124,24 @@ export function songSetThresholds(
     return { 3: count };
 }
 
+/** 한 곡을 S → 풀콤보 → Pianist 로 올리는 업적인지 — 기준을 따로 정한 한 곡 묶음은 그 기준 하나뿐이다 */
+function isLampSongSet(set: AchievementSongSet) {
+    return set.songs.length === 1 && !set.everyChart && !set.lamp;
+}
+
 const SONG_SET_DEFINITIONS: AchievementDefinition[] =
     ACHIEVEMENT_SONG_SET_KEYS.map((key) => {
-        const set = ACHIEVEMENT_SONG_SETS[key];
+        const set: AchievementSongSet = ACHIEVEMENT_SONG_SETS[key];
+        const lamp = isLampSongSet(set);
         return {
             key,
             category: set.category,
             metric: songSetMetric(key),
-            thresholds: songSetThresholds(set.songs.length),
-            ...(set.songs.length === 1 ? { unit: "lamp" as const } : {}),
+            thresholds:
+                lamp || set.songs.length > 1
+                    ? songSetThresholds(set.songs.length)
+                    : { 3: 1 },
+            ...(lamp ? { unit: "lamp" as const } : {}),
         };
     });
 
@@ -406,12 +415,19 @@ export function chartAchievementMetrics(
                     (row) =>
                         !set.difficulty || row.difficulty === set.difficulty
                 );
-            const value =
-                set.songs.length === 1
-                    ? Math.max(0, ...charts(set.songs[0]).map(chartLamp))
-                    : set.songs.filter((musicIndex) =>
-                          charts(musicIndex).some((row) => row.sRank)
-                      ).length;
+            const passes = (row: AchievementChartRow) =>
+                set.lamp === "fullCombo"
+                    ? row.fullCombo || row.pianist
+                    : row.sRank;
+            const counts = (musicIndex: string) => {
+                const list = charts(musicIndex);
+                return set.everyChart
+                    ? list.length > 0 && list.every(passes)
+                    : list.some(passes);
+            };
+            const value = isLampSongSet(set)
+                ? Math.max(0, ...charts(set.songs[0]).map(chartLamp))
+                : set.songs.filter(counts).length;
             return [songSetMetric(key), { value }];
         })
     ) as Record<AchievementSongSetMetric, AchievementMetricValue>;
