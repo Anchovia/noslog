@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Check, Share } from "lucide-react";
+import { Share } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -224,17 +224,9 @@ function ProfileCardPreview({
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
                             >
-                                {status === "copied" ? (
-                                    <>
-                                        <Check
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                        {t("common.copied")}
-                                    </>
-                                ) : (
-                                    t("profile.copyImage")
-                                )}
+                                {status === "copied"
+                                    ? t("common.copied")
+                                    : t("profile.copyImage")}
                             </ActionButton>
                             <ActionButton
                                 variant="secondary"

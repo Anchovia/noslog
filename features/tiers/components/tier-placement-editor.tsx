@@ -80,7 +80,7 @@ export default function TierPlacementEditor({
             <p className="nl-metadata px-nl-4 text-nl-subdued">
                 검색 결과 {totalCount}곡 · 한 페이지에 최대 100곡
             </p>
-            <div className="overflow-hidden rounded-nl-container bg-nl-surface">
+            <div className="overflow-hidden rounded-nl-control bg-nl-surface">
                 {entries.map((entry, index) => (
                     <form
                         key={entry.id}
@@ -91,10 +91,10 @@ export default function TierPlacementEditor({
                             index={entry.chart.music.index}
                             background={entry.chart.music.background}
                             title={entry.chart.music.title}
-                            className="size-nl-48 shrink-0 rounded-nl-field"
+                            className="size-nl-48 shrink-0 rounded-nl-control"
                         />
                         <span className="min-w-0 flex-1">
-                            <strong className="nl-body-secondary block truncate">
+                            <strong className="nl-emphasis-label block truncate">
                                 {entry.chart.music.title}
                             </strong>
                             <span className="nl-metadata block truncate text-nl-subdued">

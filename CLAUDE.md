@@ -1,4 +1,5 @@
 @AGENTS.md
+@docs/ai-check.md
 
 # Claude 전용 메모
 

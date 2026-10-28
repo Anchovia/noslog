@@ -45,9 +45,22 @@ for (const locale of ["ko", "ja", "en"]) {
                         page
                             .locator(".nl-home-tile__label")
                             .evaluateAll((elements) =>
-                                elements.every(
-                                    (e) => e.scrollWidth <= e.clientWidth
-                                )
+                                elements.every((e) => {
+                                    if (e.getClientRects().length === 0)
+                                        return true;
+                                    // 폭을 바꾼 뒤 ResizeObserver 가 맞춤(data-fit)을 다시 정할 때까지 — 앞 폭의 표시가 남은 순간은 재지 않는다
+                                    const lines = Math.round(
+                                        e.getBoundingClientRect().height /
+                                            parseFloat(
+                                                getComputedStyle(e).lineHeight
+                                            )
+                                    );
+                                    return (
+                                        e.scrollWidth <= e.clientWidth &&
+                                        lines ===
+                                            (e.dataset.fit === "wrap" ? 2 : 1)
+                                    );
+                                })
                             )
                     )
                     .toBe(true);
@@ -95,6 +108,8 @@ for (const locale of ["ko", "ja", "en"]) {
                                     radius: surface.borderRadius,
                                     background: surface.backgroundColor,
                                     line: parseFloat(css.lineHeight),
+                                    textHeight: text.height,
+                                    fit: label.dataset.fit,
                                     label: label.textContent,
                                 };
                             }),
@@ -106,7 +121,7 @@ for (const locale of ["ko", "ja", "en"]) {
                     1
                 );
                 expect(measured.navigation.x).toBeCloseTo(measured.search.x, 1);
-                // 페이지 제목은 뷰포트 1056 부터 32/40(가이드 「글자」) — 검색 폭(최대 640)과 기준이 다르다
+                // 페이지 제목은 24, 1056 이상 32 — 언어 공통(가이드 「글자」)
                 await expect(
                     page.locator(".nl-home-identity .nl-page-title")
                 ).toHaveCSS("font-size", width >= 1056 ? "32px" : "24px");
@@ -124,6 +139,7 @@ for (const locale of ["ko", "ja", "en"]) {
                     expect(tile.iconWidth).toBe(20);
                     expect(tile.gap).toBe(8);
                     expect([12, 14]).toContain(tile.textSize);
+                    // 보통 칸은 ActionButton medium, 좁은 폭에 맞춰 줄인 12 글자는 regular
                     expect(tile.textWeight).toBe(
                         tile.textSize === 12 ? "400" : "500"
                     );
@@ -131,10 +147,14 @@ for (const locale of ["ko", "ja", "en"]) {
                     expect(tile.background).toBe(
                         theme === "dark"
                             ? "rgb(27, 27, 27)"
-                            : "rgb(248, 248, 248)"
+                            : "rgb(255, 255, 255)"
+                    );
+                    // 12 로 줄여도 넘치는 이름만 두 줄(가이드 홈 「타일 이름 좁을 때」)
+                    expect(tile.textHeight).toBe(
+                        tile.fit === "wrap" ? tile.line * 2 : tile.line
                     );
                     expect(tile.height).toBe(
-                        (columns === 3 ? 24 : 48) + 20 + 8 + tile.line
+                        (columns === 3 ? 24 : 48) + 20 + 8 + tile.textHeight
                     );
                 }
                 if (columns === 3)

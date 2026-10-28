@@ -6,8 +6,8 @@ import { useRef } from "react";
 import { cn } from "@/lib/cn";
 
 /**
- * 숫자 척도 고르기 — 0 ~ 4 같은 짧은 척도를 숫자 버튼 한 줄로 (2026-09-17 · Tally · Jotform · Typeform 형).
- * 버튼 = 컨트롤 M 정사각 · 모서리 8 · 사이 8(375 미만 4), 숫자는 버튼 안. 고른 값은 주 버튼 면 + 어두운 글자.
+ * 숫자 척도 고르기 — 0 ~ 4 같은 짧은 척도를 숫자 버튼 한 줄로 (Tally · Jotform · Typeform 형).
+ * 버튼 = 컨트롤 M 정사각 · 모서리 control · 사이 8(375 미만 4), 숫자는 버튼 안. 고른 값은 고른 면(surface/control) + 기본 글자 600.
  * 같은 값을 다시 누르면 해제(값 없음). 라디오 묶음 — 방향키로 이동하며 고르고, 고른 값(없으면 첫 값)만 탭 순서에 든다.
  */
 export default function ScalePicker({
@@ -58,7 +58,7 @@ export default function ScalePicker({
             aria-labelledby={labelId}
             aria-disabled={disabled || undefined}
             className="nl-scale-picker"
-            // 값을 고른 줄은 나머지 숫자를 한 단계 흐리게 (2026-09-17 S1)
+            // 값을 고른 줄 — 나머지 숫자를 흐린 글자 · 옅은 경계로 둔다
             data-has-value={value !== null || undefined}
         >
             {steps.map((step) => {

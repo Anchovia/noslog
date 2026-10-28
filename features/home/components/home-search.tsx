@@ -41,7 +41,6 @@ export default function HomeSearch() {
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(-1);
     const [capacity, setCapacity] = useState(5);
-    const [slowRequest, setSlowRequest] = useState<string | null>(null);
     const {
         register,
         control,
@@ -63,13 +62,7 @@ export default function HomeSearch() {
         enabled: current && open,
     });
     const pending = current && query.isFetching;
-    const busyKey = `${queryKey}:${query.dataUpdatedAt}:${query.errorUpdatedAt}`;
 
-    useEffect(() => {
-        if (!pending) return;
-        const timer = setTimeout(() => setSlowRequest(busyKey), 400);
-        return () => clearTimeout(timer);
-    }, [pending, busyKey]);
     useEffect(() => {
         function closeOutside(event: PointerEvent) {
             if (
@@ -94,7 +87,7 @@ export default function HomeSearch() {
                 (viewport?.offsetTop ?? 0) +
                 (viewport?.height ?? window.innerHeight);
             // 미리보기 = 검색칸 아래 8 · 안쪽 16 위아래 · 화면 끝 16, 카드 64 사이 8(home.css · entity.css)
-            // 「전체 결과」 줄 = 큰 L 높이(1055 이하 44 · 1056 이상 40, 2026-10-15 사용자 B)
+            // 「전체 결과」 줄 = 컨트롤 높이
             const gap = readTokenPixels(anchor!, "--nl-spacing-8");
             const inset = readTokenPixels(anchor!, "--nl-spacing-16");
             const row = readTokenPixels(anchor!, "--nl-spacing-64") + gap;
@@ -144,11 +137,9 @@ export default function HomeSearch() {
     const showHandoff = total > items.length;
     if (showHandoff) destinations.push(allHref);
     const showPopup =
-        open &&
-        current &&
-        (Boolean(data) ||
-            query.isError ||
-            (pending && slowRequest === busyKey));
+        open && current && (Boolean(data) || query.isError || pending);
+    // 결과 없이 불러오는 중이면 판째 nl-loading-delay 로 숨겨 짧은 요청에서 빈 판이 번쩍이지 않게 한다
+    const loadingOnly = pending && !data && !query.isError;
     const activeId =
         showPopup && active >= 0 && active < destinations.length
             ? `${resultsId}-${active}`
@@ -264,7 +255,11 @@ export default function HomeSearch() {
                 }
             />
             <div
-                className="nl-search-preview"
+                className={
+                    loadingOnly
+                        ? "nl-search-preview nl-loading-delay"
+                        : "nl-search-preview"
+                }
                 hidden={!showPopup}
                 aria-busy={pending || undefined}
             >
@@ -301,12 +296,12 @@ export default function HomeSearch() {
                         </IntentLink>
                     ) : null}
                 </div>
-                {pending && !data ? (
-                    // 미리보기와 같은 카드 틀의 스켈레톤 — 짧게 끝나면 보이지 않는다(nl-loading-delay)
+                {loadingOnly ? (
+                    // 미리보기와 같은 카드 틀의 스켈레톤 — 짧게 끝나면 판째 보이지 않는다
                     <div aria-busy="true">
                         <LoadingStatus label={t("home.previewLoading")} />
                         <div
-                            className="nl-search-preview__list nl-loading-delay"
+                            className="nl-search-preview__list"
                             aria-hidden="true"
                         >
                             {[0, 1, 2].map((index) => (
@@ -326,10 +321,7 @@ export default function HomeSearch() {
                             <ActionButton
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => {
-                                    setSlowRequest(null);
-                                    void query.refetch();
-                                }}
+                                onClick={() => void query.refetch()}
                             >
                                 {t("common.retry")}
                             </ActionButton>

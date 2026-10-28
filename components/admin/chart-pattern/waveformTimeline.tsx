@@ -6,21 +6,13 @@ import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { EDITOR_COLORS } from "@/lib/chart-pattern/stageColors";
 
 import { useChartEditorStore } from "./chartEditorStore";
 
 interface WaveformTimelineProps {
     peaks: Float32Array | null;
     onSeek: (timeMs: number) => void;
-}
-
-function cssColor(name: string, fallback: string) {
-    if (typeof window === "undefined") return fallback;
-    return (
-        getComputedStyle(document.documentElement)
-            .getPropertyValue(name)
-            .trim() || fallback
-    );
 }
 
 export default function WaveformTimeline({
@@ -63,10 +55,10 @@ export default function WaveformTimeline({
         const centerY = viewHeight / 2;
 
         context.clearRect(0, 0, viewWidth, viewHeight);
-        context.fillStyle = cssColor("--color-surface-muted", "#1a1a22");
+        context.fillStyle = EDITOR_COLORS.waveformBackground;
         context.fillRect(0, 0, viewWidth, viewHeight);
 
-        context.strokeStyle = cssColor("--color-divider", "#20202a");
+        context.strokeStyle = EDITOR_COLORS.rulerLine;
         context.lineWidth = 1;
         context.beginPath();
         context.moveTo(0, centerY + 0.5);
@@ -74,7 +66,7 @@ export default function WaveformTimeline({
         context.stroke();
 
         if (peaks && peaks.length > 0) {
-            context.fillStyle = cssColor("--color-text-disabled", "#666674");
+            context.fillStyle = EDITOR_COLORS.rulerBeatAccentLine;
             const barWidth = viewWidth / peaks.length;
             for (let index = 0; index < peaks.length; index += 1) {
                 const x = index * barWidth;
@@ -87,7 +79,7 @@ export default function WaveformTimeline({
                 );
             }
         } else {
-            context.fillStyle = cssColor("--color-text-disabled", "#666674");
+            context.fillStyle = EDITOR_COLORS.rulerBeatAccentLine;
             context.font = "12px sans-serif";
             context.textAlign = "center";
             context.textBaseline = "middle";
@@ -106,8 +98,8 @@ export default function WaveformTimeline({
                 const x = (point.timeMs / durationMs) * viewWidth;
                 context.strokeStyle =
                     point.id === selectedTimingPointId
-                        ? cssColor("--color-score", "#facc15")
-                        : cssColor("--color-chart", "#38bdf8");
+                        ? EDITOR_COLORS.preview
+                        : EDITOR_COLORS.timingPoint;
                 context.lineWidth = point.id === selectedTimingPointId ? 2 : 1;
                 context.beginPath();
                 context.moveTo(x + 0.5, 0);
@@ -115,11 +107,8 @@ export default function WaveformTimeline({
                 context.stroke();
             }
 
-            // 시각 댓글 눈금(2026-09-24 B1) — 경고 표시색, 위아래 끝에서 짧게
-            context.fillStyle = cssColor(
-                "--nl-feedback-warning-marker",
-                "#fbc828"
-            );
+            // 시각 댓글 눈금 — 경고 표시색, 위아래 끝에서 짧게
+            context.fillStyle = EDITOR_COLORS.warning;
             for (const timeMs of commentTimes) {
                 if (timeMs < 0 || timeMs > durationMs) continue;
                 const x = (timeMs / durationMs) * viewWidth;
@@ -129,7 +118,7 @@ export default function WaveformTimeline({
 
             const playheadX =
                 (Math.min(currentTimeMs, durationMs) / durationMs) * viewWidth;
-            context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
+            context.strokeStyle = EDITOR_COLORS.playhead;
             context.lineWidth = 2;
             context.beginPath();
             context.moveTo(playheadX + 0.5, 0);
@@ -184,7 +173,7 @@ export default function WaveformTimeline({
                 aria-valuenow={Math.round(currentTimeMs)}
                 aria-valuetext={formatEditorTime(currentTimeMs)}
                 tabIndex={0}
-                className="nl-editor-waveform w-full touch-none rounded-nl-field"
+                className="nl-editor-waveform w-full touch-none rounded-nl-control"
                 onPointerDown={(event) => {
                     event.currentTarget.setPointerCapture(event.pointerId);
                     seekFromClientX(event.clientX);

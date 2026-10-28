@@ -59,7 +59,7 @@ export default async function AdminUsersPage({
                     <AdminUserCard key={user.id} user={user} />
                 ))}
                 {result.users.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         조건에 맞는 유저가 없습니다.
                     </p>
                 ) : null}

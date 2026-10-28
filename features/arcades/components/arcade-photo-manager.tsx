@@ -145,7 +145,7 @@ export default function ArcadePhotoManager({
     }
 
     return (
-        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-12">
             <legend className="nl-emphasis-label px-nl-4 text-nl-content">
                 사진
             </legend>
@@ -156,7 +156,7 @@ export default function ArcadePhotoManager({
             </p>
             {photos.map((photo, index) => (
                 <div key={photo.id} className="flex items-center gap-nl-8">
-                    <div className="relative size-nl-64 shrink-0 overflow-hidden rounded-nl-field bg-nl-raised">
+                    <div className="relative size-nl-64 shrink-0 overflow-hidden rounded-nl-control bg-nl-control">
                         <Image
                             src={photo.url}
                             alt={photo.alt}
@@ -221,8 +221,8 @@ export default function ArcadePhotoManager({
                 onChange={(event) => choose(event.target.files?.[0])}
             />
             {file && preview ? (
-                <div className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8">
-                    <div className="relative aspect-video overflow-hidden rounded-nl-field bg-nl-raised">
+                <div className="grid gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-8">
+                    <div className="relative aspect-video overflow-hidden rounded-nl-control bg-nl-control">
                         <Image
                             src={preview}
                             alt=""

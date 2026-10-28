@@ -59,7 +59,7 @@ export default function TierChartSearch({
             </div>
 
             {query.trim() ? (
-                <div className="nl-admin-scroll-list mt-nl-8 overflow-y-auto rounded-nl-field border-nl-stroke border-nl-divider">
+                <div className="nl-admin-scroll-list mt-nl-8 overflow-y-auto rounded-nl-control border-nl-stroke border-nl-divider">
                     {isSearching ? (
                         <p className="nl-body-secondary py-nl-24 text-center text-nl-subdued">
                             검색 중...
@@ -87,7 +87,7 @@ export default function TierChartSearch({
                                       background={chart.jacket}
                                       title={chart.title}
                                       className={cn(
-                                          "size-nl-48 shrink-0 rounded-nl-field border-nl-stroke-strong",
+                                          "size-nl-48 shrink-0 rounded-nl-control border-nl-stroke-strong",
                                           getTierDifficultyBorder(
                                               chart.difficulty
                                           )

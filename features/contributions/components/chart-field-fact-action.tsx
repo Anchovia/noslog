@@ -46,10 +46,7 @@ export default function ChartFieldFactAction({
     return (
         <>
             {pendingValue !== undefined ? (
-                <span
-                    className="nl-tag nl-tag--status nl-tag--inline"
-                    data-tone="warning"
-                >
+                <span className="nl-tag nl-tag--status" data-tone="warning">
                     {t("contribution.pending")}
                 </span>
             ) : null}

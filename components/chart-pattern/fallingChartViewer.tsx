@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import {
     type ChangeEvent,
+    type CSSProperties,
     useCallback,
     useEffect,
     useEffectEvent,
@@ -26,12 +27,16 @@ import { useTranslations } from "@/components/i18n/locale-provider";
 import { Checkbox } from "@/components/ui/checkbox";
 import CompactSelect from "@/components/ui/compact-select";
 import { overlayPosition } from "@/components/ui/overlay-position";
+import { StatusMessage } from "@/components/ui/status-message";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
+    FALLING_COLORS,
     HAND_COLORS,
     hexToNumber,
+    PIANO_COLORS,
     PRESSED_HAND_COLORS,
+    SHEET_COLORS,
     STAGE_CANVAS,
 } from "@/lib/chart-pattern/stageColors";
 import {
@@ -64,7 +69,6 @@ import { useMetronomeVolume } from "./useMetronomeVolume";
 import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
-    jacketUrl: string | null;
     /** 밖에서 재생 위치 옮기기(채보 의견 시각 · 주소 `?t=`) — key 가 바뀔 때마다, 처음 그릴 때도 한 번 */
     seekRequest?: { timeMs: number; key: number } | null;
     /** 진행 막대 눈금(채보 의견 시각, 2026-09-24 D1) */
@@ -89,10 +93,13 @@ interface ProjectedRange {
 const colors = {
     left: hexToNumber(HAND_COLORS.left),
     right: hexToNumber(HAND_COLORS.right),
-    noteFace: 0xf8f7f1,
-    judgment: 0xf2f0e9,
-    judgmentEdge: 0x8f929d,
-    guideStrong: 0x727786,
+    noteFace: hexToNumber(FALLING_COLORS.noteFace),
+    judgment: hexToNumber(FALLING_COLORS.judgment),
+    judgmentEdge: hexToNumber(FALLING_COLORS.judgmentEdge),
+    judgmentFace: hexToNumber(FALLING_COLORS.judgmentFace),
+    guideStrong: hexToNumber(FALLING_COLORS.guideStrong),
+    pianoBody: hexToNumber(PIANO_COLORS.body),
+    pianoKeyLine: hexToNumber(PIANO_COLORS.keyLine),
 };
 
 function colorForHand(hand: ChartHand) {
@@ -332,7 +339,7 @@ function sampleProjectedSegment(
 
 const TRILL_FADE_STRIPS = 10;
 const TRILL_SOLID_ALPHA = 0.82;
-const TRILL_DIAMOND = 0xf2c75c;
+const TRILL_DIAMOND = hexToNumber(SHEET_COLORS.trillDiamond);
 const TRILL_TAIL = hexToNumber(STAGE_CANVAS);
 
 /**
@@ -468,17 +475,13 @@ function drawTrillShape(
     }
 }
 
+// 바탕은 칠하지 않는다 — 캔버스 아래 무대 칸이 `stage/canvas` 한 색이다
 function drawPlayfield(
     graphics: Graphics,
     width: number,
-    height: number,
     horizonY: number,
     judgmentY: number
 ) {
-    graphics.rect(0, 0, width, height).fill({
-        color: hexToNumber(STAGE_CANVAS),
-        alpha: 0.74,
-    });
     for (const lane of CHART_LANE_GROUP_BOUNDARIES) {
         for (let step = 0; step <= 48; step += 1) {
             const point = projectPlaybackLane({
@@ -575,7 +578,7 @@ function drawPiano(
 
     graphics
         .rect(left, pianoTop, right - left, pianoBottom - pianoTop)
-        .fill({ color: 0xbfc2c4, alpha: 0.92 });
+        .fill({ color: colors.pianoBody, alpha: 0.92 });
     for (let lane = 0; lane < CHART_LANE_COUNT; lane += 1) {
         const x = left + lane * laneWidth;
         const activeHand = activeLaneHands.get(lane);
@@ -592,7 +595,7 @@ function drawPiano(
                             : chartPianoColors.whiteAlt,
                 alpha: activeHand === undefined ? 0.96 : 0.9,
             })
-            .stroke({ color: 0x565a63, width: 0.65, alpha: 0.7 });
+            .stroke({ color: colors.pianoKeyLine, width: 0.65, alpha: 0.7 });
     }
 
     const blackAfter = new Set([0, 1, 3, 4, 5]);
@@ -619,7 +622,7 @@ function drawJudgmentLine(
     const lineWidth = width * 0.964;
     graphics
         .roundRect(left, judgmentY - 5, lineWidth, 10, 5)
-        .fill({ color: 0x1c2029, alpha: 0.96 })
+        .fill({ color: colors.judgmentFace, alpha: 0.96 })
         .stroke({ color: colors.judgmentEdge, width: 2.5, alpha: 0.95 });
     graphics
         .moveTo(left + 7, judgmentY - 1.5)
@@ -823,7 +826,7 @@ function renderPlaybackFrame({
     const judgmentY = height * 0.79;
     const visualScale = getPlaybackVisualScale(width);
     graphics.clear();
-    drawPlayfield(graphics, width, height, horizonY, judgmentY);
+    drawPlayfield(graphics, width, horizonY, judgmentY);
     drawBeatLines(
         graphics,
         beatTimes,
@@ -861,7 +864,6 @@ function renderPlaybackFrame({
 
 export default function FallingChartViewer({
     document,
-    jacketUrl,
     seekRequest,
     markers,
     onTimeChange,
@@ -1183,8 +1185,8 @@ export default function FallingChartViewer({
         else void startPlayback();
     }
 
-    // 키보드(2026-09-25, 유튜브와 같게) — 스페이스 재생 · 일시정지, ← → 5초,
-    // Shift + > · < 노트 속도 ±0.1(2026-09-26 — 유튜브의 속도 단축키 자리).
+    // 키보드(유튜브와 같게) — 스페이스 재생 · 일시정지, ← → 한 마디,
+    // Shift + > · < 노트 속도 ±0.1(유튜브의 속도 단축키 자리).
     // 글 입력 · 버튼 · 막대 · 셀렉트에 포커스가 있으면 그 부품의 원래 동작을 둔다(두 번 눌리지 않게)
     const handleKey = useEffectEvent((event: KeyboardEvent) => {
         if (
@@ -1395,18 +1397,32 @@ export default function FallingChartViewer({
                 aria-label={t("chart.position")}
                 className="nl-chart-stage__seek"
             />
-            {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
+            <span
+                aria-hidden
+                className="nl-chart-stage__progress"
+                style={
+                    {
+                        "--nl-seek-at": Math.min(
+                            1,
+                            Math.max(0, currentTimeMs / Math.max(1, durationMs))
+                        ),
+                    } as CSSProperties
+                }
+            />
+            {/* 의견 시각 눈금 — 누르는 건 의견 목록의 시각 */}
             {markers?.map((timeMs, index) => (
                 <span
                     key={`${timeMs}-${index}`}
                     aria-hidden
                     className="nl-chart-stage__marker"
-                    style={{
-                        left: `calc(10px + (100% - 20px) * ${Math.min(
-                            1,
-                            Math.max(0, timeMs / Math.max(1, durationMs))
-                        )})`,
-                    }}
+                    style={
+                        {
+                            "--nl-marker-at": Math.min(
+                                1,
+                                Math.max(0, timeMs / Math.max(1, durationMs))
+                            ),
+                        } as CSSProperties
+                    }
                 />
             ))}
         </div>
@@ -1467,14 +1483,6 @@ export default function FallingChartViewer({
                         togglePlayback();
                     }}
                 >
-                    {jacketUrl ? (
-                        <div
-                            aria-hidden
-                            className="nl-chart-stage__art"
-                            style={{ backgroundImage: `url("${jacketUrl}")` }}
-                        />
-                    ) : null}
-                    <div aria-hidden className="nl-chart-stage__scrim" />
                     <div
                         ref={hostRef}
                         role="img"
@@ -1585,7 +1593,6 @@ export default function FallingChartViewer({
                                                 onValueChange={(value) =>
                                                     setNoteSpeed(Number(value))
                                                 }
-                                                outlined
                                                 container={layerContainer}
                                                 options={noteSpeedOptions}
                                             />
@@ -1653,9 +1660,11 @@ export default function FallingChartViewer({
                 </div>
             </div>
             {audioError ? (
-                <p className="nl-body-secondary nl-chart-stage__error">
-                    {audioError}
-                </p>
+                <StatusMessage
+                    severity="danger"
+                    role="alert"
+                    title={audioError}
+                />
             ) : null}
             <audio
                 ref={audioRef}

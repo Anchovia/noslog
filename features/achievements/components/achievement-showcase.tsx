@@ -11,9 +11,7 @@ import AchievementInfoBadge from "@/features/achievements/components/achievement
 export default function AchievementShowcase({
     summary,
 }: {
-    userId: number;
     summary: AchievementSummary;
-    isOwner: boolean;
 }) {
     if (!summary.showcase.length) return null;
     return (

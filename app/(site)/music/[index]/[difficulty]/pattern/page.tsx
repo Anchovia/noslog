@@ -20,7 +20,6 @@ import {
 } from "@/lib/i18n/music-title";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
-import { getJacketUrl } from "@/lib/music-jackets";
 import getSession from "@/lib/session";
 import { getUser } from "@/lib/user";
 
@@ -128,10 +127,7 @@ export default async function PublicChartPatternPage({
                             id: null,
                             name: pattern.publishedBy.username,
                             avatar: pattern.publishedBy.avatar ?? null,
-                            label:
-                                pattern.publishedBy.role === "admin"
-                                    ? { kind: "operator" }
-                                    : null,
+                            label: null,
                         }
                       : null,
                 // 유저 기여 채보만 — 출처 창에 「공개 · 운영자 이름」 을 따로 적는다
@@ -166,7 +162,6 @@ export default async function PublicChartPatternPage({
                 initialTimeMs: parseTimeParam(t),
             }}
             document={document.data}
-            jacketUrl={getJacketUrl(chart.music.index, chart.music.background)}
             backHref={localizePath(
                 `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?tab=detail`,
                 locale

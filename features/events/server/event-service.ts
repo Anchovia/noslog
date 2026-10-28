@@ -114,17 +114,22 @@ export async function getSitemapEvents() {
     }));
 }
 
-// 홈 — 진행 중 가운데 끝나는 순 2개. 이벤트 조회가 실패해도 홈은 그대로 뜬다
-export async function getHomeLiveEvents() {
+// 홈 — 진행 중 가운데 끝나는 순 2개. 이벤트 조회가 실패해도 홈은 그대로 뜨고, 실패는 빈 목록과 따로 알린다
+export async function getHomeLiveEvents(): Promise<
+    { status: "ready"; events: PublicEventItem[] } | { status: "error" }
+> {
     try {
-        return (await getEventBoard()).live.slice(0, 2);
+        return {
+            status: "ready",
+            events: (await getEventBoard()).live.slice(0, 2),
+        };
     } catch (error) {
         logServerError(error, {
             event: "events.home.failed",
             routePath: "/",
             routeType: "page",
         });
-        return [];
+        return { status: "error" };
     }
 }
 export async function getPublicEventDetail(id: number) {

@@ -249,7 +249,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
         <form
             onSubmit={submit}
             noValidate
-            className="grid gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
+            className="grid gap-nl-8 rounded-nl-control bg-nl-surface p-nl-12"
         >
             {isCreate ? (
                 <h2 className="nl-component-title flex items-center gap-nl-8 text-nl-content">
@@ -399,7 +399,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 </label>
             </div>
             {/* 시설 — 공개 상세 「시설」 구역(아이콘 + 글자)에 보인다 */}
-            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-12">
                 <legend className="nl-emphasis-label px-nl-4 text-nl-content">
                     시설 (선택)
                 </legend>
@@ -431,7 +431,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 register={register}
                 errors={errors}
             />
-            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-12">
                 <legend className="nl-emphasis-label px-nl-4 text-nl-content">
                     기체
                 </legend>
@@ -450,7 +450,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     return (
                         <div
                             key={field.key}
-                            className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8"
+                            className="grid gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-8"
                         >
                             <div className="flex items-center gap-nl-8">
                                 <span className="nl-emphasis-label text-nl-content">

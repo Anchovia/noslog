@@ -71,7 +71,7 @@ describe("사용자 변경 Server Action 권한", () => {
 
         expect(result.success).toBe(true);
         expect(result.message).toBe(
-            "연동 토큰을 재발급했습니다. 북마클릿을 다시 등록해주세요."
+            "동기화 토큰을 재발급했습니다. 북마클릿을 다시 등록해주세요."
         );
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 7 },

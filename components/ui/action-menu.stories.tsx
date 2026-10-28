@@ -39,4 +39,22 @@ export const Default: Story = {
         await expect(opener).toHaveFocus();
     },
 };
+// 행 = 컨트롤 높이 · 글자 14
+export const ItemRows: Story = {
+    play: async ({ canvasElement }) => {
+        await userEvent.click(
+            within(canvasElement).getByRole("button", { name: "기록 작업" })
+        );
+        const menu = await screen.findByRole("menu", { name: "기록 작업" });
+        const height = window.matchMedia("(min-width: 1056px)").matches
+            ? "32px"
+            : "40px";
+        for (const item of within(menu).getAllByRole("menuitem")) {
+            const style = getComputedStyle(item);
+            await expect(style.height).toBe(height);
+            await expect(style.fontSize).toBe("14px");
+        }
+        await userEvent.keyboard("{Escape}");
+    },
+};
 export const Disabled: Story = { args: { disabled: true } };

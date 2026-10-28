@@ -11,7 +11,8 @@ model TierList {
   description String?
   status      TierListStatus         @default(draft)
   createdAt   DateTime               @default(now()) @map("created_at")
-  updatedAt   DateTime               @updatedAt @map("updated_at")
+  // 공개 「N월 N일 업데이트」 = 배치 · 구간이 바뀐 날. 정보(제목 · 설명 · 상태)만 저장할 때는 바꾸지 않는다
+  updatedAt   DateTime               @map("updated_at")
   bands       TierBand[]
   entries     TierEntry[]
   history     TierPlacementHistory[]

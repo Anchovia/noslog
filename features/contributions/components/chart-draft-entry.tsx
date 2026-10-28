@@ -2,13 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
-import { toast } from "sonner";
 
 import { getMyChartDraftStatus } from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
+
+import ChartDraftCopyButton from "./chart-draft-copy-button";
 
 /** 에디터는 넓은 화면 도구 — 이 폭 아래에서는 들어가는 대신 안내(2026-09-24 F1) */
 const EDITOR_MIN_WIDTH = 1056;
@@ -104,29 +105,7 @@ export default function ChartDraftEntry({
                         >
                             {t("common.close")}
                         </Button>
-                        <Button
-                            onClick={() => {
-                                void navigator.clipboard
-                                    .writeText(
-                                        new URL(draftHref, window.location.href)
-                                            .href
-                                    )
-                                    .then(
-                                        () => {
-                                            toast.success(
-                                                t("contribution.entry.copied")
-                                            );
-                                            setNarrow(false);
-                                        },
-                                        () =>
-                                            toast.error(
-                                                t("tiers.linkCopyFailed")
-                                            )
-                                    );
-                            }}
-                        >
-                            {t("contribution.entry.copyLink")}
-                        </Button>
+                        <ChartDraftCopyButton href={draftHref} />
                     </>
                 }
             />

@@ -50,9 +50,9 @@ export default function SortableTierChart({
                 transition,
             }}
             className={cn(
-                "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-field border-nl-stroke-strong bg-nl-raised bg-cover bg-center active:cursor-grabbing",
+                "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-control border-nl-stroke-strong bg-nl-surface bg-cover bg-center active:cursor-grabbing",
                 getTierDifficultyBorder(entry.chart.difficulty),
-                selected && "ring-nl-stroke-strong ring-nl-difficulty-real",
+                selected && "ring-nl-stroke-strong ring-nl-ring",
                 isDragging && "opacity-0"
             )}
             {...attributes}

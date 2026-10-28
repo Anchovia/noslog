@@ -129,6 +129,7 @@ model MusicChart {
   tierEntries          TierEntry[]
   tierPlacementHistory TierPlacementHistory[]
   pattern              ChartPattern?
+  patternMetric        ChartPatternMetric?
   fieldProposals       ChartFieldProposal[]
   drafts               ChartDraft[]
   comments             ChartComment[]
@@ -171,6 +172,23 @@ model ChartPattern {
   @@index([publishedById])
   @@index([authorId])
   @@map("chart_patterns")
+}
+
+// 공개 채보에서 계산한 패턴 경향 원점수(lib/chart-pattern/patternMetrics) — 공개할 때마다 그 채보만 다시 계산함
+// 칸 이름은 패턴 투표와 같다(offset = 즈레, chords = 변박). chords 는 박자표를 믿을 수 없는 채보(영상 추출 그대로)면 null
+model ChartPatternMetric {
+  chartId           Int        @id @map("chart_id")
+  chart             MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  version           Int
+  publishedRevision Int        @map("published_revision")
+  stairs            Float
+  repetition        Float
+  polyrhythm        Float
+  offset            Float
+  chords            Float?
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  @@map("chart_pattern_metrics")
 }
 
 // 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함

@@ -71,6 +71,7 @@ export default function ResponsiveDialog({
             title={title}
             footer={fullScreenFooter ?? footer ?? null}
             trigger={trigger}
+            form
             onCloseAutoFocus={onCloseAutoFocus}
         >
             {fullScreenChildren ?? children ?? null}

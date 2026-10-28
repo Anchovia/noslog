@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect, within } from "storybook/test";
 
 import LoginPrompt from "./login-prompt";
 const meta = {
@@ -19,4 +20,16 @@ const meta = {
 } satisfies Meta<typeof LoginPrompt>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
+export const Default: Story = {
+    play: async ({ canvasElement }) => {
+        // 안내 제목 = 부품 제목 16/24 · 600
+        const title = within(canvasElement).getByText("로그인이 필요합니다.");
+        await expect(title).toHaveClass("nl-component-title");
+        const style = getComputedStyle(title);
+        await expect([
+            style.fontSize,
+            style.lineHeight,
+            style.fontWeight,
+        ]).toEqual(["16px", "24px", "600"]);
+    },
+};

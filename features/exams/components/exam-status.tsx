@@ -29,8 +29,14 @@ const DOT_TONE = {
     rejected: "danger",
 } as const;
 
+// 머리 태그는 상태 태그 규격이라 아이콘 없이 글자색만 쓴다. Grd. 부족 · 동기화 필요는 중립(기본 글자색)
+const TAG_TONE: Partial<Record<ExamStatusKind, string>> = {
+    passed: "success",
+    ...DOT_TONE,
+};
+
 /**
- * 셀렉트 목록 · 레일 · 급 머리 태그가 같이 쓰는 상태 글자.
+ * 셀렉트 목록 · 레일이 같이 쓰는 상태 글자(detailed 면 급 머리 상태 태그).
  * 합격 = 체크(성공 표시색) · Grd. 부족 = 자물쇠 — 흐린 글자, 응시 가능 · 심사 중 · 반려 = 상태 점 + 기본 글자
  */
 export default function ExamStatus({
@@ -40,7 +46,7 @@ export default function ExamStatus({
 }: {
     exam: ExamDashboardItem;
     kind: ExamStatusKind;
-    /** 급 머리 태그 — Grd. 부족에 모자란 값까지 */
+    /** 급 머리 상태 태그 — Grd. 부족에 모자란 값까지 */
     detailed?: boolean;
 }) {
     const t = useTranslations();
@@ -63,6 +69,12 @@ export default function ExamStatus({
                             ).toLocaleString(locale),
                         })
                       : t("exams.insufficient");
+    if (detailed)
+        return (
+            <span className="nl-tag nl-tag--status" data-tone={TAG_TONE[kind]}>
+                {label}
+            </span>
+        );
     return (
         <span className="nl-exam-status nl-metadata" data-kind={kind}>
             {kind === "passed" ? (

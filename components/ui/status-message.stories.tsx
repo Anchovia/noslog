@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect, within } from "storybook/test";
 
 import Button from "./button";
 import { StatusMessage } from "./status-message";
@@ -42,5 +43,16 @@ export const Boxed: Story = {
         severity: "warning",
         title: "되돌릴 수 없는 변경",
         description: "확인한 뒤 진행하세요.",
+    },
+    play: async ({ canvasElement }) => {
+        // 상자 알림 제목 = 부품 제목 16/24 · 600
+        const title = within(canvasElement).getByText("되돌릴 수 없는 변경");
+        await expect(title).toHaveClass("nl-component-title");
+        const style = getComputedStyle(title);
+        await expect([
+            style.fontSize,
+            style.lineHeight,
+            style.fontWeight,
+        ]).toEqual(["16px", "24px", "600"]);
     },
 };

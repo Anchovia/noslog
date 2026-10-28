@@ -442,8 +442,8 @@ export default function TierBrowserPage({
                 ) : null}
                 <div className="nl-tier-results">
                     <div className="nl-filter-control-block">
-                        {/* 폰: 검색 + ☰ 필터 44 / 정렬 · 보기 전환 M. Wide: 정렬 L · 보기 전환 L
-                            — 악곡 목록 머리와 같은 틀(2026-09-22) */}
+                        {/* 폰: 검색 + ☰ 필터 아이콘 버튼 / 정렬 · 띠 값 · 보기 전환 M. Wide: 정렬 · 띠 값 · 보기 전환 L
+                            — 악곡 목록 머리와 같은 틀 */}
                         <div
                             className={
                                 wide ? "nl-tier-toolbar" : "nl-tier-search"

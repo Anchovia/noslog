@@ -97,7 +97,6 @@ export default function CommunityOpinions({
                 {(query.data?.pages[0].total ?? initialData.total) > 1 ? (
                     <div className="nl-opinions__sort">
                         <SortMenu
-                            variant="ghost"
                             size="sm"
                             label={t("discovery.sortLabel")}
                             value={sort}

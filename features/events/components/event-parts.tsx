@@ -31,7 +31,7 @@ export function eventPeriod(startsAt: string, endsAt: string, locale: Locale) {
     return `${full.format(start)} ~ ${(year(start) === year(end) ? short : full).format(end)}`;
 }
 
-// 상태 태그 = 태그 가족의 면 변형(높이 24 · 좌우 8 · 모서리 4). 색은 알림 면 토큰 (2026-09-18 결정 4)
+// 상태 태그 = 공용 상태 태그(nl-tag--status). 면은 카드 면 + 둘레 선, 상태는 글자색과 글자로만 말한다
 const STATUS_TONE: Record<EventStatus | EventPhase, string> = {
     draft: "neutral",
     pending: "warning",
@@ -59,7 +59,7 @@ export function EventStatusTag({
     );
 }
 
-// 대표 이미지 2.4 : 1 · 모서리 8. 이미지가 없으면 같은 비율의 빈 면(가라앉은 면)
+// 대표 이미지 2.4 : 1 · 모서리 6. 이미지가 없으면 같은 비율의 바탕 면
 export function EventBanner({
     src,
     sizes,

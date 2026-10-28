@@ -10,9 +10,9 @@ import IconButton from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
 
 /**
- * 대화상자(2026-09-26 A, GitHub · Primer 3칸 창) — 머리(제목 + 닫기 + 아래 구분선) · 본문(여기만 스크롤) · 발(버튼 오른쪽, 위 구분선).
- * 크기 = small 440 · medium 560(기본) · large 768. 확인 창(`variant="confirm"`)은 small · 큰 제목 · 구분선 없음 · 닫기 없음.
- * 672 미만: 입력 칸이 있는 창은 전체 화면, 그 밖은 아래 시트(Primer 좁은 화면 규칙, CSS 가 내용으로 가른다).
+ * 대화상자(GitHub · Primer 3칸 창) — 머리(제목 + 닫기) · 본문(여기만 스크롤) · 발(버튼 오른쪽). 구분선은 두지 않는다.
+ * 크기 = small 440 · medium 600(기본) · large 768. 확인 창(`variant="confirm"`)은 small · 큰 제목 · 구분선 없음 · 닫기 없음.
+ * 672 미만에서 입력 칸이 있는 창은 공용 CSS 가 전체 화면으로 연다. 입력 칸이 없는 창 · 확인 창은 폰에서도 가운데 창이다.
  */
 export default function ModalDialog({
     open,
@@ -25,7 +25,6 @@ export default function ModalDialog({
     showClose,
     size,
     variant = "default",
-    sheet = false,
     onCloseAutoFocus,
     onOpenAutoFocus,
     className,
@@ -39,12 +38,10 @@ export default function ModalDialog({
     trigger?: ReactNode;
     /** 기본 = 확인 창이 아니면 보임 */
     showClose?: boolean;
-    /** small 440 · medium 560 · large 768(읽기 폭). 기본 = 확인 창 small, 그 밖 medium */
+    /** small 440 · medium 600 · large 768(읽기 폭). 기본 = 확인 창 small, 그 밖 medium */
     size?: "small" | "medium" | "large";
     /** confirm = 되돌릴 수 없는 결정 · 경고(큰 제목 · 구분선 없음 · 닫기 없음) */
     variant?: "default" | "confirm";
-    /** 1055 이하에서 화면 아래에 붙는 시트로(2026-09-26, 유튜브 폰 설명 창). 넓은 화면은 가운데 창 그대로 */
-    sheet?: boolean;
     onCloseAutoFocus?: (event: Event) => void;
     onOpenAutoFocus?: (event: Event) => void;
     className?: string;
@@ -67,7 +64,6 @@ export default function ModalDialog({
                             "nl-dialog",
                             `nl-dialog--${dialogSize}`,
                             confirm && "nl-dialog--confirm",
-                            sheet && "nl-dialog--sheet",
                             className
                         )}
                         onCloseAutoFocus={onCloseAutoFocus}
@@ -87,7 +83,7 @@ export default function ModalDialog({
                                 {title}
                             </Dialog.Title>
                             {closeVisible ? (
-                                /* 머리 오른쪽 닫기 — 컴팩트 아이콘 버튼(M) · 아이콘 20 */
+                                /* 머리 오른쪽 닫기 — 672 미만은 컴팩트 아이콘 버튼 · 아이콘 20, 672 이상은 공용 CSS 가 컨트롤 높이 정사각으로 키운다 */
                                 <Dialog.Close asChild>
                                     <IconButton
                                         className="nl-dialog__close"
@@ -103,7 +99,7 @@ export default function ModalDialog({
                             {description ? (
                                 <Dialog.Description
                                     id={descriptionId}
-                                    className="nl-body-secondary nl-muted"
+                                    className="nl-body-reading nl-muted"
                                 >
                                     {description}
                                 </Dialog.Description>

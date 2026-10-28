@@ -353,3 +353,52 @@ export function arcadeDirections(arcade: PublicArcade) {
         ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`
         : null;
 }
+
+/**
+ * 길찾기 메뉴 항목(2026-10-20 뮤즈캣 시안 ③) — 국내는 네이버 지도 · 카카오맵, 해외는 Google 지도 · Apple 지도.
+ * 좌표가 있으면 목적지로, 없으면 주소 검색으로 연다. 열 곳이 없으면 빈 목록
+ */
+export function arcadeDirectionLinks(arcade: PublicArcade) {
+    const hasCoordinates =
+        arcade.latitude !== null && arcade.longitude !== null;
+    const query = arcade.address ?? arcade.name;
+    if (!hasCoordinates && !arcade.address) return [];
+    const destination = hasCoordinates
+        ? `${arcade.latitude},${arcade.longitude}`
+        : query;
+    const global = [
+        {
+            key: "google" as const,
+            href: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`,
+        },
+        {
+            key: "apple" as const,
+            href: `https://maps.apple.com/?daddr=${encodeURIComponent(destination)}`,
+        },
+    ];
+    // 국내는 네이버 · 카카오를 위에 두고 Google · Apple 도 함께(2026-10-21 전면 대조 ⑨). 두 국내 앱은 국내 길찾기만 되어 해외에는 두지 않는다
+    if (arcade.countryCode === "KR") {
+        return [
+            {
+                key: "naver" as const,
+                href: `https://map.naver.com/p/search/${encodeURIComponent(query)}`,
+            },
+            { key: "kakao" as const, href: arcadeDirections(arcade)! },
+            ...global,
+        ];
+    }
+    return global;
+}
+
+/** 오락실 현지 지금 시각(분) — 영업시간 3단 줄의 「지금」 */
+export function arcadeLocalMinutes(arcade: PublicArcade, now: Date) {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: arcade.timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+    }).formatToParts(now);
+    const value = (type: string) =>
+        Number(parts.find((part) => part.type === type)?.value ?? 0);
+    return value("hour") * 60 + value("minute");
+}

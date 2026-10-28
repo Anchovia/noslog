@@ -41,7 +41,6 @@ export default async function Header() {
                             <ProfileAvatar
                                 avatar={user.avatar}
                                 username={user.username}
-                                size={32}
                             />
                         </IntentLink>
                     ) : (

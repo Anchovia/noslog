@@ -129,8 +129,7 @@ export function createProfileSettingsSchema(t: Translator) {
             .string()
             .trim()
             .min(1, t("settings.validation.nicknameRequired"))
-            .max(20, t("settings.validation.nicknameMax"))
-            .transform((value) => value.toUpperCase()),
+            .max(20, t("settings.validation.nicknameMax")),
         country: z.enum(profileCountrySchema.options, {
             error: t("settings.validation.countryRequired"),
         }),

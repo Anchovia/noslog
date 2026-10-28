@@ -4,8 +4,6 @@ import { ChevronDown, Grid3x3, List } from "lucide-react";
 import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import PageContainer from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import FilterChips from "@/components/ui/filter-chips";
 import IconButton from "@/components/ui/icon-button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -76,7 +74,8 @@ function AchievementRow({
     const progress = metrics
         ? achievementProgress(definition, metrics[definition.metric], tier)
         : null;
-    const showNumbers = definition.unit !== "exam";
+    const showNumbers =
+        definition.unit !== "exam" && definition.unit !== "lamp";
     const number = (value: number) => value.toLocaleString(locale);
     const steps = achievementSteps(definition);
     const shownTier = progress?.nextTier ?? (tier || steps[0]?.tier || 1);
@@ -99,7 +98,7 @@ function AchievementRow({
                     <span className="nl-body-secondary nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
                             ? showNumbers
-                                ? `${text.condition(key, shownTier)} — ${t(
+                                ? `${text.condition(key, shownTier)} · ${t(
                                       "achievement.progress",
                                       {
                                           current: number(progress.current),
@@ -206,23 +205,16 @@ function AchievementRow({
 }
 
 /**
- * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 결과 줄 → 목록 · 촘촘한 격자.
+ * 프로필 「업적」 탭 — 머리(얻은 수) → 분류 칩 → 결과 줄 → 목록 · 촘촘한 격자.
  * 결과 줄(2026-09-25) = 악곡 · 서열표와 같은 문법: 왼쪽 정렬 SortMenu 고스트 · 오른쪽 보기 전환(목록 · 촘촘한 격자) — 폰 M · 1056 이상 L.
  * 본인: 진행 막대. 남: 얻은 단계 · 날짜 · 조건만. 머리 진열은 설정 「프로필」 탭에서 고른다(2026-09-25 D1).
  */
 export default function AchievementsPage({
-    userName,
-    profileHref,
     records,
     metrics,
     recipients,
     scoresHidden,
-    embedded = false,
 }: {
-    userName?: string;
-    profileHref?: string;
-    /** 프로필 「업적」 탭 안(2026-09-25) — 머리 · 탭은 프로필 레이아웃이 그려 돌아가기 · 제목을 두지 않는다 */
-    embedded?: boolean;
     records: AchievementRecords;
     metrics: AchievementMetrics | null;
     recipients: Record<string, number>;
@@ -268,37 +260,16 @@ export default function AchievementsPage({
     const totalIn = (item: CategoryFilter) =>
         achievementStepTotal(inCategory(item));
 
-    const Wrapper = embedded ? "div" : PageContainer;
     return (
-        <Wrapper
-            {...(embedded ? {} : { width: "reading" as const })}
-            className="nl-achievements-page"
-        >
+        <div className="nl-achievements-page">
             <div className="nl-achievements-page__head">
-                {embedded || !profileHref ? null : (
-                    <>
-                        <BackLink href={profileHref}>{userName}</BackLink>
-                        <h1 className="nl-page-title">
-                            {t("achievement.title")}
-                        </h1>
-                    </>
-                )}
-                {/* 프로필 탭 안에서는 다른 탭(「활동」 등)처럼 구역 제목(2026-10-01 규칙 맞춤) */}
-                {embedded ? (
-                    <h2 className="nl-section-title">
-                        {t("achievement.count", {
-                            earned: summary.earned.toLocaleString(locale),
-                            total: summary.total.toLocaleString(locale),
-                        })}
-                    </h2>
-                ) : (
-                    <p className="nl-body-secondary nl-muted">
-                        {t("achievement.count", {
-                            earned: summary.earned.toLocaleString(locale),
-                            total: summary.total.toLocaleString(locale),
-                        })}
-                    </p>
-                )}
+                {/* 프로필 「업적」 탭 안 — 머리 · 탭은 프로필 레이아웃이 그려 다른 탭처럼 구역 제목 */}
+                <h2 className="nl-section-title">
+                    {t("achievement.count", {
+                        earned: summary.earned.toLocaleString(locale),
+                        total: summary.total.toLocaleString(locale),
+                    })}
+                </h2>
                 {scoresHidden ? (
                     <p className="nl-metadata nl-muted">
                         {t("achievement.scoresHidden")}
@@ -396,6 +367,6 @@ export default function AchievementsPage({
                     ))}
                 </ul>
             )}
-        </Wrapper>
+        </div>
     );
 }

@@ -102,7 +102,7 @@ export default function TierListForm({
             )}
             className="flex flex-col gap-nl-16"
         >
-            <section className="grid grid-cols-2 gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+            <section className="grid grid-cols-2 gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
                 <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     서열표 이름
                     <input

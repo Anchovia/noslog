@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 
 import { savePrivacy } from "@/app/(site)/settings/actions";
 import { useTranslations } from "@/components/i18n/locale-provider";
+import Button from "@/components/ui/button";
+import { StatusMessage } from "@/components/ui/status-message";
 import { Switch } from "@/components/ui/switch";
 import type { SettingsPrivacyValues } from "@/features/settings/schemas/settings-schema";
 import {
@@ -28,13 +30,20 @@ export default function PrivacySettings({
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState("");
     const [error, setError] = useState("");
+    // 실패한 한 번을 「다시 시도」 로 그대로 다시 보낸다
+    const [failed, setFailed] = useState<{
+        key: keyof SettingsPrivacyValues;
+        next: boolean;
+    } | null>(null);
     const busy = useRef(false);
     async function toggle(key: keyof SettingsPrivacyValues, next: boolean) {
         if (busy.current) return;
         setSaved("");
         setError("");
+        setFailed(null);
         if (!navigator.onLine) {
             setError(t("settings.offline"));
+            setFailed({ key, next });
             return;
         }
         busy.current = true;
@@ -50,10 +59,12 @@ export default function PrivacySettings({
             } else {
                 setValues(previous);
                 setError(result.message);
+                setFailed({ key, next });
             }
         } catch {
             setValues(previous);
-            setError(t("settings.saveError"));
+            setError(t("settings.privacySaveError"));
+            setFailed({ key, next });
         }
         busy.current = false;
         setSaving(false);
@@ -97,17 +108,39 @@ export default function PrivacySettings({
                     </div>
                 ))}
             </div>
+            {/* 저장 상태는 이 한 곳 — 저장 중 · 저장됨 · 실패 + 다시 시도 */}
             {error ? (
-                <p role="alert" className="nl-body-secondary nl-field__error">
-                    {error}
+                <StatusMessage
+                    tone="quiet"
+                    severity="danger"
+                    role="alert"
+                    title={error}
+                    action={
+                        failed ? (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                    void toggle(failed.key, failed.next)
+                                }
+                            >
+                                {t("common.retry")}
+                            </Button>
+                        ) : null
+                    }
+                />
+            ) : (
+                <p
+                    role="status"
+                    className={
+                        saving || saved
+                            ? "nl-body-secondary nl-muted"
+                            : "sr-only"
+                    }
+                >
+                    {saving ? t("settings.saving") : saved}
                 </p>
-            ) : null}
-            <p
-                role="status"
-                className={saved ? "nl-body-secondary" : "sr-only"}
-            >
-                {saved}
-            </p>
+            )}
         </div>
     );
 }

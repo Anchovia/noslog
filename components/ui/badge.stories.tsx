@@ -20,21 +20,13 @@ export const Default: Story = {};
 export const Variants: Story = {
     render: () => (
         <div className="nl-stack">
-            {(
-                [
-                    "default",
-                    "outline",
-                    "success",
-                    "danger",
-                    "score",
-                    "basic",
-                    "recital",
-                ] as const
-            ).map((variant) => (
-                <Badge key={variant} variant={variant}>
-                    {variant}
-                </Badge>
-            ))}
+            {(["default", "success", "danger", "score"] as const).map(
+                (variant) => (
+                    <Badge key={variant} variant={variant}>
+                        {variant}
+                    </Badge>
+                )
+            )}
         </div>
     ),
 };

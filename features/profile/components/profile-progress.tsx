@@ -108,7 +108,6 @@ export default function ProfileProgress({
                         ]}
                     />
                     <CompactSelect
-                        outlined
                         size="sm"
                         label={t("profile.rangeLabel")}
                         value={

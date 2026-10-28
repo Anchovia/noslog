@@ -34,7 +34,7 @@ export async function generateMetadata({
     });
 }
 
-/** 프로필 「통계」 탭(2026-09-26) — 성장 추이 · 레벨별 달성 전체 · 판정 · 랭크 분포 · 노트 종류별 성공률 */
+/** 프로필 「통계」 탭 — 성장 추이 · 레벨별 달성 전체 · 판정 요약 · 랭크 분포 */
 export default async function ProfileStatsRoute({
     params,
     searchParams,

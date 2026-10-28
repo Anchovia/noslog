@@ -65,7 +65,7 @@ export default async function AdminSyncsPage({
                 {summaries.map((summary) => (
                     <div
                         key={summary.label}
-                        className="rounded-nl-container bg-nl-surface p-nl-12"
+                        className="rounded-nl-control bg-nl-surface p-nl-12"
                     >
                         <p className="nl-metadata text-nl-subdued">
                             {summary.label}
@@ -122,11 +122,11 @@ export default async function AdminSyncsPage({
                     return (
                         <article
                             key={sync.id}
-                            className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12"
+                            className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12"
                         >
                             <div className="flex items-start gap-nl-12">
                                 <span
-                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised`}
+                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-control`}
                                 >
                                     <Icon className="nl-icon-small" />
                                 </span>
@@ -155,7 +155,7 @@ export default async function AdminSyncsPage({
                                 </span>
                             </div>
                             <div className="grid grid-cols-3 gap-nl-8 text-center">
-                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                                     <p className="nl-metadata text-nl-subdued">
                                         수신
                                     </p>
@@ -163,7 +163,7 @@ export default async function AdminSyncsPage({
                                         {sync.receivedPlays}
                                     </strong>
                                 </div>
-                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                                     <p className="nl-metadata text-nl-subdued">
                                         추가
                                     </p>
@@ -171,7 +171,7 @@ export default async function AdminSyncsPage({
                                         {sync.insertedPlays}
                                     </strong>
                                 </div>
-                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                                     <p className="nl-metadata text-nl-subdued">
                                         변경
                                     </p>
@@ -180,7 +180,7 @@ export default async function AdminSyncsPage({
                                     </strong>
                                 </div>
                             </div>
-                            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+                            <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
                                 <summary className="nl-emphasis-label flex cursor-pointer list-none items-center justify-between text-nl-content">
                                     <span className="flex items-center gap-nl-8">
                                         <DatabaseZap className="nl-icon-small" />
@@ -262,7 +262,7 @@ export default async function AdminSyncsPage({
                     );
                 })}
                 {syncs.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         동기화 내역이 없습니다.
                     </p>
                 ) : null}

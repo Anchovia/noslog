@@ -80,7 +80,6 @@ export default function DeleteContributionDialog({
                         (2026-09-17 · 09-18 사용자 지적: 의견 · 투표만 테두리 버튼이라 어긋났다) */}
                     <ActionButton
                         variant="danger"
-                        destructiveFilled
                         busy={busy}
                         busyLabel={t("community.deleting")}
                         onClick={() => void handleDelete()}

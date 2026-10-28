@@ -14,7 +14,7 @@ import ActionButton from "@/components/ui/action-button";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { StatusMessage } from "@/components/ui/status-message";
 
-// 작성자 글 삭제(2026-09-18 D1 · P1) — 빨간 테두리 버튼 → 확인 창(Compact · 채운 빨강). 공개 중이면 사라지는 곳을 한 줄 더 알린다
+// 작성자 글 삭제 — 보조 버튼 → 확인 창(확정만 채운 빨강). 공개 중이면 사라지는 곳을 한 줄 더 알린다
 export default function EventDeleteButton({
     id,
     title,
@@ -68,7 +68,7 @@ export default function EventDeleteButton({
             )}
             variant="confirm"
             trigger={
-                <ActionButton variant="danger">
+                <ActionButton variant="secondary">
                     {t("events.delete.button")}
                 </ActionButton>
             }
@@ -83,7 +83,6 @@ export default function EventDeleteButton({
                     </ActionButton>
                     <ActionButton
                         variant="danger"
-                        destructiveFilled
                         busy={busy}
                         busyLabel={t("events.delete.deleting")}
                         onClick={() => void remove()}

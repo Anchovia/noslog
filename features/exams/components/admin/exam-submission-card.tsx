@@ -14,13 +14,13 @@ export default function ExamSubmissionCard({
     const proofImagePath = `/api/admin/private-images/exam/${submission.id}`;
 
     return (
-        <article className="overflow-hidden rounded-nl-container bg-nl-surface">
+        <article className="overflow-hidden rounded-nl-control bg-nl-surface">
             {submission.hasProofImage ? (
                 <a
                     href={proofImagePath}
                     target="_blank"
                     rel="noreferrer"
-                    className="relative block aspect-video bg-nl-raised"
+                    className="relative block aspect-video bg-nl-control"
                 >
                     <Image
                         src={proofImagePath}
@@ -30,12 +30,12 @@ export default function ExamSubmissionCard({
                         sizes="358px"
                         className="object-contain"
                     />
-                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-raised">
+                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-control bg-nl-surface">
                         <ExternalLink className="nl-icon-small" />
                     </span>
                 </a>
             ) : (
-                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-raised px-nl-24 text-center text-nl-subdued">
+                <div className="nl-metadata flex aspect-video items-center justify-center bg-nl-control px-nl-24 text-center text-nl-subdued">
                     보관 기간이 지나 증빙 이미지가 삭제되었습니다.
                 </div>
             )}
@@ -61,7 +61,7 @@ export default function ExamSubmissionCard({
                         reviewerNote={submission.reviewerNote ?? ""}
                     />
                 ) : submission.reviewerNote ? (
-                    <p className="nl-metadata rounded-nl-field bg-nl-canvas px-nl-12 py-nl-8 text-nl-subdued">
+                    <p className="nl-metadata rounded-nl-control bg-nl-canvas px-nl-12 py-nl-8 text-nl-subdued">
                         심사 메모: {submission.reviewerNote}
                     </p>
                 ) : null}

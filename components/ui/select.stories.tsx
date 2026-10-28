@@ -62,6 +62,23 @@ export const KeyboardSelection: Story = {
         await expect(trigger).toHaveFocus();
     },
 };
+// 목록 행 = 컨트롤 높이 · 글자 14(본문 16 이 붙지 않는다)
+export const OptionRows: Story = {
+    play: async ({ canvasElement }) => {
+        within(canvasElement).getByRole("combobox", { name: "난이도" }).focus();
+        await userEvent.keyboard("{ArrowDown}");
+        const list = await screen.findByRole("listbox");
+        const height = window.matchMedia("(min-width: 1056px)").matches
+            ? "32px"
+            : "40px";
+        for (const option of within(list).getAllByRole("option")) {
+            const style = getComputedStyle(option);
+            await expect(style.height).toBe(height);
+            await expect(style.fontSize).toBe("14px");
+        }
+        await userEvent.keyboard("{Escape}");
+    },
+};
 export const EmptyValue: Story = { args: { value: "" } };
 export const EscapeRestoresFocus: Story = {
     play: async ({ canvasElement }) => {
@@ -74,5 +91,10 @@ export const EscapeRestoresFocus: Story = {
         await userEvent.keyboard("{Escape}");
         await expect(trigger).toHaveFocus();
         await expect(trigger).toHaveAttribute("aria-expanded", "false");
+        // 다시 열기 막음(200ms)은 누름 닫기에만 — Escape 뒤 곧바로 키보드로 다시 연다
+        await userEvent.keyboard("{ArrowDown}");
+        await screen.findByRole("listbox");
+        await expect(trigger).toHaveAttribute("aria-expanded", "true");
+        await userEvent.keyboard("{Escape}");
     },
 };

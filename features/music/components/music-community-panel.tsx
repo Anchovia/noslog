@@ -101,9 +101,7 @@ export default function MusicCommunityPanel({
                                 <OpinionComposer
                                     chartId={music.chartDetail.id}
                                     data={data}
-                                    accountId={music.accountId}
                                     avatar={music.userPlayData?.user.avatar}
-                                    returnTo={returnTo}
                                     first={!data.opinions.total}
                                 />
                             )
@@ -114,8 +112,6 @@ export default function MusicCommunityPanel({
                                     inline
                                     chartId={music.chartDetail.id}
                                     data={data}
-                                    accountId={music.accountId}
-                                    returnTo={returnTo}
                                     onDone={() => setEditing(false)}
                                 />
                             ) : undefined

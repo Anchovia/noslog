@@ -72,7 +72,7 @@ export default function CommunityOpinionRow({
             tabIndex={-1}
             aria-labelledby={`${id}-name`}
         >
-            <Avatar src={item.user.avatar} size={32} />
+            <Avatar src={item.user.avatar} size="compact" />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
                     <IntentLink

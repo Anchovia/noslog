@@ -1,8 +1,6 @@
 import type { UnlockStep } from "@/lib/music/unlock-condition";
-import type {
-    CommunityData,
-    PatternSummary,
-} from "@/features/music/schemas/community-schema";
+import type { CommunityData } from "@/features/music/schemas/community-schema";
+import type { PatternTendency } from "@/features/music/lib/pattern-tendency";
 import type { PeerScoreComparison } from "@/lib/music/peer-score-comparison";
 import type {
     ChartRankingRow,
@@ -141,8 +139,8 @@ export interface ChartDetail {
 
 export interface MusicDetailProps {
     community?: CommunityData;
-    /** 개요 탭 패턴 평가 요약 — 서버가 함께 읽어 첫 데이터로 쓴다 */
-    patternSummary?: PatternSummary;
+    /** 개요 탭 패턴 경향 계산값 — null 은 공개 채보 없음, 없으면(undefined) 읽기 실패 */
+    patternTendency?: PatternTendency | null;
     accountId?: number;
     music: MusicInfo;
     difficulty: Difficulty;

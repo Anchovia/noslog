@@ -53,8 +53,11 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
-# Claude Code local tooling
-.claude/
+# Claude Code local tooling (프로젝트 스킬만 공유)
+.claude/*
+!.claude/skills/
+!.claude/hooks/
+!.claude/settings.json
 
 # Local analysis outputs (keep generated datasets out of Git)
 /.local/analysis/

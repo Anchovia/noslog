@@ -28,7 +28,7 @@ import {
     getChartScorePlayers,
     MUSIC_RANKING_PAGE_SIZE,
 } from "./chart-ranking";
-import { getCachedCommunityPattern, getCommunityData } from "./community-data";
+import { getCommunityData } from "./community-data";
 import {
     getCachedChartDetailStats,
     getCachedMusicDetail,
@@ -39,6 +39,7 @@ import {
     getUserChartRecord,
     getUserChartScoreTrend,
 } from "./music-detail-data";
+import { getPatternTendency } from "./pattern-metrics";
 
 const MUSIC_DIFFICULTIES: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
 const MUSIC_DETAIL_TABS: DetailTab[] = ["record", "detail", "ranking", "tier"];
@@ -137,7 +138,7 @@ export async function loadMusicDetail(
         tierLists,
         tierHistory,
         community,
-        patternSummary,
+        patternTendency,
         personal,
     ] = await Promise.all([
         unlockSources.length && locale !== "ja"
@@ -176,15 +177,13 @@ export async function loadMusicDetail(
                       return undefined;
                   })
             : undefined,
-        // 개요의 패턴 평가 요약 — 화면을 띄운 뒤 따로 받지 않게 함께 읽는다(2026-10-15 S5). 실패하면 클라가 받는다
-        activeTab === "detail"
-            ? getCachedCommunityPattern(chart.id).catch((error) => {
-                  logServerError(error, {
-                      event: "music-community.pattern.initial.failed",
-                  });
-                  return undefined;
-              })
-            : undefined,
+        // 개요의 패턴 경향 — 채보마다 고정된 계산값이라 탭을 옮겨도 다시 받지 않게 늘 함께 읽는다
+        getPatternTendency(chart.id).catch((error) => {
+            logServerError(error, {
+                event: "music-detail.pattern-tendency.failed",
+            });
+            return undefined;
+        }),
         userRecord.then(async (userPlayData) => {
             // 비공개인 본인이 볼 때만 자기 점수를 포함한다.
             const includeSelf =
@@ -335,7 +334,7 @@ export async function loadMusicDetail(
         ranking,
         tier,
         community,
-        patternSummary,
+        patternTendency,
     };
 }
 

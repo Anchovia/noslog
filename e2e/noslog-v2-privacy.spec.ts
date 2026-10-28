@@ -96,11 +96,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator(".nl-privacy-contents__compact")
         ).not.toHaveAttribute("open", "");
+        // 머리글에 가리지 않음 — 전역 scroll-padding 이 헤더 높이만큼 비운다(2026-10-27 가이드 고를 곳 27)
+        const headerBottom = await page
+            .locator(".nl-header")
+            .evaluate((el) => el.getBoundingClientRect().bottom);
         expect(
             await page
                 .locator("#privacy-storage")
                 .evaluate((el) => el.getBoundingClientRect().top)
-        ).toBeGreaterThanOrEqual(60);
+        ).toBeGreaterThanOrEqual(headerBottom);
         await expect(
             page.getByRole("link", {
                 name: "sodacandy77@naver.com",
@@ -123,6 +127,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 exact: true,
             })
         ).toBeVisible();
+        // 날짜 · 적용 기간 두 줄은 모두 쪽 제목 아래 설명 줄 16/24
+        const identityLines = page.locator(".nl-privacy-identity > p");
+        await expect(identityLines).toHaveCount(2);
+        for (const line of await identityLines.all()) {
+            await expect(line).toHaveCSS("font-size", "16px");
+            await expect(line).toHaveCSS("line-height", "24px");
+        }
         await page
             .getByRole("link", {
                 name: privacyHistoryCopy[locale].title,
@@ -171,10 +182,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator(".nl-privacy .nl-status--warning")
         ).toHaveCount(4);
-        test.fixme(
-            true,
-            "앱 버그 의심: 인쇄에서 경고 설명(.nl-status__copy > .nl-body-secondary:not(:first-child))이 --nl-content-subdued(#afafaf)로 남아 흰 종이 위 대비 2.19 — privacy.css 인쇄 규칙이 이 글자를 검정으로 덮지 못한다"
-        );
         expect(
             (await new AxeBuilder({ page }).include(".nl-privacy").analyze())
                 .violations

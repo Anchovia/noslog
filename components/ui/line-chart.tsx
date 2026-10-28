@@ -4,6 +4,7 @@ import type { KeyboardEvent } from "react";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
+import { readTokenPixels } from "@/lib/design-tokens";
 import useElementWidth from "@/lib/hooks/use-element-width";
 import { readMotion } from "@/lib/motion";
 
@@ -73,9 +74,18 @@ export default function LineChart({
 }) {
     const { ref, width } = useElementWidth<HTMLDivElement>();
     // 툴팁은 안쪽 여백까지 재야 오른쪽 끝에서 플롯 밖으로 삐져나가지 않는다 (2026-09-17)
-    const { ref: tooltipRef, width: tooltipWidth } =
-        useElementWidth<HTMLDivElement>("border-box");
+    const {
+        ref: tooltipRef,
+        width: tooltipWidth,
+        height: tooltipHeight,
+    } = useElementWidth<HTMLDivElement>("border-box");
     const [active, setActive] = useState<number | null>(null);
+    // 점 → 툴팁 간격 16 — 토큰을 점 버튼에서 읽는다
+    const [tooltipGap, setTooltipGap] = useState(0);
+    const show = (index: number, target: HTMLElement) => {
+        setTooltipGap(readTokenPixels(target, "--nl-spacing-16"));
+        setActive(index);
+    };
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
     const range = domain[1] - domain[0] || 1;
@@ -244,6 +254,7 @@ export default function LineChart({
                     {showValueAxis ? (
                         <div
                             className="nl-line-chart__y nl-metadata nl-muted"
+                            style={frameStyle}
                             aria-hidden
                         >
                             {ticks.map((tick, index) => (
@@ -459,9 +470,13 @@ export default function LineChart({
                                                 ? tooltipId
                                                 : undefined
                                         }
-                                        onFocus={() => setActive(index)}
+                                        onFocus={(event) =>
+                                            show(index, event.currentTarget)
+                                        }
                                         onBlur={() => setActive(null)}
-                                        onClick={() => setActive(index)}
+                                        onClick={(event) =>
+                                            show(index, event.currentTarget)
+                                        }
                                         onKeyDown={(event) =>
                                             onKeyDown(event, index)
                                         }
@@ -483,10 +498,15 @@ export default function LineChart({
                                                     tooltipWidth / 2
                                             )
                                         ),
+                                        // 위에 자리가 모자라면 점 아래로
                                         top:
-                                            position(active).y < 60
-                                                ? position(active).y + 16
-                                                : position(active).y - 64,
+                                            position(active).y <
+                                            tooltipHeight + tooltipGap
+                                                ? position(active).y +
+                                                  tooltipGap
+                                                : position(active).y -
+                                                  tooltipHeight -
+                                                  tooltipGap,
                                     }}
                                 >
                                     {points[active].detail ? null : (

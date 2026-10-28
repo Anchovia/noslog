@@ -19,6 +19,7 @@ model Arcade {
   cabinets      ArcadeCabinet[]
   publicPhotos  ArcadePublicPhoto[]
   reports       FeedbackReport[]
+  externalIds   ArcadeExternalId[]
 
   @@index([isActive, name])
   @@map("arcades")

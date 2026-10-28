@@ -18,17 +18,14 @@ import {
 } from "@/lib/chart-pattern/timing";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { chartPianoColors } from "@/lib/chart-pattern/piano";
+import {
+    EDITOR_COLORS,
+    numberToHex,
+    STAGE_CANVAS,
+} from "@/lib/chart-pattern/stageColors";
 
 import { useChartEditorStore } from "./chartEditorStore";
-
-function cssColor(name: string, fallback: string) {
-    if (typeof window === "undefined") return fallback;
-    return (
-        getComputedStyle(document.documentElement)
-            .getPropertyValue(name)
-            .trim() || fallback
-    );
-}
 
 function drawTimingPiano(
     context: CanvasRenderingContext2D,
@@ -41,15 +38,17 @@ function drawTimingPiano(
     const pianoHeight = Math.max(1, viewHeight - pianoTop);
 
     for (let lane = 0; lane < CHART_LANE_COUNT; lane += 1) {
-        context.fillStyle = lane % 2 === 0 ? "#e7e6e1" : "#d2d4d4";
+        context.fillStyle = numberToHex(
+            lane % 2 === 0 ? chartPianoColors.white : chartPianoColors.whiteAlt
+        );
         context.fillRect(lane * laneWidth, pianoTop, laneWidth, pianoHeight);
-        context.strokeStyle = "#565a63";
+        context.strokeStyle = EDITOR_COLORS.pianoKeyLine;
         context.lineWidth = 0.65;
         context.strokeRect(lane * laneWidth, pianoTop, laneWidth, pianoHeight);
     }
 
     const blackAfter = new Set([0, 1, 3, 4, 5]);
-    context.fillStyle = "#161820";
+    context.fillStyle = numberToHex(chartPianoColors.black);
     for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
         if (!blackAfter.has(lane % 7)) continue;
         const x = (lane + 1) * laneWidth;
@@ -61,14 +60,14 @@ function drawTimingPiano(
         );
     }
 
-    context.fillStyle = "#252a34";
-    context.strokeStyle = "#969aa5";
+    context.fillStyle = EDITOR_COLORS.pianoRail;
+    context.strokeStyle = EDITOR_COLORS.pianoEdge;
     context.lineWidth = 2;
     context.beginPath();
     context.roundRect(0, judgmentY - 5, viewWidth, 10, 4);
     context.fill();
     context.stroke();
-    context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
+    context.strokeStyle = EDITOR_COLORS.playhead;
     context.lineWidth = 1.5;
     context.beginPath();
     context.moveTo(5, judgmentY - 1.5);
@@ -125,7 +124,8 @@ export default function TimingRuler({
         const endMs = currentTimeMs + judgmentY / pixelsPerMs;
 
         context.clearRect(0, 0, viewWidth, viewHeight);
-        context.fillStyle = cssColor("--color-bg", "#0b0b10");
+        // 바탕은 노트 캔버스와 같은 무대 색
+        context.fillStyle = STAGE_CANVAS;
         context.fillRect(0, 0, viewWidth, viewHeight);
 
         const laneWidth = viewWidth / CHART_LANE_COUNT;
@@ -133,8 +133,8 @@ export default function TimingRuler({
             const x = lane * laneWidth;
             const isGroupBoundary = isChartLaneGroupBoundary(lane);
             context.strokeStyle = isGroupBoundary
-                ? cssColor("--color-border", "#2a2a35")
-                : cssColor("--color-divider", "#20202a");
+                ? EDITOR_COLORS.rulerLaneGroupLine
+                : EDITOR_COLORS.rulerLine;
             context.lineWidth = isGroupBoundary ? 1 : 0.5;
             context.beginPath();
             context.moveTo(x + 0.5, 0);
@@ -151,8 +151,8 @@ export default function TimingRuler({
         for (const beat of beats) {
             const y = judgmentY - (beat.timeMs - currentTimeMs) * pixelsPerMs;
             context.strokeStyle = beat.accent
-                ? cssColor("--color-text-disabled", "#666674")
-                : cssColor("--color-divider", "#20202a");
+                ? EDITOR_COLORS.rulerBeatAccentLine
+                : EDITOR_COLORS.rulerLine;
             context.lineWidth = beat.accent ? 1.5 : 1;
             context.beginPath();
             context.moveTo(0, y + 0.5);
@@ -167,8 +167,8 @@ export default function TimingRuler({
             const y = judgmentY - (point.timeMs - currentTimeMs) * pixelsPerMs;
             context.strokeStyle =
                 point.id === selectedTimingPointId
-                    ? cssColor("--color-score", "#facc15")
-                    : cssColor("--color-chart", "#38bdf8");
+                    ? EDITOR_COLORS.preview
+                    : EDITOR_COLORS.timingPoint;
             context.lineWidth = point.id === selectedTimingPointId ? 2 : 1.5;
             context.beginPath();
             context.moveTo(0, y + 0.5);
@@ -185,7 +185,7 @@ export default function TimingRuler({
         if (pianoVisible) {
             drawTimingPiano(context, viewWidth, viewHeight, judgmentY);
         } else {
-            context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
+            context.strokeStyle = EDITOR_COLORS.playhead;
             context.lineWidth = 2;
             context.beginPath();
             context.moveTo(0, judgmentY + 0.5);
@@ -193,9 +193,9 @@ export default function TimingRuler({
             context.stroke();
         }
 
-        context.fillStyle = cssColor("--color-surface", "#121218");
+        context.fillStyle = EDITOR_COLORS.timeLabel;
         context.fillRect(8, judgmentY - 26, 92, 20);
-        context.fillStyle = cssColor("--color-text-primary", "#f2f2f5");
+        context.fillStyle = EDITOR_COLORS.playhead;
         context.font = "12px monospace";
         context.textBaseline = "middle";
         context.fillText(formatEditorTime(currentTimeMs), 14, judgmentY - 16);

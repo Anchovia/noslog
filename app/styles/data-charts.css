@@ -9,8 +9,8 @@
     gap: var(--nl-spacing-8);
     min-width: 0;
 }
+/* 세로 값 축 높이 = 그래프 틀 높이(LineChart 가 인라인으로 준다) — 축 숫자가 격자 틀과 같은 높이에 나뉜다 */
 .noslog-ui .nl-line-chart__y {
-    height: 136px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -26,11 +26,9 @@
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-line-chart__series {
-    height: 120px;
     width: 100%;
     position: relative;
 }
-/* 차트 패널: 패턴 레이더·서열 가중치 차트와 같은 면·radius·inset */
 .noslog-ui .nl-line-chart__series svg {
     display: block;
     overflow: visible;
@@ -50,7 +48,7 @@
 .noslog-ui .nl-line-chart__state[data-placement="center"] {
     transform: translateY(-50%);
 }
-/* 성장 추이 선 = 주황(osu! 계열, 2026-09-19 C1). 선이 하나라 「평균 · SLOW」 뜻과 부딪히지 않는다 */
+/* 성장 추이 선 = 주황(osu! 계열). 선이 하나라 「평균 · SLOW」 뜻과 부딪히지 않는다 */
 .noslog-ui .nl-line-chart[data-tone="growth"] {
     --nl-local-data-personal: var(--nl-local-data-categorical-2);
 }
@@ -69,7 +67,7 @@
     stroke: var(--nl-local-data-personal);
     stroke-width: var(--nl-stroke-strong);
 }
-/* 가리킨 점(점을 끈 그래프) = 선 색으로 채운 반지름 4 (2026-09-19 P1) */
+/* 가리킨 점(점을 끈 그래프) = 선 색으로 채운 반지름 4 */
 .noslog-ui .nl-line-chart__point[data-active] {
     fill: var(--nl-local-data-personal);
     stroke-width: 0;
@@ -79,7 +77,7 @@
 }
 .noslog-ui .nl-line-chart__line[data-series="slow"] {
     stroke: var(--nl-local-data-slow);
-    stroke-dasharray: 4 4;
+    stroke-dasharray: var(--nl-spacing-4) var(--nl-spacing-4);
 }
 .noslog-ui .nl-line-chart__point[data-series="slow"] {
     fill: var(--nl-local-data-slow);
@@ -96,8 +94,8 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-line-chart__legend i {
-    width: 8px;
-    height: 8px;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
 }
 .noslog-ui .nl-line-chart__legend [data-series="fast"] {
     border: var(--nl-stroke-strong) solid var(--nl-local-data-fast);
@@ -129,16 +127,16 @@
     justify-content: center;
 }
 /* 점마다 놓인 보이지 않는 버튼 — 키보드 · 화면 읽기로 점을 옮기는 용도. 마우스는 올리기만 해도 툴팁이 뜨고
-   누를 동작이 없으므로 손가락 커서를 쓰지 않는다(전역 button 규칙을 끈다, 2026-09-19) */
+   누를 동작이 없으므로 손가락 커서를 쓰지 않는다(전역 button 규칙을 끈다) */
 .noslog-ui .nl-line-chart__target {
     position: absolute;
-    width: 24px;
-    height: 24px;
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
     transform: translate(-50%, -50%);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     cursor: default;
 }
-/* 툴팁 속 선 이름 = 기본 글자색 + 앞에 그 선의 색 점 8(2026-10-15 — 선 색 글자는 툴팁 면 위 대비 4.5 미달,
+/* 툴팁 속 선 이름 = 기본 글자색 + 앞에 그 선의 색 점 8(선 색 글자는 툴팁 면 위 대비 4.5 미달,
    점은 글자 아닌 단서라 3 : 1). 선과 같은 변수라 판정 추이의 지표별 색도 따라간다 */
 .noslog-ui .nl-line-chart__series-name {
     display: inline-flex;
@@ -162,10 +160,10 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
     position: absolute;
     width: max-content;
@@ -180,8 +178,12 @@
 .noslog-ui .nl-chart-table th,
 .noslog-ui .nl-chart-table td {
     padding-block: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     text-align: start;
+}
+/* 표 머리 = 보조 글자(Spectrum 2 gray-700) */
+.noslog-ui .nl-chart-table thead th {
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-chart-table tbody th {
     font-weight: var(--nl-type-weight-regular);

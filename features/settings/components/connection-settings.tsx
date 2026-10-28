@@ -10,15 +10,21 @@ import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
 import DiscordIcon from "@/components/ui/discord-icon";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { StatusMessage } from "@/components/ui/status-message";
+import { MusecatConnectionRow } from "@/features/partner/components/musecat-connection-settings";
+import type { MusecatSettings } from "@/features/partner/server/partner-settings-data";
 
 export default function ConnectionSettings({
     displayName,
     error,
     result,
+    musecat,
 }: {
     displayName: string;
     error?: string;
     result?: string;
+    /** 뮤즈캣 연동(2026-10-20) — visible 일 때만 줄을 보인다 */
+    musecat?: MusecatSettings;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -98,11 +104,16 @@ export default function ConnectionSettings({
                         </Button>
                     </div>
                 </div>
+                {musecat?.visible ? (
+                    <MusecatConnectionRow settings={musecat} />
+                ) : null}
             </div>
             {errorMessage && !confirmChange ? (
-                <p role="alert" className="nl-body-secondary nl-field__error">
-                    {errorMessage}
-                </p>
+                <StatusMessage
+                    severity="danger"
+                    role="alert"
+                    title={errorMessage}
+                />
             ) : null}
             {!error && (result === "refresh" || result === "change") ? (
                 <p role="status" className="nl-body-secondary">
@@ -150,12 +161,11 @@ export default function ConnectionSettings({
                 }
             >
                 {localError ? (
-                    <p
+                    <StatusMessage
+                        severity="danger"
                         role="alert"
-                        className="nl-body-secondary nl-field__error"
-                    >
-                        {localError}
-                    </p>
+                        title={localError}
+                    />
                 ) : null}
             </ModalDialog>
         </div>

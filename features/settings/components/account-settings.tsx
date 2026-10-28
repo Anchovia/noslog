@@ -19,6 +19,7 @@ import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { StatusMessage } from "@/components/ui/status-message";
 import type {
     AccountDeletionFormValues,
     AccountDeletionSummary,
@@ -81,8 +82,12 @@ export default function AccountSettings({
     function finish(status: "logged-out" | "deleted") {
         cache.clear();
         // A new document also discards account-sensitive Next router and component caches.
-        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-        window.location.assign(`${href("/")}?accountStatus=${status}`);
+        window.location.assign(
+            new URL(
+                `${href("/")}?accountStatus=${status}`,
+                window.location.origin
+            ).href
+        );
     }
     async function logOut() {
         if (busyRef.current) return;
@@ -130,12 +135,11 @@ export default function AccountSettings({
                     {t("profile.logout")}
                 </ActionButton>
                 {logoutError ? (
-                    <p
+                    <StatusMessage
+                        severity="danger"
                         role="alert"
-                        className="nl-body-secondary nl-field__error"
-                    >
-                        {logoutError}
-                    </p>
+                        title={logoutError}
+                    />
                 ) : null}
             </div>
             {/* 회원 탈퇴(2026-10-01 E1) — 네이버 · 치지직 · note · 당근 식 보통 줄 + 꺾쇠. 빨간 채운 버튼은 확인 창의 확정 버튼에만 */}
@@ -192,7 +196,6 @@ export default function AccountSettings({
                                 </Button>
                                 <ActionButton
                                     variant="danger"
-                                    destructiveFilled
                                     type="submit"
                                     form={formId}
                                     busy={busy}
@@ -314,20 +317,27 @@ export default function AccountSettings({
                                 />
                             </FormField>
                             {deleteError ? (
-                                <div
+                                <StatusMessage
+                                    severity="danger"
                                     role="alert"
-                                    className="nl-body-secondary nl-field__error"
-                                >
-                                    <p>{deleteError}</p>
-                                    <IntentLink href={href("/privacy")}>
-                                        {t("footer.privacy")}
-                                    </IntentLink>
-                                </div>
+                                    title={deleteError}
+                                    action={
+                                        <IntentLink
+                                            href={href("/privacy")}
+                                            className="nl-body-secondary nl-link nl-text-link--underlined"
+                                        >
+                                            {t("footer.privacy")}
+                                        </IntentLink>
+                                    }
+                                />
                             ) : null}
                         </form>
                     </ModalDialog>
                 </div>
-                <IntentLink href={href("/privacy")} className="nl-control">
+                <IntentLink
+                    href={href("/privacy")}
+                    className="nl-control nl-link"
+                >
                     {t("footer.privacy")}
                 </IntentLink>
             </section>

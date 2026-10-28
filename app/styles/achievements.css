@@ -1,14 +1,18 @@
 /* 업적(2026-09-24 T2 · I1 · L2 · K1 · P5 · D1 · B1 · C1 · E1) — 색은 검정 명판 금속 사다리 토큰(exam/tier-*)을 그대로 불러 쓴다 */
 
-/* 육각 — 테두리 = 금속 색(동 mid · 은 high · 금 top), 못 얻은 것은 disabled 선 + pending 그림 */
+/* 목록 육각 폭 44 — 육각 · 사다리 들여쓰기 · 격자 칸 · 프로필 한 줄 칸 수(JS)가 같은 값을 쓴다 */
+.noslog-ui {
+    --nl-achievement-hex-row-width: 44px;
+}
+/* 육각 — 테두리 = 금속 색(동 mid · 은 high · 금 top), 못 얻은 것은 줄 선(border/row) + 흐린 그림(테두리는 선이라 카드 면 위에서도 보이게) */
 .noslog-ui .nl-achievement-hex {
-    --nl-achievement-metal: var(--nl-content-disabled);
+    --nl-achievement-metal: var(--nl-border-row);
     --nl-achievement-hex-stroke: var(--nl-stroke-strong);
     position: relative;
     display: inline-grid;
     place-items: center;
     flex-shrink: 0;
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-achievement-hex[data-tier="1"],
 .noslog-ui .nl-achievement-progress[data-tier="1"] {
@@ -54,8 +58,8 @@
 }
 /* 목록 48 · 그림 24(강조) */
 .noslog-ui .nl-achievement-hex[data-size="row"] {
-    width: 44px;
-    height: 48px;
+    width: var(--nl-achievement-hex-row-width);
+    height: var(--nl-spacing-48);
 }
 .noslog-ui .nl-achievement-hex[data-size="row"] .nl-achievement-hex__icon {
     width: var(--nl-icon-large);
@@ -64,8 +68,8 @@
 /* 머리 · 한 줄 24(명판 · 태그와 같은 높이) · 그림 16 · 선 1 */
 .noslog-ui .nl-achievement-hex[data-size="inline"] {
     --nl-achievement-hex-stroke: var(--nl-stroke-default);
-    width: 22px;
-    height: 24px;
+    width: calc(var(--nl-spacing-24) - var(--nl-spacing-2));
+    height: var(--nl-spacing-24);
 }
 .noslog-ui .nl-achievement-hex[data-size="inline"] .nl-achievement-hex__icon {
     width: var(--nl-icon-small);
@@ -77,8 +81,8 @@
     right: calc(var(--nl-spacing-4) * -1);
     bottom: calc(var(--nl-spacing-2) * -1);
     z-index: calc(var(--nl-layer-above) + 1);
-    min-width: 16px;
-    height: 16px;
+    min-width: var(--nl-spacing-16);
+    height: var(--nl-spacing-16);
     padding-inline: var(--nl-spacing-4);
     border-radius: var(--nl-radius-full);
     background: var(--nl-achievement-metal);
@@ -91,7 +95,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 24px;
+    min-height: var(--nl-spacing-24);
 }
 
 /* 목록 줄(L2) — 육각 48 · 제목 · 조건 · 진행 막대, 구분선 목록 */
@@ -108,7 +112,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding-block: var(--nl-spacing-8);
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-achievement-row:first-child {
     border-top: 0;
@@ -134,7 +138,7 @@
     gap: var(--nl-spacing-4) var(--nl-spacing-8);
 }
 .noslog-ui .nl-achievement-row[data-earned="false"] .nl-achievement-row__name {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-achievement-row__actions {
     display: flex;
@@ -149,7 +153,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     margin: 0;
-    padding: 0 0 0 calc(44px + var(--nl-spacing-12));
+    padding: 0 0 0
+        calc(var(--nl-achievement-hex-row-width) + var(--nl-spacing-12));
     list-style: none;
 }
 .noslog-ui .nl-achievement-ladder__step {
@@ -224,59 +229,68 @@
     gap: var(--nl-spacing-8);
     min-width: 0;
     padding: var(--nl-spacing-12) var(--nl-spacing-4);
-    border: var(--nl-stroke-default) solid var(--nl-control-line, transparent);
-    border-radius: var(--nl-radius-field);
+    border: var(--nl-stroke-default) solid transparent;
+    border-radius: var(--nl-radius-control);
     text-align: center;
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-achievement-picker__choices {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(calc(var(--nl-spacing-64) + var(--nl-spacing-24)), 1fr)
+    );
     gap: var(--nl-spacing-8);
 }
-/* 칸 = 칩과 같은 옅은 면 surface/control, 고른 것 = control-selected(2026-09-30 P1). 떠 있는 면 위에서는 약한 선(W1).
-   3칸이 차면 나머지는 비활성(칩의 비활성과 같은 면 · 글자) */
+/* 칸 = 칩과 같은 바탕 면 + 입력 경계 선, 고른 것 = 고른 칩과 같은 gray-100 면.
+   3칸이 차면 나머지는 비활성 — 그림을 품은 칸이라 색 대신 투명도로 흐린다 */
 .noslog-ui .nl-achievement-picker__choice {
-    background: var(--nl-surface-control);
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
     color: var(--nl-content-default);
     cursor: pointer;
 }
 .noslog-ui .nl-achievement-picker__choice[aria-pressed="true"] {
-    background-color: var(--nl-surface-control-selected);
+    background: var(--nl-surface-control);
+    box-shadow: none;
 }
 .noslog-ui .nl-achievement-picker__choice:disabled {
-    border-color: transparent;
-    background: var(--nl-interaction-disabled-bg);
+    box-shadow: none;
     cursor: not-allowed;
-    color: var(--nl-interaction-disabled-content);
+    opacity: var(--nl-disabled-opacity);
+}
+/* 올림 · 키 포커스 · 누름 = 칩과 같은 면 gray-200 · 글자 gray-900 */
+.noslog-ui
+    .nl-achievement-picker__choice:not(:disabled):is(:focus-visible, :active) {
+    background-color: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-achievement-picker__choice:not(:disabled):hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
     }
-}
-.noslog-ui .nl-achievement-picker__choice:focus-visible {
-    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
-    outline-offset: calc(var(--nl-stroke-default) * -1);
 }
 
 /* 배지 정보 창 큰 육각(2026-09-25 M1) — 58 × 64 · 선 2 · 그림 32 */
 .noslog-ui .nl-achievement-hex[data-size="large"] {
     width: 58px;
-    height: 64px;
+    height: var(--nl-spacing-64);
 }
 .noslog-ui .nl-achievement-hex[data-size="large"] .nl-achievement-hex__icon {
-    width: 32px;
-    height: 32px;
+    width: var(--nl-spacing-32);
+    height: var(--nl-spacing-32);
 }
 /* 머리 배지 정보 창(M1, osu! 메달 창 순서) — 분류 → 큰 육각 → 제목 → 조건 →구분선→ 달성 인원 · 달성일, 가운데 정렬 · 폭 240 · 안쪽 16 */
+/* 업적 카드 팝오버는 툴팁이 아니라 카드 — 떠 있는 면 그대로(툴팁 면 · 그림자를 쓰지 않는다) */
 .noslog-ui.nl-term__popover.nl-achievement-card-popover {
     width: 240px;
     padding: var(--nl-spacing-16);
+    border-color: var(--nl-border-elevated);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+    color: var(--nl-content-default);
+    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-achievement-card {
     display: flex;
@@ -285,6 +299,10 @@
     gap: var(--nl-spacing-8);
     text-align: center;
     overflow-wrap: anywhere;
+}
+/* 가운데 맞춘 조건 글이 두 줄이 되면 둘째 줄에 낱말 하나만 남지 않게 줄 길이를 고르게 */
+.noslog-ui .nl-achievement-card > p.nl-body-secondary {
+    text-wrap: balance;
 }
 .noslog-ui .nl-achievement-card__facts {
     display: flex;
@@ -295,7 +313,7 @@
     margin-inline: calc(var(--nl-spacing-16) * -1);
     margin-top: var(--nl-spacing-4);
     padding-top: var(--nl-spacing-12);
-    border-top: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 
 /* 진행 막대(2026-09-25) — 쫓는 다음 등급의 색. 움직임은 ⑯ 공용 클래스(nl-chart-reveal · nl-chart-bar) */
@@ -310,16 +328,14 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-/* 촘촘한 격자(2026-09-25 D1) — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8 */
+/* 촘촘한 격자 — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8. 칸 = 육각 폭이라 사이가 늘 8 */
 .noslog-ui .nl-achievement-dense {
     display: grid;
-    /* 칸 최소 = 육각 44 + 8(2026-09-26 E2 — 값 그대로 뜻이 보이게) */
     grid-template-columns: repeat(
         auto-fill,
-        minmax(calc(44px + var(--nl-spacing-8)), 1fr)
+        var(--nl-achievement-hex-row-width)
     );
     gap: var(--nl-spacing-12) var(--nl-spacing-8);
-    justify-items: center;
     margin: 0;
     padding: 0;
     list-style: none;

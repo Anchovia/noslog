@@ -40,7 +40,7 @@ export default async function AdminCatalogPage({
                         key={item}
                         href={"/admin/catalog?status=" + item}
                         className={
-                            "nl-emphasis-label rounded-nl-field px-nl-12 py-nl-8 transition-colors duration-nl-state " +
+                            "nl-emphasis-label rounded-nl-control px-nl-12 py-nl-8 transition-colors duration-nl-state " +
                             (status === item
                                 ? "bg-nl-primary text-nl-on-primary"
                                 : "nl-hover-layer bg-nl-surface text-nl-subdued")
@@ -55,7 +55,7 @@ export default async function AdminCatalogPage({
                 {candidates.map((candidate) => (
                     <article
                         key={candidate.id}
-                        className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
+                        className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16"
                     >
                         <div className="flex items-start justify-between gap-nl-12">
                             <div className="min-w-0">
@@ -102,7 +102,7 @@ export default async function AdminCatalogPage({
                     </article>
                 ))}
                 {candidates.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         해당하는 악곡 업데이트가 없습니다.
                     </p>
                 ) : null}

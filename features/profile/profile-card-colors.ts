@@ -4,8 +4,8 @@
  * 값 색(Grd 구간 · 순위)과 검정 명판은 lib/music/score-tone.ts 의 STAT_TONE_DARK_HEX · EXAM_TIER_DARK_HEX
  */
 export const PROFILE_CARD_DARK_HEX = {
-    /** 기본 글자 · N 로고 테두리 */
-    ink: "#f2f2f2", // content-interactive
+    /** 기본 글자 */
+    ink: "#dbdbdb", // content-default
     /** 국기 테두리 */
     flagBorder: "#dbdbdb", // content-default
     /** 라벨 · 모드 · 기준일 · 아래 줄 글자 · 지구본 */
@@ -13,7 +13,7 @@ export const PROFILE_CARD_DARK_HEX = {
     /** 칸 사이 세로선 */
     divider: "#323232", // border-divider
     /** 사진 없는 아바타 면 */
-    emptySurface: "#222222", // surface-raised
+    emptySurface: "#1b1b1b", // surface-surface
     /** 아바타 링 · 장식 */
     gold: "#d6b56d", // exam-tier-top
     /** 아래 줄 「P」(score-goal-pianist) */

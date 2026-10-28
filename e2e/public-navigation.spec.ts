@@ -8,7 +8,7 @@ import {
 
 const publicRoutes = [
     { label: "악곡", path: "/ko/music", heading: "악곡" },
-    { label: "랭킹", path: "/ko/rankings", heading: "유저 랭킹" },
+    { label: "랭킹", path: "/ko/rankings", heading: "랭킹" },
     // 서열표 제목은 스위처 — h1 은 화면 읽기용 「{목표} 서열표」(기본 S)
     { label: "서열", path: "/ko/tiers", heading: "S 서열표" },
     {

@@ -71,16 +71,13 @@ export function contributionProgress(value: ContributionLevel) {
     );
 }
 
-/** 이름 옆 라벨 — 운영자는 역할, 그 밖에는 기준 등급 이상일 때만 */
-export type NameLabel =
-    { kind: "operator" } | { kind: "level"; level: number; points: number };
+/** 이름 옆 라벨 — 기준 등급 이상일 때만 */
+export type NameLabel = { kind: "level"; level: number; points: number };
 
 export function nameLabelFor(
-    role: string | null | undefined,
     points: number,
     minLevel = CONTRIBUTION_NAME_MIN_LEVEL
 ): NameLabel | null {
-    if (role === "admin") return { kind: "operator" };
     const value = contributionLevel(points);
     return value.level >= minLevel
         ? { kind: "level", level: value.level, points: value.points }

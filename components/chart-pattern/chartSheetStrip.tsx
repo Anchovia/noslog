@@ -21,6 +21,7 @@ import {
 import Button from "@/components/ui/button";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/cn";
+import { readTokenPixels } from "@/lib/design-tokens";
 
 import {
     PADDING_BOTTOM,
@@ -43,7 +44,7 @@ import { useFullscreen } from "./useFullscreen";
  * - 이음새: 열 그림의 위 30·아래 34 여백(시각 라벨 자리)은 안쪽 이음새에서 잘라 마디선이 이어지게 한다.
  *   첫 열 아래(BPM·박자 띠)와 마지막 열 위(끝 시각 띠)도 자른다 — 전체 길이는 읽기 줄에 있고,
  *   시작 BPM·박자는 뷰어가 첫 마디선 아래에 라벨로 얹는다. 경계 시각도 같은 방식.
- * - 미니맵: 열마다 저해상도 썸네일 하나. Compact 는 오버레이(평상시 높이 40%·썸네일 30%, 탭하면 전체·100%,
+ * - 미니맵: 열마다 저해상도 썸네일 하나. Compact 는 오버레이(평상시 높이 40%·썸네일 투명 0.25, 탭하면 전체·1,
  *   바깥 탭으로 닫힘),
  *   672+ 는 옆 레일 96. 뷰포트 사각형을 끌거나 아무 데나 누르면 본문이 이동한다.
  * - 읽기 한 줄: 「현재 시각 / 전체 길이」(보이는 영역 아래 끝 = 가장 이른 지점, osu! 재생 헤드 기준) aria-live.
@@ -51,9 +52,6 @@ import { useFullscreen } from "./useFullscreen";
  */
 
 const MINI_SCALE_COMPACT = 0.16;
-const MINI_WIDTH_COMPACT = 64;
-const MINI_WIDTH_WIDE = 96;
-const FRAME_HEIGHT_COMPACT = 560;
 const MAIN_SCALE_MAX = 2;
 
 export default function ChartSheetStrip({
@@ -75,7 +73,11 @@ export default function ChartSheetStrip({
     const fullscreen = useFullscreen(stripRef);
     const miniRef = useRef<HTMLDivElement | null>(null);
     const [mainWidth, setMainWidth] = useState(PANEL_WIDTH);
-    const [viewportHeight, setViewportHeight] = useState(FRAME_HEIGHT_COMPACT);
+    // 둘 다 첫 레이아웃(그리기 전)에서 실제 요소 · CSS 변수로 읽는다
+    const [viewportHeight, setViewportHeight] = useState(0);
+    const [miniWidth, setMiniWidth] = useState(0);
+    // 미니맵 보이는 영역 틀의 최소 높이 · 자동 추종 때 틀 위아래로 남기는 여유
+    const [miniGap, setMiniGap] = useState({ minHeight: 0, margin: 0 });
     const [scrollTop, setScrollTop] = useState<number | null>(null);
     // Compact 오버레이 열림 — 탭으로 열고, 바깥을 탭하면 닫힌다(누르는 동안만 열리던 방식은 손가락이 노트를 가려 사용자 기각)
     const [miniOpen, setMiniOpen] = useState(false);
@@ -90,7 +92,6 @@ export default function ChartSheetStrip({
     const columnHeight = Math.round(contentHeight * mainScale);
     const padTop = Math.round(PADDING_TOP * mainScale);
     const columnWidth = Math.round(PANEL_WIDTH * mainScale);
-    const miniWidth = wide ? MINI_WIDTH_WIDE : MINI_WIDTH_COMPACT;
     const miniScale = wide ? miniWidth / PANEL_WIDTH : MINI_SCALE_COMPACT;
     const miniColumnHeight = Math.round(PANEL_HEIGHT * miniScale);
     // 첫 열은 마디선 아래 inset(5) 만큼 더 잘라 그 밑의 BPM 글자 윗부분이 비치지 않게 한다
@@ -101,6 +102,17 @@ export default function ChartSheetStrip({
     const startMarker = measureMarkers[0];
     // 띠는 위가 곡의 끝, 아래가 시작 — DOM 순서는 마지막 열부터
     const reversed = useMemo(() => [...panels].reverse(), [panels]);
+
+    // 미니맵 폭은 폭 단계마다 CSS(--nl-chart-mini-width)가 정한다
+    useLayoutEffect(() => {
+        const strip = stripRef.current;
+        if (!strip) return;
+        setMiniWidth(readTokenPixels(strip, "--nl-chart-mini-width"));
+        setMiniGap({
+            minHeight: readTokenPixels(strip, "--nl-spacing-12"),
+            margin: readTokenPixels(strip, "--nl-spacing-8"),
+        });
+    }, [wide]);
 
     // 폭은 첫 레이아웃에서 동기로 읽고, 이후 변화는 ResizeObserver 로 따라간다
     useLayoutEffect(() => {
@@ -184,7 +196,7 @@ export default function ChartSheetStrip({
     // 미니맵 — 뷰포트 사각형 위치와 자동 추종
     const miniViewportTop = (top / totalHeight) * miniTotalHeight;
     const miniViewportHeight = Math.max(
-        12,
+        miniGap.minHeight,
         (viewportHeight / totalHeight) * miniTotalHeight
     );
     useEffect(() => {
@@ -192,11 +204,15 @@ export default function ChartSheetStrip({
         if (!mini || dragging.current) return;
         const visibleTop = mini.scrollTop;
         const visibleBottom = visibleTop + mini.clientHeight;
-        if (miniViewportTop < visibleTop) mini.scrollTop = miniViewportTop - 8;
+        if (miniViewportTop < visibleTop)
+            mini.scrollTop = miniViewportTop - miniGap.margin;
         else if (miniViewportTop + miniViewportHeight > visibleBottom)
             mini.scrollTop =
-                miniViewportTop + miniViewportHeight - mini.clientHeight + 8;
-    }, [miniViewportTop, miniViewportHeight]);
+                miniViewportTop +
+                miniViewportHeight -
+                mini.clientHeight +
+                miniGap.margin;
+    }, [miniViewportTop, miniViewportHeight, miniGap.margin]);
 
     // 바깥 탭(포인터 다운)이면 닫는다 — 본문 스크롤은 닫지 않는다(옮긴 뒤 계속 볼 수 있어야 한다)
     useEffect(() => {
@@ -403,7 +419,6 @@ export default function ChartSheetStrip({
                         "nl-chart-strip__mini",
                         miniOpen && "nl-chart-strip__mini--active"
                     )}
-                    style={{ width: miniWidth }}
                     aria-hidden
                     onPointerDown={onMiniPointerDown}
                     onPointerMove={onMiniPointerMove}

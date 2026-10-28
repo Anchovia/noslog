@@ -17,6 +17,7 @@ export default function FullScreenDialog({
     footer,
     trigger,
     onReset,
+    form = false,
     onCloseAutoFocus,
 }: {
     open: boolean;
@@ -28,6 +29,8 @@ export default function FullScreenDialog({
     trigger?: ReactNode;
     /** 「초기화」 — 발 왼쪽 고스트 L, 오른쪽 주 액션과 한 줄 (2026-09-16: 폰 필터 22곳 중 발 왼쪽 9 · 머리 오른쪽 1) */
     onReset?: () => void;
+    /** 글 쓰는 입력 창 — 발의 주 액션을 오른쪽 글자 폭으로(Google 피드백 보내기). 기본은 필터처럼 남은 폭 가득 */
+    form?: boolean;
     onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
@@ -41,7 +44,11 @@ export default function FullScreenDialog({
                 <div className="noslog-ui">
                     <Dialog.Overlay className="nl-dialog-overlay" />
                     <Dialog.Content
-                        className="nl-full-dialog"
+                        className={
+                            form
+                                ? "nl-full-dialog nl-full-dialog--form"
+                                : "nl-full-dialog"
+                        }
                         aria-describedby={undefined}
                         onCloseAutoFocus={onCloseAutoFocus}
                     >

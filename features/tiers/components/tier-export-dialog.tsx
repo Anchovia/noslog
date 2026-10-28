@@ -3,7 +3,6 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Check } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
@@ -89,7 +88,7 @@ function TierExportPreview({
     const [status, setStatus] = useState<
         "idle" | "working" | "copied" | "error"
     >("idle");
-    // 「✓ 복사됨」 은 2초 뒤 원래 글자로
+    // 「복사됨」 은 2초 뒤 원래 글자로
     useEffect(() => {
         if (status !== "copied") return;
         const timer = window.setTimeout(() => setStatus("idle"), 2000);
@@ -461,7 +460,7 @@ function TierExportPreview({
                     />
                 ) : null}
             </div>
-            {/* 복사 성공은 상자 대신 버튼 글자가 잠깐 「✓ 복사됨」(2026-09-28 인상 점검 A1) — 알림은 화면 읽기로 */}
+            {/* 복사 성공은 상자 대신 버튼 글자가 잠깐 「복사됨」, 알림은 화면 읽기로 */}
             {status === "copied" ? (
                 <span className="sr-only" role="status">
                     {t("profile.copiedImage")}
@@ -497,17 +496,9 @@ function TierExportPreview({
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
                             >
-                                {status === "copied" ? (
-                                    <>
-                                        <Check
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                        {t("common.copied")}
-                                    </>
-                                ) : (
-                                    t("profile.copyImage")
-                                )}
+                                {status === "copied"
+                                    ? t("common.copied")
+                                    : t("profile.copyImage")}
                             </Button>
                             <Button
                                 variant="secondary"
@@ -529,7 +520,7 @@ function TierExportPreview({
 }
 
 /**
- * 서열표 이미지 내보내기(2026-09-22 E3 · D1) — 제목 줄 오른쪽 공유 아이콘이 여는 창.
+ * 서열표 이미지 내보내기 — 제목 줄 ⋯ 메뉴 「이미지로 내보내기」 가 여는 창.
  * 프로필 카드 내보내기와 같은 창(nl-image-share): 담기는 범위 한 줄 → 미리보기 → 표시 선택 → 저장 · 복사 · 공유
  */
 export default function TierExportDialog({

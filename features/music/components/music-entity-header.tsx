@@ -184,7 +184,7 @@ export default function MusicEntityHeader({
             ? "p"
             : rankAssetNames[shownRecord.rank.toUpperCase()]
         : undefined;
-    // 그레이드 줄 — 위 「그레이드」(control) · 내 Grd(정수 24 · 소수 16, 막대 위치 색) / 최대 Grd(Pianist 색, 모르면 흐린 —),
+    // 그레이드 줄 — 위 「그레이드」(control) · 내 Grd(정수 · 소수 모두 24/32, 막대 위치 색) / 최대 Grd(Pianist 색, 모르면 흐린 —),
     // 아래 진행 막대(0 → 최대, 등급 색 그라데이션 · 최대값을 모르면 빈 트랙) (2026-09-18 Q3)
     const formatGrade = (grade: number) => (grade / 100).toFixed(2).split(".");
     const [grdWhole, grdFraction] = shownRecord
@@ -264,7 +264,7 @@ export default function MusicEntityHeader({
                     background={music.background}
                     appearance="foundation"
                 />
-                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 등급은 제목 한 줄 높이(32 · 40)로 제목 글자 끝 8 뒤, 펼치면 숨김 (2026-09-18) */}
+                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 등급은 제목 한 줄 높이(32)로 제목 글자 끝 8 뒤, 펼치면 숨김 */}
                 <div
                     ref={identity}
                     className="nl-music-entity__copy"
@@ -272,7 +272,7 @@ export default function MusicEntityHeader({
                 >
                     {/* 카테고리 = 제목 바로 위 왼쪽 (자켓 위 겹침에서 이동 · 2026-09-17) */}
                     <span
-                        className="nl-jacket__category nl-metadata nl-music-entity__category"
+                        className="nl-tag nl-music-entity__category"
                         lang="en"
                         data-category={music.category_short}
                     >

@@ -7,10 +7,10 @@ import { getSyncHealthTagTone } from "@/lib/admin/sync-health";
 
 export default function AdminUserCard({ user }: { user: AdminUserRow }) {
     return (
-        <article className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+        <article className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
             <div className="flex items-start gap-nl-12">
                 <span
-                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-raised ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
+                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-control ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
                 >
                     {user.role === "admin" ? (
                         <ShieldCheck className="nl-icon-small" aria-hidden />
@@ -40,7 +40,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                 {user.counts.examAchievements}개
             </p>
             <div className="grid grid-cols-2 gap-nl-8">
-                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                     <p className="nl-metadata text-nl-subdued">마지막 동기화</p>
                     <strong className="nl-metadata mt-nl-4 block text-nl-subdued">
                         {user.latestSyncAt
@@ -50,7 +50,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                             : "-"}
                     </strong>
                 </div>
-                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                     <p className="nl-metadata text-nl-subdued">
                         공식 마지막 플레이
                     </p>
@@ -58,7 +58,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                         {user.nostalgiaLastPlaytime ?? "-"}
                     </strong>
                 </div>
-                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                     <p className="nl-metadata text-nl-subdued">
                         전체 채보 기록
                     </p>
@@ -66,7 +66,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                         {user.counts.playData.toLocaleString("ko-KR")}
                     </strong>
                 </div>
-                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                <div className="rounded-nl-control bg-nl-canvas p-nl-8">
                     <p className="nl-metadata text-nl-subdued">
                         최근 플레이 기록
                     </p>
@@ -75,7 +75,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                     </strong>
                 </div>
             </div>
-            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+            <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
                 <summary className="nl-emphasis-label flex cursor-pointer list-none items-center gap-nl-8 text-nl-content">
                     <DatabaseZap className="nl-icon-small" aria-hidden />
                     상세 데이터 적재율

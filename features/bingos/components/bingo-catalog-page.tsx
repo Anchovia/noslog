@@ -110,17 +110,12 @@ export default function BingoCatalogPage({
             : "nl-bingo-catalog__grid";
     return (
         <div className="nl-bingo-catalog">
-            {/* 머리(2026-09-22): 제목 → (폰) 개수 메타 → 검색(전체 폭) → 상태 칩(로그인) → 정렬 · 보기 전환 */}
+            {/* 머리(2026-09-22): 제목 → 검색(전체 폭) → 상태 칩(로그인) → 정렬 · 보기 전환 */}
             <div
                 className="nl-bingo-catalog__head"
                 data-compact={wide ? undefined : ""}
             >
                 <h1 className="nl-page-title">{t("bingo.title")}</h1>
-                {!wide ? (
-                    <p className="nl-bingo-catalog__summary nl-metadata nl-muted">
-                        {t("bingo.countShort", { count: visible.length })}
-                    </p>
-                ) : null}
                 <div className="nl-bingo-catalog__search-row">
                     <SearchField
                         value={search}
@@ -169,6 +164,12 @@ export default function BingoCatalogPage({
                     ) : null}
                     {viewSwitch}
                 </div>
+                {/* 결과 수 — 좁은 폭은 제목 아래 메타 글줄, 그 밖은 결과 쪽(목록 화면 머리 규칙) */}
+                {wide ? (
+                    <p className="nl-body-secondary nl-muted" role="status">
+                        {t("bingo.countShort", { count: visible.length })}
+                    </p>
+                ) : null}
             </div>
             {recent ? (
                 <section
@@ -200,10 +201,7 @@ export default function BingoCatalogPage({
                     ))}
                 </ul>
             ) : (
-                <p
-                    className="nl-body-secondary nl-bingo-catalog__empty"
-                    role="status"
-                >
+                <p className="nl-body-secondary nl-muted" role="status">
                     {t(
                         !items.length
                             ? "bingo.catalogMissing"

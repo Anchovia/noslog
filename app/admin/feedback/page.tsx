@@ -57,7 +57,7 @@ export default async function AdminFeedbackPage({
                     <Link
                         key={item.key}
                         href={`/admin/feedback?status=${item.key}`}
-                        className={`nl-emphasis-label rounded-nl-field px-nl-12 py-nl-8 transition-colors duration-nl-state ${active === item.key ? "bg-nl-primary text-nl-on-primary" : "nl-hover-layer bg-nl-surface text-nl-subdued"}`}
+                        className={`nl-emphasis-label rounded-nl-control px-nl-12 py-nl-8 transition-colors duration-nl-state ${active === item.key ? "bg-nl-primary text-nl-on-primary" : "nl-hover-layer bg-nl-surface text-nl-subdued"}`}
                     >
                         {item.label}
                     </Link>
@@ -72,7 +72,7 @@ export default async function AdminFeedbackPage({
                     <OpinionReportCard key={report.id} report={report} />
                 ))}
                 {reports.length === 0 && opinionReports.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         {opinionStatus
                             ? "해당하는 신고가 없습니다."
                             : "해당하는 피드백이 없습니다."}

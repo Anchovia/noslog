@@ -19,7 +19,7 @@ import type { ChartRankingRow } from "@/features/music/schemas/chart-ranking-sch
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { scoreTone } from "@/lib/music/score-tone";
 
-/** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
+/** 등급 메달 — 순위표는 아이콘 20, 작은 자리는 16 */
 export function ScoreGrade({
     rank,
     size = 20,
@@ -95,14 +95,14 @@ function ChartLeaderboardRow({
             <Avatar
                 src={row.user.avatar}
                 fallbackName={row.user.username}
-                size={32}
+                size="compact"
             />
             <div className="nl-player-row__identity">
                 <div className="nl-player-row__name">
                     <CountryMarker country={row.user.country ?? ""} />
                     <IntentLink
                         href={href(`/profile/${row.user_id}`)}
-                        className="nl-player-row__link nl-link"
+                        className="nl-player-row__link nl-link nl-emphasis-label"
                         lang={language}
                         title={name}
                     >
@@ -141,7 +141,10 @@ function ChartLeaderboardRowSkeleton() {
             </span>
             <span className="nl-avatar nl-skeleton" />
             <div className="nl-player-row__identity">
-                <SkeletonText className="nl-player-row__link" width="m" />
+                <SkeletonText
+                    className="nl-player-row__link nl-emphasis-label"
+                    width="m"
+                />
             </div>
             <span className="nl-chart-leaderboard__result">
                 <span className="nl-score-grade nl-skeleton" />

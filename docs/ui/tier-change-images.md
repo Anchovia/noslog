@@ -51,4 +51,4 @@ DB·Blob·로그인·실제 공지 저장/게시는 자동 부품 검사에서 �
 
 두 이미지 생성기는 서로 작업 중인 동안 입력·생성·첨부가 잠긴다. 입력을 고치면 이전 미리보기를 지우고 업로드 실패 시 본문을 보존한다. 고정 칸 폭을 넘는 큰 숫자는 잘라내거나 축소하지 않고 오류로 알린다.
 
-원본은 `schemas/tier-rebalance-image-schema.ts`, `lib/tier-rebalance-image.ts`, `components/tier-rebalance-image-builder.tsx`(모두 `features/announcements/` 아래)다. Storybook `Features/Announcements/TierRebalanceImageBuilder`에서 실제 PNG 크기·명시적 프리셋·빈 입력/모순·첨부 실패/재시도·미리보기 무효화를 검사한다. 실제 DB·Blob·공지 저장은 실행하지 않는다.
+원본은 `features/announcements/schemas/tier-rebalance-image-schema.ts` · `features/announcements/lib/tier-rebalance-image.ts` · `features/announcements/components/tier-rebalance-image-builder.tsx` 다. Storybook `Features/Announcements/TierRebalanceImageBuilder`에서 실제 PNG 크기·명시적 프리셋·빈 입력/모순·첨부 실패/재시도·미리보기 무효화를 검사한다. 실제 DB·Blob·공지 저장은 실행하지 않는다.

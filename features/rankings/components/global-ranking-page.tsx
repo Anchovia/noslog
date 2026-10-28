@@ -15,6 +15,7 @@ import type {
     GlobalRankingQuery,
 } from "@/features/rankings/schemas/global-ranking-schema";
 import { GLOBAL_RANKING_PAGE_SIZE } from "@/features/rankings/schemas/global-ranking-schema";
+import useDelayedFlag from "@/lib/hooks/use-delayed-flag";
 
 import PlayerRankingRow, {
     PlayerRankingRowSkeleton,
@@ -43,6 +44,15 @@ export default function GlobalRankingPage({
         busy,
         retry: retryRequest,
     } = useGlobalRankings(initialQuery, initialData, viewerId);
+    // 모드 · 지표 전환은 순위와 값의 뜻이 바뀐다 — 스켈레톤 지연 동안만 이전 표를 흐리게 두고, 넘으면 같은 틀 스켈레톤.
+    // 쪽 · 지역은 같은 뜻이라 이전 표를 흐리게 둔다
+    const switching = useDelayedFlag(
+        busy &&
+            data !== null &&
+            (data.query.mode !== query.mode ||
+                data.query.metric !== query.metric),
+        `${query.mode}-${query.metric}`
+    );
     const totalPages = Math.max(
         1,
         Math.ceil((data?.totalCount ?? 0) / GLOBAL_RANKING_PAGE_SIZE)
@@ -90,7 +100,6 @@ export default function GlobalRankingPage({
                         ]}
                     />
                     <CompactSelect
-                        outlined
                         label={t("rankings.regionNav")}
                         value={controls.region}
                         onValueChange={(region) =>
@@ -124,12 +133,14 @@ export default function GlobalRankingPage({
                         // 갱신 중에는 이전 순위표를 흐린 색으로 두고 안내는 화면 읽기에만 — 글자 한 줄이 끼어 순위표가 밀리지 않게
                         <LoadingStatus label={t("rankings.updating")} />
                     ) : null}
-                    {!data && result.isError ? null : !data ? (
-                        // 첫 불러오기 — 순위표와 같은 틀(머리글은 실제 글자, 줄만 스켈레톤), 안내는 화면 읽기에만
+                    {!data && result.isError ? null : !data || switching ? (
+                        // 첫 불러오기 · 길어진 뜻 바뀜 전환 — 순위표와 같은 틀(머리글은 실제 글자, 줄만 스켈레톤), 안내는 화면 읽기에만
                         <div aria-busy="true">
-                            <LoadingStatus
-                                label={t("rankings.loadingInitial")}
-                            />
+                            {data ? null : (
+                                <LoadingStatus
+                                    label={t("rankings.loadingInitial")}
+                                />
+                            )}
                             <div
                                 className="nl-ranking-head nl-metadata nl-muted"
                                 aria-hidden

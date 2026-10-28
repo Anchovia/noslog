@@ -3,7 +3,6 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
-import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
 import type {
     DiscoveryCounts,
     DiscoveryPage,
@@ -18,11 +17,15 @@ import {
 } from "@/features/music/schemas/discovery-schema";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import {
-    contributionBaseRevision,
-    isExtractedChart,
-} from "@/lib/chart-pattern/chartSource";
 import db from "@/lib/db";
+import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
+import type { Locale } from "@/lib/i18n/routing";
+
+/** 번역 제목은 보는 사람의 언어 · 설정마다 달라 캐시한 목록 위에 따로 붙인다 */
+export interface DiscoveryTitleDisplay {
+    locale: Locale;
+    showLocalizedTitle: boolean;
+}
 
 export function publicDiscoveryQuery(
     query: DiscoveryQuery,
@@ -149,17 +152,54 @@ export function getDiscoveryCounts(
         : queryDiscoveryCounts(input, userId);
 }
 
-export function getDiscoveryPage(
+export async function getDiscoveryPage(
     input: DiscoveryQuery,
     offset = 0,
-    userId: number | null = null
+    userId: number | null = null,
+    display?: DiscoveryTitleDisplay
 ): Promise<DiscoveryPage> {
-    return userId === null
+    const page = await (userId === null
         ? getCachedPublicDiscoveryPage(
               publicDiscoveryQuery(input, null),
               Math.max(0, Math.min(100000, Math.floor(offset)))
           )
-        : queryDiscoveryPage(input, offset, userId);
+        : queryDiscoveryPage(input, offset, userId));
+    return display ? withLocalizedTitles(page, display) : page;
+}
+
+// 상세 머리와 같은 규칙(getLocalizedMusicTitle) — 승인된 번역 · 일본어는 읽기
+async function withLocalizedTitles(
+    page: DiscoveryPage,
+    display: DiscoveryTitleDisplay
+): Promise<DiscoveryPage> {
+    if (!display.showLocalizedTitle || !page.items.length) return page;
+    const music = await db.music.findMany({
+        where: {
+            index: { in: [...new Set(page.items.map((item) => item.index))] },
+        },
+        select: {
+            index: true,
+            title: true,
+            titleKana: true,
+            translations: {
+                where: { status: "approved", locale: display.locale },
+                select: { locale: true, title: true, status: true },
+            },
+        },
+    });
+    const byIndex = new Map(music.map((item) => [item.index, item]));
+    return {
+        ...page,
+        items: page.items.map((item) => {
+            const source = byIndex.get(item.index);
+            return {
+                ...item,
+                localizedTitle: source
+                    ? getLocalizedMusicTitle(source, display.locale, true)
+                    : null,
+            };
+        }),
+    };
 }
 
 async function queryDiscoveryCounts(
@@ -221,7 +261,6 @@ async function queryDiscoveryPage(
                     WHEN LOWER(music."artist") = LOWER(${query.q}) THEN 2 ELSE 1 END AS relevance,
                 1 AS target_count,
                 CASE eligible."difficulty" WHEN 'Normal' THEN 0 WHEN 'Hard' THEN 1 WHEN 'Expert' THEN 2 ELSE 3 END AS difficulty_order,
-                eligible."id" AS "chartId",
                 jsonb_build_array(jsonb_build_object('difficulty', eligible."difficulty", 'level', eligible."level")) AS targets
             FROM music AS music JOIN eligible ON eligible."music_idx" = music."index"
             ${musicWhere}
@@ -255,7 +294,7 @@ async function queryDiscoveryPage(
         {
             total: number;
             chartTotal: number;
-            items: (DiscoveryPage["items"][number] & { chartId?: number })[];
+            items: DiscoveryPage["items"];
         }[]
     >(Prisma.sql`
         WITH eligible AS (${eligible}), catalog AS (${catalog}), page AS (
@@ -265,81 +304,17 @@ async function queryDiscoveryPage(
             COALESCE((SELECT jsonb_agg(to_jsonb(page)) FROM page), '[]'::jsonb) AS items FROM catalog
     `);
     const row = rows[0] ?? { total: 0, chartTotal: 0, items: [] };
-    const charts = chartScope
-        ? await getChartRowInfo(
-              row.items.flatMap((item) =>
-                  item.chartId === undefined ? [] : [item.chartId]
-              )
-          )
-        : null;
     return discoveryPageSchema.parse({
         ...row,
-        items: row.items.map(({ chartId, ...item }) => ({
+        items: row.items.map((item) => ({
             ...item,
             normal: item.normal ?? 0,
             hard: item.hard ?? 0,
             expert: item.expert ?? 0,
-            ...(charts && chartId !== undefined
-                ? { chart: charts.get(chartId) }
-                : {}),
         })),
         nextOffset:
             safeOffset + row.items.length < row.total
                 ? safeOffset + row.items.length
                 : null,
     });
-}
-
-/**
- * 채보 줄의 작성자 · 출처 · 공개일(2026-09-25 I2) — 뷰어 머리와 같은 규칙: 작성자는 유저 기여면 그 사람, 아니면 공개한 사람.
- * 이름 옆 라벨은 기여 Lv(이름 라벨 규칙의 최소 등급 이상)만 — 운영자 라벨은 목록에 두지 않는다
- */
-async function getChartRowInfo(chartIds: number[]) {
-    const info = new Map<
-        number,
-        NonNullable<DiscoveryPage["items"][number]["chart"]>
-    >();
-    if (!chartIds.length) return info;
-    const patterns = await db.chartPattern.findMany({
-        where: { chartId: { in: chartIds } },
-        select: {
-            chartId: true,
-            publishedAt: true,
-            publishedRevision: true,
-            author: { select: { id: true, username: true } },
-            publishedBy: { select: { username: true } },
-            revisions: {
-                where: { kind: { in: ["vid2bmap", "contribution"] } },
-                select: { number: true, kind: true, message: true },
-            },
-        },
-    });
-    const labels = await getNameLabels(
-        patterns.flatMap((pattern) =>
-            pattern.author?.username ? [pattern.author.id] : []
-        )
-    );
-    for (const pattern of patterns) {
-        const author = pattern.author?.username ? pattern.author : null;
-        const label = author ? labels.get(author.id) : null;
-        info.set(pattern.chartId, {
-            publishedAt: pattern.publishedAt?.toISOString() ?? null,
-            author: author?.username ?? pattern.publishedBy?.username ?? null,
-            authorLevel: label?.kind === "level" ? label.level : null,
-            extracted:
-                pattern.publishedRevision !== null &&
-                isExtractedChart(
-                    pattern.publishedRevision,
-                    pattern.revisions.map((revision) => ({
-                        number: revision.number,
-                        kind: revision.kind,
-                        baseRevision:
-                            revision.kind === "contribution"
-                                ? contributionBaseRevision(revision.message)
-                                : null,
-                    }))
-                ),
-        });
-    }
-    return info;
 }

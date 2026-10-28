@@ -3,15 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ListFilter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import type { CSSProperties } from "react";
-import {
-    useEffect,
-    useId,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import {
@@ -42,18 +34,13 @@ import type {
     PublicArcade,
 } from "@/features/arcades/schemas/public-arcade-schema";
 import { arcadeDiscoverySchema } from "@/features/arcades/schemas/public-arcade-schema";
-import { readTokenPixels } from "@/lib/design-tokens";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 
 import ArcadeDiscoveryMap from "./arcade-discovery-map";
+import ArcadeMapSheet from "./arcade-map-sheet";
 import ArcadeResultCard from "./arcade-result-card";
 
 const SORTS = ["distance", "name", "preferred"] as const;
-// 시트 끌기 — 이만큼 움직여야 끌기로 본다(그 전엔 탭) · 이만큼 끌고 놓으면 그 방향 단계로 ·
-// 올린 목록을 맨 위에서 당길 때는 스크롤과 헷갈리지 않게 더 길게
-const SHEET_SLOP = 8;
-const SHEET_DRAG = 24;
-const SHEET_PULL = 48;
 
 /**
  * 오락실 찾기 — 지도와 목록이 한 집합이다.
@@ -118,20 +105,7 @@ export default function ArcadeDiscoveryPage({
     );
     const sheetLayout = !sideBySide && mapState !== "error";
     const [sheet, setSheet] = useState<"collapsed" | "expanded">("collapsed");
-    const [peek, setPeek] = useState<number | null>(null);
-    const resultsRef = useRef<HTMLDivElement>(null);
-    const catalogRef = useRef<HTMLDivElement>(null);
     const bodyRef = useRef<HTMLDivElement>(null);
-    const bodyId = useId();
-    const gesture = useRef<{
-        startY: number;
-        from: number;
-        range: number;
-        threshold: number;
-        active: boolean;
-    } | null>(null);
-    const suppressClick = useRef(false);
-    const pointerHandled = useRef(false);
     const [locationState, setLocationState] = useState<
         "idle" | "requesting" | "denied" | "error"
     >("idle");
@@ -220,6 +194,7 @@ export default function ArcadeDiscoveryPage({
     // 내 주변만 보기·가까운 순 — 위치 권한을 받아 origin 을 잡고, 성공했을 때만 켠다
     // URL 로 들고 들어왔는데 위치가 없으면 한 번 요청한다 (실패하면 켜진 상태만 남고 거리 정렬은 빠진다)
     const requestedFromUrl = useRef(false);
+    const requestNearbyFromUrl = useEffectEvent(() => nearby(() => undefined));
     useEffect(() => {
         if (
             (!values.near && values.sort !== "distance") ||
@@ -228,8 +203,7 @@ export default function ArcadeDiscoveryPage({
         )
             return;
         requestedFromUrl.current = true;
-        nearby(() => undefined);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        requestNearbyFromUrl();
     }, [values.near, values.sort, origin]);
     function nearby(onSuccess: () => void) {
         if (!navigator.geolocation || !window.isSecureContext) {
@@ -297,48 +271,6 @@ export default function ArcadeDiscoveryPage({
                     body.getBoundingClientRect().top;
         });
     }
-    // 시트 끌기 — 끄는 동안은 손가락 위치로 옮긴다. 놓으면 인라인 위치를 지워 가까운 단계(끈 방향)로 곧바로 바뀐다
-    function beginDrag(y: number, threshold: number) {
-        const catalog = catalogRef.current;
-        if (!sheetLayout || !catalog || peek === null) return;
-        const range = catalog.offsetHeight - peek;
-        gesture.current = {
-            startY: y,
-            from: sheet === "expanded" ? 0 : range,
-            range,
-            threshold,
-            active: false,
-        };
-    }
-    function moveDrag(y: number) {
-        const drag = gesture.current;
-        const catalog = catalogRef.current;
-        if (!drag || !catalog) return false;
-        const distance = y - drag.startY;
-        if (!drag.active) {
-            if (Math.abs(distance) < SHEET_SLOP) return false;
-            drag.active = true;
-            resultsRef.current?.setAttribute("data-dragging", "");
-        }
-        const offset = Math.min(drag.range, Math.max(0, drag.from + distance));
-        catalog.style.transform = `translateY(${offset}px)`;
-        return true;
-    }
-    function endDrag(y: number | null) {
-        const drag = gesture.current;
-        gesture.current = null;
-        if (!drag?.active) return false;
-        resultsRef.current?.removeAttribute("data-dragging");
-        if (catalogRef.current) catalogRef.current.style.transform = "";
-        if (y !== null && Math.abs(y - drag.startY) >= drag.threshold)
-            setSheet(y < drag.startY ? "expanded" : "collapsed");
-        return true;
-    }
-    function toggleSheet() {
-        setSheet((current) =>
-            current === "expanded" ? "collapsed" : "expanded"
-        );
-    }
     function clearFilters() {
         return {
             ...values,
@@ -385,43 +317,11 @@ export default function ArcadeDiscoveryPage({
                 condition: token.label,
             }),
         }));
-    // 내린 시트 높이 = 손잡이 · 요약 줄 · (적용 조건) · 첫 카드 요약 + 아래 16 — 내용에서 잰다.
-    // 첫 카드가 펼쳐져 있어도 요약 줄까지만 재서 지도 높이가 카드 펼침에 따라 흔들리지 않는다
-    useLayoutEffect(() => {
-        if (!sheetLayout) return;
-        const catalog = catalogRef.current;
-        const body = bodyRef.current;
-        if (!catalog || !body) return;
-        const anchor = body.querySelector<HTMLElement>(
-            ".nl-arcades__list > li:first-child .nl-arcade-result__summary, [data-sheet-peek]"
-        );
-        if (!anchor) return;
-        const measure = () =>
-            setPeek(
-                Math.ceil(
-                    anchor.getBoundingClientRect().bottom +
-                        body.scrollTop -
-                        catalog.getBoundingClientRect().top +
-                        // 첫 카드 아래 여백 — compact component inset
-                        readTokenPixels(catalog, "--nl-spacing-16")
-                )
-            );
-        measure();
-        const observer = new ResizeObserver(measure);
-        observer.observe(catalog);
-        observer.observe(anchor);
-        return () => observer.disconnect();
-    }, [sheetLayout, result.length, tokens.length, bounds]);
     return (
         <PageContainer
             className="nl-arcades"
             data-sheet-layout={mapState !== "error" || undefined}
             data-sheet={sheet}
-            style={
-                peek === null
-                    ? undefined
-                    : ({ "--nl-sheet-peek": `${peek}px` } as CSSProperties)
-            }
         >
             {/* 검색줄 옆 필터 자리는 CSS 미디어 쿼리가 아니라 같은 판정(popover)으로 — 둘이 엇갈리면 세 개가 한 줄에 낀다 */}
             <div
@@ -660,8 +560,15 @@ export default function ArcadeDiscoveryPage({
                     />
                 ) : null}
             </div>
-            <div ref={resultsRef} className="nl-arcades__results">
-                <div className="nl-arcades__map-region">
+            <ArcadeMapSheet
+                sheetLayout={sheetLayout}
+                sheet={sheet}
+                onSheetChange={setSheet}
+                toggleLabel={t("arcades.list")}
+                peekSelector=".nl-arcades__list > li:first-child .nl-arcade-result__summary, [data-sheet-peek]"
+                measureKey={`${result.length}-${tokens.length}-${bounds ? "b" : ""}`}
+                bodyRef={bodyRef}
+                map={
                     <ArcadeDiscoveryMap
                         inlineError
                         appKey={appKey}
@@ -674,194 +581,85 @@ export default function ArcadeDiscoveryPage({
                         onSearchArea={setBounds}
                         onStateChange={setMapState}
                     />
-                </div>
-                <div ref={catalogRef} className="nl-arcades__catalog">
-                    <div className="nl-arcades__sheet-head">
-                        {/* 손잡이 줄 전체가 누르는 자리 — 탭하면 올리고 내리고, 끌면 시트가 따라오고 놓으면 그 방향 단계로 */}
-                        <button
-                            type="button"
-                            className="nl-arcades__sheet-toggle"
-                            aria-label={t("arcades.list")}
-                            aria-expanded={sheet === "expanded"}
-                            aria-controls={bodyId}
-                            onPointerDown={(event) => {
-                                pointerHandled.current = false;
-                                event.currentTarget.setPointerCapture(
-                                    event.pointerId
-                                );
-                                beginDrag(event.clientY, SHEET_DRAG);
-                            }}
-                            onPointerMove={(event) => moveDrag(event.clientY)}
-                            // 탭·끌기는 손을 뗄 때 처리한다 — 쓸어 올린 직후의 탭은 브라우저가 클릭을 만들지 않을 때가 있다
-                            onPointerUp={(event) => {
-                                pointerHandled.current = true;
-                                if (!endDrag(event.clientY)) toggleSheet();
-                            }}
-                            onPointerCancel={() => endDrag(null)}
-                            // 키보드(Enter · Space)는 포인터 없이 클릭만 온다. 포인터로 이미 처리한 클릭은 건너뛴다
-                            onClick={() => {
-                                if (pointerHandled.current) {
-                                    pointerHandled.current = false;
-                                    return;
-                                }
-                                toggleSheet();
-                            }}
-                        />
-                        <span className="nl-arcades__handle" aria-hidden />
-                        <div className="nl-arcades__summary-row">
-                            <p
-                                className="nl-arcades__summary nl-body-secondary nl-muted"
-                                role="status"
-                            >
-                                {t("arcades.resultsSummary", {
-                                    count: result.length,
-                                    verified: runningCount,
-                                })}
-                            </p>
-                            {popover ? null : (
-                                <SortMenu
-                                    size="sm"
-                                    className="nl-arcades__sort"
-                                    label={t("discovery.sortLabel")}
-                                    value={values.sort}
-                                    options={sorts}
-                                    onValueChange={changeSort}
-                                />
-                            )}
-                        </div>
-                    </div>
-                    <div
-                        ref={bodyRef}
-                        id={bodyId}
-                        className="nl-arcades__sheet-body"
-                        // 내린 시트 안으로 포커스가 들어오면(키보드) 가려진 카드가 보이게 올린다
-                        onFocusCapture={() => {
-                            if (sheetLayout && sheet === "collapsed")
-                                setSheet("expanded");
-                        }}
-                        // 내린 시트는 몸 어디를 끌어도 시트가 따라온다(내린 동안 목록은 스크롤하지 않는다)
-                        onPointerDown={(event) => {
-                            suppressClick.current = false;
-                            if (sheet === "collapsed")
-                                beginDrag(event.clientY, SHEET_DRAG);
-                        }}
-                        onPointerMove={(event) => {
-                            if (sheet !== "collapsed") return;
-                            const target = event.currentTarget;
-                            if (
-                                moveDrag(event.clientY) &&
-                                !target.hasPointerCapture(event.pointerId)
-                            )
-                                target.setPointerCapture(event.pointerId);
-                        }}
-                        onPointerUp={(event) => {
-                            if (sheet === "collapsed" && endDrag(event.clientY))
-                                suppressClick.current = true;
-                        }}
-                        onPointerCancel={() => {
-                            if (sheet === "collapsed") endDrag(null);
-                        }}
-                        // 끌고 놓은 손가락이 카드를 누른 것으로 이어지지 않게
-                        onClickCapture={(event) => {
-                            if (!suppressClick.current) return;
-                            suppressClick.current = false;
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }}
-                        // 올린 목록은 맨 위에서 아래로 당길 때만 시트가 따라 내려온다(그 밖에는 목록 스크롤)
-                        onTouchStart={(event) => {
-                            if (
-                                sheet === "expanded" &&
-                                event.currentTarget.scrollTop <= 0
-                            )
-                                beginDrag(event.touches[0].clientY, SHEET_PULL);
-                        }}
-                        onTouchMove={(event) => {
-                            const drag = gesture.current;
-                            if (sheet !== "expanded" || !drag) return;
-                            const y = event.touches[0].clientY;
-                            if (
-                                event.currentTarget.scrollTop > 0 ||
-                                (!drag.active && y < drag.startY)
-                            ) {
-                                endDrag(null);
-                                gesture.current = null;
-                                return;
-                            }
-                            moveDrag(y);
-                        }}
-                        onTouchEnd={(event) => {
-                            if (sheet === "expanded")
-                                endDrag(event.changedTouches[0].clientY);
-                        }}
-                        onTouchCancel={() => {
-                            if (sheet === "expanded") endDrag(null);
-                        }}
-                    >
-                        <AppliedTokens
-                            label={t("arcades.filters")}
-                            clearLabel={t("discovery.clearFilters")}
-                            onClear={() => commit(clearFilters())}
-                            tokens={tokens}
-                        />
-                        {bounds ? (
-                            <Button
+                }
+                head={
+                    <div className="nl-arcades__summary-row">
+                        <p
+                            className="nl-arcades__summary nl-body-secondary nl-muted"
+                            role="status"
+                        >
+                            {t("arcades.resultsSummary", {
+                                count: result.length,
+                                verified: runningCount,
+                            })}
+                        </p>
+                        {popover ? null : (
+                            <SortMenu
                                 size="sm"
-                                variant="ghost"
-                                onClick={() => setBounds(null)}
-                            >
-                                {t("arcades.resetArea")}
-                            </Button>
-                        ) : null}
-                        {result.length ? (
-                            <ul
-                                ref={listRef}
-                                className="nl-arcades__list"
-                                aria-label={t("arcades.list")}
-                            >
-                                {result.map((arcade, index) => (
-                                    <li key={arcade.id}>
-                                        <ArcadeResultCard
-                                            arcade={arcade}
-                                            eagerPhoto={index === 0}
-                                            distance={arcadeDistance(
-                                                arcade,
-                                                origin
-                                            )}
-                                            now={now}
-                                            selected={arcade.id === selectedId}
-                                            expanded={arcade.id === expandedId}
-                                            onSelect={select}
-                                            onToggle={toggleCard}
-                                            onShowOnMap={
-                                                sheetLayout
-                                                    ? showOnMap
-                                                    : undefined
-                                            }
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p
-                                className="nl-body-secondary nl-muted"
-                                data-sheet-peek
-                            >
-                                {t("arcades.noResults")}
-                            </p>
-                        )}
-                        {/* 시트 배치에서는 페이지가 스크롤되지 않아 셸 푸터 대신 목록 끝에 같은 푸터를 둔다 */}
-                        <div className="nl-arcades__footer">
-                            <FooterLinks
-                                privacyHref={href("/privacy")}
-                                privacyLabel={t("footer.privacy")}
-                                externalLabel={t("shell.externalLink")}
-                                notice={t("shell.serviceNotice")}
+                                className="nl-arcades__sort"
+                                label={t("discovery.sortLabel")}
+                                value={values.sort}
+                                options={sorts}
+                                onValueChange={changeSort}
                             />
-                        </div>
+                        )}
                     </div>
+                }
+            >
+                <AppliedTokens
+                    label={t("arcades.filters")}
+                    clearLabel={t("discovery.clearFilters")}
+                    onClear={() => commit(clearFilters())}
+                    tokens={tokens}
+                />
+                {bounds ? (
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setBounds(null)}
+                    >
+                        {t("arcades.resetArea")}
+                    </Button>
+                ) : null}
+                {result.length ? (
+                    <ul
+                        ref={listRef}
+                        className="nl-arcades__list"
+                        aria-label={t("arcades.list")}
+                    >
+                        {result.map((arcade, index) => (
+                            <li key={arcade.id}>
+                                <ArcadeResultCard
+                                    arcade={arcade}
+                                    eagerPhoto={index === 0}
+                                    distance={arcadeDistance(arcade, origin)}
+                                    now={now}
+                                    selected={arcade.id === selectedId}
+                                    expanded={arcade.id === expandedId}
+                                    onSelect={select}
+                                    onToggle={toggleCard}
+                                    onShowOnMap={
+                                        sheetLayout ? showOnMap : undefined
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="nl-body-secondary nl-muted" data-sheet-peek>
+                        {t("arcades.noResults")}
+                    </p>
+                )}
+                {/* 시트 배치에서는 페이지가 스크롤되지 않아 셸 푸터 대신 목록 끝에 같은 푸터를 둔다 */}
+                <div className="nl-arcades__footer">
+                    <FooterLinks
+                        privacyHref={href("/privacy")}
+                        privacyLabel={t("footer.privacy")}
+                        externalLabel={t("shell.externalLink")}
+                        notice={t("shell.serviceNotice")}
+                    />
                 </div>
-            </div>
+            </ArcadeMapSheet>
         </PageContainer>
     );
 }

@@ -14,6 +14,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
+    /* 머리 → 본문 = 페이지 제목 → 첫 내용 16 (글 간격 24 에서 당긴다) */
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
 }
 .noslog-ui .nl-announcements__heading h1 {
     min-width: 0;
@@ -26,8 +28,7 @@
     gap: var(--nl-spacing-4) var(--nl-spacing-12);
     align-items: center;
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
-        var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-announcement-row > .nl-announcement-meta {
@@ -69,7 +70,7 @@
             "title title";
     }
 }
-/* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
+/* 공지 줄 제목 = 16/600 — 전체 목록 · 홈 카드 · 내 이벤트 글 모두. 홈 고정 줄엔 면 없이 핀만 둔다 */
 .noslog-ui .nl-announcement-row__title {
     margin: 0;
     min-width: 0;
@@ -89,7 +90,7 @@
 /* 면 가장자리 = 페이지 내용 선(제목 · 칩과 같은 선), 글자는 면 안쪽 12 (목록 항목 카드) */
 .noslog-ui .nl-announcements__pinned .nl-announcement-row {
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     box-shadow: none;
 }
@@ -123,7 +124,7 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-announcements__adjacent-link[data-side="newer"] {
@@ -131,16 +132,19 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-announcements__adjacent-link:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
         );
     }
 }
-.noslog-ui .nl-announcements__adjacent-link:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+.noslog-ui .nl-announcements__adjacent-link:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-announcement-body {
     display: flex;
@@ -149,12 +153,12 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-/* 본문 소제목(2026-09-26 역할 값) — 사이 16 위에 더해 구역 사이 32 · 구역 제목 → 첫 내용 12, 상자 제목(h3) → 내용 8 */
+/* 본문 소제목 — 문단 사이 16 대신 구역 사이 · 구역 제목 → 첫 내용(구역 간격 토큰), 상자 제목(h3) → 내용 8 */
 .noslog-ui .nl-announcement-body > h2:not(:first-child) {
-    margin-top: calc(var(--nl-spacing-32) - var(--nl-spacing-16));
+    margin-top: calc(var(--nl-section-gap) - var(--nl-spacing-16));
 }
 .noslog-ui .nl-announcement-body > h2 + * {
-    margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-16));
+    margin-top: calc(var(--nl-section-title-gap) - var(--nl-spacing-16));
 }
 .noslog-ui .nl-announcement-body > h3 + * {
     margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
@@ -176,7 +180,7 @@
     display: block;
     max-width: 100%;
     height: auto;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
 }
 /* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤). 번호 목록도 같은 들여쓰기(2026-09-26 감사) */
 .noslog-ui .nl-announcement-body ul {
@@ -188,12 +192,25 @@
     list-style: decimal;
 }
 .noslog-ui .nl-announcement-body strong {
+    font-weight: var(--nl-type-weight-strong);
+}
+/* 한국어 · 일본어 strong 500 은 16 본문 글자 400 과 거의 구분되지 않는다. 읽는 본문의 강조는 강조 글자(600)와 같게 */
+.noslog-ui .nl-announcement-body strong:is(:lang(ko), :lang(ja)) {
     font-weight: var(--nl-type-weight-semibold);
 }
+/* 본문 안 링크 = Spectrum 2 secondary 링크 — 늘 밑줄, 올림 · 키 포커스에 밝은 글자 */
 .noslog-ui .nl-announcement-body a {
-    color: var(--nl-content-interactive);
+    color: var(--nl-content-default);
     text-decoration: underline;
     text-underline-position: under;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-announcement-body a:hover {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-announcement-body a:focus-visible {
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-announcement-body a svg {
     display: inline-block;
@@ -219,7 +236,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-strong);
+    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-ring);
     padding-inline-start: var(--nl-spacing-12);
     color: var(--nl-content-subdued);
 }
@@ -230,8 +247,8 @@
 }
 /* 글 안의 코드(K1) = 옅은 면 + 모서리 4 */
 .noslog-ui .nl-announcement-body code {
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-raised);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-surface-surface);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     font-family: var(--nl-font-family-mono);
     font-size: var(--nl-type-size-14);
@@ -241,9 +258,9 @@
     margin: 0;
     /* 세로 flex 안에서 줄지 않으면 글 전체가 넘친다 — 이 상자만 줄여 놓고 안에서 민다 */
     min-width: 0;
-    border: var(--nl-stroke-default) solid var(--nl-border-subtle);
-    border-radius: var(--nl-radius-field);
-    background: var(--nl-surface-sunken);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-canvas);
     padding: var(--nl-spacing-12);
     overflow-x: auto;
 }
@@ -251,7 +268,7 @@
     border-radius: 0;
     background: none;
     padding: 0;
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
 }
 /* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다 */
 .noslog-ui .nl-announcement-body__table {
@@ -262,18 +279,29 @@
     width: 100%;
     border-collapse: collapse;
     font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
 }
+/* 표 줄 = 목록 행(한 줄일 때 컨트롤 높이 · 아래 선 포함). 여러 줄 칸은 그만큼 늘어난다 */
 .noslog-ui .nl-announcement-body th,
 .noslog-ui .nl-announcement-body td {
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
+    padding: calc(
+            (
+                    var(--nl-control-height) - var(--nl-type-line-height-ui) -
+                        var(--nl-stroke-default)
+                ) /
+                2
+        )
+        var(--nl-spacing-12);
     text-align: start;
     vertical-align: top;
+    /* 본문의 anywhere 를 끊는다 — 칸 안 코드는 글자 중간에서 꺾지 않고 좁으면 표만 가로로 민다 */
+    overflow-wrap: normal;
 }
+/* 머리 칸 = Spectrum 2 TableView 머리 글자 bold */
 .noslog-ui .nl-announcement-body th {
     color: var(--nl-content-subdued);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-strong);
     white-space: nowrap;
 }
 
@@ -296,7 +324,7 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-poll-section__card-head {
@@ -311,18 +339,16 @@
     gap: var(--nl-spacing-4);
     margin-inline-start: auto;
 }
-/* 만들기 창(2026-09-23 W1) — 칸 사이 16, 선택지 줄은 입력칸 + 지우기 아이콘 */
+/* 만들기 창(2026-09-23 W1) — 칸 사이는 폼 칸 공용 24(foundation.css)를 받고, 선택지 줄은 입력칸 + 지우기 아이콘 */
 .noslog-ui .nl-poll-builder {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
     min-width: 0;
 }
-/* 「고급」 안의 칸도 칸 사이 16(2026-10-01 — 세로 폼 칸 사이는 모두 16) */
+/* 「자세히」 안의 칸도 세로로 쌓기만 하고 칸 사이는 같은 공용 24 */
 .noslog-ui .nl-poll-builder .nl-disclosure__body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-poll-builder__options {
     display: flex;
@@ -353,7 +379,7 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-poll > p {
@@ -377,19 +403,24 @@
     width: 100%;
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
-    border-radius: var(--nl-radius-field);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-control);
     background: none;
     color: var(--nl-content-default);
     text-align: start;
 }
 @media (hover: hover) {
     .noslog-ui .nl-poll__option:hover:not(:disabled) {
-        border-color: var(--nl-border-strong);
+        border-color: var(--nl-border-ring);
+        color: var(--nl-content-strong);
     }
 }
+.noslog-ui .nl-poll__option:is(:focus-visible, :active):not(:disabled) {
+    border-color: var(--nl-border-ring);
+    color: var(--nl-content-strong);
+}
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
-    border-color: var(--nl-content-default);
+    border-color: var(--nl-border-ring);
     border-width: var(--nl-stroke-strong);
     padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
@@ -422,19 +453,19 @@
 .noslog-ui .nl-poll__label svg {
     flex-shrink: 0;
 }
-/* 진행 막대 — 검정 · 빙고와 같은 규격(트랙 8 · 모서리 full) */
+/* 진행 막대 — 공용 규격(트랙 8 · 모서리 4 · 트랙 divider) */
 .noslog-ui .nl-poll__bar {
     display: block;
     height: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-full);
+    border-radius: var(--nl-radius-small);
     background: var(--nl-border-divider);
     overflow: hidden;
 }
 .noslog-ui .nl-poll__bar i {
     display: block;
     height: 100%;
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-border-strong);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-border-ring);
 }
 .noslog-ui .nl-poll__bar i[data-mine] {
     background: var(--nl-content-default);

@@ -14,13 +14,13 @@ export default function FeedbackReportCard({
     const imagePath = `/api/admin/private-images/feedback/${report.id}`;
 
     return (
-        <article className="overflow-hidden rounded-nl-container bg-nl-surface">
+        <article className="overflow-hidden rounded-nl-control bg-nl-surface">
             {report.hasImage ? (
                 <a
                     href={imagePath}
                     target="_blank"
                     rel="noreferrer"
-                    className="relative block aspect-video bg-nl-raised"
+                    className="relative block aspect-video bg-nl-surface"
                 >
                     <Image
                         src={imagePath}
@@ -30,7 +30,7 @@ export default function FeedbackReportCard({
                         sizes="358px"
                         className="object-contain"
                     />
-                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-field bg-nl-raised">
+                    <span className="absolute top-nl-8 right-nl-8 flex size-nl-32 items-center justify-center rounded-nl-control bg-nl-surface">
                         <ExternalLink className="nl-icon-small" aria-hidden />
                     </span>
                 </a>
@@ -83,7 +83,7 @@ export default function FeedbackReportCard({
                     {report.content}
                 </p>
                 {report.reply ? (
-                    <div className="rounded-nl-field bg-nl-raised p-nl-12">
+                    <div className="rounded-nl-control bg-nl-control p-nl-12">
                         <p className="nl-metadata text-nl-subdued">
                             NosLog 답변
                         </p>

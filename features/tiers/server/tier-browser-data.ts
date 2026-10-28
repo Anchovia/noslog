@@ -313,14 +313,14 @@ export async function getTierBrowserBandRecords(
             (query.mode === "basic" || (record.gradeRecital ?? 0) > 0);
         if (!played) continue;
         const constant = constants.get(record.chartId);
+        // 공식 Grd 가 0 이면(상위 기록 밖이라 수집되지 않음) 값이 없는 것 — 띠 · 기여에 「+0.00」 대신 비운다
+        const grade =
+            query.mode === "basic" ? record.gradeBasic : record.gradeRecital;
         result[record.chartId] = {
             score: record.score,
             rank: record.rank,
             fc_type: record.fcType,
-            grade:
-                (query.mode === "basic"
-                    ? record.gradeBasic
-                    : (record.gradeRecital ?? 0)) / 100,
+            grade: grade ? grade / 100 : null,
             rating:
                 constant !== undefined && basis.theoreticalMax
                     ? getBasicRatingMaxContribution(

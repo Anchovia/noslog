@@ -114,4 +114,9 @@ test("비로그인 설정 접근은 같은 언어의 로그인 화면으로 연�
     await expect(
         page.getByRole("link", { name: localeCopy.en.login })
     ).toBeVisible();
+    // 메타 자간은 영어도 0 — 좁은 칸에서 낱말 중간 꺾임을 막는다. 크롬은 계산값 0 을 "normal" 로 돌려준다
+    await expect(page.locator(".nl-metadata").first()).toHaveCSS(
+        "letter-spacing",
+        "normal"
+    );
 });

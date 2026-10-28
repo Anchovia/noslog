@@ -5,7 +5,6 @@ import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { requireAdmin } from "@/lib/admin";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import { parseChartDifficulty } from "@/lib/tiers";
-import { getJacketUrl } from "@/lib/music-jackets";
 
 export default async function AdminChartPatternPreviewPage({
     params,
@@ -36,7 +35,6 @@ export default async function AdminChartPatternPreviewPage({
             level={chart.level}
             revision={chart.pattern.savedRevision}
             document={document.data}
-            jacketUrl={getJacketUrl(chart.music.index, chart.music.background)}
             preview
             backHref={`/admin/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}/pattern`}
         />

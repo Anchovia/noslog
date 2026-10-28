@@ -16,7 +16,7 @@ export default function TierDragOverlay({
             background={entry.chart.music.background}
             title={entry.chart.music.title}
             className={cn(
-                "size-nl-48 rounded-nl-field border-nl-stroke-strong shadow-nl-overlay",
+                "size-nl-48 rounded-nl-control border-nl-stroke-strong shadow-nl-overlay",
                 getTierDifficultyBorder(entry.chart.difficulty)
             )}
             fallback={

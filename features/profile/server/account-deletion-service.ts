@@ -8,6 +8,7 @@ import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale } from "@/lib/i18n/routing";
+import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
 function invalidateDeletedAccount(userId: number) {
@@ -94,7 +95,11 @@ export async function deleteAccount(
         await session.destroy();
         return { success: true as const };
     } catch (error) {
-        console.error("회원 탈퇴 처리에 실패했습니다.", error);
+        logServerError(error, {
+            event: "profile.account-deletion.failed",
+            routePath: "/settings",
+            routeType: "action",
+        });
         return {
             success: false as const,
             message: t("settings.deleteError"),

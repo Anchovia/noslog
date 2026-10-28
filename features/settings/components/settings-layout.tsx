@@ -29,11 +29,14 @@ export default async function SettingsLayout({
     category,
     authenticated,
     accountHref,
+    subpage,
     children,
 }: {
     category?: SettingsCategory;
     authenticated: boolean;
     accountHref?: string;
+    /** 분류 안 한 단계 아래(연결 › 뮤즈캣) — 뒤로 링크는 그 분류로, 제목은 하위 쪽이 로고와 함께 그린다(시안) */
+    subpage?: boolean;
     children: ReactNode;
 }) {
     const { locale, t } = await getServerI18n();
@@ -95,17 +98,18 @@ export default async function SettingsLayout({
                             </a>
                         ))}
                     </nav>
-                    {!authenticated ? (
-                        <p className="nl-body-secondary nl-muted nl-settings__guest-note">
-                            {t("settings.guestSummary")}
-                        </p>
-                    ) : null}
                 </div>
                 <div className="nl-settings__detail">
-                    <BackLink href={root} plain className="nl-settings__back">
-                        {t("settings.overview")}
+                    <BackLink
+                        href={subpage ? `${root}?category=${current}` : root}
+                        plain
+                        className={subpage ? undefined : "nl-settings__back"}
+                    >
+                        {t(subpage ? titles[current] : "settings.overview")}
                     </BackLink>
-                    <PageHeading title={t(titles[current])} />
+                    {subpage ? null : (
+                        <PageHeading title={t(titles[current])} />
+                    )}
                     {children}
                 </div>
             </div>

@@ -101,11 +101,6 @@ export default function MusicRankingPanel({
                         </IntentLink>
                     </div>
                 ) : null}
-                {!data.isLoggedIn || empty ? null : !user ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {t("ranking.noRank")}
-                    </p>
-                ) : null}
                 <div
                     className="nl-ranking-list nl-stack"
                     ref={list}

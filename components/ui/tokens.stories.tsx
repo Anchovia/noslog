@@ -18,7 +18,7 @@ const meta = {
         >
             <h2 className="nl-section-title">기존 토큰과 Tailwind 연결</h2>
             <div
-                className="flex flex-col gap-nl-16 rounded-nl-container bg-nl-surface p-nl-16"
+                className="flex flex-col gap-nl-16 rounded-nl-control bg-nl-surface p-nl-16"
                 data-testid="token-sample"
             >
                 <p className="nl-body text-nl-content">기본 글자</p>
@@ -46,8 +46,8 @@ export const Default: Story = {
         await expect(getComputedStyle(sample).borderRadius).toBe("8px");
         const control = canvas.getByTestId("control-size");
         const expectedHeight = window.matchMedia("(min-width: 1056px)").matches
-            ? "40px"
-            : "44px";
+            ? "32px"
+            : "40px";
         await expect(getComputedStyle(control).height).toBe(expectedHeight);
     },
 };

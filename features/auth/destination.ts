@@ -8,9 +8,11 @@ const destinations: Record<string, MessageKey> = {
     bingo: "header.bingo",
     exams: "header.exams",
     arcades: "header.arcades",
+    gamecenter: "header.arcades",
     bookmarklet: "header.dataSync",
     settings: "settings.title",
     profile: "profile.fallbackTitle",
+    authorize: "partner.consent.destination",
 };
 
 export function getAuthDestinationKey(path: string) {

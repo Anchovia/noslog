@@ -1,10 +1,11 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import BackLink from "@/components/ui/back-link";
-import { foundationButtonClass } from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import FilterChipLinks from "@/components/ui/filter-chip-links";
+import IntentLink from "@/components/ui/intent-link";
 import NewsTabs from "@/features/announcements/components/news-tabs";
 import {
     EVENT_PHASES,
@@ -29,23 +30,18 @@ export default async function EventBoard({
     const { locale, t } = await getServerI18n();
     const base = localizePath("/events", locale);
     const events = board[phase];
-    const lock = !writer.userId
-        ? t("events.lock.login")
-        : !writer.eligible
-          ? t("events.lock.record")
-          : null;
+    const newPath = localizePath("/events/new", locale);
     return (
         <PageContainer width="reading" className="nl-events">
             <BackLink href={localizePath("/", locale)}>
                 {t("common.home")}
             </BackLink>
-            {/* 쓸 수 없으면 비활성 버튼 + 이유 한 줄 — 서열 투표 잠금과 같은 방식 */}
+            {/* 로그아웃이면 제목 줄 끝 「로그인하고 글쓰기 ›」, 쓸 자격이 없으면 「글쓰기」 를 두지 않고 설명 문장도 두지 않는다 */}
             <PageHeading
                 title={t("news.title")}
-                description={lock}
                 action={
-                    <div className="nl-events__actions">
-                        {writer.userId ? (
+                    writer.userId ? (
+                        <div className="nl-events__actions">
                             <ButtonLink
                                 href={localizePath("/events/mine", locale)}
                                 variant="ghost"
@@ -53,28 +49,25 @@ export default async function EventBoard({
                             >
                                 {t("events.mine")}
                             </ButtonLink>
-                        ) : null}
-                        {lock ? (
-                            <button
-                                type="button"
-                                disabled
-                                className={foundationButtonClass({
-                                    variant: "secondary",
-                                    size: "sm",
-                                })}
-                            >
-                                {t("events.write")}
-                            </button>
-                        ) : (
-                            <ButtonLink
-                                href={localizePath("/events/new", locale)}
-                                variant="secondary"
-                                size="sm"
-                            >
-                                {t("events.write")}
-                            </ButtonLink>
-                        )}
-                    </div>
+                            {writer.eligible ? (
+                                <ButtonLink
+                                    href={newPath}
+                                    variant="secondary"
+                                    size="sm"
+                                >
+                                    {t("events.write")}
+                                </ButtonLink>
+                            ) : null}
+                        </div>
+                    ) : (
+                        <IntentLink
+                            className="nl-heading-link nl-control"
+                            href={`${localizePath("/login", locale)}?returnTo=${encodeURIComponent(newPath)}`}
+                        >
+                            {t("events.loginToWrite")}
+                            <ChevronRight aria-hidden />
+                        </IntentLink>
+                    )
                 }
             />
             <NewsTabs current="events" />

@@ -63,16 +63,25 @@ const dateInputSchema = z
         "날짜를 확인해주세요."
     );
 
-function normalizedIntegerString(
-    fallback: number,
-    normalize: (value: number) => number
-) {
-    return z.string().transform((value) => {
-        const parsed = Number(value);
-        return normalize(
-            Number.isFinite(parsed) ? Math.trunc(parsed) : fallback
-        );
-    });
+// 숫자가 아닌 입력은 다른 값으로 바꿔 저장하지 않고 칸 오류로 돌려준다. 범위 밖 숫자만 기존 저장 규칙대로 범위 안으로 맞춘다
+function normalizedIntegerString(normalize: (value: number) => number) {
+    return z
+        .string()
+        .trim()
+        .refine(
+            (value) => value !== "" && Number.isFinite(Number(value)),
+            "숫자를 입력해주세요."
+        )
+        .transform((value) => normalize(Math.trunc(Number(value))));
+}
+
+function isJsonText(value: string) {
+    try {
+        JSON.parse(value);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 const optionalTargetLevelSchema = z
@@ -92,7 +101,13 @@ const bingoCellFormSchema = z.object({
     title: z.string().trim().min(1, "미션 내용을 입력해주세요."),
     missionType: bingoMissionTypeSchema,
     ruleType: bingoRuleTypeSchema,
-    ruleConfig: z.string().trim(),
+    ruleConfig: z
+        .string()
+        .trim()
+        .refine(
+            (value) => value === "" || isJsonText(value),
+            "규칙 값은 JSON 형식으로 입력해주세요."
+        ),
     categoryShort: z.string().trim(),
     targetDifficulty: bingoDifficultySchema,
     targetLevel: optionalTargetLevelSchema,
@@ -104,8 +119,8 @@ export const bingoFormSchema = z
         title: z.string().trim().min(1, "빙고 제목을 입력해주세요."),
         description: z.string().trim(),
         coverMusicIndex: z.string().trim().min(1, "표지 악곡을 선택해주세요."),
-        rewardNos: normalizedIntegerString(0, (value) => Math.max(0, value)),
-        requiredLines: normalizedIntegerString(1, (value) =>
+        rewardNos: normalizedIntegerString((value) => Math.max(0, value)),
+        requiredLines: normalizedIntegerString((value) =>
             Math.min(12, Math.max(1, value))
         ),
         status: bingoStatusSchema,

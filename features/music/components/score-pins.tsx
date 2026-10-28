@@ -62,20 +62,27 @@ export default function ScorePins({
     meId,
     x,
     y,
+    width,
+    inset,
     onShowPlayer,
 }: {
     players: ChartScorePlayer[];
     meId: number | null;
     x: (score: number) => number;
-    /** 핀 줄은 점수 자 한 줄에 고정 — 높이에는 뜻이 없다 (2026-09-18) */
+    /** 핀 줄은 점수 자 한 줄에 고정 — 높이에는 뜻이 없다 */
     y: number;
+    /** 점수 자 폭 */
+    width: number;
+    /** 끝 핀을 자 안쪽으로 당기는 거리 — 사진이 자 밖으로 넘치지 않게. 점은 제자리에 둔다 */
+    inset: number;
     onShowPlayer: (player: ChartScorePlayer) => void;
 }) {
     const t = useTranslations();
     const locale = useLocale();
-    // 자리를 당기면 끝에서 사진이 다시 뭉치므로 점수 자리를 그대로 쓴다 — 좌우로 조금 넘치는 편이 낫다 (2026-09-18)
+    // 묶음은 점수 자리로 정하고, 그린 자리만 양 끝에서 안쪽으로 당긴다
     const groups = groupPins(players, meId, x).map((group) => ({
         ...group,
+        x: Math.min(Math.max(group.x, inset), Math.max(inset, width - inset)),
         y,
     }));
     return (
@@ -114,7 +121,6 @@ export default function ScorePins({
                             <Avatar
                                 src={lead.user.avatar}
                                 fallbackName={lead.user.username}
-                                size={group.me ? 28 : 24}
                                 className="nl-score-pin__photo"
                             />
                             {single ? null : (

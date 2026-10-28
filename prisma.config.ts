@@ -8,7 +8,8 @@ try {
     // .env 가 없는 곳(Vercel · CI)
 }
 
-const url = process.env.DATABASE_URL;
+// 앱은 PgBouncer(6432)로 붙고, 마이그레이션은 세션 잠금을 쓰므로 직접 연결(5432) 주소가 있으면 그쪽으로 돈다
+const url = process.env.DATABASE_MIGRATION_URL ?? process.env.DATABASE_URL;
 
 export default defineConfig({
     // 영역별 파일(2026-10-16 D9) — prisma/schema 폴더의 *.prisma 를 모두 읽는다

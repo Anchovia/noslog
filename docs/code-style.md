@@ -16,7 +16,7 @@ NosLog's existing runtime contracts, and the chart viewer/editor boundary.
 - Use native `fetch` for HTTP. Axios is not part of the NosLog stack.
 - Make migrations feature by feature. Do not perform a repository-wide move
   without verifying every import, route, test, and external consumer.
-- Preserve the existing chart viewer and chart editor in their entirety.
+- Keep the chart editor's canvas and editing controls; its admin, contributor and review modes differ only in the shell (see `AGENTS.md`).
 
 ## Directory responsibilities
 
@@ -284,7 +284,12 @@ verification. Report the actual checks and any unverified runtime conditions.
   baseline in `scripts/lint-migrations.mjs`. For an intended risk (rewriting a
   small table, dropping a column the previous deployment stopped using), put the
   reason on its own comment line and `-- squawk-ignore <rule>` right before the
-  statement. CI runs both in the lint job.
+  statement. A migration that creates tables ignores `prefer-bigint-over-int`,
+  `prefer-identity`, and `prefer-timestamp-tz` for the whole file
+  (`-- squawk-ignore-file …`) with the reason above it: new columns use the same
+  Prisma types (`Int`, `autoincrement()`, `DateTime`) as every other table.
+  CI runs both in the lint job, schema first, so fix a schema failure and run
+  `npm run lint:migrations` again before pushing.
 - Count queries per screen with `npm run measure:queries`. Start a dev server
   with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
   file with `--log`. Send logged-in cookies only through
@@ -323,13 +328,17 @@ verification. Report the actual checks and any unverified runtime conditions.
   (expand, switch, then contract). Prisma 7 runs each statement of a migration
   on its own (prisma/prisma#30640), so start every new migration with
   `BEGIN;` and end it with `COMMIT;`; a failure then leaves nothing applied.
+  Set `SET LOCAL lock_timeout` and `SET LOCAL statement_timeout` right after
+  `BEGIN;`.
   Put `CREATE INDEX CONCURRENTLY` alone in its own file without them
   (`npm run lint:migrations` checks both).
 - The schema lives in `prisma/schema/*.prisma`, one file per area (users,
   records, music, contributions, tiers, community, content, feedback, arcades,
   bingos, exams, analytics). `prisma.config.ts` gives the CLI the schema folder,
-  the migrations folder, and `DATABASE_URL`; the app connects through the `pg`
-  driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
+  the migrations folder, and `DATABASE_MIGRATION_URL` (falling back to
+  `DATABASE_URL`). In production the app uses the PgBouncer port and migrations
+  use the direct port, because `migrate deploy` takes a session lock. The app
+  connects through the `pg` driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
   Every adapter passes `PRISMA_PG_SESSION_OPTIONS` (`lib/prisma-pg.ts`), which
   fixes the session time zone to UTC: adapter-pg 7.10 reads a `timestamptz`
   offset as `+00:00`, so a non-UTC session shifts times.

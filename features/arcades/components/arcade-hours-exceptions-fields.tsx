@@ -54,7 +54,7 @@ export default function ArcadeHoursExceptionsFields({
         errors.hoursExceptions?.root?.message;
 
     return (
-        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-12">
             <legend className="nl-emphasis-label px-nl-4 text-nl-content">
                 날짜별 예외
             </legend>

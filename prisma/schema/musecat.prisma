@@ -1,0 +1,138 @@
+// 뮤즈캣 오락실 데이터 읽기 · 사용자 대리 요청 — 뮤즈캣 연동 A 방향(2026-10-20 결정).
+// 오락실 원본은 뮤즈캣이다. NosLog 는 연결 · 대응표 · NosLog 고유 기체 특징 · 보낸 요청 기록만 둔다.
+
+enum MusecatConnectionStatus {
+  active
+  needs_reconnect // refresh 확정 실패 · 결과 불확실 · 30일 만료 — 다시 연결해야 함
+  revoked
+
+  @@map("musecat_connection_status")
+}
+
+enum ArcadeExternalProvider {
+  musecat
+
+  @@map("arcade_external_provider")
+}
+
+enum ArcadeExternalMatch {
+  admin_verified // 운영자가 확인
+  user_pick // 사용자가 선호 오락실로 고르며 생김
+
+  @@map("arcade_external_match")
+}
+
+enum MusecatActionKind {
+  campaign_check
+  fault_report
+  fault_withdraw
+  favorite
+  flag_reaction
+  game_edit
+
+  @@map("musecat_action_kind")
+}
+
+enum MusecatActionStatus {
+  accepted
+  pending
+  rejected
+  uncertain // 보냈지만 응답을 못 받음 — 자동으로 다시 보내지 않는다
+
+  @@map("musecat_action_status")
+}
+
+// 사용자의 뮤즈캣 계정 연결(account:access 위임). 사용자마다 한 줄 — 다시 연결하면 세대를 올린다
+model MusecatConnection {
+  id                Int                     @id @default(autoincrement())
+  userId            Int                     @unique @map("user_id")
+  user              User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  musecatSubject    String                  @map("musecat_subject")
+  musecatUsername   String?                 @map("musecat_username")
+  generation        Int                     @default(1)
+  status            MusecatConnectionStatus @default(active)
+  scopes            String[]
+  // AES-256-GCM(iv · tag · 암호문) — 키는 환경 변수, 키 교체용 key id
+  accessTokenEnc    String?                 @map("access_token_enc")
+  accessExpiresAt   DateTime?               @map("access_expires_at")
+  refreshTokenEnc   String?                 @map("refresh_token_enc")
+  // refresh 묶음 절대 만료(뮤즈캣 30일) — 7일 · 1일 전에 다시 연결을 안내
+  familyExpiresAt   DateTime?               @map("family_expires_at")
+  encKeyId          String                  @map("enc_key_id")
+  // 여러 서버가 동시에 refresh 하지 않게 잡는 짧은 lease(조건부 UPDATE)
+  refreshLeaseUntil DateTime?               @map("refresh_lease_until")
+  refreshAttemptId  String?                 @map("refresh_attempt_id")
+  refreshSentAt     DateTime?               @map("refresh_sent_at")
+  lastErrorCode     String?                 @map("last_error_code")
+  // 429 를 받았을 때 이 시각까지 다시 부르지 않는다
+  blockedUntil      DateTime?               @map("blocked_until")
+  connectedAt       DateTime                @default(now()) @map("connected_at")
+  revokedAt         DateTime?               @map("revoked_at")
+  updatedAt         DateTime                @updatedAt @map("updated_at")
+  actions           MusecatAction[]
+
+  @@index([musecatSubject])
+  @@map("musecat_connections")
+}
+
+// NosLog 오락실 ↔ 뮤즈캣 오락실 id. 선호 오락실(users.preferred_arcade_id) 이 NosLog 오락실을 가리키므로 이 표로 잇는다
+model ArcadeExternalId {
+  id           Int                    @id @default(autoincrement())
+  arcadeId     Int                    @map("arcade_id")
+  arcade       Arcade                 @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  provider     ArcadeExternalProvider
+  externalId   String                 @map("external_id")
+  matchMethod  ArcadeExternalMatch    @map("match_method")
+  verifiedById Int?                   @map("verified_by_id")
+  verifiedBy   User?                  @relation("ArcadeExternalIdVerifier", fields: [verifiedById], references: [id], onDelete: SetNull)
+  verifiedAt   DateTime?              @map("verified_at")
+  createdAt    DateTime               @default(now()) @map("created_at")
+
+  @@unique([provider, externalId])
+  @@unique([arcadeId, provider])
+  @@index([verifiedById])
+  @@map("arcade_external_ids")
+}
+
+// NosLog 사용자가 남기는 기체 특징 — 뮤즈캣에 자리가 없어 뮤즈캣 게임 항목 id 에 붙여 NosLog 에 둔다.
+// 값은 arcade_cabinets 의 같은 칸과 같은 보기(lib/arcade-details)
+model MusecatCabinetNote {
+  id                Int      @id @default(autoincrement())
+  musecatArcadeId   String   @map("musecat_arcade_id")
+  musecatGameItemId String   @unique @map("musecat_game_item_id")
+  tags              String[] @default([])
+  keyWeight         String?  @map("key_weight")
+  screenLag         String?  @map("screen_lag")
+  soundVolume       String?  @map("sound_volume")
+  featureNote       String?  @map("feature_note")
+  updatedById       Int?     @map("updated_by_id")
+  updatedBy         User?    @relation("MusecatCabinetNoteEditor", fields: [updatedById], references: [id], onDelete: SetNull)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([musecatArcadeId])
+  @@index([updatedById])
+  @@map("musecat_cabinet_notes")
+}
+
+// 사용자 대신 뮤즈캣에 보낸 요청(고장 신고 · 반응 · 즐겨찾기 · 기체 편집 · 캠페인). id 를 그대로 X-Request-Id 로 쓴다
+model MusecatAction {
+  id                String              @id @default(uuid())
+  userId            Int                 @map("user_id")
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectionId      Int                 @map("connection_id")
+  connection        MusecatConnection   @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  generation        Int
+  musecatArcadeId   String              @map("musecat_arcade_id")
+  kind              MusecatActionKind
+  payload           Json
+  status            MusecatActionStatus @default(pending)
+  httpStatus        Int?                @map("http_status")
+  musecatResourceId String?             @map("musecat_resource_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@index([userId, createdAt])
+  @@index([connectionId])
+  @@map("musecat_actions")
+}

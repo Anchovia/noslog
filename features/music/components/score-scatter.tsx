@@ -1,20 +1,15 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import type { ChartDetail } from "@/components/music/music-detail-types";
 import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
+import { readTokenPixels } from "@/lib/design-tokens";
 import useElementWidth from "@/lib/hooks/use-element-width";
 
 import ScorePins from "./score-pins";
 
-/** 핀 줄 48 + 자 → 라벨 8 + 라벨 줄 16 (2026-09-18 · 간격 척도) */
-const HEIGHT = 72;
-/** 점수 자(가로선)의 y — 위로 나 핀 32 + 꼬리 + 「+N」 이 들어간다 */
-const AXIS = 48;
-/** 자 아래 8 을 띄우고 12 글자의 기준선까지 */
-const LABEL_BASELINE = AXIS + 8 + 13;
 const MAX = 1_000_000;
 /** 「990k」 라벨(끝 정렬, 4 띄움)과 「Pianist」 라벨(끝 정렬)이 겹치지 않는 최소 간격 */
 const LABEL_GAP = 36;
@@ -54,6 +49,20 @@ export default function ScoreScatter({
     const locale = useLocale();
     const id = useId();
     const { ref, width } = useElementWidth<HTMLDivElement>();
+    // SVG 좌표는 CSS 변수를 못 읽어 간격 토큰을 그 자리 요소에서 잰다
+    const [plot, setPlot] = useState<HTMLDivElement | null>(null);
+    const labelGap = plot ? readTokenPixels(plot, "--nl-spacing-8") : 0;
+    const labelNudge = plot ? readTokenPixels(plot, "--nl-spacing-4") : 0;
+    const pinInset = plot ? readTokenPixels(plot, "--nl-spacing-16") : 0;
+    // 점수 자(가로선)의 y = 핀 줄 48(나 핀 32 + 꼬리 + 「+N」), 높이 = 핀 줄 + 자 → 라벨 8 + 라벨 줄 16.
+    // 라벨은 라틴 숫자(950k · Pianist)라 언어별 detail 줄 높이(CJK 18)를 따르지 않는다
+    const axis = plot ? readTokenPixels(plot, "--nl-spacing-48") : 0;
+    const labelLine = plot
+        ? readTokenPixels(plot, "--nl-type-line-height-16")
+        : 0;
+    const height = axis + labelGap + labelLine;
+    // 라벨은 줄 가운데에 둔다(dominantBaseline central)
+    const labelMiddle = axis + labelGap + labelLine / 2;
     const min = scoreDomainMin(scores, width);
     const x = (score: number) =>
         ((Math.max(min, Math.min(MAX, score)) - min) / (MAX - min)) * width;
@@ -71,7 +80,7 @@ export default function ScoreScatter({
             value: 990_000,
             label: tight ? "" : "990k",
             anchor: "end",
-            dx: -4,
+            dx: -labelNudge,
             goal: "990k",
         },
         { value: MAX, label: "Pianist", anchor: "end", dx: 0, goal: "pianist" },
@@ -81,19 +90,25 @@ export default function ScoreScatter({
             className="nl-score-scatter"
             aria-label={`${t("music.info.scoreDistribution")} · ${description}`}
         >
-            <div ref={ref} className="nl-score-scatter__plot">
+            <div
+                ref={(node) => {
+                    ref(node);
+                    setPlot(node);
+                }}
+                className="nl-score-scatter__plot"
+            >
                 {width ? (
                     <svg
                         width="100%"
-                        height={HEIGHT}
+                        height={height}
                         className="nl-score-scatter__svg"
                         aria-hidden
                     >
                         <line
                             x1={0}
                             x2={width}
-                            y1={AXIS}
-                            y2={AXIS}
+                            y1={axis}
+                            y2={axis}
                             className="nl-score-scatter__axis"
                         />
                         {/* 참가자 한 명 = 점 하나 — 핀으로 묶인 사람도 여기에는 남는다 */}
@@ -101,7 +116,7 @@ export default function ScoreScatter({
                             <circle
                                 key={`${score}-${index}`}
                                 cx={x(score)}
-                                cy={AXIS}
+                                cy={axis}
                                 r={score === myScore ? 4 : 3}
                                 className="nl-score-scatter__dot"
                                 data-me={score === myScore ? "" : undefined}
@@ -115,7 +130,8 @@ export default function ScoreScatter({
                                 <text
                                     key={guide.value}
                                     x={x(guide.value) + guide.dx}
-                                    y={LABEL_BASELINE}
+                                    y={labelMiddle}
+                                    dominantBaseline="central"
                                     className="nl-score-scatter__label"
                                     data-goal={guide.goal}
                                     textAnchor={guide.anchor}
@@ -130,7 +146,9 @@ export default function ScoreScatter({
                         players={players}
                         meId={meId}
                         x={x}
-                        y={AXIS}
+                        y={axis}
+                        width={width}
+                        inset={pinInset}
                         onShowPlayer={onShowPlayer}
                     />
                 ) : null}

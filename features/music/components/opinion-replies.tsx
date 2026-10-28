@@ -236,7 +236,7 @@ function ReplyRow({
     });
     return (
         <article className="nl-opinion-row" data-reply="">
-            <Avatar src={reply.user.avatar} size={24} />
+            <Avatar src={reply.user.avatar} size="small" />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
                     <IntentLink
@@ -414,6 +414,15 @@ function ReplyComposer({
     const [error, setError] = useState<string | null>(null);
     const trimmed = value.trim();
     const save = async () => {
+        // 버튼은 늘 켜 두고 빈 값 · 넘친 값은 칸 아래 오류로 알린다
+        if (!trimmed) {
+            setError(t("community.replyEmpty"));
+            return;
+        }
+        if (trimmed.length > OPINION_REPLY_MAX_LENGTH) {
+            setError(t("community.replyTooLong"));
+            return;
+        }
         setError(null);
         try {
             await mutation.mutateAsync({
@@ -489,10 +498,6 @@ function ReplyComposer({
                     </ActionButton>
                     <ActionButton
                         size="sm"
-                        disabled={
-                            !trimmed ||
-                            trimmed.length > OPINION_REPLY_MAX_LENGTH
-                        }
                         busy={mutation.isPending}
                         busyLabel={t("community.saving")}
                         onClick={() => void save()}

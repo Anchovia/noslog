@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 26일 · 시행 2026년 9월 26일",
+        "dates": "최종 수정 2026년 10월 28일 · 시행 2026년 10월 28일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -142,7 +142,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "업적은 공개 프로필과 업적 페이지에 보입니다. 플레이 점수를 비공개로 하면 다른 사람에게는 실력 · 수집 업적이 보이지 않고(기록 범위가 드러나므로), 도전 · 커뮤니티 업적은 그대로 보입니다. 업적 진행 값은 본인에게만 보입니다."
+                        "text": "업적은 공개 프로필과 업적 페이지에 보입니다. 플레이 점수를 비공개로 하면 다른 사람에게는 실력 · 수집 · 곡 묶음 · 계절 업적이 보이지 않고(기록 범위가 드러나므로), 도전 · 커뮤니티 업적은 그대로 보입니다. 업적 진행 값은 본인에게만 보입니다."
                     }
                 ]
             },
@@ -205,7 +205,7 @@
                     {
                         "kind": "item",
                         "title": "Vercel",
-                        "text": "웹 호스팅, 서버 실행과 운영 로그 처리를 맡깁니다. 서버 실행 리전은 싱가포르(sin1)이며, 서비스 이용 시 네트워크를 통해 전송되어 서비스 제공 기간 동안 처리됩니다."
+                        "text": "웹 호스팅, 서버 실행과 운영 로그 처리를 맡깁니다. 서버 실행 리전은 대한민국 서울(icn1)이며, 서비스 이용 시 네트워크를 통해 전송되어 서비스 제공 기간 동안 처리됩니다."
                     },
                     {
                         "kind": "item",
@@ -214,8 +214,8 @@
                     },
                     {
                         "kind": "item",
-                        "title": "Neon",
-                        "text": "회원과 서비스 데이터를 PostgreSQL 데이터베이스에 저장합니다. 저장 리전은 싱가포르(sin1)이며 서비스 제공 기간 동안 처리됩니다."
+                        "title": "PlanetScale",
+                        "text": "회원과 서비스 데이터를 PostgreSQL 데이터베이스에 저장합니다. 저장 리전은 대한민국 서울(Google Cloud asia-northeast3)이며 서비스 제공 기간 동안 처리됩니다."
                     },
                     {
                         "kind": "item",
@@ -319,7 +319,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月26日 · 施行 2026年9月26日",
+        "dates": "最終更新 2026年10月28日 · 施行 2026年10月28日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -460,7 +460,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "実績は公開プロフィールと実績ページに表示されます。プレースコアを非公開にすると、他のユーザーには実力・コレクションの実績が表示されず(記録の範囲が分かるため)、チャレンジ・コミュニティの実績はそのまま表示されます。実績の進捗は本人にのみ表示されます。"
+                        "text": "実績は公開プロフィールと実績ページに表示されます。プレースコアを非公開にすると、他のユーザーには実力・コレクション・楽曲セット・季節の実績が表示されず(記録の範囲が分かるため)、チャレンジ・コミュニティの実績はそのまま表示されます。実績の進捗は本人にのみ表示されます。"
                     }
                 ]
             },
@@ -523,7 +523,7 @@
                     {
                         "kind": "item",
                         "title": "Vercel",
-                        "text": "Webホスティング、サーバー実行、運営ログの処理を委託します。サーバー実行リージョンはシンガポール（sin1）で、サービス利用時にネットワーク経由で送信され、サービス提供期間中に処理されます。"
+                        "text": "Webホスティング、サーバー実行、運営ログの処理を委託します。サーバー実行リージョンは韓国・ソウル（icn1）で、サービス利用時にネットワーク経由で送信され、サービス提供期間中に処理されます。"
                     },
                     {
                         "kind": "item",
@@ -532,8 +532,8 @@
                     },
                     {
                         "kind": "item",
-                        "title": "Neon",
-                        "text": "会員およびサービスデータをPostgreSQLデータベースに保存します。保存リージョンはシンガポール（sin1）で、サービス提供期間中に処理されます。"
+                        "title": "PlanetScale",
+                        "text": "会員およびサービスデータをPostgreSQLデータベースに保存します。保存リージョンは韓国・ソウル（Google Cloud asia-northeast3）で、サービス提供期間中に処理されます。"
                     },
                     {
                         "kind": "item",
@@ -637,7 +637,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 26, 2026 · Effective September 26, 2026",
+        "dates": "Last updated October 28, 2026 · Effective October 28, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -778,7 +778,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "Achievements appear on your public profile and on the achievement page. If your play scores are private, other people do not see your skill or collection achievements (they reveal the range of your records); challenge and community achievements stay visible. Achievement progress is shown only to you."
+                        "text": "Achievements appear on your public profile and on the achievement page. If your play scores are private, other people do not see your skill, collection, song set or season achievements (they reveal the range of your records); challenge and community achievements stay visible. Achievement progress is shown only to you."
                     }
                 ]
             },
@@ -841,7 +841,7 @@
                     {
                         "kind": "item",
                         "title": "Vercel",
-                        "text": "Vercel provides web hosting, server execution, and operational log processing. The server execution region is Singapore (sin1). Data is transmitted over the network when the service is used and processed for the duration of service provision."
+                        "text": "Vercel provides web hosting, server execution, and operational log processing. The server execution region is Seoul, South Korea (icn1). Data is transmitted over the network when the service is used and processed for the duration of service provision."
                     },
                     {
                         "kind": "item",
@@ -850,8 +850,8 @@
                     },
                     {
                         "kind": "item",
-                        "title": "Neon",
-                        "text": "Neon stores member and service data in a PostgreSQL database. The storage region is Singapore (sin1), and data is processed for the duration of service provision."
+                        "title": "PlanetScale",
+                        "text": "PlanetScale stores member and service data in a PostgreSQL database. The storage region is Seoul, South Korea (Google Cloud asia-northeast3), and data is processed for the duration of service provision."
                     },
                     {
                         "kind": "item",

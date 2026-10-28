@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 
 export default function SearchField({
     leading,
+    floating = false,
     clearLabel,
     busyLabel,
     busy = false,
@@ -16,6 +17,8 @@ export default function SearchField({
     ...props
 }: Omit<ComponentProps<"input">, "value"> & {
     leading?: ReactNode;
+    /** 지도 위에 떠 있는 검색 — 떠 있는 창 경계 · 그림자(2026-10-21 전면 대조 ③) */
+    floating?: boolean;
     /** 제어된 문자열. 입력 onChange는 네이티브 input 이벤트다. */
     value: string;
     /** 지우기 버튼의 번역된 접근성 이름. */
@@ -28,7 +31,11 @@ export default function SearchField({
 }) {
     return (
         <div
-            className={cn("nl-search", className)}
+            className={cn(
+                "nl-search",
+                floating && "nl-search--floating",
+                className
+            )}
             aria-busy={busy || undefined}
         >
             {leading ? (
@@ -42,7 +49,7 @@ export default function SearchField({
                 {...props}
                 type="search"
                 value={value}
-                className="nl-search__input nl-body"
+                className="nl-search__input nl-control"
             />
             {busy ? (
                 <span

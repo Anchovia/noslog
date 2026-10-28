@@ -4,7 +4,7 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
-/* 머리(2026-09-26 A) — 무대 아래. 제목 묶음 →12→ 채보 · 동작 줄 →12→ 정보 상자 (→12→ Safari 경고) */
+/* 머리 — 무대 아래. 제목 묶음 →12→ 채보 · 동작 줄 →12→ 정보 상자 */
 .noslog-ui .nl-chart-viewer__head {
     display: flex;
     flex-direction: column;
@@ -34,14 +34,15 @@
     gap: var(--nl-spacing-8);
     margin-inline-start: auto;
 }
-/* 정보 상자 — 면 · 모서리 8 · 안쪽 12 16, 줄 사이 8 */
+/* 정보 상자 = Spectrum 2 secondary 카드(누르지 않는 묶음) — layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 12 16, 줄 사이 8 */
 .noslog-ui .nl-chart-viewer__info {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-chart-viewer__info > p {
     margin: 0;
@@ -51,10 +52,17 @@
     flex-shrink: 0;
 }
 /* 머리 두 벌 — 넓은 화면(1056+)은 제목 묶음 · 채보 줄 · 정보 상자, 그 아래는 유튜브 폰 시청 화면(Y1) */
-/* 폰 머리는 무대 바로 아래 12(유튜브 폰 — 영상 → 제목), 컨테이너 간격 24 를 여기서만 당긴다 */
+/* 두 머리 모두 무대 바로 아래 12(유튜브 — 영상 → 제목), 컨테이너 간격 24 를 여기서만 당긴다 */
+.noslog-ui .nl-chart-viewer__head--wide,
+.noslog-ui .nl-chart-viewer__head--compact {
+    margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+}
 .noslog-ui .nl-chart-viewer__head--compact {
     gap: var(--nl-spacing-4);
-    margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+}
+/* 폰 머리 제목 →4→ 메타 */
+.noslog-ui .nl-chart-viewer__head--compact .nl-chart-viewer__titles {
+    gap: var(--nl-spacing-4);
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-chart-viewer__head--compact {
@@ -94,8 +102,21 @@
     padding: 0;
     border: 0;
     background: none;
-    color: var(--nl-content-interactive);
+    /* 「더보기」 = 단독 링크(Spectrum 2 secondary 링크) — medium, 올림 · 키 포커스 = gray-900 + 밑줄 */
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-medium);
+    text-underline-offset: var(--nl-underline-offset);
     cursor: pointer;
+}
+.noslog-ui .nl-chart-viewer__more:focus-visible {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-chart-viewer__more:hover {
+        color: var(--nl-content-strong);
+        text-decoration: underline;
+    }
 }
 /* 작성자 · 아이콘 동작 줄 = 컨트롤 높이 한 줄(접히지 않음) */
 .noslog-ui .nl-chart-viewer__byline-row--compact {
@@ -110,7 +131,7 @@
     flex-wrap: nowrap;
     gap: 0;
 }
-/* 「더보기」 창 — 제목 묶음 →16→ 작성자 →16→ 정보 상자 */
+/* 「더보기」 창 — 제목 묶음 →16→ 정보 상자 →16→ 출처 */
 .noslog-ui .nl-chart-viewer__info-sheet {
     display: flex;
     flex-direction: column;
@@ -121,7 +142,7 @@
     margin: 0;
 }
 /* 출처 표기(2026-09-24 C2) — 아티스트 아래 「채보 · 이름 [운영자]」, 메타 아래 「노트 배치 · 영상에서 추출 … 출처 보기 ›」.
-   태그(24)는 글자 줄(20)을 늘리지 않게 공용 nl-tag--inline 으로 당긴다 */
+   태그(20)는 글자 줄(20)과 높이가 같다 */
 .noslog-ui .nl-chart-viewer__byline {
     display: flex;
     flex-wrap: wrap;
@@ -129,10 +150,8 @@
     gap: var(--nl-spacing-8);
     margin: 0;
 }
-/* 의견 시각을 누르면 캔버스 위 끝으로 올린다 — 고정 머리(60) + 16 만큼 비운다(의견 줄과 같은 값) */
 .noslog-ui .nl-chart-viewer__stage {
     min-width: 0;
-    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 /* 출처 창 목록 — 항목 사이 16 · 제목 → 내용 8, 항목 사이 구분선(2026-09-26 I1 — 정보 창 줄 목록과 같은 선) */
 .noslog-ui .nl-chart-viewer__sources {
@@ -185,8 +204,8 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-chart-viewer__legend-dot {
-    width: 12px;
-    height: 12px;
+    width: var(--nl-spacing-12);
+    height: var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
     flex-shrink: 0;
 }
@@ -201,12 +220,12 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 16 / 9;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
     margin: 0;
 }
 
-/* 보기 방식 세그먼트(2026-09-26 V1) →12→ 무대. Safari 경고는 세그먼트 아래 */
+/* 보기 방식 세그먼트 →12→ 무대 */
 .noslog-ui .nl-chart-viewer__view {
     display: flex;
     flex-direction: column;
@@ -214,7 +233,7 @@
     min-width: 0;
 }
 /* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
-   빼는 높이 = 헤더 60 + 위 여백 24 + 돌아가기 44 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
+   빼는 높이 = 헤더 높이 + 위 여백 24 + 돌아가기 높이 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
     display: flex;
     flex-direction: column;
@@ -223,15 +242,16 @@
         calc(
             (
                     100dvh - var(--nl-header-height) - var(--nl-spacing-24) -
-                        44px - var(--nl-spacing-24) - var(--nl-control-height) -
-                        var(--nl-spacing-12) - var(--nl-spacing-16)
+                        var(--nl-back-link-height) - var(--nl-spacing-24) -
+                        var(--nl-control-height) - var(--nl-spacing-12) -
+                        var(--nl-spacing-16)
                 ) *
                 16 / 9
         )
     );
     margin-inline: auto;
     overflow: hidden;
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 /* 무대 = 폭 가득 · 16:9 고정(2026-09-25 A1) — 그림은 16:9 논리 크기를 폭에 맞춰 줄여 어느 기기에서나 같다 */
@@ -263,7 +283,7 @@
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
     width: min(100%, calc(100dvh * 16 / 9));
 }
-/* 무대를 누르면 재생 · 일시정지, 폰은 두 번 두드려 ∓10초 — 두 번 두드리기 확대를 끈다 */
+/* 무대를 누르면 재생 · 일시정지, 폰은 두 번 두드려 한 마디 앞뒤 — 두 번 두드리기 확대를 끈다 */
 .noslog-ui .nl-chart-stage__canvas {
     cursor: pointer;
     touch-action: manipulation;
@@ -272,22 +292,30 @@
 .noslog-ui .nl-chart-stage__screen[data-idle] .nl-chart-stage__canvas {
     cursor: none;
 }
-/* 전체화면 설정 창(2026-09-25 C1) — 떠 있는 창 규격(⋯ 메뉴와 같은 면 · 경계 · 모서리 · 그림자), 안쪽 12 · 줄 사이 12 */
+/* 설정 창 — 떠 있는 창 규격(⋯ 메뉴와 같은 면 · 경계 · 모서리 · 그림자), 안쪽 12 · 줄 사이 12.
+   층은 팝오버, 전체화면일 때만 전체화면 층(창이 전체화면 무대 안에 뜬다) */
 .noslog-ui .nl-chart-stage__settings {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
     box-shadow: var(--nl-overlay-shadow);
+    z-index: var(--nl-layer-popover);
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__settings {
     z-index: var(--nl-layer-fullscreen-dialog);
 }
-/* 조작 줄(2026-09-26 A, 유튜브와 같게) — 인라인 · 전체화면 모두 무대 아래쪽에 겹친다.
+/* 설정 창 안 셀렉트 목록은 설정 창보다 위 — 전체화면이면 창이 전체화면 층이라 목록 층(select)으로는 창 아래에 깔린다 */
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-select-menu {
+    z-index: calc(var(--nl-layer-fullscreen-dialog) + var(--nl-layer-above));
+}
+/* 조작 줄 — 인라인 · 전체화면 모두 무대 아래쪽에 겹친다.
    판 = 아래에서 위로 옅어지는 미디어 판(`surface/media-scrim` → 투명), 재생 막대 한 줄 → 버튼 줄(사이 4).
-   빈 곳을 누르면 무대로 지나가(재생 · 일시정지) 버튼 · 막대만 받는다 */
+   빈 곳(줄 사이 · 버튼 사이 · 시각 글자)을 누르면 무대로 지나가 재생 · 일시정지하고, 버튼 · 막대만 누름을 받는다 */
 .noslog-ui .nl-chart-stage__overlay {
     position: absolute;
     inset-inline: 0;
@@ -304,7 +332,7 @@
     );
     pointer-events: none;
 }
-.noslog-ui .nl-chart-stage__overlay > * {
+.noslog-ui .nl-chart-stage__overlay :is(button, input) {
     pointer-events: auto;
 }
 .noslog-ui .nl-chart-stage__overlay[hidden] {
@@ -334,58 +362,32 @@
 .noslog-ui .nl-chart-stage__media-button {
     display: inline-flex;
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
+    width: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
+    height: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
     align-items: center;
     justify-content: center;
     border: 0;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     color: var(--nl-content-on-media);
     background: transparent;
     cursor: pointer;
 }
+/* Spectrum 2 ActionButton quiet — 올림 · 키 포커스 · 누름 = 면 gray-200 · 아이콘 gray-900 */
+.noslog-ui .nl-chart-stage__media-button:is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__media-button:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
     }
-}
-.noslog-ui .nl-chart-stage__art {
-    position: absolute;
-    inset: -20px;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.25;
-    filter: blur(24px);
-    transform: scale(1.1);
-}
-/* 무대 위 원형 빛 → 가장자리 어둠 — 둘 다 무대 검정에서 섞는다(2026-09-26) */
-.noslog-ui .nl-chart-stage__scrim {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at 50% 18%,
-        color-mix(
-            in srgb,
-            color-mix(
-                    in srgb,
-                    var(--nl-stage-canvas),
-                    var(--nl-content-on-media) 25%
-                )
-                22%,
-            transparent
-        ),
-        color-mix(in srgb, var(--nl-stage-canvas) 96%, transparent) 72%
-    );
 }
 .noslog-ui .nl-chart-stage__host {
     position: absolute;
     inset: 0;
 }
-/* 재생 막대 + 의견 시각 눈금(2026-09-24 D1) */
+/* 재생 막대 + 지나간 구간 + 의견 시각 눈금 */
 .noslog-ui .nl-chart-stage__seek-track {
     position: relative;
     display: flex;
@@ -394,82 +396,83 @@
     min-width: 0;
     margin-inline: var(--nl-spacing-8);
 }
+/* 손잡이 지름 20 · 트랙 4 — 손잡이 · 트랙 · 지나간 구간 · 눈금 자리가 같은 값을 쓴다 */
+.noslog-ui .nl-chart-stage__seek-track,
+.noslog-ui .nl-chart-stage__seek {
+    --nl-chart-seek-thumb: calc(var(--nl-spacing-16) + var(--nl-spacing-4));
+    --nl-chart-seek-track: var(--nl-spacing-4);
+}
+/* 지나간 구간 = 공용 슬라이더의 고른 구간처럼 `primary/default`. 트랙 시작에서 손잡이 중심까지(--nl-seek-at = 시각 / 길이).
+   막대 위에 겹치지만 누름은 아래 막대로 지나간다 */
+.noslog-ui .nl-chart-stage__progress {
+    --nl-seek-at: 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: calc(
+        var(--nl-chart-seek-thumb) / 2 + (100% - var(--nl-chart-seek-thumb)) *
+            var(--nl-seek-at)
+    );
+    height: var(--nl-chart-seek-track);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-primary-default);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
 /* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
 .noslog-ui .nl-chart-stage__marker {
+    /* 시각 / 길이 — 눈금마다 인라인으로 준다 */
+    --nl-marker-at: 0;
     position: absolute;
     top: 50%;
     width: var(--nl-stroke-strong);
-    height: 12px;
+    height: var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
     background: var(--nl-feedback-warning-marker);
     transform: translate(-50%, -50%);
     pointer-events: none;
+    /* 손잡이 중심이 움직이는 폭(양끝 반지름 안쪽)에 맞춘다. --nl-marker-at = 시각 / 길이 */
+    left: calc(
+        var(--nl-chart-seek-thumb) / 2 + (100% - var(--nl-chart-seek-thumb)) *
+            var(--nl-marker-at)
+    );
 }
 .noslog-ui .nl-chart-stage__seek {
     flex: 1;
     min-width: 0;
-    height: 24px;
+    height: var(--nl-spacing-24);
     margin: 0;
     appearance: none;
     background: transparent;
     cursor: pointer;
 }
-.noslog-ui .nl-chart-stage__seek:focus-visible {
-    outline: none;
-}
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-runnable-track {
-    height: 4px;
+    height: var(--nl-chart-seek-track);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-default);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-track {
-    height: 4px;
+    height: var(--nl-chart-seek-track);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-default);
+    background: var(--nl-border-divider);
 }
 /* 필터 슬라이더와 같은 채운 점 20 — 네이티브 range 는 손잡이 가장자리를 트랙 끝에 맞추므로
    상자 = 보이는 크기여야 끝에서 점과 트랙이 붙는다 (바 어디를 눌러도 이동하므로 조작 영역은 바 전체) */
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: var(--nl-chart-seek-thumb);
+    height: var(--nl-chart-seek-thumb);
     margin-top: calc(var(--nl-spacing-8) * -1);
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: var(--nl-chart-seek-thumb);
+    height: var(--nl-chart-seek-thumb);
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
-}
-.noslog-ui .nl-chart-stage__seek:active::-webkit-slider-thumb {
-    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover {
-        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-    }
-}
-.noslog-ui .nl-chart-stage__seek:active::-moz-range-thumb {
-    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover {
-        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-    }
-}
-.noslog-ui .nl-chart-stage__seek:focus-visible::-webkit-slider-thumb {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
-}
-.noslog-ui .nl-chart-stage__seek:focus-visible::-moz-range-thumb {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__option {
     display: inline-flex;
@@ -478,11 +481,11 @@
     min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-chart-stage__volume .nl-chart-stage__seek {
-    width: 96px;
+    width: calc(var(--nl-spacing-64) + var(--nl-spacing-32));
     flex: none;
 }
 .noslog-ui .nl-chart-stage__percent {
-    min-width: 40px;
+    min-width: calc(var(--nl-spacing-32) + var(--nl-spacing-8));
     text-align: right;
 }
 /* 설정 창 안 로컬 음원 — 버튼 →4→ 파일 이름(없으면 안내). 창 폭을 늘리지 않게 280 안에서 줄바꿈 */
@@ -502,17 +505,19 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-chart-stage__error {
-    margin: 0;
-    color: var(--nl-feedback-error-text);
-}
 
 /* 전체 악보 — 세로 띠 본문 + 미니맵 (가로 스크롤 없음) */
 .noslog-ui .nl-chart-strip {
+    /* 미니맵 폭 — JS 가 이 값으로 축소 배율을 정한다 */
+    --nl-chart-mini-width: var(--nl-spacing-64);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     min-width: 0;
+}
+.noslog-ui .nl-chart-strip[data-layout="wide"] {
+    /* JS 가 숫자로 읽는다 — 등록하지 않은 사용자 속성의 calc 는 계산되지 않고 글자로 와서 토큰 식으로 못 쓴다 */
+    --nl-chart-mini-width: 96px;
 }
 /* 읽기 한 줄 — 현재 시각(보이는 영역 아래 끝) / 전체 길이 */
 .noslog-ui .nl-chart-strip__position {
@@ -543,14 +548,14 @@
     min-height: 0;
     height: auto;
 }
-/* 프레임 높이 — Compact 560, 672+ 는 뷰포트에서 유도(헤더 60 + 위아래 여백 48) */
+/* 프레임 높이 — Compact 560, 672+ 는 뷰포트에서 유도(헤더 높이 + 위아래 여백 48) */
 .noslog-ui .nl-chart-strip__frame {
     position: relative;
     display: flex;
     height: 560px;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-chart-strip__main {
@@ -559,14 +564,9 @@
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-    border-radius: var(--nl-radius-control);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-radius: var(--nl-radius-small);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     background: var(--nl-stage-canvas);
-    outline: none;
-}
-/* 포커스 = 평소 경계의 색만 바꾼다(2026-10-01 V15 — 경계가 있으면 색만, 안쪽 선을 겹치지 않는다) */
-.noslog-ui .nl-chart-strip__main:focus-visible {
-    border-color: var(--nl-focus-ring);
 }
 .noslog-ui .nl-chart-strip__columns {
     position: relative;
@@ -578,14 +578,14 @@
     position: relative;
     overflow: hidden;
 }
-/* 이음새 경계 시각 — `content/pending`(캔버스 면은 테마와 무관하게 어둡다) */
+/* 이음새 경계 시각 — `content/subdued`(캔버스 면은 테마와 무관하게 어둡다) */
 .noslog-ui .nl-chart-strip__seam {
     position: absolute;
     top: var(--nl-spacing-4);
     left: var(--nl-spacing-4);
     display: flex;
     flex-direction: column;
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
     pointer-events: none;
 }
 /* 시작 BPM·박자 라벨 — 열 상자는 overflow hidden 이라 컨테이너 하단 여백 24 안에 둔다 */
@@ -597,9 +597,10 @@
     display: block;
 }
 /* 미니맵 — 상자(면·경계·그림자) 없이 축소본만(VS Code·Sublime 관례). Compact 는 오버레이(평상시 높이 40%,
-   썸네일 30% · 누르는 동안·hover 전체 높이 · 100%), 672+ 는 옆 레일. 뷰포트 사각형은 위치 단서라 항상 100% */
+   썸네일 0.25 · 탭해 열거나 hover 면 전체 높이 · 1, 움직임 없이 바로), 672+ 는 옆 레일. 뷰포트 사각형은 위치 단서라 항상 1 */
 .noslog-ui .nl-chart-strip__mini {
     position: absolute;
+    width: var(--nl-chart-mini-width);
     top: var(--nl-spacing-16);
     right: var(--nl-spacing-16);
     height: 40%;
@@ -608,11 +609,9 @@
     scrollbar-width: none;
     touch-action: none;
     cursor: pointer;
-    transition: height var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini-column {
     opacity: 0.25;
-    transition: opacity var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini::-webkit-scrollbar {
     display: none;
@@ -652,7 +651,7 @@
         var(--nl-feedback-warning-marker) 14%,
         transparent
     );
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
     pointer-events: none;
 }
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__frame {
@@ -665,11 +664,9 @@
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini {
     position: static;
     height: auto;
-    transition: none;
 }
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini-column {
     opacity: 1;
-    transition: none;
 }
 
 /* 좁은 화면(2026-09-26 A) — 낙하형 무대는 화면 끝까지(유튜브 앱처럼 모서리 없음), 조작 줄은 처음으로 · 속도 값을 빼고
@@ -687,19 +684,19 @@
     }
 }
 
-/* 채보 의견(2026-09-24 D1) — 의견 구역 문법: 제목 줄 →12→ 쓰기 칸 →16→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
-   쓰기 칸(2026-10-15 C2) = 시각(링크색 · 고정폭 숫자) · 한 줄 입력, 사이 8 → 누르면 아래 8 에 종류 세그먼트(왼쪽) · 「취소 · 남기기」(오른쪽).
-   자리(2026-10-15 L2) = 1056 이상은 무대 바로 아래(보기 묶음 안, 무대 →12→), 1055 이하는 의견 구역 제목 줄 아래 */
+/* 채보 의견 — 악곡 상세 의견 구역과 같은 문법: 제목 줄 →16→ 쓰기 칸 →8→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
+   쓰기 칸 = 시각(링크색 · 고정폭 숫자) · 한 줄 입력, 사이 8 → 누르면 아래 8 에 종류 세그먼트(왼쪽) · 「취소 · 남기기」(오른쪽).
+   자리 = 1056 이상은 무대 바로 아래(보기 묶음 안, 무대 →12→), 1055 이하는 의견 구역 제목 줄 아래 */
 .noslog-ui .nl-chart-comments {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-16);
     min-width: 0;
 }
 .noslog-ui .nl-chart-comments__body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-8);
     min-width: 0;
 }
 .noslog-ui .nl-chart-comments__composer {
@@ -765,10 +762,10 @@
             calc(
                 (
                         100dvh - var(--nl-header-height) -
-                            var(--nl-spacing-24) - 44px - var(--nl-spacing-24) -
-                            var(--nl-control-height) - var(--nl-spacing-12) -
-                            var(--nl-control-height) - var(--nl-spacing-12) -
-                            var(--nl-spacing-16)
+                            var(--nl-spacing-24) - var(--nl-back-link-height) -
+                            var(--nl-spacing-24) - var(--nl-control-height) -
+                            var(--nl-spacing-12) - var(--nl-control-height) -
+                            var(--nl-spacing-12) - var(--nl-spacing-16)
                     ) *
                     16 / 9
             )
@@ -776,7 +773,7 @@
         margin-inline: auto;
     }
 }
-/* 이름 줄은 글자 줄 20 그대로 — 태그(24)는 공용 nl-tag--inline 이 당긴다. 줄이 좁아도 태그는 줄지 않는다 */
+/* 이름 줄의 태그 · 용어는 줄이 좁아도 줄지 않는다 */
 .noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-tag,
 .noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-term {
     flex-shrink: 0;

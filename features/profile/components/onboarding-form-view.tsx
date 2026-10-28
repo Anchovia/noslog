@@ -247,7 +247,7 @@ export default function OnboardingFormView({
                         {t("onboarding.connectedAccount")}
                     </p>
                     <div className="nl-auth-account-row">
-                        <Avatar src={account.avatar} size={40} />
+                        <Avatar src={account.avatar} size="medium" />
                         <p className="nl-body">{account.displayName}</p>
                     </div>
                 </section>

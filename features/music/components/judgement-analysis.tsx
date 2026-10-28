@@ -27,9 +27,9 @@ const judgementColors = {
     judge_good: "var(--nl-judgement-good)",
     judge_miss: "var(--nl-judgement-miss)",
 } as const;
-// 값이 없는 줄 — 비어 보이지 않게 비활성 회색 한 조각
+// 값이 없는 줄 — 비어 보이지 않게 트랙 면(muted) 한 조각
 const emptySegments = [
-    { key: "empty", value: 1, color: "var(--nl-content-disabled)" },
+    { key: "empty", value: 1, color: "var(--nl-surface-control)" },
 ];
 const noteLabels: MessageKey[] = [
     "music.filter.standard",
@@ -119,11 +119,6 @@ export default function JudgementAnalysis({
                         <h3 className="nl-component-title">
                             {t("music.recent.judgement")}
                         </h3>
-                        {complete || !record ? null : (
-                            <p className="nl-body-secondary nl-muted">
-                                {t("music.judgement.syncRequired")}
-                            </p>
-                        )}
                         <dl className="nl-facts nl-analysis-values nl-body-secondary">
                             {shownKeys.map((key) => (
                                 <div key={key}>

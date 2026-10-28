@@ -38,7 +38,6 @@ export default function ArcadeHours({
                 {days.map((day) => (
                     <div
                         key={day.date}
-                        className={day.today ? "nl-emphasis-label" : undefined}
                         data-today={day.today || undefined}
                         data-muted={day.hours ? undefined : true}
                         data-weekend={

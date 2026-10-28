@@ -116,7 +116,7 @@ export default function ArcadePicker({
                                 </span>
                             ) : null}
                         </span>
-                        <Check className="nl-icon nl-pick-row__check" />
+                        <Check className="nl-icon-small nl-pick-row__check" />
                     </div>
                 </div>
             ) : null}
@@ -155,7 +155,7 @@ export default function ArcadePicker({
                                 </span>
                                 {picked ? (
                                     <Check
-                                        className="nl-icon nl-pick-row__check"
+                                        className="nl-icon-small nl-pick-row__check"
                                         aria-hidden
                                     />
                                 ) : null}

@@ -319,11 +319,10 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 page.locator(".nl-record-state").getByRole("link")
             ).toHaveAttribute("href", /returnTo=.*tab%3Drecord/);
         } else {
+            // 비어 있는 값은 「—」 이 말한다 — 덧붙인 안내 줄은 두지 않는다
             await expect(
-                page.getByText(
-                    "전체 기록을 다시 연동하면 상세 판정을 확인할 수 있습니다."
-                )
-            ).toBeVisible();
+                page.getByText(/상세 판정을 확인할 수 있습니다/)
+            ).toHaveCount(0);
             await expect(
                 page.locator(".nl-analysis-values").first()
             ).toContainText("1,210—");

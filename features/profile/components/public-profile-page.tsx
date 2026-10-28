@@ -30,7 +30,7 @@ import ProfileProgress from "./profile-progress";
  * 프로필 「개요」 탭(2026-09-25 D2) — 머리 · 탭은 레이아웃이 그린다.
  * 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근 플레이) | 옆 열(고정 기록 · 레벨별 달성 요약 · 업적 · 기여).
  * 랭크 분포 · 판정 요약은 「통계」 탭으로 옮겼다(2026-09-26).
- * 태블릿은 주 열 다음 옆 열이 두 칸 격자, 폰은 베스트 → 최근 → 성장 추이 → 나머지(F2)
+ * 태블릿은 주 열 다음 옆 열이 두 칸 격자, 폰은 한 열(순서는 profile.css 의 order)
  */
 export default function PublicProfilePage({
     user,

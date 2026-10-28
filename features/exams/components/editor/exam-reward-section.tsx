@@ -52,7 +52,7 @@ export default function ExamRewardSection({
             <div className="flex flex-col gap-nl-8">
                 {rewards.map((reward, index) => (
                     <div key={`${reward.type}-${reward.musicIndex ?? index}`}>
-                        <div className="flex min-h-nl-48 items-center gap-nl-12 rounded-nl-field bg-nl-surface px-nl-12 py-nl-8">
+                        <div className="flex min-h-nl-48 items-center gap-nl-12 rounded-nl-control bg-nl-surface px-nl-12 py-nl-8">
                             <span className="nl-metadata shrink-0 text-nl-subdued">
                                 {reward.type === "music_unlock"
                                     ? "악곡"

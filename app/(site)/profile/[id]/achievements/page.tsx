@@ -63,7 +63,6 @@ export default async function ProfileAchievementsRoute({
     ]);
     return (
         <AchievementsPage
-            embedded
             records={records}
             metrics={metrics}
             recipients={recipients}

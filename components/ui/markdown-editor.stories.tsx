@@ -87,4 +87,19 @@ export const Default: Story = {
 };
 export const Empty: Story = { args: { value: "" } };
 export const ReadOnly: Story = { args: { readOnly: true } };
-export const Invalid: Story = { args: { invalid: true } };
+export const Invalid: Story = {
+    args: { invalid: true },
+    play: async ({ canvasElement }) => {
+        const editor = canvasElement.querySelector<HTMLElement>(
+            ".nl-markdown-editor"
+        )!;
+        const input = editor.querySelector<HTMLElement>(
+            ".nl-markdown-editor__input"
+        )!;
+        input.focus();
+        await expect(input).toHaveFocus();
+        // 빨간 경계는 그대로 두고 포커스는 바깥 흰 선으로 보인다
+        await expect(getComputedStyle(editor).outlineStyle).toBe("solid");
+        await expect(getComputedStyle(editor).outlineOffset).toBe("2px");
+    },
+};

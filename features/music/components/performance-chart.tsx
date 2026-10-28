@@ -73,7 +73,7 @@ export default function PerformanceChart({
         // 선 색 = 판정 색(◆JUST 분홍 · MISS 빨강 · FAST 판정 NEAR 파랑 · SLOW 주황) (2026-09-17 B)
         <div className="nl-stack nl-performance-chart" data-metric={metric}>
             <SegmentedControl<Metric>
-                className="nl-performance-selector"
+                className="nl-segments--dense"
                 label={t("music.trend.selector")}
                 value={metric}
                 onValueChange={setMetric}
@@ -83,13 +83,6 @@ export default function PerformanceChart({
                     { value: "timing", label: "FAST/SLOW" },
                 ]}
             />
-            {chartPoints.length ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("music.judgement.playBasis", {
-                        count: chartPoints.length,
-                    })}
-                </p>
-            ) : null}
             <LineChart
                 key={metric}
                 points={chartPoints}

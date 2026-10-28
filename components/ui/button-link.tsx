@@ -19,14 +19,10 @@ type ButtonLinkProps = ButtonAppearance &
 export default function ButtonLink({
     variant,
     size,
-    destructiveFilled,
     className,
     ...props
 }: ButtonLinkProps) {
-    const classes = cn(
-        foundationButtonClass({ variant, size, destructiveFilled }),
-        className
-    );
+    const classes = cn(foundationButtonClass({ variant, size }), className);
     if (props.plain) {
         const { plain: _plain, ...anchorProps } = props;
         void _plain; // 내부 선택 속성은 DOM에 전달하지 않는다.

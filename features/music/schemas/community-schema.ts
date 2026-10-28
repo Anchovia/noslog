@@ -134,7 +134,6 @@ export const patternSummarySchema = z.object({
     offset: aggregateSchema,
     chords: aggregateSchema,
 });
-export const patternDataSchema = z.object({ pattern: patternSummarySchema });
 const voteDistributionSchema = z.array(
     z.object({ value: z.number(), count: z.number().int().positive() })
 );

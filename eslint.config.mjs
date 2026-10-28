@@ -83,7 +83,6 @@ export default defineConfig([
             "app/admin/**",
             "app/**/pattern/**",
             "lib/chart-pattern/**",
-            "lib/design/**",
             "lib/generated/**",
         ],
         plugins: { "simple-import-sort": simpleImportSort },

@@ -27,15 +27,15 @@
 }
 .noslog-ui .nl-music-entity__identity > .nl-jacket {
     flex: none;
-    width: 80px;
-    height: 80px;
-    border-radius: var(--nl-radius-container);
+    width: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
+    height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-music-entity__copy {
     position: relative;
     flex: 1;
     min-width: 0;
-    min-height: 80px;
+    min-height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -90,7 +90,7 @@
     height: var(--nl-type-line-height-32);
 }
 /* 그레이드 — 수치 상자 맨 위 칸(surface · 안쪽 8/12 · 줄과 막대 사이 8). 위 줄 = 왼쪽 「그레이드」 control,
-   오른쪽 내 Grd = 정수 24/32 · 700, 소수 16/24 · 600 + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
+   오른쪽 내 Grd = 정수 page-title--fixed, 소수 component-title + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
    기록 없음 「—」 · 로그아웃이면 오른쪽에 「로그인하고 보기 ›」 (2026-09-18) */
 .noslog-ui .nl-my-best {
     display: flex;
@@ -145,17 +145,32 @@
     align-items: baseline;
     gap: var(--nl-spacing-4);
 }
-/* 정수 = nl-page-title nl-page-title--fixed(24/32 · 700) · 소수 = nl-component-title(16/24 · 600) — 글자 클래스로(2026-10-01) */
-/* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽. 자켓 밖이라 크기는 태그 규격(높이 24 · 좌우 8 · 모서리 4),
-   면(overlay)과 카테고리 글자색은 자켓 판 그대로 · 경계 없음. 배지 → 제목 4 (2026-09-18 C) */
-.noslog-ui .nl-music-entity__category {
-    position: static;
+/* 정수 = nl-page-title nl-page-title--fixed · 소수 = nl-component-title — 글자 클래스로 */
+/* 카테고리 배지 = 공용 태그(nl-tag)의 카테고리 변형 — 크기 · 모서리 · 글자는 태그 그대로, 면 · 글자색만 자켓 판과 같게 해 목록 카드와 이어진다.
+   배지 → 제목 4(글자 묶음 사이 8 에서 당김) */
+.noslog-ui .nl-tag.nl-music-entity__category {
     align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding: 0 var(--nl-spacing-8);
     margin-bottom: calc(var(--nl-spacing-4) - var(--nl-spacing-8));
+    background: var(--nl-surface-surface);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-music-entity__category[data-category="pops"] {
+    color: var(--nl-category-pops);
+}
+.noslog-ui .nl-music-entity__category[data-category="anime"] {
+    color: var(--nl-category-anime);
+}
+.noslog-ui .nl-music-entity__category[data-category="BM"] {
+    color: var(--nl-category-bm);
+}
+.noslog-ui .nl-music-entity__category[data-category="Org"] {
+    color: var(--nl-category-org);
+}
+.noslog-ui .nl-music-entity__category[data-category="Var"] {
+    color: var(--nl-category-var);
+}
+.noslog-ui .nl-music-entity__category[data-category="Cl/Jz"] {
+    color: var(--nl-category-cljz);
 }
 /* 접은 글자가 있을 때만 — 글자 묶음 전체를 누르면 펼침 · 접힘 */
 .noslog-ui .nl-music-entity__expand {
@@ -164,20 +179,12 @@
     padding: 0;
     border: 0;
     background: none;
-    border-radius: var(--nl-radius-field);
+    border-radius: var(--nl-radius-control);
     cursor: pointer;
 }
-/* 난이도 세그먼트 — 공용 세그먼트 규격(L) 그대로, 항목 = 이름 + 색 레벨 숫자(사이 8 · 항목 안쪽 4). 375 미만은 약칭 */
+/* 난이도 세그먼트 — 칸 안쪽은 공용 촘촘한 변형 · 넓은 폭 세로 변형이 맡고, 여기서는 이름 → 색 레벨 숫자 8 만 둔다 */
 .noslog-ui .nl-difficulty-selector .nl-segments__item {
     gap: var(--nl-spacing-8);
-    padding-inline: var(--nl-spacing-4);
-    white-space: nowrap;
-}
-@media (min-width: 1056px) {
-    /* 세로 변형의 안쪽 값을 쓴다(잉크 12 정렬) */
-    .noslog-ui .nl-difficulty-selector .nl-segments__item {
-        padding-inline: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
-    }
 }
 /* 375 미만(4칸이 「Expert 11」 을 못 담는 폭)은 약칭 N · H · EX · R */
 @media (max-width: 374px) {
@@ -202,10 +209,12 @@
     gap: var(--nl-section-title-gap);
     min-width: 0;
 }
+/* 개요 묶음 상자 = Spectrum 2 secondary 카드(layer-1 면 · emphasized 그림자 · 모서리 large) */
 .noslog-ui .nl-overview__card {
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-detail-panel {
     display: flex;
@@ -220,11 +229,11 @@
 }
 .noslog-ui .nl-facts > div {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-16);
-    padding-block: var(--nl-spacing-12);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    min-height: var(--nl-control-height);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-facts > div:last-child {
     border-bottom: 0;
@@ -237,8 +246,8 @@
     text-align: end;
     min-width: 0;
 }
-/* 기여 받는 칸(BPM · 노트 수 · 길이 · 수록일, 2026-09-23) — 값 · 「검토 중」 · 「추가」 또는 ⋯ 를 한 줄에.
-   줄 높이(글자 20)를 늘리지 않게 태그(24)와 ⋯(컨트롤 높이)는 위아래로 당기고, ⋯ 잉크는 카드 안쪽 선에 맞춰 오른쪽으로 당긴다 */
+/* 기여 받는 칸(BPM · 노트 수 · 길이 · 수록일) — 값 · 「검토 중」 · 「추가」 또는 ⋯ 를 한 줄에.
+   태그(높이 20)는 그대로 두고, ⋯(컨트롤 높이)만 위아래로 당겨 줄 높이를 늘리지 않으며 잉크는 오른쪽 선에 맞춰 당긴다 */
 .noslog-ui .nl-facts__value {
     display: flex;
     align-items: center;
@@ -249,12 +258,12 @@
 .noslog-ui .nl-facts__empty,
 /* 출처가 없는 값(2026-10-01 E2) — 확인된 값과 구분해 흐린 글자로 */
 .noslog-ui .nl-facts__value[data-verified="false"] {
-    color: var(--nl-content-pending);
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-facts__action {
     display: flex;
     margin-block: calc(
-        (var(--nl-type-line-height-20) - var(--nl-control-height)) / 2
+        (var(--nl-type-line-height-ui) - var(--nl-control-height)) / 2
     );
     margin-inline-end: calc(
         (var(--nl-icon-medium) - var(--nl-control-height)) / 2
@@ -267,10 +276,10 @@
 }
 /* 탭 불러오기 스켈레톤(2026-09-19 S1) — 최근 판정 추이 플롯(선 그래프 기본 높이 200, 2026-10-01 C2) · 점수 자(72) 자리 */
 .noslog-ui .nl-detail-loading__trend {
-    height: 200px;
+    height: calc(var(--nl-spacing-64) * 3 + var(--nl-spacing-8));
 }
 .noslog-ui .nl-detail-loading__ruler {
-    height: 72px;
+    height: calc(var(--nl-spacing-64) + var(--nl-spacing-8));
 }
 /* 기준 창 단계 목록 — 색 네모 8(막대 단계 색 · 모서리 없음 = 검정 「합격까지」 범례와 같은 막대 범례 문법) · 숫자 · 이름 (2026-09-23 Q2). 줄 배치는 공용 정보 줄 목록(2026-09-26 I1) */
 .noslog-ui .nl-pattern-steps__swatch {
@@ -309,10 +318,6 @@
 .noslog-ui .nl-analysis-content .nl-detail-panel {
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-performance-selector .nl-segments__item {
-    padding-inline: var(--nl-spacing-4);
-    white-space: nowrap;
-}
 .noslog-ui .nl-analysis-values dd {
     display: flex;
     flex-direction: column;
@@ -326,8 +331,8 @@
 }
 .noslog-ui .nl-judgement-label::before {
     content: "";
-    width: 8px;
-    height: 8px;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-full);
     background: var(--judgement-marker);
 }
@@ -364,27 +369,28 @@
 .noslog-ui .nl-recent-plays {
     list-style: none;
     padding: 0 var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-recent-plays > li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-recent-play {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: 0 var(--nl-spacing-12);
     /* 펼침 올림 규칙 — 줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로 */
     margin-inline: calc(var(--nl-spacing-12) * -1);
-    border-radius: var(--nl-radius-container);
+    border-radius: var(--nl-radius-control);
     list-style: none;
     cursor: pointer;
 }
 @media (hover: hover) {
     .noslog-ui .nl-recent-play:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -452,12 +458,12 @@
 }
 
 /* 최근 판정 추이 선 색 — 판정 목록의 색 점과 같은 색 (2026-09-17 B).
-   MISS 빨강은 판정 색에 빨강이 없어 feedback/danger-marker 를 빌려 쓴다(결정 기록 예외) */
+   MISS 빨강은 판정 색에 빨강이 없어 feedback/destructive 를 빌려 쓴다(결정 기록 예외) */
 .noslog-ui .nl-performance-chart[data-metric="sjust"] {
     --nl-local-data-personal: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-performance-chart[data-metric="miss"] {
-    --nl-local-data-personal: var(--nl-feedback-danger-marker);
+    --nl-local-data-personal: var(--nl-feedback-destructive);
 }
 .noslog-ui .nl-performance-chart[data-metric="timing"] {
     --nl-local-data-fast: var(--nl-judgement-near);

@@ -47,7 +47,7 @@ function ProfileRows({ t }: { t: Translate }) {
             <div className="nl-field">
                 <p className="nl-field__label">{t("onboarding.nickname")}</p>
                 <span className="nl-skeleton nl-skeleton-control" />
-                <p className="nl-field__help">{t("settings.nicknameHelp")}</p>
+                <p className="nl-field__help">{t("onboarding.nicknameHelp")}</p>
             </div>
         </div>
     );

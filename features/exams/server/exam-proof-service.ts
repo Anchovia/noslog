@@ -38,6 +38,15 @@ type ExamProofUploadActionResult = ActionResult<{
     token: string;
 }> & { requiresLogin?: boolean };
 
+// 업로드 할당 되돌리기가 실패해도 응답은 그대로 보내되, 실패는 기록에 남긴다(조용히 삼키지 않는다)
+function logQuotaReleaseError(error: unknown) {
+    logServerError(error, {
+        event: "exam.proof-upload.quota-release.failed",
+        routePath: "/exams",
+        routeType: "action",
+    });
+}
+
 async function getAvailableExam(examId: number, userId: number) {
     const exam = await db.exam.findFirst({
         where: {
@@ -154,7 +163,9 @@ export async function requestExamProofUpload(
             input.contentType
         );
         if (!upload) {
-            await releaseUploadTokenQuota(userId, grantId).catch(() => null);
+            await releaseUploadTokenQuota(userId, grantId).catch(
+                logQuotaReleaseError
+            );
             return {
                 success: false,
                 message: t("exams.proof.invalidImage"),
@@ -169,7 +180,9 @@ export async function requestExamProofUpload(
             routeType: "action",
         });
         if (grantId !== null) {
-            await releaseUploadTokenQuota(userId, grantId).catch(() => null);
+            await releaseUploadTokenQuota(userId, grantId).catch(
+                logQuotaReleaseError
+            );
         }
         return {
             success: false,

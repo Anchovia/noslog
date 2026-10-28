@@ -18,22 +18,39 @@ const scaleUtility =
 const namedUtility =
     /^(?:rounded(?:-[trblse]{1,2})?(?:-(?:xs|sm|md|lg|xl|\dxl|full))?|text-(?:xs|sm|base|lg|xl|\dxl)|font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black)|(?:drop-|inset-|text-)?shadow(?:-(?:\dxs|xs|sm|md|lg|xl|\dxl|inner))?|leading-(?:none|tight|snug|normal|relaxed|loose)|tracking-(?:tighter|tight|wide|wider|widest)|blur(?:-(?:xs|sm|md|lg|xl|\dxl))?|ease-(?:linear|in|out|in-out)|max-w-(?:xs|sm|md|lg|xl|\dxl|prose|screen-\w+)|border(?:-[xytrblse])?|ring|outline)$/;
 
-/** The utility part of a class, without variants (`md:`, `data-[x]:`) or importance. */
+// Tailwind 기본 색 팔레트(bg-red-400/10 · text-cyan-200 · border-white …) — 색은 nl 별칭만
+const paletteUtility =
+    /^-?(?:bg|text|border(?:-[xytrblse])?|divide|ring(?:-offset)?|outline|fill|stroke|from|via|to|accent|caret|decoration|placeholder|shadow|inset-shadow|inset-ring|drop-shadow)-(?:(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|[1-9]00|950)|black|white)(?:\/\d+)?$/;
+// 폭 단계는 CSS 의 viewport media query(672 · 1056)로만 — Tailwind 기본 중단점과 임의 중단점은 다른 폭이거나 숫자를 다시 쓴다
+const breakpointVariant = /^(?:max-)?(?:sm|md|lg|xl|2xl)$|^(?:min|max)-\[.*\]$/;
+
+/** A class split into its variants (`md:`, `data-[x]:`) and the utility part, without importance. */
 function utilityOf(token) {
     let depth = 0;
     let start = 0;
+    const variants = [];
     for (let index = 0; index < token.length; index += 1) {
         if (token[index] === "[") depth += 1;
         else if (token[index] === "]") depth -= 1;
-        else if (token[index] === ":" && depth === 0) start = index + 1;
+        else if (token[index] === ":" && depth === 0) {
+            variants.push(token.slice(start, index));
+            start = index + 1;
+        }
     }
-    return token.slice(start).replace(/^!|!$/g, "");
+    return { variants, utility: token.slice(start).replace(/^!|!$/g, "") };
 }
 
 function tailwindProblem(token) {
-    const utility = utilityOf(token);
+    const { variants, utility } = utilityOf(token);
+    const breakpoint = variants.find((variant) =>
+        breakpointVariant.test(variant)
+    );
+    if (breakpoint)
+        return `Tailwind breakpoint ${breakpoint}: in ${token} must be a CSS media query at the NosLog widths`;
     if (!utility || utility.startsWith("nl-") || /^[\w-]+-nl-/.test(utility))
         return null;
+    if (paletteUtility.test(utility))
+        return `Tailwind palette color ${token} must use an nl alias`;
     if (/^-?[a-z][\w-]*-\[.*\]$|^\[.*\]$/.test(utility))
         return `arbitrary Tailwind value ${token} must use an nl alias`;
     const scale = utility.match(scaleUtility);
@@ -51,16 +68,30 @@ function tailwindProblem(token) {
     return null;
 }
 
-/** Inspect literal presentation values; runtime geometry/data remains the caller's responsibility. */
-export function inspectTsxTokens(filename, source, declaredTokens) {
+// 그림 색 리터럴 — 문자열 전체가 색(「#0a0a0a」 · 「rgb(…)」)이거나 Pixi 숫자 색(0xRRGGBB)
+const colorString = /^\s*(?:#[\da-f]{3,8}|(?:rgb|hsl)a?\([^)]*\))\s*$/i;
+const colorNumber = /^0x[\da-f]{6}$/i;
+const styleVariableMethod = /^(?:getPropertyValue|setProperty|removeProperty)$/;
+
+/**
+ * Inspect literal presentation values; runtime geometry/data remains the caller's responsibility.
+ * `allowColorLiterals` 는 CSS 변수를 못 읽는 그림의 정본 색 상수 파일에만 준다.
+ */
+export function inspectTsxTokens(
+    filename,
+    source,
+    declaredTokens,
+    { allowColorLiterals = false } = {}
+) {
     const ast = ts.createSourceFile(
         filename,
         source,
         ts.ScriptTarget.Latest,
         true,
-        ts.ScriptKind.TSX
+        /\.tsx$/.test(filename) ? ts.ScriptKind.TSX : ts.ScriptKind.TS
     );
     const violations = [];
+    const colorReported = new Set();
     const constants = new Map();
     const duplicateNames = new Set();
     function collect(node) {
@@ -173,11 +204,13 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
                         !/^(?:transparent|currentColor|inherit|initial|unset|none)$/i.test(
                             text
                         ))
-                )
+                ) {
+                    colorReported.add(value);
                     report(
                         property,
                         `${name} must use a shared color token, not ${value.text}`
                     );
+                }
             }
             inspectValue(
                 ts.isShorthandPropertyAssignment(property)
@@ -200,6 +233,9 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
             )
                 report(node, `unknown token ${name}${complete ? "" : "…"}`);
         }
+        // 옛 이름(--color-* 등)이나 nl 밖 변수 — 라이브러리 자리 변수(--radix-*)만 허용
+        for (const match of value.matchAll(/var\(\s*(--(?!nl-|radix-)[\w-]+)/g))
+            report(node, `CSS variable ${match[1]} is not an nl token`);
         if (classStrings.has(node)) return;
         for (const match of value.matchAll(
             /(?:^|\s)(?:[\w-]+:)*(gap|gap-x|gap-y|p[trblxy]?|m[trblxy]?|rounded(?:-[trbl])?|text|bg|border|fill|stroke)-\[([^\]]+)\]/g
@@ -258,6 +294,43 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
         );
     }
     function visit(node) {
+        // 캔버스 · Pixi · 이미지 색은 정본 상수 파일에서만 숫자로 둔다
+        if (
+            !allowColorLiterals &&
+            !colorReported.has(node) &&
+            ((ts.isStringLiteralLike(node) && colorString.test(node.text)) ||
+                (ts.isNumericLiteral(node) &&
+                    colorNumber.test(node.getText(ast))))
+        )
+            report(
+                node,
+                `color literal ${node.getText(ast)} must come from a token or a shared color constant`
+            );
+        // style.getPropertyValue("--…") · setProperty 도 nl 토큰 이름만
+        if (
+            ts.isCallExpression(node) &&
+            ts.isPropertyAccessExpression(node.expression) &&
+            styleVariableMethod.test(node.expression.name.text) &&
+            node.arguments[0]
+        ) {
+            const argument = unwrap(node.arguments[0]);
+            const text = ts.isStringLiteralLike(argument)
+                ? argument.text
+                : ts.isTemplateExpression(argument)
+                  ? argument.head.text
+                  : null;
+            if (text?.startsWith("--") && !text.startsWith("--nl-"))
+                report(node, `CSS variable ${text} is not an nl token`);
+            else if (
+                text?.startsWith("--nl-") &&
+                (ts.isStringLiteralLike(argument)
+                    ? !declaredTokens.has(text)
+                    : ![...declaredTokens].some((token) =>
+                          token.startsWith(text)
+                      ))
+            )
+                report(node, `unknown token ${text}`);
+        }
         if (isClassContext(node)) {
             inspectClasses(
                 ts.isCallExpression(node) ? node : (node.initializer ?? node)
@@ -290,6 +363,10 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
                 node,
                 `${node.name.getText(ast)} must use overlayPosition, not ${node.initializer.expression.getText(ast)}`
             );
+        ts.forEachChild(node, visit);
+    }
+    // style 속성을 먼저 본다 — 거기서 잡은 색 리터럴은 아래 색 리터럴 검사가 한 번 더 세지 않는다
+    (function visitStyles(node) {
         if (
             ts.isJsxAttribute(node) &&
             node.name.getText(ast) === "style" &&
@@ -298,11 +375,23 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
             node.initializer.expression
         )
             inspectStyle(node.initializer.expression);
-        ts.forEachChild(node, visit);
-    }
+        ts.forEachChild(node, visitStyles);
+    })(ast);
     visit(ast);
     return [...new Set(violations)];
 }
+
+/**
+ * CSS 변수를 못 읽는 그림의 정본 색 상수 파일(기초값 「토큰 · 공용 부품으로만」) — 색 리터럴을 여기에만 둔다.
+ * 각 파일의 다크 값은 따로 테스트가 tokens.css 와 대조하고, 서열 변경 공지 이미지는 사용자가 정한 원본 규격 색이다.
+ */
+export const colorConstantFiles = new Set([
+    "lib/chart-pattern/stageColors.ts",
+    "lib/metadata/brand-image.tsx",
+    "features/profile/profile-card-colors.ts",
+    "lib/music/score-tone.ts",
+    "features/announcements/lib/tier-change-image.ts",
+]);
 
 const sourceExtensions = [".tsx", ".ts", ".jsx", ".js", ".mjs"];
 
@@ -324,7 +413,7 @@ function resolveImport(root, from, specifier) {
 }
 
 /**
- * TSX files reachable by imports from routes outside `excludedRoutes`.
+ * TSX · TS files reachable by imports from routes outside `excludedRoutes` (선언 · 테스트 · 스토리 · 스크립트 파일은 뺀다).
  * Components that only an excluded route (e.g. /admin) imports are left out on their own.
  */
 export function reachableTsxFiles(root, { routes = "app", excludedRoutes }) {
@@ -371,7 +460,12 @@ export function reachableTsxFiles(root, { routes = "app", excludedRoutes }) {
         })(ast);
     }
     return [...seen]
-        .filter((file) => file.endsWith(".tsx"))
         .map((file) => relative(root, file))
+        .filter(
+            (file) =>
+                /\.tsx?$/.test(file) &&
+                !/\.d\.ts$|\.(?:test|spec|stories)\.tsx?$/.test(file) &&
+                !/^(?:scripts|tooling|tests|e2e)\//.test(file)
+        )
         .sort();
 }

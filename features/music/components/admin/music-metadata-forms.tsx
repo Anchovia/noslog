@@ -105,7 +105,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             onSubmit={handleSubmit(handleMusicMetadataSubmit, () =>
                 toast.error("악곡 공통 정보 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
+            className="flex flex-col gap-nl-8 rounded-nl-control bg-nl-surface p-nl-12"
         >
             <input type="hidden" {...register("musicIndex")} />
             <h2 className="nl-component-title text-nl-content">공통 정보</h2>
@@ -255,7 +255,7 @@ export function ChartMetadataForm({
             onSubmit={handleSubmit(handleChartMetadataSubmit, () =>
                 toast.error("채보 정보 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12"
+            className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12"
         >
             <input type="hidden" {...register("chartId")} />
             <input type="hidden" {...register("musicIndex")} />

@@ -40,6 +40,7 @@ export const PAGE_ROUTES: readonly AnalyticsRoute[] = [
     { pattern: "/profile/settings", label: "프로필 설정" },
     { pattern: "/settings", label: "설정" },
     { pattern: "/bookmarklet", label: "동기화" },
+    { pattern: "/developer", label: "파트너 연동 문서" },
     { pattern: "/privacy", label: "개인정보처리방침" },
     { pattern: "/privacy/history", label: "개인정보처리방침 이전 버전 목록" },
     {

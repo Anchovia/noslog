@@ -107,7 +107,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.x).toBe(0);
                 }
                 // 전역 좌우 여백 16 (672 미만) / 24 / 32 (1056 이상)
-                const padding = width < 672 ? 16 : width < 1056 ? 24 : 32;
+                const padding = width < 672 ? 16 : 24;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
@@ -179,6 +179,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await trigger.click();
             const panel = page.locator("#app-destinations");
             await expect(panel).toBeVisible();
+            // 고대비 모드에서만 보이는 투명 둘레(그림자 둘레는 고대비에서 지워진다)
+            await expect(panel).toHaveCSS("outline-style", "solid");
+            await expect(panel).toHaveCSS("outline-offset", "-1px");
             await expect(panel.locator("a").first()).toBeFocused();
             const panelBox = (await panel.boundingBox())!;
             const triggerBox = (await page
@@ -189,6 +192,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 expect(panelBox.width).toBe(width >= 1056 ? 248 : 488);
                 expect(panelBox.x + panelBox.width).toBeCloseTo(
                     triggerBox.x + triggerBox.width,
+                    1
+                );
+                // 672 이상은 폭과 상관없이 헤더 아래 8
+                const headerBox = (await page
+                    .locator(".nl-header")
+                    .boundingBox())!;
+                expect(panelBox.y).toBeCloseTo(
+                    headerBox.y + headerBox.height + 8,
                     1
                 );
             } else {
@@ -220,6 +231,39 @@ for (const locale of ["ko", "ja", "en"] as const) {
         expect(audit.violations).toEqual([]);
     });
 }
+
+test("뒤로 링크는 누를 때도 올림 · 키 포커스와 같은 밝은 글자 + 밑줄이다", async ({
+    page,
+}) => {
+    await page.goto("/ko/music/bfdaadfb98501907925ecf41a076108d/expert");
+    const link = page.locator(".nl-back-link").first();
+    await expect(link).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(link).toHaveCSS("text-decoration-line", "none");
+    const strong = await link.evaluate((element) => {
+        const probe = document.createElement("span");
+        probe.style.color = "var(--nl-content-strong)";
+        element.after(probe);
+        const value = getComputedStyle(probe).color;
+        probe.remove();
+        return value;
+    });
+    // 올림이 함께 걸리지 않게 포인터 없이 누름 상태만 건다
+    const client = await page.context().newCDPSession(page);
+    await client.send("DOM.enable");
+    await client.send("CSS.enable");
+    const { root } = await client.send("DOM.getDocument");
+    const { nodeId } = await client.send("DOM.querySelector", {
+        nodeId: root.nodeId,
+        selector: ".nl-back-link",
+    });
+    await client.send("CSS.forcePseudoState", {
+        nodeId,
+        forcedPseudoClasses: ["active"],
+    });
+    await expect(link).toHaveCSS("text-decoration-line", "underline");
+    await expect(link).toHaveCSS("color", strong);
+});
 
 test("the chart viewer uses the ordinary shell", async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 900 });

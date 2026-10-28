@@ -4,6 +4,7 @@ import {
     getDiscoveryPage,
     publicDiscoveryQuery,
 } from "@/features/music/server/discovery-service";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
@@ -21,16 +22,21 @@ export async function generateMetadata() {
 export default async function Music(props: {
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-    const [searchParams, session] = await Promise.all([
+    const [searchParams, session, { locale }] = await Promise.all([
         props.searchParams,
         getSession(),
+        getServerI18n(),
     ]);
     const accountId = session.id ?? null;
     const query = publicDiscoveryQuery(
         parseDiscoverySearchParams(searchParams),
         accountId
     );
-    const initialPage = await getDiscoveryPage(query, 0, accountId);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(accountId);
+    const initialPage = await getDiscoveryPage(query, 0, accountId, {
+        locale,
+        showLocalizedTitle,
+    });
 
     return (
         <DiscoveryPage

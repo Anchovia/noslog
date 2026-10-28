@@ -22,6 +22,7 @@ import {
     TextArea,
 } from "@/components/ui/form-field";
 import LoginPrompt from "@/components/ui/login-prompt";
+import ModalDialog from "@/components/ui/modal-dialog";
 import ResponsiveDialog from "@/components/ui/responsive-dialog";
 import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -293,7 +294,7 @@ export default function FeedbackDialogView({
                     <TextArea
                         id="feedback-content"
                         maxLength={1000}
-                        // 5줄 = 글자 24 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 144 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
+                        // 5줄 = 줄 높이 20 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 124 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
                         rows={5}
                         readOnly={isSubmitting}
                         aria-invalid={Boolean(errors.content)}
@@ -350,17 +351,10 @@ export default function FeedbackDialogView({
         )
     );
 
-    // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2)
-    const loginAction = (
-        <ButtonLink href={localizedHref("/login")}>
-            {t("common.login")}
-        </ButtonLink>
-    );
+    // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2).
+    // 「내 제보」 는 읽기만 하는 창이라 발이 없고 머리 × 가 닫는다
     const closeAction = (
-        <ActionButton
-            variant={view === "mine" ? "secondary" : "primary"}
-            onClick={() => changeOpen(false)}
-        >
+        <ActionButton onClick={() => changeOpen(false)}>
             {t("common.close")}
         </ActionButton>
     );
@@ -374,21 +368,14 @@ export default function FeedbackDialogView({
             {t("feedback.send")}
         </ActionButton>
     );
-    const fullScreenFooter = !isAuthenticated
-        ? loginAction
-        : submitted || view === "mine"
-          ? closeAction
+    const fullScreenFooter = submitted
+        ? closeAction
+        : view === "mine"
+          ? null
           : submitAction;
-    const modalFooter = !isAuthenticated ? (
-        <>
-            <ActionButton variant="secondary" onClick={() => changeOpen(false)}>
-                {t("feedback.cancel")}
-            </ActionButton>
-            {loginAction}
-        </>
-    ) : submitted || view === "mine" ? (
+    const modalFooter = submitted ? (
         closeAction
-    ) : (
+    ) : view === "mine" ? null : (
         <>
             <ActionButton
                 variant="secondary"
@@ -401,15 +388,42 @@ export default function FeedbackDialogView({
         </>
     );
 
-    // 긴 창은 672 미만에서 전체 화면(가이드 대화상자 절 · 2026-09-18 구현)
+    // 로그아웃이면 입력 칸 없는 로그인 안내 한 덩이라 폰에서도 가운데 작은 창
+    if (!isAuthenticated) {
+        return (
+            <ModalDialog
+                open={open}
+                onOpenChange={changeOpen}
+                title={t("feedback.title")}
+                size="small"
+                onCloseAutoFocus={onCloseAutoFocus}
+                trigger={triggerNode}
+                footer={
+                    <>
+                        <ActionButton
+                            variant="secondary"
+                            onClick={() => changeOpen(false)}
+                        >
+                            {t("feedback.cancel")}
+                        </ActionButton>
+                        <ButtonLink href={localizedHref("/login")}>
+                            {t("common.login")}
+                        </ButtonLink>
+                    </>
+                }
+            >
+                {body}
+            </ModalDialog>
+        );
+    }
+
+    // 긴 창은 672 미만에서 전체 화면
     return (
         <ResponsiveDialog
             open={open}
             onOpenChange={changeOpen}
             title={t("feedback.title")}
-            // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
-            size={isAuthenticated ? "large" : "small"}
-            className="nl-feedback-dialog"
+            size="large"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}
             footer={fullScreenFooter}

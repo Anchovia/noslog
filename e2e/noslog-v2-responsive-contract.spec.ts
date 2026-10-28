@@ -50,8 +50,7 @@ for (const locale of ["ko", "ja", "en"]) {
                     // 영역 탭은 모든 폭에서 탭 — 좁으면 탭 줄만 가로 스크롤(부품 결정 ② 2026-09-14)
                     tabs: true,
                     // 전역 좌우 여백 16 / 24 / 32(1056 이상) — 가이드 「셸과 레이아웃」
-                    padding:
-                        width >= 1056 ? "32px" : width >= 672 ? "24px" : "16px",
+                    padding: width >= 672 ? "24px" : "16px",
                     overflow: false,
                 });
             if ([390, 672, 1470].includes(width)) {
@@ -154,6 +153,29 @@ for (const locale of ["ko", "ja", "en"]) {
                     await expect(page.locator(".nl-exam-select")).toBeVisible({
                         visible: width < 1056,
                     });
+                    if (width >= 1056) {
+                        // 지금 급 = 검정 선택 목록 고른 줄과 같은 surface/control 면 · 600. 토큰 값은 테마마다 달라 그 자리에서 읽는다
+                        const current = await page
+                            .locator('.nl-exam-rail [aria-current="true"]')
+                            .evaluate((element) => {
+                                const probe = document.createElement("span");
+                                probe.style.backgroundColor =
+                                    "var(--nl-surface-control)";
+                                element.parentElement!.append(probe);
+                                const surface =
+                                    getComputedStyle(probe).backgroundColor;
+                                probe.remove();
+                                const style = getComputedStyle(element);
+                                return {
+                                    fill: style.backgroundColor,
+                                    surface,
+                                    weight: style.fontWeight,
+                                };
+                            });
+                        expect(current.surface).not.toBe("rgba(0, 0, 0, 0)");
+                        expect(current.fill).toBe(current.surface);
+                        expect(current.weight).toBe("600");
+                    }
                 }
                 if (item.route === "/privacy") {
                     await expect(

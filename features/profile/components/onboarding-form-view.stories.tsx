@@ -276,14 +276,14 @@ export const NicknameCheckUnavailable: Story = {
     },
 };
 
-// 폭 계약: 입력 글자 16px · 가로 넘침 없음 · 입력 높이는 1056 이상 40px, 미만 44px.
+// 폭 계약: 입력 글자 14px · 가로 넘침 없음 · 입력 높이는 1056 이상 32px, 미만 40px.
 function contract(width: ContractWidth, locale?: string): Story {
     return {
         ...contractStory(width, locale),
         play: async ({ canvasElement }) => {
             await expectFormContract(
                 within(canvasElement).getAllByRole("textbox")[0],
-                { height: width >= 1056 ? "40px" : "44px" }
+                { height: width >= 1056 ? "32px" : "40px" }
             );
         },
     };

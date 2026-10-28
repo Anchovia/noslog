@@ -15,8 +15,8 @@ import type { ProfilePinnedRecords } from "@/features/profile/server/profile-pin
 import { rankTone } from "@/lib/music/score-tone";
 
 /**
- * 프로필 개요 「고정 기록」(2026-09-26 S2) — 옆 열 맨 위. 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 곡 순위,
- * 위아래 12 · 구분선(v2 시안). 고르지 않았으면 베스트 상위 3곡(자동) — 고르기는 설정 「프로필」 탭
+ * 프로필 개요 「고정 기록」 — 옆 열 맨 위. 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 Grd · 아래 곡 순위,
+ * 위아래 8 · 구분선. 고르지 않았으면 베스트 상위 3곡(자동) — 고르기는 설정 「프로필」 탭
  */
 export default function ProfilePinned({
     pinned,

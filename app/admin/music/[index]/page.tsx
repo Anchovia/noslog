@@ -63,7 +63,7 @@ export default async function AdminMusicDetailPage({
                 }}
             />
 
-            <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+            <section className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
                 <div>
                     <h2 className="nl-component-title text-nl-content">
                         번역 제목

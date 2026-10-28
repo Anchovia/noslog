@@ -43,7 +43,7 @@ export default function MusicJacket({
             className={cn(
                 appearance === "foundation"
                     ? "nl-jacket"
-                    : "relative flex overflow-hidden bg-nl-raised",
+                    : "relative flex overflow-hidden bg-nl-surface",
                 className
             )}
             role={appearance === "foundation" ? "img" : undefined}

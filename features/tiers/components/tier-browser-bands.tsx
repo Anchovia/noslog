@@ -43,9 +43,9 @@ export function tierBrowserSkeletonCount(total: number, visible: boolean) {
 }
 
 /**
- * 구간 안 곡 순서(2026-09-22 ②). 구간은 곡 전체를 한 번에 받으므로 20개씩 자르기 전에 정렬한다.
- * 레벨 순 = 높은 레벨 먼저 · 읽기 순 = 일본어 읽기 가나다 · 점수 낮은 순 = 기록 없는 곡 먼저, 그다음 낮은 점수.
- * 같은 값끼리는 서열표 순
+ * 구간 안 곡 순서. 구간은 곡 전체를 한 번에 받으므로 20개씩 자르기 전에 정렬한다.
+ * 레벨 순 = 높은 레벨 먼저, Real 은 레벨 숫자 단위가 달라(1–3) 맨 끝 한 묶음 · 읽기 순 = 일본어 읽기 가나다 ·
+ * 점수 낮은 순 = 기록 없는 곡 먼저, 그다음 낮은 점수. 같은 값끼리는 서열표 순
  */
 export function sortTierBrowserEntries(
     entries: readonly TierBrowserEntry[],
@@ -58,7 +58,10 @@ export function sortTierBrowserEntries(
         (a: TierBrowserEntry, b: TierBrowserEntry) => number
     > = {
         position: () => 0,
-        level: (a, b) => b.chart.level - a.chart.level,
+        level: (a, b) =>
+            Number(a.chart.difficulty === "Real") -
+                Number(b.chart.difficulty === "Real") ||
+            b.chart.level - a.chart.level,
         name: (a, b) =>
             (a.chart.music.reading ?? a.chart.music.title).localeCompare(
                 b.chart.music.reading ?? b.chart.music.title,

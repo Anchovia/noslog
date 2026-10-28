@@ -169,7 +169,7 @@ export default function HeaderMenu({
                     <nav
                         id="header-secondary-menu"
                         aria-label={t("header.fullMenu")}
-                        className="nl-admin-phone-frame fixed top-nl-header left-1/2 grid w-full -translate-x-1/2 grid-cols-2 gap-nl-8 border-b-nl-stroke border-nl-divider bg-nl-surface p-nl-12 shadow-nl-overlay"
+                        className="nl-admin-phone-frame fixed top-nl-header left-1/2 grid w-full -translate-x-1/2 grid-cols-2 gap-nl-8 border-b-nl-stroke border-nl-elevated-border bg-nl-elevated p-nl-12 shadow-nl-overlay"
                     >
                         {menuItems.map((item) => {
                             const Icon = item.icon;
@@ -181,9 +181,9 @@ export default function HeaderMenu({
                                     aria-current={isActive ? "page" : undefined}
                                     onClick={() => setOpenPathname(null)}
                                     className={cn(
-                                        "nl-hover-layer flex min-h-nl-control items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas px-nl-12 text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
+                                        "nl-hover-layer flex min-h-nl-control items-center gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider bg-nl-canvas px-nl-12 text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
                                         isActive &&
-                                            "border-nl-chart bg-nl-raised text-nl-content",
+                                            "border-transparent bg-nl-control text-nl-content",
                                         item.href === "/admin" && "col-span-2"
                                     )}
                                 >

@@ -12,16 +12,23 @@ import {
     YAxis,
 } from "recharts";
 
-// 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay · 그림자 · 안쪽 8) · 본문 14 (2026-10-01 A)
+import { TOKEN_VALUES } from "@/lib/design-token-values";
+
+// 툴팁 = 떠 있는 창 규격(면 elevated · 둘레 border/elevated · 모서리 large · 그림자 · 안쪽 8) · 본문 14
 const TOOLTIP_STYLE = {
-    background: "var(--nl-surface-overlay)",
-    border: "1px solid var(--nl-border-overlay)",
-    borderRadius: "var(--nl-radius-overlay)",
+    background: "var(--nl-surface-elevated)",
+    border: "var(--nl-stroke-default) solid var(--nl-border-elevated)",
+    borderRadius: "var(--nl-radius-large)",
     boxShadow: "var(--nl-overlay-shadow)",
     padding: "var(--nl-spacing-8)",
     color: "var(--nl-content-default)",
     fontSize: "var(--nl-type-size-14)",
 };
+
+// recharts 는 여백 · 축 폭을 숫자로만 받는다 — 토큰 값을 옮긴 상수에서 읽는다
+const { spacing: space } = TOKEN_VALUES;
+const CHART_MARGIN = { top: space[8], right: space[12], bottom: 0, left: 0 };
+const AXIS_WIDTH = space[32] + space[8];
 
 const NO_RECORD = "기록 없음";
 
@@ -49,7 +56,7 @@ export default function AdminDashboardChart({
                 <LineChart
                     data={data}
                     accessibilityLayer={false}
-                    margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
+                    margin={CHART_MARGIN}
                 >
                     <CartesianGrid
                         stroke="var(--nl-border-divider)"
@@ -60,7 +67,7 @@ export default function AdminDashboardChart({
                         axisLine={false}
                         tickLine={false}
                         interval="preserveStartEnd"
-                        minTickGap={16}
+                        minTickGap={space[16]}
                         tick={{
                             fill: "var(--nl-content-subdued)",
                             fontSize: "var(--nl-type-size-12)",
@@ -70,14 +77,14 @@ export default function AdminDashboardChart({
                         allowDecimals={false}
                         axisLine={false}
                         tickLine={false}
-                        width={40}
+                        width={AXIS_WIDTH}
                         tick={{
                             fill: "var(--nl-content-subdued)",
                             fontSize: "var(--nl-type-size-12)",
                         }}
                     />
                     <Tooltip
-                        cursor={{ stroke: "var(--nl-border-strong)" }}
+                        cursor={{ stroke: "var(--nl-border-ring)" }}
                         contentStyle={TOOLTIP_STYLE}
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [
@@ -92,14 +99,12 @@ export default function AdminDashboardChart({
                         type="linear"
                         dataKey="value"
                         stroke={color}
-                        strokeWidth={2}
-                        // 점은 가리킨 자리만 — 바탕색 채움 + 2px 테두리(공용 선 그래프와 같은 규격, 2026-10-01)
+                        // 선 · 점 테두리 두께는 admin.css(--nl-stroke-strong). 점은 가리킨 자리만 — 바탕색 채움 + 테두리(공용 선 그래프와 같은 규격, 2026-10-01)
                         dot={false}
                         activeDot={{
                             r: 4,
                             fill: "var(--nl-surface-canvas)",
                             stroke: color,
-                            strokeWidth: 2,
                         }}
                         isAnimationActive={false}
                     />
@@ -142,7 +147,7 @@ export function AdminDashboardHours({
                 <BarChart
                     data={data}
                     accessibilityLayer={false}
-                    margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
+                    margin={CHART_MARGIN}
                 >
                     <CartesianGrid
                         stroke="var(--nl-border-divider)"
@@ -171,7 +176,7 @@ export function AdminDashboardHours({
                         allowDecimals={false}
                         axisLine={false}
                         tickLine={false}
-                        width={40}
+                        width={AXIS_WIDTH}
                         // 빈 틀은 숫자 없이 — 자리(폭)는 남겨 수치를 바꿔도 막대 틀이 옆으로 밀리지 않는다
                         tick={
                             emptyMessage
@@ -184,7 +189,7 @@ export function AdminDashboardHours({
                     />
                     {emptyMessage ? null : (
                         <Tooltip
-                            cursor={{ fill: "var(--nl-surface-raised)" }}
+                            cursor={{ fill: "var(--nl-surface-surface)" }}
                             contentStyle={TOOLTIP_STYLE}
                             labelStyle={{ color: "var(--nl-content-subdued)" }}
                             formatter={(value) => [

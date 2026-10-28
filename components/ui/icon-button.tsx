@@ -16,8 +16,8 @@ type IconButtonProps = Omit<
 };
 
 /**
- * 아이콘만 있는 버튼 — 공용 버튼 규격을 그대로 받는다(데스크톱 40 · 모바일 44 · 모서리 8 · 올림 · 누름 · 포커스).
- * 기본은 면 없는 고스트. Radix `asChild` 트리거 안에 그대로 넣을 수 있다. 2026-09-14 부품 결정 ①
+ * 아이콘만 있는 버튼 — 공용 버튼 규격을 그대로 받는다(컨트롤 높이 정사각 · 모서리 control · 올림 · 포커스).
+ * 기본은 면 없는 고스트. Radix `asChild` 트리거 안에 그대로 넣을 수 있다.
  */
 export default function IconButton({
     label,

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
 
 for (const locale of ["ko", "ja", "en"] as const) {
-    // 버튼은 입력칸과 같은 --nl-control-height — 1056px 미만 44 · 이상 40 (2026-09-14 H2)
+    // 주 · 보조 버튼 기본은 모든 폭 --nl-control-height-large(40). 1056 미만은 고스트 「초기화」 의 줄 높이도 40
     test(`${locale} standard buttons follow the control height across page modes`, async ({
         page,
     }) => {
@@ -10,7 +10,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(`/${locale}/music`);
         for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1280]) {
             await page.setViewportSize({ width, height: 900 });
-            const height = width >= 1056 ? 40 : 44;
+            const height = 40;
             const more = page
                 .locator("button.nl-button")
                 .filter({ hasText: /20/ })
@@ -35,9 +35,19 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     exact: true,
                 });
                 await expect(reset).toHaveCSS("min-height", `${height}px`);
+                // 잉크 = 상자 왼쪽 + 경계 + 좌우 안쪽. 상자 왼쪽은 발 안쪽 16 에서 안쪽(11 + 경계 1)만큼 당긴 4
                 await expect
-                    .poll(async () => (await reset.boundingBox())?.x)
-                    .toBe(0);
+                    .poll(() =>
+                        reset.evaluate((element) => {
+                            const style = getComputedStyle(element);
+                            return (
+                                element.getBoundingClientRect().x +
+                                parseFloat(style.borderLeftWidth) +
+                                parseFloat(style.paddingLeft)
+                            );
+                        })
+                    )
+                    .toBe(16);
                 await page.keyboard.press("Escape");
                 await expect(dialog).toHaveCount(0);
             }

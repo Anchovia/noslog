@@ -109,7 +109,7 @@ export default function ChartFieldProposalReview({
     return (
         <section className="flex flex-col gap-nl-12">
             {reviewable ? (
-                <div className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+                <div className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
                     <div className="flex flex-wrap items-center justify-between gap-nl-8">
                         <label className="nl-metadata flex items-center gap-nl-8 text-nl-subdued">
                             <input
@@ -219,7 +219,7 @@ export default function ChartFieldProposalReview({
                 return (
                     <article
                         key={item.id}
-                        className="flex items-start gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
+                        className="flex items-start gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16"
                     >
                         {reviewable ? (
                             <input

@@ -196,7 +196,7 @@ export default function TierBoard({
 
     if (bands.length === 0) {
         return (
-            <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
+            <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
                 먼저 서열표 상수 구간을 추가해주세요.
             </p>
         );
@@ -214,10 +214,10 @@ export default function TierBoard({
             <div
                 className={cn(
                     "flex flex-col gap-nl-12",
-                    isMutating && "pointer-events-none text-nl-pending"
+                    isMutating && "pointer-events-none text-nl-subdued"
                 )}
             >
-                <div className="sticky top-nl-64 z-nl-sticky flex min-h-nl-control items-center justify-between gap-nl-12 rounded-nl-container border-nl-stroke border-nl-border bg-nl-surface px-nl-12 py-nl-8 shadow-nl-overlay">
+                <div className="sticky top-nl-64 z-nl-sticky flex min-h-nl-control items-center justify-between gap-nl-12 rounded-nl-large border-nl-stroke border-nl-elevated-border bg-nl-elevated px-nl-12 py-nl-8 shadow-nl-overlay">
                     <span className="nl-metadata text-nl-subdued">
                         {changeCount > 0
                             ? `배치 변경 ${changeCount}건`

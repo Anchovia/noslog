@@ -2,13 +2,21 @@
 
 import { User } from "lucide-react";
 import Image from "next/image";
-import type { CSSProperties } from "react";
 import { useState } from "react";
 
 import { cn } from "@/lib/cn";
 
-/** 그림 원본 크기 힌트(next/image). 그리는 크기는 `size` 를 주지 않으면 CSS 클래스가 정한다 */
-const IMAGE_SIZE_HINT = 44;
+/** next/image 에 요청할 원본 크기. 그리는 크기는 CSS 클래스(`nl-avatar--*`)가 정하고, 크기가 없으면 자리(부모)가 정한다 */
+const IMAGE_SIZE_HINT = {
+    small: 24,
+    compact: 32,
+    medium: 40,
+    large: 64,
+    profile: 108,
+} as const;
+const DEFAULT_IMAGE_SIZE_HINT = 44;
+
+export type AvatarSize = keyof typeof IMAGE_SIZE_HINT;
 
 export default function Avatar({
     src,
@@ -19,30 +27,24 @@ export default function Avatar({
     fallbackInitial,
     initialClassName = "nl-metadata",
     loading,
-    style,
 }: {
     src?: string | null;
     alt?: string;
-    /** 숫자 크기 — 없으면 자리(부모 · 크기 클래스)가 정한다(헤더는 칸을 채움, 2026-10-15) */
-    size?: number;
+    /** 크기 단계 — 없으면 자리(부모)가 정한다(헤더는 칸을 채움) */
+    size?: AvatarSize;
     className?: string;
     fallbackName?: string | null;
     fallbackInitial?: string;
     /** 첫 글자 글자 스타일 — 기본 metadata, 프로필 머리 108 만 display(2026-09-26 D6) */
     initialClassName?: string;
     loading?: "eager" | "lazy";
-    style?: CSSProperties;
 }) {
+    const imageSize = size ? IMAGE_SIZE_HINT[size] : DEFAULT_IMAGE_SIZE_HINT;
     const [failedSource, setFailedSource] = useState<string | null>(null);
 
     return (
         <span
-            className={cn("nl-avatar", className)}
-            style={
-                size === undefined
-                    ? style
-                    : { width: size, height: size, ...style }
-            }
+            className={cn("nl-avatar", size && `nl-avatar--${size}`, className)}
             role={!src || failedSource === src ? "img" : undefined}
             aria-label={
                 !src || failedSource === src ? alt || undefined : undefined
@@ -53,8 +55,8 @@ export default function Avatar({
                 <Image
                     src={src}
                     alt={alt}
-                    width={size ?? IMAGE_SIZE_HINT}
-                    height={size ?? IMAGE_SIZE_HINT}
+                    width={imageSize}
+                    height={imageSize}
                     loading={loading}
                     onError={() => setFailedSource(src)}
                 />

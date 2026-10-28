@@ -175,7 +175,7 @@ describe("프로필 이미지 업로드 토큰", () => {
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 2 },
             data: {
-                username: "CAROL",
+                username: "carol",
                 country: "ko-KR",
                 locale: "ko",
                 showLocalizedMusicTitle: true,

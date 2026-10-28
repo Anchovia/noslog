@@ -129,8 +129,11 @@ export default function ReportOpinionDialog({
                                 label={t("community.reportReason")}
                                 labelStyle="field"
                                 value={field.value}
-                                onValueChange={field.onChange}
-                                disabled={mutation.isPending}
+                                // 신고 중에는 비활성 면으로 바꾸지 않고 고르기만 막는다(바쁨은 비활성이 아니다)
+                                onValueChange={(next) => {
+                                    if (!mutation.isPending)
+                                        field.onChange(next);
+                                }}
                                 error={
                                     form.formState.errors.reason
                                         ? t("community.action.invalid")
@@ -158,7 +161,7 @@ export default function ReportOpinionDialog({
                             <TextArea
                                 id={`${id}-explanation`}
                                 {...form.register("explanation")}
-                                disabled={mutation.isPending}
+                                readOnly={mutation.isPending}
                                 aria-invalid={Boolean(
                                     form.formState.errors.explanation
                                 )}

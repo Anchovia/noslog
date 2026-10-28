@@ -59,7 +59,7 @@ export default async function HomePage() {
                         <h1 className="nl-page-title" lang="en">
                             NosLog
                         </h1>
-                        <p className="nl-body-secondary nl-muted">
+                        <p className="nl-metadata nl-muted">
                             {t("home.tagline")}
                         </p>
                     </div>

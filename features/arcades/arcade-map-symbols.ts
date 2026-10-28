@@ -1,10 +1,18 @@
 /**
- * 지역 버블 지름 — 범위 안 오락실 수로 결정한다(코로나 맵의 시도별 원 언어).
- * 1곳은 버블이 아니라 핀이므로 2곳부터 시작하고, 상한은 터치 타겟 두 배(88).
+ * 지역 버블의 보이는 지름 — 범위 안 오락실 수로 정한다(코로나 맵의 시도별 원 언어).
+ * 2곳 = 가장 작은 지름, 많을수록 커지되 가장 큰 지름에서 멈춘다(2026-10-21 전면 대조 ③ — 32 에서 48 까지).
+ * 값은 부르는 쪽이 토큰(--nl-spacing-32 · --nl-spacing-48)에서 읽어 넘긴다. 누르는 자리 44 는 버튼이 따로 지킨다
  */
-export function clusterDiameter(count: number) {
-    if (count < 2) return 44;
-    return Math.round(Math.max(44, Math.min(88, 32 + Math.sqrt(count) * 12)));
+export function clusterDiameter(
+    count: number,
+    smallest: number,
+    largest: number
+) {
+    if (count < 3) return smallest;
+    const step = (largest - smallest) / 3;
+    return Math.round(
+        Math.min(largest, smallest + Math.log2(count - 1) * step)
+    );
 }
 
 export function groupMapPoints<T extends { x: number; y: number }>(

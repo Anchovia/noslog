@@ -1,17 +1,14 @@
 "use client";
 
-import "@/lib/input-modality";
-
-import * as Select from "@radix-ui/react-select";
-import { Check, ChevronDown, Globe } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { changeLocale } from "@/app/(site)/settings/actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import { overlayPosition } from "@/components/ui/overlay-position";
+import CompactSelect from "@/components/ui/compact-select";
+import { StatusMessage } from "@/components/ui/status-message";
 import { PROFILE_LANGUAGES } from "@/features/profile/schemas/profile-settings-schema";
-import { getLocalizedHref, isLocale } from "@/lib/i18n/routing";
+import { getLocalizedHref, isLocale, type Locale } from "@/lib/i18n/routing";
 
 export default function AuthLanguage() {
     const locale = useLocale();
@@ -22,9 +19,14 @@ export default function AuthLanguage() {
     const [failed, setFailed] = useState(false);
     return (
         <>
-            <Select.Root
+            <CompactSelect<Locale>
+                label={t("header.language")}
                 value={locale}
                 disabled={pending}
+                options={PROFILE_LANGUAGES.map((option) => ({
+                    value: option.value,
+                    label: option.label,
+                }))}
                 onValueChange={(value) => {
                     if (!isLocale(value) || value === locale) return;
                     startTransition(async () => {
@@ -48,61 +50,13 @@ export default function AuthLanguage() {
                         }
                     });
                 }}
-            >
-                <Select.Trigger
-                    className="nl-auth-language nl-control"
-                    aria-label={t("header.language")}
-                    aria-busy={pending}
-                >
-                    <Globe className="nl-icon-small" aria-hidden />
-                    <Select.Value>
-                        {
-                            PROFILE_LANGUAGES.find(
-                                (option) => option.value === locale
-                            )?.label
-                        }
-                    </Select.Value>
-                    <Select.Icon>
-                        <ChevronDown className="nl-icon-small" aria-hidden />
-                    </Select.Icon>
-                </Select.Trigger>
-                <Select.Portal>
-                    <div className="noslog-ui">
-                        <Select.Content
-                            className="nl-select-menu"
-                            position="popper"
-                            side="top"
-                            sideOffset={overlayPosition.sideOffset}
-                            collisionPadding={overlayPosition.collisionPadding}
-                        >
-                            <Select.Viewport>
-                                {PROFILE_LANGUAGES.map((option) => (
-                                    <Select.Item
-                                        key={option.value}
-                                        value={option.value}
-                                        lang={option.value}
-                                        className="nl-select-option nl-body-secondary"
-                                    >
-                                        <Select.ItemText>
-                                            {option.label}
-                                        </Select.ItemText>
-                                        <Select.ItemIndicator>
-                                            <Check
-                                                className="nl-icon-small"
-                                                aria-hidden
-                                            />
-                                        </Select.ItemIndicator>
-                                    </Select.Item>
-                                ))}
-                            </Select.Viewport>
-                        </Select.Content>
-                    </div>
-                </Select.Portal>
-            </Select.Root>
+            />
             {failed ? (
-                <p role="alert" className="nl-metadata nl-field__error">
-                    {t("settings.preferenceFailed")}
-                </p>
+                <StatusMessage
+                    severity="danger"
+                    role="alert"
+                    title={t("settings.preferenceFailed")}
+                />
             ) : null}
         </>
     );

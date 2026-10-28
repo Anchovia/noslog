@@ -29,8 +29,7 @@ export default function AvatarCropDialog({
     const [error, setError] = useState("");
     const [zoom, setZoom] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    // Coordinates use the 302px Figma canvas; its centered 240px square is
-    // the exported crop and the circular boundary previews the profile mask.
+    // 좌표는 302 칸 기준이다. 가운데 240 정사각이 내보내는 자르기이고, 원 경계는 프로필 사진 모양을 미리 보인다
     const diameter = 240;
     useEffect(() => {
         const url = URL.createObjectURL(file);
@@ -164,7 +163,7 @@ export default function AvatarCropDialog({
                         busy={busy}
                         onClick={confirm}
                     >
-                        {t("common.confirm")}
+                        {t("settings.cropApply")}
                     </ActionButton>
                 </>
             }

@@ -3,6 +3,7 @@ export const CACHE_TAGS = {
     musicDetails: "music-details",
     chartRankings: "chart-rankings",
     chartEvaluations: "chart-evaluations",
+    patternMetrics: "pattern-metrics",
     tierLists: "tier-lists",
     userRankings: "user-rankings",
     exams: "exams",

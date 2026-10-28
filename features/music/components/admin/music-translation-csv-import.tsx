@@ -117,7 +117,7 @@ export default function MusicTranslationCsvImport() {
     }
 
     return (
-        <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16">
+        <section className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16">
             <div>
                 <h2 className="nl-component-title text-nl-content">
                     악곡 번역 CSV
@@ -198,9 +198,9 @@ export default function MusicTranslationCsvImport() {
             ) : null}
             {preview ? (
                 <div className="flex flex-col gap-nl-8">
-                    <div className="overflow-x-auto rounded-nl-field border-nl-stroke border-nl-border">
+                    <div className="overflow-x-auto rounded-nl-control border-nl-stroke border-nl-divider">
                         <table className="nl-admin-table-wide nl-metadata w-full text-left">
-                            <thead className="bg-nl-raised">
+                            <thead className="bg-nl-control">
                                 <tr>
                                     <th className="p-nl-8">index</th>
                                     <th className="p-nl-8">원제</th>

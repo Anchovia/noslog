@@ -61,7 +61,7 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
     }
 
     return (
-        <header className="flex items-start gap-nl-8 bg-nl-raised px-nl-12 py-nl-8">
+        <header className="flex items-start gap-nl-8 bg-nl-control px-nl-12 py-nl-8">
             <details className="group min-w-0 flex-1">
                 <summary
                     title="구간값 수정"

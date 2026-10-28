@@ -1,3 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+import postcss from "postcss";
 import { createElement } from "react";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -194,5 +198,35 @@ describe("dashboard metric navigation", () => {
         expect(props.data).toHaveLength(1);
         expect(props.data[0].value).toBe(0);
         expect(mocks.chart).not.toHaveBeenCalled();
+    });
+});
+
+// 기간 세그먼트는 링크(aria-current)라 공용 고른 칸 규칙([aria-checked="true"])을 따로 옮겨 적는다 — 두 값이 갈라지지 않게
+describe("dashboard range segments", () => {
+    const selected = (file: string, selector: string) => {
+        const values: Record<string, string> = {};
+        postcss
+            .parse(readFileSync(resolve("app/styles", file), "utf8"))
+            .walkRules(selector, (rule) => {
+                if (rule.parent?.type !== "root") return;
+                rule.walkDecls((decl) => {
+                    values[decl.prop] = decl.value;
+                });
+            });
+        return values;
+    };
+
+    it("paints the selected period link like the shared selected segment", () => {
+        expect(
+            selected(
+                "admin.css",
+                '.noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"]'
+            )
+        ).toEqual(
+            selected(
+                "foundation.css",
+                '.noslog-ui .nl-segments__item[aria-checked="true"]'
+            )
+        );
     });
 });

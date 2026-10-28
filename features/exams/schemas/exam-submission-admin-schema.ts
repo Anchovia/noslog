@@ -14,11 +14,21 @@ const examSubmissionIdSchema = z
     .int("잘못된 인증입니다.")
     .positive("잘못된 인증입니다.");
 
-export const examSubmissionReviewSchema = z.object({
-    submissionId: examSubmissionIdSchema,
-    status: examSubmissionReviewStatusSchema,
-    reviewerNote: z.string().trim(),
-});
+// 반려는 응시자가 다시 제출할 근거가 되므로 사유가 있어야 한다. 승인 메모는 비워도 된다
+export const examSubmissionReviewSchema = z
+    .object({
+        submissionId: examSubmissionIdSchema,
+        status: examSubmissionReviewStatusSchema,
+        reviewerNote: z.string().trim(),
+    })
+    .superRefine((data, context) => {
+        if (data.status === "rejected" && !data.reviewerNote)
+            context.addIssue({
+                code: "custom",
+                path: ["reviewerNote"],
+                message: "반려 사유를 입력해주세요.",
+            });
+    });
 
 export const examSubmissionDeleteSchema = z.object({
     submissionId: examSubmissionIdSchema,

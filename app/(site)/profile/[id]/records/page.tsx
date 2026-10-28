@@ -36,7 +36,7 @@ export async function generateMetadata({
     });
 }
 
-/** 프로필 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록 표, 검색 · 필터 · 정렬 */
+/** 프로필 「기록」 탭 — 베스트 50 · 모든 기록 표와 정렬(검색 · 필터는 두지 않는다) */
 export default async function ProfileRecordsRoute({
     params,
     searchParams,

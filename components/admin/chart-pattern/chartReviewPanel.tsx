@@ -18,7 +18,9 @@ import type { ChartCommentItem } from "@/features/contributions/server/chart-dra
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";
-import { foundationButtonClass } from "@/components/ui/button";
+import ActionButton from "@/components/ui/action-button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
+import ModalDialog from "@/components/ui/modal-dialog";
 
 const STEPS: ChartDraftStatus[] = [
     "draft",
@@ -76,6 +78,8 @@ export default function ChartReviewPanel({
     const queryClient = useQueryClient();
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
     const [body, setBody] = useState("");
+    // 지운 댓글은 되돌릴 수 없어 확인 창을 거친다
+    const [deleting, setDeleting] = useState<number | null>(null);
     const refresh = () =>
         queryClient.invalidateQueries({
             queryKey: ["chart-comments", chartId, draftId],
@@ -117,6 +121,7 @@ export default function ChartReviewPanel({
         },
         onSuccess: (result) => {
             toast.success(result.message);
+            setDeleting(null);
             void refresh();
         },
         onError: (error) => toast.error(error.message),
@@ -143,16 +148,28 @@ export default function ChartReviewPanel({
                     >
                         <span
                             aria-hidden
-                            className={`h-nl-4 rounded-nl-full ${
+                            data-on={index <= stepIndex || undefined}
+                            className={`nl-step-bar h-nl-4 rounded-nl-full ${
                                 index <= stepIndex
                                     ? "bg-nl-primary"
-                                    : "bg-nl-border"
+                                    : "bg-nl-divider"
                             }`}
                         />
-                        {t(`contribution.draftStatus.${step}`)}
+                        {/* 191 레일에서 칸마다 라벨을 두면 낱말이 끊겨, 라벨은 화면 읽기에만 두고 지금 단계를 아래 한 줄로 보인다 */}
+                        <span className="sr-only">
+                            {t(`contribution.draftStatus.${step}`)}
+                        </span>
                     </li>
                 ))}
             </ol>
+            <p className="flex items-baseline gap-nl-8" aria-hidden>
+                <span className="nl-metadata text-nl-subdued">
+                    {stepIndex + 1} / {STEPS.length}
+                </span>
+                <span className="nl-emphasis-label text-nl-content">
+                    {t(`contribution.draftStatus.${status}`)}
+                </span>
+            </p>
 
             <form
                 className="flex flex-col gap-nl-8"
@@ -195,7 +212,7 @@ export default function ChartReviewPanel({
                     {comments.map((comment) => (
                         <li
                             key={comment.id}
-                            className="flex flex-col gap-nl-4 rounded-nl-field bg-nl-canvas px-nl-8 py-nl-8"
+                            className="flex flex-col gap-nl-4 rounded-nl-control bg-nl-canvas px-nl-8 py-nl-8"
                         >
                             <div className="nl-metadata flex flex-wrap items-center gap-x-nl-8 gap-y-nl-4 text-nl-subdued">
                                 <button
@@ -213,7 +230,10 @@ export default function ChartReviewPanel({
                                         t("ranking.unknownPlayer")}
                                 </span>
                                 {comment.resolved ? (
-                                    <span className="nl-admin-chip nl-admin-chip--live">
+                                    <span
+                                        className="nl-tag nl-tag--status"
+                                        data-tone="success"
+                                    >
                                         {t("contribution.comment.resolved")}
                                     </span>
                                 ) : null}
@@ -225,8 +245,9 @@ export default function ChartReviewPanel({
                             (canModerate || comment.own) ? (
                                 <div className="flex gap-nl-4">
                                     {canModerate ? (
-                                        <button
-                                            type="button"
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
                                             disabled={act.isPending}
                                             onClick={() =>
                                                 act.mutate({
@@ -234,25 +255,21 @@ export default function ChartReviewPanel({
                                                     action: "resolve",
                                                 })
                                             }
-                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control border-nl-stroke border-nl-border px-nl-8 text-nl-subdued"
                                         >
                                             {t("editor.review.resolve")}
-                                        </button>
+                                        </Button>
                                     ) : null}
                                     {comment.own ? (
-                                        <button
-                                            type="button"
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
                                             disabled={act.isPending}
                                             onClick={() =>
-                                                act.mutate({
-                                                    id: comment.id,
-                                                    action: "delete",
-                                                })
+                                                setDeleting(comment.id)
                                             }
-                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control px-nl-8 text-nl-error"
                                         >
                                             {t("editor.review.delete")}
-                                        </button>
+                                        </Button>
                                     ) : null}
                                 </div>
                             ) : null}
@@ -264,6 +281,39 @@ export default function ChartReviewPanel({
                     {t("editor.review.empty")}
                 </p>
             )}
+            <ModalDialog
+                variant="confirm"
+                className="nl-editor-dialog"
+                open={deleting !== null}
+                onOpenChange={(open) => {
+                    if (!open && !act.isPending) setDeleting(null);
+                }}
+                title={t("editor.review.deleteTitle")}
+                footer={
+                    <>
+                        <Button
+                            variant="secondary"
+                            disabled={act.isPending}
+                            onClick={() => setDeleting(null)}
+                        >
+                            {t("settings.cancel")}
+                        </Button>
+                        <ActionButton
+                            variant="danger"
+                            busy={act.isPending}
+                            onClick={() => {
+                                if (deleting !== null)
+                                    act.mutate({
+                                        id: deleting,
+                                        action: "delete",
+                                    });
+                            }}
+                        >
+                            {t("editor.review.delete")}
+                        </ActionButton>
+                    </>
+                }
+            />
         </section>
     );
 }

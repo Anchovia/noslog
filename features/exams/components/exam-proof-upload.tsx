@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Camera, Check } from "lucide-react";
+import { Camera, Check, ChevronRight } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -23,7 +23,6 @@ import { localizePath } from "@/lib/i18n/routing";
 interface ExamProofUploadProps {
     exam: ExamDashboardItem;
     isAuthenticated: boolean;
-    disabled: boolean;
     message: string | null;
     requiresLogin?: boolean;
     onUpload: (file: File) => Promise<boolean>;
@@ -33,7 +32,6 @@ interface ExamProofUploadProps {
 export default function ExamProofUpload({
     exam,
     isAuthenticated,
-    disabled,
     message,
     requiresLogin = false,
     onUpload,
@@ -107,24 +105,29 @@ export default function ExamProofUpload({
 
     return (
         <section className="nl-exam-proof" aria-labelledby={`${inputId}-title`}>
-            <h3
-                id={`${inputId}-title`}
-                className={wide ? "nl-component-title" : "nl-section-title"}
-            >
-                {t("exams.proof.title")}
-            </h3>
-            {!isAuthenticated ? (
-                <IntentLink
-                    className="nl-button nl-button--primary"
-                    href={localizePath(
-                        `/login?returnTo=${encodeURIComponent(returnPath)}`,
-                        locale
-                    )}
+            {/* 로그아웃이면 구역 동작을 제목 줄 끝 제목 링크로 권한다(로그아웃 상태 규칙 · 빙고 · 이벤트와 같다) */}
+            <div className="nl-heading-row">
+                <h3
+                    id={`${inputId}-title`}
+                    className={wide ? "nl-component-title" : "nl-section-title"}
                 >
-                    {t("exams.proof.login")}
-                </IntentLink>
-            ) : complete || pending ? (
-                // 결과 한 줄 = 상태 메시지 inline(2026-10-01) — 완료는 성공 체크, 심사 중은 안내
+                    {t("exams.proof.title")}
+                </h3>
+                {!isAuthenticated ? (
+                    <IntentLink
+                        className="nl-heading-link nl-control"
+                        href={localizePath(
+                            `/login?returnTo=${encodeURIComponent(returnPath)}`,
+                            locale
+                        )}
+                    >
+                        {t("exams.proof.login")}
+                        <ChevronRight aria-hidden />
+                    </IntentLink>
+                ) : null}
+            </div>
+            {!isAuthenticated ? null : complete || pending ? (
+                // 결과 한 줄 = 상태 메시지 inline — 완료는 성공, 심사 중은 안내
                 <StatusMessage
                     severity={complete ? "success" : "info"}
                     role="status"
@@ -134,22 +137,6 @@ export default function ExamProofUpload({
                             : "exams.proof.reviewing"
                     )}
                 />
-            ) : disabled ? (
-                <div className="nl-exam-proof__guidance">
-                    <p className="nl-body-secondary nl-muted">
-                        {t(
-                            exam.playerGrade === null || !exam.hasSyncedIdentity
-                                ? "exams.proof.syncRequired"
-                                : "exams.simulation.notEligible"
-                        )}
-                    </p>
-                    <IntentLink
-                        className="nl-button"
-                        href={localizePath("/bookmarklet", locale)}
-                    >
-                        {t("sync.title")}
-                    </IntentLink>
-                </div>
             ) : (
                 <form
                     onSubmit={(event) => void handleSubmit(submitFile)(event)}
@@ -169,7 +156,7 @@ export default function ExamProofUpload({
                         disabled={isSubmitting}
                         onChange={changeFile}
                     />
-                    {/* C2(2026-09-22) — 찍을 것을 사진 고르기 전부터 보여 준다 */}
+                    {/* 찍을 것을 사진 고르기 전부터 보여 준다 */}
                     <div className="nl-exam-proof__guidance">
                         <p className="nl-body-secondary nl-muted">
                             {t("exams.proof.intro")}
@@ -195,15 +182,15 @@ export default function ExamProofUpload({
                         </ul>
                     </div>
                     {exam.submissionStatus === "rejected" ? (
-                        <div className="nl-exam-proof__guidance" role="status">
-                            <p className="nl-emphasis-label">
-                                {t("exams.proof.rejected")}
-                            </p>
-                            <p className="nl-body-secondary">
-                                {exam.submissionReviewerNote ||
-                                    t("exams.proof.defaultReason")}
-                            </p>
-                        </div>
+                        <StatusMessage
+                            severity="danger"
+                            role="status"
+                            title={t("exams.proof.rejected")}
+                            description={
+                                exam.submissionReviewerNote ||
+                                t("exams.proof.defaultReason")
+                            }
+                        />
                     ) : null}
                     {preview && proofFile instanceof File ? (
                         <>

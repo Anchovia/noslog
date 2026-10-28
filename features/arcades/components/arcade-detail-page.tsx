@@ -12,7 +12,7 @@ import {
     MapPin,
     Phone,
 } from "lucide-react";
-import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -49,6 +49,7 @@ import ArcadeHours from "./arcade-hours";
 import ArcadePhotos from "./arcade-photos";
 import ArcadeReportDialog from "./arcade-report-dialog";
 import { ArcadeFacilities } from "./arcade-traits";
+import LazyLocationMap from "./lazy-location-map";
 
 /**
  * 오락실 상세 — 사진(없으면 자리표시자) → 이름·상태 → 정보 행(주소·영업시간·요금·연락처) → 위치 → 기체.
@@ -190,7 +191,7 @@ export default function ArcadeDetailPage({
                 // 토글 — 눌림 상태(aria-pressed)와 채운 하트로 지정 여부를 알린다
                 <ActionButton
                     variant="secondary"
-                    size={preferredCount === null ? "icon" : undefined}
+                    size={preferredCount === null ? "icon-lg" : undefined}
                     className="nl-arcade-detail__prefer"
                     busy={busy}
                     aria-pressed={preferred}
@@ -208,7 +209,7 @@ export default function ArcadeDetailPage({
             ) : (
                 <ButtonLink
                     variant="secondary"
-                    size={preferredCount === null ? "icon" : undefined}
+                    size={preferredCount === null ? "icon-lg" : undefined}
                     className="nl-arcade-detail__prefer"
                     href={loginHref}
                     aria-label={withPreferredCount(
@@ -500,14 +501,23 @@ export default function ArcadeDetailPage({
                                         <li
                                             key={`${check.userId}-${check.checkedAt}`}
                                         >
-                                            <span className="nl-muted">
-                                                {days === 0
-                                                    ? t("arcades.checkedToday")
-                                                    : t("arcades.checkedAgo", {
-                                                          count: days ?? 0,
-                                                      })}
-                                            </span>
-                                            {" · "}
+                                            {days === null ? null : (
+                                                <>
+                                                    <span className="nl-muted">
+                                                        {days === 0
+                                                            ? t(
+                                                                  "arcades.checkedToday"
+                                                              )
+                                                            : t(
+                                                                  "arcades.checkedAgo",
+                                                                  {
+                                                                      count: days,
+                                                                  }
+                                                              )}
+                                                    </span>
+                                                    {" · "}
+                                                </>
+                                            )}
                                             <IntentLink
                                                 className="nl-link"
                                                 href={href(
@@ -535,34 +545,5 @@ export default function ArcadeDetailPage({
             {/* 1056 미만 — 화면 아래 고정 바 */}
             <div className="nl-arcade-detail__bar">{actions}</div>
         </PageContainer>
-    );
-}
-
-/**
- * 위치 지도는 화면 가까이(200px) 올 때 만든다 — 아래쪽에 있어 안 보는 방문에도 지도 SDK · 지도 · 통계 신호가 나가지 않게(2026-10-15 S14).
- * 그 전에는 지도와 같은 상자(nl-arcade-map)로 자리를 지킨다
- */
-function LazyLocationMap({ children }: { children: React.ReactNode }) {
-    const placeholder = useRef<HTMLDivElement>(null);
-    const [near, setNear] = useState(false);
-    useEffect(() => {
-        const element = placeholder.current;
-        if (near || !element) return;
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setNear(true);
-                    observer.disconnect();
-                }
-            },
-            { rootMargin: "200px 0px" }
-        );
-        observer.observe(element);
-        return () => observer.disconnect();
-    }, [near]);
-    return near ? (
-        children
-    ) : (
-        <div ref={placeholder} className="nl-arcade-map" aria-hidden />
     );
 }

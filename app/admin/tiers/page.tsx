@@ -54,7 +54,7 @@ export default async function AdminTiersPage() {
                 </div>
             </section>
 
-            <section className="overflow-hidden rounded-nl-container bg-nl-surface">
+            <section className="overflow-hidden rounded-nl-control bg-nl-surface">
                 {activeTierLists.map((tierList, index) => (
                     <Link
                         key={tierList.id}
@@ -91,7 +91,7 @@ export default async function AdminTiersPage() {
             </section>
 
             {legacyTierLists.length > 0 ? (
-                <details className="rounded-nl-container bg-nl-surface px-nl-12 py-nl-12">
+                <details className="rounded-nl-control bg-nl-surface px-nl-12 py-nl-12">
                     <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
                         기존 보관 서열표 {legacyTierLists.length}개
                     </summary>
@@ -100,7 +100,7 @@ export default async function AdminTiersPage() {
                             <Link
                                 key={tierList.id}
                                 href={`/admin/tiers/${tierList.id}`}
-                                className="nl-hover-layer flex min-h-nl-48 items-center gap-nl-8 rounded-nl-field px-nl-8"
+                                className="nl-hover-layer flex min-h-nl-48 items-center gap-nl-8 rounded-nl-control px-nl-8"
                             >
                                 <span className="nl-body-secondary min-w-0 flex-1 truncate">
                                     {tierList.title}

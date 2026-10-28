@@ -26,9 +26,9 @@ const DIFFICULTIES = [
     ["expert", "EX"],
     ["real", "R"],
 ] as const;
-/** 칸 색 = 등급 색(랭크 분포와 같음, 2026-09-26 C2a · L1). 고른 칸 밖은 흐린 회색, 「안 함」 은 트랙 면 그대로 */
-const NONE = "var(--nl-surface-raised)";
-const DIMMED = "var(--nl-content-disabled)";
+/** 칸 색 = 등급 색(랭크 분포와 같음). 「안 함」 은 카드 위 트랙 면, 고른 칸 밖은 그보다 한 단계 밝은 입력 경계 색이라 둘이 갈린다 */
+const NONE = "var(--nl-surface-control)";
+const DIMMED = "var(--nl-border-input)";
 export const PROFILE_TIER_COLORS: Record<ProfileTierKey, string> = {
     pianist: "var(--nl-score-goal-pianist)",
     fc: "var(--nl-achievement-full-combo)",

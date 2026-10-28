@@ -64,7 +64,7 @@ describe("NosLog design foundation", () => {
     });
 
     // 간격 · 모서리 · 색 · 글자 크기(2026-09-30 R1)와 층 · 굵기 · 줄 높이 · 선 두께(2026-10-15)는 토큰으로만 쓴다(가이드 「간격 · 모서리 · 높이 · 아이콘」 절).
-    // 계산식(calc 등) 안의 크기 숫자와 폭 · 높이는 보지 않는다. 관리자 화면은 손대지 않는 곳이라 뺀다.
+    // 계산식(calc 등) 안의 크기 숫자와 폭 · 높이는 보지 않는다. 관리자 화면(admin.css)도 같은 검사를 받는다.
     // 토큰으로 옮기면 모양이 바뀌는 값만 아래 예외에 이유와 함께 적는다 — 새 예외는 사용자 결정이 있을 때만
     describe("takes appearance values from tokens", () => {
         const allowed = new Set([
@@ -82,7 +82,7 @@ describe("NosLog design foundation", () => {
         function literals(check: (prop: string, bare: string) => boolean) {
             const raw: string[] = [];
             files.forEach((name, index) => {
-                if (name === "tokens.css" || name === "admin.css") return;
+                if (name === "tokens.css") return;
                 postcss.parse(styles[index]).walkDecls((decl) => {
                     if (decl.prop.startsWith("--")) return;
                     let bare = decl.value;
@@ -172,15 +172,42 @@ describe("NosLog design foundation", () => {
                 )
             ).toEqual([]);
         });
+        // 헤더 높이(1055 이하 56 · 1056 이상 64)를 숫자로 다시 쓰지 않는다. 높이 64 는 자켓 · 배지 같은 부품 크기와 겹쳐
+        // 헤더 아래에 붙이는 top 에서만 잡는다
         it("header height", () => {
             expect(
                 literals(
                     (prop, bare) =>
-                        /^(?:min-|max-)?height$|^top$/.test(prop) &&
-                        /(?:^|[^\d.])60px/.test(bare)
+                        (/^(?:min-|max-)?height$/.test(prop) &&
+                            /(?:^|[^\d.])(?:56|60)px/.test(bare)) ||
+                        (prop === "top" &&
+                            /(?:^|[^\d.])(?:56|60|64)px/.test(bare))
                 )
             ).toEqual([]);
         });
+    });
+
+    // 세로 폼 칸 사이는 공용 24 하나 — 투표 만들기 창과 그 「자세히」 안은 제 간격을 두지 않아 공용 규칙을 받는다
+    it("lets the poll builder take the shared form field gap", () => {
+        const sharedGap: string[] = [];
+        const builderGaps: string[] = [];
+        files.forEach((name, index) => {
+            postcss.parse(styles[index]).walkRules((rule) => {
+                rule.walkDecls(/^(gap|row-gap)$/, (decl) => {
+                    if (
+                        rule.selector ===
+                        ".noslog-ui :has(> .nl-field + .nl-field)"
+                    )
+                        sharedGap.push(decl.value);
+                    if (/\.nl-poll-builder(\s|$)/.test(rule.selector))
+                        builderGaps.push(
+                            `${name}: ${rule.selector}: ${decl.value}`
+                        );
+                });
+            });
+        });
+        expect(sharedGap).toEqual(["var(--nl-spacing-24)"]);
+        expect(builderGaps).toEqual([]);
     });
 
     // 올림은 포인터 장치에서만(가이드 「포커스 · 상태」) — :not(:hover) 로 평소 색을 정하는 규칙만 밖에 둔다

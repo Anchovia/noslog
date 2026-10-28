@@ -168,7 +168,11 @@ test("Public ranking keeps 20 rows, fixed columns, Pianist/FC meaning and explic
     ).toHaveText("FC");
     await expect(
         table.locator(".nl-player-row").first().locator(".nl-player-row__value")
-    ).toHaveCSS("height", "20px");
+    ).toHaveCSS("height", "21px"); // 한국어 컨트롤 글줄(Spectrum 2 CJK 1.5)
+    // 이름 링크는 emphasis-label 역할 굵기 — 단독 링크 medium 으로 가늘어지지 않는다
+    await expect(
+        table.locator(".nl-player-row").first().locator(".nl-player-row__link")
+    ).toHaveCSS("font-weight", "600");
     await expect(
         table.locator(".nl-player-row").nth(1).locator(".nl-full-combo")
     ).toHaveText("FC");
@@ -266,7 +270,8 @@ test("Public empty and no-rank states avoid duplicate messaging and unneeded pag
         signedIn: true,
         ownRank: null,
     });
-    await expect(page.getByText("순위 없음", { exact: true })).toBeVisible();
+    // 기록이 없는 로그인 사람에게도 「순위 없음」 줄을 두지 않는다 — 순위표가 스스로 말한다
+    await expect(page.getByText("순위 없음", { exact: true })).toHaveCount(0);
     await expect(page.locator(".nl-pagination")).toHaveCount(0);
     await expect(
         page.locator(".nl-chart-leaderboard .nl-player-row")

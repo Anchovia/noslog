@@ -1,52 +1,10 @@
-.noslog-ui .nl-pagination {
-    width: 100%;
-    min-width: 0;
-    display: flex;
-    justify-content: center;
-}
-.noslog-ui .nl-pagination__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-pagination__item {
-    display: flex;
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    /* 따로 누르는 상자 — 누르는 칸 모서리 8 (2026-09-14) */
-    border-radius: var(--nl-radius-field);
-    color: var(--nl-content-interactive);
-}
-@media (hover: hover) {
-    .noslog-ui button.nl-pagination__item:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
-/* 현재 쪽 = 고른 칩 · 고른 세그먼트 칸과 같은 면 · 선 없음(2026-09-30 F1, K1 규칙) */
-.noslog-ui .nl-pagination__item[aria-current="page"] {
-    background: var(--nl-surface-control-selected);
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-pagination__item:disabled,
-.noslog-ui .nl-pagination__item[aria-disabled="true"] {
-    background: transparent;
-    color: var(--nl-interaction-disabled-content);
-}
 .noslog-ui .nl-ranking-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
-/* 점수 자 — 제목도 면도 없이 svg 80(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued (2026-09-18 V1+V4) */
+/* 점수 자 — 제목도 면도 없이 svg(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued */
 .noslog-ui .nl-score-scatter {
     display: flex;
     flex-direction: column;
@@ -96,7 +54,7 @@
     pointer-events: none;
 }
 .noslog-ui .nl-score-pin {
-    --nl-pin-size: 28px;
+    --nl-pin-size: calc(var(--nl-spacing-24) + var(--nl-stroke-strong) * 2);
     position: absolute;
     width: var(--nl-pin-size);
     height: var(--nl-pin-size);
@@ -112,14 +70,14 @@
     );
 }
 .noslog-ui .nl-score-pin[data-me] {
-    --nl-pin-size: 32px;
+    --nl-pin-size: var(--nl-spacing-32);
     z-index: var(--nl-layer-above);
 }
 .noslog-ui .nl-score-pin__shape {
     position: absolute;
     inset: 0;
     border-radius: 50% 50% 50% 0;
-    background: var(--nl-border-strong);
+    background: var(--nl-border-ring);
     transform: rotate(-45deg);
 }
 /* 내 핀 = 판정 JUST 노랑 — 세로선 · 「상위 N%」 대신 색으로만 내 위치를 가리킨다 (2026-09-18 사용자 결정) */
@@ -130,18 +88,17 @@
     position: absolute;
     inset: var(--nl-stroke-strong);
 }
-/* 「+N」 = 필터 개수 배지 모양(원 20 · raised · metadata) + 사진과 떼는 1px 경계. 늘 핀 오른쪽 위 — 끝에서도 자리를 바꾸지 않는다 (2026-09-18 K1 · 사용자 지적) */
+/* 「+N」 = 필터 개수 배지 모양(nl-filter-count) + 사진과 떼는 1px 경계. 늘 핀 오른쪽 위 — 끝에서도 자리를 바꾸지 않는다 */
 .noslog-ui .nl-score-pin__count {
     position: absolute;
     top: calc(var(--nl-spacing-8) * -1);
     right: calc(var(--nl-spacing-12) * -1);
     padding-inline: var(--nl-spacing-4);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin:focus-visible {
-    outline-offset: var(--nl-spacing-4);
-    border-radius: 50%;
+    border-radius: var(--nl-radius-full);
 }
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
@@ -181,13 +138,9 @@
     width: calc(7ch + 0.66em);
     margin-left: auto;
     margin-right: calc(var(--nl-full-combo-slot) + var(--nl-spacing-8));
-    font-size: var(--nl-type-size-14);
-    font-weight: var(--nl-type-weight-semibold);
-    font-variant-numeric: tabular-nums;
 }
+/* 머리 라벨 글자는 머리 줄의 metadata 클래스 그대로 */
 .noslog-ui .nl-chart-leaderboard .nl-ranking-head__value > span {
-    font-size: var(--nl-type-size-12);
-    font-weight: var(--nl-type-weight-regular);
     white-space: nowrap;
 }
 /* 순위표 줄 메달 = 기본 아이콘 20(2026-10-15 토큰 점검 A — 18 은 아이콘 단계 밖) */
@@ -201,43 +154,41 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-/* FC 칸 = 폭 24(태그 높이와 같은 값) · 이름 글줄 20 높이(FC 태그 16 + 2 × 2). 머리 「점수」 도 이 폭을 읽는다 */
+/* FC 칸 = 폭 24 · 이름 글줄(ui — 18, CJK 21) 높이. FC 표시도 글줄 높이에 글자 가운데. 머리 「점수」 도 이 폭을 읽는다 */
 .noslog-ui .nl-chart-leaderboard,
 .noslog-ui .nl-full-combo-slot {
-    --nl-full-combo-slot: 24px;
+    --nl-full-combo-slot: var(--nl-spacing-24);
 }
 .noslog-ui .nl-full-combo-slot {
     display: block;
     width: var(--nl-full-combo-slot);
-    min-height: var(--nl-type-line-height-20);
+    min-height: var(--nl-type-line-height-ui);
 }
 .noslog-ui .nl-full-combo {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--nl-spacing-2) var(--nl-spacing-4);
+    min-height: var(--nl-type-line-height-ui);
+    padding: 0 var(--nl-spacing-4);
     box-shadow: inset 0 0 0 var(--nl-stroke-default)
         var(--nl-achievement-full-combo);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-small);
 }
-/* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 내 순위) → 12 → 목록 */
+/* 순위 구역 — 제목 줄 없음. 로그아웃일 때만 로그인 링크 한 줄 → 12 → 목록 */
 .noslog-ui .nl-ranking-section {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
-.noslog-ui .nl-ranking-list {
-    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
-}
 /* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
 .noslog-ui .nl-chart-leaderboard__empty {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
+    min-height: var(--nl-spacing-48);
     margin: 0;
     padding-inline: var(--nl-ranking-inset);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     text-align: center;
 }

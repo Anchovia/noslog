@@ -15,6 +15,7 @@ import {
 } from "@/features/achievements/achievement-definitions";
 import AchievementHex from "@/features/achievements/components/achievement-hex";
 import { useAchievementText } from "@/features/achievements/components/use-achievement-text";
+import { readTokenPixels } from "@/lib/design-tokens";
 
 export function formatAchievementDate(value: string, locale: string) {
     return new Date(value).toLocaleDateString(locale, {
@@ -22,11 +23,10 @@ export function formatAchievementDate(value: string, locale: string) {
     });
 }
 
-/** 한 줄 칸(육각 44 · 사이 = 줄의 gap) — 칸 수는 구역 폭으로 정한다(2026-09-26 A1). 처음 그릴 때는 옆 열 · 폰 폭(356 = 7칸) 기준 */
-const HEX_WIDTH = 44;
+/** 한 줄 칸(육각 폭 · 사이 = 줄의 gap) — 칸 수는 구역 폭으로 정한다(2026-09-26 A1). 처음 그릴 때는 옆 열 · 폰 폭(356 = 7칸) 기준 */
 const DEFAULT_SLOTS = 7;
-const slotsFor = (width: number, gap: number) =>
-    Math.max(1, Math.floor((width + gap) / (HEX_WIDTH + gap)));
+const slotsFor = (width: number, hexWidth: number, gap: number) =>
+    Math.max(1, Math.floor((width + gap) / (hexWidth + gap)));
 
 /**
  * 프로필 「업적」 구역(2026-09-25 A2) — 넓은 화면은 옆 열(기록 개요 아래 · 기여 위), 폰은 기여 위.
@@ -56,6 +56,7 @@ export default function ProfileAchievements({
             setSlots(
                 slotsFor(
                     entry.contentRect.width,
+                    readTokenPixels(element, "--nl-achievement-hex-row-width"),
                     Number.parseFloat(getComputedStyle(element).columnGap) || 0
                 )
             )
@@ -83,7 +84,7 @@ export default function ProfileAchievements({
             className="nl-profile-section nl-profile-achievements"
             aria-labelledby="profile-achievements-title"
         >
-            <div className="nl-profile-section__header">
+            <div className="nl-heading-row">
                 <h2
                     id="profile-achievements-title"
                     className="nl-section-title"
@@ -135,7 +136,7 @@ export default function ProfileAchievements({
                         ) : null}
                     </ul>
                     {summary.recent.length ? (
-                        <p className="nl-metadata nl-muted">
+                        <p className="nl-profile-achievements__recent nl-metadata nl-muted">
                             {t("achievement.recent")} ·{" "}
                             {/* 가장 최근 하나만(2026-09-26, 사용자) */}
                             {text.titled(
@@ -147,9 +148,7 @@ export default function ProfileAchievements({
                 </>
             ) : (
                 <p className="nl-body-secondary nl-muted">
-                    {isOwner
-                        ? t("achievement.emptyOwner")
-                        : t("achievement.empty")}
+                    {t("achievement.empty")}
                 </p>
             )}
         </section>

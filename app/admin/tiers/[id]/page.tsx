@@ -164,7 +164,7 @@ export default async function EditTierListPage({
             </section>
 
             {current ? (
-                <details className="group rounded-nl-container bg-nl-surface p-nl-12">
+                <details className="group rounded-nl-control bg-nl-surface p-nl-12">
                     <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
                         서열표 정보
                     </summary>
@@ -188,7 +188,7 @@ export default async function EditTierListPage({
                 <>
                     <form
                         method="get"
-                        className="grid grid-cols-2 gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
+                        className="grid grid-cols-2 gap-nl-8 rounded-nl-control bg-nl-surface p-nl-12"
                     >
                         <input
                             name="q"
@@ -196,7 +196,7 @@ export default async function EditTierListPage({
                             placeholder="곡 제목 · 아티스트 · 식별자"
                             className="nl-input col-span-2"
                         />
-                        <div className="col-span-2 grid grid-cols-1 gap-nl-8 md:grid-cols-3">
+                        <div className="nl-admin-filter-row col-span-2 grid gap-nl-8">
                             <select
                                 name="difficulty"
                                 defaultValue={difficulty}

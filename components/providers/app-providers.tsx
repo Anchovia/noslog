@@ -16,7 +16,8 @@ function createQueryClient() {
         defaultOptions: {
             queries: {
                 staleTime: ONE_HOUR_MS,
-                gcTime: ONE_HOUR_MS,
+                // 서버는 요청마다 새 클라이언트를 만든다. 유한한 gcTime 은 정리 타이머가 요청 객체를 그 시간만큼 붙잡게 한다
+                gcTime: isServer ? Infinity : ONE_HOUR_MS,
                 retry: 1,
                 refetchOnWindowFocus: false,
             },

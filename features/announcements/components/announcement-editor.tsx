@@ -14,6 +14,7 @@ import {
     updateAnnouncement,
 } from "@/app/admin/announcements/actions";
 import ActionButton from "@/components/ui/action-button";
+import AreaTabs from "@/components/ui/area-tabs";
 import { foundationButtonClass } from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
@@ -316,7 +317,7 @@ export default function AnnouncementEditor({
             <FormField
                 id="announcement-placement"
                 label="공지 종류"
-                help="중대 공지는 홈 맨 위 배너와 목록 맨 위에 고정되며 노출 기간이 필요합니다."
+                help="중대 공지는 홈 공지 줄과 공지 목록 1쪽 맨 위에 고정되며 노출 기간이 필요합니다."
                 error={errors.placement?.message}
             >
                 <Controller
@@ -465,154 +466,158 @@ export default function AnnouncementEditor({
             noValidate
             onSubmit={(event) => event.preventDefault()}
         >
-            <div
-                role="tablist"
-                aria-label="언어"
-                className="nl-tabs nl-tabs--primary"
+            <AreaTabs
+                label="언어"
+                value={locale}
+                onValueChange={setLocale}
+                options={ANNOUNCEMENT_LOCALES.map((item) => ({
+                    value: item,
+                    label: (
+                        <>
+                            {ANNOUNCEMENT_LOCALE_LABELS[item]}
+                            {localeHasError(item) ? (
+                                <span
+                                    className="nl-unread-dot"
+                                    role="img"
+                                    aria-label="입력 오류"
+                                />
+                            ) : null}
+                        </>
+                    ),
+                }))}
             >
-                {ANNOUNCEMENT_LOCALES.map((item) => (
-                    <button
-                        key={item}
-                        type="button"
-                        role="tab"
-                        id={`announcement-tab-${item}`}
-                        aria-selected={locale === item}
-                        aria-controls={`announcement-panel-${item}`}
-                        data-state={locale === item ? "active" : "inactive"}
-                        className="nl-tabs__item nl-control"
-                        onClick={() => setLocale(item)}
-                    >
-                        {ANNOUNCEMENT_LOCALE_LABELS[item]}
-                        {localeHasError(item) ? (
-                            <span
-                                className="nl-admin-form__error-dot"
-                                aria-label="입력 오류"
-                            />
-                        ) : null}
-                    </button>
-                ))}
-            </div>
-            {ANNOUNCEMENT_LOCALES.map((item) => {
-                const titleId = `announcement-title-${item}`;
-                const contentId = `announcement-content-${item}`;
-                const titleError = errors.translations?.[item]?.title?.message;
-                const contentError =
-                    errors.translations?.[item]?.content?.message;
-                const length = translations?.[item]?.content?.length ?? 0;
-                return (
-                    <div
-                        key={item}
-                        role="tabpanel"
-                        id={`announcement-panel-${item}`}
-                        aria-labelledby={`announcement-tab-${item}`}
-                        hidden={locale !== item}
-                        className="nl-admin-form__section"
-                    >
-                        <FormField id={titleId} label="제목" error={titleError}>
-                            <Input
-                                id={titleId}
-                                lang={item}
-                                maxLength={ANNOUNCEMENT_TITLE_MAX_LENGTH}
-                                aria-invalid={Boolean(titleError)}
-                                aria-describedby={fieldDescription(titleId, {
-                                    error: Boolean(titleError),
-                                })}
-                                {...register(`translations.${item}.title`)}
-                            />
-                        </FormField>
-                        {/* 오류는 안내 자리를 대신하고 글자 수는 그대로 — 피드백 창과 같은 도움말 줄 */}
-                        <FormField
-                            id={contentId}
-                            label="본문"
-                            help={
-                                <span className="nl-admin-form__help-row">
-                                    {contentError ? (
-                                        <span
-                                            className="nl-field__error"
-                                            role="alert"
-                                        >
-                                            {contentError}
-                                        </span>
-                                    ) : (
-                                        <span>
-                                            마크다운으로 씁니다 · 이미지는 버튼
-                                            · 붙여 넣기 · 끌어다 놓기
-                                        </span>
-                                    )}
-                                    {/* 글자 수는 한도의 75% 를 넘을 때만 보여 준다(2026-09-23 C) */}
-                                    {length >=
-                                    ANNOUNCEMENT_CONTENT_MAX_LENGTH * 0.75 ? (
-                                        <span>
-                                            {length.toLocaleString("ko-KR")} /{" "}
-                                            {ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString(
-                                                "ko-KR"
-                                            )}
-                                        </span>
-                                    ) : null}
-                                </span>
-                            }
+                {ANNOUNCEMENT_LOCALES.map((item) => {
+                    const titleId = `announcement-title-${item}`;
+                    const contentId = `announcement-content-${item}`;
+                    const titleError =
+                        errors.translations?.[item]?.title?.message;
+                    const contentError =
+                        errors.translations?.[item]?.content?.message;
+                    const length = translations?.[item]?.content?.length ?? 0;
+                    // 세 언어 입력은 모두 그려 두고 지금 언어만 보인다(쓰던 값 · 오류 표시 유지)
+                    return (
+                        <div
+                            key={item}
+                            hidden={locale !== item}
+                            className="nl-admin-form__section"
                         >
-                            <Controller
-                                control={control}
-                                name={`translations.${item}.content`}
-                                render={({ field }) => (
-                                    <MarkdownEditor
-                                        id={contentId}
-                                        name={field.name}
-                                        inputRef={field.ref}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        onBlur={field.onBlur}
-                                        lang={item}
-                                        maxLength={
-                                            ANNOUNCEMENT_CONTENT_MAX_LENGTH
+                            <FormField
+                                id={titleId}
+                                label="제목"
+                                error={titleError}
+                            >
+                                <Input
+                                    id={titleId}
+                                    lang={item}
+                                    maxLength={ANNOUNCEMENT_TITLE_MAX_LENGTH}
+                                    aria-invalid={Boolean(titleError)}
+                                    aria-describedby={fieldDescription(
+                                        titleId,
+                                        {
+                                            error: Boolean(titleError),
                                         }
-                                        invalid={Boolean(contentError)}
-                                        describedBy={fieldDescription(
-                                            contentId,
-                                            { help: true }
+                                    )}
+                                    {...register(`translations.${item}.title`)}
+                                />
+                            </FormField>
+                            {/* 오류는 안내 자리를 대신하고 글자 수는 그대로 — 피드백 창과 같은 도움말 줄 */}
+                            <FormField
+                                id={contentId}
+                                label="본문"
+                                help={
+                                    <span className="nl-admin-form__help-row">
+                                        {contentError ? (
+                                            <span
+                                                className="nl-field__error"
+                                                role="alert"
+                                            >
+                                                {contentError}
+                                            </span>
+                                        ) : (
+                                            <span>
+                                                마크다운으로 씁니다 · 이미지는
+                                                버튼 · 붙여 넣기 · 끌어다 놓기
+                                            </span>
                                         )}
-                                        labels={EDITOR_LABELS}
-                                        onUploadImage={uploadAnnouncementImage}
-                                        onPrimaryAction={() => {
-                                            if (tierImageBusy) return;
-                                            clearErrors();
-                                            setDialog("publish");
-                                        }}
-                                        // 미리보기는 공개 글과 같은 틀 — 분류 · 제목 · 본문(2026-09-23 P2)
-                                        renderPreview={(value) => (
-                                            <article className="nl-announcements__detail">
-                                                <header className="nl-announcements__heading">
-                                                    <div className="nl-announcement-meta nl-metadata nl-muted">
-                                                        <span className="nl-tag">
-                                                            {
-                                                                ANNOUNCEMENT_CATEGORY_LABELS[
-                                                                    category
-                                                                ]
-                                                            }
-                                                        </span>
-                                                    </div>
-                                                    <h1 className="nl-page-title">
-                                                        {translations[item]
-                                                            ?.title ||
-                                                            "제목 없음"}
-                                                    </h1>
-                                                </header>
-                                                <AnnouncementBody
-                                                    content={value}
-                                                    locale={item}
-                                                    siteUrl={siteUrl}
-                                                    externalLabel="외부 링크"
-                                                />
-                                            </article>
-                                        )}
-                                    />
-                                )}
-                            />
-                        </FormField>
-                    </div>
-                );
-            })}
+                                        {/* 글자 수는 한도의 75% 를 넘을 때만 보여 준다(2026-09-23 C) */}
+                                        {length >=
+                                        ANNOUNCEMENT_CONTENT_MAX_LENGTH *
+                                            0.75 ? (
+                                            <span>
+                                                {length.toLocaleString("ko-KR")}{" "}
+                                                /{" "}
+                                                {ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString(
+                                                    "ko-KR"
+                                                )}
+                                            </span>
+                                        ) : null}
+                                    </span>
+                                }
+                            >
+                                <Controller
+                                    control={control}
+                                    name={`translations.${item}.content`}
+                                    render={({ field }) => (
+                                        <MarkdownEditor
+                                            id={contentId}
+                                            name={field.name}
+                                            inputRef={field.ref}
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            lang={item}
+                                            maxLength={
+                                                ANNOUNCEMENT_CONTENT_MAX_LENGTH
+                                            }
+                                            invalid={Boolean(contentError)}
+                                            describedBy={fieldDescription(
+                                                contentId,
+                                                { help: true }
+                                            )}
+                                            labels={EDITOR_LABELS}
+                                            onUploadImage={
+                                                uploadAnnouncementImage
+                                            }
+                                            onPrimaryAction={() => {
+                                                if (tierImageBusy) return;
+                                                clearErrors();
+                                                setDialog("publish");
+                                            }}
+                                            // 미리보기는 공개 글과 같은 틀 — 분류 · 제목 · 본문(2026-09-23 P2)
+                                            renderPreview={(value) => (
+                                                <article className="nl-announcements__detail">
+                                                    <header className="nl-announcements__heading">
+                                                        <div className="nl-announcement-meta nl-metadata nl-muted">
+                                                            <span className="nl-tag">
+                                                                {
+                                                                    ANNOUNCEMENT_CATEGORY_LABELS[
+                                                                        category
+                                                                    ]
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <h1 className="nl-page-title">
+                                                            {translations[item]
+                                                                ?.title ||
+                                                                "제목 없음"}
+                                                        </h1>
+                                                    </header>
+                                                    <AnnouncementBody
+                                                        content={value}
+                                                        locale={item}
+                                                        siteUrl={siteUrl}
+                                                        externalLabel="외부 링크"
+                                                    />
+                                                </article>
+                                            )}
+                                        />
+                                    )}
+                                />
+                            </FormField>
+                        </div>
+                    );
+                })}
+            </AreaTabs>
 
             <TierChangeImageBuilder
                 locale={locale}
@@ -680,6 +685,9 @@ export default function AnnouncementEditor({
 
             <div className="nl-form-bar nl-admin-form__actions">
                 <div>
+                    <ButtonLink href="/admin/announcements" variant="ghost">
+                        나가기
+                    </ButtonLink>
                     {!isCreate && announcement.id !== undefined ? (
                         <AnnouncementDeleteButton
                             id={announcement.id}

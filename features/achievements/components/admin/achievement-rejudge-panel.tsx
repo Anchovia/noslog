@@ -45,7 +45,7 @@ export default function AchievementRejudgePanel() {
     }
 
     return (
-        <section className="flex flex-wrap items-center justify-between gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+        <section className="flex flex-wrap items-center justify-between gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
             <div className="min-w-0">
                 <p className="nl-emphasis-label">업적 다시 판정</p>
                 <p className="nl-metadata mt-nl-4 text-nl-subdued">

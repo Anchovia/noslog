@@ -126,6 +126,8 @@ async function replaceTierList(definition, groups, existing) {
                           goal: definition.goal,
                           description: definition.description,
                           status: "published",
+                          // 배치를 통째로 다시 넣으므로 공개 「업데이트」 날짜도 바뀐다
+                          updatedAt: new Date(),
                       },
                   })
                 : await transaction.tierList.create({
@@ -136,6 +138,8 @@ async function replaceTierList(definition, groups, existing) {
                           goal: definition.goal,
                           description: definition.description,
                           status: "published",
+                          // 배치를 통째로 다시 넣으므로 공개 「업데이트」 날짜도 바뀐다
+                          updatedAt: new Date(),
                       },
                   });
 

@@ -1,6 +1,6 @@
 {
     "name": "noslog",
-    "version": "2.16.2",
+    "version": "2.17.0",
     "private": true,
     "scripts": {
         "predev": "npm run generate:jacket-manifest",
@@ -16,6 +16,7 @@
         "db:import:musics": "node prisma/import-music-catalog.mjs --env-file=.env",
         "db:import:tiers:official": "node prisma/import-official-tiers.mjs --env-file=.env",
         "simulate:rating:basic": "jiti scripts/simulate-basic-tier-rating.ts --env-file=.env",
+        "db:backfill:pattern-metrics": "jiti scripts/backfill-pattern-metrics.ts",
         "measure:queries": "node scripts/measure-queries.mjs",
         "generate:profile-card-icon": "node scripts/generate-profile-card-icon.mjs",
         "convert:jackets": "node scripts/convert-music-jackets.mjs && node scripts/generate-music-jacket-manifest.mjs",

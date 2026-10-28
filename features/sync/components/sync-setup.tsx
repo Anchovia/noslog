@@ -97,6 +97,12 @@ export default function SyncSetup({
     useEffect(() => {
         anchor.current?.setAttribute("href", bookmarklet);
     }, [bookmarklet]);
+    // 「복사됨」 은 2초 뒤 원래 글자로(버튼 부품 규칙 — 프로필 · 서열표 내보내기와 같은 시간)
+    useEffect(() => {
+        if (copyState !== "copied") return;
+        const timer = window.setTimeout(() => setCopyState("idle"), 2000);
+        return () => window.clearTimeout(timer);
+    }, [copyState]);
     // 메인 버튼은 드래그 대상이라 라벨을 바꾸지 않고(드래그하면 북마크 이름이 된다) 토스트로 알린다
     async function copy(announce = false) {
         try {

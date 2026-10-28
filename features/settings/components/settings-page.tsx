@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { MusecatConnectionDetail } from "@/features/partner/components/musecat-connection-settings";
+import { getMusecatSettings } from "@/features/partner/server/partner-settings-data";
 import { settingsCategorySchema } from "@/features/settings/schemas/settings-schema";
 import { getAccountSettingsData } from "@/features/settings/server/account-settings-service";
 import { getSettingsPageData } from "@/features/settings/server/settings-page-service";
@@ -19,13 +21,17 @@ import SettingsLoading from "./settings-loading";
 async function AccountSettingsContent({
     category,
     loginHref,
+    connectionsHref,
     error,
     result,
+    partner,
 }: {
     category: "profile" | "privacy" | "connections" | "account";
     loginHref: string;
+    connectionsHref: string;
     error?: string;
     result?: string;
+    partner?: string;
 }) {
     if (category === "account") {
         const account = await getAccountSettingsData();
@@ -38,11 +44,17 @@ async function AccountSettingsContent({
         return <ProfileSettings user={user} arcades={arcades} />;
     if (category === "privacy")
         return <PrivacySettings initialValues={user.privacy} />;
+    const musecat = await getMusecatSettings(user.id);
+    if (partner === "musecat") {
+        if (!musecat.visible) redirect(connectionsHref);
+        return <MusecatConnectionDetail settings={musecat} />;
+    }
     return (
         <ConnectionSettings
             displayName={user.discordName}
             error={error}
             result={result}
+            musecat={musecat}
         />
     );
 }
@@ -54,6 +66,7 @@ export default async function SettingsPage({
         category?: string;
         discordError?: string;
         discordResult?: string;
+        partner?: string;
     }>;
 }) {
     const [{ locale }, user, params] = await Promise.all([
@@ -70,17 +83,24 @@ export default async function SettingsPage({
     const loginHref = `${localizePath("/login", locale)}?${query}`;
     if (category && category !== "experience" && !user) redirect(loginHref);
     return (
-        <SettingsLayout category={category} authenticated={Boolean(user)}>
+        <SettingsLayout
+            category={category}
+            authenticated={Boolean(user)}
+            // 뮤즈캣 상세는 모드가 꺼져도 연결 기록이 있으면 보이고(없으면 아래에서 연결로 돌려보낸다), 제목 · 뒤로는 상세가 그린다
+            subpage={category === "connections" && params.partner === "musecat"}
+        >
             {category && category !== "experience" ? (
                 <Suspense
-                    key={category}
+                    key={`${category}-${params.partner ?? ""}`}
                     fallback={<SettingsLoading category={category} />}
                 >
                     <AccountSettingsContent
                         category={category}
                         loginHref={loginHref}
+                        connectionsHref={`${root}?category=connections`}
                         error={params.discordError}
                         result={params.discordResult}
+                        partner={params.partner}
                     />
                 </Suspense>
             ) : (

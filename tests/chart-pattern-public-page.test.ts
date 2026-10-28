@@ -81,7 +81,7 @@ describe("공개 채보 페이지", () => {
                 publishedContent: publishedDocument,
                 publishedRevision: 3,
                 publishedAt: new Date("2026-09-24T02:34:50.000Z"),
-                publishedBy: { username: "운영자A", role: "admin" },
+                publishedBy: { username: "운영자A" },
                 author: null,
                 // 영상 추출 버전(2)이 공개 번호(3) 이하 → 출처 표기
                 revisions: [{ number: 2, kind: "vid2bmap", message: null }],
@@ -102,14 +102,13 @@ describe("공개 채보 페이지", () => {
             level: 1,
             revision: 3,
             document: publishedDocument,
-            jacketUrl: "/jackets/music.webp",
             backHref: "/ko/music/music-index/normal?tab=detail",
             source: {
                 author: {
                     id: null,
                     name: "운영자A",
                     avatar: null,
-                    label: { kind: "operator" },
+                    label: null,
                 },
                 publisher: null,
                 publishedAt: "2026-09-24T02:34:50.000Z",
@@ -210,7 +209,7 @@ describe("공개 채보 페이지", () => {
                 publishedContent: publishedDocument,
                 publishedRevision: 6,
                 publishedAt: null,
-                publishedBy: { username: "운영자A", role: "admin" },
+                publishedBy: { username: "운영자A" },
                 author: { id: 42, username: "하늘" },
                 // 빈 채보에서 시작한 기여(6) — 그 전 관리자 초안의 영상 추출(4)은 조상이 아니다
                 revisions: [

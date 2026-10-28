@@ -56,7 +56,7 @@ html[data-theme="light"] {
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--nl-border-default);
+        border-color: var(--nl-border-divider);
     }
 
     /* 앱 전체에 선택된 테마와 기본 폰트를 적용 */
@@ -89,11 +89,12 @@ html[data-theme="light"] {
         cursor: not-allowed;
     }
 
-    /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤 */
+    /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤.
+       셸 바깥(관리자 · 에디터)은 토큰을 못 읽어 content/tertiary · weight-regular 값을 쓴다. 셸 안은 foundation.css 가 토큰으로 덮는다 */
     input::placeholder,
     textarea::placeholder {
-        color: var(--nl-content-subdued);
-        font-weight: var(--nl-type-weight-regular);
+        color: #8a8a8a;
+        font-weight: 400;
         opacity: 1;
     }
 }

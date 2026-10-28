@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 import { listMyFeedback } from "@/app/(site)/(home)/feedback-actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
@@ -17,7 +17,7 @@ function formatDate(value: string, locale: string) {
     }).format(new Date(value));
 }
 
-// 피드백 창 「내 제보」 (2026-09-18 F1) — 상태 태그(T3 색 점) · 날짜 · 종류 →4→ 내용 →8→ 답변 상자
+// 피드백 창 「내 제보」 — 상태 태그 · 날짜 · 종류 →4→ 내용 →8→ 답변 상자
 export default function MyFeedbackList({
     onLoaded,
 }: {
@@ -28,20 +28,21 @@ export default function MyFeedbackList({
     const locale = useLocale();
     const [items, setItems] = useState<MyFeedbackItem[] | null>(null);
     const [failed, setFailed] = useState(false);
+    // 부모가 렌더마다 새 콜백을 넘겨도 다시 불러오지 않게 효과 밖 이벤트로 둔다
+    const loaded = useEffectEvent(() => onLoaded?.());
+    // 탭을 열 때 한 번만 불러온다
     useEffect(() => {
         let active = true;
         listMyFeedback()
             .then((result) => {
                 if (!active) return;
                 setItems(result ?? []);
-                onLoaded?.();
+                loaded();
             })
             .catch(() => active && setFailed(true));
         return () => {
             active = false;
         };
-        // 탭을 열 때 한 번만 불러온다
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (failed)
@@ -57,7 +58,7 @@ export default function MyFeedbackList({
         return (
             <div aria-busy="true">
                 <LoadingStatus label={t("feedback.mine.loading")} />
-                <ul className="nl-feedback-mine" aria-hidden="true">
+                <ul aria-hidden="true">
                     {[0, 1, 2].map((index) => (
                         <li key={index} className="nl-feedback-mine__row">
                             <SkeletonText className="nl-metadata" width="m" />
@@ -77,7 +78,7 @@ export default function MyFeedbackList({
             </p>
         );
     return (
-        <ul className="nl-feedback-mine">
+        <ul>
             {items.map((item) => (
                 <li key={item.id} className="nl-feedback-mine__row">
                     <div className="nl-announcement-meta">

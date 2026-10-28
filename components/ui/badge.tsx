@@ -8,12 +8,9 @@ const badgeVariants = cva("nl-tag", {
     variants: {
         variant: {
             default: "",
-            outline: "",
             success: "nl-tag--status",
             danger: "nl-tag--status",
             score: "nl-tag--status",
-            basic: "",
-            recital: "",
         },
     },
     defaultVariants: {

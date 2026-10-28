@@ -40,7 +40,7 @@ async function OnboardingContent({
                 />
             )}
             <form action={logout.bind(null, locale)} className="nl-auth-logout">
-                <button type="submit" className="nl-control">
+                <button type="submit" className="nl-control nl-link">
                     {t("onboarding.logoutBrowse")}
                 </button>
             </form>

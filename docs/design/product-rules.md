@@ -1,714 +1,652 @@
-# NosLog product rules
+# NosLog 기능 규칙
 
-Current behavioral baseline, consolidated on 2026-09-08. This preserves important
-rules that cannot be inferred from the screen. It does not define layouts,
-create new features or certify implementation completeness. Presentation belongs
-to the [design guide](./README.md). The latest explicit user decision wins. For detailed predicates, payloads and edge cases, inspect the
-linked domain implementation and its tests; do not reconstruct behavior from an
-old design-stage checklist. Changes to material behavior require a user decision.
+화면만으로 알 수 없는 동작과 데이터 의미의 정본이다. 화면 모양은 [디자인 가이드](./README.md)가 정한다.
+최신 사용자 결정이 이 문서보다 우선한다. 세부 조건 · 응답 내용 · 경계 사례는 연결된 도메인 구현과 테스트를 보고,
+옛 설계 단계 점검표로 동작을 다시 짜 맞추지 않는다. 중요한 동작을 바꾸려면 사용자 결정이 필요하다.
 
-## Shared behavior
+## 공통 동작
 
-- NosLog is an unofficial NOSTALGIA records, ranking and archive service. It does
-  not claim KONAMI affiliation or official certification.
-- Keep Korean, Japanese and English routes and messages. UI language, play region,
-  NosLog nickname, NOSTALGIA player name and Discord identity are distinct values.
-- Explicit localized URLs render that locale without silently changing the saved
-  preference. Region is never inferred from language. Stable profile IDs survive
-  nickname changes. Original music titles remain available with approved translations.
-- Preserve URL filters, selected chart/difficulty/mode and valid return destinations.
-  Browser Back and resizing must not reset a task. Ignore stale responses for a
-  previously selected target; retain correctly identified cached data during updates.
-- Distinguish missing data, measured zero, loading, no result, private data, signed
-  out and ineligible states. Never fabricate records or treat all of them as zero.
-- Enforce authentication, ownership, eligibility and input validation on the server.
-  Client-side hidden or disabled controls are not authorization.
-- Keep keyboard operation, labels, focus restoration, accessible errors and retries.
-  Explicit destructive confirmation is separate from ordinary navigation or save.
-- Page metadata (2026-10-01): every page sets its own title, a description that
-  summarizes that page (posts use the first paragraph of the body, not the title), a
-  canonical URL, ko/ja/en alternates plus `x-default` (the unprefixed URL, which the
-  proxy sends to the browser language), `og:locale:alternate`, and a share image —
-  the site image by default, the chart jacket on chart details (small card), and the
-  profile card on profiles. Setting `openGraph` in a page replaces the parent's
-  images, so pages build metadata through `createPageMetadata`. No `keywords` meta.
+- NosLog 는 NOSTALGIA 비공식 기록 · 랭킹 · 아카이브 서비스다. KONAMI 와 관계가 있거나 공식 인증을 받았다고
+  내세우지 않는다.
+- 한국어 · 일본어 · 영어 경로와 문구를 유지한다. 화면 언어, 플레이 지역, NosLog 닉네임, NOSTALGIA 플레이어명,
+  Discord 신원은 서로 다른 값이다.
+- 언어가 붙은 주소로 들어오면 그 언어로 보여 주고, 저장된 언어 설정은 몰래 바꾸지 않는다. 지역은 언어로
+  추측하지 않는다. 고정 프로필 ID 는 닉네임이 바뀌어도 그대로다. 악곡 원제는 승인된 번역과 함께 계속 볼 수 있다.
+- 주소의 필터, 고른 채보 · 난이도 · 모드, 유효한 돌아갈 곳을 지킨다. 브라우저 뒤로 가기나 창 크기 변경이
+  하던 일을 초기화하지 않는다. 앞서 고른 대상에 대한 늦은 응답은 무시한다. 갱신하는 동안 정확히 식별된 캐시
+  데이터는 그대로 둔다.
+- 데이터 없음, 측정된 0, 불러오는 중, 결과 없음, 비공개, 로그아웃, 자격 없음을 서로 구분한다. 기록을 지어내지
+  않고, 이 상태들을 모두 0으로 다루지 않는다.
+- 인증, 소유, 자격, 입력 검증은 서버에서 지킨다. 클라이언트에서 숨기거나 비활성화한 조작은 권한 검사가 아니다.
+- 키보드 조작, 라벨, 포커스 되돌리기, 접근 가능한 오류 안내, 다시 시도를 유지한다. 되돌릴 수 없는 삭제 확인은
+  일반 이동 · 저장과 따로 둔다.
+- 페이지 메타데이터: 모든 페이지는 제목, 그 페이지를 요약하는 설명(글은 제목이 아니라 본문 첫 문단),
+  canonical 주소, ko · ja · en 대체 주소와 `x-default`(언어 접두사 없는 주소 — 프록시가 브라우저 언어로 보낸다),
+  `og:locale:alternate`, 공유 이미지를 각자 정한다. 공유 이미지는 기본이 사이트 이미지이고, 악곡 상세는 채보
+  자켓(작은 카드), 프로필은 프로필 카드다. 페이지에서 `openGraph` 를 정하면 상위의 이미지가 통째로 바뀌므로,
+  페이지는 `createPageMetadata` 로 메타데이터를 만든다. `keywords` 메타는 쓰지 않는다.
 
-## Authentication, profile settings and account deletion
+바뀐 기록: [2026-10-01](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
 
-- Discord is the sole login provider. NosLog does not manage passwords. Validate
-  OAuth state and trusted internal return paths. Do not accept arbitrary external
-  redirect destinations.
-- New/incomplete accounts complete onboarding before account-dependent work.
-  Preserve the safe original destination and allow logout/public-browsing recovery.
-- Settings retain Experience, Profile, Privacy, Connections and Account. Guests
-  can use public experience settings and sign in for account settings.
-- Profile and Privacy edits are explicitly saved. Preserve staged changes on
-  failure; warn before discarding dirty forms. Language applies immediately.
-- NosLog nicknames preserve allowed Unicode display form and case. Validation and
-  normalized uniqueness belong to the existing account schemas/services, not a
-  new uppercase conversion. The synced official player name remains read-only.
-- Avatar selection/cropping is staged before save; accept the existing JPG/PNG/WebP
-  4 MB limits. Discord refresh must not overwrite a custom NosLog avatar, nickname,
-  region, arcade or privacy preference. Do not add Discord disconnect without an
-  alternative login method. Changing login identity is a separate sensitive flow.
-- Logout destroys the authenticated session and returns to localized Home; it does
-  not delete the account or device-local preferences.
-- Permanent account deletion requires fresh Discord verification for the same
-  account, valid for **10 minutes**, followed by explicit deletion confirmation.
-  The server rechecks expiry and identity at deletion time. See
-  [verification window](../../features/settings/schemas/deletion-verification.ts)
-  and [deletion service](../../features/profile/server/account-deletion-service.ts).
-- Delete the account's linked personal records, contributions, submissions and
-  owned uploads according to the existing deletion service. Shared catalogue
-  definitions are not that user's personal progress. Do not describe personal
-  Bingo as shared with other users.
+## 인증, 프로필 설정, 계정 삭제
 
-## Public profile, privacy and sharing
+- 로그인은 Discord 하나뿐이다. NosLog 는 비밀번호를 다루지 않는다. OAuth state 와 믿을 수 있는 내부 돌아갈
+  경로를 검증한다. 임의의 외부 주소로 보내지 않는다.
+- 새 계정이나 가입을 마치지 않은 계정은 계정이 필요한 일보다 온보딩을 먼저 마친다. 안전한 원래 목적지를
+  지키고, 로그아웃이나 공개 화면 둘러보기로 빠져나갈 수 있게 한다.
+- 설정은 화면 설정 · 프로필 · 공개 설정 · 연결 · 계정을 유지한다. 손님은 공개된 화면 설정을 쓸 수 있고, 계정
+  설정은 로그인해서 쓴다.
+- 공개 설정은 스위치를 누르는 즉시 저장한다. 한 번에 하나씩 저장하고, 실패하면 스위치를 되돌리고 알린다.
+  프로필은 칸마다 값을 고르거나 창에서 「적용」 을 누르는 순간 저장한다. 닉네임만 칸 옆 「저장」 으로 저장한다
+  (Enter 는 저장, Esc 는 되돌림). 나갈 때 확인 창은 닉네임을 바꿨을 때만 뜬다. 저장에 실패하면 그 칸만
+  되돌린다. 닉네임은 쓴 글자를 남긴다. 언어는 바로 적용한다.
+- NosLog 닉네임은 허용된 유니코드 표시 형태와 대소문자를 그대로 둔다. 검증과 정규화한 중복 검사는 기존 계정
+  스키마 · 서비스가 맡는다. 새로 대문자로 바꾸지 않는다. 동기화된 공식 플레이어명은 읽기 전용이다.
+- 프로필 사진은 고르고 자른 뒤에 저장한다. 기존 JPG · PNG · WebP 4 MB 제한을 따른다. Discord 정보를 새로
+  받아도 NosLog 에서 정한 프로필 사진, 닉네임, 지역, 오락실, 공개 설정을 덮어쓰지 않는다. 다른 로그인 방법 없이
+  Discord 연결 해제를 더하지 않는다. 로그인 계정 바꾸기는 따로 다루는 민감한 흐름이다.
+- 로그아웃은 로그인 세션을 없애고 그 언어의 홈으로 돌아간다. 계정이나 기기에 저장된 설정은 지우지 않는다.
+- 계정 영구 삭제는 같은 계정으로 Discord 인증을 새로 받아야 하고, 그 인증은 10분 동안 유효하다. 그 뒤 삭제를
+  따로 확인한다. 서버는 삭제 시점에 만료와 신원을 다시 검사한다.
+  [인증 유효 시간](../../features/settings/schemas/deletion-verification.ts)과
+  [삭제 서비스](../../features/profile/server/account-deletion-service.ts)를 본다.
+- 계정에 연결된 개인 기록, 기여, 제출물, 본인이 올린 파일은 기존 삭제 서비스에 따라 지운다. 공용 카탈로그
+  정의는 그 사용자의 개인 진행이 아니다. 개인 빙고를 다른 사용자와 공유한다고 설명하지 않는다.
 
-- Keep six positive visibility settings: official player name, Discord identity,
-  preferred arcade, total play count, play activity and play scores. Play activity
-  owns both last-played and recent-play disclosure. Off withholds public output; it
-  does not delete stored values. There is no whole-profile-private switch.
-- Play scores (2026-09-18, default on for existing and new users; onboarding shows it
-  checked): when off, the player is left out of chart rankings, score-ruler pins and
-  dots, the score distribution, global Grd / rating rankings, other players' rank
-  positions and "similar Grd" averages — ranks are recomputed among the remaining
-  players. Only the player still sees their own position among the public players.
-  Others see the profile identity with a lock message instead of Grd, rating, ranks,
-  rank distribution, judgement totals, best plays, progress and recent plays; the
-  profile plays/progress APIs return 403 for them. Values are withheld on the server,
-  not hidden with CSS.
-- Apply visibility consistently to public profiles, incremental results, ranking
-  identity, share cards and server-generated metadata. CSS hiding is insufficient.
-  Do not leak private values through response payloads or generated images.
-- Profile share image (2026-10-01): `/profile/[id]/share-image` is the public Basic
-  card for link previews. When play scores are off it returns 404 and the profile
-  metadata uses the site image and a description without score words. The download
-  card `/profile/[id]/card` stays owner-only. Profiles remain `noindex`.
-- Basic and Recital retain their distinct record/grade meaning. Show the highest
-  approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
-- The public profile (2026-09-25) is one head (identity, meta line, mode, headline
-  Grd) above section tabs with their own URLs — overview `/profile/[id]`, records
-  `/records`, stats `/stats`, achievements `/achievements` and activity `/activity`.
-  The selected mode lives in the URL (`?mode=recital`) and carries across tabs; only
-  the overview, records and the stats progress chart use it. Others do not see the
-  records and stats tabs of a score-private profile; others do not see the activity
-  tab while "hide play activity" is on (same rule as the recent-play list).
-- Owner view (2026-09-26 P1): the owner sees their own hidden items — NOSTALGIA ID,
-  Discord, preferred arcade, last played, play count, recent plays and the activity
-  tab — marked "only visible to you". These values are loaded only for the owner's
-  request (the plays API checks the session) and never enter the public profile cache. The headline
-  shows official Grd, world and country rank and the rating — no mode name, "top N%"
-  or 90-day change (2026-09-26, user).
-- Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd
-  contribution (the same set official Grd counts); sorts apply inside that set and
-  each row keeps its best position. There is no search or filter (2026-09-26). "All records" is every chart with a
-  score. A row's chart rank is the chart ranking's RANK among players who show scores
-  (a private player's own rows count among the public players). The achieved date is
-  the imported best time; the never-played placeholder (1970) shows no date. The
-  records API rechecks score privacy on every request like the plays API.
-- Stats tab (2026-09-26) is mode-independent except the progress chart. Level
-  achievement counts every listed chart per difficulty and level in one bar: each
-  played chart goes to its highest group — Pianist (FC type 3 or rank P) > FC
-  (FC type 2) > rank S > A+ > A > B or lower. A failed play has no group of its own
-  (it counts under its rank); unplayed = listed charts − played charts. "All" merges
-  NORMAL · HARD · EXPERT by level (levels 1–8 in one row) and keeps REAL levels as
-  separate rows; the overview side shows levels 9 and up plus REAL. The row
-  percentage is played charts over listed charts, or one group's share when that
-  group is picked in the legend. Rank counts and play count are the official-site
-  values as before, with an FC bar (FC lamp + Pianist). There is no note-type
-  success section. Rank and play-count history for the progress chart do not exist
-  yet, so the chart keeps Grd and rating only.
-- Activity tab (2026-09-26) counts imported play history per Korean calendar day
-  over 53 weeks ending today (history exists only after bookmarklet sync). Summary
-  = plays in that window, plays this month, the current streak (consecutive days
-  ending today, or yesterday when today has no play yet) and the longest run of
-  consecutive days. Calendar colour steps are relative to the player's busiest day.
-  Recent plays are listed one play per row, 20 per page; "new best" marks a play
-  whose score beat the best score recorded just before it (a first play counts).
-  Score-private profiles show others the calendar and summary without the list.
-- Public share links use stable profile IDs and the selected locale. Card export,
-  clipboard or native-share failure must offer a usable fallback without changing
-  privacy settings. Respect the existing public-data policy on every request.
-- See [profile services](../../features/profile/server) and
-  [privacy controls](../../features/settings/components/privacy-settings.tsx).
+바뀐 기록: [2026-10-01](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01) ·
+[2026-10-24](../decisions/2026-10-24-guide-code-alignment.md)
 
-## Music discovery, details, tiers and rankings
+## 공개 프로필, 공개 범위, 공유
 
-- Music and published-chart discovery share a catalogue flow but retain distinct
-  scopes. Preserve approved search/sort/filter meanings and published-chart
-  availability. Result identity stays the music; do not restore personal-record
-  hover previews or mix an unrelated difficulty's records into a result.
-- Filters retain draft/apply/cancel behavior where they obscure results and the
-  existing immediate behavior in a visible rail. Layout changes do not alter
-  filter contents, URL restoration or server query meaning.
-- Opening a music result from the catalogue (music list, grid, dense view)
-  or a bingo music mission lands on that music's highest difficulty — Real
-  when it has one, otherwise Expert (then Hard, Normal). Players care least
-  about the lowest difficulty (2026-09-19). Links that already name a
-  difficulty (search preview, chart results, records) keep theirs.
-- Music Detail keeps one music identity and one selected difficulty across
-  Overview, My Record, Ranking and Ratings (URL `tab` values stay `detail`,
-  `record`, `ranking`, `tier`). The header shows the selected chart's constant and
-  its published tier values; a chart without a constant shows a muted "—" in the
-  constant cell, and unlisted/unpublished tier scopes show no value rather than a
-  guessed one. View-chart/video actions are always present and are
-  disabled unless that exact chart has them. The stats card starts with the
-  viewer's best record on the selected chart (grade icon, best score, Basic Grd);
-  with no record it shows dashes, and when signed out it links to sign-in.
-  A localized title (when the viewer's setting allows it) appears as a line
-  under the title; long title, localized title and artist lines are clipped
-  with an end fade and the whole block expands on tap without losing text. The actual viewer/editor remain preserved.
-- Personal record, judgement analysis and Recital values keep their source units
-  and limitations. Missing mode-specific values are not substituted with Basic
-  values. Retry the failed region without losing the current chart context.
-- Arcade facilities (parking, smoking room …) and cabinet tags (streaming
-  cabinet, headphone jack …) are fixed lists chosen by admins; cabinet features
-  (key weight, screen lag, sound volume) are three-step choices plus an optional
-  free-text note (100 chars). Values are stored as keys and translated on
-  screen; the free-text note is shown as written. Editing tags, features or
-  facilities does not refresh a cabinet's verification time — only availability
-  or condition changes (or 「오늘 확인」) do (2026-09-22).
-- Chart and music data fields (note count, constant, BPM, length, release date,
-  unlock condition) record where each value came from in `chart_field_sources`
-  (play-record inference, BEMANIWiki, RemyWiki, official level or manual). Values
-  inferred from players' own records win over wiki values when they disagree;
-  wiki-sourced values may be replaced once records exist (2026-09-18).
-- The unlock condition is stored as the BEMANIWiki original (Japanese, per song,
-  same text on every chart). The detail page parses it per difficulty: one line
-  per event, a leading 「→」 marks where the event moved after it ended, and the
-  stardust count is this difficulty's number (4 numbers = N/H/E/R, 3 = N/H/E,
-  1 = every difficulty; with both 3- and 1-number lines the 1-number line is
-  Real's). Event names are translated through `unlock_condition_translations`
-  (ko · en; ja shows the original; unknown names fall back to the original)
-  (2026-09-18).
-- Release date (`released_at`, shown as 「수록일」) is per chart: Normal, Hard
-  and Expert take the song's release date (BEMANIWiki 配信日), Real takes the
-  date that Real chart was added (新規追加日). Charts the wiki does not date stay
-  empty rather than borrowing the song date (2026-09-18).
-- The ranking tab's score-distribution curve shows player pins at each best
-  score: every participant when there are 30 or fewer, otherwise the top 3 plus
-  the signed-in viewer. Nearby pins collapse into the highest-scoring player with
-  a "+N" count; the viewer is never collapsed. Choosing a player scrolls to that
-  player's leaderboard row, opening the page that contains it (2026-09-17).
-- The similar-Grd comparison in judgement analysis uses other players within
-  ±200 Grd, excluding the viewer, and is available from one such record
-  (2026-09-16, previously five). It is always shown (no toggle). Each
-  judgement/note-rate average uses only the records that have that value; an
-  item without an average shows no average line, and with no comparable records
-  neither the basis count nor any average appears.
-- Basic/Recital modes and S/Full Combo/Pianist goals remain independent. Preserve
-  published tier placements/history and existing top-70 rating calculation. A
-  community vote never directly changes an official placement.
-- Global rankings support Official Grd and NosLog Rating for both modes, with the
-  existing region populations. Use competition ranks (`1, 2, 2, 4`) for equal
-  published values, including ties across pages. Paginate 20 rows per page — the
-  chart leaderboard uses the same 20 (2026-10-15, same unit as other lists) — and
-  reset the page when mode/metric/region changes as required by the existing query.
-- NosLog Rating rankings read a per-player stored value (`PlayerRating`,
-  2026-10-15) computed with the same top-70 rule. A sync recomputes only that
-  player, saving a tier list recomputes every player after the response when the
-  Pianist basis changed, and a ranking read rebuilds once when the table is empty
-  or its basis version differs. A rebuild replaces a whole mode in one
-  transaction, so the old values stay visible until it finishes.
-- See [discovery service](../../features/music/server/discovery-service.ts),
-  [music-detail loading](../../features/music/server/load-music-detail.ts),
-  [tier domain](../../lib/tiers.ts) and [rankings](../../features/rankings).
+- 공개 설정은 켜면 공개되는 여섯 가지다: NOSTALGIA 플레이어명, Discord 신원, 선호 오락실, 총 플레이 횟수,
+  플레이 활동, 플레이 점수. 플레이 활동은 마지막 플레이와 최근 플레이 공개를 함께 맡는다. 끄면 공개 출력에서
+  빠질 뿐 저장된 값은 지우지 않는다. 프로필 전체를 비공개로 하는 스위치는 없다.
+- 플레이 점수는 기존 · 새 사용자 모두 기본으로 켜져 있고, 온보딩에서도 체크된 채로 보인다. 끄면 그 플레이어는
+  악곡 랭킹, 점수 자 핀과 점, 점수 분포, 전체 Grd · 레이팅 랭킹, 다른 플레이어의 순위 자리, 「비슷한 Grd」
+  평균에서 빠진다. 순위는 남은 플레이어끼리 다시 계산한다. 본인만 공개 플레이어 사이의 자기 자리를 계속 본다.
+  다른 사람에게는 프로필 신원과 잠금 문구만 보이고, Grd, 레이팅, 순위, 순위 분포, 판정 합계, 베스트 플레이,
+  성장 추이, 최근 플레이는 보이지 않는다. 그들이 프로필 플레이 · 성장 추이 API 를 부르면 403 을 돌려준다. 값은
+  CSS 로 숨기지 않고 서버에서 뺀다.
+- 공개 범위는 공개 프로필, 이어서 불러오는 결과, 랭킹 신원, 공유 카드, 서버에서 만든 메타데이터에 똑같이
+  적용한다. CSS 로 숨기는 것으로는 모자라다. 응답 내용이나 생성 이미지로 비공개 값이 새지 않게 한다.
+- 프로필 공유 이미지: `/profile/[id]/share-image` 는 링크 미리보기용 공개 Basic 카드다. 플레이 점수가 꺼져
+  있으면 404 를 돌려주고, 프로필 메타데이터는 사이트 이미지와 점수 관련 말이 없는 설명을 쓴다. 내려받기 카드
+  `/profile/[id]/card` 는 계속 본인만 쓴다. 프로필은 계속 `noindex` 다.
+- Basic 과 Recital 은 기록 · 등급의 뜻이 서로 다르다. 모드마다 승인된 가장 높은 검정 성과를 보여 준다. 일반적인
+  `GRADE 57` 배지를 새로 만들지 않는다.
+- 공개 프로필은 머리 하나(신원, 메타 줄, 모드, 대표 Grd) 아래에 주소가 따로 있는 구역 탭을 둔다. 개요
+  `/profile/[id]`, 기록 `/records`, 통계 `/stats`, 업적 `/achievements`, 활동 `/activity` 다. 고른 모드는
+  주소(`?mode=recital`)에 담겨 탭을 옮겨도 이어진다. 모드를 쓰는 곳은 개요, 기록, 통계의 성장 그래프뿐이다.
+  점수 비공개 프로필의 기록 · 통계 탭은 다른 사람에게 보이지 않는다. 「플레이 활동 공개」 가 꺼져 있으면 활동
+  탭도 다른 사람에게 보이지 않는다(최근 플레이 목록과 같은 규칙).
+- 본인 화면: 본인은 숨겨 둔 항목 — NOSTALGIA ID, Discord, 선호 오락실, 마지막 플레이, 플레이 횟수, 최근 플레이,
+  활동 탭 — 을 「나에게만 보입니다」 표시와 함께 본다. 이 값은 본인의 요청일 때만 불러오고(플레이 API 가 세션을
+  확인한다) 공개 프로필 캐시에 들어가지 않는다. 머리에는 공식 Grd, 세계 · 국가 순위, 레이팅을 보인다. 모드 이름,
+  「상위 N%」, 90일 변화는 없다.
+- 기록 탭: 「최고 기록」 은 그 모드의 공식 Grd 기여 순 상위 50채보다(공식 Grd 가 세는 것과 같은 묶음). 정렬은
+  그 묶음 안에서만 하고, 줄마다 최고 기록 안의 자리 번호를 그대로 단다. 검색과 필터는 없다. 「모든 기록」 은
+  점수가 있는 모든 채보다. 줄의 곡 순위는 점수를 공개한 플레이어 사이의 악곡 랭킹 순위다(비공개 플레이어 본인의
+  줄은 공개 플레이어 사이에서 센다). 달성일은 가져온 최고 기록 시각이다. 플레이한 적 없는 자리값(1970)은 날짜를
+  보이지 않는다. 기록 API 는 플레이 API 처럼 요청마다 점수 공개 여부를 다시 확인한다.
+- 통계 탭은 성장 그래프 말고는 모드와 관계없다. 레벨별 달성은 목록에 있는 모든 채보를 난이도 · 레벨마다 막대
+  하나에 센다. 플레이한 채보는 가장 높은 묶음 하나에 들어간다 — Pianist(FC 단계 3 또는 랭크 P) >
+  FC(FC 단계 2) > 랭크 S > A+ > A > B 이하. 실패한 플레이는 묶음이 따로 없고 그 랭크에 센다. 안 친 채보는 목록 채보에서 친
+  채보를 뺀 수다. 「전체」 는 NORMAL · HARD · EXPERT 를 레벨별로 합치고(레벨 1–8 은 한 줄), REAL 레벨은 줄을 따로
+  둔다. 개요 쪽 요약은 「1–8」 묶음 줄 · 9 이상 · REAL 을 보인다. 줄 퍼센트는 목록 채보 중 친 채보의 비율이고, 범례에서 묶음
+  하나를 고르면 그 묶음의 비율이다. 랭크 수와 플레이 횟수는 전과 같이 공식 사이트 값이고, FC 막대(FC 램프 +
+  Pianist)가 있다. 노트 종류별 성공 구역은 없다. 성장 그래프용 순위 · 플레이 횟수 이력은 아직 없어서 그래프는
+  Grd 와 레이팅만 둔다.
+- 활동 탭은 가져온 플레이 이력을 한국 날짜 하루 단위로, 오늘까지 53주 동안 센다(이력은 북마클릿 동기화 뒤부터만
+  있다). 요약은 그 기간의 플레이, 이번 달 플레이, 지금 연속(오늘까지 이어진 날 수, 오늘 아직 플레이가 없으면
+  어제까지), 가장 긴 연속이다. 달력 색 단계는 그 플레이어가 가장 많이 친 날을 기준으로 한다. 최근 플레이는 한
+  줄에 한 판, 한 쪽에 20개다. 「New」 는 바로 전까지의 최고 점수를 넘은 플레이에 붙는다(첫 플레이도 센다). 점수
+  비공개 프로필은 다른 사람에게 달력과 요약만 보이고 목록은 보이지 않는다.
+- 공개 공유 링크는 고정 프로필 ID 와 고른 언어를 쓴다. 카드 내보내기, 클립보드, 기기 공유가 실패하면 공개
+  설정을 바꾸지 않고 쓸 수 있는 대안을 준다. 요청마다 기존 공개 데이터 정책을 지킨다.
+- [프로필 서비스](../../features/profile/server)와
+  [공개 설정 조작](../../features/settings/components/privacy-settings.tsx)을 본다.
 
-## Community voting and evaluation
+바뀐 기록: [2026-09-18](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-18) ·
+[2026-09-25](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-25) ·
+[2026-09-26](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-26) ·
+[2026-10-01](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
 
-- Six independent goal-vote scopes: Basic and Recital × S, Full Combo and Pianist.
-  One editable/deletable vote per user, exact chart, mode and goal; accept 1.0–14.5
-  in 0.1 increments. Do not expand an old unscoped rating into six votes.
-- `fc_type` is the official Op.3 lamp: 0 none, 1 Full Combo with NEAR (yellow F),
-  2 Full Combo without NEAR (rainbow F), 3 Perfect (1,000,000; same rainbow mark).
-  NosLog counts Full Combo as `fc_type >= 2` everywhere — a NEAR Full Combo (1) is
-  stored but never shown or counted as FC (2026-10-16 K1).
-- Eligibility uses the exact chart's verified record: S requires score ≥950,000;
-  Full Combo requires `fc_type >= 2` or 1,000,000; Pianist requires `fc_type === 3`
-  or 1,000,000. Recital additionally requires `grade_recital > 0`. This does not
-  prove the goal and Recital participation occurred in the same historical play.
-  Use [the shared predicates](../../features/music/lib/community.ts).
-- Below three valid votes, display Aggregating and the exact count. A row
-  expands only when it has something to show: a distribution (three or more
-  votes), a vote the viewer may cast, or the viewer's existing vote. No
-  explanatory sentences (aggregation guidance, eligibility reasons, value range)
-  are shown; ineligible viewers simply get no input, and guests get one
-  "sign in to vote" link under the list (2026-09-16). A first vote has no preset
-  value; an existing vote stays editable/deletable.
-- From three votes, publish arithmetic mean, exact count and actual distribution.
-  Keep the median diagnostic-only. Do not merge distinct voted tier values or
-  discard an outlier merely because it differs from the majority.
-- Goal-neutral pattern evaluation is separate from goal votes. Preserve the five
-  axes and exact per-axis counts; missing/insufficient values are not zero. An
-  axis average is shown from one rating (2026-09-17, previously three); an
-  axis without ratings shows an empty bar and "—"; a rating input
-  left untouched stays "not rated", distinct from 0. The 0–4 scale is the
-  pattern's strength compared with all charts, not its share of this chart
-  (2026-09-23); the criteria dialog and the pattern form say so.
-- Preserve ownership, participation checks and edit/delete in
-  [community mutations](../../features/music/server/community-mutation.ts).
-  Opinions are listed newest first. The helpful-vote control and helpful sort
-  are removed from the UI (2026-09-16); stored helpful data and the API remain.
-  Pattern ratings save as soon as a value is chosen (changes within a short
-  moment are batched); tapping the chosen value again clears that axis, and
-  clearing every axis asks for confirmation. When no ratings and no opinion
-  remain, the evaluation row is deleted.
-  The pattern form saves ratings only and the opinion composer saves the
-  opinion only — both write the same evaluation row, so saving one keeps the
-  other's stored value. Deleting the pattern evaluation keeps an existing
-  opinion.
-  No contribution rewards or automatic tier changes are introduced.
-- Opinion interactions (2026-09-22). Likes reuse the existing helpful table: a
-  signed-in player with a positive record on that chart may like others' opinions
-  and replies (not their own). Sort: newest or most liked.
-  Replies are one level deep (`CommunityOpinionReply`); replying to a reply
-  prefixes `@name`. Writing a reply needs the same chart record as writing an
-  opinion; the author may edit or delete their reply, and replies can be reported
-  (same report table with `replyId`). Admins review opinion and reply reports in
-  the admin feedback screen ("의견 신고" tab, 2026-10-17): the card keeps the text
-  as it was when reported, and the admin only marks it resolved or reopens it. When an opinion with replies is deleted, its
-  row stays as "deleted by author" so others' replies remain; no new replies are
-  accepted there. Clearing a whole evaluation that has replies keeps the row with
-  ratings and opinion emptied. Account deletion cascades the author's replies.
-- Opinion translation (2026-09-22). The text language is detected from its script
-  (Hangul → ko, kana/Han → ja, Latin → en; one or two letters → none). When an
-  opinion or reply is written or edited, the server translates it into the other
-  two locales after the response (`after`) with the same Gemini key as official X
-  news (`GEMINI_API_KEY`, free tier — user decision) and stores them; viewers reuse
-  the stored text. "See translation" appears only when the text language differs
-  from the viewer's locale; if a stored translation is missing (older text or a
-  failed call) the first click creates and stores it once. Editing clears stale
-  translations before re-translating; deleting removes them. Without the key no
-  button is shown. The privacy policy (2026-09-22) discloses the free-tier transfer.
+## 악곡 탐색, 상세, 서열, 랭킹
 
-## Data synchronization
+- 악곡 탐색과 공개 채보 탐색은 카탈로그 흐름을 함께 쓰지만 범위는 따로다. 승인된 검색 · 정렬 · 필터의 뜻과 공개
+  채보 여부를 지킨다. 결과의 단위는 악곡이다. 마우스를 올리면 개인 기록을 미리 보여 주던 것을 되살리지 않고,
+  관계없는 난이도의 기록을 결과에 섞지 않는다.
+- 필터가 결과를 가리는 곳에서는 고르기 · 적용 · 취소 흐름을, 보이는 레일에서는 지금의 즉시 반영을 유지한다.
+  배치를 바꿔도 필터 내용, 주소 복원, 서버 질의의 뜻은 바뀌지 않는다.
+- 카탈로그(악곡 목록, 격자, 촘촘한 보기)나 빙고 악곡 미션에서 악곡을 열면 그 악곡의 가장 높은 난이도로 간다.
+  Real 이 있으면 Real, 없으면 Expert(그다음 Hard, Normal)다. 플레이어는 가장 낮은 난이도에 관심이 가장 적다.
+  이미 난이도를 정한 링크(검색 미리보기, 채보 결과, 기록)는 그 난이도를 그대로 쓴다.
+- 악곡 상세는 개요 · 내 기록 · 랭킹 · 평가 탭에서 악곡 하나와 고른 난이도 하나를 유지한다(주소
+  `tab` 값은 그대로 `detail`, `record`, `ranking`, `tier`). 머리는 고른 채보의 상수와 공개된 서열 값을 보인다.
+  상수가 없는 채보는 상수 칸에 흐린 「—」 를 보이고, 목록에 없거나 공개되지 않은 서열 범위는 추측값 대신 값을
+  비운다. 채보 보기 · 영상 버튼은 늘 있고, 바로 그 채보에 있을 때만 누를 수 있다. 수치 상자는 「그레이드」 줄로
+  시작한다. 고른 채보의 내 Basic Grd / 최대 Grd 와 진행 막대를 보이고, 점수와 메달은 없다. 최대 Grd 는 그 채보를
+  전부 ◆JUST · 풀콤보 · P 로 쳤을 때의 Basic Grd 이고, 모르면 「/ —」 다. 기록이 없으면 「—」, 로그아웃이면
+  로그인 링크를 보인다. 번역 제목(사용자 설정이 허락할 때)은 제목 아래 한 줄로 나온다. 긴 제목, 번역 제목,
+  아티스트 줄은 끝을 페이드로 자르고, 누르면 글자를 잃지 않고 묶음 전체가 펼쳐진다. 실제 뷰어 · 에디터는 그대로
+  둔다.
+- 개인 기록, 판정 분석, Recital 값은 원래 단위와 한계를 지킨다. 모드별 값이 없을 때 Basic 값으로 대신하지
+  않는다. 실패한 영역만 다시 시도하고, 지금 채보 맥락을 잃지 않는다.
+- 오락실 시설(주차, 흡연실 …)과 기체 태그(방송 기체, 헤드폰 단자 …)는 관리자가 정한 고정 목록이다. 기체
+  특징(건반 무게, 화면 지연, 소리 크기)은 세 단계 고르기와 선택 자유 메모(100자)다. 값은 키로 저장하고 화면에서
+  번역한다. 자유 메모는 쓴 그대로 보인다. 태그 · 특징 · 시설을 고쳐도 기체 확인 시각은 바뀌지 않는다. 가동 여부나
+  상태를 바꿀 때(또는 「오늘 확인」)만 바뀐다.
+- 채보 · 악곡 데이터 칸(노트 수, 상수, BPM, 길이, 수록일, 해금 조건)은 값마다 출처를 `chart_field_sources` 에
+  기록한다(플레이 기록 추정, BEMANIWiki, RemyWiki, 공식 레벨, 수동). 플레이어 기록에서 추정한 값과 위키 값이
+  다르면 기록 추정값이 이긴다. 위키에서 온 값은 기록이 생기면 바뀔 수 있다.
+- 해금 조건은 BEMANIWiki 원문(일본어, 곡 단위, 모든 채보에 같은 글)으로 저장한다. 상세 화면은 난이도마다 나눠
+  읽는다. 이벤트 하나가 한 줄이고, 줄 앞의 「→」 는 이벤트가 끝난 뒤 옮겨 간 곳을 뜻한다. 스타더스트 수는 그
+  난이도의 숫자다(숫자 4개 = N/H/E/R, 3개 = N/H/E, 1개 = 모든 난이도. 3개짜리 줄과 1개짜리 줄이 함께 있으면
+  1개짜리 줄이 Real 의 것이다). 이벤트 이름은 `unlock_condition_translations` 로 번역한다(ko · en. ja 는 원문을
+  보이고, 모르는 이름은 원문으로 돌아간다).
+- 수록일(`released_at`, 화면에서 「수록일」)은 채보 단위다. Normal · Hard · Expert 는 곡의 수록일(BEMANIWiki
+  配信日), Real 은 그 Real 채보가 추가된 날(新規追加日)을 쓴다. 위키에 날짜가 없는 채보는 곡 날짜를 빌리지 않고
+  비워 둔다.
+- 랭킹 탭은 점수 자 위에 플레이어 핀을 최고 점수 자리에 세운다. 분포 곡선은 없다. 참가자가 30명 이하면 모두,
+  넘으면 상위 3명과 로그인한 본인을 보인다. 가까운 핀은 점수가 가장 높은 사람 하나로 묶고 「+N」 을 붙인다. 본인도
+  같은 거리 규칙을 따르고, 본인이 낀 묶음은 본인이 대표가 된다. 플레이어를 고르면 그 플레이어의 순위표 줄로
+  스크롤하고, 그 줄이 있는 쪽을 연다.
+- 판정 분석의 비슷한 Grd 비교는 ±200 Grd 안의 다른 플레이어를 쓴다(본인 제외). 그런 기록이 하나만 있어도
+  보인다. 늘 보이며 켜고 끄는 조작은 없다. 판정 · 노트 비율 평균은 그 값이 있는 기록만으로 낸다.
+  평균이 없는 항목은 평균선을 보이지 않고, 비교할 기록이 없으면 기준 수와 평균 모두 보이지 않는다.
+- Basic · Recital 모드와 S · 990k · Pianist 목표는 서로 독립이다. 공개된 서열 배치 · 이력과 기존 상위 70곡
+  레이팅 계산을 지킨다. 커뮤니티 투표가 공식 배치를 바로 바꾸지 않는다.
+- 전체 랭킹은 두 모드 모두 공식 Grd 와 NosLog 레이팅을 기존 지역 범위로 지원한다. 공개 값이 같으면 공동 순위
+  (`1, 2, 2, 4`)를 쓰고, 쪽을 넘는 동점에도 적용한다. 한 쪽에 20줄씩 나눈다. 악곡 순위표도 다른 목록과 같은
+  단위인 20 을 쓴다. 모드 · 기준 · 지역이 바뀌면 기존 질의가 요구하는 대로 쪽을 처음으로 돌린다.
+- NosLog 레이팅 랭킹은 플레이어마다 저장한 값(`PlayerRating`)을 읽고, 이 값은 같은 상위 70곡 규칙으로 계산한다.
+  동기화는 그 플레이어만 다시 계산한다. 서열표를 저장해 Pianist 기준이 바뀌면 응답 뒤에 모든 플레이어를 다시
+  계산한다. 랭킹을 읽을 때 표가 비었거나 기준 버전이 다르면 한 번 다시 만든다. 다시 만들 때는 한 모드 전체를 한
+  트랜잭션으로 바꾸므로, 끝날 때까지 옛 값이 보인다.
+- [탐색 서비스](../../features/music/server/discovery-service.ts),
+  [악곡 상세 불러오기](../../features/music/server/load-music-detail.ts),
+  [서열 도메인](../../lib/tiers.ts), [랭킹](../../features/rankings)을 본다.
 
-- The account-specific bookmarklet executes on the official NOSTALGIA site. The
-  NosLog page installs/guides it and observes status; it does not possess the user's
-  official-site credentials. Never send p.eagate passwords or login cookies to NosLog.
-- Basic Pass availability determines the returned data scope, not access to personal
-  features (2026-09-20). Recent-only sync accumulates unique plays into chart best
-  records, observed play/FC/P counts, Basic Grd (top 50), Rating, rankings and history.
-  After Pass expiry, continue from existing full values; preserve independent bests
-  and absent Recital/note-rate fields. Never replace unknown Recital with zero.
-  Total player play count still comes from player_info. Full sync reconciles chart
-  values/counts to the official response without deleting play or growth history.
-- When recent Basic Grd is zero, retain the raw history value and supplement personal
-  bests with the validated judgment/combo formula (2026-09-20). Only two-hand
-  A/A2/S/P records with a known official constant and matching note/judgment totals
-  are calculated; unsupported or incomplete inputs remain unchanged. Revisit
-  already-applied zero records without incrementing counts; full-import coverage
-  remains authoritative. Positive source Grd takes precedence over calculation.
-- Record projection and history receipts commit together. Full-import coverage and
-  receipts prevent overlap and retries from increasing counts twice. Official play
-  timestamps have minute precision: an overlap in the full-import minute is treated
-  conservatively as covered. Use chart play dates for score improvements, actual
-  sync observations for Grd/Rating history. Preserve privacy and existing layouts;
-  do not add per-score source badges. See [deployment and checks](../operations/recent-record-projection/README.md).
-- Distinguish plays checked, new plays stored and charts with changed best records.
-  Repeated sync must not duplicate history. Unknown chart exclusions are counted
-  safely; user-facing messages omit raw IDs, stack traces and credentials.
-- Keep first-install guidance, returning-user flow, bookmarklet overlay, active/
-  delayed/timed-out/completed/partial/failed states and state-specific recovery.
-  Do not restore the removed separate "holdings/current coverage" section.
-- Status polling does not start ingestion. Bound polling and stop at terminal
-  states; announce meaningful changes without stealing focus or announcing every poll.
-- Keep bounded recent attempt history and meaningful change previews. A first full
-  import is not hundreds of invented individual achievements.
-- Token invalidation expires existing bookmarklets and requires reinstallation.
-  Never expose/log the raw token separately; it is embedded only where required.
-- A newly registered chart gets its official level as the constant, except Real:
-  a new Real chart stores no constant (the ◆ level does not determine it) until an
-  operator fills it. Syncing never overwrites an existing constant.
-- See [sync services](../../features/sync/server),
-  [bookmarklet](../../lib/bookmarklet.ts) and
-  [token service](../../features/profile/server/sync-token-service.ts).
+바뀐 기록: [2026-09-16](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16) ·
+[2026-09-17](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-17) ·
+[2026-09-18](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-18) ·
+[2026-09-19](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19) ·
+[2026-09-22](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-22) ·
+[2026-10-15](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-15) ·
+[2026-10-24](../decisions/2026-10-24-guide-code-alignment.md)
 
-## Bingo
+## 커뮤니티 투표와 평가
 
-- Catalogue definitions and missions are public. Saved checks are private to their
-  owner. Guests can browse but do not receive fabricated personal `0/25` records.
-- Preserve manual cell completion. Do not infer a checked cell from play history or
-  sync data. Save failures restore confirmed state; repeated or out-of-order
-  requests must not overwrite newer intent.
-- Distinguish not-started, in-progress, music-unlock complete and full-board complete.
-  Chance means a line has one unchecked cell; it is not a replacement lifecycle.
-  NOS reward conditions are not proof that an in-game reward was received.
-- Preserve current five catalogue filters (`all`, `progress`, `unlocked`, `full`,
-  `chance`) and three sorts (`recent`, `progress`, release order). Their contents
-  follow the user's explicit override.
-- Confirm reset for the selected board, clearing only that user's checks on that
-  board. Preserve other boards and shared definitions. Do not add attempt history,
-  official verification or shared-progress claims.
-- See [catalogue rules](../../features/bingos/bingo-catalog.ts) and
-  [progress service](../../features/bingos/server/bingo-progress-service.ts).
+- 지금 쓰는 목표 투표 범위는 서로 독립인 넷이다: Basic × S · 990k · Pianist, Recital × Pianist(`TIER_MODE_GOALS`). 그 밖의 범위는 보관 서열표다. 사용자 한 명은 채보 · 모드 ·
+  목표마다 표 하나를 내고, 고치거나 지울 수 있다. 값은 1.0–14.5, 0.1 단위다. 범위 없는 옛 평가를 여섯 표로
+  늘리지 않는다.
+- `fc_type` 은 공식 Op.3 램프다: 0 없음, 1 NEAR 가 있는 풀콤보(노란 F), 2 NEAR 없는 풀콤보(무지개 F), 3 Perfect
+  (1,000,000. 같은 무지개 표시). NosLog 는 어디서나 `fc_type >= 2` 를 풀콤보로 센다. NEAR 풀콤보(1)는 저장하지만
+  FC 로 보이거나 세지 않는다.
+- 자격은 그 채보의 확인된 기록으로 정한다. S 는 점수 950,000 이상, 990k 는 점수 990,000 이상,
+  Pianist 는 `fc_type === 3` 또는 1,000,000 이 필요하다. Recital 은 `grade_recital > 0` 도 필요하다. 이것이 목표
+  달성과 Recital 참여가 같은 플레이였다는 증명은 아니다.
+  [공용 판정 함수](../../features/music/lib/community.ts)를 쓴다.
+- 유효한 표가 셋보다 적으면 값 자리에 「—」 와 정확한 수를 보인다. 줄은 보일 것이 있을 때만 펼쳐진다: 분포(3표
+  이상), 보는 사람이 낼 수 있는 표, 보는 사람이 이미 낸 표. 설명 문장(집계 안내, 자격 이유, 값 범위)은 보이지
+  않는다. 자격이 없는 사람에게는 입력 칸이 없을 뿐이고, 손님에게는 목록 위 첫 줄에 「로그인하고 투표하기」 링크
+  하나가 있다. 첫 표에는 미리 정한 값이 없다. 이미 낸 표는 고치거나 지울 수 있다.
+- 3표부터 산술 평균, 정확한 수, 실제 분포를 공개한다. 중앙값은 진단용으로만 둔다. 서로 다른 서열 값 표를
+  합치지 않고, 다수와 다르다는 이유만으로 이상값을 버리지 않는다.
+- 목표와 무관한 패턴 평가는 목표 투표와 따로다. 다섯 축과 축마다 정확한 수를 지킨다. 없거나 모자란 값은 0이
+  아니다. 축 평균은 평가 하나부터 보인다. 평가가 없는 축은 빈 막대와 「—」 를 보인다. 건드리지 않은
+  평가 입력은 「평가 안 함」 으로 남고 0과 다르다. 0–4 척도는 이 채보 안에서의 비중이 아니라 모든 채보와 비교한
+  그 패턴의 강도다. 평가 탭의 기준 창과 패턴 폼이 이렇게 안내한다. 투표 평균은 개요에 보이지 않는다.
+- 개요의 패턴 경향은 투표가 아니라 공개 채보의 노트 배치로 계산한다([계산식](../../lib/chart-pattern/patternMetrics.ts)).
+  원점수는 손마다 처리량을 1초 감쇠로 쌓아, 가장 센 누적 8초의 RMS 와 최고점을 0.8 : 0.2 로 합친다. 화면 값은 같은
+  기준(같은 난이도 · 전곡) 채보 가운데 상위 1% 의 중앙값을 100% 로 둔 비율이고 100% 를 넘지 않는다. 계단 = 한 손이
+  한 음씩 같은 방향으로 1–2건반 옮겨 가는 줄이 3음 이상, 연타 = 같은 손이 250ms 안에 같은 건반을 다시 침, 폴리리듬 =
+  한 박 안에서 한 손은 8 · 16분, 다른 손은 셋잇단만 침, 즈레 = 32분 이내로 어긋난 2–4개 시각이 앞뒤 노트와 16분 이상
+  떨어진 묶음, 변박 = 가장 많이 쓴 박자표가 아닌 마디의 비율이다. 공개 직전 편집이 영상 추출 가져오기인 채보는
+  박자표가 기본값이라 변박을 계산하지 않는다. 원점수는 공개 저장 · 기여 반영 때 그 채보만 다시 계산하고, 계산식 버전이
+  다른 값끼리는 비교하지 않는다.
+- 소유, 참여 검사, 고치기 · 지우기는 [커뮤니티 변경](../../features/music/server/community-mutation.ts)에서
+  지킨다. 의견은 최신순 · 좋아요순으로 정렬한다. 패턴 평가는 값을 고르는 즉시 저장한다(짧은 사이의 변경은 묶어
+  보낸다). 고른 값을 다시 누르면 그 축을 지우고, 모든 축을 지울 때는 확인을 받는다. 평가와 의견이 모두 없어지면
+  평가 행을 지운다. 패턴 폼은 평가만, 의견 입력은 의견만 저장한다. 둘 다 같은 평가 행에 쓰므로 하나를 저장해도
+  다른 쪽에 저장된 값은 그대로다. 패턴 평가를 지워도 기존 의견은 남는다. 기여 보상이나 자동 서열 변경은 새로
+  만들지 않는다.
+- 의견 반응: 좋아요는 기존 helpful 표를 다시 쓴다. 그 채보에 0점보다 높은 기록이 있는 로그인 플레이어는 다른
+  사람의 의견 · 답글에 좋아요를 누를 수 있다(자기 것은 안 된다). 정렬은 최신순 또는 좋아요순이다. 답글은 한
+  단계(`CommunityOpinionReply`)이고, 답글에 답하면 앞에 `@이름` 을 붙인다. 답글을 쓰려면 의견 쓰기와 같은 채보
+  기록이 필요하다. 작성자는 자기 답글을 고치거나 지울 수 있고, 답글도 신고할 수 있다(같은 신고 표에 `replyId`).
+  관리자는 관리자 피드백 화면의 「의견 신고」 탭에서 의견 · 답글 신고를 검토한다. 카드는 신고 당시의 글을 그대로
+  보여 주고, 관리자는 처리 완료로 표시하거나 다시 열기만 한다. 답글이 달린 의견을 지우면 다른 사람의 답글이
+  남도록 「작성자가 지운 의견」 으로 행을 남긴다. 그 의견에는 새 답글을 받지 않는다. 답글이 있는 평가 전체를
+  지우면 평가와 의견을 비운 채 행을 남긴다. 계정을 지우면 그 사람의 답글도 함께 지운다.
+- 의견 번역: 글 언어는 문자로 판별한다(한글 → ko, 가나 · 한자 → ja, 라틴 문자 → en. 한두 글자면 언어를 정하지
+  않는다). 의견이나 답글을 쓰거나 고치면 서버가 응답 뒤(`after`)에 나머지 두 언어로 번역해 저장한다. 키는 공식
+  X 소식과 같은 Gemini 키(`GEMINI_API_KEY`, 무료 등급)다. 보는 사람은 저장된 번역을 다시 쓴다.
+  「번역 보기」 는 글 언어가 보는 사람의 언어와 다를 때만 나온다. 저장된 번역이 없으면(옛 글이나 실패한 호출) 처음
+  누를 때 한 번 만들어 저장한다. 고치면 옛 번역을 먼저 지우고 다시 번역하고, 지우면 번역도 지운다. 키가 없으면
+  버튼이 없다. 개인정보처리방침(2026-09-22 판)에 무료 등급 전송을 알렸다.
 
-## Exams
+바뀐 기록: [2026-09-16](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16) ·
+[2026-09-17](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-17) ·
+[2026-09-22](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-22) ·
+[2026-09-23](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23) ·
+[2026-10-16](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-16) ·
+[2026-10-17](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-17) ·
+[2026-10-24](../decisions/2026-10-24-guide-code-alignment.md) ·
+[2026-10-27](../decisions/2026-10-27-guide-audit-2.md)
 
-- Keep Basic, Recital and Event reference data distinct. Preserve official stage
-  and cumulative thresholds, permitted difficulties and reward meaning.
-- Basic practice analysis uses independent best plays, not a predicted single-run
-  pass. Recital points are not Basic scores; do not fabricate unsupported personal
-  Recital analysis. Event reference does not create certification or expiry dates.
-- Certification is for eligible published Basic/Recital exams only. Require the
-  verified grade, no duplicate pending submission and no already-approved grade at
-  or above the target in that mode. Higher approval implies easier grades in that
-  mode without requiring duplicate proofs; rejection does not remove prior approval.
-- One JPEG/PNG/WebP image, at most 4 MB, must show final three-tune result, mode,
-  grade, pass mark and official player name matching the latest synced identity.
-  Permit cropping/rotation only while required evidence remains readable; no stitched
-  or replaced result/name. Do not add video, EXIF, date or full-cabinet requirements.
-- Choose/preview precedes explicit upload/submit. Preserve pending, approved,
-  rejected-with-reason and retry states. Validate authorization, eligibility and
-  owned private storage paths on the server. Clean up failed temporary uploads.
-- See [eligibility](../../features/exams/exam-eligibility.ts),
-  [proof service](../../features/exams/server/exam-proof-service.ts) and
-  [proof schema](../../features/exams/schemas/exam-proof-schema.ts).
+## 데이터 동기화
 
-## Arcades, announcements, feedback and recovery
+- 계정별 북마클릿은 NOSTALGIA 공식 사이트에서 실행한다. NosLog 페이지는 설치와 안내를 맡고 상태를 지켜볼 뿐,
+  사용자의 공식 사이트 로그인 정보를 갖지 않는다. p.eagate 비밀번호나 로그인 쿠키를 NosLog 로 보내지 않는다.
+- Basic Pass 가 있는지는 돌아오는 데이터 범위를 정할 뿐, 개인 기능 이용을 정하지 않는다. 최근 기록만 받는
+  동기화는 겹치지 않는 플레이를 채보 최고 기록, 관측한 플레이 · FC · P 횟수, Basic Grd(상위 50), 레이팅, 랭킹,
+  이력에 쌓는다. Pass 가 끝나도 기존 전체 값에서 이어 간다. 값마다 따로 잡힌 최고값과, 응답에 없는 Recital ·
+  노트 비율 값은 그대로 둔다. 모르는 Recital 을 0으로 바꾸지 않는다. 플레이어의 총 플레이 횟수는 여전히
+  player_info 에서 온다. 전체 동기화는 채보 값 · 횟수를 공식 응답에 맞추되, 플레이 · 성장 이력은 지우지 않는다.
+- 최근 Basic Grd 가 0이면 이력의 원래 값은 그대로 두고, 검증된 판정 · 콤보 공식으로 개인 최고 기록을 채운다.
+  계산하는 것은 두 손 A/A2/S/P 기록 중 공식 상수를 알고 노트 · 판정 합계가 맞는 것뿐이다. 지원하지 않거나
+  모자란 입력은 그대로 둔다. 이미 반영된 0 기록은 횟수를 늘리지 않고 다시 살핀다. 전체 가져오기 범위가 여전히
+  기준이다. 원본 Grd 가 0보다 크면 계산보다 원본을 쓴다.
+- 기록 반영과 이력 영수증은 함께 커밋한다. 전체 가져오기 범위와 영수증이 겹침과 재시도로 횟수가 두 번 늘지
+  않게 막는다. 공식 플레이 시각은 분 단위라, 전체 가져오기와 같은 분에 겹친 것은 보수적으로 이미 반영된 것으로
+  본다. 점수 갱신에는 채보 플레이 날짜를, Grd · 레이팅 이력에는 실제 동기화 관측 시각을 쓴다. 공개 범위와 기존
+  배치를 지킨다. 점수마다 출처 배지를 더하지 않는다.
+  [배포와 확인](../operations/recent-record-projection/README.md)을 본다.
+- 확인한 플레이, 새로 저장한 플레이, 최고 기록이 바뀐 채보를 서로 구분한다. 동기화를 되풀이해도 이력이 겹치지
+  않는다. 모르는 채보 제외는 안전하게 센다. 사용자에게 보이는 메시지에는 원래 ID, 스택 추적, 인증 정보를 넣지
+  않는다.
+- 첫 설치 안내, 다시 온 사용자 흐름, 북마클릿 오버레이, 진행 · 지연 · 시간 초과 · 완료 · 일부 완료 · 실패
+  상태와 상태별 복구를 유지한다. 없앤 「보유 · 현재 범위」 구역을 되살리지 않는다.
+- 상태 확인(폴링)은 가져오기를 시작하지 않는다. 폴링에 한도를 두고 끝 상태에서 멈춘다. 의미 있는 변화만
+  알리고, 포커스를 빼앗거나 폴링마다 알리지 않는다.
+- 최근 시도 이력은 개수를 제한해 두고, 의미 있는 변화 미리보기를 유지한다. 첫 전체 가져오기를 수백 개의
+  지어낸 개별 달성으로 보이지 않는다.
+- 토큰을 무효로 하면 기존 북마클릿이 만료되고 다시 설치해야 한다. 원래 토큰을 따로 보이거나 로그에 남기지
+  않는다. 토큰은 꼭 필요한 곳에만 들어간다.
+- 새로 등록된 채보는 공식 레벨을 상수로 받는다. Real 은 예외다. 새 Real 채보는 운영자가 채울 때까지 상수를
+  저장하지 않는다(◆ 레벨로 상수가 정해지지 않는다). 동기화는 기존 상수를 덮어쓰지 않는다.
+- [동기화 서비스](../../features/sync/server), [북마클릿](../../lib/bookmarklet.ts),
+  [토큰 서비스](../../features/profile/server/sync-token-service.ts)를 본다.
 
-- Arcade location permission follows a user action. Denial leaves search/list
-  usable. Keep map/list selection coordinated, canonical detail links, verified
-  operating information and correction reporting. Do not infer unavailable cabinet
-  conditions or turn a report into an automatically verified fact.
-- Every announcement carries one category (`UPDATE`, `MAINTENANCE`, `DATA`,
-  `NOTICE`; default `NOTICE`) separate from placement. The category renders as an
-  inline outline tag before the title (24px, 1px `border/default`, `radius/control`,
-  `metadata` text in `content/subdued`, no colour) on Home, the archive and the
-  detail page; long titles wrap under the tag. Maintenance in progress is still
-  signalled by `MAINTENANCE_MODE`, not by the tag.
-- The public archive filters by one category through `?category=<lowercase>` (unknown
-  values fall back to all). Active critical announcements are pinned above the dated
-  list on page 1 of the matching filter and are left out of the dated list; page count
-  ignores them. The detail page links the previous (older) and next (newer)
-  announcement in publication order across all categories (2026-09-18).
-- Home/archive announcement reads carry metadata
-  and body-validity checks only; bodies are cached per announcement for detail.
-  Both caches share announcement invalidation. Publication and critical-period
-  checks run at read time, preserving scheduled visibility and expired history.
-- Admin announcement saving keeps the existing rules (slug and all three
-  translations are required even for a draft). The editor fills an empty slug
-  from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves
-  unpublished, "게시" / "업데이트" saves published (2026-09-18).
-- Community events (2026-09-18): signed-in users with at least one completed
-  data sync may write. A post has a working copy and an approved public copy.
-  Save = draft (a change request stays a change request until resubmitted);
-  "게시 요청" = pending review. Admins approve (working copy becomes public; first
-  approval date kept), request changes (public copy stays) or reject (the whole
-  post is taken down and can no longer be edited or resubmitted). Change request
-  and rejection need a reason, shown at the top of the author's edit screen.
-  The period is Korean dates; an event is live from the start date 00:00 KST
-  until the end of the end date. Tabs: live (ending soonest first), upcoming
-  (starting soonest first), ended (most recent first). Authors can delete their
-  own post in any state, including a public one (it leaves the list and Home at
-  once); the cover image file is removed only when it is in the author's upload
-  folder and no other post uses it. Public events are listed in the sitemap.
-- Announcement and event bodies may include images uploaded through the editor
-  (JPG/PNG/WebP, 4 MB, shared hourly upload limit) to the public store under
-  `announcements/{admin}/image` or `events/{author}/image`. The renderer shows only
-  images from those folders on our public store; other image URLs are dropped.
-  Uploaded body images are not deleted when a post is edited or removed (unused
-  files may remain).
-- Preserve original/source language and public publication state for announcements;
-  optional translations are not fabricated. Official NOSTALGIA news links remain
-  distinguishable from NosLog announcements.
-- Feedback/error reports preserve target/context and optional private proof. Report
-  submission is not public publication of the image. Prevent duplicate submission
-  and provide actionable upload/save errors without exposing internal diagnostics.
-- Feedback replies (2026-09-18): an admin may add a reply when resolving a report.
-  The reporter sees their reports (status received / resolved, reply) under "My
-  reports" in the feedback dialog; unread replies show a dot on the menu's feedback
-  entry and on the tab, cleared when the list is opened. Reopening keeps the reply.
-- The general feedback form records a type — `bug` (problem report) or `idea`
-  (suggestion) — and accepts any non-empty text up to 1,000 characters (no minimum
-  length, 2026-09-18). Arcade reports keep their own 10–1,000 character rule and have
-  no type. Reports made before this change keep an empty type.
-- Keep not-found, recoverable error, maintenance and fatal recovery distinct. Retry
-  must preserve safe context. Missing/unauthorized resources must not leak existence
-  or private details. These states do not authorize changes to preserved viewers.
+바뀐 기록: [2026-09-20](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-20)
 
-## Polls on posts (2026-09-23)
+## 빙고
 
-- A poll belongs to one post (announcement or community event); it is stored beside the post,
-  not inside the body, and is rendered at the end of the published post.
-- Question and option texts are translated rows. Announcements are written in ko/ja/en; an event
-  keeps only the locale it was written in. Readers get their locale, then Korean, then whatever exists.
-- Options keep the author's order, 2 to 20 of them. Two options cannot share the same text in one locale.
-- Single-choice polls record the vote on click; multiple-choice polls submit with a button and respect
-  the optional maximum. A vote is one (option, user) pair, so one account cannot count twice.
-- Signed-out readers see results only; voting asks them to sign in. Results visibility follows the poll
-  setting: always, after voting, or after it closes.
-- Once any vote exists, the question, the options and the way of choosing are locked; only the deadline
-  can change, and options can be added if the poll allowed it. After the deadline nothing can change, and
-  votes are refused. Deleting the post deletes the poll and its votes.
+- 카탈로그 정의와 미션은 공개다. 저장한 체크는 본인만 본다. 손님은 둘러볼 수 있지만 지어낸 개인 `0/25` 기록을
+  받지 않는다.
+- 칸 완료는 손으로 체크하는 방식을 지킨다. 플레이 이력이나 동기화 데이터로 체크를 추측하지 않는다. 저장이
+  실패하면 확인된 상태로 되돌린다. 되풀이되거나 순서가 바뀐 요청이 더 새로운 의도를 덮어쓰지 않는다.
+- 시작 전, 진행 중, 악곡 해금 완료, 풀보드 완료를 구분한다. 빙고 찬스는 한 줄에 체크 안 된 칸이 하나 남은
+  상태이고, 단계를 대신하지 않는다. NOS 보상 조건은 게임 안 보상을 받았다는 증명이 아니다.
+- 카탈로그 필터 다섯(`all`, `progress`, `unlocked`, `full`, `chance`)과 정렬 셋(`recent`, `progress`, 출시 순)을
+  유지한다. 그 내용은 사용자가 명시적으로 바꾼 대로 따른다.
+- 초기화는 고른 보드에 대해 확인을 받고, 그 보드에서 그 사용자의 체크만 지운다. 다른 보드와 공용 정의는 그대로
+  둔다. 시도 이력, 공식 확인, 진행을 공유한다는 주장을 더하지 않는다.
+- [카탈로그 규칙](../../features/bingos/bingo-catalog.ts)과
+  [진행 서비스](../../features/bingos/server/bingo-progress-service.ts)를 본다.
 
-## User contributions (2026-09-23)
+바뀐 기록: —
 
-- Two roles only: **contributors** (any signed-in user) and **admins**. There
-  is no reviewer role; only admins apply or publish. Contribution levels
-  (「기여 Lv.1–6」, later stage) are a reward label and never unlock
-  permissions.
-- Stage 1 — chart info suggestions for BPM, note count, length and release
-  date. A suggestion carries a value plus evidence (video or official link, or
-  a note for "checked myself"). It must differ from the current value. One
-  pending suggestion per user · chart · field (resubmitting replaces it); at
-  most 30 new suggestions per user per 24 hours. Level constants stay
-  admin-only.
-- Admin review (`/admin/contributions`, existing admin look): apply writes the
-  chart value, a `chart_field_sources` row (`source = "contribution"`, linked
-  to the suggestion) and marks it applied in one transaction; reject needs a
-  reason that the author can see. Several suggestions can be applied or
-  rejected at once. Suggestions whose current value changed since they were
-  made are flagged.
-- Stage 2 — contribution points (2026-09-24). Points are written to
-  `contribution_points` when a contribution is accepted, one row per source and
-  never removed except with the account: applied suggestion 1, resolved arcade
-  report 1 (reopening and resolving again does not add more), cabinet check 1
-  per Seoul day. Awarding never blocks the underlying action. Levels 1–6 at
-  1 · 10 · 30 · 100 · 300 · 1,000 points; admins show 「운영자」 instead.
-  Names in rankings, opinions and replies show the label from level 3; the
-  profile shows it from level 1 with a public 「기여」 section (level, points,
-  counts) and, for the owner only, their suggestion list with rejection reasons.
-- Stage 3 — user chart drafts and timestamped comments (2026-09-24). One draft
-  per user · chart (`chart_drafts`): it starts from the published chart, or an
-  empty chart when none is published (an empty chart, here and in the admin editor, starts its timing at
-  500 ms so notes on 1마디 1박 are seen falling — 2026-09-25), and only its author and admins can see
-  it. Draft → 「검토 요청」 (locked; the author can withdraw) → admin
-  「수정 요청」 or 「공개」. Size limits: 20,000 notes, 1,000 timing points,
-  30 minutes. Saving uses the draft version, so a stale window gets a conflict
-  instead of overwriting. A request with overlapping notes is refused.
-- Publishing (admin only, one transaction): unpublished admin editor changes
-  are first kept as a revision, then the draft becomes the published chart,
-  a `contribution` revision records the draft and its base published version
-  (「· 기준 vN」 / 「· 새 채보」), the chart author (`author_id`) is set and the
-  author gets 20 points once per published version. Reopening a published
-  draft starts again from the current published chart.
-- Timestamped comments (`chart_comments`): on a published chart anyone signed
-  in can comment (500 characters, 50 per 24 hours); on a draft only its author
-  and admins. Authors can delete their own comment until it is resolved. Only
-  admins resolve (+1 point when the writer is not an admin, published-chart
-  comments only) or hide. Comment times link to the viewer as `?t=` in seconds.
-- The public viewer credits the author with their name label (level 3+, or
-  「운영자」) and names the publishing admin in 「출처」. 「영상에서 추출」 follows
-  the published chart's lineage: a contribution inherits it only through its
-  base version, so a chart started from empty never shows it.
-- The editor stays wide-screen only (1056+). Narrower screens get a notice with
-  「주소 복사」 instead of opening it.
+## 검정
 
-## Chart import from video extraction (2026-09-23)
+- Basic, Recital, Event 참고 데이터를 따로 둔다. 공식 단계 · 누적 기준, 허용 난이도, 보상의 뜻을 지킨다.
+- Basic 연습 분석은 한 번에 합격할지 예측하지 않고, 곡마다 따로 잡힌 최고 기록을 쓴다. Recital 점수는 Basic
+  점수가 아니다. 근거 없는 개인 Recital 분석을 지어내지 않는다. Event 참고는 인증이나 만료일을 만들지 않는다.
+- 인증은 공개된 Basic · Recital 검정 중 자격이 있는 것만 받는다. 확인된 급이 있어야 하고, 대기 중인 같은
+  제출이 없어야 하며, 그 모드에서 목표 이상의 급을 이미 승인받지 않았어야 한다. 높은 급을 승인받으면 그 모드의
+  더 쉬운 급은 따로 증빙하지 않아도 인정된다. 반려가 이전 승인을 없애지 않는다.
+- 이미지는 JPEG · PNG · WebP 하나, 4 MB 이하다. 마지막 세 곡 결과, 모드, 급, 합격 표시, 최근 동기화된 신원과
+  같은 공식 플레이어명이 보여야 한다. 필요한 증거가 읽히는 한에서만 자르기 · 회전을 허용한다. 이어 붙이거나
+  결과 · 이름을 바꾼 이미지는 받지 않는다. 영상, EXIF, 날짜, 기체 전체 사진 요건을 더하지 않는다.
+- 고르기 · 미리보기 뒤에 올리기 · 제출을 따로 누른다. 대기, 승인, 사유가 있는 반려, 다시 시도 상태를 유지한다.
+  서버에서 권한, 자격, 본인 소유 비공개 저장 경로를 검증한다. 실패한 임시 업로드는 정리한다.
+- [자격](../../features/exams/exam-eligibility.ts),
+  [증빙 서비스](../../features/exams/server/exam-proof-service.ts),
+  [증빙 스키마](../../features/exams/schemas/exam-proof-schema.ts)를 본다.
 
-- The admin chart editor can import a vid2bmap result zip (Kim Yeonghun · Choi Sunghee, KAIST,
-  MIT) as a preview. Nothing changes until "초안에 넣기"; it writes the draft only (publishing
-  stays separate), saves the current draft as a revision first, and is undoable. Videos and
-  frames never reach the site — extraction runs on the operator's own computer.
-- Notes are placed by beat lines, not video time: a note's beat is its position between the
-  neighbouring bar lines the game draws each beat (one line = one beat of the active time
-  signature). Only the first bar line's beat is chosen by a person; when the draft already has
-  notes it starts at the position that agrees with the most of them.
-- Snap to the suggested grid (smallest average offset per grid step), chosen again per beat
-  (2026-09-24 C): a beat keeps the song grid only when every note in it is within 2.5 video
-  frames and no two notes more than that apart land on one spot; otherwise the coarsest grid
-  from 1/2 to 1/16 that does both (e.g. a 1/8-beat run inside a 1/6-beat song), and if none
-  does, notes off the song grid keep their video position. Tenuto and trill lengths use the
-  grid of the beat they end in, and the end is put on that grid. Moved notes can be selected for
-  review after import. Notes that clash on one spot are then re-snapped finer (×2 … ×8, e.g. a one-frame staircase at 180 BPM needs 1/24). Same-lane reads
-  within 3 frames are one note, and so are two reads of the same kind within 3 frames where one
-  lane range contains the other (the wider is kept — vid2bmap sometimes reads a note again one
-  frame later, narrower).
-  Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
-  from the main vid2bmap run and only the hand from the `LR_classification` branch run, matched
-  by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
-  centre notes are selected for review. Glissando pieces (vid2bmap reads each rung) are joined
-  into one glissando when the next piece is within 12 frames and 4 lanes (2026-09-24); the path
-  keeps the start, end and bends over 1 lane, one rung per piece plus rungs vid2bmap skipped
-  (gaps at least twice the usual, counted down) — one rung = one judgement, and the game's rung
-  spacing is not a clean grid (Gaia 180 BPM ≈ 1/9 beat), so the spacing is the first-to-last span
-  divided by that count and bends sit on rungs (note counts match the result screen for all three
-  checked songs: Altale 1,604 · アルストロメリア 1,394 · Gaia 1,539), a lone piece is
-  dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
-  head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
-  one lane within the head, 2026-09-24) and is flagged.
-  When the zip carries hands for at least half its notes, notes whose hand was not read and that
-  look like extraction ghosts are dropped before import and listed in a warning with their
-  places (2026-09-25 F1′, checked against the videos by the combo counter): a tenuto of 8 beats
-  or more that overlaps another note, and a standard note inside a tenuto's lanes within ¾ of a
-  beat after its head. Notes whose hand was read are never dropped. A tenuto that still crosses a
-  later note on its lanes is ended one grid step before that note (2026-09-27: a key cannot be held
-  and struck again, so the extraction paired the head with a later end — Field of Hopes and Dreams
-  16, Pink Rose 40 places); the judgement count stays the same and the places are listed in a
-  warning to check the length against the video. When the chart has a note
-  count, the panel compares it with the import's judgement count (one per note, one per
-  glissando rung).
-- Against an existing draft every difference is listed (same tick, overlapping lanes = same
-  note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
-  a hand read from the video counts as a difference, a guessed hand does not) and chosen
-  per place; notes after the draft are a separate
-  new-section toggle. An import whose own notes overlap each other can still be applied
-  (2026-09-26 A; an overlap with a note already in the draft still blocks it — change 「내 것 / 가져온
-  것」 or clear the draft): the footer names the places, the overlapping notes (both sides) go in selected, and
-  the admin removes the false side or fixes the length in the editor — the video's combo tells which
-  side is false (パヴァーヌ: the notes inside a long tenuto; 平均律: the tenuto). Revisions still refuse
-  overlaps, so the 「영상 추출」 revision is kept pending and the first revision saved after the overlaps
-  are fixed is recorded as the video-extraction revision.
-- Snap check in the editor (2026-09-24 C, like osu!'s "Unsnapped hitobjects" check): a note
-  whose start is off every editor snap (1/1–1/32 of the active beat) gets a dashed warning
-  outline, and the note inspector lists them with the nearest grid and offset in ms, one by one
-  or all at once to the nearest grid.
-- Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
-  `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
-  frame-drop correction — and the tempo is measured from those (the corrected bar lines
-  jitter ±10%). Beats are counted on the AI bar lines the notes use (2026-09-25): when the zip is
-  read, a gap of 1.5× the neighbours or more gets the raw bar line inside it, or, when neither has
-  one, even lines from 1.8× (below that it may be a fermata); a line under half a beat from its
-  neighbour with no raw line is dropped; the import panel says where 「AI 가 놓친 박자선 ○곳을
-  메우고 …」. Each AI line is paired with its raw frame (within 35% of a beat, following the offset
-  that frame-drop correction shifts); unpaired beats share the raw time between their paired
-  neighbours evenly. A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
-  lasts at least 8 beats; each section's BPM is measured by a straight-line fit over all its beats (shared slope, separate offsets across steps where
-  the beats jump by more than 1.5 frames; sections under 32 beats use the first-to-last average), then the first of whole →
-  0.5 → 0.1 → 0.01 whose beats stay within the video jitter + 0.5 frames to the section end is proposed (2026-09-25 B′),
-  with the measurement shown. The start BPM is proposed only when the current one drifts past that limit.
-  Where the video moves beat by beat (2026-09-25 B) — two beats together off the section BPM by 2.5 frames or
-  more, sections under 32 beats, or a beat drifting 2.5 frames from the video — the beats are chained with the
-  longest whole BPMs that keep every beat within 1.5 frames (the one that ends a run is picked by the next 16
-  beats), then the section BPM resumes; the points of one such place share a card (「17마디 3박 — 2박 느려짐」,
-  「45마디 3박 ~ 48마디 2박 — 박마다 바뀜」) showing the beat intervals in frames. No song-specific values.
-  Timing points start a new measure, as in osu!, so a card whose last point is mid-bar also puts a point with the
-  same BPM on the next downbeat of the song's bars (the timing before import, with the proposed start meter) unless
-  another point comes first (2026-09-25 마) — 「… · 49마디 1박 마디선 맞춤」 on the card.
-  When the draft has timing points besides the start and they miss the video (a beat more than 2.5 frames off after
-  removing the average offset), a card offers 「기존 타이밍 포인트를 영상 타이밍으로」 (2026-09-25 B): proposals are made
-  as if only the start point existed and the others are removed with the import (one undo step; the start point and
-  its time stay). On by default only when the draft has no notes; off keeps them and says which proposals they block.
-  Proposals
-  replace the bar-interval BPM warning, are on by default, add the point at the beat with the
-  previous time signature, and go in with the notes in one undoable step. No proposal where a
-  timing point already exists; older zips without beat frames keep the warning only.
-  The start timing gets the same kind of proposal (2026-09-24 A) when the first section — measured
-  over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
-  default only when the draft has no notes (changing the start BPM moves every existing note in
-  time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
-  (start time against the audio) cannot come from the video; when the start time is 0 ms the same
-  card offers 「시작 시각을 500ms 로」 (2026-09-25 B, the new-draft default), on by default only when
-  the draft has no notes, moving every timing point by the same amount. The meter is proposed in the same
-  card (2026-09-24 A): the game draws the same line every beat, so accents at beat heads (notes
-  within 3 frames, tenuto/trill starts ×3) are compared for 3- and 4-beat cycles; 「박자를 ○/4 로」
-  shows 뚜렷함/약함 (clear = score ≥ 0.15 and twice the other) and is on by default only when
-  clear and the draft has no notes. With it on, an empty draft's first bar goes to the strongest
-  accent (measure 1 = last downbeat at or before the first note), so a song that does not start on
-  a downbeat lands right (Altale: first note 1마디 3½박).
-- Provenance (2026-09-24 C2): right after an import the editor saves a revision with
-  kind `vid2bmap`. A published chart whose published revision number is at or after the first
-  `vid2bmap` revision shows "노트 배치 · 영상에서 추출(vid2bmap)" and a sources dialog (vid2bmap,
-  its authors, MIT, paper and repository links). The byline is the publisher's username with the
-  operator tag when their role is admin. The viewer never reads draft content.
+바뀐 기록: —
 
-## Official X news (2026-09-19)
+## 오락실, 공지, 피드백, 복구
 
-- Home reads the persisted latest post and successful ko/en translations through the data cache; it never calls X or Gemini. New posts are checked every 12 hours outside page rendering using `since_id`. Successful translations have no time-based expiry.
-- Unchanged content is not rewritten or retranslated. A DB execution claim still changes once per UTC half-day to prevent concurrent/duplicate paid calls. Failed translations retry on the next scheduled run; existing raw content remains available.
-- The latest post only is retained, not a historical archive. Incremental polling does not automatically reconcile deletion, privacy changes, or edits that are not returned by X.
-- Hobby deployments use GitHub Actions; see [setup, verification SQL and limitations](../operations/official-x-sync.md).
+- 오락실 위치 권한은 사용자 조작 뒤에 묻는다. 거부해도 검색과 목록은 쓸 수 있다. 지도와 목록의 선택을 맞추고,
+  canonical 상세 링크, 확인된 운영 정보, 정정 제보를 유지한다. 알 수 없는 기체 상태를 추측하지 않고, 제보를
+  자동으로 확인된 사실로 바꾸지 않는다.
+- 공지는 모두 분류 하나를 가진다(`UPDATE`, `MAINTENANCE`, `DATA`, `NOTICE`. 기본은 `NOTICE`). 분류는 노출 위치와
+  따로다. 홈, 공지 목록, 상세에서 분류는 제목 앞의 공용 태그 `nl-tag`
+  ([디자인 가이드 components/tag.md](./components/tag.md))로 보이고, 색을 쓰지 않는다. 긴 제목은 태그 아래로
+  줄을 바꾼다. 점검 중인지는 태그가 아니라 `MAINTENANCE_MODE` 로 알린다.
+- 공개 공지 목록은 `?category=<소문자>` 로 분류 하나를 거른다(모르는 값은 전체로 돌아간다). 진행 중인 중요
+  공지는 맞는 필터의 1쪽에서 날짜 목록 위에 고정되고, 날짜 목록에서는 빠진다. 쪽 수에는 넣지 않는다. 상세 화면은
+  모든 분류를 합친 게시 순서로 이전(더 오래된) 공지와 다음(더 새) 공지를 잇는다.
+- 홈 · 공지 목록의 공지 읽기는 메타데이터와 본문 유효성 검사만 가져온다. 본문은 상세용으로 공지마다 캐시한다.
+  두 캐시는 공지 무효화를 함께 쓴다. 게시 여부와 중요 기간 검사는 읽을 때 하므로, 예약 공개와 만료된 이력을
+  지킨다.
+- 관리자 공지 저장은 기존 규칙을 따른다(임시저장이라도 slug 와 세 언어 번역이 모두 필요하다). 에디터는 저장할
+  때 빈 slug 를 영어 제목(없으면 한국어 제목)으로 채운다. 「임시저장」 · 「비공개로 전환」 은 비공개로, 「게시」 ·
+  「업데이트」 는 공개로 저장한다.
+- 커뮤니티 이벤트: 데이터 동기화를 한 번 이상 마친 로그인 사용자가 쓸 수 있다. 글에는 작업본과 승인된 공개본이
+  있다. 저장은 임시저장이다(수정 요청을 받은 글은 다시 낼 때까지 수정 요청으로 남는다). 「게시 요청」 은 검토
+  대기다. 관리자는 승인(작업본이 공개본이 되고, 첫 승인 날짜는 유지), 수정 요청(공개본은 그대로), 반려(글 전체를
+  내리고, 더는 고치거나 다시 낼 수 없다)를 한다. 수정 요청과 반려에는 사유가 필요하고, 사유는 작성자 편집 화면
+  맨 위에 보인다. 기간은 한국 날짜다. 이벤트는 시작일 00:00 KST 부터 종료일이 끝날 때까지 진행 중이다. 탭은
+  진행 중(곧 끝나는 순), 예정(곧 시작하는 순), 종료(최근 순)다. 작성자는 공개된 글을 포함해 어떤 상태든 자기 글을
+  지울 수 있다(목록과 홈에서 바로 빠진다). 표지 이미지 파일은 작성자 업로드 폴더에 있고 다른 글이 쓰지 않을 때만
+  지운다. 공개 이벤트는 사이트맵에 들어간다.
+- 공지 · 이벤트 본문에는 에디터로 올린 이미지(JPG · PNG · WebP, 4 MB, 시간당 업로드 한도 공용)를 넣을 수 있다.
+  이미지는 공개 저장소의 `announcements/{admin}/image` 나 `events/{author}/image` 에 올라간다. 렌더러는 우리 공개
+  저장소의 그 폴더 이미지만 보이고, 다른 이미지 주소는 버린다. 올린 본문 이미지는 글을 고치거나 지워도 지우지
+  않는다(안 쓰는 파일이 남을 수 있다).
+- 공지의 원문 · 원래 언어와 공개 상태를 지킨다. 선택 번역을 지어내지 않는다. NOSTALGIA 공식 소식 링크는 NosLog
+  공지와 구별되게 둔다.
+- 피드백 · 오류 제보는 대상과 맥락, 선택한 비공개 증빙을 지킨다. 제보를 보내는 것은 이미지를 공개하는 것이
+  아니다. 중복 제출을 막고, 내부 진단 정보를 드러내지 않으면서 고칠 수 있는 업로드 · 저장 오류를 알린다.
+- 피드백 답변: 관리자는 제보를 처리 완료할 때 답변을 더할 수 있다. 제보자는 피드백 창 「내 제보」 에서 자기
+  제보(상태 접수 / 처리 완료, 답변)를 본다. 읽지 않은 답변은 메뉴의 피드백 줄과 탭에 점으로 보이고, 목록을 열면
+  사라진다. 다시 열어도 답변은 남는다.
+- 일반 피드백 폼은 종류 — `bug`(오류 제보) 또는 `idea`(제안 · 의견) — 를 기록하고, 비어 있지 않은 1,000자 이하
+  글을 받는다(최소 길이 없음). 오락실 제보는 자기 10–1,000자 규칙을 지키고 종류가 없다. 이 변경 전의 제보는
+  종류가 비어 있다.
+- 찾을 수 없음, 복구할 수 있는 오류, 점검, 치명적 오류 복구를 구분한다. 다시 시도는 안전한 맥락을 지킨다. 없거나
+  권한 없는 자원은 존재 여부나 비공개 내용을 드러내지 않는다. 이런 상태가 그대로 두기로 한 뷰어를 바꿀 근거가
+  되지 않는다.
 
-## Visit analytics (2026-09-20)
+바뀐 기록: [2026-09-18](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-18) ·
+[2026-10-24](../decisions/2026-10-24-guide-code-alignment.md)
 
-- Within the loaded dashboard period, metric changes reuse the same snapshot and
-  update `metric` in browser history without another server request. Period changes
-  and page reloads fetch a new snapshot. Direct links, back/forward navigation,
-  admin authorization and today's hourly chart remain supported. Today's hourly
-  bars follow the selected metric: page views from the hour bucket, signups and
-  people who completed a sync from their existing timestamps (Seoul hour). Visitors are counted per day
-  only, so today keeps the empty hourly frame with a centered note (2026-09-22).
+## 글 투표
 
-- Accounts whose current role is `admin` are excluded at collection time from
-  page views, daily visitors, hour/audience buckets, browser external events and
-  API-call totals. Dashboard signup, sync, funnel and contribution totals also
-  exclude current admins; operational queues and failure monitoring do not.
-  Existing aggregate visit rows cannot be retroactively separated because they
-  intentionally contain no account identifier (2026-09-21).
-- Counted totals only, never who visited. A page view increments the day total, the
-  route total, the Seoul hour bucket (`hour`, `00`–`23`) and the signed-in split
-  (`audience` / `audienceVisitor`, `member` | `guest`). The signed-in flag comes from
-  the session cookie; no account id is stored. Daily visitor hashes still expire the
-  next day and totals after 90 days.
-- The privacy policy lists the retained totals, so adding a new breakdown requires a
-  new effective version (archive the current copy under
-  `features/privacy/content/versions/{effective}.json`). Hourly buckets and the
-  signed-in split were announced in the 2026-09-20 version.
-- Dashboard panels that use existing tables only (conversion, contributions) collect
-  nothing new. Real-time presence and error trends need extra storage; they are out.
-- Metric definitions (2026-10-17). **Visitors** over several days are the sum of
-  daily visitors — the daily hash cannot join days, so someone who comes back on
-  another day is counted again, as in Plausible and Fathom; the dashboard states this
-  under the KPI row. **Page views** count every public route in `app/(site)`; a test
-  fails when a page is missing from `PAGE_ROUTES`. **Signups** are accounts created
-  (Discord sign-in), counted among accounts that still exist; the funnel adds
-  onboarding completed (`profile_completed_at`) and only successful syncs count as
-  linked. **Syncs** are people who completed at least one sync (a day, an hour or
-  the whole period counts each person once); attempts and failures are shown
-  beside it, and the rail's sync status lists completed / failed / processing and the
-  top three failure reasons (first line, 80 characters) — all excluding admins.
-  **Contributions** count new rows only (`created_at`, opinions by
-  `opinion_created_at`, pattern ratings only when a pattern value exists), so edits,
-  translations and moderation do not count.
-- Comparisons (2026-10-17). Today compares with yesterday up to the same Seoul hour
-  (:59) — page views from the hour bucket, signups and syncs from timestamps;
-  visitors have no hourly bucket, so today's visitor change is `-`. When the previous
-  period starts before collection began (2026-09-13) or before the 90-day retention,
-  visitor and page-view changes are `-` and days before collection are empty in the
-  chart, not zero. Signup and sync comparisons always use their tables.
-- Active users and new contributors (2026-10-17) use existing tables only: active =
-  non-admin people who completed a sync or created a contribution in the last 7 and
-  28 Seoul days (up to today, independent of the selected period), plus 7 ÷ 28 in
-  percent; new contributors = people whose first contribution falls in the period.
-  Visits are never joined to accounts.
+- 투표는 글(공지 또는 커뮤니티 이벤트) 하나에 속한다. 본문 안이 아니라 글 옆에 저장하고, 게시된 글 끝에 보인다.
+- 질문과 선택지 글은 번역 행이다. 공지는 ko · ja · en 으로 쓰고, 이벤트는 쓴 언어 하나만 둔다. 읽는 사람은 자기
+  언어, 없으면 한국어, 그것도 없으면 있는 언어를 본다.
+- 선택지는 작성자 순서를 지키고 2–20개다. 한 언어 안에서 두 선택지가 같은 글일 수 없다.
+- 하나 고르기 투표는 누를 때 바로 기록한다. 여러 개 고르기 투표는 버튼으로 제출하고, 정해 둔 최대 수를 지킨다.
+  표 하나는 (선택지, 사용자) 짝이므로 한 계정이 두 번 셀 수 없다.
+- 로그아웃한 사람은 결과만 본다. 투표하려 하면 로그인을 묻는다. 결과 공개는 투표 설정을 따른다: 늘, 투표한 뒤,
+  마감한 뒤.
+- 표가 하나라도 있으면 질문, 선택지, 고르는 방식이 잠긴다. 마감만 바꿀 수 있고, 투표가 허락했다면 선택지를 더할
+  수 있다. 마감 뒤에는 아무것도 바꿀 수 없고 표를 받지 않는다. 글을 지우면 투표와 표도 지운다.
 
-## Data retention and operator facts
+바뀐 기록: [2026-09-23](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23)
 
-- Operator display: **계롤(Anchovia)**. Keep the confirmed contact and provider facts
-  from [privacy content](../../features/privacy/content/privacy-content.ts); do not
-  invent a business identity, processor, retention period or legal claim.
-- Avatars are public; exam/feedback evidence is private with server-enforced access.
-  Approved exam evidence and sensitive review notes expire six months after review
-  while achievement remains. Rejected exam evidence and resolved feedback follow
-  the existing six-month retention policy. Account deletion removes owned data and
-  uploads under the deletion contract. See [retention rules](../../lib/privacy-retention.ts).
-- Audio stays local to the browser. Never upload MP3 files to NosLog storage or DB.
-- Documentation consolidation does not declare unresolved real-provider, privacy
-  copy or assisted-browser checks passed. Record actual verification separately.
+## 사용자 기여
 
-## Achievements (2026-09-24)
+- 역할은 둘뿐이다: 기여자(로그인한 누구나)와 관리자. 검토자 역할은 없고, 반영과 공개는 관리자만 한다. 기여
+  등급(「기여 Lv.1–6」, 뒤 단계)은 보상 라벨이며 권한을 열지 않는다.
+- 1단계는 BPM, 노트 수, 길이, 수록일 채보 정보 제안이다. 제안에는 값과 근거(영상 · 공식 링크, 또는 「직접 확인」
+  일 때 설명)가 붙는다. 지금 값과 달라야 한다. 사용자 · 채보 · 칸마다 대기 중인 제안은 하나다(다시 내면 바뀐다).
+  사용자마다 24시간에 새 제안 30개까지 낼 수 있다. 레벨 상수는 관리자만 정한다.
+- 관리자 검토(`/admin/contributions`, 기존 관리자 모양): 반영하면 채보 값, `chart_field_sources` 행
+  (`source = "contribution"`, 제안과 연결), 반영 표시를 한 트랜잭션으로 쓴다. 반려에는 작성자가 볼 수 있는 사유가
+  필요하다. 여러 제안을 한꺼번에 반영하거나 반려할 수 있다. 제안한 뒤 지금 값이 바뀐 제안에는 표시가 붙는다.
+- 2단계는 기여 점수다. 기여가 받아들여지면 `contribution_points` 에 점수를 쓴다. 출처마다 한 행이고, 계정을 지울
+  때 말고는 지우지 않는다. 반영된 제안 1점, 처리 완료된 오락실 제보 1점(다시 열었다 다시 처리해도 더 늘지
+  않는다), 기체 확인은 서울 날짜 하루에 1점이다. 점수 주기가 원래 동작을 막지 않는다. 등급 1–6 은 1 · 10 · 30 ·
+  100 · 300 · 1,000점이다. 관리자도 같은 규칙이고 역할 태그는 없다. 랭킹, 의견, 답글의 이름은 3등급부터 라벨을
+  보인다. 프로필은 1등급부터 라벨과 공개 「기여」 구역(등급, 점수, 개수)을 보이고, 본인에게만 반려 사유가 있는
+  자기 제안 목록을 보인다.
+- 3단계는 사용자 채보 초안과 시각 의견이다. 초안은 사용자 · 채보마다 하나(`chart_drafts`)다. 공개 채보에서
+  시작하고, 공개된 것이 없으면 빈 채보에서 시작한다(빈 채보는 여기서도 관리자 에디터에서도 타이밍을 500 ms 에서
+  시작해, 1마디 1박의 노트가 떨어지는 모습이 보인다). 초안은 작성자와 관리자만 본다. 초안 → 「검토 요청」(잠김,
+  작성자가 거둘 수 있다) → 관리자 「수정 요청」 또는 「공개」 로 간다. 크기 제한은 노트 20,000, 타이밍 포인트
+  1,000, 30분이다. 저장은 초안 버전을 쓰므로, 오래된 창은 덮어쓰지 않고 충돌을 받는다. 노트가 겹치는 요청은
+  거절한다.
+- 공개(관리자만, 한 트랜잭션): 공개되지 않은 관리자 에디터 변경을 먼저 리비전으로 남기고, 초안을 공개 채보로
+  만든다. `contribution` 리비전이 초안과 그 기준 공개 버전을 기록한다(「· 기준 vN」 / 「· 새 채보」). 채보
+  작성자(`author_id`)를 정하고, 작성자는 공개 버전마다 한 번 20점을 받는다. 공개된 초안을 다시 열면 지금 공개
+  채보에서 다시 시작한다.
+- 시각 의견(`chart_comments`): 공개 채보에는 로그인한 누구나 의견을 쓸 수 있다(500자, 24시간에 50개). 초안에는
+  작성자와 관리자만 쓴다. 작성자는 해결되기 전까지 자기 의견을 지울 수 있다. 해결과 숨기기는 관리자만 한다(해결은
+  쓴 사람이 관리자가 아니고 공개 채보 의견일 때만 +1점). 의견 시각은 뷰어로 가는 `?t=`(초) 링크가 된다.
+- 공개 뷰어는 작성자를 이름 라벨(3등급 이상)과 함께 밝히고, 공개한 관리자를 「출처」 에 적는다.
+  「영상에서 추출」 은 공개 채보의 계보를 따른다. 기여 초안은 기준 버전으로만 그 표시를 물려받으므로, 빈 채보에서
+  시작한 채보에는 나오지 않는다.
+- 에디터는 계속 넓은 화면(1056 이상) 전용이다. 더 좁은 화면에서는 열지 않고 「주소 복사」 가 있는 안내를
+  보인다.
 
-- Tiered achievements judged automatically from synced records and site activity. Five grades — bronze I ·
-  silver II · gold III · platinum IV · diamond V (2026-09-25) — and each achievement has its own set of
-  grades: all five, only bronze · silver · gold, or a single diamond for a very rare one. The stored tier is
-  the grade. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
-  or luck, and no bingo achievement (bingo cells are ticked by players themselves). Definitions and
-  thresholds live in code (`features/achievements`); they can be tuned again from the production
-  distribution.
-- Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
-  tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
-  value later drops. The only exception is the admin 「업적 다시 판정」 with 「기준에 못 미치는 단계도 빼기」
-  checked (2026-09-25, off by default, used after thresholds change): it removes tiers of removed
-  achievements, grades an achievement no longer has, and tiers whose current value is below the threshold. A failed judgement never fails the sync. Achievements that come from activity
-  (opinions, helpful marks, pattern ratings, exams) are also picked up at the next sync.
-- The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
-- Rarity is shown as the number of players who reached each tier, only on the achievement page.
-  No player list.
-- The profile head shows up to three achievements the owner chose (`user_achievement_showcase`), or the
-  highest tiers automatically when none are chosen. They are chosen in Settings → Profile (2026-09-25) and
-  saved with the rest of the profile form; only earned achievements, at most three, in the chosen order.
-  An invalid choice blocks the whole save. The achievement list itself has no pin controls.
-- Pinned records (2026-09-26 S2, `UserPinnedRecord`): up to three charts the owner
-  chose, each with an optional one-line note (80 characters, whitespace collapsed),
-  shown on the overview in the chosen order with that chart's current best record.
-  Pins are by chart because sync may replace record rows; a pin whose chart has no
-  scored record anymore is skipped, and with no usable pin the overview shows the top
-  three Basic Grd records. Only charts with a score can be pinned; they are chosen in
-  Settings → Profile and saved with the profile form, and an invalid choice blocks the
-  whole save. Score-private profiles show nothing of this to others (the overview is
-  locked). Notes are public profile text.
-- Profiles with private scores: other people do not see skill or collection achievements (they reveal
-  record ranges); challenge and community achievements stay visible. Progress values are shown only to the
-  owner.
+바뀐 기록: [2026-09-23](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23) ·
+[2026-09-24](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-24) ·
+[2026-09-25](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-25) ·
+[2026-10-27](../decisions/2026-10-27-admin-tag-removal.md)
+
+## 영상 추출로 채보 가져오기
+
+- 관리자 채보 에디터는 vid2bmap 결과 zip(Kim Yeonghun · Choi Sunghee, KAIST, MIT)을 미리보기로 가져올 수 있다.
+  「초안에 넣기」 전에는 아무것도 바뀌지 않는다. 넣으면 초안에만 쓰고(공개는 따로), 먼저 지금 초안을 리비전으로
+  저장하며, 되돌릴 수 있다. 영상과 프레임은 사이트에 오지 않는다. 추출은 운영자 컴퓨터에서 한다.
+- 노트는 영상 시각이 아니라 박자선으로 놓는다. 노트의 박은 게임이 박마다 그리는 이웃 박자선 사이의 위치다(선
+  하나 = 지금 박자표의 한 박). 사람이 고르는 것은 첫 박자선의 박뿐이다. 초안에 이미 노트가 있으면 그 노트와 가장
+  많이 맞는 위치에서 시작한다.
+- 제안 격자(격자 단계마다 평균 어긋남이 가장 작은 것)에 맞추고, 박마다 다시 고른다. 한 박의 모든 노트가 영상
+  2.5프레임 안에 있고, 그보다 멀리 떨어진 두 노트가 한 자리에 겹치지 않을 때만 그 박이 곡 격자를 유지한다.
+  아니면 1/2 부터 1/16 중 둘 다 만족하는 가장 성긴 격자를 쓴다(예: 1/6박 곡 안의 1/8박 연타). 그런 격자가 없으면
+  곡 격자에서 벗어난 노트는 영상 위치를 유지한다. 테누토 · 트릴 길이는 끝나는 박의 격자를 쓰고, 끝을 그 격자에
+  맞춘다. 옮겨진 노트는 가져온 뒤 검토용으로 고를 수 있다. 그 뒤 한 자리에 부딪친 노트는 더 잘게 다시
+  맞춘다(×2 … ×8. 예: 180 BPM 의 한 프레임 계단은 1/24 가 필요하다). 같은 레인에서 3프레임 안에 읽힌 것은 한
+  노트다. 같은 종류가 3프레임 안에 두 번 읽히고 한쪽 레인 범위가 다른 쪽을 품을 때도 한 노트다(넓은 쪽을 남긴다
+  — vid2bmap 은 가끔 한 프레임 뒤에 노트를 더 좁게 다시 읽는다).
+  손은 zip 에 있으면 그것을 쓴다(실행기는 노트와 박자선을 vid2bmap 본 실행에서, 손만 `LR_classification` 갈래
+  실행에서 가져와 종류 · 레인 · 가까운 프레임으로 짝짓는다). 없으면 레인 가운데로 추측하고, 추측한 가운데 노트만
+  검토용으로 고른다. 글리산도 조각(vid2bmap 은 계단을 하나씩 읽는다)은 다음 조각이 12프레임 · 4레인 안에 있으면
+  글리산도 하나로 잇는다. 경로는 시작, 끝, 1레인 넘는 꺾임을 남긴다. 계단은 조각마다 하나에 vid2bmap 이 건너뛴
+  계단을 더한다. 건너뛴 계단은 느린 글리산도(보통 간격 4프레임 이상)에서 간격이 보통의 2.5배를 넘는 곳만 내림으로
+  센다. 빠른 글리산도는 원래 간격이 고르지 않아 채우면 너무 많이 셌다. 이렇게 바꾸니 실험 데이터의 글리산도 곡
+  114곡 중 공식 노트 수와 맞는 곡이 83곡에서 104곡이 됐다. 계단 하나가 판정 하나다. 게임의 계단 간격은 깔끔한
+  격자가 아니어서(Gaia 180 BPM ≈ 1/9박), 간격은 첫 계단부터 끝 계단까지의 길이를 그 수로 나눈 값이고 꺾임은
+  계단 위에 놓인다(확인한 세 곡 모두 결과 화면 노트 수와 맞다: Altale 1,604 · アルストロメリア 1,394 · Gaia
+  1,539). 홀로 있는 조각은 버린다. 경로 위의 일반 노트는 계단을 두 번 읽은 것으로 보고 버린다. 트릴 머리 폭 w 는
+  한 레인 떨어진 폭 w-1 위치 둘이 되고(영상의 육각형이 머리 안에서 한 레인씩 번갈아 움직인다), 표시가 붙는다.
+  zip 이 노트의 절반 이상에 손을 담고 있으면, 손을 읽지 못했고 추출 유령으로 보이는 노트는 가져오기 전에 버리고
+  경고에 자리와 함께 적는다(영상의 콤보 숫자로 확인했다). 버리는 것은 다른 노트와 겹치는 8박 이상 테누토, 그리고
+  테누토 머리 뒤 ¾박 안에서 그 테누토 레인 안에 있는 일반 노트다. 손을 읽은 노트는 버리지 않는다. 그래도 같은
+  레인의 뒤 노트를 가로지르는 테누토는 그 노트보다 격자 한 칸 앞에서 끝낸다. 건반을 누른 채 다시 칠 수 없으니,
+  추출이 머리를 뒤의 끝과 짝지은 것이다(Field of Hopes and Dreams 16곳, Pink Rose 40곳). 판정 수는 그대로이고,
+  길이를 영상과 대조하도록 자리를 경고에 적는다. 채보에 노트 수가 있으면 패널이 가져온 판정 수(노트마다 하나,
+  글리산도 계단마다 하나)와 비교한다.
+- 기존 초안과 비교하면 차이를 모두 적고(같은 틱 · 겹치는 레인 = 같은 노트. 아니면 같은 레인 · 폭 · 종류가
+  4분음표의 1/8 안이면 같은 노트가 옮겨진 것. 영상에서 읽은 손은 차이로 세고, 추측한 손은 세지 않는다), 자리마다
+  고른다. 초안 뒤에 오는 노트는 따로 새 구간 토글이다. 가져온 노트끼리 겹쳐도 적용할 수 있다. 초안에 이미 있는
+  노트와 겹치면 여전히 막힌다 — 「내 것 / 가져온 것」 을 바꾸거나 초안을 비운다. 아래 막대가 겹친 자리를 알리고,
+  겹친 노트(양쪽 다)는 선택된 채로 들어간다. 관리자는 에디터에서 거짓 쪽을 지우거나 길이를 고친다. 어느 쪽이
+  거짓인지는 영상의 콤보가 알려 준다(パヴァーヌ: 긴 테누토 안의 노트, 平均律: 테누토). 리비전은 여전히 겹침을
+  거절하므로 「영상 추출」 리비전은 미뤄 두고, 겹침을 고친 뒤 처음 저장한 리비전을 영상 추출 리비전으로 기록한다.
+- 에디터의 스냅 검사(osu! 의 "Unsnapped hitobjects" 검사와 같은 것): 시작이 에디터의 어떤 스냅(지금 박의
+  1/1–1/32)에도 맞지 않는 노트는 점선 경고 테두리를 받는다. 노트 검사기는 그런 노트를 가장 가까운 격자와
+  어긋남(ms)과 함께 적고, 하나씩 또는 한꺼번에 가장 가까운 격자로 맞춘다.
+- 템포 변화는 타이밍 포인트 제안이 된다. 결과 zip 은 `beat_frames.json` — 박자선이 격자 한 줄을 지난 프레임,
+  vid2bmap 의 프레임 누락 보정 전 값 — 을 담고, 템포는 그것으로 잰다(보정된 박자선은 ±10% 흔들린다). 박은 노트가
+  쓰는 AI 박자선으로 센다. zip 을 읽을 때 이웃의 1.5배 이상인 틈에는 그 안의 원본 박자선을 넣고, 양쪽 다 원본
+  선이 없으면 1.8배부터 고른 간격으로 선을 넣는다(그보다 작으면 페르마타일 수 있다). 원본 선이 없고 이웃과 반 박
+  안인 선은 버린다. 가져오기 패널은 「AI 가 놓친 박자선 ○곳을 메우고 …」 로 알린다. AI 선마다 원본 프레임과
+  짝짓는다(한 박의 35% 안, 프레임 누락 보정이 옮긴 어긋남을 따라간다). 짝이 없는 박은 짝지은 이웃 사이의 원본
+  시간을 고르게 나눈다. 변화는 8박 절사 평균이 1.5% 넘게 움직여 8박 이상 이어지는 것이다. 구간마다 BPM 은 그
+  구간의 모든 박에 직선을 맞춰 잰다(기울기는 같고, 박이 1.5프레임 넘게 뛰는 곳 앞뒤는 오프셋을 따로 둔다. 32박
+  미만 구간은 첫 박부터 끝 박까지의 평균). 그다음 정수 → 0.5 → 0.1 → 0.01 중 구간 끝까지 박이 영상 흔들림 +
+  0.5프레임 안에 드는 첫 값을 제안하고, 잰 값을 함께 보인다. 시작 BPM 은 지금 값이 그 한계를 넘어 어긋날 때만
+  제안한다.
+  영상이 박마다 움직이는 곳 — 두 박이 함께 구간 BPM 에서 2.5프레임 이상 벗어나거나, 32박 미만 구간이거나, 한
+  박이 영상에서 2.5프레임 벗어나는 곳 — 은 모든 박을 1.5프레임 안에 두는 가장 긴 정수 BPM 들로 박을 잇고(한
+  구간을 끝내는 BPM 은 다음 16박으로 고른다), 그 뒤 구간 BPM 으로 돌아간다. 그런 자리의 포인트는 카드 하나를 함께
+  쓰고(「17마디 3박 — 2박 느려짐」, 「45마디 3박 ~ 48마디 2박 — 박마다 바뀜」), 박 간격을 프레임으로 보인다.
+  곡마다 정한 값은 없다.
+  osu! 처럼 타이밍 포인트는 새 마디를 시작한다. 그래서 마지막 포인트가 마디 중간인 카드는, 다른 포인트가 먼저
+  오지 않으면 곡 마디(가져오기 전 타이밍, 제안된 시작 박자표 기준)의 다음 첫 박에 같은 BPM 포인트를 하나 더
+  놓는다. 카드에는 「… · 49마디 1박 마디선 맞춤」 으로 적는다.
+  초안에 시작 말고 다른 타이밍 포인트가 있고 그것이 영상과 어긋나면(평균 어긋남을 뺀 뒤 한 박이 2.5프레임 넘게
+  어긋날 때), 카드가 「기존 타이밍 포인트를 영상 타이밍으로」 를 제안한다. 시작 포인트만 있는 것처럼 제안을
+  만들고, 나머지 포인트는 가져오기와 함께 지운다(되돌리기 한 번. 시작 포인트와 그 시각은 그대로). 초안에 노트가
+  없을 때만 기본으로 켜진다. 끄면 기존 포인트를 두고, 그 포인트가 어떤 제안을 막는지 알린다.
+  제안은 박자선 간격 BPM 경고를 대신하고, 기본으로 켜지며, 그 박에 앞의 박자표로 포인트를 더하고, 노트와 함께
+  되돌릴 수 있는 한 단계로 들어간다. 이미 타이밍 포인트가 있는 곳에는 제안하지 않는다. 박 프레임이 없는 옛
+  zip 은 경고만 남는다.
+  시작 타이밍도 같은 종류의 제안을 받는다. 첫 구간(처음 몇 박이 아니라 구간 전체로 잰다)이 시작 타이밍과 다르면
+  「시작 타이밍을 BPM ○ 로」 를 제안한다. 초안에 노트가 없을 때만 기본으로 켜진다(시작 BPM 을 바꾸면 기존 노트의
+  시각이 모두 움직인다). 이 제안은 그 포인트의 BPM 만 바꾸고(직접 고치는 것과 같다), 노트와 함께 들어간다.
+  오프셋(오디오에 대한 시작 시각)은 영상에서 알 수 없다. 시작 시각이 0 ms 면 같은 카드가 「시작 시각을 500ms 로」
+  (새 초안 기본값)를 제안한다. 초안에 노트가 없을 때만 기본으로 켜지고, 모든 타이밍 포인트를 같은 만큼 옮긴다.
+  박자표도 같은 카드에서 제안한다. 게임은 박마다 같은 선을 그리므로, 박 머리의 강세(3프레임 안의 노트, 테누토 ·
+  트릴 시작은 ×3)를 3박 · 4박 주기로 비교한다. 「박자를 ○/4 로」 는 뚜렷함 / 약함을 보인다(뚜렷함 = 점수 0.15
+  이상이고 다른 쪽의 두 배 이상). 뚜렷하고 초안에 노트가 없을 때만 기본으로 켜진다. 켜면 빈 초안의 첫 마디는
+  가장 센 강세로 간다(1마디 = 첫 노트와 같거나 그보다 앞선 마지막 첫 박). 그래서 첫 박에서 시작하지 않는 곡도
+  맞게 놓인다(Altale: 첫 노트 1마디 3½박).
+- 출처: 가져온 직후 에디터는 종류 `vid2bmap` 인 리비전을 저장한다. 공개 리비전 번호가 첫 `vid2bmap` 리비전과
+  같거나 그 뒤인 공개 채보는 「노트 배치 · 영상에서 추출(vid2bmap)」 과 출처 창(vid2bmap, 만든 사람, MIT, 논문 ·
+  저장소 링크)을 보인다. 작성자 줄은 공개한 사람의 사용자 이름이고, 태그를 붙이지 않는다. 뷰어는 초안 내용을 읽지 않는다.
+
+바뀐 기록: [2026-09-23](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23) ·
+[2026-09-24](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-24) ·
+[2026-09-25](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-25) ·
+[2026-09-26](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-26) ·
+[2026-09-27](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-27) ·
+[2026-10-19](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-19) ·
+[2026-10-27](../decisions/2026-10-27-admin-tag-removal.md)
+
+## 공식 X 소식
+
+- 홈은 저장된 최신 글과 성공한 ko · en 번역을 데이터 캐시로 읽는다. X 나 Gemini 를 부르지 않는다. 새 글은 페이지
+  렌더링 밖에서 12시간마다 `since_id` 로 확인한다. 성공한 번역에는 시간 만료가 없다.
+- 내용이 같으면 다시 쓰거나 다시 번역하지 않는다. 동시 · 중복 유료 호출을 막으려고 DB 실행 선점은 UTC 반나절마다
+  한 번 바뀐다. 실패한 번역은 다음 예약 실행에서 다시 시도한다. 기존 원문은 계속 볼 수 있다.
+- 최신 글 하나만 두고, 이력은 보관하지 않는다. 증분 확인은 X 가 돌려주지 않는 삭제, 공개 범위 변경, 수정을
+  자동으로 맞추지 않는다.
+- Hobby 배포는 GitHub Actions 를 쓴다. [설정, 확인 SQL, 한계](../operations/official-x-sync.md)를 본다.
+
+바뀐 기록: [2026-09-19](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19)
+
+## 방문 분석
+
+- 불러온 대시보드 기간 안에서 지표를 바꾸면 같은 스냅숏을 다시 쓰고, 서버 요청 없이 브라우저 기록의 `metric`
+  만 바꾼다. 기간을 바꾸거나 새로 고치면 새 스냅숏을 받는다. 직접 링크, 뒤로 · 앞으로, 관리자 권한 검사, 오늘의
+  시간대 그래프는 그대로 지원한다. 오늘의 시간대 막대는 고른 지표를 따른다. 페이지 조회는 시간 버킷에서, 가입과
+  동기화를 마친 사람은 기존 시각(서울 시)에서 센다. 방문자는 하루 단위로만 세므로, 오늘은 빈 시간대 틀과 가운데
+  안내를 보인다.
+- 현재 역할이 `admin` 인 계정은 수집할 때부터 페이지 조회, 일 방문자, 시간 · 로그인 구분 버킷, 브라우저 외부
+  이벤트, API 호출 합계에서 뺀다. 대시보드의 가입, 동기화, 퍼널, 기여 합계도 현재 관리자를 뺀다. 운영 대기열과
+  실패 모니터링은 빼지 않는다. 기존 방문 합계 행은 일부러 계정 식별자를 담지 않아서 거슬러 나눌 수 없다.
+- 센 합계만 두고, 누가 방문했는지는 두지 않는다. 페이지 조회 하나는 하루 합계, 경로 합계, 서울 시간 버킷
+  (`hour`, `00`–`23`), 로그인 구분(`audience` / `audienceVisitor`, `member` | `guest`)을 하나씩 늘린다. 로그인
+  여부는 세션 쿠키에서 온다. 계정 ID 는 저장하지 않는다. 일 방문자 해시는 계속 다음 날 만료되고, 합계는 90일 뒤
+  만료된다.
+- 개인정보처리방침에 보관하는 합계가 적혀 있으므로, 새 구분을 더하려면 새 시행판이 필요하다(지금 판을
+  `features/privacy/content/versions/{effective}.json` 에 보관한다). 시간 버킷과 로그인 구분은 2026-09-20 판에서
+  알렸다.
+- 기존 표만 쓰는 대시보드 패널(전환, 기여)은 새로 모으는 것이 없다. 실시간 접속과 오류 추이는 저장소가 더 필요해
+  넣지 않는다.
+- 지표 정의: 「방문자」 는 여러 날이면 일 방문자의 합이다. 일 해시로는 날을 이을 수 없어서, 다른 날 다시 온
+  사람은 또 센다(Plausible · Fathom 과 같다). 대시보드는 KPI 줄 아래에 이를 적는다. 「페이지 조회」 는
+  `app/(site)` 의 모든 공개 경로를 센다. 페이지가 `PAGE_ROUTES` 에 없으면 테스트가 실패한다. 「가입」 은 만든
+  계정(Discord 로그인)이며, 지금 남아 있는 계정 안에서 센다. 퍼널은 온보딩 완료(`profile_completed_at`)를 더하고,
+  성공한 동기화만 연결로 센다. 「동기화」 는 동기화를 한 번 이상 마친 사람이다(하루, 한 시간, 전체 기간 모두
+  사람마다 한 번 센다). 시도와 실패는 옆에 보인다. 레일의 동기화 상태는 완료 / 실패 / 처리 중과 상위 실패 이유
+  셋(첫 줄, 80자)을 적는다. 모두 관리자를 뺀다. 「기여」 는 새 행만 센다(`created_at`, 의견은
+  `opinion_created_at`, 패턴 평가는 패턴 값이 있을 때만). 수정, 번역, 관리 처리는 세지 않는다.
+- 비교: 오늘은 어제의 같은 서울 시각(:59)까지와 비교한다. 페이지 조회는 시간 버킷에서, 가입과 동기화는 시각에서
+  센다. 방문자는 시간 버킷이 없어서 오늘 방문자 변화는 `-` 다. 앞 기간이 수집 시작(2026-09-13)이나 90일 보관보다
+  앞에서 시작하면 방문자 · 페이지 조회 변화는 `-` 이고, 수집 전 날짜는 그래프에서 0이 아니라 비워 둔다. 가입 ·
+  동기화 비교는 늘 그 표를 쓴다.
+- 활성 사용자와 새 기여자는 기존 표만 쓴다. 활성은 지난 7 · 28 서울 날짜(오늘까지, 고른 기간과 무관) 안에
+  동기화를 마쳤거나 기여를 만든 관리자 아닌 사람이고, 7 ÷ 28 백분율을 함께 보인다. 새 기여자는 첫 기여가 그
+  기간에 있는 사람이다. 방문은 계정과 잇지 않는다.
+
+바뀐 기록: [2026-09-20](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-20) ·
+[2026-09-21](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-21) ·
+[2026-09-22](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-22) ·
+[2026-10-17](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-17)
+
+## 데이터 보관과 운영자 정보
+
+- 운영자 표시는 계롤(Anchovia)이다. 확인된 연락처와 제공자 정보는
+  [개인정보 내용](../../features/privacy/content/privacy-content.ts)에 있는 그대로 둔다. 사업자, 처리자, 보관
+  기간, 법적 주장을 지어내지 않는다.
+- 프로필 사진은 공개다. 검정 · 피드백 증빙은 비공개이고 서버가 접근을 막는다. 승인된 검정 증빙과 민감한 검토
+  메모는 검토 6개월 뒤 만료되고, 달성은 남는다. 반려된 검정 증빙과 처리 완료된 피드백은 기존 6개월 보관 정책을
+  따른다. 계정 삭제는 삭제 계약에 따라 소유 데이터와 업로드를 지운다. [보관 규칙](../../lib/privacy-retention.ts)을
+  본다.
+- 음원은 브라우저 안에만 둔다. MP3 를 NosLog 저장소나 DB 에 올리지 않는다.
+- 문서를 정리했다고 해서 실제 제공자, 개인정보 문구, 보조 브라우저 확인이 통과했다고 선언하지 않는다. 실제
+  확인은 따로 기록한다.
+
+바뀐 기록: [2026-10-28 DB 위탁처 · 저장 리전](../decisions/2026-10-28-db-planetscale-seoul.md)
+
+## 업적
+
+- 동기화된 기록과 사이트 활동으로 자동 판정하는 단계형 업적이다. 등급은 다섯 — 동 I · 은 II · 금 III · 플래티넘
+  IV · 다이아 V — 이고, 업적마다 자기 등급 묶음이 있다: 다섯 모두, 동 · 은 · 금만, 또는 아주 드문 업적은 다이아
+  하나. 저장하는 단계가 곧 등급이다. 숨은 업적은 없다. 플레이 횟수, 동기화 횟수, 연속, 운에 기댄 조건도 없고,
+  빙고 업적도 없다(빙고 칸은 플레이어가 직접 체크한다). 정의와 기준값은 코드(`features/achievements`)에 있고,
+  운영 분포를 보고 다시 맞출 수 있다.
+- 곡 묶음 · 계절 업적은 정해 둔 곡 목록(공식 곡 번호)에서 S 이상(아무 난이도)을 받은 곡 수로 판정한다. 새 곡이 들어와도
+  목록은 저절로 바뀌지 않는다. 계절 업적도 계절과 상관없이 언제든 얻는다. 단계는 곡 수로 나눈다 — 10곡 이상은
+  I–V(20 · 40 · 60 · 80 · 100%), 5–9곡은 I–III(⅓ · ⅔ · 전부), 2–4곡은 전부 채운 금 III 하나, 한 곡은 S → 풀콤보 →
+  Pianist. 묶음에 따라 기준을 달리 정할 수 있다 — 한 난이도만 보기(Normal · Expert), 곡의 모든 채보가 기준을 넘어야
+  그 곡을 세기, S 대신 풀콤보로 세기. 한 난이도만 보는 한 곡 묶음은 그 난이도에서 S → 풀콤보 → Pianist 이고, 모든
+  채보나 풀콤보로 세는 한 곡 묶음은 금 III 하나다. 「한 곡 완주」 는 한 곡의 모든 채보가 S 이상인 곡 수, 「레벨
+  사다리」 는 Lv.1 부터 끊기지 않고 S 이상 채보가 있는 가장 높은 레벨이다(Real 의 ◆ 는 세지 않는다). 「오래된 악보」 는 나온 지 30일이 넘고 30일 넘게 다른
+  의견이 없던 채보에 쓴 의견 중 다른 사람에게 「도움이 돼요」 를 받은 것의 수다.
+- 판정은 동기화마다 끝에, 기록과 Grd 를 갱신한 뒤 한다. 새로 도달한 단계만 더하고(`user_achievements`, 사용자 ·
+  업적 · 단계마다 한 행), 값이 나중에 내려가도 단계를 빼지 않는다. 예외는 관리자 「업적 다시 판정」 에서 「기준에
+  못 미치는 단계도 빼기」 를 체크했을 때뿐이다(기본 꺼짐, 기준을 바꾼 뒤 쓴다). 이때는 없어진 업적의 단계, 업적에
+  더는 없는 등급, 지금 값이 기준보다 낮은 단계를 뺀다. 판정이 실패해도 동기화는 실패하지 않는다. 활동에서 오는
+  업적(의견, 좋아요, 패턴 평가, 검정)도 다음 동기화 때 반영한다.
+- 단계의 날짜는 플레이한 날이 아니라 NosLog 가 확인한 때(동기화 시각)다.
+- 희귀도는 단계마다 도달한 플레이어 수로 보이고, 업적 페이지에만 있다. 플레이어 목록은 없다.
+- 프로필 머리는 본인이 고른 업적을 셋까지(`user_achievement_showcase`), 고른 것이 없으면 가장 높은 단계를
+  자동으로 보인다. 업적은 설정 → 프로필에서 고르고, 창에서 「적용」 하는 순간 그 칸만 저장한다. 얻은 업적만, 셋까지, 고른
+  순서로 둔다. 잘못된 선택은 그 칸의 저장을 막고 칸을 되돌린다. 업적 목록 자체에는 고정 조작이 없다.
+- 고정 기록(`UserPinnedRecord`): 본인이 고른 채보 셋까지, 저마다 선택 한 줄 소감(80자, 이어진 공백은 하나로
+  줄인다)을 달 수 있다. 개요에 고른 순서로, 그 채보의 지금 최고 기록과 함께 보인다. 동기화가 기록 행을 바꿀 수
+  있어서 고정은 채보 단위다. 고정한 채보에 점수 있는 기록이 더는 없으면 건너뛰고, 쓸 수 있는 고정이 없으면 개요는
+  Basic Grd 상위 3기록을 보인다. 점수가 있는 채보만 고정할 수 있다. 설정 → 프로필에서 고르고 창에서 「적용」 하는
+  순간 그 칸만 저장하며, 잘못된 선택은 그 칸의 저장을 막고 칸을 되돌린다. 점수 비공개 프로필은 다른 사람에게 이것을 전혀 보이지 않는다(개요가
+  잠긴다). 소감은 공개 프로필 글이다.
+- 점수 비공개 프로필: 다른 사람은 실력 · 수집 · 곡 묶음 · 계절 업적을 보지 못한다(기록 범위가 드러나기 때문이다). 도전 · 커뮤니티
+  업적은 보인다. 진행 값은 본인에게만 보인다.
+
+바뀐 기록: [2026-09-24](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-24) ·
+[2026-09-25](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-25) ·
+[2026-09-26](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-26) ·
+[2026-10-28 곡 묶음 · 계절 업적 추가](../decisions/2026-10-28-achievement-song-sets.md) ·
+[2026-10-28 밈 · 일화 업적 추가 · 이름 바꿈](../decisions/2026-10-28-achievement-memes.md)
+
+## 뮤즈캣 협업
+
+- `MUSECAT_MODE` 가 사용자에게 보일 것을 정한다. 비어 있거나 `off` 면 지금 오락실 · 설정 화면을 둔다. `mock` 은
+  NosLog 오락실과 고정 예시로 만든 뮤즈캣 모양 데이터를 준다(사용자 동작은 서버 메모리에만 남는다). `live` 는
+  사용자가 연결한 뮤즈캣 계정으로 뮤즈캣을 부른다. 운영은 협약과 API 세부가 정해질 때까지 꺼 둔다. 꺼져 있어도
+  연결 기록(뮤즈캣 계정 · 기록 보내기)이 있으면 설정의 뮤즈캣 줄 · 상세는 보인다(연결한 사람이 끊을 곳을 남긴다).
+- 파트너 읽기(NosLog 가 OAuth 서버): 파트너는 사용자가 동의 화면에서 체크한 것만 받는다(다시 동의할 때도 체크는 모두
+  꺼진 채로 시작한다. 기본 프로필은 늘, Grade ·
+  레이팅, 순위, 최근 플레이는 선택. 곡 기록은 형식이 합의될 때까지 「준비 중」 으로 보인다). NosLog 공개 설정이 그
+  위에 그대로 적용된다. 플레이 점수가 비공개면 응답 전체를 `private` 으로 표시하고, 활동이 비공개면 체크해도 최근
+  플레이를 보내지 않는다. 항목을 줄이거나 연결을 끊으면 NosLog 에서 바로 적용되고, 파트너에게는 outbox 로
+  알린다(26시간 동안 다시 시도). 토큰은 해시로 저장한다. 연결은 동의부터 최대 90일이다.
+- 뮤즈캣 계정 사용(NosLog 가 클라이언트): 고장 제보, 반응, 즐겨찾기, 캠페인 응답, NOSTALGIA 기체 수정은 사용자
+  본인의 뮤즈캣 계정으로 뮤즈캣에 올라가고, 거기서 공개된다. 쓰기는 한 번 보내고 자동으로 다시 시도하지 않는다.
+  로그아웃했거나 연결하지 않은 사람은 뮤즈캣이 공개로 보이는 것(고장 수만, 가격 둘까지)을 본다. 제보 거두기와
+  기체 수정은 뮤즈캣이 문서로 정할 때까지 mock 에서만 된다.
+- NosLog 기체 특징은 NosLog 데이터로 남고, NOSTALGIA 게임 카드 안에 보인다. 기체별 줄(「가동 중」 확인, NosLog
+  고장 제보)은 뮤즈캣 오락실 페이지에 보이지 않으므로 고장은 뮤즈캣으로 한 번만 간다. 그 줄은 `MUSECAT_MODE` 가
+  꺼져 있을 때 쓰는 NosLog 오락실 페이지에는 남는다.
+- 뮤즈캣 기체 창에서 고친 NosLog 기체 특징은 바로 저장하지 않는다. 바뀐 특징은 오락실 제보(「condition」, 그
+  기체)가 되고, 다른 오락실 제보처럼 운영자가 검토해 반영한다.
+- 뮤즈캣 오락실 목록: 목록은 늘 보인다. 시작점은 이 기기에 마지막으로 저장한 위치, 없으면 요청 IP 의 대략 위치
+  (Vercel 위치 헤더, 그 요청에만 쓰고 저장하지 않는다), 그것도 없으면 서울이다. 조준점을 누를 때만 기기 위치를
+  묻는다. 거부해도 목록은 남고 검색을 권한다. 뮤즈캣의 주변 API 는 좌표가 필요해서 위치 없는 목록은 없다.
+- 사이트는 자기 페이지에만 위치 권한을 연다(`Permissions-Policy: geolocation=(self)`). 2026-10-21 이전에는
+  완전히 막혀 있어서 오락실 찾기의 「내 주변」 필터가 늘 실패했다.
+- 뮤즈캣 목록 핀: 핀을 누르면 그 오락실을 고른다(폰은 시트에 그 줄만 보이고, 넓은 화면은 패널이 그 줄로
+  스크롤한다). 지도 바탕을 누르면 해제한다. 줄을 누르면 상세 페이지를 연다. 목록 위 줄은 목록을 어디서부터
+  쟀는지만 보인다(내 위치, 검색어, 또는 지도 영역의 시 · 구 · 동). 카카오맵과 같고, 개수는 없다. NosLog 헤더는
+  지도 화면에 남고, 지도 화면에는 사이트 푸터가 없다.
+- 뮤즈캣 기체 수정: 뮤즈캣 수정은 성공했는데 NosLog 특징 제보가 실패하면, 다시 저장할 때 제보만 보내 뮤즈캣이
+  같은 수정을 두 번 받지 않게 한다. 특징을 「모름」 으로 고르면 그 특징은 보내지 않는다.
+- 길 찾기: 한국 오락실은 네이버, 카카오, 구글, 애플 지도를 보인다. 다른 나라는 구글과 애플만 보인다. 네이버와
+  카카오는 한국 안에서만 길을 찾기 때문이다.
+- 파트너 동의 「다른 계정 사용」: 세션의 로그인 부분만 지우고, 대기 중인 인가 요청과 언어는 두고, 로그인으로
+  보낸다. 로그인하면 같은 동의 화면으로 돌아온다(10분 요청 제한은 그대로 적용된다).
+
+바뀐 기록: [2026-10-20](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-20) ·
+[2026-10-21](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-21) ·
+[2026-10-22](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-22) ·
+[2026-10-27](../decisions/2026-10-27-guide-audit-2.md) ·
+[2026-10-28 개요 패턴 경향을 채보 데이터 계산값으로](../decisions/2026-10-28-pattern-tendency-computed.md)
