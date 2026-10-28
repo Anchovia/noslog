@@ -80,8 +80,10 @@ describe("채보 검토 단계 줄", () => {
         // 칸에는 막대뿐 — 화면 읽기 전용 이름을 빼면 보이는 글자가 없다
         expect(
             steps
-                .replace(/<span class="sr-only">[^<]*<\/span>/g, "")
-                .replace(/<[^>]+>/g, "")
+                .split(/<span class="sr-only">[^<]*<\/span>/)
+                .join("")
+                .split(/<[^>]+>/)
+                .join("")
                 .trim()
         ).toBe("");
         expect(steps.match(/bg-nl-primary/g)).toHaveLength(position);
