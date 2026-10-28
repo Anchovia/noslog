@@ -2649,6 +2649,16 @@ html[data-theme="light"] .noslog-ui,
         color: HighlightText;
         border-color: Highlight;
     }
+    /* 단계 막대는 면 색으로 진행을 보여 체크박스처럼 시스템 색을 직접 준다 */
+    .noslog-ui .nl-step-bar {
+        forced-color-adjust: none;
+        border: var(--nl-stroke-default) solid ButtonText;
+        background: Canvas;
+    }
+    .noslog-ui .nl-step-bar[data-on="true"] {
+        background: Highlight;
+        border-color: Highlight;
+    }
     /* 스위치 · 고른 세그먼트 칸은 면 색으로 상태를 보여 시스템 색을 직접 준다(누름 · 포커스 색보다 앞서게) */
     .noslog-ui .nl-switch,
     .noslog-ui .nl-switch::after,

@@ -72,7 +72,7 @@
 - 배경 그림을 이미 쓰는 요소(투표 줄의 구분선)와 `::selection` 만 `background-color` 로 칠한다.
 - 대비는 글자 4.5 : 1, 글자 아닌 단서 3 : 1 이다. 색만으로 상태를 알리지 않는다 — 상태 색은 늘 상태 글자와 함께 쓴다.
 - 상태는 글자색으로 써도 된다. `feedback/*-marker` · `feedback/destructive` 처럼 다크 바탕에서 4.5 : 1 을 넘는 표시색만 쓴다.
-- 고대비 모드(`forced-colors: active`)에서는 시스템 색을 쓴다(포커스 선 `Highlight`, 체크박스 상자 `ButtonText` · 체크하면 `Highlight`). 스위치 트랙은 면 색으로 상태를 보이므로 실제 선으로 그리고 시스템 색을 직접 준다. 고른 세그먼트 칸은 시스템 색 바꿈을 꺼(`forced-color-adjust: none`) 제 면을 남기고, 그 칸의 포커스 선은 면과 겹치지 않게 `HighlightText` 다. 메뉴 판 둘레는 실제 `border`, 토스트 둘레는 `outline` 이라 저절로 남는다. ≡ 창은 투명 `outline` 둘레를 두어 고대비에서만 선이 보인다. 규칙은 `foundation.css` 한 곳에 있다.
+- 고대비 모드(`forced-colors: active`)에서는 시스템 색을 쓴다(포커스 선 `Highlight`, 체크박스 상자 `ButtonText` · 체크하면 `Highlight`). 스위치 트랙과 채보 검토 단계 막대는 면 색으로 상태를 보이므로 실제 선으로 그리고 시스템 색을 직접 준다(단계 막대는 선 · 채움을 체크박스와 같게, 빈 칸 `Canvas` 면 + `ButtonText` 선 · 채운 칸 `Highlight`). 고른 세그먼트 칸은 시스템 색 바꿈을 꺼(`forced-color-adjust: none`) 제 면을 남기고, 그 칸의 포커스 선은 면과 겹치지 않게 `HighlightText` 다. 메뉴 판 둘레는 실제 `border`, 토스트 둘레는 `outline` 이라 저절로 남는다. ≡ 창은 투명 `outline` 둘레를 두어 고대비에서만 선이 보인다. 규칙은 `foundation.css` 한 곳에 있다.
 
 ## 글자
 
@@ -337,6 +337,7 @@ viewport media query 로만 정하고, CSS 와 JS 가 같은 기준을 쓴다.
 
 ## 바뀐 기록
 
+- [2026-10-28 채보 검토 단계 줄 — 고대비 막대](../decisions/2026-10-28-chart-review-steps.md)
 - [2026-10-28 전수 검수 — 메타 자간 · 링크 굵기 · 레일 지금 줄 · 포커스 선 · 컨트롤 글자 · 떠 있는 창 둘레 · 숫자 척도](../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-28 글자 계층 · 세그먼트 · 전체 화면 창 · 칩 · 필터 창 글자](../decisions/2026-10-28-typography-filter-dialog.md)
 - [2026-10-27 운영보다 나빠진 자리 — 면 단계 · 헤더 · 푸터 · 버튼 · 고른 줄 · 탭](../decisions/2026-10-27-production-regression-fixes.md)
