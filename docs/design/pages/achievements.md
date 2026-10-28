@@ -112,7 +112,7 @@
 | 발   | 보조 「자동으로」 + 주 「적용」                 |
 
 - 격자 칸은 최소 88 · 사이 8, 칸 안쪽 12 / 4 다.
-- 칸은 칩과 같은 `surface/canvas` 면 + `border/input` 선, 고른 칸은 `surface/control` 면 · 선 없음이다. 올림 · 누름 · 키 포커스는 면 `surface/control-hover` · 글자 `content/strong` 이다.
+- 칸은 적용 조건 알약과 같은 `surface/canvas` 면 + `border/input` 선, 고른 칸은 `surface/control` 면 · 선 없음이다. 올림 · 누름 · 키 포커스는 면 `surface/control-hover` · 글자 `content/strong` 이다.
 - 3칸이 차면 나머지 칸은 비활성이다. 그림을 품은 칸이라 선을 빼고 칸 전체를 `--nl-disabled-opacity` 로 흐린다.
 - 얻은 업적이 없으면 값 자리에 「아직 얻은 업적이 없습니다」 를 쓰고 「변경」 을 두지 않는다.
 - 「적용」 을 누르는 순간 저장된다(설정 프로필은 칸마다 바로 저장, [설정](./settings.md#프로필)).

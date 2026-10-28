@@ -43,7 +43,7 @@
 
 준비된 원문 · 번역만 읽고, 수집 · 번역을 기다리지 않는다. 수집 동작은 [기능 규칙](../product-rules.md#공식-x-소식)을 따른다.
 
-소식 카드는 누르지 않는 묶음 상자다. 면 `surface/surface` · 둘레 없음 · 그림자 `--nl-card-shadow` · 모서리 `radius/large` 다. 소식 상태 상자도 이 카드 자리를 대신하므로 같은 면이다.
+소식 카드는 [면 카드](../components/surface-card.md#면-카드)의 한 단계 면이다. 면 `surface/surface` · 둘레 · 그림자 없음 · 모서리 `radius/control` 이다. 소식 상태 상자도 이 카드 자리를 대신하므로 같은 면이다.
 
 ## 폭별
 
@@ -68,7 +68,7 @@
 | 배너 글자 층 번짐 | 32                                                                                                                                               | `surface/media-scrim` 층 위쪽                      |
 | 고정 핀           | 16                                                                                                                                               | 고정 공지 줄 날짜 앞                               |
 | 푸터 한 줄 기준   | 840                                                                                                                                              | 푸터                                               |
-| 목적지 타일       | ActionButton 면(→ [버튼](../components/button.md)) `surface/control` · 선 없음 · `radius/control` · 최소 컨트롤 높이 · 안쪽 12(672 이상 24)      | 목적지 타일                                        |
+| 목적지 타일       | `surface/surface` · 선 없음 · `radius/control` · 최소 컨트롤 높이 · 안쪽 12(672 이상 24)                                                         | 목적지 타일                                        |
 | 목적지 격자       | 672 미만 3열 · 사이 `--nl-grid-gutter-compact`, 672 이상 4열 · 사이 `--nl-grid-gutter-wide`                                                      | 목적지 타일. 피드백 칸은 672 미만에만              |
 | 타일 이름 좁을 때 | 12/16 · 400, 그래도 넘치면 줄바꿈                                                                                                                | 목적지 타일 이름                                   |
 | 검색 미리보기     | 검색 →8→ 판([떠 있는 창](../foundations.md#떠-있는-창)) · 안쪽 16 · 카드 사이 8 · 끝에 「전체 결과」 줄(컨트롤 높이 · `radius/control` · medium) | 홈 검색 입력 중                                    |

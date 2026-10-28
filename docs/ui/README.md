@@ -29,7 +29,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 
 | 부품               | 사용 기준                                                                   |
 | ------------------ | --------------------------------------------------------------------------- |
-| `Button`           | 동작용. 화면 이동은 링크. L 기본, M은 `size="sm"`                           |
+| `Button`           | 동작용. 화면 이동은 링크. 주 · 보조 · 위험 기본은 크게, 작게는 `size="sm"`  |
 | `ButtonLink`       | 버튼 모양 이동. `IntentLink` 기본, OAuth·외부 주소·북마클릿은 `plain`       |
 | `IntentLink`       | 공개 화면 링크. 마우스 100ms · 키보드 포커스 때만 미리 불러옴, 터치는 안 함 |
 | `IconButton`       | 아이콘만 있는 동작. `label` 필수, 내부 아이콘은 `aria-hidden`               |
@@ -41,7 +41,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 | `Checkbox`         | 저장하는 폼의 켜기·끄기. 보이는 `label` 필수                                |
 | `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                                   |
 | `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화                 |
-| `SurfaceCard`      | 면 카드(1px 테두리 · 모서리 control · 안쪽 16)                              |
+| `SurfaceCard`      | 면 카드(둘레 없음 · 카드 그림자 · 모서리 large · 안쪽 16)                   |
 | `StatusDot`        | 상태 색 점 8. 늘 상태 글자와 함께                                           |
 | `UnitInput`        | 단위 붙은 입력칸(「1 대」 · 「500 원」)                                     |
 | `IconRow`          | 아이콘 정보 줄(아이콘 · 본문 + 보조 줄 · 끝 동작), `IconRows` 안에서 구분선 |
