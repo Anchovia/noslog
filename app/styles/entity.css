@@ -46,20 +46,12 @@
 .noslog-ui .nl-jacket__category[data-category="Cl/Jz"] {
     color: var(--nl-category-cljz);
 }
+/* 악곡 카드 = 바탕보다 한 단계 밝은 면 · 둘레 · 그림자 없음 · 모서리 control */
 .noslog-ui .nl-music-card {
     display: flex;
     min-width: 0;
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-music-card:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
 }
 .noslog-ui .nl-music-card__body {
     display: flex;
@@ -81,21 +73,25 @@
     text-overflow: ellipsis;
 }
 .noslog-ui .nl-music-card--list {
-    min-height: 64px;
+    min-height: var(--nl-spacing-64);
     align-items: center;
     gap: var(--nl-spacing-12);
     padding-right: var(--nl-spacing-12);
 }
+/* 자켓은 64 정사각 고정. 글자 줄이 셋(번역 제목)이라 카드가 더 높아지면 늘이지 않고 가운데에 둔다 */
 .noslog-ui .nl-music-card--list > .nl-jacket {
-    width: 64px;
-    min-height: 64px;
-    align-self: stretch;
+    width: var(--nl-spacing-64);
+    height: var(--nl-spacing-64);
     border-radius: var(--nl-radius-control) 0 0 var(--nl-radius-control);
 }
+/* 위아래 8 + 이름 24 + 아티스트 24 = 카드 64 = 자켓 */
 .noslog-ui .nl-music-card--list .nl-music-card__body {
     align-items: center;
     gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
+}
+.noslog-ui .nl-music-card--list .nl-music-card__identity {
+    gap: var(--nl-spacing-0);
 }
 .noslog-ui .nl-music-card--grid {
     flex-direction: column;
@@ -104,14 +100,6 @@
     width: 100%;
     aspect-ratio: 1;
     border-radius: var(--nl-radius-control) var(--nl-radius-control) 0 0;
-}
-.noslog-ui .nl-music-card--grid > .nl-jacket::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: var(--nl-stroke-default);
-    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-music-card--grid .nl-jacket__category {
     right: var(--nl-spacing-8);
@@ -129,16 +117,16 @@
 .noslog-ui .nl-music-card--dense .nl-music-card__body {
     padding: var(--nl-spacing-8);
 }
-/* 난이도 판 4칸 — 고정 순서, 판 24(목록 · 격자) / 20(촘촘), 모서리 4, 카드 위 판 면(surface/control), 사이 4.
+/* 난이도 판 4칸 — 고정 순서, 판 24(목록) / 20(격자 · 촘촘), 사이 4, 면 없음.
    숫자는 metric-value(14 tabular) + 난이도 글자색. 없는 난이도는 빈 자리 */
 .noslog-ui .nl-difficulty-levels {
-    --nl-level-size: 24px;
+    --nl-level-size: var(--nl-spacing-24);
     display: inline-flex;
     flex-shrink: 0;
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-music-card--grid .nl-difficulty-levels {
-    --nl-level-size: 20px;
+    --nl-level-size: calc(var(--nl-spacing-16) + var(--nl-spacing-4));
 }
 .noslog-ui .nl-level {
     display: flex;
@@ -146,12 +134,6 @@
     height: var(--nl-level-size);
     align-items: center;
     justify-content: center;
-    border-radius: var(--nl-radius-small);
-    background: var(--nl-surface-control);
-}
-/* 없는 난이도 — 자리만 비운다(표의 빈 셀). 테두리 판은 다크에서 「구멍」 처럼 시선을 끈다(사용자 지적 2026-09-16) */
-.noslog-ui .nl-level--empty {
-    background: transparent;
 }
 .noslog-ui .nl-level--normal {
     color: var(--nl-difficulty-text-normal);
