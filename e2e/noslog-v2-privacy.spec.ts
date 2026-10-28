@@ -182,10 +182,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator(".nl-privacy .nl-status--warning")
         ).toHaveCount(4);
-        test.fixme(
-            true,
-            "앱 버그 의심: 인쇄에서 경고 설명(.nl-status__copy > .nl-body-secondary:not(:first-child))이 --nl-content-subdued(#afafaf)로 남아 흰 종이 위 대비 2.19 — privacy.css 인쇄 규칙이 이 글자를 검정으로 덮지 못한다"
-        );
         expect(
             (await new AxeBuilder({ page }).include(".nl-privacy").analyze())
                 .violations

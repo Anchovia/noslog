@@ -63,7 +63,7 @@
     }
 }
 
-/* 칩: 높이 = 작은 컨트롤 · 모서리 알약(태그와 같음, 2026-10-26 사용자) */
+/* 칩: 높이 = 작은 컨트롤 · 모서리 control */
 .noslog-ui .nl-chips {
     display: flex;
     flex-wrap: wrap;
@@ -191,7 +191,7 @@
     color: var(--nl-content-subdued);
     font-weight: var(--nl-type-weight-regular);
 }
-/* 고른 칩 안 개수는 칩 글자색 그대로 — 고른 면(surface/control) 위에서 흐린 글자는 대비가 모자란다 */
+/* 고른 칩 안 개수는 칩 글자색 그대로 — 고른 면(surface/tag) 위에서 흐린 글자는 대비가 모자란다 */
 .noslog-ui
     .nl-chip:is([aria-pressed="true"], [aria-current="page"])
     .nl-chip__count {

@@ -188,10 +188,16 @@
         color: black;
         break-inside: avoid;
     }
-    /* 링크(nl-link) · 상자 제목도 검정 — 낮으면 인쇄에서 흰 종이 위 흰 글자가 된다 */
+    /* 링크(nl-link) · 제목도 검정 — 낮으면 인쇄에서 흰 종이 위 흰 글자가 된다 */
     .noslog-ui .nl-privacy a:not(.nl-back-link),
-    .noslog-ui .nl-privacy .nl-status .nl-component-title,
+    .noslog-ui
+        .nl-privacy
+        :is(.nl-page-title, .nl-section-title, .nl-component-title),
     .noslog-ui .nl-privacy .nl-muted,
+    .noslog-ui
+        .nl-privacy
+        .nl-status__copy
+        > .nl-body-secondary:not(:first-child),
     .noslog-ui .nl-privacy-contact dt {
         color: black;
     }

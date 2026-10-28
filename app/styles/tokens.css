@@ -76,8 +76,8 @@
     --nl-layer-fullscreen-dialog: 110;
     /* 무채색 = Adobe Spectrum 2 다크 회색 단계(괄호 안이 Spectrum 토큰). 면만으로 칸이 보이게 바탕과 판을 한 단계 띄운다.
        바탕 background-base(gray-25) · 누르지 않는 묶음 상자 background-layer-1(gray-50) ·
-       면 있는 컨트롤 · 고른 칩 · 비활성 면 · 스켈레톤 gray-100.
-       고른 칩 면이 gray-100 인 까닭: 그 위 난이도 · 판정 색 글자가 4.5 : 1 을 넘는 가장 밝은 단계다(gray-300 이면 3.7) */
+       면 있는 컨트롤 · 고른 세그먼트 · 고른 줄 · 비활성 면 · 스켈레톤 gray-100. 고른 칩은 태그 면(surface/tag).
+       고른 면이 gray-100 인 까닭: 그 위 난이도 · 판정 색 글자가 4.5 : 1 을 넘는 가장 밝은 단계다(gray-300 이면 3.7) */
     --nl-surface-canvas: #111111;
     --nl-surface-surface: #1b1b1b;
     --nl-surface-control: #2c2c2c;
