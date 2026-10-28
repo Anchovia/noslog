@@ -339,18 +339,16 @@
     gap: var(--nl-spacing-4);
     margin-inline-start: auto;
 }
-/* 만들기 창(2026-09-23 W1) — 칸 사이 16, 선택지 줄은 입력칸 + 지우기 아이콘 */
+/* 만들기 창(2026-09-23 W1) — 칸 사이는 폼 칸 공용 24(foundation.css)를 받고, 선택지 줄은 입력칸 + 지우기 아이콘 */
 .noslog-ui .nl-poll-builder {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
     min-width: 0;
 }
-/* 「고급」 안의 칸도 만들기 창과 같은 칸 사이 16 */
+/* 「자세히」 안의 칸도 세로로 쌓기만 하고 칸 사이는 같은 공용 24 */
 .noslog-ui .nl-poll-builder .nl-disclosure__body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-poll-builder__options {
     display: flex;
