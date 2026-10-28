@@ -27,10 +27,11 @@
 
 ## 근거
 
-- 디자인 시스템 53곳(headless 로 메뉴 · 부품 페이지를 열어 확인): 최상위에 Components 50 · Foundations 45 · Patterns 19. 큰 결정 기록 파일 하나를 두는 곳 0. 공개 결정 기록 4곳(Primer ADR · Fluent RFC · GOV.UK · USWDS)은 결정마다 문서 하나. 버튼 페이지 42곳 중 변형 38 · 사용 지침 34 · 접근성 22 · 상태 20 · 문구 17.
+- 디자인 시스템 53곳(headless 로 메뉴 · 부품 페이지를 열어 확인): 최상위에 Components 50 · Foundations 45 · Patterns 19. 큰 결정 기록 파일 하나를 두는 곳 0. 공개 결정 기록 4곳(Primer ADR · Fluent RFC · GOV.UK · USWDS)은 결정마다 문서 하나. 버튼 페이지 42곳 중 변형 38 · 사용 지침 34 · 접근성 22 · 상태 20 · 문구 17. 원문: [조사](../research/2026-10-24-a-design-systems.md).
 - 문서 방법: Nygard 「Documenting Architecture Decisions」(2011) · MADR · adr-tools · AWS · Azure(덧붙이기만 하는 기록, 결정 기록을 가이드로 쓰지 말 것) · PEP Superseded-By · IETF Obsoletes · Diátaxis(종류별로 나눔) · Google docguide(정본 한 곳) · Nogueira 2026(ADR 양식 비교 — 짧은 Nygard 양식이 가장 높음).
 - 동시 수정: towncrier(조각 파일) · Primer 저장소 ADR 022 중복(연번 충돌 실례) · Microsoft Engineering Playbook(작업 ID 로 번호).
 - 에이전트 지침: Claude 문서 CLAUDE.md 200줄 미만 · Gloaguen 2026(긴 저장소 개요는 성공률은 그대로, 비용만 20% 넘게).
+- 문서 방법 · 동시 수정 · 에이전트 지침 원문: [조사](../research/2026-10-24-c-papers-methods.md).
 
 ## 바뀌는 곳
 

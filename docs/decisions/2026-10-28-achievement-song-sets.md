@@ -34,5 +34,6 @@
 ## 바뀌는 곳
 
 - 문서: [기능 규칙](../design/product-rules.md) 업적 절 · [업적 화면](../design/pages/achievements.md) 상태 · 목록 줄
+- 개인정보처리방침 2026-10-28 판: 점수 비공개일 때 보이지 않는 업적에 곡 묶음 · 계절을 더함(`features/privacy/content/policyCopy.json`)
 - 코드: `features/achievements/{achievement-song-sets.ts,achievement-definitions.ts,server/achievement-service.ts,components/achievement-hex.tsx,components/use-achievement-text.ts,components/achievements-page.tsx}` · `lib/i18n/message-catalogs/{ko,en,ja}.ts`
 - 테스트: `tests/achievement-definitions.test.ts` · `tests/achievement-metrics-database.test.ts` · `e2e/noslog-v2-profile.spec.ts`

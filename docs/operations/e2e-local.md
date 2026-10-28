@@ -10,3 +10,4 @@
 2. 복사본에서 `npx prisma migrate deploy` → `E2E_SEED=1 npm run db:seed:e2e` → `node prisma/import-music-catalog.mjs --apply`.
 3. 복사본에서 `npx next build && npx next start -p 3100`, 리포에서 `DATABASE_URL=<위 e2e 주소> npx playwright test e2e/<스펙>`.
    기본은 모바일 한 폭이고, 두 폭이 필요한 테스트만 `@responsive` · `@desktop` 태그를 단다. 끝나면 3100 서버를 끈다.
+   실패는 이번 변경으로 생긴 것과 원래 있던 것을 나눠 보고한다.

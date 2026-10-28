@@ -34,7 +34,7 @@ Figma · Z1 · 옛 브리프 · 핸드오프 · 감사 문서 · PDF · 레거�
 
 ## 화면
 
-[홈](./pages/home.md) · [악곡 목록 · 채보 보기](./pages/music-list.md) · [악곡 상세](./pages/music-detail.md) · [서열표](./pages/tiers.md) · [빙고](./pages/bingo.md) · [검정](./pages/exams.md) · [프로필](./pages/profile.md) · [업적](./pages/achievements.md) · [설정](./pages/settings.md) · [가입 온보딩 · 로그인](./pages/onboarding-login.md) · [개인정보](./pages/privacy.md) · [데이터 동기화](./pages/sync.md) · [오락실](./pages/arcades.md) · [파트너 동의](./pages/partner-consent.md) · [피드백 · 오류 제보](./pages/feedback.md) · [소식 · 공지](./pages/news.md) · [이벤트](./pages/events.md) · [관리자 공지 작성](./pages/admin-announcements.md) · [채보 뷰어](./pages/chart-viewer.md) · [채보 에디터](./pages/chart-editor.md)
+[홈](./pages/home.md) · [악곡 목록 · 채보 보기](./pages/music-list.md) · [악곡 상세](./pages/music-detail.md) · [서열표](./pages/tiers.md) · [빙고](./pages/bingo.md) · [검정](./pages/exams.md) · [프로필](./pages/profile.md) · [업적](./pages/achievements.md) · [설정](./pages/settings.md) · [가입 온보딩 · 로그인](./pages/onboarding-login.md) · [개인정보](./pages/privacy.md) · [데이터 동기화](./pages/sync.md) · [오락실](./pages/arcades.md) · [랭킹](./pages/rankings.md) · [파트너 동의](./pages/partner-consent.md) · [피드백 · 오류 제보](./pages/feedback.md) · [소식 · 공지](./pages/news.md) · [이벤트](./pages/events.md) · [관리자 공지 작성](./pages/admin-announcements.md) · [채보 뷰어](./pages/chart-viewer.md) · [채보 에디터](./pages/chart-editor.md)
 
 화면 문서 양식: 구성(위에서 아래) · 폭별 · 상태 · 동작 · 하지 않는 것 · 부품 고유 크기 · 바뀐 기록.
 
@@ -57,7 +57,7 @@ Figma · Z1 · 옛 브리프 · 핸드오프 · 감사 문서 · PDF · 레거�
 - 바꾼 화면은 실제 브라우저에서 CSS px 로 잰다. 폭 320 · 390 · 768 · 1280, 바뀐 경계의 양쪽, 한 · 일 · 영.
 - 가로 넘침이 없다는 것만으로 통과시키지 않는다. 같은 줄 높이 · 여백 · 정렬을 함께 본다.
 - 시안이 있는 화면은 시안과 같은 폭으로 나란히 대조하고, 바꾼 동작(메뉴 · 시트 · 창 · 핀 · 쪽 넘김 · 펼치기 · 복사 · 포커스 이동)을 하나씩 눌러 본다. 폰 · 데스크톱, 로그아웃 · 로그인 둘 다. 저장 · 제출 · 삭제는 누르지 않는다.
-- 토큰 검사: `tests/design-foundation.test.ts`(CSS — 간격 · 모서리 · 색 · 글자 크기 · 층 · 굵기 · 줄 높이 px · 선 두께 px · 헤더 높이) · `tests/design-tsx-tokens.test.ts`(공개 TSX — 정적 토큰 참조 · 인라인 값 · Tailwind 기본 스케일과 임의값 · Radix 자리 숫자) · `tests/admin-tsx-tokens.test.ts`(관리자 · 에디터) · `tests/legacy-theme-tokens.test.ts`(옛 이름 없음) · `tests/ai-tells.test.ts`(AI 티 기계 검사). 떠 있는 창 자리는 `components/ui/overlay-position.ts`, JS 크기 계산은 `lib/design-tokens.ts` 의 `readTokenPixels`.
+- 토큰 검사: `tests/design-foundation.test.ts`(CSS, `admin.css` 포함 — 간격 · 모서리 · 색 · 글자 크기 · 층 · 굵기 · 줄 높이 px · 선 두께 px · 헤더 높이) · `tests/design-tsx-tokens.test.ts`(공개 TSX · TS — 정적 토큰 참조 · nl 밖 CSS 변수 이름 · 인라인 값 · Tailwind 기본 스케일과 임의값 · 중단점 변형 · 색 팔레트 · Radix 자리 숫자 · 정본 색 상수 파일 밖 캔버스 색) · `tests/admin-tsx-tokens.test.ts`(관리자 · 에디터, 같은 검사). 예외는 각 테스트의 목록에 이유와 함께 둔다 · `tests/legacy-theme-tokens.test.ts`(옛 이름 없음) · `tests/ai-tells.test.ts`(AI 티 기계 검사). 떠 있는 창 자리는 `components/ui/overlay-position.ts`, JS 크기 계산은 `lib/design-tokens.ts` 의 `readTokenPixels`.
 - 공용 UI 를 바꾸면 `npm run test:storybook`(부품 동작 · WCAG A · AA 자동 검사). 기능 화면 스토리는 실제 View 에 로컬 콜백을 연결하고, 폼 폭 계약(입력 글자 14px · 가로 넘침 · 창 전환 경계)은 같은 스토리 파일의 `Contract*` 가 검사한다.
 - typecheck · lint · 테스트 · e2e 명령은 `AGENTS.md` 「스택 · 명령」. e2e 는 로컬 테스트 DB 에서만.
-- 보고에는 실제로 돌린 것만 쓴다. 안 돌린 검사는 「안 함」.
+- 보고에는 실제로 돌린 것만 쓴다. 안 돌린 검사는 「안 함」. 실패는 원래 있던 것과 이번에 생긴 것을 나눠 적는다.

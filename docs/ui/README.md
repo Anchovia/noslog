@@ -47,7 +47,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 | `IconRow`          | 아이콘 정보 줄(아이콘 · 본문 + 보조 줄 · 끝 동작), `IconRows` 안에서 구분선 |
 | `Stepper`          | 작은 정수 − · 값 · + 한 줄(대수)                                            |
 
-`components/ui`의 실제 부품 파일 56개에 대응하는 스토리 56개와 토큰 예제 1개를 제공한다.
+`components/ui`의 실제 부품 파일 57개 중 56개에 스토리가 있고(`IntentLink`는 없음), 토큰 예제 1개를 더 제공한다.
 폼 입력·스켈레톤·수치 목록의 이름 있는 부품은 해당 파일의 스토리에서 함께 다룬다.
 `use-select-open.ts` 같은 내부 훅은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
 
@@ -90,7 +90,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 
 ```tsx
 <div className="noslog-ui">
-    <section className="rounded-nl-container flex flex-col gap-nl-16 bg-nl-surface p-nl-16">
+    <section className="flex flex-col gap-nl-16 rounded-nl-control bg-nl-surface p-nl-16">
         <p className="nl-body text-nl-content">...</p>
     </section>
 </div>
