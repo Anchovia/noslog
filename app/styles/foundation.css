@@ -502,7 +502,7 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-input);
     color: var(--nl-content-default);
-    font-size: var(--nl-type-size-14);
+    font-size: var(--nl-type-input-size);
     line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-regular);
 }
@@ -2798,7 +2798,7 @@ html[data-theme="light"] .noslog-ui,
     border: 0;
     background: transparent;
     color: var(--nl-content-default);
-    font-size: var(--nl-type-size-14);
+    font-size: var(--nl-type-input-size);
     line-height: var(--nl-type-line-height-ui);
     field-sizing: content;
     resize: vertical;

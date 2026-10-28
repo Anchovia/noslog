@@ -661,3 +661,9 @@
 .noslog-ui .nl-dialog.nl-editor-dialog {
     z-index: calc(var(--nl-layer-fullscreen-dialog) + var(--nl-layer-above));
 }
+/* 시험 편집기 보상 이름 — 회색 줄 안 맨 입력, 글자는 입력칸과 같은 토큰 */
+.noslog-ui .nl-admin-reward__input {
+    font-size: var(--nl-type-input-size);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
+}

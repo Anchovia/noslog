@@ -4,10 +4,10 @@
 
 ## 모양
 
-- 입력 · 검색 · 단위 입력 · 마크다운 입력 · 스테퍼 · 파일 줄은 Spectrum 2 텍스트 필드다. 면 `surface/input` + 2px 실제 테두리 `border/input` · 모서리 `radius/control` · 높이 L. 검색칸만 Spectrum 2 SearchField 라 모서리 `radius/full` 이다.
+- 입력 · 검색 · 단위 입력 · 마크다운 입력 · 스테퍼 · 파일 줄은 Spectrum 2 텍스트 필드다. 면 `surface/input` + 2px 실제 테두리 `border/input` · 모서리 `radius/control` · 높이 L. 검색칸만 Spectrum 2 SearchField 라 모서리 `radius/full` 이고, 높이는 모든 화면 · 모든 폭 크게(40)다. 화면 CSS 가 높이를 덮어쓰지 않는다.
 - 올리면 테두리가 `border/input-hover` 로 밝아진다. 포커스는 커서가 들어가면 테두리가 `content/strong` 으로 바뀌는 것 하나다. 잘못된 칸은 빨간 경계를 지키고, 포커스는 바깥 흰 선 한 줄로 보인다. 바깥 선 · 파랑 링을 겹쳐 그리지 않는다([기초값 — 포커스](../foundations.md#포커스)).
 - 셀렉트는 Spectrum 2 picker 다. 면 `surface/control` · 테두리 없음이고, 올림 · 누름 · 키 포커스 · 열림에 면 `surface/control-hover` · 글자 `content/strong` 이다. 꺾쇠는 글자색을 따르고, 고른 값이 없을 때만 `content/tertiary` 다.
-- 글자는 모든 폭 `nl-control`(14 · 400). 자리표시자 · 입력 아이콘은 `content/tertiary`.
+- 입력 글자(입력칸 · 검색칸 · 단위 입력 · 마크다운 입력)는 모든 폭 `--nl-type-input-size`(16) · 400 · 줄 높이 `--nl-type-line-height-ui` 다. 16 보다 작으면 iOS Safari 가 포커스 때 화면을 확대한다. 입력 글자 크기는 이 토큰 하나만 고친다. 셀렉트 글자는 `nl-control`(14 · 400). 자리표시자 · 입력 아이콘은 `content/tertiary`.
 - 칸 라벨은 `control`(14/400) · `content/subdued`. 칸 라벨 → 입력 · 값 4. 도움말 · 오류는 칸 아래 `nl-metadata--long`.
 - 칸이 둘 이상 이어지면 칸 사이는 24 다. 공용 규칙이 맞추므로 화면 CSS 가 덮어쓰지 않는다.
 
@@ -23,7 +23,7 @@
 | 범위 셀렉트 라벨 | 12 (바깥 4 + 버튼 8) · 꺾쇠 16                    |
 | 지우기 ×         | 20, 오른쪽 12 (중심 22 = 셀렉트 꺾쇠와 같은 자리) |
 
-검색창 안 범위 셀렉트 · 지우기는 4px 안쪽 층이다. 면만 M 정사각(모서리 `radius/small`)이고 잉크는 위 규칙을 따른다. 누르는 높이는 검색창 그대로다. 올림 · 누름 · 키 포커스에 안쪽 층이 `surface/control-hover`, 잉크가 `content/strong` 이다.
+검색창 안 범위 셀렉트는 올리거나 눌러도 면 · 글자색이 바뀌지 않는다. 키 포커스는 [포커스](../foundations.md#포커스) 선만 보인다. 지우기는 4px 안쪽 층이다. 면만 위아래 4 를 비운 32 정사각(모서리 `radius/small`)이고, 올림 · 누름 · 키 포커스에 안쪽 층이 `surface/control-hover`, 잉크가 `content/strong` 이다. 두 컨트롤 모두 누르는 높이는 검색창 그대로다.
 
 ## 변형
 
@@ -54,6 +54,7 @@
 
 ## 바뀐 기록
 
+- [2026-10-29 입력 글자 크기 · 검색칸 높이를 한 곳에서](../../decisions/2026-10-29-input-text-16.md)
 - [2026-10-28 전수 검수 — 검색 · 단위 입력 글자](../../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)

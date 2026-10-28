@@ -46,10 +46,6 @@
     position: relative;
     width: 100%;
 }
-/* 메인 검색은 모든 폭 크게(40) */
-.noslog-ui .nl-home-search > .nl-search {
-    --nl-control-height: var(--nl-control-height-large);
-}
 .noslog-ui .nl-home-destinations {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

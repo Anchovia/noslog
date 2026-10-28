@@ -63,7 +63,7 @@ export default function ExamRewardSection({
                                 aria-invalid={Boolean(
                                     errors.rewards?.[index]?.label
                                 )}
-                                className="nl-control min-w-0 flex-1 bg-transparent text-nl-content outline-none"
+                                className="nl-admin-reward__input min-w-0 flex-1 bg-transparent text-nl-content outline-none"
                                 {...register(`rewards.${index}.label`)}
                             />
                             <button

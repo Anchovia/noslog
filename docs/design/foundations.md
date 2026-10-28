@@ -87,7 +87,7 @@
 | `nl-component-title` · `nl-entity-title` | 16/24 · 600 · 16/24 · 600    | 상자 · 창 · 필터 그룹 제목 / 목록 · 카드 항목 이름              |
 | `nl-body` · `nl-body-secondary`          | 16/24 · 400                  | 본문 / 보조 설명                                                |
 | `nl-body-reading`                        | 16/24 · 400 / 16/27          | 공지 · 이벤트 글 · 개발자 문서 본문 · 대화상자 본문             |
-| `nl-control`                             | 14/18 · 400 / 14/21          | 버튼 · 탭 · 라벨 · 입력 · 메뉴 항목                             |
+| `nl-control`                             | 14/18 · 400 / 14/21          | 버튼 · 탭 · 라벨 · 셀렉트 · 메뉴 항목                           |
 | `nl-emphasis-label`                      | 14/18 · 600 / 14/21          | 고른 항목, 격자 카드 항목 이름                                  |
 | `nl-metadata`                            | 12/16 · 400                  | 3차 정보(자간 0). 12 보다 작게 쓰지 않음                        |
 | `nl-metric-display` · `nl-metric-value`  | 32/40 · 700 · 14/18 · 500    | 비교하는 숫자. 고정폭 숫자(tabular)는 이 둘에만                 |
@@ -104,7 +104,7 @@
 - 굵기는 400 · 500 · 600 · 700 · 800 만. 부품 글자의 bold 는 `--nl-type-weight-strong`(라틴 700 · CJK 500)이다. 쪽 제목 · 절 제목은 한국어 · 일본어도 700 이다.
 - 버튼 글자는 bold, 고스트 · 메뉴 항목 · 이동 목록 줄 · 홈 이동 칸 · 헤더 로그인 · 단독 링크는 medium, 탭은 안 고른 것 medium · 고른 것 600, 세그먼트 칸은 고른 것도 regular 다. 카드(`SurfaceCard`) 항목 이름은 14 bold, 대화상자 제목은 22 bold(줄 26 · CJK 33), 메뉴 묶음 제목은 14 bold `content/default` 다.
 - 전체 화면 창(필터 창)은 야놀자 필터 시트 글자다. 창 제목은 20/24 bold, 필터 묶음 제목(`nl-filter-group__head` 의 `nl-component-title`)은 16/20 bold, 칩 글자는 14/18 regular 다.
-- 클래스 없는 셸 기본 글자와 입력칸 글자는 모든 폭에서 14/18(CJK 14/21)이다.
+- 클래스 없는 셸 기본 글자는 모든 폭에서 14/18(CJK 14/21)이다. 입력 글자는 역할 토큰 `--nl-type-input-size`(16)다([입력 · 셀렉트 · 검색](./components/field.md#모양)).
 - 제목 클래스(`page-title` · `section-title` · `component-title` · `entity-title`) 글자색은 `content/strong`, 본문은 `content/default`. `component-title` 의 색은 Tailwind `components` 레이어에 있어, 상태 · 난이도 색 클래스를 함께 붙이면 그 색이 이긴다.
 - 흐린 메타 줄(`metadata` + 흐림)은 `content/subdued`. 칩 · 버튼 · 세그먼트 칸 안에서는 대비가 모자라 `content/subdued` 그대로.
 - `metric-value` 밖의 14 · 500 은 위의 medium 자리에만 쓴다. 칸 라벨 · 필터 그룹 옆 버튼은 `control` 400 이다.
