@@ -60,4 +60,19 @@ export const AtMinimum: Story = {
         ).toBeDisabled();
     },
 };
-export const Disabled: Story = { args: { disabled: true } };
+export const Disabled: Story = {
+    args: { disabled: true },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByRole("group")).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
+        await expect(
+            canvas.getByRole("button", { name: "대수 줄이기" })
+        ).toBeDisabled();
+        await expect(
+            canvas.getByRole("button", { name: "대수 늘리기" })
+        ).toBeDisabled();
+    },
+};
