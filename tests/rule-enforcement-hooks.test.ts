@@ -143,6 +143,19 @@ describe("세션 넘기기 판정", () => {
                 now: minutesLater(HANDOFF_IDLE_MINUTES - 1),
             })
         ).toBeNull();
+        // 「75분 넘게」 라 딱 기준 분은 넘기지 않고 1분 더 쉬어야 넣는다
+        expect(
+            judgeHandoff(longSession, {
+                prompt: "이어서",
+                now: minutesLater(HANDOFF_IDLE_MINUTES),
+            })
+        ).toBeNull();
+        expect(
+            judgeHandoff(longSession, {
+                prompt: "이어서",
+                now: minutesLater(HANDOFF_IDLE_MINUTES + 1),
+            })
+        ).not.toBeNull();
         const shortSession = [
             assistant("a", [{ type: "text", text: "이전 답" }], {
                 timestamp: answeredAt,

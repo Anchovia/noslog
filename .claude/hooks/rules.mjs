@@ -110,7 +110,7 @@ export function judgeHandoff(entries, { prompt = "", now = Date.now() } = {}) {
     const state = lastTurnState(entries);
     if (!state || Number.isNaN(state.at)) return null;
     const minutes = Math.floor((now - state.at) / 60_000);
-    if (minutes < HANDOFF_IDLE_MINUTES || state.tokens < HANDOFF_MIN_TOKENS)
+    if (minutes <= HANDOFF_IDLE_MINUTES || state.tokens < HANDOFF_MIN_TOKENS)
         return null;
     return [
         "===== 세션 넘기기 (훅이 잰 값) =====",

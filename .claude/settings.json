@@ -21,6 +21,7 @@
             "Bash(prisma migrate reset *)",
             "Bash(npx prisma db push *)",
             "Bash(prisma db push *)",
+            "Bash(* --accept-data-loss)",
             "Bash(* --accept-data-loss *)",
             "Bash(* --force)",
             "Bash(* --force *)",
