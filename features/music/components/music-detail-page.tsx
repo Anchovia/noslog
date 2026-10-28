@@ -207,11 +207,13 @@ export default function MusicDetailPage({
                     </span>
                     {data && query.isError ? (
                         <StatusMessage
+                            tone="quiet"
                             severity="danger"
                             role="alert"
                             title={t("detail.error")}
                             action={
                                 <ActionButton
+                                    variant="ghost"
                                     size="sm"
                                     onClick={() => void query.refetch()}
                                 >
@@ -227,6 +229,7 @@ export default function MusicDetailPage({
                                 message={t("detail.error")}
                                 action={
                                     <ActionButton
+                                        variant="secondary"
                                         onClick={() => void query.refetch()}
                                     >
                                         {t("common.retry")}
@@ -246,12 +249,7 @@ export default function MusicDetailPage({
                         )
                     ) : null}
                     {data && selection.tab === "detail" ? (
-                        <OverviewPanel
-                            data={data}
-                            onEvaluate={() =>
-                                change(selection.difficulty, "tier")
-                            }
-                        />
+                        <OverviewPanel data={data} />
                     ) : null}
                     {data && selection.tab === "record" ? (
                         <MusicRecordPanel data={data} />

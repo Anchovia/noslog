@@ -5,7 +5,6 @@ import {
     communityDataSchema,
     opinionPageSchema,
     opinionReplyListSchema,
-    patternDataSchema,
 } from "@/features/music/schemas/community-schema";
 import { readApiResponse } from "@/lib/api/response";
 
@@ -17,24 +16,6 @@ async function getCommunity(params: URLSearchParams, signal: AbortSignal) {
             cache: "no-store",
         })
     );
-}
-
-export function communityPatternOptions(chartId: number) {
-    return queryOptions({
-        queryKey: ["music-community", chartId, "pattern"],
-        staleTime: 60_000,
-        retry: false,
-        queryFn: async ({ signal }) =>
-            patternDataSchema.parse(
-                await getCommunity(
-                    new URLSearchParams({
-                        chartId: String(chartId),
-                        area: "pattern",
-                    }),
-                    signal
-                )
-            ),
-    });
 }
 
 export function communityOptions(chartId: number, accountId?: number) {

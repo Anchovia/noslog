@@ -13,9 +13,15 @@ const LEVELS = [0, 1, 2, 3, 4] as const;
  * 「패턴 경향 기준」 ⓘ + 창 — 개요 제목 줄과 평가 탭 패턴 투표 기준 줄이 같은 창을 연다.
  * 기준 = 모든 곡 대비 세기(곡 안 비중 아님) · 단계 이름 0–4 는 막대 단계 색 네모와 함께 (2026-09-23 A1 + B2)
  * 안 = 소제목 「단계」 · 「항목」 + 구분선 줄 목록(2026-09-26 I1)
+ * 개요(computed)는 채보에서 계산한 백분율이라 0–4 단계 대신 계산 기준과 「—」 뜻을 보인다
  */
-export default function PatternCriteriaDialog() {
+export default function PatternCriteriaDialog({
+    variant = "vote",
+}: {
+    variant?: "vote" | "computed";
+}) {
     const t = useTranslations();
+    const computed = variant === "computed";
     const [open, setOpen] = useState(false);
     return (
         <ModalDialog
@@ -32,29 +38,35 @@ export default function PatternCriteriaDialog() {
                 </button>
             }
         >
-            <p className="nl-body-secondary">{t("pattern.basis")}</p>
-            <section className="nl-info-section">
-                <h3 className="nl-metadata nl-muted">{t("pattern.levels")}</h3>
-                <ul className="nl-info-rows nl-pattern-steps">
-                    {LEVELS.map((level) => (
-                        <li key={level}>
-                            <span className="nl-info-rows__lead">
-                                <span
-                                    className="nl-pattern-steps__swatch"
-                                    data-level={level}
-                                    aria-hidden
-                                />
-                                <span className="nl-emphasis-label">
-                                    {level}
+            <p className="nl-body-secondary">
+                {t(computed ? "pattern.computed" : "pattern.basis")}
+            </p>
+            {computed ? null : (
+                <section className="nl-info-section">
+                    <h3 className="nl-metadata nl-muted">
+                        {t("pattern.levels")}
+                    </h3>
+                    <ul className="nl-info-rows nl-pattern-steps">
+                        {LEVELS.map((level) => (
+                            <li key={level}>
+                                <span className="nl-info-rows__lead">
+                                    <span
+                                        className="nl-pattern-steps__swatch"
+                                        data-level={level}
+                                        aria-hidden
+                                    />
+                                    <span className="nl-emphasis-label">
+                                        {level}
+                                    </span>
                                 </span>
-                            </span>
-                            <span className="nl-body-secondary">
-                                {t(`pattern.level.${level}`)}
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+                                <span className="nl-body-secondary">
+                                    {t(`pattern.level.${level}`)}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
             <section className="nl-info-section">
                 <h3 className="nl-metadata nl-muted">{t("pattern.axes")}</h3>
                 <dl className="nl-info-rows">
@@ -71,7 +83,7 @@ export default function PatternCriteriaDialog() {
                 </dl>
             </section>
             <p className="nl-metadata nl-metadata--long">
-                {t("pattern.scale")}
+                {t(computed ? "pattern.computedMissing" : "pattern.scale")}
             </p>
         </ModalDialog>
     );

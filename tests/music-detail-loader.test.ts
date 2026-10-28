@@ -43,7 +43,9 @@ vi.mock("@/features/music/server/chart-ranking", () => ({
 }));
 vi.mock("@/features/music/server/community-data", () => ({
     getCommunityData: mocks.community,
-    getCachedCommunityPattern: async () => undefined,
+}));
+vi.mock("@/features/music/server/pattern-metrics", () => ({
+    getPatternTendency: async () => null,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));

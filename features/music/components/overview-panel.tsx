@@ -1,8 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight } from "lucide-react";
-import { Fragment, type ReactNode, useId } from "react";
+import { ArrowLeftRight, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Fragment, type ReactNode, useId, useState } from "react";
 
 import {
     useLocale,
@@ -11,18 +12,16 @@ import {
 } from "@/components/i18n/locale-provider";
 import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
-import BarList, { BarListSkeleton } from "@/components/ui/bar-list";
+import BarList from "@/components/ui/bar-list";
 import IntentLink from "@/components/ui/intent-link";
-import ResultState from "@/components/ui/result-state";
-import { LoadingStatus } from "@/components/ui/skeleton";
 import StatStrip from "@/components/ui/stat-strip";
+import { StatusMessage } from "@/components/ui/status-message";
 import { myPendingChartFieldsOptions } from "@/features/contributions/api/chart-field-proposals";
 import ChartFieldFactAction from "@/features/contributions/components/chart-field-fact-action";
 import {
     type ChartFieldProposalField,
     chartFieldValue,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
-import { communityPatternOptions } from "@/features/music/api/community";
 import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
 import { rankTone, scoreTone } from "@/lib/music/score-tone";
 
@@ -30,32 +29,24 @@ import PatternCriteriaDialog from "./pattern-criteria-dialog";
 import TierHistory from "./tier-history";
 
 /**
- * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 「평가하기 ›」) ② 내 기록 요약 띠 ③ 채보 정보
+ * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 기준 전환) ② 내 기록 요약 띠 ③ 채보 정보
  * ④ 서열 변경 이력(접힘). 값이 없는 구역은 두지 않는다 (2026-09-16).
  * 채보 정보의 BPM · 노트 수 · 길이 · 수록일은 비어 있어도 줄을 두고 「추가」 로 기여를 받는다(2026-09-23)
  */
-export default function OverviewPanel({
-    data,
-    onEvaluate,
-}: {
-    data: MusicDetailProps;
-    onEvaluate: () => void;
-}) {
+export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
+    const router = useRouter();
     const chart = data.chartDetail;
-    const pattern = useQuery({
-        ...communityPatternOptions(chart.id),
-        initialData: data.patternSummary
-            ? { pattern: data.patternSummary }
-            : undefined,
-    });
-    const id = useId();
-    const summary = pattern.data?.pattern;
-    const evaluatorCount = summary
-        ? Math.max(...PATTERN_AXES.map((axis) => summary[axis].count))
+    const tendency = data.patternTendency;
+    const [basisAll, setBasisAll] = useState(false);
+    const strengths = tendency
+        ? basisAll
+            ? tendency.all
+            : tendency.difficulty
         : null;
+    const id = useId();
     const record = data.userPlayData;
     const pendingOptions = myPendingChartFieldsOptions(
         chart.id,
@@ -144,61 +135,70 @@ export default function OverviewPanel({
                     <h2 id={`${id}-pattern`} className="nl-section-title">
                         {t("pattern.title")}
                     </h2>
-                    <PatternCriteriaDialog />
-                    {evaluatorCount !== null ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("pattern.count", { count: evaluatorCount })}
-                        </span>
+                    <PatternCriteriaDialog variant="computed" />
+                    {tendency ? (
+                        // 지금 기준을 글자로, 누르면 다른 기준 — max-scouter 패턴 경향 기준 단추와 같다
+                        <ActionButton
+                            variant="ghost"
+                            size="sm"
+                            className="nl-heading-row__end"
+                            aria-label={
+                                basisAll
+                                    ? t("pattern.switchToDifficulty", {
+                                          difficulty: data.difficulty,
+                                      })
+                                    : t("pattern.switchToAll")
+                            }
+                            onClick={() => setBasisAll((value) => !value)}
+                        >
+                            {basisAll
+                                ? t("pattern.basisAll")
+                                : t("pattern.basisDifficulty", {
+                                      difficulty: data.difficulty,
+                                  })}
+                            <ArrowLeftRight aria-hidden />
+                        </ActionButton>
                     ) : null}
-                    <button
-                        type="button"
-                        className="nl-heading-link nl-control"
-                        onClick={onEvaluate}
-                    >
-                        {t("pattern.evaluate")}
-                        <ChevronRight aria-hidden />
-                    </button>
                 </div>
-                {/* 집계가 없어도 빈 막대 그래프를 그대로 — 값 자리는 「—」 (2026-09-16) */}
-                {summary ? (
-                    <div className="nl-overview__card">
-                        <BarList
-                            max={4}
-                            label={t("pattern.title")}
-                            rows={PATTERN_AXES.map((axis) => ({
-                                key: axis,
-                                label: t(`pattern.axis.${axis}`),
-                                value: summary[axis].average,
-                                display: summary[axis].average?.toFixed(1),
-                                // 평균의 가장 가까운 정수 단계 색 — 파랑 → 하늘 → 노랑 → 주황 → 빨강 (2026-09-17 E2)
-                                color:
-                                    summary[axis].average === null
-                                        ? undefined
-                                        : `var(--nl-pattern-level-${Math.round(summary[axis].average)})`,
-                            }))}
-                        />
-                    </div>
-                ) : pattern.isError ? (
-                    <ResultState
-                        error
-                        message={t("detail.error")}
+                {tendency === undefined ? (
+                    <StatusMessage
+                        tone="quiet"
+                        severity="danger"
+                        role="alert"
+                        title={t("detail.error")}
                         action={
                             <ActionButton
+                                variant="ghost"
                                 size="sm"
-                                onClick={() => void pattern.refetch()}
+                                onClick={() => router.refresh()}
                             >
                                 {t("common.retry")}
                             </ActionButton>
                         }
                     />
                 ) : (
-                    // 불러오는 동안 — 같은 막대 목록 틀에 항목 이름은 실제 글자, 값 자리만 스켈레톤
-                    <div className="nl-overview__card" aria-busy="true">
-                        <LoadingStatus label={t("pattern.loading")} />
-                        <BarListSkeleton
-                            labels={PATTERN_AXES.map((axis) =>
-                                t(`pattern.axis.${axis}`)
-                            )}
+                    // 공개 채보가 없어도 빈 막대 그래프를 그대로 — 값 자리는 「—」 (2026-09-16)
+                    <div className="nl-overview__card">
+                        <BarList
+                            max={1}
+                            label={t("pattern.title")}
+                            rows={PATTERN_AXES.map((axis) => {
+                                const value = strengths?.[axis] ?? null;
+                                return {
+                                    key: axis,
+                                    label: t(`pattern.axis.${axis}`),
+                                    value,
+                                    display:
+                                        value === null
+                                            ? undefined
+                                            : `${Math.round(value * 100)}%`,
+                                    // 0–4 단계 색을 25% 마다(파랑 → 하늘 → 노랑 → 주황 → 빨강)
+                                    color:
+                                        value === null
+                                            ? undefined
+                                            : `var(--nl-pattern-level-${Math.round(value * 4)})`,
+                                };
+                            })}
                         />
                     </div>
                 )}

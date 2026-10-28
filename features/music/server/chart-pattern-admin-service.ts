@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { revalidatePath, updateTag } from "next/cache";
 import { z } from "zod";
 
+import { savePatternMetrics } from "@/features/music/server/pattern-metrics";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
@@ -239,6 +240,14 @@ async function saveRevision(
                         createdAt: true,
                     },
                 });
+                if (kind === "publish") {
+                    await savePatternMetrics(
+                        transaction,
+                        chartId,
+                        document,
+                        nextRevision
+                    );
+                }
                 return {
                     success: true,
                     message:
@@ -298,6 +307,14 @@ async function saveRevision(
                 createdAt: true,
             },
         });
+        if (kind === "publish") {
+            await savePatternMetrics(
+                transaction,
+                chartId,
+                document,
+                nextRevision
+            );
+        }
 
         return {
             success: true,
@@ -335,6 +352,7 @@ export async function publishChartPattern(input: unknown) {
     if (result.success) {
         // 기여 채보 공개와 같게 바로 비운다 — 운영자가 저장 직후 공개 화면에서 새 채보를 본다(2026-10-16 D8 · B6)
         updateTag(CACHE_TAGS.musicDetails);
+        updateTag(CACHE_TAGS.patternMetrics);
         revalidatePath("/music");
     }
     return result;

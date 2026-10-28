@@ -18,6 +18,7 @@ import {
     getNameLabels,
     refreshContributionViews,
 } from "@/features/contributions/server/contribution-point-service";
+import { savePatternMetrics } from "@/features/music/server/pattern-metrics";
 import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
@@ -412,16 +413,18 @@ export async function addChartComment(
                     success: false,
                     message: t("contribution.comment.invalid"),
                 };
+            // 하루 한도는 공개 채보 의견만 센다 — 초안 검토 댓글은 한도와 따로다
             const recent = await db.chartComment.count({
                 where: {
                     userId: session.id,
+                    draftId: null,
                     createdAt: { gte: new Date(Date.now() - 86_400_000) },
                 },
             });
             if (recent >= CHART_COMMENT_DAILY_LIMIT)
                 return {
                     success: false,
-                    message: t("contribution.proposal.dailyLimit"),
+                    message: t("contribution.comment.dailyLimit"),
                 };
         }
         await db.chartComment.create({
@@ -741,6 +744,12 @@ export async function reviewChartDraft(
                     createdById: admin.id,
                 },
             });
+            await savePatternMetrics(
+                tx,
+                draft.chartId,
+                document.data,
+                nextRevision
+            );
             // 공개 버전마다 한 번 — 같은 트랜잭션에서 적립
             await tx.contributionPoint.createMany({
                 data: [
@@ -757,6 +766,7 @@ export async function reviewChartDraft(
         });
         refreshContributionViews([draft.userId]);
         updateTag(CACHE_TAGS.musicDetails);
+        updateTag(CACHE_TAGS.patternMetrics);
         revalidatePath("/music");
         revalidatePath(
             `/music/${encodeURIComponent(draft.chart.musicIdx)}/${draft.chart.difficulty.toLowerCase()}/pattern`

@@ -3,32 +3,57 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
-const pattern = {
-    stairs: { count: 41, average: 2.8 },
-    repetition: { count: 40, average: 3.4 },
-    polyrhythm: { count: 38, average: 1.6 },
-    offset: { count: 39, average: 2.1 },
-    chords: { count: 41, average: 3.7 },
+// 개요의 패턴 경향은 채보 데이터 계산값(같은 난이도 · 전곡 두 기준, 0–1)이다. 변박 null = 박자표를 알 수 없음
+const tendency = {
+    difficulty: {
+        stairs: 0.9,
+        repetition: 1,
+        polyrhythm: 0.13,
+        offset: 0.21,
+        chords: null,
+    },
+    all: {
+        stairs: 0.82,
+        repetition: 0.88,
+        polyrhythm: 0.08,
+        offset: 0.13,
+        chords: null,
+    },
 };
 
-// 개요의 패턴 경향은 서버가 상세와 함께 그린다(2026-10-15 S5) — 고정 데이터를 보이려면
-// 서버 요약이 빠진 상세(클라가 따로 받는 경우)를 주고 다른 탭에서 개요로 옮겨 온다
-async function openOverviewWithClientPattern(page: Page, locale = "ko") {
-    await page.route("**/api/music-detail?**", async (route) => {
-        const response = await route.fetch();
-        const body = await response.json();
-        await route.fulfill({
-            json: {
-                ...body,
-                result: { ...body.result, patternSummary: undefined },
-            },
-        });
-    });
-    await page.goto(`/${locale}${musicPath}?tab=record`);
-    await page.getByRole("tab").first().click();
-    // 개요를 받은 뒤의 상세 요청(다른 탭 · 난이도)은 그대로 서버로 보낸다
+// 패턴 경향은 상세 데이터에 늘 함께 와서 탭을 옮겨도 다시 받지 않는다 — 고정 값을 보이려면
+// Hard 에서 연 뒤 그 값이 든 Expert 상세 응답을 주고 난이도를 옮긴다. undefined 는 읽기 실패
+async function openOverviewWithPattern(
+    page: Page,
+    patternTendency: unknown,
+    locale = "ko"
+) {
+    await page.route(
+        "**/api/music-detail?*difficulty=expert*",
+        async (route) => {
+            const response = await route.fetch();
+            const body = await response.json();
+            await route.fulfill({
+                json: {
+                    ...body,
+                    result: { ...body.result, patternTendency },
+                },
+            });
+        }
+    );
+    await page.goto(`/${locale}${musicPath.replace(/expert$/, "hard")}`);
+    // Hard 개요도 이미 보이므로 Expert 응답이 끝난 뒤에 가로채기를 푼다
+    const loaded = page.waitForResponse(
+        (response) =>
+            response.url().includes("/api/music-detail?") &&
+            response.url().includes("difficulty=expert")
+    );
+    await page.getByRole("radio", { name: /^Expert/ }).click();
+    await loaded;
+    await expect(page).toHaveURL(/\/expert$/);
     await expect(page.locator(".nl-overview")).toBeVisible();
-    await page.unroute("**/api/music-detail?**");
+    // 받은 뒤의 상세 요청(다른 탭 · 난이도)은 그대로 서버로 보낸다
+    await page.unroute("**/api/music-detail?*difficulty=expert*");
 }
 
 test("Music detail enters Overview and keeps the four difficulty choices on one row", async ({
@@ -110,20 +135,10 @@ test("Music detail enters Overview and keeps the four difficulty choices on one 
     await expect(page.getByRole("radio", { name: /^Expert/ })).toBeChecked();
 });
 
-test("Pattern trend lists five exact values as bars with a keyboard dismissible help dialog", async ({
+test("Pattern trend shows five computed values and switches between the difficulty and all charts", async ({
     page,
 }) => {
-    await page.route("**/api/music-community?**", (route) =>
-        route.fulfill({
-            json: {
-                isSuccess: true,
-                code: "SUCCESS",
-                message: "",
-                result: { pattern },
-            },
-        })
-    );
-    await openOverviewWithClientPattern(page);
+    await openOverviewWithPattern(page, tendency);
     const bars = page.locator(".nl-overview .nl-bar-list");
     await expect(bars.locator("dt")).toHaveText([
         "계단",
@@ -133,119 +148,76 @@ test("Pattern trend lists five exact values as bars with a keyboard dismissible 
         "변박",
     ]);
     await expect(bars.locator(".nl-bar-list__value")).toHaveText([
-        "2.8",
-        "3.4",
-        "1.6",
-        "2.1",
-        "3.7",
+        "90%",
+        "100%",
+        "13%",
+        "21%",
+        "—",
     ]);
-    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(5);
-    // 평가 인원은 제목 줄에, 「평가하기 ›」 는 같은 줄 오른쪽 끝 — 누르면 평가 탭
-    // 내 기록 구역도 제목 줄(로그인 링크)을 가지므로 패턴 경향 제목 줄은 첫 줄이다
-    await expect(
-        page.locator(".nl-overview .nl-heading-row").first()
-    ).toContainText("평가 41명");
+    // 변박은 박자표를 알 수 없어 빈 막대
+    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(4);
+    const basis = page.getByRole("button", {
+        name: "전곡 기준으로 보기",
+        exact: true,
+    });
+    await expect(basis).toHaveText("Expert 기준");
+    await expect(page.locator(".nl-overview")).not.toContainText("평가하기");
+    await basis.click();
+    const back = page.getByRole("button", {
+        name: "Expert 기준으로 보기",
+        exact: true,
+    });
+    await expect(back).toHaveText("전곡 기준");
+    await expect(bars.locator(".nl-bar-list__value")).toHaveText([
+        "82%",
+        "88%",
+        "8%",
+        "13%",
+        "—",
+    ]);
+    await back.click();
+    await expect(bars.locator(".nl-bar-list__value").first()).toHaveText("90%");
     const help = page.getByRole("button", {
         name: "패턴 경향 기준",
         exact: true,
     });
     await help.click();
-    await expect(
-        page.getByRole("dialog", { name: "패턴 경향 기준" })
-    ).toBeVisible();
+    const dialog = page.getByRole("dialog", { name: "패턴 경향 기준" });
+    await expect(dialog).toContainText("상위 1%의 중앙값을 100%로 둡니다");
+    await expect(dialog).not.toContainText("악곡의 특색일 정도");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(help).toBeFocused();
-    await page.getByRole("button", { name: "평가하기", exact: true }).click();
-    await expect(page).toHaveURL(/tab=tier/);
 });
 
-test("An incomplete pattern aggregate keeps the other bars and marks only the missing axis", async ({
+test("A chart without a published chart draws the empty bar graph without a basis switch", async ({
     page,
 }) => {
-    await page.route("**/api/music-community?**", (route) =>
-        route.fulfill({
-            json: {
-                isSuccess: true,
-                code: "SUCCESS",
-                message: "",
-                result: {
-                    pattern: {
-                        ...pattern,
-                        polyrhythm: { count: 2, average: null },
-                    },
-                },
-            },
-        })
-    );
-    await openOverviewWithClientPattern(page);
-    const bars = page.locator(".nl-overview .nl-bar-list");
-    await expect(bars.locator(".nl-bar-list__value").nth(2)).toHaveText("—");
-    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(4);
-});
-
-test("Axes without an average still draw the empty bar graph without a sentence", async ({
-    page,
-}) => {
-    const empty = Object.fromEntries(
-        Object.keys(pattern).map((axis) => [axis, { count: 1, average: null }])
-    );
-    await page.route("**/api/music-community?**", (route) =>
-        route.fulfill({
-            json: {
-                isSuccess: true,
-                code: "SUCCESS",
-                message: "",
-                result: { pattern: empty },
-            },
-        })
-    );
-    await openOverviewWithClientPattern(page);
-    // 집계가 없어도 빈 막대 5줄 + 값 「—」, 문장 없음 (2026-09-16)
+    await openOverviewWithPattern(page, null);
+    // 공개 채보가 없어도 빈 막대 5줄 + 값 「—」, 문장 없음 (2026-09-16)
     const bars = page.locator(".nl-overview .nl-bar-list");
     await expect(bars.locator(".nl-bar-list__row")).toHaveCount(5);
     await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(0);
     await expect(bars.locator(".nl-bar-list__value").first()).toHaveText("—");
-    await expect(page.locator(".nl-overview")).not.toContainText("집계");
+    await expect(
+        page.getByRole("button", { name: "전곡 기준으로 보기" })
+    ).toHaveCount(0);
 });
 
-test("Pattern request failure keeps the page and retries only its region", async ({
+test("Pattern load failure keeps the page and shows the error in its region", async ({
     page,
 }) => {
-    let failed = true;
-    await page.route("**/api/music-community?**", (route) =>
-        failed
-            ? route.fulfill({
-                  status: 503,
-                  json: {
-                      isSuccess: false,
-                      code: "TEST_UNAVAILABLE",
-                      message: "Unavailable",
-                      result: null,
-                  },
-              })
-            : route.fulfill({
-                  json: {
-                      isSuccess: true,
-                      code: "SUCCESS",
-                      message: "",
-                      result: { pattern },
-                  },
-              })
-    );
-    await openOverviewWithClientPattern(page);
+    await openOverviewWithPattern(page, undefined);
     const error = page
         .getByRole("alert")
         .filter({ hasText: "악곡 정보를 불러오지 못했습니다." });
     await expect(error).toBeVisible();
     await expect(
+        error.getByRole("button", { name: "다시 시도", exact: true })
+    ).toBeVisible();
+    await expect(
         page.getByRole("heading", { name: "내 기록", exact: true })
     ).toBeVisible();
-    failed = false;
-    await error.getByRole("button", { name: "다시 시도", exact: true }).click();
-    await expect(page.locator(".nl-overview .nl-bar-list__fill")).toHaveCount(
-        5
-    );
 });
 
 test("Exact-target refresh failure retains information and offers a working retry", async ({
@@ -324,18 +296,8 @@ for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} Overview keeps readable labels at every width and passes accessibility checks`, async ({
         page,
     }, testInfo) => {
-        await page.route("**/api/music-community?**", (route) =>
-            route.fulfill({
-                json: {
-                    isSuccess: true,
-                    code: "SUCCESS",
-                    message: "",
-                    result: { pattern },
-                },
-            })
-        );
-        await openOverviewWithClientPattern(page, locale);
-        await expect(page.locator(".nl-bar-list__fill")).toHaveCount(5);
+        await openOverviewWithPattern(page, tendency, locale);
+        await expect(page.locator(".nl-bar-list__fill")).toHaveCount(4);
         for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });
             // 1056+ 는 왼쪽 머리 열 + 오른쪽 탭 내용 두 열 (2026-09-16 데스크톱 B)
