@@ -67,10 +67,11 @@
 
     앱은 `DATABASE_URL` 의 호스트만 `DATABASE_EXPECTED_HOST` 와 맞춰 본다. `prisma migrate deploy` 는 이 확인을 거치지 않으니 `DATABASE_MIGRATION_URL` 은 붙여 넣은 뒤 호스트를 눈으로 한 번 더 본다.
 
-7. 배포. [릴리스](./release.md) 순서대로 버전을 올리고 `dev` 에서 `main` 으로 PR 을 합친다. 이전 커밋만 따로 `main` 에 cherry-pick 하면 `main` 에 없는 결정 색인과 충돌하므로, `dev` 에 쌓인 커밋이 함께 나간다. 배포 빌드가 `prisma migrate deploy` 를 `DATABASE_MIGRATION_URL` 로 돌리고, 함수는 `icn1` 에서 뜬다. 이때 운영에 없던 마이그레이션 3개가 PlanetScale 에 함께 적용된다. 모두 표 · 열 · 색인 · 타입을 더하기만 한다.
+7. 배포. [릴리스](./release.md) 순서대로 버전을 올리고 `dev` 에서 `main` 으로 PR 을 합친다. 이전 커밋만 따로 `main` 에 cherry-pick 하면 `main` 에 없는 결정 색인과 충돌하므로, `dev` 에 쌓인 커밋이 함께 나간다. 배포 빌드가 `prisma migrate deploy` 를 `DATABASE_MIGRATION_URL` 로 돌리고, 함수는 `icn1` 에서 뜬다. 이때 운영에 없던 마이그레이션 4개가 PlanetScale 에 함께 적용된다. 모두 표 · 열 · 색인 · 타입을 더하기만 한다.
     - `20261020000000_partner_oauth`
     - `20261020010000_musecat_arcades`
     - `20261028090000_chart_pattern_metrics`
+    - `20261028230000_relation_fk_indexes`
 8. 패턴 경향 채우기. 7번 마이그레이션이 만든 `chart_pattern_metrics` 는 비어 있다. 운영 값만 담은 env 파일을 리포 밖에 만들어 한 번 돌린다(`DATABASE_URL` · `DATABASE_EXPECTED_HOST` 는 6번과 같은 값).
 
     ```bash
@@ -86,7 +87,7 @@
 
 - 6번 전에 멈추면 `MAINTENANCE_MODE=false` 로 바꾸고 Redeploy 한다. Neon 이 그대로 운영 DB 다.
 - 6번 뒤 7번 전에 멈추면 `DATABASE_URL` · `DATABASE_EXPECTED_HOST` 를 적어 둔 Neon 값으로 돌리고, `DATABASE_MIGRATION_URL` 을 지운 뒤 `MAINTENANCE_MODE=false` 로 Redeploy 한다.
-- 7번 뒤에 되돌리면 점검을 켠 채로 위와 같이 환경 변수를 Neon 값으로 돌리고, Vercel 의 Instant Rollback 으로 이전 직전 배포(`sin1` · 2026-09-26 방침)를 Production 으로 올린다. 새 코드를 그대로 두고 Neon 으로만 돌리면 Neon 에 없는 마이그레이션 3개 때문에 화면이 깨지고, 함수 리전 · 처리방침도 실제와 어긋난다.
+- 7번 뒤에 되돌리면 점검을 켠 채로 위와 같이 환경 변수를 Neon 값으로 돌리고, Vercel 의 Instant Rollback 으로 이전 직전 배포(`sin1` · 2026-09-26 방침)를 Production 으로 올린다. 새 코드를 그대로 두고 Neon 으로만 돌리면 Neon 에 없는 마이그레이션 4개 때문에 화면이 깨지고, 함수 리전 · 처리방침도 실제와 어긋난다.
 - 되돌리기 전에 PlanetScale 에만 쓰인 기록(동기화 · 글)이 있는지 본다. 있으면 PlanetScale 덤프를 Neon 에 옮길지 먼저 정한다.
 
 ## 공지 문구

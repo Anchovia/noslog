@@ -1,5 +1,11 @@
 -- 2026-10-20 뮤즈캣 연동 B 방향 — 파트너 OAuth 인가 서버 표(새 enum 5개 · 표 8개, 기존 표는 바꾸지 않음).
 -- 개발 DB 의 마이그레이션 기록이 파일과 어긋나 migrate dev --create-only 가 reset 을 요구해, 커밋된 스키마와의 오프라인 비교(prisma migrate diff)로 만들었다.
+-- 새 표의 열 타입은 다른 표와 같은 Prisma 기본형(Int · autoincrement · DateTime)에 맞춘다.
+-- squawk-ignore-file prefer-bigint-over-int, prefer-identity, prefer-timestamp-tz
+BEGIN;
+SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '60s';
+
 
 -- CreateEnum
 CREATE TYPE "oauth_scope" AS ENUM ('nostalgia:read', 'profile');
@@ -233,3 +239,4 @@ ALTER TABLE "partner_outbox_messages" ADD CONSTRAINT "partner_outbox_messages_cl
 -- AddForeignKey
 ALTER TABLE "partner_outbox_messages" ADD CONSTRAINT "partner_outbox_messages_grant_id_fkey" FOREIGN KEY ("grant_id") REFERENCES "oauth_grants"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
+COMMIT;

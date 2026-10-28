@@ -90,6 +90,7 @@ model ArcadeExternalId {
 
   @@unique([provider, externalId])
   @@unique([arcadeId, provider])
+  @@index([verifiedById])
   @@map("arcade_external_ids")
 }
 
@@ -110,6 +111,7 @@ model MusecatCabinetNote {
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@index([musecatArcadeId])
+  @@index([updatedById])
   @@map("musecat_cabinet_notes")
 }
 

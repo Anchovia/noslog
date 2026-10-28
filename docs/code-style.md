@@ -284,7 +284,12 @@ verification. Report the actual checks and any unverified runtime conditions.
   baseline in `scripts/lint-migrations.mjs`. For an intended risk (rewriting a
   small table, dropping a column the previous deployment stopped using), put the
   reason on its own comment line and `-- squawk-ignore <rule>` right before the
-  statement. CI runs both in the lint job.
+  statement. A migration that creates tables ignores `prefer-bigint-over-int`,
+  `prefer-identity`, and `prefer-timestamp-tz` for the whole file
+  (`-- squawk-ignore-file …`) with the reason above it: new columns use the same
+  Prisma types (`Int`, `autoincrement()`, `DateTime`) as every other table.
+  CI runs both in the lint job, schema first, so fix a schema failure and run
+  `npm run lint:migrations` again before pushing.
 - Count queries per screen with `npm run measure:queries`. Start a dev server
   with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
   file with `--log`. Send logged-in cookies only through
@@ -323,6 +328,8 @@ verification. Report the actual checks and any unverified runtime conditions.
   (expand, switch, then contract). Prisma 7 runs each statement of a migration
   on its own (prisma/prisma#30640), so start every new migration with
   `BEGIN;` and end it with `COMMIT;`; a failure then leaves nothing applied.
+  Set `SET LOCAL lock_timeout` and `SET LOCAL statement_timeout` right after
+  `BEGIN;`.
   Put `CREATE INDEX CONCURRENTLY` alone in its own file without them
   (`npm run lint:migrations` checks both).
 - The schema lives in `prisma/schema/*.prisma`, one file per area (users,

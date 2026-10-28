@@ -77,6 +77,7 @@ model OAuthSubject {
   createdAt DateTime    @default(now()) @map("created_at")
 
   @@unique([userId, clientId])
+  @@index([clientId])
   @@map("oauth_subjects")
 }
 
@@ -208,6 +209,7 @@ model PartnerOutboxMessage {
   createdAt      DateTime            @default(now()) @map("created_at")
 
   @@index([status, nextAttemptAt])
+  @@index([clientId])
   @@index([grantId])
   @@map("partner_outbox_messages")
 }

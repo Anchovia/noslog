@@ -1,5 +1,11 @@
 -- 2026-10-20 뮤즈캣 연동 A 방향 — 뮤즈캣 연결 · 오락실 대응표 · NosLog 기체 특징 · 보낸 요청 기록(새 enum 5개 · 표 4개, 기존 표는 바꾸지 않음).
 -- 앞 마이그레이션과 같은 이유로 오프라인 비교(prisma migrate diff)로 만들었다.
+-- 새 표의 열 타입은 다른 표와 같은 Prisma 기본형(Int · autoincrement · DateTime)에 맞춘다.
+-- squawk-ignore-file prefer-bigint-over-int, prefer-identity, prefer-timestamp-tz
+BEGIN;
+SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '60s';
+
 
 -- CreateEnum
 CREATE TYPE "musecat_connection_status" AS ENUM ('active', 'needs_reconnect', 'revoked');
@@ -133,3 +139,4 @@ ALTER TABLE "musecat_actions" ADD CONSTRAINT "musecat_actions_user_id_fkey" FORE
 -- AddForeignKey
 ALTER TABLE "musecat_actions" ADD CONSTRAINT "musecat_actions_connection_id_fkey" FOREIGN KEY ("connection_id") REFERENCES "musecat_connections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+COMMIT;
