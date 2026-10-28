@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { ImageResponse } from "next/og";
 
 import { TOKEN_VALUES } from "@/lib/design-token-values";
@@ -8,21 +11,51 @@ import {
 } from "@/lib/metadata/brand-mark";
 
 /**
- * 아이콘 · 공유 이미지 색 = tokens.css 다크 값(2026-10-01 D13). 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
+ * 아이콘 · 공유 이미지 색 = tokens.css 다크 값. 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
  * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens.css 를 읽어 확인한다
  */
 export const BRAND_IMAGE_DARK_HEX = {
-    background: "#000000", // surface-canvas
-    surface: "#0a0a0a", // surface-surface
-    border: "#1f1f1f", // border-divider
-    primary: "#dbdbdb", // identity-mark (워드마크 · N 로고)
-    secondary: "#a1a1a1", // content-subdued
+    background: "#111111", // surface-canvas
+    surface: "#1b1b1b", // surface-surface
+    border: "#323232", // border-divider
+    primary: "#dbdbdb", // identity-mark (고양이 원)
+    text: "#dbdbdb", // content-default (이름 「NosLog」)
+    secondary: "#afafaf", // content-subdued
 } as const;
+
+const SOCIAL_IMAGE_FONT = "Pretendard JP";
+
+/** 공유 미리보기 글자도 사이트 글꼴로 — Satori 는 woff2 를 읽지 못해 리포의 TTF 원본을 쓴다 */
+async function loadSocialImageFonts() {
+    const directory = join(process.cwd(), "assets/fonts/pretendard-jp/1.3.9");
+    return Promise.all(
+        (
+            [
+                { file: "Regular", weight: 400 },
+                { file: "SemiBold", weight: 600 },
+                { file: "Bold", weight: 700 },
+            ] as const
+        ).map(async ({ file, weight }) => {
+            const buffer = await readFile(
+                join(directory, `PretendardJP-${file}.ttf`)
+            );
+            return {
+                name: SOCIAL_IMAGE_FONT,
+                data: buffer.buffer.slice(
+                    buffer.byteOffset,
+                    buffer.byteOffset + buffer.byteLength
+                ) as ArrayBuffer,
+                weight,
+                style: "normal" as const,
+            };
+        })
+    );
+}
 
 const colors = BRAND_IMAGE_DARK_HEX;
 const { spacing: space, typeSize, weight, stroke } = TOKEN_VALUES;
 
-/** 이미지용 NosLog 아이콘(2026-10-15 B) — 채운 원(로고 색) 안의 고양이(바탕색). 화면은 components/layout/brand-mark.tsx */
+/** 이미지용 NosLog 아이콘 — 채운 원(로고 색) 안의 고양이(바탕색). 화면은 components/layout/brand-mark.tsx */
 export function BrandMarkImage({
     size,
     circle = colors.primary,
@@ -62,21 +95,23 @@ export function createBrandIcon(size: number) {
                 width: "100%",
             }}
         >
-            {/* 고양이 원 = 지름 68% 상자(maskable 안전 영역 80% 안, 2026-10-15 B) */}
+            {/* 고양이 원 = 지름 68% 상자(maskable 안전 영역 80% 안) */}
             <BrandMarkImage size={Math.round(size * 0.68)} />
         </div>,
         { height: size, width: size }
     );
 }
 
-export function createSocialImage() {
+export async function createSocialImage() {
+    const fonts = await loadSocialImageFonts();
     return new ImageResponse(
         <div
             style={{
                 alignItems: "center",
                 background: colors.background,
-                color: colors.primary,
+                color: colors.text,
                 display: "flex",
+                fontFamily: SOCIAL_IMAGE_FONT,
                 height: "100%",
                 justifyContent: "center",
                 padding: "72px",
@@ -107,7 +142,7 @@ export function createSocialImage() {
                         style={{
                             display: "flex",
                             fontSize: 72,
-                            fontWeight: weight.bold,
+                            fontWeight: weight.semibold,
                         }}
                     >
                         NosLog
@@ -132,10 +167,10 @@ export function createSocialImage() {
                         noslog.app
                     </div>
                 </div>
-                {/* 오른쪽 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) */}
+                {/* 오른쪽 = 앱 아이콘과 같은 고양이 원 */}
                 <BrandMarkImage size={220} />
             </div>
         </div>,
-        { height: 630, width: 1200 }
+        { fonts, height: 630, width: 1200 }
     );
 }

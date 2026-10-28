@@ -26,7 +26,7 @@
 .noslog-ui .nl-exam-navigation {
     gap: var(--nl-spacing-32);
 }
-/* 급 머리 H2(2026-09-22) — 제목 + 상태 태그 한 줄 →12→ 수치 띠(요구 Grd. · 검정료 · 합격 보상) */
+/* 급 머리 — 제목 →8→ 상태 태그 한 줄 → 구역 제목 간격 → 수치 띠(요구 Grd. · 검정료 · 합격 보상) */
 .noslog-ui .nl-exam-head {
     display: flex;
     flex-direction: column;
@@ -36,10 +36,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-/* 급 상태(2026-09-22 G1-a) — 셀렉트 트리거 · 목록 · 레일 · 머리 태그가 같은 모양.
+/* 급 상태 — 셀렉트 목록 · 레일이 같은 모양(머리는 글자만 있는 상태 태그).
    합격 = 체크 · Grd. 부족 = 자물쇠(아이콘 16, 사이 4, 흐린 글자) / 응시 가능 · 심사 중 · 반려 = 상태 점 8(사이 8, 기본 글자) */
 .noslog-ui .nl-exam-status {
     display: inline-flex;
@@ -63,8 +62,8 @@
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-exam-status__dot {
-    width: 8px;
-    height: 8px;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
     flex-shrink: 0;
     border-radius: var(--nl-radius-full);
 }
@@ -77,10 +76,11 @@
 .noslog-ui .nl-exam-status__dot[data-tone="danger"] {
     background: var(--nl-feedback-destructive);
 }
+/* 칸 라벨 → 셀렉트 4(입력 칸 규칙) */
 .noslog-ui .nl-exam-select {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-exam-select__trigger {
     display: flex;
@@ -88,8 +88,8 @@
     align-items: center;
     width: 100%;
 }
-/* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
-   오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
+/* 검정 선택 목록 = 셀렉트 목록과 같은 판 · 행. 폭은 트리거 폭.
+   오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고, 고른 행은 메뉴 고른 행과 같은 겹침 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
     color: var(--nl-content-default);
     width: var(--radix-select-trigger-width);
@@ -99,7 +99,6 @@
 .noslog-ui.nl-exam-select__popup [data-radix-select-viewport] {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-exam-rail button {
     display: flex;
@@ -110,6 +109,7 @@
     padding: 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
+    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-exam-select__option {
     justify-content: space-between;
@@ -117,26 +117,39 @@
     text-align: start;
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
-    --nl-state-layer: var(--nl-interaction-menu);
+    --nl-state-layer: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
 }
-.noslog-ui .nl-exam-select__option[data-state="checked"],
+:root[data-input="pointer"]
+    .noslog-ui
+    .nl-exam-select__option[data-highlighted]:not(:hover) {
+    color: inherit;
+    background-image: none;
+}
+/* 레일 줄 = Spectrum 2 메뉴 항목 — 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900, 고른 줄 = 셀렉트 목록 고른 줄과 같은 surface/control + 600 */
+.noslog-ui .nl-exam-rail button:is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-exam-rail button:hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
 .noslog-ui .nl-exam-rail [aria-current="true"] {
-    --nl-state-layer: var(--nl-surface-control);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background: var(--nl-surface-control);
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-exam-rail {
     display: none;
 }
 .noslog-ui .nl-exam-stages {
-    --nl-exam-jacket-size: 64px;
+    --nl-exam-jacket-size: var(--nl-spacing-64);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -198,12 +211,15 @@
     padding-inline-end: var(--nl-spacing-16);
     width: 100%;
     min-height: var(--nl-exam-jacket-size);
-    border-radius: var(--nl-radius-control);
+    /* 과제곡 = Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
     text-align: start;
 }
+/* 채보가 없어 누르지 않는 카드(div)는 올림 반응이 없다 */
 @media (hover: hover) {
-    .noslog-ui .nl-exam-stage__row:hover {
+    .noslog-ui :is(a, button).nl-exam-stage__row:hover {
         --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
@@ -211,11 +227,18 @@
         );
     }
 }
+.noslog-ui :is(a, button).nl-exam-stage__row:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
 .noslog-ui .nl-exam-stage__jacket {
     width: var(--nl-exam-jacket-size);
     height: var(--nl-exam-jacket-size);
     flex-shrink: 0;
-    border-radius: var(--nl-radius-control) 0 0 var(--nl-radius-control);
+    border-radius: var(--nl-radius-large) 0 0 var(--nl-radius-large);
 }
 .noslog-ui .nl-exam-stage__identity {
     flex: 1;
@@ -270,8 +293,10 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-control);
+    /* Spectrum 2 secondary 카드(누르지 않는 묶음) */
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
     min-width: 0;
 }
 .noslog-ui .nl-exam-practice__head {
@@ -362,7 +387,7 @@
     white-space: nowrap;
 }
 .noslog-ui .nl-exam-progress__labels .nl-metric-value:not([data-sign]),
-.noslog-ui .nl-exam-progress__legend .nl-metric-value {
+.noslog-ui .nl-exam-progress__legend .nl-metric-value:not([data-empty]) {
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-exam-progress__legend {
@@ -379,11 +404,6 @@
     width: var(--nl-spacing-8);
     height: var(--nl-spacing-8);
     flex-shrink: 0;
-}
-.noslog-ui .nl-exam-practice__priority {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
 }
 @media (min-width: 672px) {
     .noslog-ui .nl-exam-navigation > .nl-segments,
@@ -419,8 +439,10 @@
         display: flex;
         flex-direction: column;
         gap: var(--nl-spacing-4);
+        /* 레일 판 = Spectrum 2 secondary 카드(누르지 않는 묶음), 안의 줄은 메뉴 항목 */
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-control);
+        border-radius: var(--nl-radius-large);
+        box-shadow: var(--nl-card-shadow);
         padding: var(--nl-spacing-8);
     }
     .noslog-ui .nl-exams__personal {
@@ -448,15 +470,13 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-exam-proof {
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-control);
+        border-radius: var(--nl-radius-large);
+        box-shadow: var(--nl-card-shadow);
         padding: var(--nl-spacing-16);
     }
-    .noslog-ui .nl-exam-proof > h3 {
+    /* 로그아웃이면 제목 줄 하나뿐이라 당기지 않는다(상자 위아래 안쪽 16 그대로) */
+    .noslog-ui .nl-exam-proof > .nl-heading-row:not(:last-child) {
         margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-12));
-    }
-    /* 로그아웃 「로그인 후 인증 가능」 — 상자가 한 줄을 다 쓰므로 주 버튼은 내용 폭(2026-09-30 C1) */
-    .noslog-ui .nl-exam-proof > .nl-button {
-        align-self: flex-start;
     }
 }
 .noslog-ui .nl-exam-proof__checklist {

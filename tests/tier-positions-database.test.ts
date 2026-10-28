@@ -97,6 +97,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     title: "T",
                     mode: "basic",
                     goal: "s",
+                    updatedAt: new Date(),
                 },
             });
             tierListId = list.id;

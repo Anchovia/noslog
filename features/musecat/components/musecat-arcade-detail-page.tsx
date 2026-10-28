@@ -241,21 +241,21 @@ export default function MusecatArcadeDetailPage({
             />
             <ActionButton
                 variant="secondary"
-                size="icon"
+                size="icon-lg"
                 className="nl-arcade-detail__prefer"
                 aria-pressed={viewer.connected ? favorited : undefined}
                 aria-label={t("musecat.favorite")}
                 title={t("musecat.favorite")}
                 data-active={favorited || undefined}
-                disabled={busy}
+                busy={busy}
                 onClick={toggleFavorite}
             >
-                <Heart className="nl-icon" aria-hidden />
+                {busy ? null : <Heart className="nl-icon" aria-hidden />}
             </ActionButton>
             {editable && !data.closed ? (
                 <Button
                     variant="secondary"
-                    size="icon"
+                    size="icon-lg"
                     aria-label={t("musecat.edit.title")}
                     title={t("musecat.edit.title")}
                     onClick={() => {
@@ -614,7 +614,7 @@ export default function MusecatArcadeDetailPage({
                                                 <li key={notice.id}>
                                                     <button
                                                         type="button"
-                                                        className="nl-musecat-line nl-hover-layer"
+                                                        className="nl-musecat-line"
                                                         aria-expanded={expanded}
                                                         onClick={() =>
                                                             setNoticeOpen(
@@ -706,7 +706,7 @@ export default function MusecatArcadeDetailPage({
                             </>
                         ) : null}
 
-                        {/* 시설 — 있는 것만 태그, 모르는 것은 수와 「뮤즈캣에서 고치기」(2026-10-21 전면 대조 ①) */}
+                        {/* 시설 — 묶음마다 있는 것만 태그, 한 줄에 하나 */}
                         {facilityGroups.length ? (
                             <>
                                 <hr className="nl-musecat-rule" />
@@ -725,9 +725,9 @@ export default function MusecatArcadeDetailPage({
                                                         `musecat.facilities.${group}`
                                                     )}
                                                 </p>
-                                                <div className="nl-musecat-tags">
+                                                <ul className="nl-musecat-tags">
                                                     {present.map((facility) => (
-                                                        <span
+                                                        <li
                                                             key={facility.key}
                                                             className="nl-tag"
                                                         >
@@ -737,9 +737,9 @@ export default function MusecatArcadeDetailPage({
                                                             {facility.note
                                                                 ? ` · ${facility.note}`
                                                                 : null}
-                                                        </span>
+                                                        </li>
                                                     ))}
-                                                </div>
+                                                </ul>
                                             </div>
                                         )
                                     )}

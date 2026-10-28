@@ -191,7 +191,7 @@ export default function ArcadeDetailPage({
                 // 토글 — 눌림 상태(aria-pressed)와 채운 하트로 지정 여부를 알린다
                 <ActionButton
                     variant="secondary"
-                    size={preferredCount === null ? "icon" : undefined}
+                    size={preferredCount === null ? "icon-lg" : undefined}
                     className="nl-arcade-detail__prefer"
                     busy={busy}
                     aria-pressed={preferred}
@@ -209,7 +209,7 @@ export default function ArcadeDetailPage({
             ) : (
                 <ButtonLink
                     variant="secondary"
-                    size={preferredCount === null ? "icon" : undefined}
+                    size={preferredCount === null ? "icon-lg" : undefined}
                     className="nl-arcade-detail__prefer"
                     href={loginHref}
                     aria-label={withPreferredCount(
@@ -501,14 +501,23 @@ export default function ArcadeDetailPage({
                                         <li
                                             key={`${check.userId}-${check.checkedAt}`}
                                         >
-                                            <span className="nl-muted">
-                                                {days === 0
-                                                    ? t("arcades.checkedToday")
-                                                    : t("arcades.checkedAgo", {
-                                                          count: days ?? 0,
-                                                      })}
-                                            </span>
-                                            {" · "}
+                                            {days === null ? null : (
+                                                <>
+                                                    <span className="nl-muted">
+                                                        {days === 0
+                                                            ? t(
+                                                                  "arcades.checkedToday"
+                                                              )
+                                                            : t(
+                                                                  "arcades.checkedAgo",
+                                                                  {
+                                                                      count: days,
+                                                                  }
+                                                              )}
+                                                    </span>
+                                                    {" · "}
+                                                </>
+                                            )}
                                             <IntentLink
                                                 className="nl-link"
                                                 href={href(

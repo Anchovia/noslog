@@ -245,7 +245,7 @@ function RecordLoading() {
                             </h3>
                             <div className="nl-stack nl-performance-chart">
                                 <SegmentedControl
-                                    className="nl-performance-selector"
+                                    className="nl-segments--dense"
                                     label={t("music.trend.selector")}
                                     value="sjust"
                                     onValueChange={noop}
@@ -261,11 +261,7 @@ function RecordLoading() {
                                         { value: "timing", label: "FAST/SLOW" },
                                     ]}
                                 />
-                                <SkeletonText
-                                    className="nl-body-secondary"
-                                    width="s"
-                                />
-                                {/* 선 그래프 틀 — 플롯(기본 높이 120) → 날짜 줄 */}
+                                {/* 선 그래프 틀 — 플롯 → 날짜 줄 */}
                                 <figure className="nl-line-chart">
                                     <div className="nl-line-chart__plot">
                                         <div className="nl-line-chart__area">
@@ -340,6 +336,21 @@ function CommunityLoading({ signedIn }: { signedIn: boolean }) {
                         open
                         title={t("community.patternVote")}
                     >
+                        <div className="nl-heading-row nl-pattern-form__status">
+                            <p className="nl-pattern-form__basis nl-metadata nl-muted">
+                                <span>
+                                    {t("pattern.basisShort")} ·{" "}
+                                    <strong>0</strong> {t("pattern.basisLow")} –{" "}
+                                    <strong>4</strong> {t("pattern.basisHigh")}
+                                </span>
+                                <span className="nl-info-trigger">
+                                    <Info
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
+                                </span>
+                            </p>
+                        </div>
                         <div className="nl-pattern-lock">
                             <div className="nl-pattern-axes">
                                 {PATTERN_AXES.map((axis) => (

@@ -510,11 +510,7 @@ export default function ArcadeDiscoveryMap({
                         <StatusMessage
                             severity={inlineError ? "danger" : "info"}
                             tone={inlineError ? "inline" : "quiet"}
-                            title={t(
-                                inlineError
-                                    ? "arcades.mapLoadError"
-                                    : "arcades.mapListFallback"
-                            )}
+                            title={t("arcades.mapLoadError")}
                             action={
                                 <Button
                                     variant="ghost"
@@ -597,12 +593,12 @@ export default function ArcadeDiscoveryMap({
                                 collisionPadding={
                                     overlayPosition.collisionPadding
                                 }
-                                className="noslog-ui nl-arcade-map__legend-popover nl-body-secondary"
+                                className="noslog-ui nl-arcade-map__legend-popover"
                             >
-                                <strong className="nl-control">
+                                <strong className="nl-emphasis-label">
                                     {t("arcades.legend")}
                                 </strong>
-                                <ul>
+                                <ul className="nl-body-secondary">
                                     {(
                                         [
                                             "arcades.legendPin",

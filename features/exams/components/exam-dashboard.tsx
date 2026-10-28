@@ -171,7 +171,6 @@ export default function ExamDashboard({
         <div className="nl-exams">
             <header className="nl-exams__identity">
                 <h1 className="nl-page-title">{t("exams.title")}</h1>
-                <p className="nl-metadata nl-muted">{t("exams.description")}</p>
             </header>
             <ExamNavigation
                 mode={mode}
@@ -196,24 +195,19 @@ export default function ExamDashboard({
                                 >
                                     {examTitle(selected)}
                                 </h2>
-                                {getExamStatus(selected, isAuthenticated) ? (
-                                    <span className="nl-tag">
-                                        {examState(selected, true)}
-                                    </span>
-                                ) : null}
+                                {examState(selected, true)}
                             </div>
                             {/* 급 머리 H2(2026-09-22) — 상태는 제목 옆 태그, 사실은 수치 띠 세 칸 */}
                             <StatStrip
                                 items={[
-                                    {
+                                    // 요구 Grd. 가 없는 검정은 칸을 만들지 않는다(값 없는 수치 칸 없음)
+                                    Boolean(selected.requiredGrade) && {
                                         key: "required",
                                         label: t("exams.requiredGrade"),
-                                        value: selected.requiredGrade
-                                            ? selected.requiredGrade.toLocaleString(
-                                                  locale
-                                              )
-                                            : t("exams.none"),
-                                        // 넘었으면 합격 체크와 같은 성공색(2026-09-25 R1) — 모자란 양은 머리 태그가 말한다
+                                        value: selected.requiredGrade.toLocaleString(
+                                            locale
+                                        ),
+                                        // 넘었으면 합격 체크와 같은 성공색 — 모자란 양은 머리 태그가 말한다
                                         color: gradeMet
                                             ? "var(--nl-feedback-success-marker)"
                                             : undefined,
@@ -282,18 +276,19 @@ export default function ExamDashboard({
                                     exam={selected}
                                 />
                             ) : null}
-                            {/* 합격한 급은 인증 구역을 두지 않는다(상태는 머리 태그 「합격」, 2026-09-22 사용자) */}
+                            {/* 합격한 급 · 자격이 없는 급(Grd. 부족 · 동기화 필요)은 인증 구역을 두지 않는다 — 상태는 머리 태그가 말한다.
+                                로그아웃이면 제목 줄 로그인 링크, 심사 중이면 결과 한 줄은 남긴다 */}
                             {selected.mode !== "event" &&
-                            !selected.isAchieved ? (
+                            !selected.isAchieved &&
+                            (!isAuthenticated ||
+                                selected.submissionStatus === "pending" ||
+                                (canEnterExam(selected) &&
+                                    selected.playerGrade !== null &&
+                                    selected.hasSyncedIdentity)) ? (
                                 <ExamProofUpload
                                     key={`proof-${selected.id}`}
                                     exam={selected}
                                     isAuthenticated={isAuthenticated}
-                                    disabled={
-                                        !canEnterExam(selected) ||
-                                        selected.playerGrade === null ||
-                                        !selected.hasSyncedIdentity
-                                    }
                                     message={
                                         uploadFeedback?.examId === selected.id
                                             ? uploadFeedback.message

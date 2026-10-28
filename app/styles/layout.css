@@ -49,11 +49,19 @@
     align-items: center;
     gap: var(--nl-spacing-8);
     min-height: var(--nl-back-link-height);
+    /* 단독 링크 = Spectrum 2 secondary 링크(.nl-link 와 같은 값). TSX 의 nl-muted 보다 뒤에 읽혀 이 색이 이긴다 */
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-medium);
+    text-underline-offset: var(--nl-underline-offset);
+}
+.noslog-ui .nl-back-link:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
 }
 @media (hover: hover) {
     .noslog-ui .nl-back-link:hover {
+        color: var(--nl-content-strong);
         text-decoration: underline;
-        text-underline-offset: var(--nl-underline-offset);
     }
 }
 .noslog-ui .nl-back-link svg {
@@ -84,10 +92,15 @@
     left: var(--nl-spacing-8);
     z-index: var(--nl-layer-fullscreen);
     transform: translateY(-200%);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    /* 주 버튼 모양 — 원 끝이라 좌우 안쪽 = 높이 ÷ 2 */
+    display: flex;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    padding-inline: calc(var(--nl-control-height) / 2);
+    border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
+    font-weight: var(--nl-type-weight-strong);
 }
 .noslog-ui .nl-skip-link:focus {
     transform: none;
@@ -98,10 +111,8 @@
     z-index: var(--nl-layer-header);
     height: var(--nl-header-height);
     flex-shrink: 0;
-    /* 헤더 = 바탕 면 + 아래 구분선. 가운데 띠(__bar)도 바탕 면 */
-    background: var(--nl-surface-canvas);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
-        var(--nl-border-divider);
+    /* 헤더 = 바탕보다 한 단계 밝은 면 · 아래 선 없음(Steam). 가운데 띠(__bar)도 같은 면 */
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-header__interaction {
     position: relative;
@@ -126,9 +137,21 @@ html:has(.noslog-ui .nl-header) {
     justify-content: space-between;
     height: var(--nl-header-height);
     padding: var(--nl-spacing-8) var(--nl-layout-margin);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
-        var(--nl-border-divider);
-    background: var(--nl-surface-canvas);
+    background: var(--nl-surface-surface);
+}
+/* 채보 에디터 옛 셸 헤더 — 좌우 여백 · 1056 이상 늘 보임은 셸 헤더와 같은 폭 단계 */
+.noslog-ui .nl-editor-header {
+    padding-inline: var(--nl-grid-margin-compact);
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-editor-header {
+        padding-inline: var(--nl-grid-margin-intermediate);
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-editor-header {
+        translate: none;
+    }
 }
 .noslog-ui .nl-wordmark {
     color: var(--nl-content-default);
@@ -174,6 +197,7 @@ html:has(.noslog-ui .nl-header) {
     justify-content: center;
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
+    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-nav-trigger {
     display: flex;
@@ -188,15 +212,25 @@ html:has(.noslog-ui .nl-header) {
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
 }
+/* 로그인 · ≡ 는 버튼이라 포커스 선도 버튼처럼 간격 0 */
+.noslog-ui :is(.nl-login, .nl-nav-trigger):focus-visible {
+    outline-offset: 0;
+}
+/* 로그인 · 헤더 이동 · ≡ = Spectrum 2 ActionButton quiet. 키 포커스 · 누름도 올림과 같은 색, hover 만 미디어 쿼리 안 */
+.noslog-ui
+    :is(.nl-login, .nl-header__nav-item, .nl-nav-trigger):is(
+        :focus-visible,
+        :active
+    ) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
 @media (hover: hover) {
     .noslog-ui .nl-login:hover,
     .noslog-ui .nl-header__nav-item:hover,
     .noslog-ui .nl-nav-trigger:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-nav-scrim {
@@ -215,36 +249,44 @@ html:has(.noslog-ui .nl-header) {
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-8);
     /* 폰은 헤더 바로 아래에 붙으므로 위 모서리 · 위 선이 없다 */
-    border-radius: 0 0 var(--nl-radius-overlay) var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
+    border-radius: 0 0 var(--nl-radius-large) var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
     box-shadow:
         inset var(--nl-stroke-default) 0 var(--nl-border-elevated),
         inset calc(var(--nl-stroke-default) * -1) 0 var(--nl-border-elevated),
         inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
+    /* 고대비 모드는 그림자 둘레를 지우므로 그때만 보이는 투명 둘레(대화상자와 같음) */
+    outline: var(--nl-stroke-default) solid transparent;
+    outline-offset: calc(var(--nl-stroke-default) * -1);
     max-height: calc(100dvh - var(--nl-header-height) - var(--nl-spacing-16));
     overflow-y: auto;
 }
 .noslog-ui .nl-destination {
     display: flex;
     min-width: 0;
-    min-height: 48px;
+    min-height: var(--nl-spacing-48);
     align-items: center;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
+    font-weight: var(--nl-type-weight-medium);
+}
+/* ≡ 이동 줄 = Spectrum 2 메뉴 항목. 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
+.noslog-ui .nl-destination:is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-destination:hover {
-        --nl-state-layer: var(--nl-interaction-menu);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
     }
 }
-.noslog-ui .nl-destination[aria-current="page"] {
+/* 지금 화면 = 한 단계 면 + semibold(Apple Music 사이드바). :where — 올림 · 포커스 · 누름 때는 위 규칙의 면을 받게 */
+.noslog-ui .nl-destination:where([aria-current="page"]) {
+    background: var(--nl-surface-control);
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-destinations__divider {
@@ -258,9 +300,9 @@ html:has(.noslog-ui .nl-header) {
     height: var(--nl-stroke-default);
     background: var(--nl-border-divider);
 }
+/* 푸터 = 헤더와 같은 면 · 위 선 없음(Steam) */
 .noslog-ui .nl-footer {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
-    background: var(--nl-surface-canvas);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-footer__content {
     display: flex;
@@ -304,19 +346,17 @@ html:has(.noslog-ui .nl-header) {
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
     }
 }
-/* 12 로 줄이면 굵기도 metadata 400 — 지금 줄은 굵기 대신 고른 면(surface/control)이 표시한다(12 굵게 금지) */
+/* 359 이하는 글자만 12 로 줄인다. 12 에서는 굵게(600)를 쓰지 않으므로 지금 줄은 면만 두고 medium */
 @media (max-width: 359px) {
-    .noslog-ui .nl-destination,
-    .noslog-ui .nl-destination[aria-current="page"] {
+    .noslog-ui .nl-destination {
         font-size: var(--nl-type-size-12);
         line-height: var(--nl-type-line-height-16);
-        font-weight: var(--nl-type-weight-regular);
     }
     .noslog-ui .nl-destination[aria-current="page"] {
-        background: var(--nl-surface-control);
+        font-weight: var(--nl-type-weight-medium);
     }
 }
-/* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */
+/* 헤더 메뉴 이동 줄 — 1055 이하 48 · 1056 이상 컨트롤 높이 */
 @media (min-width: 1056px) {
     .noslog-ui .nl-destination {
         min-height: var(--nl-control-height);
@@ -338,9 +378,10 @@ html:has(.noslog-ui .nl-header) {
         color: var(--nl-content-subdued);
         white-space: nowrap;
     }
-    .noslog-ui .nl-header__nav-item[aria-current="page"] {
+    /* :where — 지금 위치도 올림 · 포커스 · 누름 때는 위 규칙의 gray-900 을 받게 */
+    .noslog-ui .nl-header__nav-item:where([aria-current="page"]) {
         color: var(--nl-content-default);
-        font-weight: var(--nl-type-weight-semibold);
+        font-weight: var(--nl-type-weight-strong);
     }
 }
 @media (min-width: 672px) {
@@ -352,17 +393,15 @@ html:has(.noslog-ui .nl-header) {
         right: var(--nl-layout-margin);
         left: auto;
         width: 488px;
-        border-radius: var(--nl-radius-overlay);
+        border-radius: var(--nl-radius-large);
         box-shadow:
             0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
             var(--nl-overlay-shadow);
     }
 }
-/* 1056 이상 ≡ 창은 설정 · 피드백 · 관리자만(S1) — 한 열, 폭은 두 열 창(488)의 한 칸(232) + 안쪽 8 × 2.
-   위치는 ≡ 버튼 바로 아래(헤더 가운데 컨트롤의 아래 끝) */
+/* 1056 이상 ≡ 창은 설정 · 피드백 · 관리자만 담는 한 열. 위치는 672 이상과 같이 헤더 아래 8 */
 @media (min-width: 1056px) {
     .noslog-ui .nl-destinations {
-        top: calc((var(--nl-header-height) + var(--nl-control-height)) / 2);
         width: 248px;
         grid-template-columns: minmax(0, 1fr);
     }

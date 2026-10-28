@@ -5,8 +5,8 @@ import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 /**
- * 숫자 스테퍼(2026-10-21 전면 대조 ⑩ — Apple 스테퍼 · 대수처럼 작은 정수) — − · 값(+ 단위) · + 한 줄.
- * 높이 = 컨트롤 높이, 버튼 = 정사각, 경계 = 입력칸 선 · 모서리 4. 값 바뀜은 화면 읽기에 알린다
+ * 숫자 스테퍼(Apple 스테퍼 · 대수처럼 작은 정수) — − · 값(+ 단위) · + 한 줄.
+ * 높이 = 컨트롤 높이, 버튼 = 정사각, 경계 = 입력칸 선 · 모서리 control. 값 바뀜은 화면 읽기에 알린다
  */
 export default function Stepper({
     value,
@@ -37,6 +37,7 @@ export default function Stepper({
             className={cn("nl-stepper", className)}
             role="group"
             aria-labelledby={labelledBy}
+            aria-disabled={disabled || undefined}
             data-disabled={disabled || undefined}
         >
             <button
@@ -48,7 +49,7 @@ export default function Stepper({
             >
                 <Minus className="nl-icon" aria-hidden />
             </button>
-            <output className="nl-stepper__value nl-body" aria-live="polite">
+            <output className="nl-stepper__value nl-control" aria-live="polite">
                 {value}
                 {unit}
             </output>

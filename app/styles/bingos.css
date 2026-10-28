@@ -113,7 +113,10 @@
 /* 미니 판 — 칸 6 · 사이 2 · 판 안쪽 4. 격자 카드는 자켓 오른쪽 아래(진행 트랙 위 8, 2026-09-22 — 자켓 카테고리 레이블과 같은 자리) */
 .noslog-ui .nl-bingo-mini {
     display: grid;
-    grid-template-columns: repeat(5, 6px);
+    grid-template-columns: repeat(
+        5,
+        calc(var(--nl-spacing-4) + var(--nl-spacing-2))
+    );
     gap: var(--nl-spacing-2);
     padding: var(--nl-spacing-4);
     border-radius: var(--nl-radius-small);
@@ -123,19 +126,20 @@
     bottom: calc(var(--nl-spacing-8) + var(--nl-spacing-4));
 }
 .noslog-ui .nl-bingo-mini > span {
-    width: 6px;
-    height: 6px;
+    width: calc(var(--nl-spacing-4) + var(--nl-spacing-2));
+    height: calc(var(--nl-spacing-4) + var(--nl-spacing-2));
     border-radius: 1px;
     background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-content-on-media);
 }
+/* 자켓 위 진행 트랙 4 — 트랙 색은 공용 진행 막대와 같은 border/divider */
 .noslog-ui .nl-bingo-card__track {
     position: absolute;
     inset: auto 0 0;
-    height: 4px;
-    background: color-mix(in srgb, var(--nl-content-on-media) 30%, transparent);
+    height: var(--nl-spacing-4);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-card__track > span {
     display: block;
@@ -154,16 +158,37 @@
     min-width: 0;
 }
 .noslog-ui .nl-bingo-row-item {
+    position: relative;
+    isolation: isolate;
     display: grid;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-columns: var(--nl-spacing-48) minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--nl-spacing-12);
     padding-block: var(--nl-spacing-8);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
+/* 목록 줄 올림 = 줄 면 겹침, 서열표 목록 행과 같이 좌우 12 를 넓혀 칠하고 자켓 · 글자 선은 그대로 */
+.noslog-ui .nl-bingo-row-item::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    border-radius: var(--nl-radius-control);
+    pointer-events: none;
+}
+@media (hover: hover) {
+    .noslog-ui a.nl-bingo-row-item:hover::before {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
 .noslog-ui .nl-bingo-row-item__cover {
-    width: 48px;
-    height: 48px;
+    width: var(--nl-spacing-48);
+    height: var(--nl-spacing-48);
     border-radius: var(--nl-radius-small);
 }
 .noslog-ui .nl-bingo-row-item__body {
@@ -189,9 +214,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-}
-.noslog-ui .nl-bingo-catalog__empty {
-    padding-block: var(--nl-spacing-32);
 }
 /* 헤더 → 돌아가기 24 · 돌아가기 → 내용 24 — 다른 상세 페이지 머리와 같게(2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-bingo-detail {
@@ -228,9 +250,6 @@
     align-items: center;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-bingo-progress .nl-bingo-summary__bar {
-    flex: 1 1 120px;
-}
 /* 진행 바 — 공용 진행 막대 규격(트랙 8 · 모서리 4 · 트랙 divider · 채움 local-data/single). 자켓 위 목록 카드 트랙만 4 */
 .noslog-ui .nl-bingo-summary__bar {
     display: block;
@@ -265,8 +284,8 @@
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-bingo-legend i {
-    width: 12px;
-    height: 12px;
+    width: var(--nl-spacing-12);
+    height: var(--nl-spacing-12);
     border-radius: 2px;
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
     background: var(--nl-surface-surface);
@@ -286,15 +305,15 @@
     );
     border-color: var(--nl-border-ring);
 }
-/* 칸 팝오버 — 필터 팝오버와 같은 DestinationPanel 계약(334 · overlay · border/elevated · 그림자) */
+/* 칸 팝오버 — 필터 팝오버와 같은 DestinationPanel 계약(334 · elevated 면 · border/elevated · 모서리 large · 그림자) */
 .noslog-ui .nl-bingo-cell-popover {
     width: min(334px, calc(100vw - var(--nl-spacing-32)));
     max-height: var(--radix-popover-content-available-height);
     overflow-y: auto;
     overscroll-behavior: contain;
     border: var(--nl-stroke-default) solid var(--nl-border-elevated);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-popover);
 }
@@ -343,8 +362,8 @@
     min-width: 0;
 }
 .noslog-ui .nl-bingo-identity__cover {
-    width: 96px;
-    height: 96px;
+    width: calc(var(--nl-spacing-64) + var(--nl-spacing-32));
+    height: calc(var(--nl-spacing-64) + var(--nl-spacing-32));
     flex-shrink: 0;
 }
 /* 진행 = 바(전체 폭) 위, 숫자(줄·칸)는 그 아래 오른쪽 정렬 */
@@ -383,13 +402,23 @@
     color: var(--nl-content-default);
     text-align: start;
 }
-/* 올림 = 칸 면 위 6% — 줄 칸(이미 겹침) · 완성 칸(채운 면)은 그대로 */
+/* 올림 · 누름 · 키 포커스 = 칸 면 위 Spectrum 2 표 줄 겹침(gray-900 7%) — 줄 칸(이미 겹침) · 완성 칸(채운 면)은 그대로 */
+.noslog-ui
+    .nl-bingo-board__cell:not([data-line="true"]):not(
+        [data-completed="true"]
+    ):is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
 @media (hover: hover) {
     .noslog-ui
         .nl-bingo-board__cell:not([data-line="true"]):not(
             [data-completed="true"]
         ):hover {
-        --nl-state-layer: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
@@ -422,7 +451,7 @@
 .noslog-ui .nl-bingo-board__line[data-state] {
     color: var(--nl-content-default);
 }
-/* 완성된 줄 — 면 menu-set + 테두리 ring (새 토큰 없음) */
+/* 완성된 줄 — 고른 면(surface/control) 겹침 + 테두리 ring */
 .noslog-ui .nl-bingo-board__cell[data-line="true"] {
     --nl-state-layer: var(--nl-surface-control);
     background-image: linear-gradient(
@@ -467,10 +496,11 @@
 .noslog-ui .nl-bingo-position > .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-content-default);
 }
-/* 넓은 화면 선택 칸 상세 — 미션 행과 같은 면(surface · 모서리 6), 안쪽은 칸 상세(16) 그대로 */
+/* 넓은 화면 선택 칸 상세 — 미션 행과 같은 Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자), 안쪽은 칸 상세(16) 그대로 */
 .noslog-ui .nl-bingo-detail-panel {
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-bingo-detail-panel__hint {
     margin: 0;
@@ -491,15 +521,34 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    border-radius: var(--nl-radius-control);
+    /* Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
-.noslog-ui .nl-bingo-mission[data-selected="true"] {
-    --nl-state-layer: var(--nl-surface-control);
+/* 미션 행은 눌러 칸을 고른다 — 고르지 않은 행만 카드 면 위 겹침으로 반응 */
+@media (hover: hover) {
+    .noslog-ui .nl-bingo-mission:not([data-selected="true"]):hover {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui
+    .nl-bingo-mission:not([data-selected="true"]):is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
+}
+/* 고른 행 = Spectrum 2 카드 고름 — 안쪽 2px 선 · elevated 그림자(선 색은 오락실 고른 카드와 같은 gray-900) */
+.noslog-ui .nl-bingo-mission[data-selected="true"] {
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-strong) var(--nl-content-strong),
+        var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-bingo-mission[aria-busy="true"] {
     color: var(--nl-content-subdued);
@@ -518,10 +567,19 @@
     flex-shrink: 0;
     gap: 0;
 }
+/* 본문 안 링크 = Spectrum 2 secondary 링크 — 늘 밑줄, 올림 · 키 포커스 gray-900 */
 .noslog-ui .nl-bingo-mission__link {
     color: var(--nl-content-default);
     text-decoration: underline;
     text-underline-offset: var(--nl-underline-offset);
+}
+.noslog-ui .nl-bingo-mission__link:focus-visible {
+    color: var(--nl-content-strong);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-bingo-mission__link:hover {
+        color: var(--nl-content-strong);
+    }
 }
 @media (min-width: 1056px) {
     /* 넓은 화면(2026-09-22 E · W1) = 판 | 오른쪽 1:1 (악곡 상세 개요 두 열과 같은 비율 · 열 사이 16).

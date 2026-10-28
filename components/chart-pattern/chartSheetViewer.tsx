@@ -176,8 +176,6 @@ export default function ChartSheetViewer({
                 .map((comment) => comment.timeMs),
         [comments]
     );
-    // Safari 도 막지 않는다(2026-09-26, 사용자) — 낙하형을 모든 브라우저에서
-    const effectiveViewMode = viewMode;
     const playbackDurationMs = useMemo(
         () => getChartPlaybackDurationMs(document),
         [document]
@@ -220,10 +218,7 @@ export default function ChartSheetViewer({
         stageRef.current?.scrollIntoView({ block: "start" });
     };
     // 무대 아래 동작 버튼(2026-09-26 A, 유튜브 채널 줄의 버튼 자리) — 고치기 · 출처(영상 추출만) · 공유
-    const actionClass = foundationButtonClass({
-        variant: "secondary",
-        size: "sm",
-    });
+    const actionClass = foundationButtonClass({ variant: "secondary" });
     async function copyLink() {
         const url = new URL(window.location.href);
         url.searchParams.delete("t");
@@ -234,7 +229,7 @@ export default function ChartSheetViewer({
             toast.error(t("tiers.linkCopyFailed"));
         }
     }
-    // 넓은 화면 = 보조 M 아이콘+글자, 폰 = 글자 없는 아이콘 버튼(유튜브 폰 동작 줄 — 이름은 스크린리더 · 툴팁)
+    // 넓은 화면 = 기본 크기 보조 버튼 아이콘+글자, 폰 = 글자 없는 아이콘 버튼(유튜브 폰 동작 줄 — 이름은 스크린리더 · 툴팁)
     function renderActions(compact: boolean) {
         const iconClass = foundationButtonClass({
             variant: "ghost",
@@ -411,7 +406,7 @@ export default function ChartSheetViewer({
             <div className="nl-chart-viewer__view">
                 <SegmentedControl
                     label={t("chart.viewMode")}
-                    value={effectiveViewMode}
+                    value={viewMode}
                     onValueChange={setViewMode}
                     options={[
                         { value: "falling", label: t("chart.falling") },
@@ -421,9 +416,9 @@ export default function ChartSheetViewer({
                 <div
                     ref={stageRef}
                     className="nl-chart-viewer__stage"
-                    data-view={effectiveViewMode}
+                    data-view={viewMode}
                 >
-                    {effectiveViewMode === "falling" ? (
+                    {viewMode === "falling" ? (
                         document.notes.length === 0 ? (
                             <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
                                 {t("chart.empty")}

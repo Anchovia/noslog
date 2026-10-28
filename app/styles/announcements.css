@@ -70,7 +70,7 @@
             "title title";
     }
 }
-/* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
+/* 공지 줄 제목 = 16/600 — 전체 목록 · 홈 카드 · 내 이벤트 글 모두. 홈 고정 줄엔 면 없이 핀만 둔다 */
 .noslog-ui .nl-announcement-row__title {
     margin: 0;
     min-width: 0;
@@ -81,7 +81,7 @@
         text-underline-offset: var(--nl-underline-offset);
     }
 }
-/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 4 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
+/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
 .noslog-ui .nl-announcements__pinned {
     display: flex;
     flex-direction: column;
@@ -139,6 +139,13 @@
         );
     }
 }
+.noslog-ui .nl-announcements__adjacent-link:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
 .noslog-ui .nl-announcement-body {
     display: flex;
     flex-direction: column;
@@ -168,7 +175,7 @@
 .noslog-ui .nl-announcement-body__items > dd {
     margin: var(--nl-spacing-8) 0 0;
 }
-/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 6 · 원래 비율 */
+/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
 .noslog-ui .nl-announcement-body__image {
     display: block;
     max-width: 100%;
@@ -185,12 +192,25 @@
     list-style: decimal;
 }
 .noslog-ui .nl-announcement-body strong {
+    font-weight: var(--nl-type-weight-strong);
+}
+/* 한국어 · 일본어 strong 500 은 16 본문 글자 400 과 거의 구분되지 않는다. 읽는 본문의 강조는 강조 글자(600)와 같게 */
+.noslog-ui .nl-announcement-body strong:is(:lang(ko), :lang(ja)) {
     font-weight: var(--nl-type-weight-semibold);
 }
+/* 본문 안 링크 = Spectrum 2 secondary 링크 — 늘 밑줄, 올림 · 키 포커스에 밝은 글자 */
 .noslog-ui .nl-announcement-body a {
     color: var(--nl-content-default);
     text-decoration: underline;
     text-underline-position: under;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-announcement-body a:hover {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-announcement-body a:focus-visible {
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-announcement-body a svg {
     display: inline-block;
@@ -248,7 +268,7 @@
     border-radius: 0;
     background: none;
     padding: 0;
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
 }
 /* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다 */
 .noslog-ui .nl-announcement-body__table {
@@ -259,15 +279,15 @@
     width: 100%;
     border-collapse: collapse;
     font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
 }
 /* 표 줄 = 목록 행(한 줄일 때 컨트롤 높이 · 아래 선 포함). 여러 줄 칸은 그만큼 늘어난다 */
 .noslog-ui .nl-announcement-body th,
 .noslog-ui .nl-announcement-body td {
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     padding: calc(
             (
-                    var(--nl-control-height) - var(--nl-type-line-height-20) -
+                    var(--nl-control-height) - var(--nl-type-line-height-ui) -
                         var(--nl-stroke-default)
                 ) /
                 2
@@ -275,10 +295,13 @@
         var(--nl-spacing-12);
     text-align: start;
     vertical-align: top;
+    /* 본문의 anywhere 를 끊는다 — 칸 안 코드는 글자 중간에서 꺾지 않고 좁으면 표만 가로로 민다 */
+    overflow-wrap: normal;
 }
+/* 머리 칸 = Spectrum 2 TableView 머리 글자 bold */
 .noslog-ui .nl-announcement-body th {
     color: var(--nl-content-subdued);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-strong);
     white-space: nowrap;
 }
 
@@ -391,7 +414,12 @@
 @media (hover: hover) {
     .noslog-ui .nl-poll__option:hover:not(:disabled) {
         border-color: var(--nl-border-ring);
+        color: var(--nl-content-strong);
     }
+}
+.noslog-ui .nl-poll__option:is(:focus-visible, :active):not(:disabled) {
+    border-color: var(--nl-border-ring);
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
     border-color: var(--nl-border-ring);

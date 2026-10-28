@@ -98,6 +98,14 @@ function rebuildRatingsAfterResponse() {
     );
 }
 
+// 공개 화면 「N월 N일 업데이트」 는 배치 · 구간이 바뀐 날이다 — 구간 · 채보를 바꾸는 트랜잭션에 함께 넣는다
+function touchTierList(id: number) {
+    return db.tierList.update({
+        where: { id },
+        data: { updatedAt: new Date() },
+    });
+}
+
 function revalidateTierList(id: number) {
     // 랭킹 레이팅 캐시도 tierLists 태그를 달고 있어 함께 비워진다(userRankings 따로 안 비움)
     updateTag(CACHE_TAGS.tierLists);
@@ -260,7 +268,7 @@ export async function createTierList(
         }
 
         const tierList = await db.tierList.create({
-            data: tierListData(input),
+            data: { ...tierListData(input), updatedAt: new Date() },
         });
         revalidateTierList(tierList.id);
         return {
@@ -288,6 +296,8 @@ export async function updateTierList(
     }
 
     try {
+        if (!(await isEditableTierList(input.id)))
+            return { success: false, message: ARCHIVED_TIER_LIST.message };
         const duplicate = await db.tierList.findFirst({
             where: {
                 NOT: { id: input.id },
@@ -345,6 +355,17 @@ export async function deleteTierList(
     if (!result.success) return invalidTierMutation(result.error);
 
     try {
+        // 지우는 것은 보관 서열표만 — 화면에서 버튼을 숨긴 것과 같은 검사를 서버에서도 한다
+        const list = await db.tierList.findUnique({
+            where: { id: result.data.id },
+            select: { id: true },
+        });
+        if (!list) return { success: false, message: "잘못된 서열표입니다." };
+        if (await isEditableTierList(list.id))
+            return {
+                success: false,
+                message: "지금 쓰는 서열표는 삭제할 수 없습니다.",
+            };
         await db.tierList.delete({ where: { id: result.data.id } });
         revalidateTierListIndex();
         return { success: true, message: "보관 서열표를 삭제했습니다." };
@@ -398,7 +419,7 @@ export async function addTierBand(
             ),
         ];
 
-        await db.$transaction(operations);
+        await db.$transaction([...operations, touchTierList(tierListId)]);
         revalidateTierList(tierListId);
         return { success: true, message: "서열 상수 구간을 추가했습니다." };
     } catch (error) {
@@ -475,7 +496,7 @@ export async function updateTierBand(
                 : []),
         ];
 
-        await db.$transaction(operations);
+        await db.$transaction([...operations, touchTierList(band.tierListId)]);
         revalidateTierList(band.tierListId);
         return { success: true, message: "서열 상수 구간을 저장했습니다." };
     } catch (error) {
@@ -539,7 +560,7 @@ export async function deleteTierBand(
             ),
         ];
 
-        await db.$transaction(operations);
+        await db.$transaction([...operations, touchTierList(band.tierListId)]);
         revalidateTierList(band.tierListId);
         return { success: true, message: "서열 상수 구간을 삭제했습니다." };
     } catch (error) {
@@ -601,6 +622,7 @@ export async function addTierEntry(
             db.tierPlacementHistory.create({
                 data: { tierListId, chartId, bandValue: band.value },
             }),
+            touchTierList(tierListId),
         ]);
         revalidateTierList(tierListId);
         return { success: true, message: "채보를 구간에 추가했습니다." };
@@ -720,7 +742,7 @@ export async function applyTierBoardLayout(
             }),
         ];
 
-        await db.$transaction(operations);
+        await db.$transaction([...operations, touchTierList(input.tierListId)]);
         revalidateTierList(input.tierListId);
         return { success: true, message: "서열표 배치를 적용했습니다." };
     } catch (error) {
@@ -774,7 +796,7 @@ export async function deleteTierEntry(
             }),
         ];
 
-        await db.$transaction(operations);
+        await db.$transaction([...operations, touchTierList(entry.tierListId)]);
         revalidateTierList(entry.tierListId);
         return { success: true, message: "채보를 서열표에서 제거했습니다." };
     } catch (error) {
@@ -855,6 +877,7 @@ export async function moveTierEntryToBand(
                     bandValue: targetBand.value,
                 },
             }),
+            touchTierList(entry.tierListId),
         ]);
         revalidateTierList(entry.tierListId);
         return { success: true, message: "채보의 서열 상수를 저장했습니다." };

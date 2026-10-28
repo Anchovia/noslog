@@ -443,7 +443,6 @@ for (const locale of ["ko", "ja", "en"])
                             };
                         }),
                         regionHeight: box(region).height,
-                        regionFill: getComputedStyle(region).backgroundColor,
                         firstWeight: getComputedStyle(
                             rows[0].querySelector(".nl-player-row__rank")!
                         ).fontWeight,
@@ -464,16 +463,18 @@ for (const locale of ["ko", "ja", "en"])
                 expect(geometry.measure).toBeLessThanOrEqual(640);
                 if (width >= 768) expect(geometry.measure).toBe(640);
                 expect(geometry.step).toBe(48);
+                // 이름 emphasis-label · 값 metric-value 는 14/18, 한국어 · 일본어 14/21(가이드 「글자」)
+                const uiLine = locale === "en" ? "18px" : "21px";
                 for (const row of geometry.rows) {
                     expect(row.height).toBe(48);
                     expect(row.avatar).toEqual([32, 32]);
                     expect(row.rankWidth).toBe(32);
                     expect(row.rankOffset).toBeLessThanOrEqual(0.5);
-                    expect(row.name).toEqual(["14px", "20px", "600"]);
-                    // 값 = metric-value 14/20 · 500(가이드 1절 글자 표)
-                    expect(row.value).toEqual(["14px", "20px", "500"]);
+                    expect(row.name).toEqual(["14px", uiLine, "600"]);
+                    expect(row.value).toEqual(["14px", uiLine, "500"]);
                     if (!row.badge) continue;
-                    expect(row.badge.height).toBe(20);
+                    // 명판 높이 = 이름 글줄(가이드 순위표 「명판 안쪽」)
+                    expect(row.badge.height).toBe(parseFloat(uiLine));
                     expect(row.badge.offset).toBeLessThanOrEqual(0.5);
                     expect(row.badge.overhang).toBeLessThanOrEqual(0.5);
                     if (width >= 768) expect(row.label).toBe("full");
@@ -492,16 +493,19 @@ for (const locale of ["ko", "ja", "en"])
                     });
                 else expect(long.truncated).toBe(false);
                 expect(geometry.regionHeight).toBe(width >= 1056 ? 32 : 40);
-                // 상자 고르기 = 보조 버튼과 같은 면 + 선(2026-10-26 Geist secondary — 면 background-100)
-                expect(geometry.regionFill).toBe(
-                    theme === "dark" ? "rgb(10, 10, 10)" : "rgb(255, 255, 255)"
-                );
+                // 고른 뒤 포커스가 돌아온 상자 없는 셀렉트 = 키 포커스 면 surface/control-hover(가이드 「올림」).
+                // 면은 전환으로 바뀌므로 끝난 값을 기다린다
+                await expect(
+                    page.locator(
+                        ".nl-global-ranking-controls .nl-compact-select"
+                    )
+                ).toHaveCSS("background-color", "rgb(50, 50, 50)");
                 // 순위도 metric-value(500) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
                 expect(geometry.firstWeight).toBe("500");
                 expect(geometry.font).toContain("Pretendard JP Variable");
-                // 내 순위 줄 = 위아래 12 + body-secondary 20(global-rankings.css .nl-ranking-personal)
+                // 내 순위 줄 = 위아래 12 + body-secondary 24(global-rankings.css .nl-ranking-personal)
                 expect(geometry.personal).toEqual({
-                    height: 44,
+                    height: 48,
                     overflow: 0,
                     rankTag: "A",
                     buttons: 0,

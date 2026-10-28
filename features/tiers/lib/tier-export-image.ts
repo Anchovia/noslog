@@ -197,6 +197,7 @@ export async function drawTierImage(input: TierExportInput) {
             canvas: tokens.color("var(--nl-surface-canvas)"),
             sunken: tokens.color("var(--nl-surface-canvas)"),
             overlay: tokens.color("var(--nl-surface-surface)"),
+            strong: tokens.color("var(--nl-content-strong)"),
             text: tokens.color("var(--nl-content-default)"),
             subdued: tokens.color("var(--nl-content-subdued)"),
             divider: tokens.color("var(--nl-border-divider)"),
@@ -205,7 +206,6 @@ export async function drawTierImage(input: TierExportInput) {
             onMedia: tokens.color("var(--nl-content-on-media)"),
             fullCombo: tokens.color("var(--nl-achievement-full-combo)"),
             goal: tokens.color(`var(--nl-score-goal-${input.goal})`),
-            wordmark: tokens.color("var(--nl-identity-mark)"),
         };
         // 난이도 판 글자 = 난이도 글자색 그대로(2026-10-01 D12, 화면 서열 카드와 같게)
         const difficultyColor = (difficulty: string) =>
@@ -218,24 +218,35 @@ export async function drawTierImage(input: TierExportInput) {
         const gap = space(8);
         const radius = tokens.px("--nl-radius-control");
         const plateRadius = tokens.px("--nl-radius-small");
-        const titleFont = font(size(32), weight("bold"));
+        // 머리 = page-title 크기 · 줄 높이 · 굵기(언어별 역할 값) · content/strong, 「NosLog」 = 헤더 이름과 같은 600
+        const titleSize = tokens.px("--nl-type-page-title-size");
+        const titleLine = tokens.px("--nl-type-page-title-line-height");
+        const titleFont = font(titleSize, weight("heading"));
         const subtitleFont = font(size(14), weight("regular"));
         const bandFont = font(size(20), weight("bold"));
-        const metaFont = font(size(12), weight("regular"));
+        const brandFont = font(size(20), weight("semibold"));
+        // 메타 줄 자간은 nl-metadata 자간 토큰(--nl-type-tracking-detail)을 읽는다
+        const metaFont = font(size(12), weight("medium"));
+        const metaTracking = `${(parseFloat(tokens.raw("--nl-type-tracking-detail")) || 0) * size(12)}px`;
         const plateFont = metaFont;
 
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d", { willReadFrequently: true })!;
+        // 자간은 메타 줄에만 — 글꼴을 바꿀 때마다 같이 정한다
+        const setFont = (value: string) => {
+            context.font = value;
+            context.letterSpacing = value === metaFont ? metaTracking : "0px";
+        };
         // 구간 열 폭 = 구간 값 · 달성 수 중 넓은 글자 + 16
         const achievedCount = (band: TierExportBand) =>
             band.entries.filter((entry) =>
                 isTierGoalAchieved(entry.record, input.goal)
             ).length;
-        context.font = bandFont;
+        setFont(bandFont);
         const valueWidths = input.bands.map(
             (band) => context.measureText(formatTierValue(band.value)).width
         );
-        context.font = metaFont;
+        setFont(metaFont);
         const countWidths = input.showAchievement
             ? input.bands.map(
                   (band) =>
@@ -255,7 +266,7 @@ export async function drawTierImage(input: TierExportInput) {
         const nameHeight = input.showNames ? space(4) + line(16) : 0;
         const rowHeight = cell + nameHeight;
         const headerHeight =
-            line(40) + (input.subtitle ? space(4) + line(20) : 0);
+            titleLine + (input.subtitle ? space(4) + line(20) : 0);
         const bandHeights = input.bands.map((band) =>
             Math.max(
                 line(28) + (input.showAchievement ? line(16) : 0),
@@ -282,13 +293,13 @@ export async function drawTierImage(input: TierExportInput) {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // 머리 — 왼쪽 서열표 · 조건 / 아래 달성 요약, 오른쪽 NosLog · 날짜
-        context.fillStyle = colors.text;
-        context.font = titleFont;
+        context.fillStyle = colors.strong;
+        setFont(titleFont);
         const brandWidth = (() => {
-            context.font = bandFont;
+            setFont(brandFont);
             return context.measureText("NosLog").width;
         })();
-        context.font = titleFont;
+        setFont(titleFont);
         context.fillText(
             ellipsize(
                 context,
@@ -296,27 +307,27 @@ export async function drawTierImage(input: TierExportInput) {
                 TIER_EXPORT_WIDTH - padding * 2 - brandWidth - space(24)
             ),
             padding,
-            padding + (line(40) - size(32)) / 2
+            padding + (titleLine - titleSize) / 2
         );
         if (input.subtitle) {
-            context.font = subtitleFont;
+            setFont(subtitleFont);
             context.fillStyle = colors.subdued;
             context.fillText(
                 input.subtitle,
                 padding,
-                padding + line(40) + space(4) + (line(20) - size(14)) / 2
+                padding + titleLine + space(4) + (line(20) - size(14)) / 2
             );
         }
-        // NosLog = 헤더 워드마크와 같은 규격(section-title · identity/mark)
+        // NosLog = 사이트 글꼴 글자 · content/default(헤더 이름과 같은 색)
         context.textAlign = "right";
-        context.fillStyle = colors.wordmark;
-        context.font = bandFont;
+        context.fillStyle = colors.text;
+        setFont(brandFont);
         context.fillText(
             "NosLog",
             TIER_EXPORT_WIDTH - padding,
             padding + (line(28) - size(20)) / 2
         );
-        context.font = metaFont;
+        setFont(metaFont);
         context.fillStyle = colors.subdued;
         context.fillText(
             input.date,
@@ -330,7 +341,7 @@ export async function drawTierImage(input: TierExportInput) {
         let y = padding + headerHeight + space(24);
         input.bands.forEach((band, bandIndex) => {
             // 구간 값(서열 값 그라데이션 색) · 아래 달성 수
-            context.font = bandFont;
+            setFont(bandFont);
             context.fillStyle = tokens.color(tierValueColor(band.value));
             context.fillText(
                 formatTierValue(band.value),
@@ -338,7 +349,7 @@ export async function drawTierImage(input: TierExportInput) {
                 y + (line(28) - size(20)) / 2
             );
             if (input.showAchievement) {
-                context.font = metaFont;
+                setFont(metaFont);
                 context.fillStyle = colors.subdued;
                 context.fillText(
                     input.achievedLabel(
@@ -428,7 +439,7 @@ export async function drawTierImage(input: TierExportInput) {
                     context.fillStyle = colors.scrim;
                     context.fillRect(x, top, cell, stripHeight);
                     context.restore();
-                    context.font = metaFont;
+                    setFont(metaFont);
                     context.fillStyle = colors.onMedia;
                     context.textAlign = "center";
                     context.fillText(
@@ -440,7 +451,7 @@ export async function drawTierImage(input: TierExportInput) {
                 }
 
                 // 오른쪽 아래 난이도 판
-                context.font = plateFont;
+                setFont(plateFont);
                 // 칸이 폰 카드(375 이상)보다 커서 판은 약칭 없이 전체 이름
                 const plateText = `${entry.chart.difficulty} ${entry.chart.level}`;
                 const plateWidth =
@@ -504,7 +515,7 @@ export async function drawTierImage(input: TierExportInput) {
                 }
 
                 if (input.showNames) {
-                    context.font = metaFont;
+                    setFont(metaFont);
                     context.fillStyle = colors.text;
                     context.fillText(
                         ellipsize(
@@ -528,7 +539,7 @@ export async function drawTierImage(input: TierExportInput) {
         context.fillStyle = colors.divider;
         context.fillRect(padding, y, TIER_EXPORT_WIDTH - padding * 2, hairline);
         y += hairline + space(16);
-        context.font = metaFont;
+        setFont(metaFont);
         context.fillStyle = colors.subdued;
         context.fillText(
             ellipsize(context, input.url, TIER_EXPORT_WIDTH - padding * 2),

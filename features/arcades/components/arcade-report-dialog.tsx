@@ -65,9 +65,7 @@ export default function ArcadeReportDialog({
     initialReportType?: (typeof ARCADE_REPORT_TYPES)[number];
     triggerLabel?: string;
     triggerAriaLabel?: string;
-    /** 기체 행 「고장 신고」 는 빨간 테두리(중요 액션 강조) */
-    /** 없으면 기본 트리거의 말풍선 아이콘 */
-    /** 글자 오른쪽에 붙는 것 — 기체 행 「고장 신고」 의 흐린 신고 건수 */
+    /** 글자 오른쪽에 붙는 것 — 기체 카드 「고장 신고」 의 신고 건수 */
     triggerSuffix?: ReactNode;
     /** 상세 하단 바·레일 — 선호 하트처럼 말풍선 아이콘만. 이름·툴팁은 「오락실 제보」 */
     iconOnly?: boolean;
@@ -151,7 +149,7 @@ export default function ArcadeReportDialog({
     const trigger = iconOnly ? (
         <Button
             variant="secondary"
-            size="icon"
+            size="icon-lg"
             aria-label={triggerAriaLabel ?? title}
             title={title}
         >
@@ -185,7 +183,7 @@ export default function ArcadeReportDialog({
     );
     const fields = (
         <>
-            {/* 고정 값 칸 = 칸 라벨 모양 →8→ 값(2026-10-01, FormField 와 같은 간격) */}
+            {/* 고정 값 칸 = 칸 라벨 모양 →4→ 값(FormField 와 같은 간격) */}
             <div className="nl-field">
                 <p className="nl-field__label">{t("arcades.reportTarget")}</p>
                 <p className="nl-body">
@@ -349,7 +347,6 @@ export default function ArcadeReportDialog({
             title={title}
             // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
             size={isAuthenticated ? "large" : "small"}
-            className="nl-feedback-dialog"
             trigger={trigger}
             fullScreenFooter={
                 !isAuthenticated ? loginLink : success ? null : submitButton

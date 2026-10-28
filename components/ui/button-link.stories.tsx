@@ -26,11 +26,11 @@ const meta = {
     argTypes: {
         variant: {
             control: "select",
-            options: ["primary", "secondary", "ghost", "danger", null],
+            options: ["primary", "secondary", "ghost", "danger"],
         },
         size: {
             control: "select",
-            options: ["sm", "md", "lg", "icon", "icon-sm", null],
+            options: ["sm", "md", "lg", "icon", "icon-sm", "icon-lg", null],
         },
         plain: { control: "boolean" },
     },

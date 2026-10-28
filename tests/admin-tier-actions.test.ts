@@ -94,6 +94,7 @@ import {
     createTierList,
     moveTierEntryToBand,
     searchTierCharts,
+    updateTierList,
 } from "@/app/admin/tiers/actions";
 
 // 순번 다시 매기기는 문장 두 개(음수로 비키기 · 한 번에 제자리로, 2026-10-16) — 보낸 SQL 과 값을 꺼내 본다
@@ -284,7 +285,29 @@ describe("관리자 서열표 액션", () => {
                 goal: "s",
                 description: null,
                 status: "draft",
+                updatedAt: expect.any(Date),
             },
+        });
+    });
+
+    // 공개 「N월 N일 업데이트」 는 배치 · 구간이 바뀐 날이라 정보만 저장할 때는 날짜를 넣지 않는다
+    it("서열표 정보만 저장하면 업데이트 날짜를 바꾸지 않는다", async () => {
+        mocks.listFindUnique.mockResolvedValue({ mode: "basic", goal: "s" });
+        const formData = new FormData();
+        formData.set("id", "5");
+        formData.set("slug", "basic-s");
+        formData.set("title", "Basic S");
+        formData.set("mode", "basic");
+        formData.set("goal", "s");
+        formData.set("description", "");
+        formData.set("status", "published");
+
+        await expect(updateTierList(formData)).resolves.toMatchObject({
+            success: true,
+        });
+        expect(mocks.listUpdate).toHaveBeenCalledWith({
+            where: { id: 5 },
+            data: expect.not.objectContaining({ updatedAt: expect.anything() }),
         });
     });
 
@@ -375,10 +398,16 @@ describe("관리자 서열표 액션", () => {
         expect(mocks.historyCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, chartId: 20, bandValue: 12 },
         });
+        // 채보 추가 · 이력에 목록 갱신일(배치가 바뀐 날)을 같은 트랜잭션으로 묶는다
         expect(mocks.transaction).toHaveBeenCalledWith([
             expect.any(Promise),
             expect.any(Promise),
+            expect.any(Promise),
         ]);
+        expect(mocks.listUpdate).toHaveBeenCalledWith({
+            where: { id: 5 },
+            data: { updatedAt: expect.any(Date) },
+        });
         expect(mocks.updateTag).toHaveBeenCalledWith("tier-lists");
         // 랭킹 레이팅 캐시는 tier-lists 태그로 함께 비워진다(2026-10-15 S4)
         expect(mocks.updateTag).not.toHaveBeenCalledWith("user-rankings");

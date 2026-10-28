@@ -8,6 +8,22 @@
     padding-block: var(--nl-spacing-12);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
+@media (hover: hover) {
+    .noslog-ui .nl-settings__category:hover {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-settings__category:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
 .noslog-ui .nl-settings__category > span {
     display: flex;
     flex: 1;
@@ -28,7 +44,7 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
-/* 불러오기 틀(2026-10-01) — 상세와 같은 줄 목록. 버튼 자리는 실제 버튼 크기에 글자만 숨기고, 사진 64 원 · 스위치 트랙(24 × 24 + 16) */
+/* 불러오기 틀 — 상세와 같은 줄 목록. 버튼 자리는 실제 버튼 크기에 글자만 숨기고, 사진 64 원 · 스위치 트랙(실제 스위치와 같은 26 × 16) */
 .noslog-ui .nl-settings__skeleton-button {
     color: transparent;
 }
@@ -38,8 +54,10 @@
 }
 .noslog-ui .nl-settings__skeleton-switch {
     flex-shrink: 0;
-    width: calc(var(--nl-icon-large) + var(--nl-spacing-16));
-    height: var(--nl-icon-large);
+    width: calc(
+        var(--nl-icon-small) + var(--nl-spacing-8) + var(--nl-spacing-2)
+    );
+    height: var(--nl-icon-small);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-settings__zone,
@@ -109,7 +127,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     padding: var(--nl-spacing-16);
-    background: var(--nl-surface-surface);
+    /* 창 면(surface/elevated) 위에 놓인 판이라 한 단계 밝은 면 */
+    background: var(--nl-surface-control);
     border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-account-consequences > dl {
@@ -151,9 +170,6 @@
 .noslog-ui .nl-settings--detail .nl-settings__navigation {
     display: none;
 }
-.noslog-ui .nl-settings__guest-note {
-    margin-top: var(--nl-spacing-24);
-}
 @media (min-width: 1056px) {
     .noslog-ui .nl-settings__zone > .nl-button {
         align-self: flex-start;
@@ -194,13 +210,6 @@
     }
     .noslog-ui .nl-settings__category .nl-settings__name--wide {
         display: block;
-    }
-    .noslog-ui .nl-settings__category--current {
-        --nl-state-layer: var(--nl-surface-control);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
     }
     .noslog-ui .nl-settings__save > .nl-button {
         align-self: flex-start;
@@ -282,7 +291,14 @@
         );
     }
 }
-/* 연결 계정 로고 — 지금 아바타 자리와 같은 40(아이콘 M 두 배) 원, 면은 누르는 면 · 가운데 Discord 로고 20 */
+.noslog-ui button.nl-settings__row:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+/* 연결 계정 로고 — 원 40(아이콘 M 두 배, 홈 로고 원과 같은 값), 가운데 Discord 로고 20 */
 .noslog-ui .nl-settings__logo {
     display: flex;
     width: calc(var(--nl-icon-medium) * 2);
@@ -348,10 +364,10 @@
         margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-4));
     }
 }
-/* 뮤즈캣 로고 원(2026-10-21 시안) — 같은 원 40 에 밝은 면 · 캔버스 글자 「M」 */
+/* 뮤즈캣 로고 원(2026-10-21 시안) — 같은 원 40 에 밝은 면(primary) · 그 위 글자 「M」 */
 .noslog-ui .nl-settings__logo--mark {
-    background: var(--nl-content-default);
-    color: var(--nl-surface-canvas);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
 }
 /* 촘촘한 설정 구역(뮤즈캣 상세 시안) — 제목 · 내용 사이 8 */
 .noslog-ui .nl-settings__zone--compact {

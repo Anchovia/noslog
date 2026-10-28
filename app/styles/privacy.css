@@ -66,7 +66,7 @@
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-control);
 }
-/* 목차 행이 자기 안쪽 여백(좌우 16)과 현재 위치 면을 카드 폭 전체로 가져서 본문 여백을 두지 않는다 */
+/* 목차 행이 자기 안쪽 여백(좌우 16)을 카드 폭 전체로 가져서 본문 여백을 두지 않는다 */
 .noslog-ui .nl-privacy-contents__compact > .nl-disclosure__body {
     padding: 0;
 }
@@ -79,13 +79,10 @@
     align-items: center;
     min-height: var(--nl-control-height);
     padding: 0 var(--nl-spacing-16);
+    border-radius: var(--nl-radius-control);
 }
+/* 지금 위치 = Spectrum 2 메뉴 고른 항목 — 면 없이 굵기 600 */
 .noslog-ui .nl-privacy-contents a[aria-current] {
-    --nl-state-layer: var(--nl-surface-control);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-privacy-contents__wide {
@@ -191,8 +188,9 @@
         color: black;
         break-inside: avoid;
     }
-    /* 링크(nl-link)도 검정 — 낮으면 인쇄에서 흰 종이 위 흰 글자가 된다 */
+    /* 링크(nl-link) · 상자 제목도 검정 — 낮으면 인쇄에서 흰 종이 위 흰 글자가 된다 */
     .noslog-ui .nl-privacy a:not(.nl-back-link),
+    .noslog-ui .nl-privacy .nl-status .nl-component-title,
     .noslog-ui .nl-privacy .nl-muted,
     .noslog-ui .nl-privacy-contact dt {
         color: black;

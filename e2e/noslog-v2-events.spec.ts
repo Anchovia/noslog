@@ -47,13 +47,14 @@ test("guests see live events by closing date, a locked write button and no hidde
     ]);
     await expect(tabs.first()).toHaveAttribute("aria-current", "page");
 
-    // 쓸 수 없으면 비활성 버튼 + 이유 한 줄(로그아웃)
+    // 로그아웃이면 「글쓰기」 버튼 · 설명 줄 없이 제목 줄 끝 로그인 링크
     await expect(
         page.getByRole("button", { name: t["events.write"] })
-    ).toBeDisabled();
-    await expect(page.locator(".nl-page-heading")).toContainText(
-        t["events.lock.login"]
-    );
+    ).toHaveCount(0);
+    await expect(
+        page.getByRole("link", { name: t["events.loginToWrite"] })
+    ).toHaveAttribute("href", /\/login\?returnTo=/);
+    await expect(page.locator(".nl-page-heading .nl-metadata")).toHaveCount(0);
     await expect(
         page.getByRole("link", { name: t["events.mine"] })
     ).toHaveCount(0);
@@ -128,6 +129,10 @@ test("the detail keeps the approved version while an edit is under review", asyn
     });
     expect(color).toBe(success);
     await expect(page.locator(".nl-announcement-body h2")).toHaveText("규칙");
+    // 본문 안 굵게 — 한국어 · 일본어는 600, 영어는 700(news.md 「상세 본문」)
+    const strong = page.locator(".nl-announcement-body strong");
+    await expect(strong).toHaveText("대상");
+    await expect(strong).toHaveCSS("font-weight", "600");
     // 작성자가 아니면 고치기 · 검토 안내 없음
     await expect(page.locator(".nl-status")).toHaveCount(0);
     await expect(
@@ -138,6 +143,16 @@ test("the detail keeps the approved version while an edit is under review", asyn
         (await new AxeBuilder({ page }).include(".nl-events").analyze())
             .violations
     ).toEqual([]);
+    for (const [locale, weight] of [
+        ["ja", "600"],
+        ["en", "700"],
+    ] as const) {
+        await page.goto(page.url().replace(/\/(ko|ja)\//, `/${locale}/`));
+        await expect(page.locator(".nl-announcement-body strong")).toHaveCSS(
+            "font-weight",
+            weight
+        );
+    }
 });
 
 test("unpublished, rejected and malformed ids are not found", async ({

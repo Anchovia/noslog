@@ -12,6 +12,7 @@ import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import {
+    useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
@@ -55,6 +56,7 @@ import { musicSearchSchema } from "@/features/music/schemas/music-search-schema"
 import { cn } from "@/lib/cn";
 import useDebouncedValue from "@/lib/hooks/use-debounced-value";
 import useDelayedFlag from "@/lib/hooks/use-delayed-flag";
+import useMediaQuery from "@/lib/hooks/use-media-query";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
 
 // 스크롤 자동 로딩은 첫 묶음 뒤 세 번까지 — 그다음은 버튼이라 푸터에 닿을 수 있다
@@ -70,6 +72,7 @@ export default function DiscoveryPage({
     accountId: number | null;
 }) {
     const t = useTranslations();
+    const locale = useLocale();
     const href = useLocalizedHref();
     const params = useSearchParams();
     const serialized = params.toString();
@@ -88,9 +91,11 @@ export default function DiscoveryPage({
               };
     }, [serialized, accountId]);
     const wide = useWideLayout();
+    // 결과 수 줄은 672 이상(중간 · 넓은 폭)에 있고 좁은 폭에만 없다
+    const summaryShown = useMediaQuery("(min-width: 672px)");
     const [open, setOpen] = useState(false);
     if (wide && open) setOpen(false);
-    const summaryRef = useRef<HTMLParagraphElement>(null);
+    const summaryRef = useRef<HTMLElement | null>(null);
     const focusCommittedSummary = useRef(false);
     const [draft, setDraft] = useState(query);
     const [rangeDraft, setRangeDraft] = useState<DiscoveryQuery | null>(null);
@@ -122,7 +127,7 @@ export default function DiscoveryPage({
     const initialDataQuery = { ...initialQuery, view: "list" as const };
     const queryKey = JSON.stringify(dataQuery);
     const collection = useInfiniteQuery({
-        ...discoveryOptions(dataQuery, accountId),
+        ...discoveryOptions(dataQuery, accountId, locale),
         initialData:
             initialPage && queryKey === JSON.stringify(initialDataQuery)
                 ? { pages: [initialPage], pageParams: [0] }
@@ -324,11 +329,18 @@ export default function DiscoveryPage({
                 ]}
             />
         ) : null;
-    const summaryShort = t(
-        query.scope === "music"
-            ? "discovery.musicCountShort"
-            : "discovery.chartCountShort",
-        { count: query.scope === "music" ? total : chartTotal }
+    const summaryLine = (
+        <div className="nl-discovery__summary-row">
+            <p
+                ref={(node) => {
+                    summaryRef.current = node;
+                }}
+                tabIndex={-1}
+                className="nl-discovery__summary nl-body-secondary nl-muted"
+            >
+                {summary}
+            </p>
+        </div>
     );
     const filterTrigger = (
         <ActionButton
@@ -412,16 +424,6 @@ export default function DiscoveryPage({
                             : "discovery.chart"
                     )}
                 </h1>
-                {!wide ? (
-                    // 결과 수는 제목 아래 보조 글줄(제목 → 메타 8) — 필터를 적용한 뒤 포커스가 오는 자리
-                    <p
-                        ref={summaryRef}
-                        tabIndex={-1}
-                        className="nl-discovery__summary nl-metadata nl-muted"
-                    >
-                        {summaryShort}
-                    </p>
-                ) : null}
                 <div className="nl-discovery__search-row">
                     <form
                         role="search"
@@ -541,28 +543,23 @@ export default function DiscoveryPage({
                                     </div>
                                     {viewSwitch}
                                 </div>
-                                <div className="nl-discovery__summary-row">
-                                    <p
-                                        ref={summaryRef}
-                                        tabIndex={-1}
-                                        className="nl-discovery__summary nl-body-secondary nl-muted"
-                                    >
-                                        {summary}
-                                    </p>
-                                </div>
+                                {summaryLine}
                             </div>
                         </>
                     ) : (
-                        /* Compact: 결과 줄 하나 — 정렬(고스트 M) 왼쪽 · 보기 전환(M) 오른쪽. 개수는 제목 아래, 필터는 검색줄 옆 (2026-09-16 E′ · R2) */
-                        <div className="nl-discovery__summary-row nl-discovery__summary-row--compact">
-                            <DiscoverySortMenu
-                                query={query}
-                                signedIn={Boolean(accountId)}
-                                onChange={(next) => commit(next)}
-                                size="sm"
-                            />
-                            {viewSwitchCompact}
-                        </div>
+                        <>
+                            {/* Compact: 결과 줄 하나 — 정렬(고스트 M) 왼쪽 · 보기 전환(M) 오른쪽, 필터는 검색줄 옆. 672 이상이면 아래에 결과 수 줄 */}
+                            <div className="nl-discovery__summary-row nl-discovery__summary-row--compact">
+                                <DiscoverySortMenu
+                                    query={query}
+                                    signedIn={Boolean(accountId)}
+                                    onChange={(next) => commit(next)}
+                                    size="sm"
+                                />
+                                {viewSwitchCompact}
+                            </div>
+                            {summaryShown ? summaryLine : null}
+                        </>
                     )}
                     <AppliedTokens
                         label={t("music.filter")}
@@ -646,6 +643,11 @@ export default function DiscoveryPage({
                         ]}
                     />
                     <section
+                        // 좁은 폭에는 결과 수 줄이 없어 필터를 적용한 뒤 포커스가 결과 영역으로 온다
+                        ref={(node) => {
+                            if (!summaryShown) summaryRef.current = node;
+                        }}
+                        tabIndex={summaryShown ? undefined : -1}
                         aria-label={t("discovery.results")}
                         aria-busy={
                             pending ||
@@ -754,35 +756,32 @@ export default function DiscoveryPage({
                         <div className="nl-discovery__progress" ref={progress}>
                             {collection.isFetchNextPageError ? (
                                 <StatusMessage
+                                    tone="quiet"
                                     severity="danger"
                                     role="alert"
                                     title={t("discovery.moreError")}
+                                    action={
+                                        <ActionButton
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => void loadMore()}
+                                        >
+                                            {t("common.retry")}
+                                        </ActionButton>
+                                    }
                                 />
-                            ) : null}
-                            {collection.hasNextPage ? (
+                            ) : collection.hasNextPage ? (
                                 <ActionButton
                                     variant="secondary"
                                     busy={collection.isFetchingNextPage}
                                     busyLabel={t("discovery.loading")}
                                     onClick={() => void loadMore()}
                                 >
-                                    {collection.isFetchNextPageError
-                                        ? t("common.retry")
-                                        : t("discovery.loadMore", {
-                                              count: nextAmount,
-                                          })}
+                                    {t("discovery.loadMore", {
+                                        count: nextAmount,
+                                    })}
                                 </ActionButton>
-                            ) : (
-                                <p className="nl-body-secondary nl-muted">
-                                    {t("discovery.complete")}
-                                </p>
-                            )}
-                            <p className="nl-metadata nl-muted">
-                                {t("discovery.progress", {
-                                    count: items.length,
-                                    total,
-                                })}
-                            </p>
+                            ) : null}
                         </div>
                     ) : null}
                     <p className="sr-only" role="status">

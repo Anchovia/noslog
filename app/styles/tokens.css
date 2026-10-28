@@ -13,33 +13,44 @@
     /* 구역 간격 — 구역 사이 32(2026-10-25 체계 묶음) · 구역 제목 → 내용 1055 이하 12, 1056 이상 16(아래 미디어 쿼리) */
     --nl-section-gap: var(--nl-spacing-32);
     --nl-section-title-gap: var(--nl-spacing-12);
-    /* 모서리(2026-10-26 Vercel Geist) — 작은 칸(체크박스 · 세그먼트 칸 · 상자 안 항목) 4,
-       컨트롤 · 카드 · 메뉴 항목 6(material-base), 대화상자 · 메뉴 · 팝오버 · 토스트 12(material-modal · menu), 배지 · 칩 원 */
+    /* 모서리 = Spectrum 2 corner-radius — 작은 칸(체크박스) small 4, 컨트롤 · 메뉴 항목 · 작은 카드 medium 8,
+       카드 · 메뉴 판 · 팝오버 · 토스트 large 10, 대화상자 extra-large 16, 버튼 · 배지 · 칩 원(높이 ÷ 2) */
     --nl-radius-small: 4px;
-    --nl-radius-control: 6px;
-    --nl-radius-overlay: 12px;
+    --nl-radius-control: 8px;
+    --nl-radius-large: 10px;
+    --nl-radius-overlay: 16px;
     --nl-radius-full: 9999px;
     --nl-type-size-12: 12px;
     --nl-type-size-14: 14px;
     --nl-type-size-16: 16px;
     --nl-type-size-20: 20px;
+    --nl-type-size-22: 22px;
     --nl-type-size-24: 24px;
+    --nl-type-size-25: 25px;
     --nl-type-size-28: 28px;
     --nl-type-size-32: 32px;
+    --nl-type-size-36: 36px;
     --nl-type-size-40: 40px;
     --nl-type-line-height-16: 16px;
     --nl-type-line-height-18: 18px;
     --nl-type-line-height-20: 20px;
+    --nl-type-line-height-21: 21px;
     --nl-type-line-height-24: 24px;
+    --nl-type-line-height-26: 26px;
+    --nl-type-line-height-27: 27px;
     --nl-type-line-height-28: 28px;
     --nl-type-line-height-32: 32px;
+    --nl-type-line-height-33: 33px;
     --nl-type-line-height-36: 36px;
+    --nl-type-line-height-38: 38px;
     --nl-type-line-height-40: 40px;
+    --nl-type-line-height-42: 42px;
     --nl-type-line-height-48: 48px;
     --nl-type-weight-regular: 400;
     --nl-type-weight-medium: 500;
     --nl-type-weight-semibold: 600;
     --nl-type-weight-bold: 700;
+    --nl-type-weight-extrabold: 800;
     --nl-grid-gutter-compact: 12px;
     --nl-grid-gutter-wide: 16px;
     --nl-grid-margin-compact: 16px;
@@ -63,61 +74,66 @@
     --nl-layer-select: 90;
     --nl-layer-fullscreen: 100;
     --nl-layer-fullscreen-dialog: 110;
-    /* 무채색 = Vercel Geist 다크 그대로(2026-10-26, 자리별로 부품 소스의 토큰을 따라감 — 괄호 안이 Geist 토큰).
-       바탕 background-200 · 카드 · 메뉴 · 대화상자 면 background-100 · 고른 면 · 비활성 면 · 스켈레톤 gray-100 */
-    --nl-surface-canvas: #000000;
-    --nl-surface-surface: #0a0a0a;
-    --nl-surface-control: #1a1a1a;
-    /* 보조 버튼 올림(gray-200) */
-    --nl-surface-control-hover: #1f1f1f;
-    --nl-surface-input: #0a0a0a;
-    /* 가림막 — 대화상자 overlay-backdrop 80% · 헤더 메뉴(≡) 뒤 50%(비교 시안대로) */
-    --nl-surface-scrim: rgb(0 0 0 / 80%);
-    --nl-surface-nav-scrim: rgb(0 0 0 / 50%);
-    /* 툴팁 = Spotify 웹 툴팁 면 · 글자(다크 서비스 22곳 중 18곳이 어두운 면), 배지 = gray-500 · contrast-fg */
+    /* 무채색 = Adobe Spectrum 2 다크 회색 단계(괄호 안이 Spectrum 토큰). 면만으로 칸이 보이게 바탕과 판을 한 단계 띄운다.
+       바탕 background-base(gray-25) · 누르지 않는 묶음 상자 background-layer-1(gray-50) ·
+       면 있는 컨트롤 · 고른 칩 · 비활성 면 · 스켈레톤 gray-100.
+       고른 칩 면이 gray-100 인 까닭: 그 위 난이도 · 판정 색 글자가 4.5 : 1 을 넘는 가장 밝은 단계다(gray-300 이면 3.7) */
+    --nl-surface-canvas: #111111;
+    --nl-surface-surface: #1b1b1b;
+    --nl-surface-control: #2c2c2c;
+    /* 떠 있는 면(background-elevated · gray-75) — 카드 · 메뉴 판 · 팝오버 · 대화상자 */
+    --nl-surface-elevated: #222222;
+    /* 면 있는 컨트롤의 올림(gray-200) — 보조 버튼 · 셀렉트 · 칩 · 메뉴 항목 · 고스트 */
+    --nl-surface-control-hover: #323232;
+    /* 입력 면(gray-25) — 텍스트 필드 · 체크박스 · 라디오 · 꺼진 스위치 */
+    --nl-surface-input: #111111;
+    /* 가림막 — overlay-opacity 60% */
+    --nl-surface-scrim: rgb(0 0 0 / 60%);
+    --nl-surface-nav-scrim: rgb(0 0 0 / 60%);
+    /* 툴팁 = Spotify 웹 툴팁 면 · 글자(다크 서비스 22곳 중 18곳이 어두운 면), 배지 = gray-400 · 흰 글자 */
     --nl-surface-inverse: #282828;
     --nl-content-on-inverse: #ffffff;
-    --nl-surface-tag: #454545;
+    --nl-surface-tag: #444444;
     --nl-content-on-tag: #ffffff;
-    /* 글자 gray-1000 · 보조 · 라벨 gray-900 · 자리표시자 · 비활성 · 입력 아이콘 gray-700 */
-    --nl-content-default: #ededed;
-    --nl-content-subdued: #a1a1a1;
-    --nl-content-tertiary: #8f8f8f;
-    --nl-content-disabled: var(--nl-content-tertiary);
-    /* 선 — 구분선 gray-200 · 표 줄 · 꺼진 스위치 gray-400 · 목록 줄 · 탭 줄 accents-2 ·
-       떠 있는 면 · 면 카드 둘레 shadow-border(흰 14.5%) · 입력 · 체크박스 · 라디오 gray-alpha-400(입력 올림 500) */
-    --nl-border-divider: #1f1f1f;
-    --nl-border-default: #2e2e2e;
-    --nl-border-row: #333333;
-    --nl-border-elevated: rgb(255 255 255 / 14.5%);
-    --nl-border-input: rgb(255 255 255 / 14%);
-    --nl-border-input-hover: rgb(255 255 255 / 24%);
-    --nl-border-ring: #737373;
-    /* 올림 — 고스트 · 면 없는 줄 · 목록 줄 accents-1(비교 시안대로) · 메뉴 항목 gray-alpha-100 */
-    --nl-interaction-hover: #111111;
-    --nl-interaction-row: #111111;
-    --nl-interaction-menu: rgb(255 255 255 / 6%);
+    /* 글자 neutral-content(gray-800) · 보조 · 라벨 neutral-subdued-content(gray-700) · 흐림 · 자리표시자 gray-600 */
+    --nl-content-default: #dbdbdb;
+    --nl-content-subdued: #afafaf;
+    --nl-content-tertiary: #8a8a8a;
+    /* 제목(heading · title-color) · 누르는 부품 글자의 올림 · 누름 · 포커스(neutral-content-color-hover) gray-900 */
+    --nl-content-strong: #f2f2f2;
+    /* 비활성 글자 · 선 · 면(disabled-content-color) gray-400 */
+    --nl-content-disabled: #444444;
+    /* 선 — 구분선 gray-200 · 목록 · 표 줄(table-divider-color) gray-300 · 태그 둘레 gray-400 ·
+       떠 있는 창 다크 둘레 gray-200 · 입력 경계 gray-300(올림 gray-400) · 고른 경계 gray-500 */
+    --nl-border-divider: #323232;
+    --nl-border-default: #444444;
+    --nl-border-row: #393939;
+    --nl-border-elevated: #323232;
+    --nl-border-input: #393939;
+    --nl-border-input-hover: #444444;
+    --nl-border-ring: #6d6d6d;
+    /* 줄 올림 — 폭이 꽉 찬 목록 · 표 줄에 겹친다(table-row-hover gray-900 7%).
+       흰 6% 는 Spectrum 2 에 없는 단계라 새로 쓰지 않는다 — 면 없는 누르는 것 · 메뉴 항목의 올림은 surface/control-hover */
+    --nl-interaction-hover: rgb(255 255 255 / 6%);
+    --nl-interaction-row: rgb(242 242 242 / 7%);
+    /* 비활성 투명도 — 그림 · 사진을 품은 줄(고르기 줄 · 업적 고르기 · 사진 칸)만. 글자 · 아이콘 · 선만 있는 것은 content/disabled 색 */
     --nl-disabled-opacity: 0.5;
-    /* 포커스 = 흰 2px 선 한 줄(2026-10-26 사용자 — Geist 파랑 대신 무채색) */
+    /* 포커스 = 흰 2px 선 한 줄 — 유채색을 쓰지 않아 Spectrum 2 의 파랑 링 대신 무채색 */
     --nl-focus-ring: #ffffff;
     --nl-identity-mark: #dbdbdb;
-    /* 주 버튼 gray-1000 · 글자 background-100 · 올림 hsl(0,0%,80%) */
-    --nl-primary-default: #ededed;
-    --nl-primary-hover: #cccccc;
-    --nl-primary-on-primary: #0a0a0a;
-    /* 스위치 손잡이(gray-1000 84%) */
-    --nl-switch-thumb: rgb(237 237 237 / 84%);
+    /* 주 버튼 gray-800 · 글자 gray-25 · 올림 gray-900(Spectrum 의 파랑 accent 대신 무채색) */
+    --nl-primary-default: #dbdbdb;
+    --nl-primary-hover: #f2f2f2;
+    --nl-primary-on-primary: #111111;
+    /* 꺼진 스위치 손잡이(neutral gray-800) */
+    --nl-switch-thumb: #dbdbdb;
     --nl-feedback-info-marker: #4688ec;
     --nl-feedback-success-marker: #82b536;
     --nl-feedback-warning-marker: #fbc828;
-    /* 위험 — 글자 · 경계 red-900, 채운 위험 버튼 red-800(올림 90%) */
-    --nl-feedback-destructive: #ff6166;
-    --nl-feedback-destructive-surface: #d93036;
-    --nl-feedback-destructive-hover: color-mix(
-        in oklab,
-        var(--nl-feedback-destructive-surface) 90%,
-        transparent
-    );
+    /* 위험 = Spectrum 2 negative — 글자 · 경계 negative-900, 채운 위험 버튼 negative-700(올림 · 누름 600) */
+    --nl-feedback-destructive: #fc432e;
+    --nl-feedback-destructive-surface: #cd2e1d;
+    --nl-feedback-destructive-hover: #b12617;
     --nl-feedback-on-destructive: #ffffff;
     --nl-difficulty-normal: #068850;
     --nl-difficulty-hard: #e06400;
@@ -145,8 +161,8 @@
     --nl-local-data-personal: #3278be;
     --nl-achievement-full-combo: #b4ce35;
     --nl-achievement-pianist: #f2a634;
-    /* 큰 제목(20 이상) · 큰 숫자 자간(2026-10-21 전면 대조 ⑦) */
-    --nl-type-tracking-title: -0.02em;
+    /* 큰 제목 · 큰 숫자 자간 — Spectrum 2 letter-spacing 0 */
+    --nl-type-tracking-title: 0;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
     /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
@@ -211,9 +227,13 @@
     --nl-font-family-mono:
         ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
         "Liberation Mono", "Roboto Mono", monospace;
-    /* 떠 있는 창 그림자(2026-10-21 전면 대조 ⑦ — Primer · Atlassian · Spotify 처럼 넓고 진하게) */
+    /* 그림자 = Spectrum 2 drop-shadow 3겹(key · transition · ambient). 떠 있는 창 elevated · 카드 emphasized */
     --nl-overlay-shadow:
-        0 2px 6px rgb(0 0 0 / 24%), 0 8px 24px rgb(0 0 0 / 48%);
+        0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
+        0 4px 12px rgb(0 0 0 / 24%);
+    --nl-card-shadow:
+        0 0 1px rgb(0 0 0 / 24%), 0 1px 4px rgb(0 0 0 / 12%),
+        0 2px 8px rgb(0 0 0 / 24%);
     /* 툴팁 그림자 — Spotify 웹 툴팁 값 그대로 */
     --nl-tooltip-shadow:
         0 16px 24px rgb(0 0 0 / 30%), 0 6px 8px rgb(0 0 0 / 20%);
@@ -227,10 +247,33 @@
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;
-    /* 선 두께 두 단계 — 기본: 구분선 · 경계 · 칸 사이 선 = 1
-       강조: 선택 밑줄 · 강조 테두리(달성 · 체크박스 · 라디오 링) · 진행 막대 · 포커스 선 = 2. 테두리를 빼는 여백 보정도 이 값으로 */
+    /* 선 두께 두 단계 — 기본 1: 구분선 · 칸 사이 선 · 떠 있는 창 둘레 · 태그 · 칩 둘레
+       강조 2: 입력 경계 · 체크박스 · 라디오 · 스위치 · 고른 세그먼트 칸 · 선택 밑줄 · 진행 막대 · 포커스 선. 테두리를 빼는 여백 보정도 이 값으로 */
     --nl-stroke-default: 1px;
     --nl-stroke-strong: 2px;
+}
+/* 글자 단계 = 본문 16 계열(Spectrum 2 Body M · 당근 · velog · note 실측). 쪽 제목 24/32(1056 이상 32/40) · 절 제목 20/28 bold ·
+   부품 제목 16/24 semibold · 본문 16/24 · 메타 12/16 regular · 컨트롤 14. 한국어 · 일본어는 줄 높이 · 굵기 강조만 CJK 값 */
+.noslog-ui {
+    --nl-type-page-title-size: var(--nl-type-size-24);
+    --nl-type-page-title-line-height: var(--nl-type-line-height-32);
+    --nl-type-section-title-size: var(--nl-type-size-20);
+    --nl-type-section-title-line-height: var(--nl-type-line-height-28);
+    --nl-type-line-height-ui: var(--nl-type-line-height-18);
+    --nl-type-line-height-body: var(--nl-type-line-height-24);
+    --nl-type-line-height-detail: var(--nl-type-line-height-16);
+    --nl-type-dialog-title-line-height: var(--nl-type-line-height-26);
+    --nl-type-tracking-detail: 0;
+    --nl-type-weight-strong: var(--nl-type-weight-bold);
+    --nl-type-weight-heading: var(--nl-type-weight-extrabold);
+}
+.noslog-ui:is(:lang(ko), :lang(ja)) {
+    --nl-type-line-height-ui: var(--nl-type-line-height-21);
+    --nl-type-line-height-body: var(--nl-type-line-height-27);
+    --nl-type-line-height-detail: var(--nl-type-line-height-18);
+    --nl-type-dialog-title-line-height: var(--nl-type-line-height-33);
+    --nl-type-weight-strong: var(--nl-type-weight-medium);
+    --nl-type-weight-heading: var(--nl-type-weight-bold);
 }
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {
@@ -315,30 +358,41 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
 }
+/* 페이지 제목 = heading XL · 구역 제목 = heading L(모든 폭). 제목 글자는 heading-color gray-900 */
 .noslog-ui .nl-page-title {
-    font-size: var(--nl-type-size-32);
-    line-height: var(--nl-type-line-height-40);
-    font-weight: var(--nl-type-weight-semibold);
+    font-size: var(--nl-type-page-title-size);
+    line-height: var(--nl-type-page-title-line-height);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
-    color: var(--nl-content-default);
+    color: var(--nl-content-strong);
 }
-/* 제목 단계(2026-10-25 체계 묶음 A) — 페이지 32 · 구역 폰 24 / 1056 이상 28 · 상자 24, 모두 600 */
+/* 쪽 제목 바로 아래 설명 한 줄은 본문 크기 — 메타 글줄이어도 쪽 제목 다음 단계로 읽힌다 */
+.noslog-ui .nl-page-title + :is(p, .nl-metadata) {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-regular);
+}
 .noslog-ui .nl-section-title {
-    font-size: var(--nl-type-size-24);
-    line-height: var(--nl-type-line-height-32);
-    font-weight: var(--nl-type-weight-semibold);
+    font-size: var(--nl-type-section-title-size);
+    line-height: var(--nl-type-section-title-line-height);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
-    color: var(--nl-content-default);
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-component-title {
-    font-size: var(--nl-type-size-24);
-    line-height: var(--nl-type-line-height-32);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
-    color: var(--nl-content-default);
+}
+/* 색만 레이어 안에 둔다 — 레이어 밖이면 함께 붙인 Tailwind 색(동기화 요약 상태색 · 관리자 난이도 이름)을 덮는다 */
+@layer components {
+    .noslog-ui .nl-component-title {
+        color: var(--nl-content-strong);
+    }
 }
 .noslog-ui .nl-entity-title {
     font-size: var(--nl-type-size-16);
@@ -346,42 +400,43 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: 0;
     font-variant-numeric: normal;
-    color: var(--nl-content-default);
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-body {
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 읽기 본문(2026-09-26 H1) — 공지 · 이벤트 글 본문만. 크기는 본문과 같고 행간만 28(한국어 긴 글 행간 중앙값 1.7) */
+/* 읽기 본문 = body M — 공지 · 이벤트 글 본문 · 대화상자 본문 */
 .noslog-ui .nl-body-reading {
     font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-28);
+    line-height: var(--nl-type-line-height-body);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
 .noslog-ui .nl-body-secondary {
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
 .noslog-ui .nl-control {
     font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 3차 정보 = 메타 12/16 — 자간 0 은 영어 좁은 칸(빙고 판 · FC 태그)이 낱말 중간에서 꺾이지 않게 */
 .noslog-ui .nl-metadata {
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
     font-weight: var(--nl-type-weight-regular);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-detail);
     font-variant-numeric: normal;
 }
 /* 여러 줄로 읽는 12 설명(칸 도움말 · 창 안 설명 문단)은 줄 높이만 18 — 한 줄 라벨 · 표 · 목록 줄 안 12 는 16 그대로(2026-10-01 D4) */
@@ -397,14 +452,14 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-metric-value {
     font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-medium);
     letter-spacing: 0;
     font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-emphasis-label {
     font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: 0;
     font-variant-numeric: normal;
@@ -439,18 +494,14 @@ html:has(.noslog-ui) {
         --nl-control-height: 32px;
         --nl-control-height-compact: 24px;
         --nl-control-height-large: 40px;
+        --nl-type-page-title-size: var(--nl-type-size-32);
+        --nl-type-page-title-line-height: var(--nl-type-line-height-40);
     }
 }
 /* 좁은 열 안 페이지 제목 `nl-page-title--fixed`(악곡 상세 머리 열 272 — 32 면 576곡 중 44% 가 잘림)은 모든 폭 24/32(2026-10-01 D5) */
 .noslog-ui .nl-page-title--fixed {
     font-size: var(--nl-type-size-24);
     line-height: var(--nl-type-line-height-32);
-}
-@media (min-width: 1056px) {
-    .noslog-ui .nl-section-title {
-        font-size: var(--nl-type-size-28);
-        line-height: var(--nl-type-line-height-36);
-    }
 }
 
 /* 움직임 토큰(2026-09-19) — 가이드 「움직임」 절이 원본. 값은 여기서만 정하고 부품은 이름으로만 쓴다(인라인 · 부품별 값 없음).

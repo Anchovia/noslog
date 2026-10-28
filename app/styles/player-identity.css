@@ -147,10 +147,16 @@
 .noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__divider::before {
     content: "";
     position: absolute;
-    left: -2.5px;
-    top: 3px;
-    width: 6px;
-    height: 6px;
+    /* 마름모 6 을 구분선(1 × 12) 가운데에 */
+    left: calc(
+        (var(--nl-stroke-default) - var(--nl-spacing-4) - var(--nl-spacing-2)) /
+            2
+    );
+    top: calc(
+        (var(--nl-spacing-12) - var(--nl-spacing-4) - var(--nl-spacing-2)) / 2
+    );
+    width: calc(var(--nl-spacing-4) + var(--nl-spacing-2));
+    height: calc(var(--nl-spacing-4) + var(--nl-spacing-2));
     background: var(--nl-exam-badge-metal);
     clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
@@ -180,9 +186,10 @@
     height: 100%;
 }
 
-/* 기여 라벨(2026-09-24 N1 · L2) — 기존 태그 안에서 「기여」 는 보조 글자 · 보통 굵기, 「Lv.N」 만 굵게 */
+/* 기여 라벨(2026-09-24 N1 · L2) — 기존 태그 안에서 「기여」 는 한 단계 흐린 글자 · 보통 굵기, 「Lv.N」 만 굵게.
+   태그 면 위 대비 4.5 : 1 을 넘는 가장 흐린 글자가 content/default 다(subdued 는 4.44) */
 .noslog-ui .nl-contribution-label__prefix {
     margin-inline-end: var(--nl-spacing-4);
-    color: var(--nl-content-subdued);
+    color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-regular);
 }

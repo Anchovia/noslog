@@ -78,8 +78,8 @@ test("Music detail enters Overview and keeps the four difficulty choices on one 
                         (element) => element.getBoundingClientRect().height
                     )
             )
-            // 난이도 = 공용 세그먼트 L 한 줄(1056+ 는 세로 4행 = 행 40×4 + 사이 4×3 + 트랙 8)
-            .toBe(width >= 1056 ? 180 : 44);
+            // 난이도 = 공용 세그먼트 한 줄 = 칸 높이(판 안쪽 0). 1056+ 는 세로 4행 = 행(컨트롤 기본 32)×4 + 사이 4×3
+            .toBe(width >= 1056 ? 140 : 40);
         await expect
             .poll(() =>
                 page

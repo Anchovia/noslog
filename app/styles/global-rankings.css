@@ -33,7 +33,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-16);
 }
-/* 표 — 모든 폭 같은 규격: 행 48 · 아바타 32 · 글자 14/20.
+/* 표 — 모든 폭 같은 규격: 행 48 · 아바타 32 · 글자 14 · 줄 높이 ui(18, CJK 21).
    묶음 사이 12(순위 → 아바타 → 이름 묶음), 묶음 안 8(국기 → 이름 → 명판) */
 .noslog-ui .nl-ranking-head,
 .noslog-ui .nl-player-row {
@@ -61,7 +61,7 @@
     margin: 0;
 }
 .noslog-ui .nl-player-row {
-    height: 48px;
+    height: var(--nl-spacing-48);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-player-row__rank {
@@ -98,7 +98,7 @@
 .noslog-ui .nl-player-row__identity > .nl-exam-badge {
     flex-shrink: 0;
 }
-/* 명판 뒤 기여 라벨(2026-09-24) — 줄지 않고, 명판처럼 이름 글줄(20) 높이로.
+/* 명판 뒤 기여 라벨(2026-09-24) — 줄지 않고, 명판처럼 이름 글줄(ui) 높이로.
    이름 · 명판(B·R)까지 넣고 남는 자리가 없으면 라벨을 숨긴다 — 폭은 계속 재도록 보이지 않게 겹쳐 둔다 */
 .noslog-ui .nl-player-row__identity > .nl-term {
     flex-shrink: 0;
@@ -109,9 +109,10 @@
     visibility: hidden;
     pointer-events: none;
 }
-/* 랭킹 행의 명판은 이름 글줄(20)과 같은 높이 — 글자 12 그대로, 상자 여백만 2/6 */
+/* 랭킹 행의 명판은 이름 글줄(ui — 18, CJK 21)과 같은 높이 — 글자 12/16 그대로, 높이만 글줄에 맞추고 좌우 여백 6 */
 .noslog-ui .nl-player-row .nl-exam-badge {
-    padding: var(--nl-spacing-2) 6px;
+    min-height: var(--nl-type-line-height-ui);
+    padding: 0 calc(var(--nl-spacing-4) + var(--nl-spacing-2));
 }
 .noslog-ui
     .nl-player-row
@@ -142,6 +143,14 @@
         );
     }
 }
+.noslog-ui
+    .nl-player-row:has(.nl-player-row__link:is(:active, :focus-visible)) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
 .noslog-ui .nl-player-row__link {
     min-width: 0;
     white-space: nowrap;
@@ -156,6 +165,13 @@
 }
 .noslog-ui .nl-player-row[data-current="true"] {
     background: var(--nl-surface-surface);
+}
+/* 다시 불러오는 동안 이전 표는 흐린 글자 — 순위 시상 색 · 값 구간 색도 흐린다 */
+.noslog-ui
+    .nl-global-ranking-content[aria-busy="true"]
+    .nl-player-row
+    :is(.nl-player-row__rank, .nl-player-row__link, .nl-player-row__value) {
+    color: var(--nl-content-subdued);
 }
 /* 내 행은 면이 한 단계 밝아 Recital 명판의 파인 모서리도 같은 면으로 칠한다 */
 .noslog-ui .nl-player-row[data-current="true"] .nl-exam-badge {

@@ -169,7 +169,8 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
         .click();
     await expect(page.locator("[data-result]")).toHaveCount(1);
     await expect(page).toHaveURL(/categories=pops/);
-    await expect(page.locator(".nl-discovery__summary")).toBeFocused();
+    // 폰에는 개수 글줄이 없어 포커스가 결과 영역으로 온다
+    await expect(page.locator(".nl-discovery__collection")).toBeFocused();
 });
 
 test("Intermediate filters stage changes and require a difficulty for level sorting", async ({
@@ -260,7 +261,25 @@ test("Discovery exposes settled empty, retry, and delayed replacement states wit
         region.getByText("일치하는 악곡이 없습니다.", { exact: true })
     ).toBeVisible();
     await expect(search).toBeEnabled();
-    await expect(page.locator(".nl-discovery__summary")).toBeFocused();
+    // 폰에는 결과 수 줄이 없어 다시 불러온 뒤 포커스가 결과 영역으로 온다
+    await expect(page.locator(".nl-discovery__collection")).toBeFocused();
+});
+
+test("Discovery shows the result count from 672 up and not on phones", async ({
+    page,
+}) => {
+    await page.goto("/ko/music");
+    await expect(page.locator("[data-result]")).toHaveCount(20);
+    const summary = page.locator(".nl-discovery__summary");
+    for (const [width, shown] of [
+        [390, false],
+        [800, true],
+        [1280, true],
+    ] as const) {
+        await page.setViewportSize({ width, height: 900 });
+        if (shown) await expect(summary).toHaveText(/^악곡 [\d,]+개$/);
+        else await expect(summary).toHaveCount(0);
+    }
 });
 
 for (const locale of ["ko", "ja", "en"]) {

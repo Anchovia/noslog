@@ -77,14 +77,14 @@ export default function TierListSwitcher({
                                         <Select.Item
                                             key={goal}
                                             value={encode({ mode, goal })}
-                                            className="nl-select-option nl-body-secondary"
+                                            className="nl-select-option"
                                         >
                                             <Select.ItemText>
                                                 {name({ mode, goal })}
                                             </Select.ItemText>
                                             <Select.ItemIndicator>
                                                 <Check
-                                                    className="nl-icon"
+                                                    className="nl-icon-small"
                                                     aria-hidden
                                                 />
                                             </Select.ItemIndicator>

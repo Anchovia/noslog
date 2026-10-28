@@ -4,11 +4,21 @@
 
 ## 모양
 
-- 셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록이 한 모양이다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)). 판 = `surface/surface` · 둘레 1px `border/elevated` + 그림자 · 안쪽 4 · `radius/overlay`. 트리거에서 8 떨어진다.
-- 행 = 컨트롤 높이 · 좌우 안쪽 12 · 모서리 `radius/control` · 행 사이 4 · `nl-body-secondary`. 올림 `interaction/menu`.
-- 고른 행 = `interaction/menu` + 600 + 오른쪽 체크 16.
-- 소제목(`nl-metadata` 흐림)은 그룹이 둘 이상일 때만. 정렬 하나뿐이면 트리거 라벨이 이미 이름이라 소제목 없이 행부터.
+- 셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록이 한 모양이다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)). 판 = `surface/elevated` · 다크 둘레 1px `border/elevated` + 그림자 · 안쪽 8 · `radius/large`(Spectrum 2 popover · menu). 트리거에서 8 떨어진다.
+- 판 둘레는 고대비 모드에서도 남게 실제 `border` 로 그리고, 선 두께만큼 안쪽을 줄여 판 크기는 같다. Radix 가 판에 `outline: none` 을 인라인으로 넣어 `outline` 은 쓰지 않는다.
+- 행 = 컨트롤 높이 · 좌우 안쪽 12 · 모서리 `radius/control` · 14 medium. 행 사이는 0 이다(Spectrum 2 Menu). 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`, 항목 설명 글자는 `content/default` 다. 비활성 행 글자는 `content/disabled`.
+- 되돌릴 수 없는 항목은 글자 `feedback/destructive` 이고, 올려도 면만 바뀌고 글자는 빨강 그대로다.
+- 고른 행 = 면 `surface/control` + 600 + 오른쪽 체크 16(Apple Music 사이드바). 올리면 그 면 위에 올림 면을 겹친다. Spectrum 의 파랑 체크는 쓰지 않는다.
+- 소제목은 Spectrum 2 메뉴 묶음 제목(14 bold · `content/default` · 자간 0)이고, 그룹이 둘 이상일 때만 둔다. 정렬 하나뿐이면 트리거 라벨이 이미 이름이라 소제목 없이 행부터.
 - 셀렉트 목록 · 정렬 메뉴 폭은 240(화면 폭 − 32 를 넘지 않는다). `ActionMenu` 최소 폭 160, 항목에 아이콘을 두지 않는다. 메뉴에서 연 창을 닫으면 포커스는 ⋯ 로 돌아간다.
+
+## 상태 칸이 있는 목록
+
+검정 선택 목록처럼 항목마다 상태(급 합격 여부 등)를 보여 줘야 하는 목록이다. 판 · 행은 위와 같다.
+
+- 폭은 트리거 폭이다.
+- 행 오른쪽 칸은 상태 글자가 쓴다. 체크는 두지 않는다.
+- 고른 행은 위 메뉴와 같이 면 `surface/control` + 600 이다.
 
 ## 정렬
 
@@ -23,9 +33,13 @@
 
 ## 바뀐 기록
 
-- [2026-10-26 Geist 색 · 모서리 · 포커스 — 판 12 · 둘레 선 + 그림자 · 항목 6 · 올림 · 고른 항목 흰 6%](../../decisions/2026-10-26-geist-color-radius.md)
-- [2026-10-25 체계 묶음 — 메뉴 한 모양 — 판 안쪽 4 · 테두리 없음 · 항목 모서리 0](../../decisions/2026-10-25-design-system-cluster.md)
-- [2026-09-23 정렬 트리거 고스트 · 방향은 항목에](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23)
+- [2026-10-28 전수 검수 — 메뉴 행 글자 · 판 둘레](../../decisions/2026-10-28-audit-fixes.md)
+- [2026-10-27 운영보다 나빠진 자리 — 고른 행](../../decisions/2026-10-27-production-regression-fixes.md)
+- [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
+- [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)
+- [2026-10-26 Geist 색 · 모서리 · 포커스 — 판 · 둘레 · 그림자 · 항목 모서리 · 올림 · 고른 항목 면](../../decisions/2026-10-26-geist-color-radius.md)
+- [2026-10-25 체계 묶음 — 메뉴 모양 — 판 안쪽 · 테두리 · 항목 모서리](../../decisions/2026-10-25-design-system-cluster.md)
+- [2026-09-23 정렬 트리거 모양 · 방향 표시 자리](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23)
 - [2026-09-22 ⋯ 더보기 메뉴](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-22)
 - [2026-09-16 메뉴 소제목 · 행 높이](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16)
-- [2026-09-14 목록 흰 선은 키보드일 때만](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-14)
+- [2026-09-14 목록 포커스 선](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-14)
