@@ -2171,7 +2171,7 @@ export const enMessages = {
     "achievement.recipients": "Earned by {count}",
     "achievement.detail": "Show tiers",
     "achievement.scoresHidden":
-        "Skill and collection achievements are hidden because this player keeps scores private.",
+        "Skill, collection, song set and season achievements are hidden because this player keeps scores private.",
     "achievement.pin.failed":
         "Couldn't update your profile achievements. Try again shortly.",
     "achievement.settings.label": "Profile achievements",

@@ -14,7 +14,7 @@
 
 1. 이름을 바꾼다 — 削除 묶음의 한국어 「사쿠죠」, 헐화 · 회신 묶음의 영어 「Wakhmaninov」, 비 묶음의 영어 「Raindrop」 · 일본어 「雨だれ」.
 2. 곡 묶음 업적 19개를 더한다. 생활 속 클래식(트럭 후진음 · 운동회 · 만화 속 클래식 · 띠로리 · 종착역입니다 · 빠바바밤 · 결혼식 축주), BEMANI · 게임 · 동방(와 샌즈 · 배드애플 · 홍마관 자매 · 마라시 채널 · 왁선생 · 그랜드슬램 · 세 마왕 · 피협), 클래식 일화(1인 4역 · 종소리 · 1분이 아니야 · 왕벌의 비행).
-3. 곡 묶음은 난이도 하나만 보기, 곡의 모든 채보로 세기, 풀콤보로 세기를 정할 수 있다. 기준을 정한 한 곡 묶음은 금 III 하나다.
+3. 곡 묶음은 난이도 하나만 보기, 곡의 모든 채보로 세기, 풀콤보로 세기를 정할 수 있다. 한 난이도만 보는 한 곡 묶음(왕벌의 비행)은 그 난이도에서 S → 풀콤보 → Pianist 이고, 모든 채보나 풀콤보로 세는 한 곡 묶음(배드애플 · 1인 4역)은 금 III 하나다.
 4. 이름은 언어마다 그 커뮤니티의 밈을 쓰고, 그 언어에 밈이 없으면 뜻을 옮긴다. 새 왁선생 묶음의 영어 이름은 헐화 · 회신의 「Wakhmaninov」 와 겹치지 않게 「Virkato」 로 한다.
 
 규칙은 [기능 규칙 › 업적](../design/product-rules.md#업적)에 있다.
@@ -31,6 +31,6 @@
 
 ## 바뀌는 곳
 
-- 문서: [기능 규칙](../design/product-rules.md) 업적 절
+- 문서: [기능 규칙](../design/product-rules.md) 업적 절 · [업적 화면](../design/pages/achievements.md) 상태 · 목록 줄
 - 코드: `features/achievements/{achievement-song-sets.ts,achievement-definitions.ts,components/achievement-hex.tsx}` · `lib/i18n/message-catalogs/{ko,en,ja}.ts`
-- 테스트: `tests/achievement-definitions.test.ts`
+- 테스트: `tests/achievement-definitions.test.ts` · `tests/achievement-metrics-database.test.ts` · `e2e/noslog-v2-profile.spec.ts`

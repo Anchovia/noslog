@@ -409,3 +409,40 @@ test("profile activity tab shows a year calendar that starts at today's end and 
     const audit = await new AxeBuilder({ page }).include("main").analyze();
     expect(audit.violations).toEqual([]);
 });
+
+test("achievements tab filters song sets and seasons, and one-song ladders show the condition without numbers", async ({
+    page,
+}) => {
+    await page.goto("/ko/profile/1/achievements");
+    const songSets = page.getByRole("button", { name: /^곡 묶음/ });
+    const seasons = page.getByRole("button", { name: /^계절/ });
+    if (
+        await page.getByText("점수 비공개 프로필이라", { exact: false }).count()
+    ) {
+        // 점수 비공개 시드 — 남에게는 곡 묶음 · 계절 분류가 없다
+        await expect(songSets).toHaveCount(0);
+        await expect(seasons).toHaveCount(0);
+        return;
+    }
+    await expect(seasons).toBeVisible();
+    await songSets.click();
+    await expect(songSets).toHaveAttribute("aria-pressed", "true");
+    const rows = page.locator(".nl-achievement-row");
+    // 한 곡 사다리는 첫 단계 조건만, 모든 채보 풀콤보 묶음은 금 III 조건 하나
+    await expect(
+        rows
+            .filter({ hasText: "1분이 아니야" })
+            .locator(".nl-achievement-row__text > .nl-achievement-row__number")
+    ).toHaveText("小犬のワルツ S 이상");
+    await expect(
+        rows
+            .filter({ hasText: "1인 4역" })
+            .locator(".nl-achievement-row__text > .nl-achievement-row__number")
+    ).toHaveText("魔王 모든 난이도 풀콤보");
+    await expect(page.locator("main")).not.toContainText("achievement.");
+    expect(
+        await page.evaluate(
+            () => document.documentElement.scrollWidth - innerWidth
+        )
+    ).toBeLessThanOrEqual(0);
+});

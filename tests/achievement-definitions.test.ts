@@ -237,7 +237,7 @@ describe("요약(프로필 구역 · 머리)", () => {
 });
 
 describe("점수 비공개(남이 볼 때)", () => {
-    it("실력 · 수집 업적은 자료에서 빼고, 분모도 보이는 업적만", () => {
+    it("실력 · 수집 · 곡 묶음 · 계절 업적은 자료에서 빼고, 분모도 보이는 업적만", () => {
         const visible = achievementRecordsForViewer(
             { ...records, pins: ["s-rank", "opinion"] },
             true

@@ -89,5 +89,72 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             // 곡 분류는 채보 → 곡으로 잇는다 — 이 곡 하나를 S 이상으로 얻었다
             expect(metrics.categoryBM).toMatchObject({ value: 1 });
         });
+
+        it("reads every chart with this player's records and counts revived opinions", async () => {
+            const metrics = await collectAchievementMetrics(userId);
+            expect(metrics).toMatchObject({
+                // Expert · Real 둘 다 S 이상인 곡 하나
+                allDifficultySongs: { value: 1 },
+                // Lv.1 기록이 없고, Real 의 Lv.3 은 사다리에 세지 않는다
+                levelLadder: { value: 0 },
+                revivedOpinions: { value: 0 },
+            });
+        });
+
+        it("counts an opinion as revived only when no other opinion came in the 30 days before it", async () => {
+            const [expert, real] = await db.musicChart.findMany({
+                where: { musicIdx: musicIndex },
+                orderBy: { id: "asc" },
+            });
+            const other = await db.user.create({
+                data: { username: `${musicIndex}-other` },
+            });
+            const daysAgo = (days: number) =>
+                new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+            try {
+                await db.communityChartEvaluation.createMany({
+                    data: [
+                        {
+                            chartId: expert.id,
+                            userId: other.id,
+                            opinion: "a",
+                            opinionCreatedAt: daysAgo(60),
+                        },
+                        {
+                            chartId: real.id,
+                            userId: other.id,
+                            opinion: "b",
+                            opinionCreatedAt: daysAgo(10),
+                        },
+                    ],
+                });
+                const mine = await Promise.all(
+                    [expert, real].map((chart) =>
+                        db.communityChartEvaluation.create({
+                            data: {
+                                chartId: chart.id,
+                                userId,
+                                opinion: "c",
+                                opinionCreatedAt: daysAgo(0),
+                            },
+                        })
+                    )
+                );
+                await db.communityOpinionHelpful.createMany({
+                    data: mine.map((evaluation) => ({
+                        evaluationId: evaluation.id,
+                        userId: other.id,
+                    })),
+                });
+                const metrics = await collectAchievementMetrics(userId);
+                // Expert 는 60일 전 의견 뒤 처음, Real 은 10일 전에 다른 의견이 있었다
+                expect(metrics.revivedOpinions).toMatchObject({ value: 1 });
+            } finally {
+                await db.communityChartEvaluation.deleteMany({
+                    where: { chart: { musicIdx: musicIndex } },
+                });
+                await db.user.delete({ where: { id: other.id } });
+            }
+        });
     }
 );

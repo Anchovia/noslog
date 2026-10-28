@@ -2143,7 +2143,7 @@ export const koMessages = {
     "achievement.recipients": "{count}명 달성",
     "achievement.detail": "단계 보기",
     "achievement.scoresHidden":
-        "점수 비공개 프로필이라 실력 · 수집 업적은 보이지 않습니다.",
+        "점수 비공개 프로필이라 실력 · 수집 · 곡 묶음 · 계절 업적은 보이지 않습니다.",
     "achievement.pin.failed":
         "업적을 걸지 못했습니다. 잠시 후 다시 시도해 주세요.",
     "achievement.settings.label": "프로필 업적",

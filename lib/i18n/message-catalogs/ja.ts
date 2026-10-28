@@ -2166,7 +2166,7 @@ export const jaMessages = {
     "achievement.recipients": "{count}人達成",
     "achievement.detail": "段階を見る",
     "achievement.scoresHidden":
-        "スコア非公開のため、実力・コレクションの実績は表示されません。",
+        "スコア非公開のため、実力・コレクション・楽曲セット・季節の実績は表示されません。",
     "achievement.pin.failed":
         "実績を更新できませんでした。しばらくしてからもう一度お試しください。",
     "achievement.settings.label": "プロフィールの実績",
