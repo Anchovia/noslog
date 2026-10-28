@@ -175,7 +175,7 @@ export const jaMessages = {
     "pattern.computed":
         "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
     "pattern.computedMissing":
-        "公開譜面がない曲と、動画から抽出して拍子がわからない譜面の変拍子は「—」で表示します。",
+        "公開譜面がない曲は値を空欄にします。動画から抽出して拍子がわからない譜面は変拍子の値を空欄にします。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",

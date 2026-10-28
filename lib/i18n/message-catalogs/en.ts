@@ -177,7 +177,7 @@ export const enMessages = {
     "pattern.computed":
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
     "pattern.computedMissing":
-        "Shows “—” for songs without a published chart, and for meter changes on charts extracted from video, where the time signature is unknown.",
+        "Values stay empty for songs without a published chart. Meter changes stay empty for charts extracted from video, because their time signature is unknown.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",

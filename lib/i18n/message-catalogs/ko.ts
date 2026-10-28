@@ -174,7 +174,7 @@ export const koMessages = {
     "pattern.computed":
         "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
     "pattern.computedMissing":
-        "공개 채보가 없는 곡과, 영상에서 추출해 박자표를 알 수 없는 채보의 변박은 「—」로 표시합니다.",
+        "공개 채보가 없는 곡은 값을 비워 둡니다. 영상에서 추출해 박자표를 알 수 없는 채보는 변박 값을 비워 둡니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
