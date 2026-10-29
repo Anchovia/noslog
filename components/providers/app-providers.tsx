@@ -7,7 +7,9 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+
+import { onSessionEnded } from "@/lib/session-broadcast";
 
 const ONE_HOUR_MS = 60 * 60 * 1000;
 
@@ -36,6 +38,16 @@ function getQueryClient() {
 
 export function AppProviders({ children }: { children: ReactNode }) {
     const queryClient = getQueryClient();
+
+    // 다른 탭에서 로그아웃 · 탈퇴했으면 이 탭의 캐시를 버리고 새 문서로 다시 연다
+    useEffect(
+        () =>
+            onSessionEnded(() => {
+                queryClient.clear();
+                window.location.reload();
+            }),
+        [queryClient]
+    );
 
     return (
         <NuqsAdapter>

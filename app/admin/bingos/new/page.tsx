@@ -2,8 +2,10 @@ import { listBingoMusicOptions } from "@/features/bingos/server/bingo-admin-data
 import BingoEditor, {
     type BingoEditorData,
 } from "@/features/bingos/components/bingo-editor";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function NewBingoPage() {
+    await requireAdmin();
     const musics = await listBingoMusicOptions();
     const bingo: BingoEditorData = {
         title: "",

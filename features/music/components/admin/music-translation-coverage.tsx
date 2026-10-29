@@ -106,7 +106,7 @@ export default function MusicTranslationCoverage({
                                                 "nl-metadata rounded-nl-control px-nl-8 py-nl-8 text-center " +
                                                 (active
                                                     ? "bg-nl-primary text-nl-on-primary"
-                                                    : "bg-nl-surface text-nl-subdued hover:text-nl-content")
+                                                    : "nl-hover-layer bg-nl-surface text-nl-subdued")
                                             }
                                         >
                                             <span className="nl-emphasis-label block">
@@ -122,7 +122,7 @@ export default function MusicTranslationCoverage({
                                     "/admin/music/translations.csv?locale=" +
                                     item.locale
                                 }
-                                className="nl-metadata mt-nl-8 block text-right hover:text-nl-content"
+                                className="nl-admin-link nl-metadata mt-nl-8 block text-right"
                             >
                                 {item.label} CSV 내보내기
                             </Link>
@@ -133,7 +133,7 @@ export default function MusicTranslationCoverage({
             {activeLocale && activeStatus ? (
                 <Link
                     href="/admin/music"
-                    className="nl-metadata self-start hover:text-nl-content"
+                    className="nl-admin-link nl-metadata self-start"
                 >
                     번역 필터 해제
                 </Link>

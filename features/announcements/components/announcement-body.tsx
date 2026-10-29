@@ -33,13 +33,16 @@ export function announcementLink(
 }
 
 // 본문 이미지(2026-09-18) — 우리 공개 이미지 저장소에 공지 · 이벤트 글쓰기로 올린 것만 그린다.
-// 다른 사이트 주소 · 쿼리 붙은 주소는 그리지 않는다(추적 픽셀 · 외부 요청 차단)
+// 다른 사이트 주소 · 다른 저장소 · 쿼리 붙은 주소는 그리지 않는다(추적 픽셀 · 외부 요청 차단).
+// 저장소 호스트는 next.config.mjs 의 env 가 빌드 때 넣고, 없으면 본문 이미지를 그리지 않는다
 const BODY_IMAGE_PATHS = ["/announcements/", "/events/"];
 function announcementImage(src: string) {
+    const host = process.env.BLOB_PUBLIC_HOST;
+    if (!host) return null;
     try {
         const url = new URL(src);
         return url.protocol === "https:" &&
-            url.hostname.endsWith(".public.blob.vercel-storage.com") &&
+            url.host === host &&
             !url.search &&
             !url.hash &&
             BODY_IMAGE_PATHS.some((path) => url.pathname.startsWith(path))

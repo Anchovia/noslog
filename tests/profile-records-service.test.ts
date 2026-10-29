@@ -105,6 +105,54 @@ describe("profile records tab", () => {
         expect(result?.items[0].position).toBeNull();
     });
 
+    it("플레이 활동을 숨긴 사람의 달성일은 남에게 주지 않고, 최근 달성 순은 기본 순으로 바꾼다", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
+        mocks.findMany.mockResolvedValueOnce([play(21)]);
+        mocks.count.mockResolvedValue(1);
+        const result = await getPublicProfileRecords(
+            7,
+            profileRecordsQuerySchema.parse({ view: "all", sort: "recent" })
+        );
+        expect(mocks.findMany.mock.calls[0][0].orderBy).toEqual([
+            { gradeBasic: "desc" },
+            { score: "desc" },
+            { chartId: "asc" },
+            { id: "asc" },
+        ]);
+        expect(result?.query.sort).toBe("value");
+        expect(result?.items[0].playedAt).toBeNull();
+        expect(JSON.stringify(result)).not.toContain("2026-09-19");
+    });
+
+    it("플레이 활동을 숨겨도 본인에게는 달성일과 최근 달성 순을 그대로 준다", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
+        mocks.findMany.mockResolvedValueOnce([play(21)]);
+        mocks.count.mockResolvedValue(1);
+        const result = await getPublicProfileRecords(
+            7,
+            profileRecordsQuerySchema.parse({ view: "all", sort: "recent" }),
+            { owner: true }
+        );
+        expect(mocks.findMany.mock.calls[0][0].orderBy[0]).toEqual({
+            bestAt: { sort: "desc", nulls: "last" },
+        });
+        expect(result?.query.sort).toBe("recent");
+        expect(result?.items[0].playedAt).toBe("2026-09-19 01:01");
+    });
+
+    it("플레이 활동이 공개면 남에게도 달성일을 준다", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: false });
+        mocks.findMany
+            .mockResolvedValueOnce([{ id: 11 }])
+            .mockResolvedValueOnce([play(11)]);
+        mocks.count.mockResolvedValue(1);
+        const result = await getPublicProfileRecords(
+            7,
+            profileRecordsQuerySchema.parse({})
+        );
+        expect(result?.items[0].playedAt).toBe("2026-09-19 01:01");
+    });
+
     it("shows the KST minute and treats an unknown record time as no date", () => {
         // 옛 「1970-01-01 09:00」 자리표시는 best_at 이 NULL(2026-10-16 P5-1)
         expect(recordPlayedAt(null)).toBeNull();

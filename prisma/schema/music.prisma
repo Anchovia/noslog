@@ -90,11 +90,15 @@ model MusicCatalogCandidate {
   lastSeenAt     DateTime               @default(now()) @map("last_seen_at")
   reviewedAt     DateTime?              @map("reviewed_at")
   appliedAt      DateTime?              @map("applied_at")
+  // 일반 사용자 동기화가 만든 후보의 제출자 — 사람별 24시간 상한을 센다
+  submittedById  Int?                   @map("submitted_by_id")
+  submittedBy    User?                  @relation(fields: [submittedById], references: [id], onDelete: SetNull)
   createdAt      DateTime               @default(now()) @map("created_at")
   updatedAt      DateTime               @updatedAt @map("updated_at")
 
   @@unique([musicIndex, fingerprint])
   @@index([status, lastSeenAt])
+  @@index([submittedById, createdAt])
   @@map("music_catalog_candidates")
 }
 

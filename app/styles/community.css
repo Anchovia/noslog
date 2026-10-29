@@ -145,11 +145,11 @@
     color: var(--nl-feedback-destructive);
 }
 /* 평가할 수 없을 때 — 목록 흐림 5px(투명도는 그대로) + 가운데 떠 있는 카드(떠 있는 창 규격: elevated 면 · 다크 둘레 · 모서리 large · 그림자).
-   입력 영역 잠금에만 쓴다 (2026-09-17 L2) */
+   패턴 투표 잠금과 공개 채보가 없는 개요 패턴 경향에만 쓴다 (2026-09-17 L2) */
 .noslog-ui .nl-pattern-lock {
     position: relative;
 }
-.noslog-ui .nl-pattern-lock[data-locked] > .nl-pattern-axes {
+.noslog-ui .nl-pattern-lock[data-locked] > :not(.nl-pattern-lock__overlay) {
     filter: blur(5px);
     pointer-events: none;
     user-select: none;

@@ -14,8 +14,9 @@ import {
     publicEvent,
 } from "@/features/events/schemas/event-schema";
 import {
-    type PollSaveError,
+    type PublishedPollSaveError,
     savePollWithPost,
+    savePublishedPoll,
 } from "@/features/polls/server/poll-service";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
@@ -188,20 +189,21 @@ function localeFrom(formData: FormData): Locale {
 // 공개판은 건드리지 않는다(승인 때만 바뀐다)
 // 투표 저장이 막힌 이유 → 화면 문구 키 (2026-09-23 V2)
 class PollSaveAbort extends Error {
-    constructor(readonly reason: PollSaveError) {
+    constructor(readonly reason: PublishedPollSaveError) {
         super(reason);
     }
 }
 const POLL_SAVE_MESSAGE_KEYS = {
     invalid: "poll.error.invalid",
     locked: "poll.error.locked",
+    published: "poll.error.published",
     closed: "poll.error.closed",
     question: "poll.error.question",
     options: "poll.error.options",
     duplicate: "poll.error.duplicate",
     maxChoices: "poll.error.maxChoices",
     closesAt: "poll.error.closesAt",
-} as const satisfies Record<PollSaveError, string>;
+} as const satisfies Record<PublishedPollSaveError, string>;
 
 export async function saveEvent(
     formData: FormData
@@ -263,13 +265,16 @@ export async function saveEvent(
                 ? await tx.communityEvent.update({
                       where: { id: existing.id },
                       data,
-                      select: { id: true },
+                      select: { id: true, publishedAt: true },
                   })
                 : await tx.communityEvent.create({
                       data: { ...data, authorId: writer.userId },
-                      select: { id: true },
+                      select: { id: true, publishedAt: true },
                   });
-            const failed = await savePollWithPost(
+            // 공개판이 있으면 투표는 이미 공개 화면에 나가 있다 — 검토 없이 바뀌지 않게 마감 날짜만 받는다.
+            // 공개 여부는 이 트랜잭션에서 고친 행으로 본다. 앞서 읽은 뒤에 승인됐어도 막는다
+            const save = row.publishedAt ? savePublishedPoll : savePollWithPost;
+            const failed = await save(
                 tx,
                 { eventId: row.id },
                 parsed.data.poll ?? null,

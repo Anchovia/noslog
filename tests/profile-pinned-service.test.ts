@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
+    user: vi.fn(),
     pins: vi.fn(),
     plays: vi.fn(),
     count: vi.fn(),
@@ -12,6 +13,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
+        user: { findUnique: mocks.user },
         userPinnedRecord: {
             findMany: mocks.pins,
             deleteMany: mocks.deleteMany,
@@ -49,6 +51,7 @@ function play(chart: number) {
 describe("profile pinned records", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mocks.user.mockResolvedValue({ hidePlayActivity: false });
         mocks.ranks.mockResolvedValue([]);
         mocks.transaction.mockResolvedValue([]);
     });
@@ -92,6 +95,24 @@ describe("profile pinned records", () => {
             ["Song 2", "좋아하는 곡"],
             ["Song 1", null],
         ]);
+    });
+    it("플레이 활동을 숨긴 사람의 고정 기록은 남에게 달성일 없이, 본인에게는 그대로", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
+        mocks.pins.mockResolvedValue([{ chartId: 1, comment: null }]);
+        mocks.plays.mockResolvedValue([play(1)]);
+        const other = await getProfilePinnedRecords(7);
+        expect(other.items[0].playedAt).toBeNull();
+        expect(other.items[0].score).toBe(950000);
+        mocks.user.mockClear();
+        const owner = await getProfilePinnedRecords(7, { owner: true });
+        expect(owner.items[0].playedAt).toBe("2026-09-12 21:00");
+        expect(mocks.user).not.toHaveBeenCalled();
+    });
+    it("플레이 활동이 공개면 남에게도 고정 기록 달성일을 준다", async () => {
+        mocks.pins.mockResolvedValue([]);
+        mocks.plays.mockResolvedValue([play(5)]);
+        const result = await getProfilePinnedRecords(7);
+        expect(result.items[0].playedAt).toBe("2026-09-12 21:00");
     });
     it("falls back to the Basic best top three when nothing is pinned", async () => {
         mocks.pins.mockResolvedValue([]);

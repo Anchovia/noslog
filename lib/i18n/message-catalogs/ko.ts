@@ -127,6 +127,8 @@ export const koMessages = {
     "community.action.unavailable": "현재 이 항목을 변경할 수 없습니다.",
     "community.action.failed":
         "저장하지 못했습니다. 입력을 유지했으니 다시 시도해 주세요.",
+    "community.dailyLimit":
+        "오늘 쓸 수 있는 양을 모두 썼습니다. 내일 다시 시도해 주세요.",
     "pattern.evaluate": "평가하기",
     "music.info.levelConstant": "공식 레벨",
     "record.summaryGuest": "로그인하면 내 기록과 순위를 볼 수 있습니다.",
@@ -173,8 +175,9 @@ export const koMessages = {
     "pattern.switchToAll": "전곡 기준으로 보기",
     "pattern.computed":
         "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
+    "pattern.computedNone": "공개 채보가 없어 계산할 수 없어요",
     "pattern.computedMissing":
-        "공개 채보가 없는 곡은 값을 비워 둡니다. 영상에서 추출해 박자표를 알 수 없는 채보는 변박 값을 비워 둡니다.",
+        "영상에서 추출해 박자표를 알 수 없는 채보는 변박 값을 비워 둡니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
@@ -348,6 +351,8 @@ export const koMessages = {
     "poll.voteFailed": "표를 저장하지 못했습니다.",
     "poll.error.invalid": "투표 내용을 다시 확인해주세요.",
     "poll.error.locked": "표가 들어온 뒤에는 질문과 선택지를 바꿀 수 없습니다.",
+    "poll.error.published":
+        "공개된 글의 투표는 질문과 선택지를 바꿀 수 없습니다. 마감 날짜만 바꿀 수 있습니다.",
     "poll.error.closed": "마감한 투표는 고칠 수 없습니다.",
     "poll.error.question": "질문을 입력해주세요.",
     "poll.error.options": "선택지를 2개 이상 20개 이하로 입력해주세요.",
@@ -713,6 +718,8 @@ export const koMessages = {
     "feedback.attachmentError": "허용되지 않은 첨부 이미지입니다.",
     "feedback.success": "제보를 접수했습니다.",
     "feedback.submitError": "제보를 접수하지 못했습니다.",
+    "feedback.dailyLimit":
+        "오늘 보낼 수 있는 제보를 모두 보냈습니다. 내일 다시 보내 주세요.",
     "feedback.uploadError": "이미지 업로드 요청을 처리하지 못했습니다.",
     "music.action.voteLogin": "로그인 후 투표할 수 있습니다.",
     "music.action.voteInvalid": "투표 값을 확인해 주세요.",
@@ -1613,16 +1620,6 @@ export const koMessages = {
     "settings.loginRequired": "로그인이 필요합니다.",
     "settings.checkInput": "입력한 정보를 확인해주세요.",
     "settings.validation.avatarUrl": "올바른 이미지 주소가 아닙니다.",
-    "settings.validation.nicknameRequired": "닉네임을 입력해주세요.",
-    "settings.validation.nicknameMax": "닉네임은 20자 이하로 입력해주세요.",
-    "settings.validation.countryRequired": "국가를 선택해주세요.",
-    "settings.validation.localeRequired": "언어를 선택해주세요.",
-    "settings.validation.discordNameMax":
-        "Discord 닉네임은 32자 이하로 입력해주세요.",
-    "settings.validation.discordTagCharacters":
-        "Discord 태그는 영문, 숫자, 마침표, 밑줄만 사용할 수 있습니다.",
-    "settings.validation.discordTagMax":
-        "Discord 태그는 32자 이하로 입력해주세요.",
     "settings.validation.arcadeRequired": "오락실을 다시 선택해주세요.",
     "settings.userNotFound": "사용자 정보를 찾을 수 없습니다.",
     "settings.invalidAvatarUrl": "허용되지 않은 프로필 이미지 주소입니다.",
@@ -1730,6 +1727,7 @@ export const koMessages = {
     "arcades.region": "지역",
     "arcades.legend": "지도 범례",
     "arcades.cluster": "{count}곳",
+    "arcades.clusterMore": "외 {count}곳",
     "arcades.legendSelected": "흰 핀: 선택한 오락실",
     "arcades.details": "오락실 상세",
     "arcades.directions": "길찾기",

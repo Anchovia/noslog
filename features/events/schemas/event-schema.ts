@@ -139,6 +139,7 @@ export function eventInputFromFormData(formData: FormData) {
 export const eventReviewSchema = z
     .object({
         id: z.coerce.number().int().positive(),
+        updatedAt: z.iso.datetime(),
         decision: z.enum(EVENT_REVIEW_DECISIONS, {
             error: "검토 결과를 골라 주세요.",
         }),

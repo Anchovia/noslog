@@ -1,21 +1,30 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     session: { id: 9 as number | undefined },
     existing: vi.fn(),
     arcade: vi.fn(),
     save: vi.fn(),
+    count: vi.fn(),
+    lock: vi.fn(),
     image: vi.fn(),
     invalidate: vi.fn(),
     tag: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
-vi.mock("@/lib/db", () => ({
-    default: {
-        feedbackReport: { findUnique: mocks.existing, upsert: mocks.save },
-        arcade: { findFirst: mocks.arcade },
-    },
-}));
+vi.mock("@/lib/db", () => {
+    const tx = {
+        $executeRaw: mocks.lock,
+        feedbackReport: { count: mocks.count, upsert: mocks.save },
+    };
+    return {
+        default: {
+            feedbackReport: { findUnique: mocks.existing },
+            arcade: { findFirst: mocks.arcade },
+            $transaction: (run: (client: typeof tx) => unknown) => run(tx),
+        },
+    };
+});
 vi.mock("@/lib/blob", () => ({ isValidPrivateImageBlob: mocks.image }));
 vi.mock("next/cache", () => ({
     revalidatePath: mocks.invalidate,
@@ -49,6 +58,7 @@ describe("P12 arcade report authorization and retries", () => {
         mocks.existing.mockResolvedValue(null);
         mocks.arcade.mockResolvedValue({ name: "Test arcade", cabinets: [] });
         mocks.save.mockResolvedValue({ id: 1 });
+        mocks.count.mockResolvedValue(0);
         mocks.image.mockResolvedValue(true);
     });
     it("rejects guests before reading or writing reports", async () => {
@@ -142,5 +152,54 @@ describe("P12 arcade report authorization and retries", () => {
         mocks.save.mockRejectedValue(new Error("database unavailable"));
         expect((await submitArcadeReport(report())).success).toBe(false);
         expect(mocks.invalidate).not.toHaveBeenCalled();
+    });
+});
+
+describe("오락실 제보 하루 한도", () => {
+    beforeEach(() => {
+        vi.resetAllMocks();
+        mocks.session.id = 9;
+        mocks.existing.mockResolvedValue(null);
+        mocks.arcade.mockResolvedValue({ name: "Test arcade", cabinets: [] });
+        mocks.save.mockResolvedValue({ id: 1 });
+        mocks.image.mockResolvedValue(true);
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("counts this person's arcade reports of the last 24 hours under a per-person lock", async () => {
+        vi.useFakeTimers({ now: new Date("2026-10-29T12:00:00.000Z") });
+        mocks.count.mockResolvedValue(29);
+        expect((await submitArcadeReport(report())).success).toBe(true);
+        expect(mocks.lock.mock.calls[0].slice(1)).toEqual([
+            "feedback-report:9",
+        ]);
+        expect(mocks.count).toHaveBeenCalledWith({
+            where: {
+                userId: 9,
+                arcadeReportType: { not: null },
+                createdAt: { gte: new Date("2026-10-28T12:00:00.000Z") },
+            },
+        });
+        expect(mocks.save).toHaveBeenCalledTimes(1);
+    });
+
+    it("refuses the 31st report of the day without writing", async () => {
+        mocks.count.mockResolvedValue(30);
+        expect(await submitArcadeReport(report())).toEqual({
+            success: false,
+            message:
+                "You've reached today's report limit. Send it again tomorrow.",
+        });
+        expect(mocks.save).not.toHaveBeenCalled();
+        expect(mocks.tag).not.toHaveBeenCalled();
+    });
+
+    it("still acknowledges a retry of a report already saved at the limit", async () => {
+        mocks.existing.mockResolvedValue({ id: 1 });
+        mocks.count.mockResolvedValue(30);
+        expect((await submitArcadeReport(report())).success).toBe(true);
+        expect(mocks.count).not.toHaveBeenCalled();
     });
 });

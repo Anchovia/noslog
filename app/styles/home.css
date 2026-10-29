@@ -46,10 +46,6 @@
     position: relative;
     width: 100%;
 }
-/* 메인 검색은 모든 폭 크게(40) */
-.noslog-ui .nl-home-search > .nl-search {
-    --nl-control-height: var(--nl-control-height-large);
-}
 .noslog-ui .nl-home-destinations {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -90,11 +86,6 @@
     background: var(--nl-surface-control-hover);
     color: var(--nl-content-strong);
 }
-/* 누름 = Spectrum 2 pressScale. 원근은 max(높이, 폭 ÷ 3, 24) 인데 칸 높이 · 폭을 CSS 로 못 읽어 컨트롤 높이로 쓴다 */
-.noslog-ui .nl-home-tile:active {
-    transform: perspective(max(var(--nl-control-height), var(--nl-spacing-24)))
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
 @media (hover: hover) {
     .noslog-ui .nl-home-tile:hover {
         background: var(--nl-surface-control-hover);
@@ -124,7 +115,11 @@
     grid-template-columns: subgrid;
     grid-template-areas: "meta title date";
 }
-.noslog-ui .nl-home-announcements .nl-announcement-row__title {
+/* 말줄임은 링크에 건다. 제목 칸이 자르면 링크 바깥 포커스 선(+2)까지 잘린다 */
+.noslog-ui .nl-home-announcements .nl-announcement-row__title > a {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: top;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -196,9 +191,12 @@
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-official-post__text a,
-.noslog-ui .nl-official-post__identity > a {
+.noslog-ui .nl-official-post__text a {
     text-decoration: underline;
+    text-underline-position: under;
+}
+/* 이름 링크는 단독 링크(nl-link) — 밑줄은 올림 · 누름 · 키 포커스에만 */
+.noslog-ui .nl-official-post__identity > a {
     text-underline-position: under;
 }
 .noslog-ui .nl-official-post__toggle {
@@ -357,7 +355,14 @@
 .noslog-ui .nl-home-event__caption > .nl-entity-title {
     color: var(--nl-content-on-media);
 }
+/* 누르는 카드 올림 · 누름 · 키 포커스 = 그림자 overlay */
+.noslog-ui .nl-home-event:is(:active, :focus-visible) {
+    box-shadow: var(--nl-overlay-shadow);
+}
 @media (hover: hover) {
+    .noslog-ui .nl-home-event:hover {
+        box-shadow: var(--nl-overlay-shadow);
+    }
     .noslog-ui .nl-home-event:hover .nl-entity-title {
         text-decoration: underline;
         text-underline-position: under;

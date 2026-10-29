@@ -103,11 +103,24 @@ describe("시각 댓글", () => {
 describe("운영자 결정 · 점수", () => {
     it("결정은 수정 요청 · 공개 둘뿐", () => {
         expect(
-            draftReviewSchema.safeParse({ draftId: 1, decision: "publish" })
-                .success
+            draftReviewSchema.safeParse({
+                draftId: 1,
+                version: 3,
+                decision: "publish",
+            }).success
         ).toBe(true);
         expect(
-            draftReviewSchema.safeParse({ draftId: 1, decision: "reject" })
+            draftReviewSchema.safeParse({
+                draftId: 1,
+                version: 3,
+                decision: "reject",
+            }).success
+        ).toBe(false);
+    });
+
+    it("결정은 운영자가 본 초안 판을 함께 보낸다", () => {
+        expect(
+            draftReviewSchema.safeParse({ draftId: 1, decision: "publish" })
                 .success
         ).toBe(false);
     });

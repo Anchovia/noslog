@@ -53,6 +53,16 @@
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
+/* 누르는 악곡 카드 · 채보 줄 = 한 단계 면이라 올림 · 누름 · 키 포커스도 홈 이동 칸처럼 한 단계 위 면 */
+@media (hover: hover) {
+    .noslog-ui a.nl-music-card:not([aria-disabled="true"]):hover {
+        background: var(--nl-surface-control-hover);
+    }
+}
+.noslog-ui
+    a.nl-music-card:not([aria-disabled="true"]):is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
+}
 .noslog-ui .nl-music-card__body {
     display: flex;
     flex: 1;
@@ -73,18 +83,17 @@
     text-overflow: ellipsis;
 }
 .noslog-ui .nl-music-card--list {
-    min-height: var(--nl-spacing-64);
+    min-height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
     align-items: center;
     gap: var(--nl-spacing-12);
     padding-right: var(--nl-spacing-12);
 }
-/* 자켓은 64 정사각 고정. 글자 줄이 셋(번역 제목)이라 카드가 더 높아지면 늘이지 않고 가운데에 둔다 */
+/* 자켓 80 정사각 = 카드 높이. 번역 제목이 있는 세 줄(8 + 16 + 24 + 24 + 8)도 80 이라 두 줄 · 세 줄 카드 높이가 같다 */
 .noslog-ui .nl-music-card--list > .nl-jacket {
-    width: var(--nl-spacing-64);
-    height: var(--nl-spacing-64);
+    width: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
+    height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
     border-radius: var(--nl-radius-control) 0 0 var(--nl-radius-control);
 }
-/* 위아래 8 + 이름 24 + 아티스트 24 = 카드 64 = 자켓 */
 .noslog-ui .nl-music-card--list .nl-music-card__body {
     align-items: center;
     gap: var(--nl-spacing-12);

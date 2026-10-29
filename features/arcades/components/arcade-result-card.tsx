@@ -115,7 +115,7 @@ export default function ArcadeResultCard({
     eagerPhoto = false,
     selected,
     expanded,
-    onSelect,
+    onHighlight,
     onToggle,
     onShowOnMap,
 }: {
@@ -125,7 +125,8 @@ export default function ArcadeResultCard({
     eagerPhoto?: boolean;
     selected: boolean;
     expanded: boolean;
-    onSelect: (id: number) => void;
+    /** 올리거나 키 포커스한 동안만 지도 핀을 강조한다(null = 강조 풀기). 고름은 누를 때만 */
+    onHighlight: (id: number | null) => void;
     onToggle: (id: number) => void;
     /** 지도가 시트에 가려질 수 있는 폭에서만 넘긴다 — 없으면 버튼을 그리지 않는다 */
     onShowOnMap?: (id: number) => void;
@@ -189,14 +190,16 @@ export default function ArcadeResultCard({
             data-selected={selected || undefined}
             data-expanded={expanded || undefined}
             data-arcade-id={arcade.id}
-            onPointerEnter={() => onSelect(arcade.id)}
+            onPointerEnter={() => onHighlight(arcade.id)}
+            onPointerLeave={() => onHighlight(null)}
         >
             <button
                 type="button"
                 className="nl-arcade-result__summary"
                 aria-expanded={expanded}
                 aria-controls={panelId}
-                onFocus={() => onSelect(arcade.id)}
+                onFocus={() => onHighlight(arcade.id)}
+                onBlur={() => onHighlight(null)}
                 onClick={() => onToggle(arcade.id)}
             >
                 {summary}

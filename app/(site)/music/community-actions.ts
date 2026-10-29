@@ -43,25 +43,33 @@ export async function saveChartContribution(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("community.action.login") };
+    const userId = session.id;
     try {
         const { translate, ...result } = (await mutateChartCommunity(
             input,
-            session.id
+            userId
         )) as Awaited<ReturnType<typeof mutateChartCommunity>> & {
             translate?: { kind: "opinion" | "reply"; id: number };
         };
         const action = (input as { action?: unknown }).action;
         if (typeof action === "string" && SHARED_CACHE_ACTIONS.has(action))
             updateTag(getChartEvaluationTag(result.chartId));
-        // 의견 · 답글을 쓰거나 고쳤으면 응답을 늦추지 않고 뒤에서 나머지 두 언어로 번역해 저장한다(실패하면 「번역 보기」 때 다시)
+        // 의견 · 답글을 쓰거나 고쳤으면 응답을 늦추지 않고 뒤에서 나머지 두 언어로 번역해 저장한다(실패하면 「번역 보기」 때 다시).
+        // 쓴 사람의 시간당 번역 한도를 넘었으면 건너뛴다 — 그 글은 「번역 보기」 때 만든다
         if (translate)
             after(async () => {
                 try {
                     await fillCommunityTranslations(
                         translate.kind,
-                        translate.id
+                        translate.id,
+                        userId
                     );
                 } catch (error) {
+                    if (
+                        error instanceof ApiError &&
+                        error.code === "dailyLimit"
+                    )
+                        return;
                     logServerError(error, {
                         event: "music-community.translate.failed",
                     });
@@ -73,6 +81,8 @@ export async function saveChartContribution(
             ...result,
         };
     } catch (error) {
+        if (error instanceof ApiError && error.code === "dailyLimit")
+            return { success: false, message: t("community.dailyLimit") };
         if (
             error instanceof ApiError &&
             (error.code === "invalid" ||
@@ -89,7 +99,7 @@ export async function saveChartContribution(
     }
 }
 
-// 의견 · 답글 번역(2026-09-22 T1) — 로그인 없이도(저장된 번역을 나눠 쓴다). 실패하면 원문을 그대로 둔다
+// 의견 · 답글 번역(2026-09-22 T1) — 손님은 저장된 번역만, 새 번역은 로그인한 사람만 만든다. 실패하면 원문을 그대로 둔다
 export async function translateChartContribution(
     input: unknown,
     requestedLocale: string
@@ -100,10 +110,18 @@ export async function translateChartContribution(
     const parsed = communityTranslateInputSchema.safeParse(input);
     if (!parsed.success)
         return { success: false, message: t("community.translateFailed") };
+    const session = await getSession();
     try {
-        const text = await getCommunityTranslation(parsed.data);
+        const text = await getCommunityTranslation({
+            ...parsed.data,
+            userId: session.id ?? null,
+        });
         return { success: true, message: "", text };
     } catch (error) {
+        if (error instanceof ApiError && error.code === "login")
+            return { success: false, message: t("community.action.login") };
+        if (error instanceof ApiError && error.code === "dailyLimit")
+            return { success: false, message: t("community.dailyLimit") };
         if (!(error instanceof ApiError))
             logServerError(error, {
                 event: "music-community.translate.failed",

@@ -1,22 +1,38 @@
+// 우리 공개 Blob 저장소 호스트 — 읽기 · 쓰기 토큰(vercel_blob_rw_<저장소 id>_<비밀>)의 저장소 id 로 만든다(@vercel/blob 의
+// parseStoreIdFromReadWriteToken · constructBlobUrl 과 같은 규칙). BLOB_STORE_ID 를 쓰지 않는 것은, 그 값이 있으면 SDK 가
+// Vercel 배포에서 토큰 대신 OIDC 인증으로 바꾸기 때문이다. URL 호스트는 소문자로 비교된다
+const blobStoreId = process.env.BLOB_READ_WRITE_TOKEN?.trim()
+    .split("_")[3]
+    ?.toLowerCase();
+const blobPublicHost = blobStoreId
+    ? `${blobStoreId}.public.blob.vercel-storage.com`
+    : null;
+
+// 스크립트는 proxy 가 요청마다 nonce 로 강제한다. 여기 Report-Only 는 나머지 출처만 지켜보므로 script-src 는 다 받아 둔다
+// (비우면 default-src 'self' 가 스크립트에 적용돼, nonce 가 붙은 Next 인라인 스크립트마다 위반 보고가 온다)
 const contentSecurityPolicyReportOnly = [
     "default-src 'self'",
     "base-uri 'self'",
     "object-src 'none'",
     "frame-ancestors 'none'",
     "form-action 'self'",
-    "script-src 'self' https://dapi.kakao.com 'report-sample'",
+    "script-src * 'unsafe-inline' 'unsafe-eval' blob: data:",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://cdn.discordapp.com https://p.eagate.573.jp https://*.public.blob.vercel-storage.com https://*.daumcdn.net https://*.kakaocdn.net https://pbs.twimg.com https://*.twimg.com",
+    `img-src 'self' data: blob: https://cdn.discordapp.com https://p.eagate.573.jp${blobPublicHost ? ` https://${blobPublicHost}` : ""} https://*.daumcdn.net https://*.kakaocdn.net https://pbs.twimg.com https://*.twimg.com`,
     "font-src 'self' data:",
-    "connect-src 'self' https://dapi.kakao.com https://*.kakao.com https://*.daum.net",
+    "connect-src 'self' https://dapi.kakao.com https://*.kakao.com https://*.kakaocdn.net https://*.daum.net",
     "worker-src 'self' blob:",
     "manifest-src 'self'",
+    "report-uri /api/csp-report",
 ].join("; ");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     allowedDevOrigins: ["127.0.0.1"],
     agentRules: false,
+    poweredByHeader: false,
+    // 공지 · 이벤트 본문은 편집기 미리보기(클라이언트)에서도 그린다. 토큰에서 뽑은 공개 호스트만 빌드 때 넣는다(비밀 부분은 넣지 않음)
+    env: { BLOB_PUBLIC_HOST: blobPublicHost ?? "" },
     outputFileTracingIncludes: {
         "/profile/*/card": ["./assets/fonts/pretendard-jp/1.3.9/*.ttf"],
     },
@@ -108,19 +124,35 @@ const nextConfig = {
         // 원본 주소가 내용마다 바뀐다(Blob 무작위 접미사 · Discord · X 해시) — 최적화 결과를 31일 둔다(기본 4시간, 2026-10-15 S12)
         minimumCacheTTL: 2678400,
         remotePatterns: [
-            {
+            // Discord 프로필 사진(?size= 가 붙어 search 는 두지 않는다)
+            ...["/avatars/**", "/embed/avatars/**"].map((pathname) => ({
+                protocol: "https",
                 hostname: "cdn.discordapp.com",
-            },
-
+                pathname,
+            })),
             {
                 hostname: "p.eagate.573.jp",
             },
-            {
-                hostname: "*.public.blob.vercel-storage.com",
-            },
-            {
+            ...(blobPublicHost
+                ? [
+                      {
+                          protocol: "https",
+                          hostname: blobPublicHost,
+                          pathname: "/**",
+                      },
+                  ]
+                : []),
+            // 공식 X 글 사진(media)과 동영상 · GIF 미리보기 프레임
+            ...[
+                "/media/**",
+                "/ext_tw_video_thumb/**",
+                "/amplify_video_thumb/**",
+                "/tweet_video_thumb/**",
+            ].map((pathname) => ({
+                protocol: "https",
                 hostname: "pbs.twimg.com",
-            },
+                pathname,
+            })),
             /*
             {
                 hostname: "cdn44.atwikiimg.com",

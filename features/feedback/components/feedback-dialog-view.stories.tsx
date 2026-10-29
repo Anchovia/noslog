@@ -328,7 +328,7 @@ export const ExternalReopenWhileSubmitting: Story = {
     },
 };
 
-// 폭 계약: 입력 글자 14px · 가로 넘침 없음 · 672 미만은 전체 화면 창, 이상은 가운데 창.
+// 폭 계약: 입력 글자 16px · 가로 넘침 없음 · 672 미만은 전체 화면 창, 이상은 가운데 창.
 function contract(width: ContractWidth, locale?: string): Story {
     return {
         ...contractStory(width, locale),

@@ -47,6 +47,26 @@ describe("브라우저 통계 수집", () => {
         mocks.recordExternalCall.mockResolvedValue(true);
     });
 
+    it("Sec-Fetch-Site 가 same-origin 이 아니거나 없으면 세지 않는다", async () => {
+        for (const site of ["cross-site", "same-site", "none", null]) {
+            const headers: Record<string, string> = {
+                "content-type": "application/json",
+                "user-agent": CHROME,
+            };
+            if (site) headers["sec-fetch-site"] = site;
+            const response = await POST(
+                new Request("http://localhost:3000/api/analytics", {
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify({ type: "view", path: "/" }),
+                })
+            );
+            expect(response.status).toBe(204);
+        }
+        expect(mocks.recordPageView).not.toHaveBeenCalled();
+        expect(mocks.getSession).not.toHaveBeenCalled();
+    });
+
     it("관리자의 방문과 외부 서비스 호출은 기록하지 않는다", async () => {
         mocks.getSession.mockResolvedValue({ id: 1, save: vi.fn() });
         mocks.userFindUnique.mockResolvedValue({ role: "admin" });

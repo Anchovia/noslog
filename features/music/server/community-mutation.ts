@@ -21,6 +21,9 @@ async function detachDeletedOpinion(
     });
 }
 
+/** 새 답글은 사람마다 24시간에 이만큼 */
+const REPLY_DAILY_LIMIT = 50;
+
 type ReplyMutation = Extract<
     CommunityMutation,
     { action: "reply-save" | "reply-delete" | "reply-like" }
@@ -75,6 +78,16 @@ async function executeReplyMutation(
         // 지운 의견 자리에는 새 답글을 받지 않는다 — 남은 대화만 보인다
         if (opinion.opinion === null)
             throw new ApiError("opinion_unavailable", "unavailable");
+        // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
+        await transaction.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`community-reply-daily:${userId}`}))`;
+        const recent = await transaction.communityOpinionReply.count({
+            where: {
+                userId,
+                createdAt: { gte: new Date(Date.now() - 86_400_000) },
+            },
+        });
+        if (recent >= REPLY_DAILY_LIMIT)
+            throw new ApiError("reply_daily_limit", "dailyLimit");
         const created = await transaction.communityOpinionReply.create({
             data: { evaluationId: opinion.id, userId, body: input.body },
             select: { id: true },
@@ -419,16 +432,23 @@ async function executeMutation(
 export async function mutateChartCommunity(input: unknown, userId: number) {
     const parsed = communityMutationSchema.safeParse(input);
     if (!parsed.success) throw new ApiError("invalid_contribution", "invalid");
+    // 새 답글은 사람마다 잠근 뒤 하루 수를 센다. 직렬화 격리에서는 잠금을 기다리기 전에 읽는 시점이 정해져
+    // 앞 요청이 넣은 답글을 세지 못하고 충돌로 끝나므로, 새 답글만 기본 격리로 돌린다
+    const newReply =
+        parsed.data.action === "reply-save" &&
+        parsed.data.replyId === undefined;
     // 동시 수정에서도 한 사람의 투표와 감사 전후 값을 한 트랜잭션으로 유지함.
     for (let attempt = 0; attempt < 3; attempt++) {
         try {
             return await db.$transaction(
                 (transaction) =>
                     executeMutation(transaction, parsed.data, userId),
-                {
-                    isolationLevel:
-                        Prisma.TransactionIsolationLevel.Serializable,
-                }
+                newReply
+                    ? undefined
+                    : {
+                          isolationLevel:
+                              Prisma.TransactionIsolationLevel.Serializable,
+                      }
             );
         } catch (error) {
             if (

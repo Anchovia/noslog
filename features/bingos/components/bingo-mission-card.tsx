@@ -51,7 +51,7 @@ export default function BingoMissionCard({
             open={isOpen || shouldOpen}
             onToggle={(event) => setIsOpen(event.currentTarget.open)}
         >
-            <summary className="flex cursor-pointer list-none items-center gap-nl-12">
+            <summary className="nl-admin-card-summary flex cursor-pointer list-none items-center gap-nl-12">
                 <span className="nl-emphasis-label flex size-nl-32 shrink-0 items-center justify-center rounded-nl-control bg-nl-control">
                     {getBingoEditorCellLabel(position)}
                 </span>

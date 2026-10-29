@@ -10,8 +10,21 @@ vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
 vi.mock("@/features/profile/server/public-profile-data", () => ({
     getCachedProfileData: mocks.getCachedProfileData,
 }));
+// 그림은 그리지 않고 응답 머리만 본다
+vi.mock("next/og", () => ({
+    ImageResponse: class {
+        constructor(
+            _element: unknown,
+            init: { headers: Record<string, string> }
+        ) {
+            return new Response("png", { headers: init.headers });
+        }
+    },
+}));
 
 import { GET } from "@/app/(site)/profile/[id]/card/route";
+import { GET as getShareImage } from "@/app/(site)/profile/[id]/share-image/route";
+import { LOCALE_REQUEST_HEADER } from "@/lib/i18n/routing";
 
 describe("프로필 카드 이미지", () => {
     beforeEach(() => {
@@ -62,5 +75,56 @@ describe("프로필 카드 이미지", () => {
             { params: Promise.resolve({ id: "1" }) }
         );
         expect(response.status).toBe(404);
+    });
+});
+
+describe("프로필 공유 이미지", () => {
+    beforeEach(() => {
+        mocks.getSession.mockReset();
+        mocks.getCachedProfileData.mockReset();
+        mocks.getCachedProfileData.mockResolvedValue({
+            user: { avatar: null, country: "ko-KR", hide_play_scores: false },
+        });
+    });
+
+    it("CDN 에 10분까지만 두고 stale-while-revalidate 는 붙이지 않는다", async () => {
+        const response = await getShareImage(
+            new NextRequest("http://localhost:3000/profile/1/share-image", {
+                headers: { [LOCALE_REQUEST_HEADER]: "ko" },
+            }),
+            { params: Promise.resolve({ id: "1" }) }
+        );
+        expect(response.status).toBe(200);
+        expect(response.headers.get("Cache-Control")).toBe(
+            "public, max-age=0, s-maxage=600"
+        );
+    });
+
+    it("쿼리가 붙으면 그리지 않고 쿼리 없는 같은 언어 주소로 308", async () => {
+        const response = await getShareImage(
+            new NextRequest(
+                "http://localhost:3000/profile/1/share-image?v=2&x=1",
+                { headers: { [LOCALE_REQUEST_HEADER]: "ja" } }
+            ),
+            { params: Promise.resolve({ id: "1" }) }
+        );
+        expect(response.status).toBe(308);
+        expect(response.headers.get("Location")).toBe(
+            "http://localhost:3000/ja/profile/1/share-image"
+        );
+        expect(mocks.getCachedProfileData).not.toHaveBeenCalled();
+    });
+
+    it("언어 앞머리가 이미 있는 주소는 그대로 두고 쿼리만 뗀다", async () => {
+        const response = await getShareImage(
+            new NextRequest(
+                "http://localhost:3000/en/profile/1/share-image?v=2"
+            ),
+            { params: Promise.resolve({ id: "1" }) }
+        );
+        expect(response.status).toBe(308);
+        expect(response.headers.get("Location")).toBe(
+            "http://localhost:3000/en/profile/1/share-image"
+        );
     });
 });

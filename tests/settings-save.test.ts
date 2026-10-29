@@ -11,13 +11,19 @@ const mocks = vi.hoisted(() => ({
     log: vi.fn(),
     setShowcase: vi.fn(),
     setPinned: vi.fn(),
+    invalidateRecords: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
-vi.mock("@/lib/db", () => ({
-    default: {
+vi.mock("@/lib/db", () => {
+    const db = {
         user: { findUnique: mocks.findUser, update: mocks.updateUser },
         arcade: { findFirst: mocks.findArcade },
-    },
+        $transaction: (run: (tx: unknown) => Promise<unknown>) => run(db),
+    };
+    return { default: db };
+});
+vi.mock("@/features/partner/server/oauth-service", () => ({
+    enqueueRecordsInvalidationForUser: mocks.invalidateRecords,
 }));
 vi.mock("next/cache", () => ({ updateTag: mocks.updateTag }));
 vi.mock("@/lib/blob", () => ({
@@ -290,6 +296,30 @@ describe("P10 settings save boundaries", () => {
             },
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();
+    });
+    it("점수나 활동을 공개에서 비공개로 바꿀 때만 파트너 기록 무효화를 같은 트랜잭션에 넣는다", async () => {
+        const open = { hidePlayScores: false, hidePlayActivity: false };
+        const save = (values: Partial<typeof privacy>) =>
+            saveSettingsPrivacy(settingsFormData({ ...privacy, ...values }));
+
+        mocks.findUser.mockResolvedValue(open);
+        await save({ showPlayScores: false, showPlayActivity: true });
+        expect(mocks.invalidateRecords).toHaveBeenCalledTimes(1);
+        expect(mocks.invalidateRecords.mock.calls[0]?.[1]).toBe(9);
+
+        mocks.invalidateRecords.mockClear();
+        await save({ showPlayScores: true, showPlayActivity: false });
+        expect(mocks.invalidateRecords).toHaveBeenCalledTimes(1);
+
+        mocks.invalidateRecords.mockClear();
+        await save({ showPlayScores: true, showPlayActivity: true });
+        mocks.findUser.mockResolvedValue({
+            hidePlayScores: true,
+            hidePlayActivity: true,
+        });
+        await save({ showPlayScores: false, showPlayActivity: false });
+        await save({ showPlayScores: true, showPlayActivity: true });
+        expect(mocks.invalidateRecords).not.toHaveBeenCalled();
     });
 
     describe("프로필 업적 진열(2026-09-25 D1)", () => {

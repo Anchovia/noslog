@@ -49,7 +49,7 @@ export default function SearchField({
                 {...props}
                 type="search"
                 value={value}
-                className="nl-search__input nl-control"
+                className="nl-search__input"
             />
             {busy ? (
                 <span

@@ -11,12 +11,14 @@ import MusicTranslationForm from "@/features/music/components/admin/music-transl
 import { getAdminMusicDetail } from "@/features/music/server/music-admin-service";
 import { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminMusicDetailPage({
     params,
 }: {
     params: Promise<{ index: string }>;
 }) {
+    await requireAdmin();
     const { index } = await params;
     const music = await getAdminMusicDetail(decodeURIComponent(index));
     if (!music) notFound();

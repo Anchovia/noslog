@@ -75,5 +75,7 @@ export type ChartCommentInput = z.infer<typeof chartCommentInputSchema>;
 
 export const draftReviewSchema = z.object({
     draftId: z.number().int().positive(),
+    // 운영자가 본 판 — 그사이 작성자가 회수 · 수정 · 다시 요청했으면 처리하지 않는다
+    version: z.number().int().nonnegative(),
     decision: z.enum(["request_changes", "publish"]),
 });

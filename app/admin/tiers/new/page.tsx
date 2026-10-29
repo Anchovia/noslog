@@ -1,6 +1,8 @@
 import TierListForm from "@/features/tiers/components/tier-list-form";
+import { requireAdmin } from "@/lib/admin";
 
-export default function NewTierListPage() {
+export default async function NewTierListPage() {
+    await requireAdmin();
     return (
         <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>

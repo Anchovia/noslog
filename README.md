@@ -7,7 +7,7 @@
 
 [서비스 바로가기](https://noslog.app/ko) · [이슈 제보](https://github.com/Anchovia/noslog/issues) · [최신 Release](https://github.com/Anchovia/noslog/releases/latest)
 
-NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.17.0**입니다.
+NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.17.1**입니다.
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 
@@ -188,10 +188,10 @@ GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행
 의존성 보안은 `Dependencies` 워크플로가 PR의 새 의존성 검토와 주 1회 운영 의존성 감사로 따로 확인합니다. 버전 갱신 PR(Dependabot)은 쓰지 않습니다.
 
 주간 운영 의존성 감사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
-확인할 때는 `npm audit`를 실행합니다. 2026-10-17 기준 운영 권고는 0건이며,
-전체 감사에는 ESLint의 `fast-glob → micromatch → braces` 경로에서 파생된 high 5건이
-남습니다. [braces 권고](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)는 현재 수정 버전이
-없습니다. 기존 Next.js 16 스택을 유지하며 이 권고를 미해결로 기록합니다.
+확인할 때는 `npm audit`를 실행합니다. 2026-10-29 기준 운영 권고는 0건이며(`@vercel/cli-config` 가
+고정한 zod 는 `overrides` 로 루트 zod 를 따릅니다), 전체 감사에는 prisma-lint 가 쓰는 zod 3.25.76 의
+[high 권고](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5) 2건이 남습니다. prisma-lint 는 리포의
+스키마 파일만 읽는 개발 도구라 이 권고를 미해결로 기록합니다.
 
 ## 배포와 릴리스
 

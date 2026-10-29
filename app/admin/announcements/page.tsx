@@ -14,6 +14,7 @@ import {
     selectHomeAnnouncements,
 } from "@/features/announcements/schemas/public-announcement-schema";
 import { cn } from "@/lib/cn";
+import { requireAdmin } from "@/lib/admin";
 
 // 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -42,6 +43,7 @@ function Chip({
 }
 
 export default async function AdminAnnouncementsPage() {
+    await requireAdmin();
     const now = new Date();
     const announcements = await listAdminAnnouncements();
     // 공개 화면과 같은 판정으로 "실제로 보이는가" 를 계산함

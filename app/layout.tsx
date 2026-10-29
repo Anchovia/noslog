@@ -92,6 +92,7 @@ export default async function RootLayout({
                 <Script
                     id="noslog-theme"
                     strategy="beforeInteractive"
+                    nonce={requestHeaders.get("x-nonce") ?? undefined}
                     dangerouslySetInnerHTML={{ __html: themeScript }}
                 />
             </head>

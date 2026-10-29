@@ -15,7 +15,11 @@ type Item = (typeof ITEMS)[number];
 /** 뮤즈캣과 형식을 맞추기 전이라 고를 수 없는 항목 */
 const UNAVAILABLE: readonly Item[] = ["song_records"];
 
-function SubmitButtons({ deny }: { deny: () => Promise<void> }) {
+function SubmitButtons({
+    deny,
+}: {
+    deny: (formData: FormData) => Promise<void>;
+}) {
     const t = useTranslations();
     const { pending } = useFormStatus();
     return (
@@ -46,6 +50,7 @@ function SubmitButtons({ deny }: { deny: () => Promise<void> }) {
  * 고른 항목은 Server Action 이 다시 걸러 저장한다.
  */
 export default function PartnerConsentForm({
+    requestId,
     clientName,
     host,
     wantsRecords,
@@ -55,6 +60,7 @@ export default function PartnerConsentForm({
     approve,
     deny,
 }: {
+    requestId: string;
     clientName: string;
     host: string;
     wantsRecords: boolean;
@@ -62,7 +68,7 @@ export default function PartnerConsentForm({
     scoresPrivate: boolean;
     activityPrivate: boolean;
     approve: (formData: FormData) => Promise<void>;
-    deny: () => Promise<void>;
+    deny: (formData: FormData) => Promise<void>;
 }) {
     const t = useTranslations();
     const available = ITEMS.filter((item) => !UNAVAILABLE.includes(item));
@@ -103,6 +109,7 @@ export default function PartnerConsentForm({
     // 못 보내는 항목은 목록에서 빼고 맨 아래 한 줄. 공개 범위 경고는 도움말 아래 따로
     return (
         <form action={approve} className="nl-auth-form">
+            <input type="hidden" name="requestId" value={requestId} />
             <section
                 className="nl-consent-group"
                 aria-labelledby="consent-always"

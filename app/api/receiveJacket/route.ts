@@ -7,7 +7,8 @@ import {
     saveCollectedJacket,
 } from "@/features/music/server/jacket-collection-service";
 import { getUserSyncAuth } from "@/features/users/server/user-data";
-import { verifySyncToken } from "@/lib/bookmarklet";
+import { readJsonBody } from "@/lib/api/read-json-body";
+import { isSyncTokenExpired, verifySyncToken } from "@/lib/bookmarklet";
 
 // 관리자 동기화 중 북마클릿이 공식 사이트(로그인 필요)에서 받은 자켓 한 장을 저장한다
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
@@ -46,23 +47,23 @@ export async function POST(request: NextRequest) {
     if (!request.headers.get("content-type")?.startsWith("application/json")) {
         return json(415, { saved: false });
     }
-    const contentLength = Number(request.headers.get("content-length"));
-    if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
+    const read = await readJsonBody(request, MAX_BODY_BYTES);
+    if (read.tooLarge) {
         return json(413, { saved: false });
     }
 
-    const parsed = jacketRequestSchema.safeParse(
-        await request.json().catch(() => null)
-    );
+    const parsed = jacketRequestSchema.safeParse(read.body);
     if (!parsed.success) return json(400, { saved: false });
 
-    const tokenPayload = verifySyncToken(parsed.data.token);
-    if (!tokenPayload) return json(401, { saved: false });
+    const verifiedToken = verifySyncToken(parsed.data.token);
+    if (verifiedToken.status !== "valid") return json(401, { saved: false });
+    const tokenPayload = verifiedToken.payload;
     const user = await getUserSyncAuth(tokenPayload.userId);
     if (
         !user ||
         user.syncTokenVersion !== tokenPayload.version ||
-        user.role !== "admin"
+        user.role !== "admin" ||
+        isSyncTokenExpired(tokenPayload, user.role)
     ) {
         return json(403, { saved: false });
     }

@@ -58,6 +58,9 @@ export async function getAdminEvent(id: number) {
     });
 }
 
+const EVENT_CHANGED_MESSAGE =
+    "검토하는 동안 글이 바뀌었습니다. 새로고침해 주세요.";
+
 // 승인 · 수정 요청 · 반려. 검토 대기인 글만 받는다(다른 관리자가 먼저 처리했으면 거절)
 export async function reviewEvent(
     formData: FormData
@@ -65,6 +68,7 @@ export async function reviewEvent(
     const admin = await requireAdmin();
     const parsed = eventReviewSchema.safeParse({
         id: formData.get("id"),
+        updatedAt: formData.get("updatedAt"),
         decision: formData.get("decision"),
         note: String(formData.get("note") ?? ""),
     });
@@ -86,9 +90,13 @@ export async function reviewEvent(
             bannerUrl: true,
             publishedAt: true,
             publishedBannerUrl: true,
+            updatedAt: true,
         },
     });
     if (!event) return { success: false, message: "글을 찾을 수 없습니다." };
+    const reviewedAt = new Date(parsed.data.updatedAt);
+    if (event.updatedAt.getTime() !== reviewedAt.getTime())
+        return { success: false, message: EVENT_CHANGED_MESSAGE };
     if (event.status !== "pending")
         return {
             success: false,
@@ -103,16 +111,17 @@ export async function reviewEvent(
             new Date(),
             event.publishedAt
         );
+        // 위에서 읽은 판을 공개본으로 옮기므로, 그사이 작성자가 고친 글이면 처리하지 않는다
         const changed = await db.communityEvent.updateMany({
-            where: { id: parsed.data.id, status: "pending" },
+            where: {
+                id: parsed.data.id,
+                status: "pending",
+                updatedAt: reviewedAt,
+            },
             data: update,
         });
         if (!changed.count)
-            return {
-                success: false,
-                message:
-                    "검토 대기인 글만 처리할 수 있습니다. 새로고침해 주세요.",
-            };
+            return { success: false, message: EVENT_CHANGED_MESSAGE };
         invalidateEvents();
         return {
             success: true,

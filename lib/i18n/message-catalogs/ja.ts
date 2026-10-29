@@ -128,6 +128,8 @@ export const jaMessages = {
     "community.action.unavailable": "現在この項目を変更できません。",
     "community.action.failed":
         "保存できませんでした。入力内容は保持されています。もう一度お試しください。",
+    "community.dailyLimit":
+        "今日使える分をすべて使いました。明日もう一度お試しください。",
     "pattern.evaluate": "評価する",
     "music.info.levelConstant": "公式レベル",
     "record.summaryGuest": "ログインすると自分の記録と順位を確認できます。",
@@ -174,8 +176,9 @@ export const jaMessages = {
     "pattern.switchToAll": "全曲基準で表示",
     "pattern.computed":
         "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
+    "pattern.computedNone": "公開譜面がないため計算できません",
     "pattern.computedMissing":
-        "公開譜面がない曲は値を空欄にします。動画から抽出して拍子がわからない譜面は変拍子の値を空欄にします。",
+        "動画から抽出して拍子がわからない譜面は変拍子の値を空欄にします。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",
@@ -347,6 +350,8 @@ export const jaMessages = {
     "poll.voteFailed": "票を保存できませんでした。",
     "poll.error.invalid": "投票の内容を確認してください。",
     "poll.error.locked": "票が入った後は質問と選択肢を変更できません。",
+    "poll.error.published":
+        "公開された投稿の投票は質問と選択肢を変更できません。締め切り日のみ変更できます。",
     "poll.error.closed": "締め切った投票は編集できません。",
     "poll.error.question": "質問を入力してください。",
     "poll.error.options": "選択肢は2個以上20個以下で入力してください。",
@@ -709,6 +714,8 @@ export const jaMessages = {
     "feedback.attachmentError": "許可されていない添付画像です。",
     "feedback.success": "報告を受け付けました。",
     "feedback.submitError": "報告を受け付けられませんでした。",
+    "feedback.dailyLimit":
+        "今日はこれ以上報告を送れません。明日もう一度送ってください。",
     "feedback.uploadError":
         "画像アップロードのリクエストを処理できませんでした。",
     "music.action.voteLogin": "ログインすると投票できます。",
@@ -1625,17 +1632,6 @@ export const jaMessages = {
     "settings.loginRequired": "ログインが必要です。",
     "settings.checkInput": "入力内容を確認してください。",
     "settings.validation.avatarUrl": "正しい画像URLを入力してください。",
-    "settings.validation.nicknameRequired": "ニックネームを入力してください。",
-    "settings.validation.nicknameMax":
-        "ニックネームは20文字以内で入力してください。",
-    "settings.validation.countryRequired": "国・地域を選択してください。",
-    "settings.validation.localeRequired": "言語を選択してください。",
-    "settings.validation.discordNameMax":
-        "Discordネームは32文字以内で入力してください。",
-    "settings.validation.discordTagCharacters":
-        "Discordタグには半角英数字、ピリオド、アンダースコアのみ使用できます。",
-    "settings.validation.discordTagMax":
-        "Discordタグは32文字以内で入力してください。",
     "settings.validation.arcadeRequired":
         "ゲームセンターをもう一度選択してください。",
     "settings.userNotFound": "ユーザー情報が見つかりません。",
@@ -1746,6 +1742,7 @@ export const jaMessages = {
     "arcades.region": "地域",
     "arcades.legend": "地図の凡例",
     "arcades.cluster": "{count}か所",
+    "arcades.clusterMore": "ほか{count}か所",
     "arcades.legendSelected": "白いピン：選択中のゲームセンター",
     "arcades.details": "ゲームセンターの詳細",
     "arcades.directions": "経路案内",

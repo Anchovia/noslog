@@ -54,7 +54,7 @@ export interface PollBuilderLabels {
 /**
  * 투표 만들기 창 — 고르는 방법 → 질문 → 선택지 → 익명 → 「자세히」(마감 · 결과 공개 · 선택지 추가).
  * 미리보기는 두지 않는다(Discourse · Strawpoll 둘 다 없음). 엔터 · 「선택지 추가」 · 여러 줄 붙여넣기 세 경로를 모두 준다.
- * 표가 들어온 뒤(`locked`)에는 마감 시각과 선택지 추가만 열어 둔다.
+ * 표가 들어온 뒤(`locked`)에는 마감 시각과 선택지 추가만, 공개판이 있는 이벤트 글(`published`)은 마감 시각만 열어 둔다.
  */
 export default function PollBuilderDialog({
     open,
@@ -65,6 +65,7 @@ export default function PollBuilderDialog({
     labels,
     locales,
     locked = false,
+    published = false,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -76,6 +77,7 @@ export default function PollBuilderDialog({
     /** 공지는 ko · ja · en 세 벌, 이벤트는 쓴 언어 한 벌 */
     locales: Locale[];
     locked?: boolean;
+    published?: boolean;
 }) {
     const id = useId();
     const [draft, setDraft] = useState(value);
@@ -208,8 +210,16 @@ export default function PollBuilderDialog({
                             }));
                         }}
                         options={[
-                            { value: "single", label: labels.single },
-                            { value: "multiple", label: labels.multiple },
+                            {
+                                value: "single",
+                                label: labels.single,
+                                disabled: published,
+                            },
+                            {
+                                value: "multiple",
+                                label: labels.multiple,
+                                disabled: published,
+                            },
                         ]}
                     />
                 </FormField>
@@ -228,7 +238,7 @@ export default function PollBuilderDialog({
                         lang={locale}
                         maxLength={POLL_QUESTION_MAX_LENGTH}
                         value={draft.question[locale] ?? ""}
-                        readOnly={locked}
+                        readOnly={locked || published}
                         onChange={(event) =>
                             setDraft((prev) => ({
                                 ...prev,
@@ -278,7 +288,9 @@ export default function PollBuilderDialog({
                                         lang={locale}
                                         maxLength={POLL_OPTION_MAX_LENGTH}
                                         value={option.text[locale] ?? ""}
-                                        readOnly={locked && saved}
+                                        readOnly={
+                                            published || (locked && saved)
+                                        }
                                         onChange={(event) =>
                                             setOption(index, event.target.value)
                                         }
@@ -286,8 +298,9 @@ export default function PollBuilderDialog({
                                             if (event.key !== "Enter") return;
                                             event.preventDefault();
                                             if (
+                                                published ||
                                                 draft.options.length >=
-                                                POLL_MAX_OPTIONS
+                                                    POLL_MAX_OPTIONS
                                             )
                                                 return;
                                             addOption(index + 1);
@@ -296,6 +309,7 @@ export default function PollBuilderDialog({
                                     <IconButton
                                         label={labels.removeOption}
                                         disabled={
+                                            published ||
                                             (locked && saved) ||
                                             draft.options.length <= 2
                                         }
@@ -311,12 +325,15 @@ export default function PollBuilderDialog({
                         <ActionButton
                             variant="secondary"
                             size="sm"
-                            disabled={draft.options.length >= POLL_MAX_OPTIONS}
+                            disabled={
+                                published ||
+                                draft.options.length >= POLL_MAX_OPTIONS
+                            }
                             onClick={() => addOption()}
                         >
                             {labels.addOption}
                         </ActionButton>
-                        {!locked ? (
+                        {!locked && !published ? (
                             <ActionButton
                                 variant="ghost"
                                 size="sm"
@@ -361,6 +378,7 @@ export default function PollBuilderDialog({
                             min={2}
                             max={draft.options.length}
                             value={draft.maxChoices ?? ""}
+                            readOnly={published}
                             onChange={(event) =>
                                 setDraft((prev) => ({
                                     ...prev,
@@ -384,8 +402,16 @@ export default function PollBuilderDialog({
                             }))
                         }
                         options={[
-                            { value: "hidden", label: labels.votersHidden },
-                            { value: "shown", label: labels.votersShown },
+                            {
+                                value: "hidden",
+                                label: labels.votersHidden,
+                                disabled: published,
+                            },
+                            {
+                                value: "shown",
+                                label: labels.votersShown,
+                                disabled: published,
+                            },
                         ]}
                     />
                 </FormField>
@@ -417,6 +443,7 @@ export default function PollBuilderDialog({
                         <Select
                             id={`${id}-results`}
                             value={draft.results}
+                            disabled={published}
                             onValueChange={(next) =>
                                 setDraft((prev) => ({
                                     ...prev,
@@ -432,6 +459,7 @@ export default function PollBuilderDialog({
                     <Checkbox
                         label={labels.allowAddOptions}
                         checked={draft.allowAddOptions}
+                        disabled={published}
                         onChange={(event) =>
                             setDraft((prev) => ({
                                 ...prev,

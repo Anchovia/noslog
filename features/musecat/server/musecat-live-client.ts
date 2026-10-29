@@ -92,6 +92,17 @@ const record = (value: unknown): Json =>
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 const text = (value: unknown) =>
     typeof value === "string" && value.trim() ? value : null;
+/** 파트너가 준 링크는 href 에 그대로 들어가므로 http · https 주소만 남긴다 */
+const webLink = (value: unknown) => {
+    const link = text(value);
+    if (!link) return null;
+    try {
+        const { protocol } = new URL(link);
+        return protocol === "https:" || protocol === "http:" ? link : null;
+    } catch {
+        return null;
+    }
+};
 /** 뮤즈캣 다국어 칸은 en/kr/jp — NosLog 는 ko 를 먼저 */
 const localized = (value: unknown) => {
     const item = record(value);
@@ -326,7 +337,7 @@ export function fromMusecatArcade(
             return {
                 type: String(item.type ?? "link"),
                 name: String(item.name ?? item.link ?? ""),
-                link: text(item.link),
+                link: webLink(item.link),
             };
         }),
         facilities,

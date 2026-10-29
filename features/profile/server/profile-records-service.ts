@@ -39,13 +39,21 @@ export async function getChartRanks(playIds: readonly number[]) {
 /** 「기록」 탭 목록 — 베스트 50(공식 Grd 기여 상위) 또는 모든 기록을 고른 순으로 */
 export async function getPublicProfileRecords(
     userId: number,
-    query: ProfileRecordsQuery
+    requested: ProfileRecordsQuery,
+    /** 본인이 자기 프로필을 볼 때 — 플레이 활동을 숨겨도 달성일은 본인에게 보인다 */
+    { owner = false }: { owner?: boolean } = {}
 ) {
     const user = await db.user.findUnique({
         where: { id: userId },
-        select: { id: true },
+        select: { hidePlayActivity: true },
     });
     if (!user) return null;
+    // 플레이 활동 비공개면 남에게 달성일을 주지 않는다. 날짜 순서도 날짜를 드러내므로 기본 순으로 바꾼다
+    const datesHidden = user.hidePlayActivity && !owner;
+    const query: ProfileRecordsQuery =
+        datesHidden && requested.sort === "recent"
+            ? { ...requested, sort: "value" }
+            : requested;
     const field = query.mode === "basic" ? "gradeBasic" : "gradeRecital";
     const best =
         query.view === "best"
@@ -126,7 +134,7 @@ export async function getPublicProfileRecords(
             rank: play.rank,
             fullCombo: hasFullComboLamp(play.fcType),
             contribution: (play[field] ?? 0) > 0 ? play[field]! / 100 : null,
-            playedAt: recordPlayedAt(play.bestAt),
+            playedAt: datesHidden ? null : recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
             position: positions.get(play.id) ?? null,
         })),

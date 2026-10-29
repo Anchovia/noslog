@@ -89,7 +89,11 @@ export async function loadNostalgiaRecords(input: {
     return buildNostalgiaRecords({
         subject: input.subject,
         playerName: user.username ?? "NosLog player",
-        profileUrl: `${input.origin}/profile/${input.userId}`,
+        // 고른 항목이 없거나 점수가 비공개면 사용자 번호가 든 주소를 넘기지 않는다 — 파트너가 sub 를 NosLog 계정과 잇지 못하게
+        profileUrl:
+            input.sharedItems.length > 0 && !user.hide_play_scores
+                ? `${input.origin}/profile/${input.userId}`
+                : input.origin,
         updatedAt: lastSync?.completedAt ?? new Date(user.created_at),
         scoresPublic: !user.hide_play_scores,
         activityPublic: !user.hide_play_activity,

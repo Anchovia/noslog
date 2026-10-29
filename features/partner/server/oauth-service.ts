@@ -160,10 +160,13 @@ export async function approveAuthorization(input: {
     userId: number;
     clientId: string;
     scopes: OAuthScope[];
+    /** 자동 승인은 요청 scope 가 더 좁아도 연결이 이미 허락한 범위를 그대로 둔다 */
+    grantScopes?: OAuthScope[];
     sharedItems: PartnerShareItemName[];
     redirectUri: string;
     codeChallenge: string;
 }) {
+    const grantScopes = toDbScopes(input.grantScopes ?? input.scopes);
     const now = new Date();
     const sharedItems = PARTNER_SHARE_ITEMS.filter((item) =>
         input.sharedItems.includes(item)
@@ -184,7 +187,7 @@ export async function approveAuthorization(input: {
             ? await tx.oAuthGrant.update({
                   where: { id: active.id },
                   data: {
-                      scopes: toDbScopes(input.scopes),
+                      scopes: grantScopes,
                       sharedItems,
                   },
                   select: { id: true, generation: true },
@@ -193,7 +196,7 @@ export async function approveAuthorization(input: {
                   data: {
                       userId: input.userId,
                       clientId: input.clientId,
-                      scopes: toDbScopes(input.scopes),
+                      scopes: grantScopes,
                       sharedItems,
                       familyExpiresAt: new Date(
                           now.getTime() + OAUTH_FAMILY_TTL_MS
@@ -380,9 +383,19 @@ export async function refreshAccessToken(input: {
                 },
             },
         });
+        if (!row || row.grant.clientId !== input.clientId) {
+            return { ok: false, error: "invalid_grant" } as const;
+        }
+        // 거둔 refresh 가 다시 오면 새어 나간 토큰으로 보고 살아 있는 연결 전체를 끝낸다(RFC 9700 §4.14.2)
         if (
-            !row ||
-            row.grant.clientId !== input.clientId ||
+            row.revokedAt &&
+            !row.grant.revokedAt &&
+            row.grant.familyExpiresAt > now
+        ) {
+            await revokeGrant(tx, row.grant.id, "replay", now);
+            return { ok: false, error: "invalid_grant" } as const;
+        }
+        if (
             row.revokedAt ||
             row.grant.revokedAt ||
             row.expiresAt <= now ||
@@ -500,6 +513,7 @@ export async function authenticateBearer(
                     sharedItems: true,
                     revokedAt: true,
                     familyExpiresAt: true,
+                    client: { select: { disabledAt: true } },
                 },
             },
         },
@@ -509,7 +523,8 @@ export async function authenticateBearer(
         token.revokedAt ||
         token.expiresAt <= now ||
         token.grant.revokedAt ||
-        token.grant.familyExpiresAt <= now
+        token.grant.familyExpiresAt <= now ||
+        token.grant.client.disabledAt
     ) {
         return { ok: false, error: "invalid_token" };
     }
@@ -588,22 +603,53 @@ export async function updateSharedItems(
             data: { sharedItems: next },
         });
         if (grant.sharedItems.some((item) => !next.includes(item))) {
-            const subject = await tx.oAuthSubject.findUnique({
-                where: { userId_clientId: { userId, clientId } },
-                select: { subject: true },
-            });
-            await enqueuePartnerMessage(tx, {
-                clientId,
-                grantId: grant.id,
-                kind: "records_invalidation",
-                generation: grant.generation,
-                payload: {
-                    sub: subject?.subject ?? null,
-                    service: "nostalgia",
-                },
-            });
+            await enqueueRecordsInvalidation(tx, userId, clientId, grant);
         }
         return true;
+    });
+}
+
+/**
+ * 공개 설정에서 점수 · 활동을 비공개로 바꿈 — 기록을 읽는 연결마다 뮤즈캣 캐시 무효화를 outbox 에 넣는다.
+ * 공개 설정 저장과 같은 트랜잭션에서 부른다
+ */
+export async function enqueueRecordsInvalidationForUser(
+    tx: Tx,
+    userId: number
+) {
+    const grants = await tx.oAuthGrant.findMany({
+        where: {
+            userId,
+            scopes: { has: DB_SCOPE["nostalgia:read"] },
+            ...activeGrantWhere(new Date()),
+        },
+        select: { id: true, clientId: true, generation: true },
+        orderBy: { id: "asc" },
+    });
+    for (const grant of grants) {
+        await enqueueRecordsInvalidation(tx, userId, grant.clientId, grant);
+    }
+}
+
+async function enqueueRecordsInvalidation(
+    tx: Tx,
+    userId: number,
+    clientId: string,
+    grant: { id: number; generation: number }
+) {
+    const subject = await tx.oAuthSubject.findUnique({
+        where: { userId_clientId: { userId, clientId } },
+        select: { subject: true },
+    });
+    await enqueuePartnerMessage(tx, {
+        clientId,
+        grantId: grant.id,
+        kind: "records_invalidation",
+        generation: grant.generation,
+        payload: {
+            sub: subject?.subject ?? null,
+            service: "nostalgia",
+        },
     });
 }
 

@@ -91,6 +91,7 @@ export default async function PartnerConsentPage({
                 </div>
             </div>
             <PartnerConsentForm
+                requestId={data.requestId}
                 clientName={data.clientName}
                 host={data.host}
                 wantsRecords={data.wantsRecords}

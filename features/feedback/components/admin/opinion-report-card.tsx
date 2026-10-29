@@ -29,7 +29,7 @@ export default function OpinionReportCard({
                 <span>작성자</span>
                 <Link
                     href={`/profile/${report.author.id}`}
-                    className="nl-emphasis-label text-nl-content hover:underline"
+                    className="nl-link nl-emphasis-label"
                 >
                     {report.author.name}
                 </Link>
@@ -37,7 +37,7 @@ export default function OpinionReportCard({
                 <span>신고한 사람</span>
                 <Link
                     href={`/profile/${report.reporter.id}`}
-                    className="nl-emphasis-label text-nl-content hover:underline"
+                    className="nl-link nl-emphasis-label"
                 >
                     {report.reporter.name}
                 </Link>
@@ -46,7 +46,7 @@ export default function OpinionReportCard({
                 <Link
                     href={report.chart.href}
                     target="_blank"
-                    className="nl-metadata text-nl-subdued hover:underline"
+                    className="nl-admin-link nl-metadata text-nl-subdued"
                 >
                     {report.chart.title} · {report.chart.difficulty}
                 </Link>

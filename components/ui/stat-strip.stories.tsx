@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { ChevronRight } from "lucide-react";
 import { expect, within } from "storybook/test";
 
 import StatStrip, { StatStripSkeleton } from "./stat-strip";
@@ -37,9 +38,15 @@ export const WithSlots: Story = {
     args: {
         header: <p className="nl-body">내 최고 기록</p>,
         footer: (
-            <a className="nl-control" href="#records">
-                기록 보기
-            </a>
+            <div className="nl-action-group">
+                <a className="nl-action-group__item" href="#records">
+                    기록 보기
+                    <ChevronRight
+                        className="nl-action-group__chevron"
+                        aria-hidden
+                    />
+                </a>
+            </div>
         ),
     },
 };

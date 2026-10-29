@@ -6,7 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
 import { serverEnv } from "@/lib/env/server";
-import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
+import { prismaPgSessionOptions } from "@/lib/prisma-pg";
 
 const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
@@ -24,7 +24,9 @@ const queryLogFile =
 function adapter() {
     return new PrismaPg({
         connectionString: serverEnv.DATABASE_URL,
-        options: PRISMA_PG_SESSION_OPTIONS,
+        options: prismaPgSessionOptions(
+            process.env.MAINTENANCE_MODE?.toLowerCase() === "true"
+        ),
     });
 }
 

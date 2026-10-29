@@ -45,9 +45,6 @@ export default async function BookmarkletPage() {
     const bookmarklet = createBookmarkletHref(
         origin,
         createSyncToken({ userId: user.id, version: user.syncTokenVersion }),
-        serverEnv.VERCEL_ENV === "preview"
-            ? serverEnv.VERCEL_AUTOMATION_BYPASS_SECRET
-            : undefined,
         locale
     );
     return (

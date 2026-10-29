@@ -1,5 +1,7 @@
 import "server-only";
 
+import { timingSafeEqual } from "node:crypto";
+
 import type { OAuthScope } from "@/features/partner/server/oauth-authorize";
 import { getClientName } from "@/features/partner/server/oauth-service";
 import type { PartnerShareItemName } from "@/features/partner/server/partner-outbox";
@@ -17,6 +19,7 @@ export type ConsentPageData =
     | { kind: "login" }
     | {
           kind: "ready";
+          requestId: string;
           clientName: string;
           host: string;
           userName: string;
@@ -36,6 +39,19 @@ export async function readPendingConsent() {
     return { session, pending };
 }
 
+/** 동의 폼이 보낸 requestId 가 지금 기다리는 요청의 것인지(같은 시간 비교) */
+export function consentRequestMatches(
+    sent: FormDataEntryValue | null,
+    pending: { requestId?: string }
+) {
+    if (typeof sent !== "string" || !pending.requestId) return false;
+    const actual = Buffer.from(sent);
+    const expected = Buffer.from(pending.requestId);
+    return (
+        actual.length === expected.length && timingSafeEqual(actual, expected)
+    );
+}
+
 export async function getConsentPageData(
     error: string | undefined
 ): Promise<ConsentPageData> {
@@ -43,7 +59,8 @@ export async function getConsentPageData(
         return { kind: "error", code: error };
     }
     const { session, pending } = await readPendingConsent();
-    if (!pending) return { kind: "error", code: "expired" };
+    // requestId 를 싣기 전에 시작한 요청은 폼이 동의할 수 없으니 다시 시작하게 한다
+    if (!pending?.requestId) return { kind: "error", code: "expired" };
     if (!session.id) return { kind: "login" };
     const [clientName, user] = await Promise.all([
         getClientName(pending.clientId),
@@ -60,6 +77,7 @@ export async function getConsentPageData(
     if (!clientName || !user) return { kind: "error", code: "invalid_client" };
     return {
         kind: "ready",
+        requestId: pending.requestId,
         clientName,
         host: new URL(pending.redirectUri).host,
         userName: user.username ?? "",

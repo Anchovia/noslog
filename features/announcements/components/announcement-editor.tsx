@@ -56,7 +56,10 @@ import { ANNOUNCEMENT_POLL_LABELS } from "@/features/polls/components/poll-label
 import type { PollInput } from "@/features/polls/schemas/poll-schema";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 import type { Locale } from "@/lib/i18n/routing";
-import { uploadGrantedImage } from "@/lib/uploads/client-image-upload";
+import {
+    reencodeImageForUpload,
+    uploadGrantedImage,
+} from "@/lib/uploads/client-image-upload";
 
 export interface AnnouncementEditorData {
     id?: number;
@@ -129,6 +132,11 @@ async function uploadAnnouncementImage(file: File) {
     const upload = await requestAnnouncementImageUpload(file.type);
     if (!upload.success) throw new Error(upload.message);
     return uploadGrantedImage(file, upload, "public");
+}
+
+// 글쓴이가 고른 사진은 다시 그려 메타데이터를 지운다. 서열 이미지는 이 화면이 그린 PNG 라 크기 · 글자를 그대로 둔다
+async function uploadPickedAnnouncementImage(file: File) {
+    return uploadAnnouncementImage(await reencodeImageForUpload(file));
 }
 
 type SaveMode = "draft" | "publish";
@@ -576,7 +584,7 @@ export default function AnnouncementEditor({
                                             )}
                                             labels={EDITOR_LABELS}
                                             onUploadImage={
-                                                uploadAnnouncementImage
+                                                uploadPickedAnnouncementImage
                                             }
                                             onPrimaryAction={() => {
                                                 if (tierImageBusy) return;

@@ -73,6 +73,7 @@ model User {
   musecatActions            MusecatAction[]
   arcadeExternalIdsVerified ArcadeExternalId[]          @relation("ArcadeExternalIdVerifier")
   musecatCabinetNotes       MusecatCabinetNote[]        @relation("MusecatCabinetNoteEditor")
+  musicCatalogCandidates    MusicCatalogCandidate[]
 
   @@index([preferredArcadeId])
   // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)

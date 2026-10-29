@@ -6,6 +6,7 @@ import {
     normalizeExamSubmissionStatus,
 } from "@/features/exams/schemas/exam-submission-admin-schema";
 import { listExamSubmissions } from "@/features/exams/server/exam-submission-admin-service";
+import { requireAdmin } from "@/lib/admin";
 
 const statuses = examSubmissionStatusSchema.options;
 
@@ -14,6 +15,7 @@ export default async function AdminSubmissionsPage({
 }: {
     searchParams: Promise<{ status?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const status = normalizeExamSubmissionStatus(params.status);
     const submissions = await listExamSubmissions(status);

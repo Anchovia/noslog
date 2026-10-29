@@ -2,10 +2,12 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
+import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 
 /** 관리자 서열표 목록 — 구간 · 채보 수(2026-10-16 D8 — 화면에서 옮김) */
-export function listAdminTierLists() {
+export async function listAdminTierLists() {
+    await requireAdmin();
     return db.tierList.findMany({
         include: {
             _count: { select: { bands: true, entries: true } },
@@ -15,7 +17,8 @@ export function listAdminTierLists() {
 }
 
 /** 편집할 서열표 — 구간과 구간별 채보 수 */
-export function getAdminTierList(tierListId: number) {
+export async function getAdminTierList(tierListId: number) {
+    await requireAdmin();
     return db.tierList.findUnique({
         where: { id: tierListId },
         include: {
@@ -28,12 +31,13 @@ export function getAdminTierList(tierListId: number) {
 }
 
 /** 서열표 편집 화면의 채보 한 쪽(곡 이름 · 난이도 순) */
-export function listAdminTierEntries(
+export async function listAdminTierEntries(
     tierListId: number,
     chartWhere: Prisma.MusicChartWhereInput,
     page: number,
     pageSize: number
 ) {
+    await requireAdmin();
     return db.tierEntry.findMany({
         where: { tierListId, chart: chartWhere },
         select: {
@@ -64,17 +68,19 @@ export function listAdminTierEntries(
 }
 
 /** 서열표 편집 화면 필터에 맞는 채보 수 */
-export function countAdminTierEntries(
+export async function countAdminTierEntries(
     tierListId: number,
     chartWhere: Prisma.MusicChartWhereInput
 ) {
+    await requireAdmin();
     return db.tierEntry.count({
         where: { tierListId, chart: chartWhere },
     });
 }
 
 /** 보관 서열표(목표 없는 옛 표) — 구간 · 채보 전부 */
-export function getLegacyTierListWithEntries(tierListId: number) {
+export async function getLegacyTierListWithEntries(tierListId: number) {
+    await requireAdmin();
     return db.tierList.findUnique({
         where: { id: tierListId },
         include: {

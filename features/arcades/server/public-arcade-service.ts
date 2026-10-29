@@ -52,7 +52,7 @@ function publicInclude(now: Date) {
                             ),
                         },
                     },
-                    select: { createdAt: true },
+                    select: { createdAt: true, userId: true },
                 },
             },
         },
@@ -163,7 +163,10 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
                 lastCheckedAt: lastCheck?.toISOString() ?? null,
                 checkCount: new Set(cabinet.checks.map((check) => check.userId))
                     .size,
-                openReports: cabinet.reports.length,
+                // 같은 사람이 여러 번 보낸 신고는 한 건으로 — 한 사람이 수를 부풀리지 못하게
+                openReports: new Set(
+                    cabinet.reports.map((report) => report.userId)
+                ).size,
                 latestReportAt:
                     cabinet.reports
                         .reduce<Date | null>(

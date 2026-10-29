@@ -1,4 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+const mocks = vi.hoisted(() => ({ profile: vi.fn() }));
+
+vi.mock("@/features/profile/server/public-profile-data", () => ({
+    getCachedProfileData: mocks.profile,
+}));
+vi.mock("@/lib/db", () => ({
+    default: {
+        playerRating: { findMany: async () => [] },
+        dataSync: { findFirst: async () => null },
+        chartPlayHistory: { findMany: async () => [], count: async () => 0 },
+    },
+}));
 
 import { musecatRecordsSchema } from "@/features/partner/schemas/musecat-records-schema";
 import {
@@ -6,6 +19,7 @@ import {
     type NostalgiaRecentPlay,
     type NostalgiaRecordsInput,
 } from "@/features/partner/server/nostalgia-records";
+import { loadNostalgiaRecords } from "@/features/partner/server/nostalgia-records-data";
 
 function play(index: number, overrides: Partial<NostalgiaRecentPlay> = {}) {
     return {
@@ -171,5 +185,48 @@ describe("NOSTALGIA records for Musecat", () => {
                 source: { name: "NosLog", url: "http://noslog.app" },
             })
         ).toThrow();
+    });
+});
+
+describe("NOSTALGIA records source link", () => {
+    function profileUser(hidePlayScores: boolean) {
+        return {
+            user: {
+                username: "carol",
+                created_at: "2026-10-01T00:00:00.000Z",
+                hide_play_scores: hidePlayScores,
+                hide_play_activity: false,
+                rank_basic: null,
+                rank_basic_country: null,
+                rank_recital: null,
+                rank_recital_country: null,
+                grade_basic: null,
+                grade_recital: null,
+            },
+        };
+    }
+    async function sourceUrl(
+        hidePlayScores: boolean,
+        sharedItems: ("summary" | "ranks")[]
+    ) {
+        mocks.profile.mockResolvedValue(profileUser(hidePlayScores));
+        const records = await loadNostalgiaRecords({
+            userId: 42,
+            subject: "nl_subject",
+            sharedItems,
+            origin: "https://noslog.app",
+        });
+        expect(() => musecatRecordsSchema.parse(records)).not.toThrow();
+        return records?.source.url;
+    }
+
+    it("links the public profile only when items are shared and scores are public", async () => {
+        expect(await sourceUrl(false, ["summary"])).toBe(
+            "https://noslog.app/profile/42"
+        );
+        expect(await sourceUrl(false, [])).toBe("https://noslog.app");
+        expect(await sourceUrl(true, ["summary", "ranks"])).toBe(
+            "https://noslog.app"
+        );
     });
 });

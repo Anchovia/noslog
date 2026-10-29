@@ -515,6 +515,7 @@ function ChartTimingEditorWorkspace({
         try {
             const result = await reviewChartDraft({
                 draftId: mode.draftId,
+                version: store.getState().draftVersion,
                 decision,
             });
             if (!result.success) {

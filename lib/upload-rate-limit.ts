@@ -4,18 +4,28 @@ import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/routing";
 
-export type UploadPurpose =
-    | "profile-avatar"
-    | "exam-proof"
-    | "feedback-image"
-    | "arcade-photo"
-    | "music-jacket"
-    | "event-banner"
-    | "event-image"
-    | "announcement-image";
+const HOUR_MS = 60 * 60 * 1000;
+const IMAGE_UPLOAD_QUOTA = { limit: 10, windowMs: HOUR_MS };
 
-const UPLOAD_LIMIT = 10;
-const UPLOAD_WINDOW_MS = 60 * 60 * 1000;
+// 목적마다 한도 · 창 — 이미지 업로드 토큰 말고도 비용이 드는 요청(이용자 글 번역)을 같은 표로 센다
+const QUOTAS = {
+    "profile-avatar": IMAGE_UPLOAD_QUOTA,
+    "exam-proof": IMAGE_UPLOAD_QUOTA,
+    "feedback-image": IMAGE_UPLOAD_QUOTA,
+    "arcade-photo": IMAGE_UPLOAD_QUOTA,
+    "music-jacket": IMAGE_UPLOAD_QUOTA,
+    "event-banner": IMAGE_UPLOAD_QUOTA,
+    "event-image": IMAGE_UPLOAD_QUOTA,
+    "announcement-image": IMAGE_UPLOAD_QUOTA,
+    "community-translation": { limit: 20, windowMs: HOUR_MS },
+} satisfies Record<string, { limit: number; windowMs: number }>;
+
+export type UploadPurpose = keyof typeof QUOTAS;
+
+// 지난 기록 정리는 가장 긴 창보다 오래된 행만 지운다 — 다른 목적의 창 안 기록을 지우지 않게
+const LONGEST_WINDOW_MS = Math.max(
+    ...Object.values(QUOTAS).map((quota) => quota.windowMs)
+);
 const SERIALIZABLE_RETRY_LIMIT = 3;
 
 type UploadQuotaResult =
@@ -35,8 +45,10 @@ export async function claimUploadTokenQuota(
     userId: number,
     purpose: UploadPurpose
 ): Promise<UploadQuotaResult> {
+    const { limit, windowMs } = QUOTAS[purpose];
     for (let attempt = 0; attempt < SERIALIZABLE_RETRY_LIMIT; attempt += 1) {
-        const windowStart = new Date(Date.now() - UPLOAD_WINDOW_MS);
+        const now = Date.now();
+        const windowStart = new Date(now - windowMs);
 
         try {
             return await db.$transaction(
@@ -44,7 +56,9 @@ export async function claimUploadTokenQuota(
                     await tx.uploadTokenGrant.deleteMany({
                         where: {
                             userId,
-                            createdAt: { lt: windowStart },
+                            createdAt: {
+                                lt: new Date(now - LONGEST_WINDOW_MS),
+                            },
                         },
                     });
 
@@ -55,7 +69,7 @@ export async function claimUploadTokenQuota(
                             createdAt: { gte: windowStart },
                         },
                     });
-                    if (recentGrantCount >= UPLOAD_LIMIT) {
+                    if (recentGrantCount >= limit) {
                         return { allowed: false, grantId: null };
                     }
 
@@ -89,6 +103,6 @@ export async function releaseUploadTokenQuota(userId: number, grantId: number) {
 /** 업로드 한도 안내 — 공개 화면에서 쓰는 곳은 요청 언어를 넘긴다(관리자 화면은 한국어 기본) */
 export function getUploadLimitMessage(locale: Locale = DEFAULT_LOCALE) {
     return createTranslator(getMessages(locale))("upload.limitReached", {
-        count: UPLOAD_LIMIT,
+        count: IMAGE_UPLOAD_QUOTA.limit,
     });
 }

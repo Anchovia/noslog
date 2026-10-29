@@ -22,11 +22,21 @@ import {
     type ChartFieldProposalField,
     chartFieldValue,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
+import type { PatternStrengths } from "@/features/music/lib/pattern-tendency";
 import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
 import { rankTone, scoreTone } from "@/lib/music/score-tone";
 
 import PatternCriteriaDialog from "./pattern-criteria-dialog";
 import TierHistory from "./tier-history";
+
+/** 공개 채보가 없을 때 흐림 뒤에 둘 막대 — 읽히지 않는 자리표시라 값에 뜻이 없다 */
+const PLACEHOLDER_STRENGTHS: PatternStrengths = {
+    stairs: 0.6,
+    repetition: 0.35,
+    polyrhythm: 0.8,
+    offset: 0.45,
+    chords: 0.25,
+};
 
 /**
  * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 기준 전환) ② 내 기록 요약 띠 ③ 채보 정보
@@ -177,29 +187,48 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                         }
                     />
                 ) : (
-                    // 공개 채보가 없어도 빈 막대 그래프를 그대로 — 값 자리는 「—」 (2026-09-16)
-                    <div className="nl-overview__card">
-                        <BarList
-                            max={1}
-                            label={t("pattern.title")}
-                            rows={PATTERN_AXES.map((axis) => {
-                                const value = strengths?.[axis] ?? null;
-                                return {
-                                    key: axis,
-                                    label: t(`pattern.axis.${axis}`),
-                                    value,
-                                    display:
-                                        value === null
-                                            ? undefined
-                                            : `${Math.round(value * 100)}%`,
-                                    // 0–4 단계 색을 25% 마다(파랑 → 하늘 → 노랑 → 주황 → 빨강)
-                                    color:
-                                        value === null
-                                            ? undefined
-                                            : `var(--nl-pattern-level-${Math.round(value * 4)})`,
-                                };
-                            })}
-                        />
+                    // 공개 채보가 없으면 자리표시 막대를 흐리고 그 위에 투표 잠금과 같은 카드로 이유를 둔다
+                    <div
+                        className="nl-pattern-lock"
+                        data-locked={!strengths || undefined}
+                    >
+                        <div
+                            className="nl-overview__card"
+                            aria-hidden={!strengths || undefined}
+                            inert={!strengths || undefined}
+                        >
+                            <BarList
+                                max={1}
+                                label={t("pattern.title")}
+                                rows={PATTERN_AXES.map((axis) => {
+                                    const value = (strengths ??
+                                        PLACEHOLDER_STRENGTHS)[axis];
+                                    return {
+                                        key: axis,
+                                        label: t(`pattern.axis.${axis}`),
+                                        value,
+                                        display:
+                                            value === null
+                                                ? undefined
+                                                : `${Math.round(value * 100)}%`,
+                                        // 0–4 단계 색을 25% 마다(파랑 → 하늘 → 노랑 → 주황 → 빨강)
+                                        color:
+                                            value === null
+                                                ? undefined
+                                                : `var(--nl-pattern-level-${Math.round(value * 4)})`,
+                                    };
+                                })}
+                            />
+                        </div>
+                        {!strengths ? (
+                            <div className="nl-pattern-lock__overlay">
+                                <div className="nl-pattern-lock__card">
+                                    <p className="nl-emphasis-label">
+                                        {t("pattern.computedNone")}
+                                    </p>
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 )}
             </section>

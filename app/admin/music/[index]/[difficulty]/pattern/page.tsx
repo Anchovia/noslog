@@ -7,12 +7,14 @@ import {
     createDefaultChartDocument,
 } from "@/lib/chart-pattern/schema";
 import { parseChartDifficulty } from "@/lib/tiers";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminChartPatternEditorPage({
     params,
 }: {
     params: Promise<{ index: string; difficulty: string }>;
 }) {
+    await requireAdmin();
     const { index, difficulty } = await params;
     const musicIndex = decodeURIComponent(index);
     const chartDifficulty = parseChartDifficulty(

@@ -4,8 +4,10 @@ import {
     pickLocaleText,
     type PollInput,
     pollLockedChange,
+    pollPublishedChange,
     validatePollInput,
 } from "@/features/polls/schemas/poll-schema";
+import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 import type { Locale } from "@/lib/i18n/routing";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
@@ -25,6 +27,8 @@ const localeTexts = (rows: { locale: string; text?: string }[]) =>
 
 /** 글쓰기 화면이 쓰는 값 — 저장된 투표를 만들기 창 모양으로 돌려준다 */
 export async function getPollInput(owner: PollOwner) {
+    // 이벤트 투표는 getOwnEvent 로 작성자를 확인한 뒤에 부른다. 공지 투표는 미공개도 돌려주므로 여기서 막는다
+    if ("announcementId" in owner) await requireAdmin();
     const poll = await db.poll.findFirst({
         where: owner,
         include: {
@@ -75,6 +79,40 @@ export type PollSaveError =
     | "duplicate"
     | "maxChoices"
     | "closesAt";
+export type PublishedPollSaveError = PollSaveError | "published";
+
+const findPollForSave = (tx: Tx, owner: PollOwner) =>
+    tx.poll.findFirst({
+        where: owner,
+        include: {
+            translations: true,
+            options: {
+                orderBy: { position: "asc" },
+                include: { translations: true },
+            },
+            _count: { select: { votes: true } },
+        },
+    });
+
+const savedPollShape = (
+    current: NonNullable<Awaited<ReturnType<typeof findPollForSave>>>
+) => ({
+    question: localeTexts(
+        current.translations.map((row) => ({
+            locale: row.locale,
+            text: row.question,
+        }))
+    ),
+    multiple: current.multiple,
+    maxChoices: current.maxChoices,
+    results: current.results,
+    showVoters: current.showVoters,
+    options: current.options.map((option) => ({
+        id: option.id,
+        text: localeTexts(option.translations),
+    })),
+    allowAddOptions: current.allowAddOptions,
+});
 
 /**
  * 글을 저장할 때 투표도 함께 저장한다(2026-09-23 V2).
@@ -87,17 +125,7 @@ export async function savePollWithPost(
     poll: PollInput | null,
     now = new Date()
 ): Promise<PollSaveError | null> {
-    const current = await tx.poll.findFirst({
-        where: owner,
-        include: {
-            translations: true,
-            options: {
-                orderBy: { position: "asc" },
-                include: { translations: true },
-            },
-            _count: { select: { votes: true } },
-        },
-    });
+    const current = await findPollForSave(tx, owner);
     const votes = current?._count.votes ?? 0;
     const closed = current?.closesAt ? current.closesAt <= now : false;
 
@@ -124,26 +152,8 @@ export async function savePollWithPost(
     if (current) {
         // 마감한 투표는 아무것도 고치지 못한다(조사한 모든 서비스가 같다)
         if (closed) return "closed";
-        if (votes > 0) {
-            const locked = pollLockedChange(
-                {
-                    question: localeTexts(
-                        current.translations.map((row) => ({
-                            locale: row.locale,
-                            text: row.question,
-                        }))
-                    ),
-                    multiple: current.multiple,
-                    options: current.options.map((option) => ({
-                        id: option.id,
-                        text: localeTexts(option.translations),
-                    })),
-                    allowAddOptions: current.allowAddOptions,
-                },
-                poll
-            );
-            if (locked) return "locked";
-        }
+        if (votes > 0 && pollLockedChange(savedPollShape(current), poll))
+            return "locked";
     }
 
     const settings = {
@@ -202,6 +212,29 @@ export async function savePollWithPost(
             ),
         });
     }
+    return null;
+}
+
+/**
+ * 공개판이 있는 이벤트 글을 저장할 때의 투표 — 마감 날짜만 받는다.
+ * 투표를 새로 만들거나 지우거나 마감 밖의 것을 바꾸면 「published」 로 돌려주고 아무것도 쓰지 않는다.
+ */
+export async function savePublishedPoll(
+    tx: Tx,
+    owner: PollOwner,
+    poll: PollInput | null,
+    now = new Date()
+): Promise<PublishedPollSaveError | null> {
+    const current = await findPollForSave(tx, owner);
+    if (!current) return poll ? "published" : null;
+    if (!poll || pollPublishedChange(savedPollShape(current), poll))
+        return "published";
+    const closesAt = poll.closesAt ? new Date(poll.closesAt) : null;
+    if (closesAt?.getTime() === current.closesAt?.getTime()) return null;
+    if (current.closesAt && current.closesAt <= now) return "closed";
+    const invalid = validatePollInput(poll, now);
+    if (invalid) return invalid;
+    await tx.poll.update({ where: { id: current.id }, data: { closesAt } });
     return null;
 }
 
@@ -294,8 +327,26 @@ export async function castVote(
     optionIds: number[],
     now = new Date()
 ): Promise<PollVoteError | null> {
-    const poll = await db.poll.findUnique({
-        where: { id: pollId },
+    // 공개 화면에 보이는 투표에만 표를 받는다. 없는 투표와 같은 답이라 미공개 투표 id 를 알아낼 수 없다
+    const poll = await db.poll.findFirst({
+        where: {
+            id: pollId,
+            OR: [
+                {
+                    announcement: {
+                        isPublished: true,
+                        publicSlug: { not: null },
+                        publishedAt: { lte: now },
+                    },
+                },
+                {
+                    event: {
+                        publishedAt: { not: null },
+                        status: { not: "rejected" },
+                    },
+                },
+            ],
+        },
         include: { options: { select: { id: true } } },
     });
     if (!poll) return "unknown-option";
@@ -305,11 +356,13 @@ export async function castVote(
     if (chosen.some((id) => !known.has(id))) return "unknown-option";
     const limit = poll.multiple ? (poll.maxChoices ?? poll.options.length) : 1;
     if (chosen.length > limit) return "too-many";
-    await db.$transaction([
-        db.pollVote.deleteMany({ where: { pollId, userId } }),
-        db.pollVote.createMany({
+    await db.$transaction(async (tx) => {
+        // 같은 사람의 요청이 동시에 오면 지우기 · 넣기가 엇갈려 표가 한도보다 많이 남는다
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`poll-vote:${pollId}:${userId}`}))`;
+        await tx.pollVote.deleteMany({ where: { pollId, userId } });
+        await tx.pollVote.createMany({
             data: chosen.map((optionId) => ({ pollId, optionId, userId })),
-        }),
-    ]);
+        });
+    });
     return null;
 }

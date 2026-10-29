@@ -24,10 +24,9 @@
 
 보기는 격자(기본) · 목록형 둘이다.
 
-격자 카드는 자켓 1:1(모서리 `radius/control`) +4+ 이름 `emphasis-label` · 상태 `metadata` 다. 이름 · 상태는 한 줄씩 말줄임이다.
+격자 카드는 [악곡 격자 카드](./music-list.md#악곡-카드)와 같은 카드다(면 · 모서리 · 안쪽 12 · 올림). 난이도 판 자리 없이 이름 `emphasis-label` · 상태 `metadata` 이고, 한 줄씩 말줄임이다.
 로그인하면 자켓 오른쪽 아래에 미니 판, 아래에 진행 트랙 4(`border/divider` · 채움 `local-data/single`)를 둔다.
-미니 판은 칸 6 · 사이 2 · 판 안쪽 4 · `surface/media-scrim` 이고, 아래 트랙 위 8 에 선다. 자켓 카테고리 레이블과 같은 자리다.
-격자 카드는 면 없는 그림 카드라 올림은 제목 밑줄이다(→ [foundations](../foundations.md)).
+미니 판은 칸 6 · 사이 2 · 판 안쪽 4 · `surface/surface` · 채운 칸 `content/default` 이고, 아래 트랙 위 8 에 선다. 자켓 카테고리 판과 같은 자리 · 같은 면이다.
 
 목록형 행은 서열표 목록 행 규격이다(자켓 48 · 모서리 `radius/small` · 사이 12 · 위아래 8 · 아래 `border/row`).
 위에서부터 이름 · 상태 · 진행 막대(위 4, [그래프 — 진행 막대](../components/charts.md#진행-막대))이고, 오른쪽 끝에 미니 판(바탕 없이 칸만)을 둔다.
@@ -133,6 +132,7 @@
 
 ## 바뀐 기록
 
+- [2026-10-29 빙고 격자 카드를 악곡 격자 카드와 같게](../../decisions/2026-10-29-bingo-grid-card.md)
 - [2026-10-27 제목 아래 개수 · 설명 글줄 삭제](../../decisions/2026-10-27-title-subline-removal.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)

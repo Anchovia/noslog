@@ -31,7 +31,6 @@ export const serverEnv = createEnv({
         OFFICIAL_X_SYNC_SECRET: z.string().min(32).optional(),
         GEMINI_API_KEY: optionalSecret,
         VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
-        VERCEL_AUTOMATION_BYPASS_SECRET: optionalSecret,
         // 뮤즈캣 연동(2026-10-20) — 없으면 지금 오락실 화면, mock 은 흉내 데이터, live 는 실제 뮤즈캣
         MUSECAT_MODE: z.enum(["mock", "live"]).optional(),
         MUSECAT_API_ORIGIN: z.url().optional(),
@@ -64,8 +63,6 @@ export const serverEnv = createEnv({
         OFFICIAL_X_SYNC_SECRET: process.env.OFFICIAL_X_SYNC_SECRET,
         GEMINI_API_KEY: process.env.GEMINI_API_KEY,
         VERCEL_ENV: process.env.VERCEL_ENV,
-        VERCEL_AUTOMATION_BYPASS_SECRET:
-            process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
         MUSECAT_MODE: process.env.MUSECAT_MODE,
         MUSECAT_API_ORIGIN: process.env.MUSECAT_API_ORIGIN,
         MUSECAT_WEB_ORIGIN: process.env.MUSECAT_WEB_ORIGIN,
@@ -87,6 +84,19 @@ const discordValues = [
 if (discordValues.some(Boolean) && !discordValues.every(Boolean)) {
     throw new Error(
         "DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, and DISCORD_REDIRECT_URI must be configured together"
+    );
+}
+
+// 흉내 데이터가 운영 화면 · 협업 기록에 섞이지 않게 운영 배포에서는 시작하지 않는다.
+// 배포 주소(VERCEL_URL)가 있을 때만 본다 — 로컬 빌드는 내려받은 .env.production.local 의 VERCEL_ENV 와
+// 개발용 .env 의 mock 을 함께 읽어, 배포가 아닌데도 멈추게 된다
+if (
+    process.env.VERCEL_URL &&
+    serverEnv.VERCEL_ENV === "production" &&
+    serverEnv.MUSECAT_MODE === "mock"
+) {
+    throw new Error(
+        "MUSECAT_MODE=mock cannot be used when VERCEL_ENV is production"
     );
 }
 

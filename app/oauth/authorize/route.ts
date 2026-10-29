@@ -1,3 +1,5 @@
+import { randomBytes } from "node:crypto";
+
 import { NextRequest, NextResponse } from "next/server";
 
 import {
@@ -60,6 +62,7 @@ export async function GET(request: NextRequest) {
         scopes: result.scopes,
         state: result.state,
         codeChallenge: result.codeChallenge,
+        requestId: randomBytes(16).toString("base64url"),
         createdAt: Date.now(),
     };
     await session.save();
@@ -79,6 +82,7 @@ export async function GET(request: NextRequest) {
             userId: session.id,
             clientId: result.clientId,
             scopes: result.scopes,
+            grantScopes: grant.scopes,
             sharedItems: grant.sharedItems,
             redirectUri: result.redirectUri,
             codeChallenge: result.codeChallenge,

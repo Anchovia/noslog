@@ -452,7 +452,7 @@
 .noslog-ui .nl-arcade-marker:focus-visible {
     outline: none;
 }
-.noslog-ui .nl-arcade-marker:focus-visible > * {
+.noslog-ui .nl-arcade-marker:focus-visible > :not(.nl-arcade-marker__label) {
     outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
     outline-offset: var(--nl-stroke-strong);
 }
@@ -483,6 +483,37 @@
     .nl-arcade-marker__label {
     bottom: var(--nl-spacing-24);
     left: calc(50% + var(--nl-spacing-16));
+}
+/* 올림 · 키 포커스 때만 뜨는 이름 판 — 핀은 이름, 묶음은 이름 목록(네이버 지도). 핀 크기는 그대로 */
+.noslog-ui .nl-arcade-marker--bubble {
+    position: relative;
+}
+.noslog-ui .nl-arcade-marker--bubble .nl-arcade-marker__label {
+    bottom: calc(100% - var(--nl-spacing-8));
+    left: calc(100% - var(--nl-spacing-8));
+}
+.noslog-ui .nl-arcade-marker__label--list > span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.noslog-ui .nl-arcade-marker__label--hover {
+    display: none;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-arcade-marker:hover .nl-arcade-marker__label {
+        display: block;
+    }
+}
+.noslog-ui .nl-arcade-marker:focus-visible .nl-arcade-marker__label {
+    display: block;
+}
+/* 목록 카드에 올린 동안의 핀 강조(카카오맵 · Airbnb) — 흰 핀 · 이름 판, 크기는 그대로 */
+.noslog-ui .nl-arcade-marker--pin[data-highlighted] .nl-arcade-marker__pin {
+    fill: var(--nl-content-on-media);
+}
+.noslog-ui .nl-arcade-marker[data-highlighted] .nl-arcade-marker__label {
+    display: block;
 }
 /* 필터 레이어 */
 .noslog-ui .nl-arcades__filters {
@@ -908,6 +939,17 @@
         var(--nl-state-layer)
     );
 }
+/* 포커스 선도 넓힌 면 안쪽(−2)에 — 안의 버튼 상자에 그으면 넓힌 면과 어긋난다 */
+.noslog-ui .nl-arcade-fact__action[aria-expanded]:focus-visible {
+    outline: none;
+}
+.noslog-ui
+    .nl-arcade-fact:has(
+        > .nl-arcade-fact__action[aria-expanded]:focus-visible
+    ) {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
+}
 @media (hover: hover) {
     .noslog-ui
         .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
@@ -1312,6 +1354,7 @@
     inset-block: 0;
     inset-inline: calc(var(--nl-spacing-12) * -1);
     z-index: calc(var(--nl-layer-above) * -1);
+    border-radius: var(--nl-radius-control);
     pointer-events: none;
 }
 @media (hover: hover) {
@@ -1449,6 +1492,23 @@
 }
 .noslog-ui .nl-musecat-result[data-selected] {
     background: var(--nl-interaction-row);
+}
+/* 폭이 꽉 찬 목록 줄 올림 = 제 면 위에 interaction/row 겹침, 누름 · 키 포커스도 같다 */
+@media (hover: hover) {
+    .noslog-ui .nl-musecat-result:hover {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-musecat-result:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 /* 같은 뜻의 다시 불러오기(쪽 · 나라 · 지역 · 기준 위치) — 이전 줄을 흐린 글자로 둔다 */
 .noslog-ui

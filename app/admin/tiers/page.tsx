@@ -10,6 +10,7 @@ import {
     type TierGoal,
     type TierMode,
 } from "@/lib/tiers";
+import { requireAdmin } from "@/lib/admin";
 
 const statusLabel: Record<string, string> = {
     draft: "임시 저장",
@@ -23,6 +24,7 @@ function scopeOrder(mode: TierMode, goal: TierGoal) {
 }
 
 export default async function AdminTiersPage() {
+    await requireAdmin();
     const tierLists = await listAdminTierLists();
     // 지금 쓰는 서열표만 위에, 목표가 없거나 모드별 목록에서 빠진 표(Recital S·FC 등)는 보관으로
     const activeTierLists = tierLists
@@ -92,7 +94,7 @@ export default async function AdminTiersPage() {
 
             {legacyTierLists.length > 0 ? (
                 <details className="rounded-nl-control bg-nl-surface px-nl-12 py-nl-12">
-                    <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
+                    <summary className="nl-admin-card-summary nl-emphasis-label cursor-pointer list-none text-nl-content">
                         기존 보관 서열표 {legacyTierLists.length}개
                     </summary>
                     <div className="mt-nl-12 flex flex-col border-t-nl-stroke border-nl-divider pt-nl-8">

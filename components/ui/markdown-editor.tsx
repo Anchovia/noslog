@@ -295,7 +295,11 @@ export default function MarkdownEditor({
     }
 
     return (
-        <div className="nl-markdown-editor" data-invalid={invalid || undefined}>
+        <div
+            className="nl-markdown-editor"
+            data-invalid={invalid || undefined}
+            data-readonly={readOnly || undefined}
+        >
             <div className="nl-markdown-editor__head">
                 {/* 「쓰기 / 미리보기」 2단 탭 — 미리보기 탭은 전체 화면 창을 연다(2026-09-23 P2 · 사용자 선택 A) */}
                 <div

@@ -413,30 +413,39 @@ export async function addChartComment(
                     success: false,
                     message: t("contribution.comment.invalid"),
                 };
-            // 하루 한도는 공개 채보 의견만 센다 — 초안 검토 댓글은 한도와 따로다
-            const recent = await db.chartComment.count({
-                where: {
-                    userId: session.id,
-                    draftId: null,
-                    createdAt: { gte: new Date(Date.now() - 86_400_000) },
-                },
+        }
+        const data = {
+            chartId,
+            draftId: draftId ?? null,
+            userId: session.id,
+            timeMs,
+            kind,
+            body,
+        };
+        if (draftId) {
+            await db.chartComment.create({ data });
+        } else {
+            // 하루 한도는 공개 채보 의견만 센다 — 초안 검토 댓글은 한도와 따로다.
+            // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 한도를 넘지 않게 한다
+            const added = await db.$transaction(async (tx) => {
+                await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-comment-daily:${data.userId}`}))`;
+                const recent = await tx.chartComment.count({
+                    where: {
+                        userId: data.userId,
+                        draftId: null,
+                        createdAt: { gte: new Date(Date.now() - 86_400_000) },
+                    },
+                });
+                if (recent >= CHART_COMMENT_DAILY_LIMIT) return false;
+                await tx.chartComment.create({ data });
+                return true;
             });
-            if (recent >= CHART_COMMENT_DAILY_LIMIT)
+            if (!added)
                 return {
                     success: false,
                     message: t("contribution.comment.dailyLimit"),
                 };
         }
-        await db.chartComment.create({
-            data: {
-                chartId,
-                draftId: draftId ?? null,
-                userId: session.id,
-                timeMs,
-                kind,
-                body,
-            },
-        });
         return { success: true, message: t("contribution.comment.added") };
     } catch (error) {
         logDraftError(
@@ -596,6 +605,9 @@ export async function getChartDraftForReview(draftId: number) {
     return draft ? { ...draft, user: row.user } : null;
 }
 
+const DRAFT_CHANGED_MESSAGE =
+    "검토하는 동안 초안이 바뀌었습니다. 새로고침해 주세요.";
+
 /**
  * 운영자 결정 — 「수정 요청」 은 상태만, 「공개」 는 한 트랜잭션으로:
  * 운영자 에디터에 공개 안 한 변경이 있으면 먼저 이력으로 보관 → 공개본 · 초안을 이 채보로 → 이력 한 줄(kind contribution)
@@ -608,11 +620,12 @@ export async function reviewChartDraft(
     const parsed = draftReviewSchema.safeParse(input);
     if (!parsed.success)
         return { success: false, message: "검토 요청을 확인해 주세요." };
-    const { draftId, decision } = parsed.data;
+    const { draftId, version, decision } = parsed.data;
     const draft = await db.chartDraft.findUnique({
         where: { id: draftId },
         select: {
             id: true,
+            version: true,
             status: true,
             content: true,
             chartId: true,
@@ -624,12 +637,14 @@ export async function reviewChartDraft(
     });
     if (!draft || draft.status !== "pending")
         return { success: false, message: "검토 대기 중인 초안이 아닙니다." };
+    if (draft.version !== version)
+        return { success: false, message: DRAFT_CHANGED_MESSAGE };
     const now = new Date();
 
     if (decision === "request_changes") {
         // 대기 중일 때만 — 다른 운영자가 먼저 처리했으면 건너뛴다(2026-10-16 D5)
         const changed = await db.chartDraft.updateMany({
-            where: { id: draft.id, status: "pending" },
+            where: { id: draft.id, status: "pending", version },
             data: {
                 status: "changes_requested",
                 reviewedAt: now,
@@ -639,10 +654,7 @@ export async function reviewChartDraft(
             },
         });
         if (!changed.count)
-            return {
-                success: false,
-                message: "검토 대기 중인 초안이 아닙니다.",
-            };
+            return { success: false, message: DRAFT_CHANGED_MESSAGE };
         revalidatePath("/admin/contributions");
         return { success: true, message: "수정을 요청했습니다." };
     }
@@ -665,7 +677,7 @@ export async function reviewChartDraft(
         const publishedRevision = await db.$transaction(async (tx) => {
             // 먼저 대기 중인 초안을 차지한다 — 이미 처리됐으면 공개본 · 이력 · 점수를 쓰지 않고 되돌린다(2026-10-16 D5)
             const claimed = await tx.chartDraft.updateMany({
-                where: { id: draft.id, status: "pending" },
+                where: { id: draft.id, status: "pending", version },
                 data: {
                     status: "approved",
                     reviewedAt: now,

@@ -11,6 +11,7 @@ import {
     getChartFieldQueueStatus,
     listChartFieldProposals,
 } from "@/features/contributions/server/chart-field-proposal-service";
+import { requireAdmin } from "@/lib/admin";
 
 const DRAFT_STATUSES = ["pending", "changes_requested", "approved"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
@@ -45,6 +46,7 @@ export default async function AdminContributionsPage({
 }: {
     searchParams: Promise<{ kind?: string; status?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const kind = params.kind === "chart" ? "chart" : "field";
 

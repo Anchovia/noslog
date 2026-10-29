@@ -8,6 +8,8 @@ const mocks = vi.hoisted(() => ({
     claimUploadTokenQuota: vi.fn(),
     releaseUploadTokenQuota: vi.fn(),
     feedbackCreate: vi.fn(),
+    feedbackCount: vi.fn(),
+    lock: vi.fn(),
     revalidatePath: vi.fn(),
     logServerError: vi.fn(),
     session: { id: 2 as number | undefined },
@@ -26,11 +28,20 @@ vi.mock("@/lib/upload-rate-limit", () => ({
         "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
     releaseUploadTokenQuota: mocks.releaseUploadTokenQuota,
 }));
-vi.mock("@/lib/db", () => ({
-    default: {
-        feedbackReport: { create: mocks.feedbackCreate },
-    },
-}));
+vi.mock("@/lib/db", () => {
+    const tx = {
+        $executeRaw: mocks.lock,
+        feedbackReport: {
+            count: mocks.feedbackCount,
+            create: mocks.feedbackCreate,
+        },
+    };
+    return {
+        default: {
+            $transaction: (run: (client: typeof tx) => unknown) => run(tx),
+        },
+    };
+});
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
@@ -76,6 +87,7 @@ describe("피드백 제보 액션", () => {
         });
         mocks.releaseUploadTokenQuota.mockResolvedValue(undefined);
         mocks.feedbackCreate.mockResolvedValue({ id: 1 });
+        mocks.feedbackCount.mockResolvedValue(0);
     });
 
     it("피드백 전용 할당량을 소비한 뒤 비공개 업로드 토큰을 발급한다", async () => {
@@ -227,6 +239,43 @@ describe("피드백 제보 액션", () => {
             routePath: "/",
             routeType: "action",
         });
+    });
+
+    it("오락실 제보를 빼고 최근 24시간 제보를 사람마다 잠근 채 센다", async () => {
+        vi.useFakeTimers({ now: new Date("2026-10-29T12:00:00.000Z") });
+        try {
+            mocks.feedbackCount.mockResolvedValue(9);
+            expect((await submitFeedbackReport(feedbackForm())).success).toBe(
+                true
+            );
+            expect(mocks.lock.mock.calls[0].slice(1)).toEqual([
+                "feedback-report:2",
+            ]);
+            expect(mocks.feedbackCount).toHaveBeenCalledWith({
+                where: {
+                    userId: 2,
+                    arcadeReportType: null,
+                    createdAt: { gte: new Date("2026-10-28T12:00:00.000Z") },
+                },
+            });
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("하루 10건을 넘기면 저장하지 않고 첨부 이미지를 정리한다", async () => {
+        mocks.feedbackCount.mockResolvedValue(10);
+
+        await expect(
+            submitFeedbackReport(feedbackForm(undefined, feedbackImage))
+        ).resolves.toEqual({
+            success: false,
+            message:
+                "오늘 보낼 수 있는 제보를 모두 보냈습니다. 내일 다시 보내 주세요.",
+        });
+        expect(mocks.feedbackCreate).not.toHaveBeenCalled();
+        expect(mocks.revalidatePath).not.toHaveBeenCalled();
+        expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(feedbackImage);
     });
 
     it("현재 사용자가 소유한 임시 이미지만 폐기한다", async () => {

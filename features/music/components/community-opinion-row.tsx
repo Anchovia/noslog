@@ -61,6 +61,7 @@ export default function CommunityOpinionRow({
         language: item.language,
         translations: item.translations,
         enabled: translationEnabled,
+        signedIn: Boolean(accountId),
     });
     const name = item.user.username ?? t("ranking.unknownPlayer");
     const writtenAt = new Date(item.updatedAt);

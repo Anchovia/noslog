@@ -84,7 +84,7 @@ export default function OfficialXPostArticle({
                         href={OFFICIAL_X_URL}
                         target="_blank"
                         rel="noreferrer"
-                        className="nl-entity-title"
+                        className="nl-entity-title nl-link"
                     >
                         {post.author.name}
                     </a>

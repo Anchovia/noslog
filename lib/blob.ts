@@ -1,5 +1,7 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
+
 import { del, get, head } from "@vercel/blob";
 import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
@@ -14,6 +16,15 @@ export { isImageContentType } from "@/lib/image-upload-rules";
 
 function imageExtension(contentType: ImageContentType) {
     return contentType === "image/jpeg" ? "jpg" : contentType.split("/")[1];
+}
+
+// 클라이언트 토큰은 30초 동안 몇 번이든 쓸 수 있다. 무작위 경로를 여기서 정하고 덮어쓰기를 막아(기본값)
+// 같은 토큰으로 두 번째 파일을 올리면 「이미 있음」 으로 실패하게 한다 — 발급 한도가 실제 업로드 한도가 된다
+function singleUsePathname(
+    pathnameWithoutExtension: string,
+    contentType: ImageContentType
+) {
+    return `${pathnameWithoutExtension}-${randomUUID()}.${imageExtension(contentType)}`;
 }
 
 function hasBlobHostname(url: string, access: "public" | "private") {
@@ -46,12 +57,12 @@ export async function createImageUploadToken(
 ) {
     if (!isImageContentType(contentType)) return null;
 
-    const pathname = `${pathnameWithoutExtension}.${imageExtension(contentType)}`;
+    const pathname = singleUsePathname(pathnameWithoutExtension, contentType);
     const token = await generateClientTokenFromReadWriteToken({
         pathname,
         allowedContentTypes: [contentType],
         maximumSizeInBytes: MAX_IMAGE_SIZE,
-        addRandomSuffix: true,
+        addRandomSuffix: false,
     });
 
     return { pathname, token };
@@ -64,13 +75,13 @@ export async function createPrivateImageUploadToken(
 ) {
     if (!isImageContentType(contentType)) return null;
 
-    const pathname = `${pathnameWithoutExtension}.${imageExtension(contentType)}`;
+    const pathname = singleUsePathname(pathnameWithoutExtension, contentType);
     const token = await generateClientTokenFromReadWriteToken({
         token: privateBlobToken(),
         pathname,
         allowedContentTypes: [contentType],
         maximumSizeInBytes: MAX_IMAGE_SIZE,
-        addRandomSuffix: true,
+        addRandomSuffix: false,
     });
 
     return { pathname, token };

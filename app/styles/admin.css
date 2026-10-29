@@ -157,19 +157,20 @@
     color: inherit;
     text-decoration: none;
 }
-@media (hover: hover) {
-    .noslog-ui .nl-dashboard__kpi:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
-
 .noslog-ui .nl-dashboard__kpi[aria-current="true"] {
     border-color: var(--nl-border-ring);
     background: var(--nl-surface-surface);
+}
+/* 면 있는 이동 칸 = 한 단계 위 면 + 강한 글자. 고른 칸 규칙보다 뒤에 두어 고른 칸도 반응한다 */
+@media (hover: hover) {
+    .noslog-ui a.nl-dashboard__kpi:hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui a.nl-dashboard__kpi:is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-dashboard__delta {
     display: flex;
@@ -242,14 +243,50 @@
     color: inherit;
     text-decoration: none;
 }
+/* 면 없는 구분선 목록 줄 — 점(글자 시작)에서 좌우 12 를 넓혀 칠하고 위 구분선은 덮지 않는다.
+   포커스 선도 넓힌 면과 같은 사각형 안쪽에 긋는다 */
+.noslog-ui a.nl-dashboard__todo-item {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui a.nl-dashboard__todo-item::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc((var(--nl-spacing-12) - var(--nl-spacing-4)) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    border-radius: var(--nl-radius-control);
+    pointer-events: none;
+}
+.noslog-ui
+    .nl-dashboard__todo-list
+    > li
+    + li
+    > a.nl-dashboard__todo-item::before {
+    inset-block-start: var(--nl-stroke-default);
+}
 @media (hover: hover) {
-    .noslog-ui .nl-dashboard__todo-item:hover {
+    .noslog-ui a.nl-dashboard__todo-item:hover::before {
         --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
             var(--nl-state-layer)
         );
     }
+}
+.noslog-ui a.nl-dashboard__todo-item:is(:active, :focus-visible)::before {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+.noslog-ui a.nl-dashboard__todo-item:focus-visible {
+    outline: none;
+}
+.noslog-ui a.nl-dashboard__todo-item:focus-visible::before {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 
 .noslog-ui .nl-dashboard__todo-item .nl-metric-value {
@@ -348,10 +385,23 @@
     }
 }
 
+.noslog-ui .nl-admin-nav__tab:is(:active, :focus-visible) {
+    color: var(--nl-content-default);
+}
+
 .noslog-ui .nl-admin-nav__tab--current {
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
     box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) var(--nl-border-ring);
+}
+/* 고른 탭은 올림 · 누름 · 키 포커스에 강한 글자 */
+@media (hover: hover) {
+    .noslog-ui .nl-admin-nav__tab--current:hover {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-admin-nav__tab--current:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
 }
 
 /* 공지 관리 — 목록 */
@@ -370,11 +420,48 @@
         var(--nl-border-divider);
     color: inherit;
 }
+/* 다른 관리자 목록(nl-hover-layer)과 같은 면 · 글자. 줄 글자 선은 그대로 두고 면만 좌우 12 를 넓혀 칠한다 */
+.noslog-ui a.nl-admin-row {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui a.nl-admin-row::before {
+    content: "";
+    position: absolute;
+    inset-block: 0 var(--nl-stroke-default);
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    border-radius: var(--nl-radius-control);
+    pointer-events: none;
+}
 @media (hover: hover) {
-    .noslog-ui .nl-admin-row:hover .nl-admin-row__title {
-        text-decoration: underline;
-        text-underline-position: under;
+    .noslog-ui a.nl-admin-row:hover {
+        color: var(--nl-content-strong);
     }
+    .noslog-ui a.nl-admin-row:hover::before {
+        --nl-state-layer: var(--nl-surface-control-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui a.nl-admin-row:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui a.nl-admin-row:is(:active, :focus-visible)::before {
+    --nl-state-layer: var(--nl-surface-control-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+.noslog-ui a.nl-admin-row:focus-visible {
+    outline: none;
+}
+.noslog-ui a.nl-admin-row:focus-visible::before {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 
 .noslog-ui .nl-admin-row__body {
@@ -403,6 +490,73 @@
 .noslog-ui .nl-admin-empty {
     padding-block: var(--nl-spacing-48);
     text-align: center;
+}
+
+/* 관리자 단독 링크 — 평소 글자색 · 굵기는 그 자리 것을 두고 올림 · 누름 · 키 포커스만 nl-link 와 같은 값 */
+.noslog-ui .nl-admin-link {
+    text-underline-offset: var(--nl-underline-offset);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-admin-link:hover {
+        color: var(--nl-content-strong);
+        text-decoration: underline;
+    }
+}
+.noslog-ui .nl-admin-link:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
+}
+
+/* 관리자 네이티브 셀렉트(nl-input) — 올림 · 누름 · 키 포커스는 셀렉트 규칙대로 면 · 글자를 바꾼다 */
+@media (hover: hover) {
+    .noslog-ui.nl-admin select.nl-input:not(:disabled):hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui.nl-admin select.nl-input:not(:disabled):is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+
+/* 관리자 맨 펼침 줄(details > summary) — 흐름 속 줄은 좌우 12 를 넓혀 칠하고, 면 있는 상자 안 줄은 상자 전체에 겹친다 */
+.noslog-ui .nl-admin-summary {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui .nl-admin-summary::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    border-radius: var(--nl-radius-control);
+    pointer-events: none;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-admin-summary:hover::before,
+    .noslog-ui details:has(> .nl-admin-card-summary:hover) {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-admin-summary:is(:active, :focus-visible)::before,
+.noslog-ui details:has(> .nl-admin-card-summary:is(:active, :focus-visible)) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+.noslog-ui .nl-admin-summary:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-admin-summary:focus-visible::before {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 
 /* 상태 칩 — 형태(테두리)와 라벨로 구분하고 색은 보조 */
@@ -660,4 +814,10 @@
 }
 .noslog-ui .nl-dialog.nl-editor-dialog {
     z-index: calc(var(--nl-layer-fullscreen-dialog) + var(--nl-layer-above));
+}
+/* 시험 편집기 보상 이름 — 회색 줄 안 맨 입력, 글자는 입력칸과 같은 토큰 */
+.noslog-ui .nl-admin-reward__input {
+    font-size: var(--nl-type-input-size);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
 }

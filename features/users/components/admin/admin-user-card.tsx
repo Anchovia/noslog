@@ -76,7 +76,7 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                 </div>
             </div>
             <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
-                <summary className="nl-emphasis-label flex cursor-pointer list-none items-center gap-nl-8 text-nl-content">
+                <summary className="nl-admin-summary nl-emphasis-label flex cursor-pointer list-none items-center gap-nl-8 text-nl-content">
                     <DatabaseZap className="nl-icon-small" aria-hidden />
                     상세 데이터 적재율
                 </summary>

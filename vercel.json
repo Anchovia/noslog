@@ -12,6 +12,10 @@
         {
             "path": "/api/cron/privacy-retention",
             "schedule": "0 18 * * *"
+        },
+        {
+            "path": "/api/cron/partner-outbox",
+            "schedule": "*/5 * * * *"
         }
     ]
 }

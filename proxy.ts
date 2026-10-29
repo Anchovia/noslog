@@ -25,6 +25,25 @@ interface Routes {
     [key: string]: boolean;
 }
 
+const CSP_REPORT_PATH = "/api/csp-report";
+
+// 요청마다 새 nonce 를 요청 헤더의 CSP 에 넣으면 Next 가 읽어 프레임워크 · 페이지 스크립트에 붙인다.
+// 스크립트만 강제하고(저장형 XSS 를 막는 층) 나머지 지시는 next.config 의 Report-Only 로 지켜본다
+function applyScriptPolicy(requestHeaders: Headers) {
+    const nonce = btoa(crypto.randomUUID());
+    const devEval =
+        process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
+    const policy = [
+        `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${devEval}`,
+        "object-src 'none'",
+        "base-uri 'self'",
+        `report-uri ${CSP_REPORT_PATH}`,
+    ].join("; ");
+    requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", policy);
+    return policy;
+}
+
 // public, private route 설정
 const routes: {
     publicOnly: Routes;
@@ -194,7 +213,15 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     }
 
     if (isNonLocalizedPath(requestedPathname)) {
-        return;
+        // 관리자 화면도 사용자가 쓴 글을 그리므로 같은 스크립트 정책을 건다
+        if (pathname !== "/admin" && !pathname.startsWith("/admin/")) return;
+        const adminHeaders = new Headers(request.headers);
+        const adminPolicy = applyScriptPolicy(adminHeaders);
+        const adminResponse = NextResponse.next({
+            request: { headers: adminHeaders },
+        });
+        adminResponse.headers.set("Content-Security-Policy", adminPolicy);
+        return adminResponse;
     }
 
     if (!pathLocale) {
@@ -205,17 +232,21 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
 
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set(LOCALE_REQUEST_HEADER, locale);
+    const policy = applyScriptPolicy(requestHeaders);
 
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = pathname;
     const response = NextResponse.rewrite(rewriteUrl, {
         request: { headers: requestHeaders },
     });
+    response.headers.set("Content-Security-Policy", policy);
     return response;
 }
 
+// 빼는 것은 public/ 의 실제 폴더 · 파일과 정적 아이콘 라우트뿐이다. 확장자로 빼면 /tiers/x.png 같은 페이지 주소가
+// 점검 · 온보딩 확인 없이 열린다
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|fonts/|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+        "/((?!_next/static|_next/image|fonts/|bg/|brand/|flag/|flags/|grade/|icon/|icons/|images/|favicon.ico$|icon-192.png$|logo.png$|main_signup.png$).*)",
     ],
 };

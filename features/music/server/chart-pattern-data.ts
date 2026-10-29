@@ -2,13 +2,15 @@ import "server-only";
 
 import type { ChartDifficulty } from "@prisma/client";
 
+import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 
 /** 운영자 채보 에디터 — 채보 정보 · 초안 · 최근 버전 20개(2026-10-16 D8 — 화면에서 옮김) */
-export function getAdminChartPatternEditor(
+export async function getAdminChartPatternEditor(
     musicIndex: string,
     chartDifficulty: ChartDifficulty
 ) {
+    await requireAdmin();
     return db.musicChart.findFirst({
         where: {
             musicIdx: musicIndex,
@@ -59,10 +61,11 @@ export function getAdminChartPatternEditor(
 }
 
 /** 운영자 초안 미리보기 */
-export function getAdminChartPatternPreview(
+export async function getAdminChartPatternPreview(
     musicIndex: string,
     chartDifficulty: ChartDifficulty
 ) {
+    await requireAdmin();
     return db.musicChart.findFirst({
         where: {
             musicIdx: musicIndex,

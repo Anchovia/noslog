@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ChartTimingEditor from "@/components/admin/chart-pattern/chartTimingEditor";
 import { getChartDraftForReview } from "@/features/contributions/server/chart-draft-service";
 import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
+import { requireAdmin } from "@/lib/admin";
 
 /**
  * 유저 채보 초안 검토(2026-09-24 C1) — 같은 에디터를 읽기 전용 검토 모드로.
@@ -14,6 +15,7 @@ export default async function AdminChartDraftReviewPage({
 }: {
     params: Promise<{ index: string; difficulty: string; draftId: string }>;
 }) {
+    await requireAdmin();
     const { draftId } = await params;
     const id = Number(draftId);
     if (!Number.isSafeInteger(id) || id < 1) notFound();

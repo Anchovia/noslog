@@ -327,8 +327,13 @@ html:has(.noslog-ui .nl-header) {
 }
 @media (hover: hover) {
     .noslog-ui .nl-footer__links a:hover {
+        color: var(--nl-content-strong);
         text-decoration: underline;
     }
+}
+.noslog-ui .nl-footer__links a:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
 }
 .noslog-ui .nl-footer__links svg {
     width: var(--nl-icon-small);

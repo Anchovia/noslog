@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // 답글(2026-09-22 R1) — 트랜잭션 안에서 쓰는 표만 흉내 낸다
 const tx = vi.hoisted(() => ({
+    $executeRaw: vi.fn(),
     communityChartEvaluation: {
         findFirst: vi.fn(),
         update: vi.fn(),
@@ -9,6 +10,7 @@ const tx = vi.hoisted(() => ({
     },
     communityOpinionReply: {
         findFirst: vi.fn(),
+        count: vi.fn(),
         create: vi.fn(),
         updateMany: vi.fn(),
         delete: vi.fn(),
@@ -24,11 +26,10 @@ const tx = vi.hoisted(() => ({
     musicChart: { findUnique: vi.fn() },
 }));
 
-vi.mock("@/lib/db", () => ({
-    default: {
-        $transaction: (run: (client: typeof tx) => unknown) => run(tx),
-    },
-}));
+const transaction = vi.hoisted(() =>
+    vi.fn((run: (client: typeof tx) => unknown) => run(tx))
+);
+vi.mock("@/lib/db", () => ({ default: { $transaction: transaction } }));
 
 import { mutateChartCommunity } from "@/features/music/server/community-mutation";
 import {
@@ -44,6 +45,7 @@ describe("의견 답글", () => {
         tx.playData.findFirst.mockResolvedValue({ id: 1 });
         tx.musicChart.findUnique.mockResolvedValue({ id: 3 });
         tx.communityOpinionReplyLike.count.mockResolvedValue(4);
+        tx.communityOpinionReply.count.mockResolvedValue(0);
     });
 
     it("답글은 1~120자, 신고는 의견과 답글 중 하나만", () => {
@@ -117,6 +119,109 @@ describe("의견 답글", () => {
             select: { id: true },
         });
         expect(result).toMatchObject({ translate: { kind: "reply", id: 31 } });
+    });
+
+    it("새 답글은 사람마다 잠근 채 최근 24시간 답글을 센다", async () => {
+        vi.useFakeTimers({ now: new Date("2026-10-29T12:00:00.000Z") });
+        try {
+            tx.communityChartEvaluation.findFirst.mockResolvedValue({
+                id: 5,
+                opinion: "후반 트릴",
+            });
+            tx.communityOpinionReply.count.mockResolvedValue(49);
+            tx.communityOpinionReply.create.mockResolvedValue({ id: 32 });
+            await mutateChartCommunity(
+                {
+                    action: "reply-save",
+                    chartId: 3,
+                    evaluationId: 5,
+                    body: "동의해요",
+                },
+                ME
+            );
+            expect(tx.$executeRaw.mock.calls[0].slice(1)).toEqual([
+                `community-reply-daily:${ME}`,
+            ]);
+            expect(tx.communityOpinionReply.count).toHaveBeenCalledWith({
+                where: {
+                    userId: ME,
+                    createdAt: { gte: new Date("2026-10-28T12:00:00.000Z") },
+                },
+            });
+            expect(tx.communityOpinionReply.create).toHaveBeenCalledTimes(1);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("하루 50건을 넘는 새 답글은 넣지 않고, 고치기는 한도와 따로다", async () => {
+        tx.communityChartEvaluation.findFirst.mockResolvedValue({
+            id: 5,
+            opinion: "후반 트릴",
+        });
+        tx.communityOpinionReply.count.mockResolvedValue(50);
+        await expect(
+            mutateChartCommunity(
+                {
+                    action: "reply-save",
+                    chartId: 3,
+                    evaluationId: 5,
+                    body: "동의해요",
+                },
+                ME
+            )
+        ).rejects.toMatchObject({ code: "dailyLimit" });
+        expect(tx.communityOpinionReply.create).not.toHaveBeenCalled();
+
+        tx.communityOpinionReply.updateMany.mockResolvedValue({ count: 1 });
+        await expect(
+            mutateChartCommunity(
+                {
+                    action: "reply-save",
+                    chartId: 3,
+                    evaluationId: 5,
+                    replyId: 31,
+                    body: "고친 답글",
+                },
+                ME
+            )
+        ).resolves.toMatchObject({ translate: { kind: "reply", id: 31 } });
+    });
+
+    it("새 답글만 기본 격리로 센다 — 직렬화 격리에서는 잠금 뒤에도 앞 요청의 답글이 보이지 않는다", async () => {
+        tx.communityChartEvaluation.findFirst.mockResolvedValue({
+            id: 5,
+            opinion: "후반 트릴",
+        });
+        tx.communityOpinionReply.create.mockResolvedValue({ id: 33 });
+        await mutateChartCommunity(
+            {
+                action: "reply-save",
+                chartId: 3,
+                evaluationId: 5,
+                body: "동의해요",
+            },
+            ME
+        );
+        expect(transaction).toHaveBeenLastCalledWith(
+            expect.any(Function),
+            undefined
+        );
+
+        tx.communityOpinionReply.updateMany.mockResolvedValue({ count: 1 });
+        await mutateChartCommunity(
+            {
+                action: "reply-save",
+                chartId: 3,
+                evaluationId: 5,
+                replyId: 33,
+                body: "고친 답글",
+            },
+            ME
+        );
+        expect(transaction).toHaveBeenLastCalledWith(expect.any(Function), {
+            isolationLevel: "Serializable",
+        });
     });
 
     it("지운 의견 자리에는 새 답글을 받지 않는다", async () => {

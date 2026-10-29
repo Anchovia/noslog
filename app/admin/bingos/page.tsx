@@ -3,8 +3,10 @@ import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 
 import { foundationButtonClass } from "@/components/ui/button";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminBingosPage() {
+    await requireAdmin();
     const bingos = await listAdminBingos();
 
     return (

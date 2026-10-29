@@ -190,15 +190,20 @@ test("Pattern trend shows five computed values and switches between the difficul
     await expect(help).toBeFocused();
 });
 
-test("A chart without a published chart draws the empty bar graph without a basis switch", async ({
+test("A chart without a published chart blurs the bar graph under the lock card without a basis switch", async ({
     page,
 }) => {
     await openOverviewWithPattern(page, null);
-    // 공개 채보가 없어도 빈 막대 5줄 + 값 「—」, 문장 없음 (2026-09-16)
-    const bars = page.locator(".nl-overview .nl-bar-list");
-    await expect(bars.locator(".nl-bar-list__row")).toHaveCount(5);
-    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(0);
-    await expect(bars.locator(".nl-bar-list__value").first()).toHaveText("—");
+    // 공개 채보가 없으면 투표 잠금과 같은 흐림 + 가운데 카드 한 줄(사용자 결정 2026-10-29)
+    const lock = page.locator(".nl-overview .nl-pattern-lock");
+    await expect(lock).toHaveAttribute("data-locked", "true");
+    await expect(lock.locator(".nl-pattern-lock__card")).toHaveText(
+        "공개 채보가 없어 계산할 수 없어요"
+    );
+    const card = lock.locator(".nl-overview__card");
+    await expect(card).toHaveAttribute("aria-hidden", "true");
+    await expect(card).toHaveCSS("filter", "blur(5px)");
+    await expect(card.locator(".nl-bar-list__row")).toHaveCount(5);
     await expect(
         page.getByRole("button", { name: "전곡 기준으로 보기" })
     ).toHaveCount(0);

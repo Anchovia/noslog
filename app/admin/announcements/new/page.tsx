@@ -4,8 +4,10 @@ import AnnouncementEditor, {
     emptyAnnouncementEditorData,
 } from "@/features/announcements/components/announcement-editor";
 import { SITE_URL } from "@/lib/metadata/site";
+import { requireAdmin } from "@/lib/admin";
 
-export default function NewAnnouncementPage() {
+export default async function NewAnnouncementPage() {
+    await requireAdmin();
     return (
         <PageContainer width="reading">
             <BackLink href="/admin/announcements">공지사항</BackLink>

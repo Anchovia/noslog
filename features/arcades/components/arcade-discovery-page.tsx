@@ -97,6 +97,8 @@ export default function ArcadeDiscoveryPage({
         seq: number;
     } | null>(null);
     const [filterOpen, setFilterOpen] = useState(false);
+    // 카드에 올리거나 키 포커스한 동안만 강조하는 핀(고름과 따로)
+    const [highlightedId, setHighlightedId] = useState<number | null>(null);
     const popover = useMediaQuery("(min-width: 672px)");
     // 1056+ 는 지도가 목록 옆에 늘 보인다. 그 아래 폭은 시트가 지도를 덮을 수 있어 「지도에서 보기」 를 준다
     const sideBySide = useMediaQuery("(min-width: 1056px)");
@@ -228,7 +230,7 @@ export default function ArcadeDiscoveryPage({
             { enableHighAccuracy: false, timeout: 10_000, maximumAge: 60_000 }
         );
     }
-    // 지도 핀에서 고르면 시트를 올리고 목록의 그 카드를 펼쳐 보이게 — 카드 hover 로 고를 때는 스크롤하지 않는다
+    // 지도 핀에서 고르면 시트를 올리고 목록의 그 카드를 펼쳐 보이게
     function changeSort(sort: ArcadeDiscoveryValues["sort"]) {
         const apply = () => commit({ ...values, sort });
         if (sort === "distance" && !origin) nearby(apply);
@@ -574,6 +576,7 @@ export default function ArcadeDiscoveryPage({
                         appKey={appKey}
                         arcades={result}
                         selectedId={selectedId}
+                        highlightedId={highlightedId}
                         focusRequest={focusRequest}
                         // 지도 전용 영역 — 휠·두 손가락으로 확대·축소(버튼 없음). 상세 위치 지도는 페이지 스크롤이 걸려 휠을 끔
                         wheelZoom
@@ -636,7 +639,7 @@ export default function ArcadeDiscoveryPage({
                                     now={now}
                                     selected={arcade.id === selectedId}
                                     expanded={arcade.id === expandedId}
-                                    onSelect={select}
+                                    onHighlight={setHighlightedId}
                                     onToggle={toggleCard}
                                     onShowOnMap={
                                         sheetLayout ? showOnMap : undefined

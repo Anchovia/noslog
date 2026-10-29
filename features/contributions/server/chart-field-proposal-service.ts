@@ -94,26 +94,6 @@ export async function submitChartFieldProposal(
             };
         }
 
-        const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        const recent = await db.chartFieldProposal.count({
-            where: { userId: session.id, createdAt: { gte: since } },
-        });
-        const existing = await db.chartFieldProposal.findFirst({
-            where: {
-                userId: session.id,
-                chartId: chart.id,
-                field: data.field,
-                status: "pending",
-            },
-            select: { id: true },
-        });
-        if (!existing && recent >= CHART_FIELD_PROPOSAL_DAILY_LIMIT) {
-            return {
-                success: false,
-                message: t("contribution.proposal.dailyLimit"),
-            };
-        }
-
         const values = {
             value: data.value,
             previousValue: current,
@@ -121,20 +101,46 @@ export async function submitChartFieldProposal(
             evidenceUrl: data.evidenceUrl,
             evidenceNote: data.evidenceNote,
         };
-        if (existing) {
-            await db.chartFieldProposal.update({
-                where: { id: existing.id },
-                data: values,
+        const userId = session.id;
+        // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
+        const saved = await db.$transaction(async (tx) => {
+            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-field-proposal-daily:${userId}`}))`;
+            const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            const recent = await tx.chartFieldProposal.count({
+                where: { userId, createdAt: { gte: since } },
             });
-        } else {
-            await db.chartFieldProposal.create({
+            const existing = await tx.chartFieldProposal.findFirst({
+                where: {
+                    userId,
+                    chartId: chart.id,
+                    field: data.field,
+                    status: "pending",
+                },
+                select: { id: true },
+            });
+            if (existing) {
+                await tx.chartFieldProposal.update({
+                    where: { id: existing.id },
+                    data: values,
+                });
+                return true;
+            }
+            if (recent >= CHART_FIELD_PROPOSAL_DAILY_LIMIT) return false;
+            await tx.chartFieldProposal.create({
                 data: {
                     ...values,
-                    userId: session.id,
+                    userId,
                     chartId: chart.id,
                     field: data.field,
                 },
             });
+            return true;
+        });
+        if (!saved) {
+            return {
+                success: false,
+                message: t("contribution.proposal.dailyLimit"),
+            };
         }
         revalidatePath("/admin");
         revalidatePath("/admin/contributions");

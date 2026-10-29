@@ -7,6 +7,7 @@ import {
     type MusicCatalogStatus,
 } from "@/features/music/schemas/music-catalog-admin-schema";
 import { listMusicCatalogCandidates } from "@/features/music/server/music-catalog-admin-service";
+import { requireAdmin } from "@/lib/admin";
 
 function statusLabel(status: MusicCatalogStatus) {
     if (status === "pending") return "검토 대기";
@@ -19,6 +20,7 @@ export default async function AdminCatalogPage({
 }: {
     searchParams: Promise<{ status?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const status = normalizeMusicCatalogStatus(params.status);
     const candidates = await listMusicCatalogCandidates(status);

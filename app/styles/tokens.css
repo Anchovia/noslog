@@ -263,6 +263,8 @@
     --nl-type-line-height-body: var(--nl-type-line-height-24);
     --nl-type-line-height-detail: var(--nl-type-line-height-16);
     --nl-type-dialog-title-line-height: var(--nl-type-line-height-26);
+    /* 입력칸 · 검색칸 · 글 쓰는 칸 글자. iOS Safari 는 16 보다 작으면 포커스 때 화면을 확대한다 */
+    --nl-type-input-size: var(--nl-type-size-16);
     --nl-type-tracking-detail: 0;
     --nl-type-weight-strong: var(--nl-type-weight-bold);
     --nl-type-weight-heading: var(--nl-type-weight-extrabold);
