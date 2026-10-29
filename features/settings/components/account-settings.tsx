@@ -25,6 +25,7 @@ import type {
     AccountDeletionSummary,
 } from "@/features/settings/schemas/account-deletion-schema";
 import { createAccountDeletionSchema } from "@/features/settings/schemas/account-deletion-schema";
+import { announceSessionEnded } from "@/lib/session-broadcast";
 
 /**
  * 계정 설정 — 로그아웃 · 회원 탈퇴. 탈퇴 창은 입력 칸이 있는 폼 창(닫기 · 발 버튼, 2026-09-26 확인 창에서 옮김):
@@ -81,6 +82,7 @@ export default function AccountSettings({
     }, [expiresAt]);
     function finish(status: "logged-out" | "deleted") {
         cache.clear();
+        announceSessionEnded();
         // A new document also discards account-sensitive Next router and component caches.
         window.location.assign(
             new URL(

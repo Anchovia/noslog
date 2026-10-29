@@ -10,7 +10,10 @@ import {
     eventPeriod,
 } from "@/features/events/components/event-parts";
 import { getAdminEvent } from "@/features/events/server/event-admin-service";
+import { pickLocaleText } from "@/features/polls/schemas/poll-schema";
+import { getPollInput } from "@/features/polls/server/poll-service";
 import { SITE_URL } from "@/lib/metadata/site";
+import { requireAdmin } from "@/lib/admin";
 
 const LABELS = {
     draft: "임시저장",
@@ -31,10 +34,13 @@ export default async function AdminEventPage({
 }: {
     params: Promise<{ id: string }>;
 }) {
+    await requireAdmin();
     const id = Number((await params).id);
     if (!Number.isSafeInteger(id) || id < 1) notFound();
     const event = await getAdminEvent(id);
     if (!event) notFound();
+    // 투표는 글의 작성판 · 공개판과 따로 한 벌만 저장된다 — 검토할 때 지금 저장된 투표를 함께 본다
+    const poll = await getPollInput({ eventId: event.id });
     const editingPublished =
         event.publishedAt !== null && event.status !== "approved";
     return (
@@ -78,8 +84,26 @@ export default async function AdminEventPage({
                 siteUrl={SITE_URL}
                 externalLabel="외부 링크"
             />
+            {poll ? (
+                <section className="flex flex-col gap-nl-8">
+                    <h2 className="nl-component-title">투표</h2>
+                    <p className="nl-body-secondary">
+                        {pickLocaleText(poll.input.question, "ko")}
+                    </p>
+                    <ol className="nl-body-secondary nl-muted">
+                        {poll.input.options.map((option, index) => (
+                            <li key={option.id ?? index}>
+                                {pickLocaleText(option.text, "ko")}
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+            ) : null}
             {event.status === "pending" ? (
-                <EventReviewForm id={event.id} />
+                <EventReviewForm
+                    id={event.id}
+                    updatedAt={event.updatedAt.toISOString()}
+                />
             ) : (
                 <p className="nl-body-secondary nl-muted">
                     검토 대기인 글만 처리할 수 있습니다.

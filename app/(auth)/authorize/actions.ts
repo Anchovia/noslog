@@ -1,8 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
-import { readPendingConsent } from "@/features/partner/server/consent-page-data";
+import {
+    consentRequestMatches,
+    readPendingConsent,
+} from "@/features/partner/server/consent-page-data";
 import {
     buildAuthorizationResponseUrl,
     type OAuthScope,
@@ -10,6 +14,7 @@ import {
 import { getRequestOAuthIssuer } from "@/features/partner/server/oauth-issuer";
 import { approveAuthorization } from "@/features/partner/server/oauth-service";
 import {
+    dispatchPartnerOutbox,
     PARTNER_SHARE_ITEMS,
     type PartnerShareItemName,
 } from "@/features/partner/server/partner-outbox";
@@ -37,12 +42,18 @@ export async function switchPartnerAccount() {
     redirect(`${localizePath("/login", locale)}?returnTo=/authorize`);
 }
 
-/** 동의 → code 를 붙여 파트너로 303(Server Action redirect) */
+/**
+ * 동의 → code 를 붙여 파트너로 303(Server Action redirect).
+ * 화면을 연 뒤 다른 요청이 세션의 대기 요청을 바꿨으면 code 를 내지 않고 지금 기다리는 요청 화면을 다시 보인다
+ */
 export async function approvePartnerConsent(formData: FormData) {
     const { session, pending } = await readPendingConsent();
     const { locale } = await getServerI18n();
     if (!pending || !session.id) {
         redirect(`${localizePath("/authorize", locale)}?error=expired`);
+    }
+    if (!consentRequestMatches(formData.get("requestId"), pending)) {
+        redirect(localizePath("/authorize", locale));
     }
     const chosen = formData.getAll("item").map(String);
     const sharedItems = pending.scopes.includes("nostalgia:read")
@@ -59,6 +70,8 @@ export async function approvePartnerConsent(formData: FormData) {
         redirectUri: pending.redirectUri,
         codeChallenge: pending.codeChallenge,
     });
+    // 항목을 줄여 다시 동의했으면 무효화 알림이 outbox 에 들어 있다 — 설정 화면과 같이 바로 보낸다
+    after(() => dispatchPartnerOutbox().catch(() => null));
     delete session.oauthAuthorize;
     await session.save();
     redirect(
@@ -70,11 +83,14 @@ export async function approvePartnerConsent(formData: FormData) {
     );
 }
 
-/** 취소 → error=access_denied 로 돌려보낸다(RFC 6749 §4.1.2.1) */
-export async function denyPartnerConsent() {
+/** 취소 → error=access_denied 로 돌려보낸다(RFC 6749 §4.1.2.1). 화면에 보인 요청이 아니면 동의와 같이 다시 보인다 */
+export async function denyPartnerConsent(formData: FormData) {
     const { session, pending } = await readPendingConsent();
     const { locale } = await getServerI18n();
     if (!pending) redirect(localizePath("/", locale));
+    if (!consentRequestMatches(formData.get("requestId"), pending)) {
+        redirect(localizePath("/authorize", locale));
+    }
     delete session.oauthAuthorize;
     await session.save();
     redirect(

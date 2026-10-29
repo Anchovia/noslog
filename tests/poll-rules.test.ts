@@ -5,6 +5,7 @@ import {
     emptyPollInput,
     pickLocaleText,
     pollLockedChange,
+    pollPublishedChange,
     validatePollInput,
     type PollInput,
 } from "@/features/polls/schemas/poll-schema";
@@ -128,6 +129,78 @@ describe("표가 들어온 뒤 잠그는 범위", () => {
         expect(
             pollLockedChange({ ...current, allowAddOptions: true }, added)
         ).toBe(false);
+    });
+});
+
+describe("공개된 이벤트 글의 투표가 받는 변경", () => {
+    const current = {
+        question: { ko: "가장 어려운 패턴 경향은?" },
+        multiple: false,
+        maxChoices: null,
+        results: "ALWAYS" as const,
+        showVoters: false,
+        options: [
+            { id: 1, text: { ko: "계단" } },
+            { id: 2, text: { ko: "연타" } },
+        ],
+        allowAddOptions: true,
+    };
+    const kept: PollInput = {
+        ...base,
+        allowAddOptions: true,
+        options: [
+            { id: 1, text: { ko: "계단" } },
+            { id: 2, text: { ko: "연타" } },
+        ],
+    };
+    it("takes only a new deadline, even before any vote", () => {
+        expect(pollPublishedChange(current, kept)).toBe(false);
+        expect(
+            pollPublishedChange(current, { ...kept, closesAt: "2026-09-30" })
+        ).toBe(false);
+        expect(
+            pollPublishedChange(current, {
+                ...kept,
+                question: { ko: "다른 질문" },
+            })
+        ).toBe(true);
+        expect(
+            pollPublishedChange(current, {
+                ...kept,
+                options: [kept.options[0]],
+            })
+        ).toBe(true);
+    });
+    it("refuses added options even when the poll allows them after votes", () => {
+        expect(
+            pollPublishedChange(current, {
+                ...kept,
+                options: [...kept.options, { text: { ko: "폴리리듬" } }],
+            })
+        ).toBe(true);
+    });
+    it("locks the settings that change how the poll is read", () => {
+        for (const change of [
+            { multiple: true },
+            { results: "AFTER_CLOSE" as const },
+            { showVoters: true },
+            { allowAddOptions: false },
+        ])
+            expect(pollPublishedChange(current, { ...kept, ...change })).toBe(
+                true
+            );
+        expect(
+            pollPublishedChange(
+                { ...current, multiple: true, maxChoices: 2 },
+                { ...kept, multiple: true, maxChoices: 2 }
+            )
+        ).toBe(false);
+        expect(
+            pollPublishedChange(
+                { ...current, multiple: true, maxChoices: 2 },
+                { ...kept, multiple: true, maxChoices: null }
+            )
+        ).toBe(true);
     });
 });
 

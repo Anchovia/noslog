@@ -25,7 +25,8 @@ const mocks = vi.hoisted(() => ({
     evaluateUserAchievements: vi.fn(),
 }));
 
-vi.mock("@/lib/bookmarklet", () => ({
+vi.mock("@/lib/bookmarklet", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("@/lib/bookmarklet")>()),
     verifySyncToken: mocks.verifySyncToken,
 }));
 
@@ -82,6 +83,18 @@ vi.mock("@/features/achievements/server/achievement-service", () => ({
 import { POST } from "@/app/api/receivePlayerData/route";
 
 const origin = "https://p.eagate.573.jp";
+const DAY_SECONDS = 24 * 60 * 60;
+
+function validToken(issuedDaysAgo = 0) {
+    return {
+        status: "valid",
+        payload: {
+            userId: 1,
+            version: 0,
+            iat: Math.floor(Date.now() / 1000) - issuedDaysAgo * DAY_SECONDS,
+        },
+    };
+}
 
 function musicSheet(difficulty: "Normal" | "Hard" | "Expert") {
     return {
@@ -236,7 +249,7 @@ describe("POST /api/receivePlayerData", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.evaluateUserAchievements.mockResolvedValue([]);
-        mocks.verifySyncToken.mockReturnValue({ userId: 1, version: 0 });
+        mocks.verifySyncToken.mockReturnValue(validToken());
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             syncTokenVersion: 0,
@@ -317,6 +330,18 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.verifySyncToken).not.toHaveBeenCalled();
     });
 
+    it("Content-Length 가 없어도 실제 본문이 상한을 넘으면 검증 전에 거부한다", async () => {
+        const body = requestBody();
+        body.recentData.data.player.name = "x".repeat(8 * 1024 * 1024);
+        const request = createRequest(body);
+        expect(request.headers.get("content-length")).toBeNull();
+
+        const response = await POST(request);
+
+        expect(response.status).toBe(413);
+        expect(mocks.verifySyncToken).not.toHaveBeenCalled();
+    });
+
     it("허용 개수를 초과한 최근 기록 배열을 거부한다", async () => {
         const body = requestBody();
         const history = body.recentData.data.player.history_list.history;
@@ -332,7 +357,7 @@ describe("POST /api/receivePlayerData", () => {
     });
 
     it("잘못된 연동 토큰을 거부한다", async () => {
-        mocks.verifySyncToken.mockReturnValue(null);
+        mocks.verifySyncToken.mockReturnValue({ status: "invalid" });
 
         const response = await POST(createRequest(requestBody()));
         const data = await response.json();
@@ -342,13 +367,55 @@ describe("POST /api/receivePlayerData", () => {
     });
 
     it("선택한 언어로 동기화 API 결과를 반환한다", async () => {
-        mocks.verifySyncToken.mockReturnValue(null);
+        mocks.verifySyncToken.mockReturnValue({ status: "invalid" });
 
         const response = await POST(createRequest(requestBody(), origin, "en"));
         const data = await response.json();
 
         expect(response.status).toBe(401);
         expect(data.message).toBe("The sync token is invalid.");
+    });
+
+    it("만료된 연동 토큰은 사용자를 읽지 않고 만료 문구로 거부한다", async () => {
+        mocks.verifySyncToken.mockReturnValue({ status: "expired" });
+
+        const response = await POST(createRequest(requestBody()));
+        const data = await response.json();
+
+        expect(response.status).toBe(401);
+        expect(data.message).toBe(
+            "동기화 토큰이 만료되었습니다. 다시 등록해주세요."
+        );
+        expect(mocks.userFindUnique).not.toHaveBeenCalled();
+        expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
+    });
+
+    it("관리자 토큰은 사용자 행을 읽은 뒤 발급 30일로 만료한다", async () => {
+        mocks.verifySyncToken.mockReturnValue(validToken(30));
+        mocks.userFindUnique.mockResolvedValue({
+            id: 1,
+            syncTokenVersion: 0,
+            role: "admin",
+            stats: { gradeBasic: 1000, gradeRecital: null },
+        });
+
+        const response = await POST(createRequest(requestBody(), origin, "ja"));
+        const data = await response.json();
+
+        expect(response.status).toBe(401);
+        expect(data.message).toBe(
+            "同期トークンの期限が切れました。再登録してください。"
+        );
+        expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
+    });
+
+    it("일반 사용자 토큰은 발급 30일이 지나도 받는다", async () => {
+        mocks.verifySyncToken.mockReturnValue(validToken(31));
+
+        const response = await POST(createRequest(requestBody()));
+
+        expect(response.status).toBe(200);
+        expect(mocks.dataSyncCreate).toHaveBeenCalledOnce();
     });
 
     it("이미 처리 중인 사용자의 중복 동기화를 거부한다", async () => {
@@ -626,7 +693,8 @@ describe("POST /api/receivePlayerData", () => {
         });
         expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
             requestBody(true).totalData?.data.music,
-            false
+            false,
+            1
         );
         expect(mocks.updatePlayData).toHaveBeenCalledWith(
             1,
@@ -690,6 +758,75 @@ describe("POST /api/receivePlayerData", () => {
         });
     });
 
+    it("노트 수 · 최대 Grd 안의 기록은 그대로 저장한다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue(
+            (["Normal", "Hard", "Expert"] as const).map((difficulty) => ({
+                musicIdx: "test-music",
+                difficulty,
+                noteCount: 500,
+                levelConstant: 10,
+            }))
+        );
+
+        const response = await POST(createRequest(requestBody(true)));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updateRecentPlay).toHaveBeenCalledWith(
+            1,
+            requestBody().recentData.data.player.history_list.history,
+            10
+        );
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [
+                expect.objectContaining({
+                    sheet: [
+                        musicSheet("Normal"),
+                        musicSheet("Hard"),
+                        musicSheet("Expert"),
+                    ],
+                }),
+            ],
+            10,
+            expect.any(Map)
+        );
+    });
+
+    it("노트 수 · 최대 Grd 를 벗어난 줄은 저장하지 않고 동기화 내역에 남긴다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue(
+            (["Normal", "Hard", "Expert"] as const).map((difficulty) => ({
+                musicIdx: "test-music",
+                difficulty,
+                noteCount: 500,
+                levelConstant: 10,
+            }))
+        );
+        const body = requestBody(true);
+        body.recentData.data.player.history_list.history[0].max_combo = 501;
+        const sheets = body.totalData!.data.music[0].sheet;
+        sheets[1].grade_basic = 100_000_000;
+        sheets[2].judge = [400, 30, 15, 5, 0];
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updateRecentPlay).toHaveBeenCalledWith(1, [], 10);
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [expect.objectContaining({ sheet: [musicSheet("Normal")] })],
+            10,
+            expect.any(Map)
+        );
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: expect.objectContaining({
+                status: "completed",
+                errorMessage:
+                    "채보 노트 수 · 최대 Grd 를 벗어난 기록 3개를 저장하지 않았습니다.",
+            }),
+        });
+    });
+
     it("등록된 채보가 하나도 없으면 기존 개인 기록을 덮어쓰지 않는다", async () => {
         mocks.musicChartFindMany.mockResolvedValue([]);
 
@@ -699,7 +836,8 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
         expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
             requestBody(true).totalData?.data.music,
-            false
+            false,
+            1
         );
         expect(mocks.updateGrade).not.toHaveBeenCalled();
         expect(mocks.updateDummy).not.toHaveBeenCalled();
@@ -790,7 +928,8 @@ describe("POST /api/receivePlayerData", () => {
         });
         expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
             requestBody(true).totalData?.data.music,
-            true
+            true,
+            1
         );
         expect(mocks.revalidateTag).toHaveBeenCalledWith(
             "music-catalog",
@@ -802,6 +941,31 @@ describe("POST /api/receivePlayerData", () => {
         );
         expect(mocks.revalidateTag).toHaveBeenCalledWith("bingos", "max");
         expect(data.missingJackets).toEqual(["missing-a"]);
+    });
+
+    it("상한을 넘어 만들지 않은 곡 후보 수를 경고로 남기고 응답 모양은 그대로 둔다", async () => {
+        const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+        mocks.processBemaniCatalogUpdates.mockResolvedValue({
+            detected: 25,
+            pending: 20,
+            applied: 0,
+            overLimit: 5,
+        });
+
+        const response = await POST(createRequest(requestBody(true)));
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(warn).toHaveBeenCalledWith(
+            "BEMANI catalog candidates over limit",
+            { userId: 1, syncId: 10, candidates: 5 }
+        );
+        expect(data.catalogUpdates).toEqual({
+            detected: 25,
+            pending: 20,
+            applied: 0,
+        });
+        warn.mockRestore();
     });
 
     it("자켓 목록 조회가 실패해도 관리자 동기화는 성공으로 끝난다", async () => {

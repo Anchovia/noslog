@@ -1,8 +1,7 @@
-import { timingSafeEqual } from "node:crypto";
-
 import { NextResponse } from "next/server";
 
 import { syncOfficialXFeed } from "@/features/home/server/official-x-sync";
+import { hasBearerSecret } from "@/lib/api/bearer-secret";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { serverEnv } from "@/lib/env/server";
 import { logServerError } from "@/lib/observability/server";
@@ -11,15 +10,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 export async function GET(request: Request) {
-    const expected = serverEnv.OFFICIAL_X_SYNC_SECRET;
-    const supplied = request.headers.get("authorization") ?? "";
-    const expectedHeader = `Bearer ${expected ?? ""}`;
     const headers = { "Cache-Control": "no-store" };
-    if (
-        !expected ||
-        Buffer.byteLength(supplied) !== Buffer.byteLength(expectedHeader) ||
-        !timingSafeEqual(Buffer.from(supplied), Buffer.from(expectedHeader))
-    ) {
+    if (!hasBearerSecret(request, serverEnv.OFFICIAL_X_SYNC_SECRET)) {
         return NextResponse.json(
             createApiFailure({
                 code: "UNAUTHORIZED",

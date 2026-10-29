@@ -79,13 +79,18 @@ export default async function ProfilePage({
         pinned,
     ] = await Promise.all([
         getProfileOverviewContext(id),
-        getPublicProfilePlays(id, {
-            kind: "best",
-            mode,
-            metric: "grade",
-            offset: 0,
-            limit: 5,
-        }),
+        // 플레이 활동을 숨겨도 달성일은 본인에게 보인다
+        getPublicProfilePlays(
+            id,
+            {
+                kind: "best",
+                mode,
+                metric: "grade",
+                offset: 0,
+                limit: 5,
+            },
+            { owner: isOwner }
+        ),
         // 본인에게는 숨긴 최근 플레이도 보인다(2026-09-26 P1)
         getPublicProfilePlays(
             id,
@@ -104,7 +109,7 @@ export default async function ProfilePage({
             range: "90",
         }),
         getProfileStats(id),
-        getProfilePinnedRecords(id),
+        getProfilePinnedRecords(id, { owner: isOwner }),
     ]);
 
     return (

@@ -12,12 +12,14 @@ import { getSyncHealthTagTone } from "@/lib/admin/sync-health";
 import { getAdminSyncs } from "@/features/admin/server/admin-sync-service";
 import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/admin-sync-schema";
 import AchievementRejudgePanel from "@/features/achievements/components/admin/achievement-rejudge-panel";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminSyncsPage({
     searchParams,
 }: {
     searchParams: Promise<{ status?: string }>;
 }) {
+    await requireAdmin();
     const {
         status,
         syncs,

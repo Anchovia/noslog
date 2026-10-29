@@ -68,21 +68,21 @@ export type PartnerSender = (
     message: PartnerOutboxMessageView
 ) => Promise<PartnerDeliveryResult>;
 
-/** MUSECAT_MODE=mock(또는 미설정)이면 보낸 것으로 친다 — 실제 뮤즈캣은 live 에서만 부른다 */
+/**
+ * 보낼지는 화면 모드(MUSECAT_MODE)가 아니라 파트너 설정으로 정한다 — 설정이 없으면 보낸 것으로 치지 않고 미뤄 둔다.
+ * 「보냄」 은 뮤즈캣이 2xx 로 받았을 때만 남긴다
+ */
 export const sendToMusecat: PartnerSender = async (message) => {
-    if (serverEnv.MUSECAT_MODE !== "live") {
-        return { kind: "delivered", status: 204 };
+    const origin = serverEnv.MUSECAT_API_ORIGIN;
+    const key = serverEnv.MUSECAT_PARTNER_KEY;
+    if (!origin || !key) {
+        return { kind: "unsupported", error: "musecat_not_configured" };
     }
     if (message.kind === "revocation") {
         return {
             kind: "unsupported",
             error: "joint_revocation_endpoint_pending",
         };
-    }
-    const origin = serverEnv.MUSECAT_API_ORIGIN;
-    const key = serverEnv.MUSECAT_PARTNER_KEY;
-    if (!origin || !key) {
-        return { kind: "retry", status: null, error: "musecat_not_configured" };
     }
     try {
         const response = await fetch(

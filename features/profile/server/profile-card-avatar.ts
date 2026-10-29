@@ -4,6 +4,8 @@ import sharp from "sharp";
 
 /** 카드 안 아바타는 122 — 2배로 그려 넣는다 */
 const CARD_AVATAR_SIZE = 244;
+// 작은 파일로 큰 그림을 풀게 하는 사진(공유 카드는 누구나 부를 수 있다)은 풀기 전에 거절한다
+const MAX_AVATAR_INPUT_PIXELS = 4096 * 4096;
 
 /**
  * 프로필 사진을 카드 그리기 엔진(next/og)이 읽는 PNG 로 바꾼다.
@@ -13,7 +15,9 @@ const CARD_AVATAR_SIZE = 244;
  */
 export async function toCardAvatar(bytes: Uint8Array): Promise<string | null> {
     try {
-        const png = await sharp(bytes)
+        const png = await sharp(bytes, {
+            limitInputPixels: MAX_AVATAR_INPUT_PIXELS,
+        })
             .rotate()
             .resize(CARD_AVATAR_SIZE, CARD_AVATAR_SIZE, { fit: "cover" })
             .png()

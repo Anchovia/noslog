@@ -27,6 +27,7 @@ import {
 import type { Prisma } from "@prisma/client";
 import { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { requireAdmin } from "@/lib/admin";
 
 interface EditTierListPageProps {
     params: Promise<{ id: string }>;
@@ -43,6 +44,7 @@ export default async function EditTierListPage({
     params,
     searchParams,
 }: EditTierListPageProps) {
+    await requireAdmin();
     const [{ id }, query] = await Promise.all([params, searchParams]);
     const tierListId = Number(id);
     if (!Number.isInteger(tierListId)) notFound();

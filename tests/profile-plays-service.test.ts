@@ -126,6 +126,39 @@ describe("profile incremental public plays", () => {
             true,
         ]);
     });
+    it("플레이 활동을 숨긴 사람의 베스트 줄은 남에게 달성일 없이, 본인에게는 그대로", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
+        mocks.plays.mockResolvedValue([play(1)]);
+        const other = await getPublicProfilePlays(
+            7,
+            profileListQuerySchema.parse({})
+        );
+        expect(other?.status).toBe("available");
+        expect(other?.items[0].playedAt).toBeNull();
+        expect(other?.items[0].score).toBe(940000);
+        const owner = await getPublicProfilePlays(
+            7,
+            profileListQuerySchema.parse({}),
+            { owner: true }
+        );
+        expect(owner?.items[0].playedAt).toBe("2026-09-19 01:01");
+    });
+    it("플레이 활동을 숨긴 사람의 레이팅 기여 줄도 남에게 달성일 없이", async () => {
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
+        mocks.basis.mockResolvedValue({
+            theoreticalMax: 100,
+            entries: [{ chartId: 1, value: 10 }],
+        });
+        mocks.plays
+            .mockResolvedValueOnce([{ chartId: 1, score: 950000 }])
+            .mockResolvedValueOnce([{ ...play(1), score: 950000 }]);
+        const result = await getPublicProfilePlays(
+            7,
+            profileListQuerySchema.parse({ metric: "rating", mode: "recital" })
+        );
+        expect(result?.items).toHaveLength(1);
+        expect(result?.items[0].playedAt).toBeNull();
+    });
     it("shows hidden recent plays only to the owner", async () => {
         mocks.user.mockResolvedValue({ hidePlayActivity: true });
         mocks.recent.mockResolvedValue([]);

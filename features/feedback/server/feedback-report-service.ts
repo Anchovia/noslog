@@ -26,6 +26,9 @@ import {
     releaseUploadTokenQuota,
 } from "@/lib/upload-rate-limit";
 
+/** 오락실이 아닌 일반 피드백은 사람마다 24시간에 이만큼 — 오락실 제보와 따로 센다 */
+const FEEDBACK_DAILY_LIMIT = 10;
+
 type FeedbackFieldName = Extract<keyof FeedbackReportFormValues, string>;
 type FeedbackActionResult = ActionResult<
     Record<never, never>,
@@ -134,9 +137,27 @@ export async function submitFeedbackReport(
     }
 
     try {
-        await db.feedbackReport.create({
-            data: { category, content, imageUrl, userId: session.id },
+        const userId = session.id;
+        // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
+        const saved = await db.$transaction(async (tx) => {
+            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`feedback-report:${userId}`}))`;
+            const recent = await tx.feedbackReport.count({
+                where: {
+                    userId,
+                    arcadeReportType: null,
+                    createdAt: { gte: new Date(Date.now() - 86_400_000) },
+                },
+            });
+            if (recent >= FEEDBACK_DAILY_LIMIT) return false;
+            await tx.feedbackReport.create({
+                data: { category, content, imageUrl, userId },
+            });
+            return true;
         });
+        if (!saved) {
+            if (imageUrl) await cleanupFeedbackImage(imageUrl, userId);
+            return { success: false, message: t("feedback.dailyLimit") };
+        }
         revalidatePath("/admin");
         revalidatePath("/admin/feedback");
         return { success: true, message: t("feedback.success") };

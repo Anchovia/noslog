@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
@@ -260,16 +260,30 @@ describe("P11 restricted Markdown", () => {
         expect(html).toContain("外部サイト");
         expect(html).not.toContain('target="_blank"');
     });
+    afterEach(() => {
+        vi.unstubAllEnvs();
+    });
     it("renders only images uploaded to our public store for announcements or events", () => {
+        vi.stubEnv("BLOB_PUBLIC_HOST", "abc.public.blob.vercel-storage.com");
         const ours =
             "https://abc.public.blob.vercel-storage.com/events/2/image-x.png";
         const html = render(
-            `![지도](${ours})\n\n![밖](https://example.com/a.png)\n\n![쿼리](${ours}?t=1)\n\n![다른 폴더](https://abc.public.blob.vercel-storage.com/avatars/2/a.png)`
+            `![지도](${ours})\n\n![밖](https://example.com/a.png)\n\n![쿼리](${ours}?t=1)\n\n![다른 폴더](https://abc.public.blob.vercel-storage.com/avatars/2/a.png)\n\n![다른 저장소](https://other.public.blob.vercel-storage.com/events/2/image-y.png)\n\n![포트](https://abc.public.blob.vercel-storage.com:8443/events/2/image-z.png)`
         );
         expect(html.match(/<img /g)).toHaveLength(1);
         expect(html).toContain(`src="${ours}"`);
         expect(html).toContain('alt="지도"');
         expect(html).not.toContain("example.com");
+        expect(html).not.toContain("other.public.blob");
+        expect(html).not.toContain(":8443");
+    });
+    it("renders no body images when our store host is not configured", () => {
+        vi.stubEnv("BLOB_PUBLIC_HOST", "");
+        const html = render(
+            "![지도](https://abc.public.blob.vercel-storage.com/events/2/image-x.png)"
+        );
+        expect(html).not.toContain("<img");
+        expect(html).not.toContain("blob.vercel-storage.com");
     });
     it("never renders executable HTML, outside images, H1 or unsafe URLs", () => {
         const html = render(

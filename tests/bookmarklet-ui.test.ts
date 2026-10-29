@@ -61,7 +61,6 @@ describe("bookmarklet loader", () => {
             const href = createBookmarkletHref(
                 "https://noslog.example",
                 token,
-                undefined,
                 locale
             );
             expect(href.startsWith("javascript:")).toBe(true);
@@ -71,12 +70,7 @@ describe("bookmarklet loader", () => {
 
     it("loads the localized script and passes the token outside its URL", () => {
         const loader = decodeURIComponent(
-            createBookmarkletHref(
-                "https://noslog.example",
-                token,
-                undefined,
-                "ja"
-            )
+            createBookmarkletHref("https://noslog.example", token, "ja")
         );
 
         expect(loader).toContain(

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { hasBearerSecret } from "@/lib/api/bearer-secret";
 import { serverEnv } from "@/lib/env/server";
 import { runPrivacyRetention } from "@/lib/privacy-retention";
 
@@ -7,11 +8,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function GET(request: Request) {
-    const cronSecret = serverEnv.CRON_SECRET;
-    if (
-        !cronSecret ||
-        request.headers.get("authorization") !== `Bearer ${cronSecret}`
-    ) {
+    if (!hasBearerSecret(request, serverEnv.CRON_SECRET)) {
         return NextResponse.json(
             { message: "접근할 수 없습니다." },
             { status: 401 }

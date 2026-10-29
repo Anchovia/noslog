@@ -13,6 +13,11 @@ export async function GET(request: NextRequest) {
         getSafeAuthReturnPath(
             request.nextUrl.searchParams.get("returnTo") ?? undefined
         ) ?? "/settings?category=connections";
+    // 다른 사이트가 연결을 시작시키지 못하게 한다(Fetch Metadata). 헤더를 안 보내는 옛 브라우저는 그대로 둔다
+    const fetchSite = request.headers.get("sec-fetch-site");
+    if (fetchSite && fetchSite !== "same-origin" && fetchSite !== "none") {
+        return NextResponse.redirect(new URL(returnTo, request.url), 303);
+    }
     const session = await getSession();
     if (getMusecatMode() === "off") {
         return NextResponse.redirect(new URL(returnTo, request.url), 303);

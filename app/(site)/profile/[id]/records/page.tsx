@@ -73,18 +73,18 @@ export default async function ProfileRecordsRoute({
     const [best, all, initialData] = await Promise.all([
         countRecordsWithGrade(id, field),
         countPlayedRecords(id),
-        getPublicProfileRecords(id, {
-            view: "best",
-            mode,
-            sort: "value",
-            offset: 0,
-        }),
+        getPublicProfileRecords(
+            id,
+            { view: "best", mode, sort: "value", offset: 0 },
+            { owner: isOwner }
+        ),
     ]);
     return (
         <ProfileRecords
             userId={id}
             counts={{ best: Math.min(best, 50), all }}
             initialData={initialData}
+            activityHidden={!isOwner && profileData.user.hide_play_activity}
         />
     );
 }

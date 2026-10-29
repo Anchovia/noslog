@@ -44,7 +44,10 @@ import {
     IMAGE_ACCEPT,
     imageFileValidationError,
 } from "@/lib/image-upload-rules";
-import { uploadGrantedImage } from "@/lib/uploads/client-image-upload";
+import {
+    reencodeImageForUpload,
+    uploadGrantedImage,
+} from "@/lib/uploads/client-image-upload";
 
 import EventDeleteButton from "./event-delete-button";
 import { EventBanner } from "./event-parts";
@@ -128,8 +131,9 @@ export default function EventEditor({
                 let uploaded = "";
                 try {
                     if (file) {
+                        const image = await reencodeImageForUpload(file);
                         const upload = await requestEventBannerUpload(
-                            file.type,
+                            image.type,
                             locale
                         );
                         if (!upload.success) {
@@ -138,7 +142,7 @@ export default function EventEditor({
                             return;
                         }
                         uploaded = await uploadGrantedImage(
-                            file,
+                            image,
                             upload,
                             "public"
                         );
@@ -402,14 +406,16 @@ export default function EventEditor({
                                 uploadFailed: t("events.uploadFailed"),
                             }}
                             onUploadImage={async (file) => {
+                                const image =
+                                    await reencodeImageForUpload(file);
                                 const upload = await requestEventImageUpload(
-                                    file.type,
+                                    image.type,
                                     locale
                                 );
                                 if (!upload.success)
                                     throw new Error(upload.message);
                                 return uploadGrantedImage(
-                                    file,
+                                    image,
                                     upload,
                                     "public"
                                 );
@@ -445,6 +451,7 @@ export default function EventEditor({
                 locales={[locale]}
                 locale={locale}
                 votes={event.poll?.votes ?? 0}
+                published={Boolean(event.isPublic)}
             />
 
             {!dialog && errors.root?.server?.message ? (

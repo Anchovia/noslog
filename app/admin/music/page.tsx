@@ -2,6 +2,7 @@ import AdminMusicList from "@/features/music/components/admin/admin-music-list";
 import MusicTranslationCoverage from "@/features/music/components/admin/music-translation-coverage";
 import MusicTranslationCsvImport from "@/features/music/components/admin/music-translation-csv-import";
 import { getAdminMusicList } from "@/features/music/server/music-translation-admin-service";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminMusicPage({
     searchParams,
@@ -13,6 +14,7 @@ export default async function AdminMusicPage({
         translationStatus?: string;
     }>;
 }) {
+    await requireAdmin();
     const data = await getAdminMusicList(await searchParams);
 
     return (

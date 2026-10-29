@@ -17,6 +17,9 @@ import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
+/** 오락실 제보는 사람마다 24시간에 이만큼 — 일반 피드백과 따로 센다 */
+const ARCADE_REPORT_DAILY_LIMIT = 30;
+
 export async function submitArcadeReport(
     formData: FormData
 ): Promise<ActionResult<Record<never, never>, keyof ArcadeReportFormValues>> {
@@ -78,23 +81,37 @@ export async function submitArcadeReport(
         ]
             .filter(Boolean)
             .join(" · ");
-        // Preserve context in the existing moderator view without changing /admin UI.
-        await db.feedbackReport.upsert({
-            where: {
-                userId_submissionId: { userId: session.id, submissionId },
-            },
-            create: {
-                userId: session.id,
-                submissionId,
-                arcadeId,
-                cabinetId,
-                arcadeReportType: reportType,
-                content: `${context}\n\n${content}`,
-                imageUrl,
-            },
-            update: {},
-            select: { id: true },
+        const userId = session.id;
+        // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
+        const saved = await db.$transaction(async (tx) => {
+            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`feedback-report:${userId}`}))`;
+            const recent = await tx.feedbackReport.count({
+                where: {
+                    userId,
+                    arcadeReportType: { not: null },
+                    createdAt: { gte: new Date(Date.now() - 86_400_000) },
+                },
+            });
+            if (recent >= ARCADE_REPORT_DAILY_LIMIT) return false;
+            // Preserve context in the existing moderator view without changing /admin UI.
+            await tx.feedbackReport.upsert({
+                where: { userId_submissionId: { userId, submissionId } },
+                create: {
+                    userId,
+                    submissionId,
+                    arcadeId,
+                    cabinetId,
+                    arcadeReportType: reportType,
+                    content: `${context}\n\n${content}`,
+                    imageUrl,
+                },
+                update: {},
+                select: { id: true },
+            });
+            return true;
         });
+        if (!saved)
+            return { success: false, message: t("feedback.dailyLimit") };
         revalidatePath("/admin/feedback");
         // 공개 오락실 화면의 열린 신고 수(캐시)도 바로 바뀌게
         updateTag(CACHE_TAGS.arcades);

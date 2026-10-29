@@ -27,6 +27,7 @@ import {
     approveAuthorization,
     authenticateBearer,
     authenticateOAuthClient,
+    enqueueRecordsInvalidationForUser,
     exchangeAuthorizationCode,
     findActiveGrant,
     refreshAccessToken,
@@ -283,6 +284,170 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 attempts: 1,
                 lastHttpStatus: 503,
             });
+        });
+
+        it("keeps the granted scopes when an existing connection is approved again with fewer", async () => {
+            await exchangeAuthorizationCode({
+                clientId,
+                code: await newCode(),
+                redirectUri,
+                codeVerifier: verifier,
+            });
+            const grant = await findActiveGrant(userId, clientId);
+            if (!grant) throw new Error("grant missing");
+            await approveAuthorization({
+                userId,
+                clientId,
+                scopes: ["profile"],
+                grantScopes: grant.scopes,
+                sharedItems: grant.sharedItems,
+                redirectUri,
+                codeChallenge: challenge,
+            });
+            expect(await findActiveGrant(userId, clientId)).toMatchObject({
+                id: grant.id,
+                scopes: ["profile", "nostalgia:read"],
+            });
+            await revokeGrantByUser(userId, clientId);
+        });
+
+        it("stops issued access tokens once the client is disabled", async () => {
+            const issued = await exchangeAuthorizationCode({
+                clientId,
+                code: await newCode(),
+                redirectUri,
+                codeVerifier: verifier,
+            });
+            if (!issued.ok) throw new Error("exchange failed");
+            const bearer = `Bearer ${issued.body.access_token}`;
+            expect(await authenticateBearer(bearer, "profile")).toMatchObject({
+                ok: true,
+            });
+            await db.oAuthClient.update({
+                where: { id: clientId },
+                data: { disabledAt: new Date() },
+            });
+            try {
+                expect(await authenticateBearer(bearer, "profile")).toEqual({
+                    ok: false,
+                    error: "invalid_token",
+                });
+            } finally {
+                await db.oAuthClient.update({
+                    where: { id: clientId },
+                    data: { disabledAt: null },
+                });
+                await revokeGrantByUser(userId, clientId);
+            }
+        });
+
+        it("ends the connection when a revoked refresh token comes back", async () => {
+            const issued = await exchangeAuthorizationCode({
+                clientId,
+                code: await newCode(),
+                redirectUri,
+                codeVerifier: verifier,
+            });
+            if (!issued.ok) throw new Error("exchange failed");
+            const grant = await findActiveGrant(userId, clientId);
+            if (!grant) throw new Error("grant missing");
+            const first = issued.body.refresh_token;
+            const lost = await refreshAccessToken({
+                clientId,
+                refreshToken: first,
+                scope: null,
+            });
+            // 응답을 놓친 재시도 — 먼저 낸 토큰은 거두고 새 토큰을 다시 낸다
+            const retried = await refreshAccessToken({
+                clientId,
+                refreshToken: first,
+                scope: null,
+            });
+            if (!lost.ok || !retried.ok) throw new Error("rotation failed");
+            // 다른 클라이언트가 내밀면 연결은 그대로
+            expect(
+                await refreshAccessToken({
+                    clientId: "someone-else",
+                    refreshToken: lost.body.refresh_token,
+                    scope: null,
+                })
+            ).toEqual({ ok: false, error: "invalid_grant" });
+            expect(await findActiveGrant(userId, clientId)).not.toBeNull();
+            expect(
+                await refreshAccessToken({
+                    clientId,
+                    refreshToken: lost.body.refresh_token,
+                    scope: null,
+                })
+            ).toEqual({ ok: false, error: "invalid_grant" });
+            expect(await findActiveGrant(userId, clientId)).toBeNull();
+            expect(
+                await db.oAuthGrant.findUnique({
+                    where: { id: grant.id },
+                    select: { revokedReason: true },
+                })
+            ).toEqual({ revokedReason: "replay" });
+            expect(
+                await authenticateBearer(
+                    `Bearer ${retried.body.access_token}`,
+                    "profile"
+                )
+            ).toEqual({ ok: false, error: "invalid_token" });
+            expect(
+                await db.partnerOutboxMessage.count({
+                    where: { grantId: grant.id, kind: "revocation" },
+                })
+            ).toBe(0);
+        });
+
+        it("queues invalidation for record-reading connections when the user hides records", async () => {
+            await exchangeAuthorizationCode({
+                clientId,
+                code: await newCode(),
+                redirectUri,
+                codeVerifier: verifier,
+            });
+            const reader = await findActiveGrant(userId, clientId);
+            if (!reader) throw new Error("grant missing");
+            await db.$transaction((tx) =>
+                enqueueRecordsInvalidationForUser(tx, userId)
+            );
+            const queued = await db.partnerOutboxMessage.findMany({
+                where: { grantId: reader.id },
+                select: { kind: true, generation: true, payload: true },
+            });
+            const subject = await db.oAuthSubject.findUnique({
+                where: { userId_clientId: { userId, clientId } },
+                select: { subject: true },
+            });
+            expect(queued).toEqual([
+                {
+                    kind: "records_invalidation",
+                    generation: reader.generation,
+                    payload: { sub: subject?.subject, service: "nostalgia" },
+                },
+            ]);
+            // 기록 범위가 없는 연결에는 보내지 않는다
+            await revokeGrantByUser(userId, clientId);
+            await approveAuthorization({
+                userId,
+                clientId,
+                scopes: ["profile"],
+                sharedItems: [],
+                redirectUri,
+                codeChallenge: challenge,
+            });
+            const profileOnly = await findActiveGrant(userId, clientId);
+            if (!profileOnly) throw new Error("grant missing");
+            await db.$transaction((tx) =>
+                enqueueRecordsInvalidationForUser(tx, userId)
+            );
+            expect(
+                await db.partnerOutboxMessage.count({
+                    where: { grantId: profileOnly.id },
+                })
+            ).toBe(0);
+            await revokeGrantByUser(userId, clientId);
         });
     }
 );

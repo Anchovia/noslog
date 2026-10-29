@@ -14,12 +14,14 @@ import {
     normalizeBingoStatus,
 } from "@/features/bingos/schemas/bingo-editor-schema";
 import { formatDateInput } from "@/lib/format-date";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function EditBingoPage({
     params,
 }: {
     params: Promise<{ id: string }>;
 }) {
+    await requireAdmin();
     const { id } = await params;
     const bingoId = Number(id);
     if (!Number.isInteger(bingoId)) notFound();

@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
+import type { UserRole } from "@prisma/client";
+
 import { TOKEN_VALUES } from "@/lib/design-token-values";
 import { serverEnv } from "@/lib/env/server";
 import { type Locale, localizePath } from "@/lib/i18n/routing";
@@ -7,7 +9,22 @@ import { type Locale, localizePath } from "@/lib/i18n/routing";
 interface SyncTokenPayload {
     userId: number;
     version: number;
+    // 발급 시각(초). 만료 규칙 전에 만든 토큰에는 없다
+    iat?: number;
 }
+
+export type SyncTokenVerification =
+    | { status: "valid"; payload: SyncTokenPayload }
+    | { status: "invalid" }
+    | { status: "expired" };
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const USER_SYNC_TOKEN_LIFETIME_MS = 180 * DAY_MS;
+const ADMIN_SYNC_TOKEN_LIFETIME_MS = 30 * DAY_MS;
+// 발급 시각이 없는 옛 토큰은 역할과 상관없이 이때까지만 받는다(만료 규칙을 넣은 날부터 180일)
+export const LEGACY_SYNC_TOKEN_EXPIRES_AT = new Date(
+    "2027-04-27T00:00:00+09:00"
+);
 
 // /api/receiveJacket 의 상한(MAX_COLLECTED_JACKET_BYTES)과 같은 값 — 넘는 파일은 보내지 않는다
 const MAX_JACKET_BYTES = 1024 * 1024;
@@ -86,17 +103,46 @@ function sign(value: string) {
     return createHmac("sha256", syncSecret()).update(value).digest("base64url");
 }
 
-export function createSyncToken(payload: SyncTokenPayload) {
-    const encodedPayload = Buffer.from(JSON.stringify(payload)).toString(
-        "base64url"
-    );
+export function createSyncToken(
+    payload: Pick<SyncTokenPayload, "userId" | "version">,
+    now = new Date()
+) {
+    const encodedPayload = Buffer.from(
+        JSON.stringify({
+            userId: payload.userId,
+            version: payload.version,
+            iat: Math.floor(now.getTime() / 1000),
+        })
+    ).toString("base64url");
 
     return `${encodedPayload}.${sign(encodedPayload)}`;
 }
 
-export function verifySyncToken(token: string): SyncTokenPayload | null {
+/** 역할별 만료 — 관리자는 사용자 행을 읽어야 알 수 있어 서명 확인과 따로 묻는다 */
+export function isSyncTokenExpired(
+    payload: SyncTokenPayload,
+    role: UserRole,
+    now = new Date()
+) {
+    const expiresAt =
+        payload.iat === undefined
+            ? LEGACY_SYNC_TOKEN_EXPIRES_AT.getTime()
+            : payload.iat * 1000 +
+              (role === "admin"
+                  ? ADMIN_SYNC_TOKEN_LIFETIME_MS
+                  : USER_SYNC_TOKEN_LIFETIME_MS);
+
+    return now.getTime() >= expiresAt;
+}
+
+export function verifySyncToken(
+    token: string,
+    now = new Date()
+): SyncTokenVerification {
     const [encodedPayload, signature, ...rest] = token.split(".");
-    if (!encodedPayload || !signature || rest.length > 0) return null;
+    if (!encodedPayload || !signature || rest.length > 0) {
+        return { status: "invalid" };
+    }
 
     const expectedSignature = sign(encodedPayload);
     const signatureBuffer = Buffer.from(signature);
@@ -106,27 +152,35 @@ export function verifySyncToken(token: string): SyncTokenPayload | null {
         signatureBuffer.length !== expectedBuffer.length ||
         !timingSafeEqual(signatureBuffer, expectedBuffer)
     ) {
-        return null;
+        return { status: "invalid" };
     }
 
+    let payload: Partial<SyncTokenPayload>;
     try {
-        const payload = JSON.parse(
+        payload = JSON.parse(
             Buffer.from(encodedPayload, "base64url").toString("utf8")
         ) as Partial<SyncTokenPayload>;
-
-        if (
-            !Number.isSafeInteger(payload.userId) ||
-            !Number.isSafeInteger(payload.version) ||
-            (payload.userId ?? 0) <= 0 ||
-            (payload.version ?? -1) < 0
-        ) {
-            return null;
-        }
-
-        return payload as SyncTokenPayload;
     } catch {
-        return null;
+        return { status: "invalid" };
     }
+
+    if (
+        !Number.isSafeInteger(payload.userId) ||
+        !Number.isSafeInteger(payload.version) ||
+        (payload.userId ?? 0) <= 0 ||
+        (payload.version ?? -1) < 0 ||
+        (payload.iat !== undefined &&
+            (!Number.isSafeInteger(payload.iat) || payload.iat <= 0))
+    ) {
+        return { status: "invalid" };
+    }
+
+    // 역할을 읽기 전이라 가장 긴 일반 사용자 기한으로 먼저 거른다
+    if (isSyncTokenExpired(payload as SyncTokenPayload, "user", now)) {
+        return { status: "expired" };
+    }
+
+    return { status: "valid", payload: payload as SyncTokenPayload };
 }
 
 // 북마크에는 짧은 로더만 담는다 — 모바일 Chrome 은 붙여 넣은 북마크 주소를 5,000자에서 잘라
@@ -135,17 +189,10 @@ export function verifySyncToken(token: string): SyncTokenPayload | null {
 export function createBookmarkletHref(
     appOrigin: string,
     token: string,
-    protectionBypassSecret?: string,
     locale: Locale = "ko"
 ) {
     const scriptUrl = new URL("/api/bookmarklet", `${appOrigin}/`);
     scriptUrl.searchParams.set("locale", locale);
-    if (protectionBypassSecret) {
-        scriptUrl.searchParams.set(
-            "x-vercel-protection-bypass",
-            protectionBypassSecret
-        );
-    }
     const code = `(()=>{const s=document.createElement("script");s.src=${JSON.stringify(scriptUrl.toString())};s.dataset.token=${JSON.stringify(token)};s.onerror=()=>{s.remove();alert(${JSON.stringify(bookmarkletCopy[locale].loadFailed)})};document.body.appendChild(s)})()`;
 
     return `javascript:${encodeURIComponent(code)}`;
@@ -157,25 +204,12 @@ export function createBookmarkletHref(
 // 상태는 글자만(실패만 위험 글자색, 바쁠 때만 공용 스피너와 같은 270° 호)
 export function createBookmarkletScript(
     appOrigin: string,
-    locale: Locale = "ko",
-    protectionBypassSecret?: string
+    locale: Locale = "ko"
 ) {
     const receiveUrl = new URL("/api/receivePlayerData", `${appOrigin}/`);
     receiveUrl.searchParams.set("locale", locale);
-    if (protectionBypassSecret) {
-        receiveUrl.searchParams.set(
-            "x-vercel-protection-bypass",
-            protectionBypassSecret
-        );
-    }
 
     const jacketUrl = new URL("/api/receiveJacket", `${appOrigin}/`);
-    if (protectionBypassSecret) {
-        jacketUrl.searchParams.set(
-            "x-vercel-protection-bypass",
-            protectionBypassSecret
-        );
-    }
 
     const copy = bookmarkletCopy[locale];
     const {

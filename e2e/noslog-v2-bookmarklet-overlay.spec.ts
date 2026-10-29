@@ -34,7 +34,6 @@ const runLoader = (
             createHref(
                 "https://noslog.example",
                 "render-only-fixture",
-                undefined,
                 locale
             ).slice("javascript:".length)
         )

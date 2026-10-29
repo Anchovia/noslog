@@ -121,8 +121,14 @@ describe("언어 경로 프록시", () => {
     });
 
     it("관리자 경로는 언어 접두사 없이 유지한다", async () => {
-        await expect(
-            proxy(new NextRequest("http://localhost:3000/admin"))
-        ).resolves.toBeUndefined();
+        const response = await proxy(
+            new NextRequest("http://localhost:3000/admin")
+        );
+        // 언어 주소로 넘기거나 바꾸지 않고, 스크립트 정책만 붙여 그대로 통과시킨다
+        expect(response?.headers.get("location")).toBeNull();
+        expect(response?.headers.get("x-middleware-rewrite")).toBeNull();
+        expect(response?.headers.get("content-security-policy")).toContain(
+            "'strict-dynamic'"
+        );
     });
 });

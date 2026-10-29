@@ -1,8 +1,10 @@
 import { listAdminArcades } from "@/features/arcades/server/arcade-admin-data";
 import ArcadeForm from "@/features/arcades/components/arcade-form";
 import { clientEnv } from "@/lib/env/client";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminArcadesPage() {
+    await requireAdmin();
     const kakaoMapAppKey = clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? "";
     const arcades = await listAdminArcades();
 

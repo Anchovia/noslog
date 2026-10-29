@@ -495,12 +495,10 @@ export default function ArcadeDetailPage({
                                 {t("arcades.recentChecks")}
                             </h2>
                             <ul className="nl-arcade-detail__checks nl-body-secondary">
-                                {recentChecks.map((check) => {
+                                {recentChecks.map((check, index) => {
                                     const days = daysAgo(check.checkedAt, now);
                                     return (
-                                        <li
-                                            key={`${check.userId}-${check.checkedAt}`}
-                                        >
+                                        <li key={`${check.checkedAt}-${index}`}>
                                             {days === null ? null : (
                                                 <>
                                                     <span className="nl-muted">
@@ -518,15 +516,20 @@ export default function ArcadeDetailPage({
                                                     {" · "}
                                                 </>
                                             )}
-                                            <IntentLink
-                                                className="nl-link"
-                                                href={href(
-                                                    `/profile/${check.userId}`
-                                                )}
-                                            >
-                                                {check.username ??
-                                                    t("common.unknownUser")}
-                                            </IntentLink>
+                                            {/* 선호 오락실을 숨긴 사람은 서버가 id 를 주지 않는다 — 이름 · 링크 없이 */}
+                                            {check.userId === null ? (
+                                                t("common.unknownUser")
+                                            ) : (
+                                                <IntentLink
+                                                    className="nl-link"
+                                                    href={href(
+                                                        `/profile/${check.userId}`
+                                                    )}
+                                                >
+                                                    {check.username ??
+                                                        t("common.unknownUser")}
+                                                </IntentLink>
+                                            )}
                                             {" · "}
                                             {check.cabinetLabel ??
                                                 t("arcades.cabinetNumber", {

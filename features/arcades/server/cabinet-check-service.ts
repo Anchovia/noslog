@@ -19,7 +19,8 @@ export type CabinetCheckActionResult = ActionResult<{ checkedAt: string }>;
 
 /**
  * 「가동 확인」 한 번 누르기. 로그인 이용자가 기체가 지금 돌아간다고 남기는 기록이며,
- * 공개 데이터에서는 마지막 확인 시각과 확인 인원으로만 드러난다.
+ * 공개 데이터에서는 기체별 마지막 확인 시각 · 확인 인원과 상세 레일 「최근 확인」(날짜 · 기체 · 확인한 사람 이름)으로 드러난다.
+ * 선호 오락실을 숨긴 사람은 「최근 확인」 에 이름과 프로필 링크 없이 나온다.
  */
 export async function confirmCabinetRunning(
     cabinetId: number,
@@ -123,7 +124,8 @@ export async function getUserCheckedCabinetIds(
 
 export type RecentCabinetCheck = {
     username: string | null;
-    userId: number;
+    /** 선호 오락실을 숨긴 사람은 null — 이름 · id 를 내보내지 않는다 */
+    userId: number | null;
     cabinetPosition: number;
     cabinetLabel: string | null;
     checkedAt: string;
@@ -144,7 +146,7 @@ export async function getRecentCabinetChecks(
         select: {
             userId: true,
             checkedAt: true,
-            user: { select: { username: true } },
+            user: { select: { username: true, hidePreferredArcade: true } },
             cabinet: { select: { position: true, label: true } },
         },
     });
@@ -153,9 +155,11 @@ export async function getRecentCabinetChecks(
     for (const row of rows) {
         if (seen.has(row.userId)) continue;
         seen.add(row.userId);
+        // 어느 오락실에 다니는지 드러나므로 선호 오락실 공개 설정을 따른다
+        const hidden = row.user.hidePreferredArcade;
         result.push({
-            username: row.user.username,
-            userId: row.userId,
+            username: hidden ? null : row.user.username,
+            userId: hidden ? null : row.userId,
             cabinetPosition: row.cabinet.position,
             cabinetLabel: row.cabinet.label,
             checkedAt: row.checkedAt.toISOString(),

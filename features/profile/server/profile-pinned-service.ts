@@ -42,12 +42,26 @@ export type ProfilePinnedRecord = ProfilePlay & {
  * 프로필 개요 「고정 기록」(2026-09-26 S2) — 고른 채보의 지금 기록(고른 순서) · 한 줄 소감.
  * 고른 것이 없거나 고른 채보의 기록이 모두 사라졌으면 Basic 베스트 상위 3곡(auto)
  */
-export async function getProfilePinnedRecords(userId: number) {
-    const pins = await db.userPinnedRecord.findMany({
-        where: { userId: userId },
-        orderBy: { position: "asc" },
-        select: { chartId: true, comment: true },
-    });
+export async function getProfilePinnedRecords(
+    userId: number,
+    /** 본인이 자기 프로필을 볼 때 — 플레이 활동을 숨겨도 달성일은 본인에게 보인다 */
+    { owner = false }: { owner?: boolean } = {}
+) {
+    const [pins, user] = await Promise.all([
+        db.userPinnedRecord.findMany({
+            where: { userId: userId },
+            orderBy: { position: "asc" },
+            select: { chartId: true, comment: true },
+        }),
+        owner
+            ? null
+            : db.user.findUnique({
+                  where: { id: userId },
+                  select: { hidePlayActivity: true },
+              }),
+    ]);
+    // 플레이 활동 비공개면 남에게 달성일을 주지 않는다
+    const datesHidden = Boolean(user?.hidePlayActivity);
     const pinnedPlays = pins.length
         ? await db.playData.findMany({
               where: {
@@ -93,7 +107,7 @@ export async function getProfilePinnedRecords(userId: number) {
             rank: play.rank,
             fullCombo: hasFullComboLamp(play.fcType),
             contribution: null,
-            playedAt: recordPlayedAt(play.bestAt),
+            playedAt: datesHidden ? null : recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
             position: null,
             newBest: false,

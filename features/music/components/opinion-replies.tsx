@@ -233,6 +233,7 @@ function ReplyRow({
         language: reply.language,
         translations: reply.translations,
         enabled: translationEnabled,
+        signedIn: Boolean(accountId),
     });
     return (
         <article className="nl-opinion-row" data-reply="">

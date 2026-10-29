@@ -36,10 +36,13 @@ export default function ProfileRecords({
     userId,
     counts,
     initialData,
+    activityHidden,
 }: {
     userId: number;
     counts: { best: number; all: number };
     initialData: ProfileRecordsPayload | null;
+    /** 플레이 활동을 숨긴 남의 프로필 — 달성일을 받지 않으니 「최근 달성 순」 을 두지 않는다 */
+    activityHidden: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -93,7 +96,9 @@ export default function ProfileRecords({
                     label={t("discovery.sortLabel")}
                     value={sort}
                     onValueChange={setSort}
-                    options={PROFILE_RECORD_SORTS.map((value) => ({
+                    options={PROFILE_RECORD_SORTS.filter(
+                        (value) => !activityHidden || value !== "recent"
+                    ).map((value) => ({
                         value,
                         label: t(`profile.records.sort.${value}`),
                     }))}

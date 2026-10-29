@@ -91,19 +91,34 @@ describe("이벤트 글 입력", () => {
 });
 
 describe("이벤트 검토", () => {
+    const updatedAt = "2026-09-18T00:00:00.000Z";
     it("requires a reason for changes and rejection only", () => {
         expect(
             eventReviewSchema.safeParse({
                 id: 1,
+                updatedAt,
                 decision: "approve",
                 note: "",
             }).success
         ).toBe(true);
         for (const decision of ["requestChanges", "reject"])
             expect(
-                eventReviewSchema.safeParse({ id: 1, decision, note: " " })
-                    .success
+                eventReviewSchema.safeParse({
+                    id: 1,
+                    updatedAt,
+                    decision,
+                    note: " ",
+                }).success
             ).toBe(false);
+    });
+    it("requires the version the reviewer saw", () => {
+        expect(
+            eventReviewSchema.safeParse({
+                id: 1,
+                decision: "approve",
+                note: "",
+            }).success
+        ).toBe(false);
     });
     it("approval copies the working copy and keeps the first publication date", () => {
         const first = new Date("2026-09-01T00:00:00Z");

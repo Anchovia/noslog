@@ -3,6 +3,7 @@ import "server-only";
 import { updateTag } from "next/cache";
 
 import { setAchievementShowcase } from "@/features/achievements/server/achievement-service";
+import { enqueueRecordsInvalidationForUser } from "@/features/partner/server/oauth-service";
 import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinned-record-schema";
 import { setPinnedRecords } from "@/features/profile/server/profile-pinned-service";
 import type {
@@ -200,24 +201,34 @@ export async function saveSettingsPrivacy(
     if (!parsed.success)
         return { success: false, message: t("settings.checkInput") };
     const values = parsed.data;
+    const userId = session.id;
     let scoresVisibilityChanged: boolean;
     try {
-        const current = await db.user.findUnique({
-            where: { id: session.id },
-            select: { hidePlayScores: true },
-        });
-        scoresVisibilityChanged =
-            current?.hidePlayScores !== !values.showPlayScores;
-        await db.user.update({
-            where: { id: session.id },
-            data: {
-                hideNostalgiaName: !values.showNostalgiaName,
-                hideDiscordName: !values.showDiscordIdentity,
-                hidePreferredArcade: !values.showPreferredArcade,
-                hidePlayCount: !values.showPlayCount,
-                hidePlayActivity: !values.showPlayActivity,
-                hidePlayScores: !values.showPlayScores,
-            },
+        scoresVisibilityChanged = await db.$transaction(async (tx) => {
+            const current = await tx.user.findUnique({
+                where: { id: userId },
+                select: { hidePlayScores: true, hidePlayActivity: true },
+            });
+            await tx.user.update({
+                where: { id: userId },
+                data: {
+                    hideNostalgiaName: !values.showNostalgiaName,
+                    hideDiscordName: !values.showDiscordIdentity,
+                    hidePreferredArcade: !values.showPreferredArcade,
+                    hidePlayCount: !values.showPlayCount,
+                    hidePlayActivity: !values.showPlayActivity,
+                    hidePlayScores: !values.showPlayScores,
+                },
+            });
+            // 파트너가 이미 받아 간 기록도 거둬야 하니 공개 → 비공개일 때 무효화를 알린다
+            if (
+                (current?.hidePlayScores === false && !values.showPlayScores) ||
+                (current?.hidePlayActivity === false &&
+                    !values.showPlayActivity)
+            ) {
+                await enqueueRecordsInvalidationForUser(tx, userId);
+            }
+            return current?.hidePlayScores !== !values.showPlayScores;
         });
     } catch (error) {
         logServerError(error, {
@@ -228,7 +239,7 @@ export async function saveSettingsPrivacy(
         return { success: false, message: t("settings.privacySaveError") };
     }
     // 랭킹 줄에 영향을 주는 건 점수 비공개뿐 — 나머지 스위치는 본인 프로필만
-    refreshPublicIdentity(session.id, {
+    refreshPublicIdentity(userId, {
         ranking: scoresVisibilityChanged,
         positions: scoresVisibilityChanged,
         arcade: false,

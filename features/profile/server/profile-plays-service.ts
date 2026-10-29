@@ -57,8 +57,10 @@ export async function getPublicProfilePlays(
         select: { hidePlayActivity: true },
     });
     if (!user) return null;
+    // 플레이 활동 비공개 — 남에게는 최근 플레이를 주지 않고, 베스트 줄의 달성일도 뺀다
+    const activityHidden = user.hidePlayActivity && !owner;
     if (query.kind === "recent") {
-        if (user.hidePlayActivity && !owner)
+        if (activityHidden)
             return profileListPayloadSchema.parse({
                 query,
                 status: "hidden",
@@ -154,7 +156,7 @@ export async function getPublicProfilePlays(
                 rank: play.rank,
                 fullCombo: hasFullComboLamp(play.fcType),
                 contribution: (play[field] ?? 0) / 100,
-                playedAt: recordPlayedAt(play.bestAt),
+                playedAt: activityHidden ? null : recordPlayedAt(play.bestAt),
                 chartRank: ranks.get(play.id) ?? null,
                 position: query.offset + index + 1,
             })),
@@ -205,7 +207,9 @@ export async function getPublicProfilePlays(
                           contribution:
                               (item.points / rating.theoreticalMax) *
                               BASIC_RATING_MAX,
-                          playedAt: recordPlayedAt(play.bestAt),
+                          playedAt: activityHidden
+                              ? null
+                              : recordPlayedAt(play.bestAt),
                           chartRank: ranks.get(play.id) ?? null,
                       },
                   ]

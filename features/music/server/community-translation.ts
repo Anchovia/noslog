@@ -9,6 +9,7 @@ import db from "@/lib/db";
 import { serverEnv } from "@/lib/env/server";
 import { type Locale, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { detectTextLanguage } from "@/lib/i18n/text-language";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 const TRANSLATION_TIMEOUT_MS = 20_000;
 const LANGUAGE_NAMES: Record<Locale, string> = {
@@ -140,11 +141,13 @@ async function loadSource(kind: "opinion" | "reply", id: number) {
 
 /**
  * 글 하나의 빠진 번역을 만들어 저장한다 — 글 언어를 뺀 나머지 두 언어를 한 번에.
- * 이미 있으면 부르지 않는다. 만드는 사이 글이 바뀌었으면 저장하지 않는다(본문이 같을 때만 기록)
+ * 이미 있으면 부르지 않는다. 만드는 사이 글이 바뀌었으면 저장하지 않는다(본문이 같을 때만 기록).
+ * 모델을 부를 때마다 요청한 사람의 시간당 번역 한도를 하나 쓴다 — 넘으면 code 「dailyLimit」 ApiError
  */
 export async function fillCommunityTranslations(
     kind: "opinion" | "reply",
-    id: number
+    id: number,
+    userId: number
 ): Promise<StoredTranslations | null> {
     if (!isCommunityTranslationEnabled()) return null;
     const source = await loadSource(kind, id);
@@ -155,6 +158,9 @@ export async function fillCommunityTranslations(
         (locale) => locale !== language && !source.stored[locale]
     );
     if (!missing.length) return source.stored;
+    const quota = await claimUploadTokenQuota(userId, "community-translation");
+    if (!quota.allowed)
+        throw new ApiError("translation_limit_reached", "dailyLimit");
     const translated = await translateCommunityText(source.text, missing);
     if (!translated) return source.stored;
     const next = { ...source.stored, ...translated };
@@ -172,12 +178,14 @@ export async function fillCommunityTranslations(
 }
 
 /**
- * 「번역 보기」 — 올릴 때 만들어 둔 번역을 그대로. 그때 실패했거나 전부터 있던 글이면 이번에 한 번 만들어 저장한다
+ * 「번역 보기」 — 올릴 때 만들어 둔 번역을 그대로. 그때 실패했거나 전부터 있던 글이면 이번에 한 번 만들어 저장한다.
+ * 손님(userId null)에게는 저장된 번역만 — 모델은 로그인한 사람의 요청으로만 부른다
  */
 export async function getCommunityTranslation(input: {
     kind: "opinion" | "reply";
     id: number;
     locale: Locale;
+    userId: number | null;
 }) {
     if (!isCommunityTranslationEnabled())
         throw new ApiError("translation_unavailable", "unavailable");
@@ -185,7 +193,13 @@ export async function getCommunityTranslation(input: {
     if (!source) throw new ApiError("translation_unavailable", "unavailable");
     const cached = source.stored[input.locale];
     if (cached) return cached;
-    const filled = await fillCommunityTranslations(input.kind, input.id);
+    if (input.userId === null)
+        throw new ApiError("translation_login_required", "login");
+    const filled = await fillCommunityTranslations(
+        input.kind,
+        input.id,
+        input.userId
+    );
     const text = filled?.[input.locale];
     if (!text) throw new ApiError("translation_failed", "failed");
     return text;

@@ -10,7 +10,7 @@ import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
-/** 프로필 「기록」 탭 목록(2026-09-25) — 점수 비공개면 본인 말고는 403(기록 API 와 같은 규칙) */
+/** 프로필 「기록」 탭 목록(2026-09-25) — 점수 비공개면 본인 말고는 403(기록 API 와 같은 규칙), 플레이 활동 비공개면 남에게 달성일 없이 */
 export async function GET(
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -38,7 +38,9 @@ export async function GET(
                 }),
                 { status: 403, headers }
             );
-        const result = await getPublicProfileRecords(id.data, query.data);
+        const result = await getPublicProfileRecords(id.data, query.data, {
+            owner: session.id === id.data,
+        });
         return result
             ? NextResponse.json(createApiSuccess(result), { headers })
             : NextResponse.json(

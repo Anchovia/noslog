@@ -5,12 +5,14 @@ import Link from "next/link";
 import Badge from "@/components/ui/badge";
 import { foundationButtonClass } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminExamsPage({
     searchParams,
 }: {
     searchParams: Promise<{ q?: string; mode?: string; status?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const query = params.q?.trim() ?? "";
     const mode =

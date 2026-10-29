@@ -164,3 +164,25 @@ export function pollLockedChange(
     if (added > 0 && !current.allowAddOptions) return true;
     return false;
 }
+
+/**
+ * 공개판이 있는 이벤트 글의 투표에서 바꿀 수 있는 것 — 마감 시각뿐.
+ * 투표는 글의 공개판과 따로 한 벌만 저장돼 고치는 즉시 공개 화면에 나가므로, 검토를 거치지 않은 질문 · 선택지 · 설정 변경을 막는다.
+ */
+export function pollPublishedChange(
+    current: Omit<PollInput, "options" | "closesAt"> & {
+        options: { id: number; text: Partial<Record<Locale, string>> }[];
+    },
+    next: PollInput
+) {
+    if (pollLockedChange({ ...current, allowAddOptions: false }, next))
+        return true;
+    const maxChoices = (poll: Pick<PollInput, "multiple" | "maxChoices">) =>
+        poll.multiple ? poll.maxChoices : null;
+    return (
+        maxChoices(current) !== maxChoices(next) ||
+        current.results !== next.results ||
+        current.showVoters !== next.showVoters ||
+        current.allowAddOptions !== next.allowAddOptions
+    );
+}

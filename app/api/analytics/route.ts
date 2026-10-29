@@ -17,9 +17,9 @@ function noContent() {
 
 // 방문·외부 호출 신호를 받는다. 실패해도 이용자 화면에는 영향이 없도록 늘 204 로 답한다
 export async function POST(request: Request) {
-    // 다른 사이트에서 보낸 신호는 세지 않는다(브라우저가 붙이는 Sec-Fetch-Site)
-    const site = request.headers.get("sec-fetch-site");
-    if (site && site !== "same-origin") return noContent();
+    // 우리 화면에서 보낸 신호만 센다(브라우저가 붙이는 Sec-Fetch-Site). 헤더가 없는 요청은 curl 같은 직접 호출이라 버린다
+    if (request.headers.get("sec-fetch-site") !== "same-origin")
+        return noContent();
     const userAgent = request.headers.get("user-agent");
     if (isBotUserAgent(userAgent)) return noContent();
 

@@ -29,6 +29,8 @@ interface SessionContent {
         scopes: string[];
         state: string | null;
         codeChallenge: string;
+        /** 동의 폼에 실어 보내는 값 — 화면에 보인 요청에만 동의하게 한다 */
+        requestId: string;
         createdAt: number;
     };
     /** 뮤즈캣 연결(A 방향) 진행 중 — PKCE verifier · state · 돌아갈 곳(live) */

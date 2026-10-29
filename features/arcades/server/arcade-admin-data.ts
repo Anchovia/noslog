@@ -1,9 +1,11 @@
 import "server-only";
 
+import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 
 /** 관리자 오락실 편집 목록 — 공개 페이지가 읽는 기체 · 영업시간 · 공개 정보(2026-10-16 D8 — 화면에서 옮김) */
-export function listAdminArcades() {
+export async function listAdminArcades() {
+    await requireAdmin();
     return db.arcade.findMany({
         include: {
             _count: { select: { users: true } },

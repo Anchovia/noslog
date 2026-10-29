@@ -11,7 +11,8 @@ type StoredTranslations = { ko?: string; ja?: string; en?: string };
 /**
  * 의견 · 답글 번역(2026-09-22 T1) — 보는 사람 언어와 다른 글에만 「번역 보기」(NN/g).
  * 누르면 같은 자리를 번역문으로 바꾸고 「일본어에서 번역됨 · Gemini · 원문 보기」 를 붙인다(Booking · Amazon 식).
- * 저장된 번역이 있으면 바로, 없으면 처음 한 번만 서버가 만든다(그동안 「번역 중…」)
+ * 저장된 번역이 있으면 바로, 없으면 처음 한 번만 서버가 만든다(그동안 「번역 중…」).
+ * 새 번역은 로그인한 사람만 만들 수 있어 손님에게는 저장된 번역이 있는 글에만 버튼을 둔다
  */
 export default function useCommunityTranslation({
     kind,
@@ -20,6 +21,7 @@ export default function useCommunityTranslation({
     language,
     translations,
     enabled,
+    signedIn,
 }: {
     kind: "opinion" | "reply";
     id: number;
@@ -27,6 +29,7 @@ export default function useCommunityTranslation({
     language: "ko" | "ja" | "en" | null;
     translations: StoredTranslations;
     enabled: boolean;
+    signedIn: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -35,7 +38,11 @@ export default function useCommunityTranslation({
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const available =
-        enabled && text !== null && language !== null && language !== locale;
+        enabled &&
+        text !== null &&
+        language !== null &&
+        language !== locale &&
+        (signedIn || Boolean(translations[locale]));
     const translated = translations[locale] ?? fetched;
     const translate = async () => {
         setError(null);

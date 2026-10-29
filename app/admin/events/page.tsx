@@ -8,6 +8,7 @@ import {
 } from "@/features/events/server/event-admin-service";
 import type { EventStatus } from "@/features/events/schemas/event-schema";
 import { eventPeriod } from "@/features/events/components/event-parts";
+import { requireAdmin } from "@/lib/admin";
 
 const LABELS: Record<EventStatus, string> = {
     draft: "임시저장",
@@ -29,6 +30,7 @@ export default async function AdminEventsPage({
 }: {
     searchParams: Promise<{ status?: string }>;
 }) {
+    await requireAdmin();
     const query = await searchParams;
     const status =
         ADMIN_EVENT_TABS.find((item) => item === query.status) ?? "pending";

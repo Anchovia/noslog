@@ -12,7 +12,8 @@ const mocks = vi.hoisted(() => ({
     revalidateTag: vi.fn(),
 }));
 
-vi.mock("@/lib/bookmarklet", () => ({
+vi.mock("@/lib/bookmarklet", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("@/lib/bookmarklet")>()),
     verifySyncToken: mocks.verifySyncToken,
 }));
 vi.mock("@/lib/db", () => ({
@@ -96,7 +97,14 @@ describe("detectJacketFormat", () => {
 describe("POST /api/receiveJacket", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.verifySyncToken.mockReturnValue({ userId: 1, version: 0 });
+        mocks.verifySyncToken.mockReturnValue({
+            status: "valid",
+            payload: {
+                userId: 1,
+                version: 0,
+                iat: Math.floor(Date.now() / 1000),
+            },
+        });
         mocks.userFindUnique.mockResolvedValue({
             syncTokenVersion: 0,
             role: "admin",
@@ -112,6 +120,19 @@ describe("POST /api/receiveJacket", () => {
         );
 
         expect(response.status).toBe(403);
+        expect(mocks.verifySyncToken).not.toHaveBeenCalled();
+    });
+
+    it("Content-Length 가 없어도 실제 본문이 상한을 넘으면 검증 전에 거부한다", async () => {
+        const request = createRequest({
+            ...jacketBody(),
+            data: "A".repeat(2 * 1024 * 1024),
+        });
+        expect(request.headers.get("content-length")).toBeNull();
+
+        const response = await POST(request);
+
+        expect(response.status).toBe(413);
         expect(mocks.verifySyncToken).not.toHaveBeenCalled();
     });
 
@@ -136,6 +157,36 @@ describe("POST /api/receiveJacket", () => {
         const response = await POST(createRequest(jacketBody()));
 
         expect(response.status).toBe(403);
+        expect(mocks.put).not.toHaveBeenCalled();
+    });
+
+    it("서명이 틀리거나 만료된 토큰은 지금 실패 응답 그대로 거부한다", async () => {
+        for (const status of ["invalid", "expired"] as const) {
+            mocks.verifySyncToken.mockReturnValueOnce({ status });
+
+            const response = await POST(createRequest(jacketBody()));
+
+            expect(response.status).toBe(401);
+            expect(await response.json()).toEqual({ saved: false });
+        }
+        expect(mocks.userFindUnique).not.toHaveBeenCalled();
+        expect(mocks.put).not.toHaveBeenCalled();
+    });
+
+    it("관리자 토큰은 발급 30일이 지나면 거부한다", async () => {
+        mocks.verifySyncToken.mockReturnValue({
+            status: "valid",
+            payload: {
+                userId: 1,
+                version: 0,
+                iat: Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60,
+            },
+        });
+
+        const response = await POST(createRequest(jacketBody()));
+
+        expect(response.status).toBe(403);
+        expect(await response.json()).toEqual({ saved: false });
         expect(mocks.put).not.toHaveBeenCalled();
     });
 

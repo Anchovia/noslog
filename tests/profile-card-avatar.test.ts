@@ -52,12 +52,24 @@ describe("프로필 카드 사진(2026-09-30 — 직접 올린 webp 사진이면
         }
     );
 
-    it("바꾼 사진은 카드 엔진에서 PNG 로 그려진다(webp 그대로는 엔진이 오류를 낸다)", async () => {
+    it("바꾼 사진은 카드 엔진에서 PNG 로 그려진다", async () => {
         const webp = await sample("webp");
-        const raw = `data:image/webp;base64,${Buffer.from(webp).toString("base64")}`;
-        await expect(render(raw)).rejects.toThrow();
         const image = await render((await toCardAvatar(webp))!);
         expect(image.subarray(0, 8).toString("hex")).toBe(PNG_SIGNATURE);
+    });
+
+    it("픽셀이 4096² 를 넘는 사진은 풀지 않고 null", async () => {
+        const huge = await sharp({
+            create: {
+                width: 5000,
+                height: 5000,
+                channels: 3,
+                background: { r: 0, g: 0, b: 0 },
+            },
+        })
+            .png()
+            .toBuffer();
+        expect(await toCardAvatar(new Uint8Array(huge))).toBeNull();
     });
 
     it("읽지 못하는 파일이면 null — 카드는 이름 첫 글자로 그린다", async () => {

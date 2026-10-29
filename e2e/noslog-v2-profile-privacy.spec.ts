@@ -181,6 +181,8 @@ for (const flag of flags) {
                     judgeGood: 3,
                     judgeNear: 1,
                     judgeMiss: 1,
+                    // 달성일 2026-08-10 21:04 KST
+                    bestAt: new Date("2026-08-10T12:04:00Z"),
                 },
             });
             await db!.chartPlayHistory.create({
@@ -235,7 +237,33 @@ for (const flag of flags) {
             expect(payload.items).toHaveLength(
                 hidden("hide_play_activity") ? 0 : 1
             );
+            // 플레이 활동 비공개면 남에게 기록 · 베스트 줄의 달성일도 주지 않고, 최근 달성 순은 기본 순으로 받는다
+            const achievedAt = hidden("hide_play_activity")
+                ? null
+                : "2026-08-10 21:04";
+            const records = (
+                await (
+                    await page.request.get(
+                        `/api/profiles/${user.id}/records?view=all&sort=recent`
+                    )
+                ).json()
+            ).result;
+            expect(records.items).toHaveLength(1);
+            expect(records.items[0].playedAt).toBe(achievedAt);
+            expect(records.query.sort).toBe(
+                hidden("hide_play_activity") ? "value" : "recent"
+            );
+            const best = (
+                await (
+                    await page.request.get(
+                        `/api/profiles/${user.id}/plays?kind=best&offset=0`
+                    )
+                ).json()
+            ).result;
+            expect(best.items).toHaveLength(1);
+            expect(best.items[0].playedAt).toBe(achievedAt);
             if (hidden("hide_play_activity")) {
+                expect(html).not.toContain("2026-08-10 21:04");
                 expect(html).not.toContain("2026-08-11 21:04:00");
                 await expect(
                     page.getByRole("region", {

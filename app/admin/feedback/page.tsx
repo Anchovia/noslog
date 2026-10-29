@@ -8,6 +8,7 @@ import {
 } from "@/features/feedback/schemas/feedback-admin-schema";
 import { listFeedbackReports } from "@/features/feedback/server/feedback-admin-service";
 import { listOpinionReports } from "@/features/feedback/server/opinion-report-admin-service";
+import { requireAdmin } from "@/lib/admin";
 
 // 피드백 두 탭 + 채보 커뮤니티 의견 · 답글 신고 두 탭(2026-10-17)
 const tabs = [
@@ -24,6 +25,7 @@ export default async function AdminFeedbackPage({
 }: {
     searchParams: Promise<{ status?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const opinionStatus =
         params.status === "reports"

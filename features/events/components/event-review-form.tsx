@@ -24,7 +24,14 @@ const OPTIONS: { value: EventReviewDecision; label: string }[] = [
 ];
 
 // 검토 결과 — 기존 관리자 폼 모양(nl-admin-form). 수정 요청 · 반려는 사유 필수
-export default function EventReviewForm({ id }: { id: number }) {
+export default function EventReviewForm({
+    id,
+    updatedAt,
+}: {
+    id: number;
+    /** 운영자가 본 판 — 그사이 작성자가 고쳤으면 서버가 처리하지 않는다 */
+    updatedAt: string;
+}) {
     const router = useRouter();
     const [decision, setDecision] = useState<EventReviewDecision>("approve");
     const [note, setNote] = useState("");
@@ -36,6 +43,7 @@ export default function EventReviewForm({ id }: { id: number }) {
         setError(null);
         const formData = new FormData();
         formData.set("id", String(id));
+        formData.set("updatedAt", updatedAt);
         formData.set("decision", decision);
         formData.set("note", note);
         try {

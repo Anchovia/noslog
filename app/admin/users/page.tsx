@@ -4,12 +4,14 @@ import FilterChipLinks from "@/components/ui/filter-chip-links";
 import AdminUserCard from "@/features/users/components/admin/admin-user-card";
 import { normalizeUserAdminFilters } from "@/features/users/schemas/user-admin-schema";
 import { listAdminUsers } from "@/features/users/server/user-admin-service";
+import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminUsersPage({
     searchParams,
 }: {
     searchParams: Promise<{ q?: string; state?: string }>;
 }) {
+    await requireAdmin();
     const params = await searchParams;
     const filters = normalizeUserAdminFilters(params.q, params.state);
     const result = await listAdminUsers(filters);

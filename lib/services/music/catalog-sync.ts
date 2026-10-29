@@ -13,6 +13,10 @@ import {
 } from "@/lib/services/music/update-music";
 
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
+// 일반 사용자 동기화가 새로 만드는 곡 후보 상한 — 동기화 한 번 · 사람별 24시간
+const NEW_CANDIDATES_PER_SYNC = 20;
+const NEW_CANDIDATES_PER_DAY = 100;
+const CANDIDATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 const difficultyOrder = new Map(
     ["Normal", "Hard", "Expert", "Real"].map((difficulty, index) => [
         difficulty,
@@ -241,10 +245,12 @@ async function recordCatalogCandidate(
 
 /**
  * 일반 사용자 동기화가 본 카탈로그 차이 — 한 번 읽고 묶어서 쓴다(2026-10-15 S9, 예전에는 곡마다 읽기 + 쓰기를 동시에).
- * 같은 지문이면 payload 도 같아(지문 = payload 해시) 다시 쓰지 않는다. 상태 규칙은 recordCatalogCandidate 와 같다
+ * 같은 지문이면 payload 도 같아(지문 = payload 해시) 다시 쓰지 않는다. 상태 규칙은 recordCatalogCandidate 와 같다.
+ * 새 후보만 상한을 센다. 넘친 수를 돌려준다
  */
 async function recordPendingCatalogCandidates(
-    updates: DetectedCatalogUpdate[]
+    updates: DetectedCatalogUpdate[],
+    submittedById: number
 ) {
     const key = (musicIndex: string, fingerprint: string) =>
         `${musicIndex}:${fingerprint}`;
@@ -260,7 +266,7 @@ async function recordPendingCatalogCandidates(
     const found = new Set(
         existing.map((item) => key(item.musicIndex, item.fingerprint))
     );
-    const created = updates.filter(
+    const unseen = updates.filter(
         (update) =>
             !found.has(key(update.payload.musicIndex, update.fingerprint))
     );
@@ -271,6 +277,26 @@ async function recordPendingCatalogCandidates(
         .filter((item) => item.status === "rejected")
         .map((item) => item.id);
     const now = new Date();
+    const submittedToday = unseen.length
+        ? await db.musicCatalogCandidate.count({
+              where: {
+                  submittedById,
+                  createdAt: {
+                      gte: new Date(now.getTime() - CANDIDATE_WINDOW_MS),
+                  },
+              },
+          })
+        : 0;
+    const created = unseen.slice(
+        0,
+        Math.max(
+            0,
+            Math.min(
+                NEW_CANDIDATES_PER_SYNC,
+                NEW_CANDIDATES_PER_DAY - submittedToday
+            )
+        )
+    );
     await db.$transaction([
         ...(created.length
             ? [
@@ -286,6 +312,7 @@ async function recordPendingCatalogCandidates(
                                 }
                               : {}),
                           status: "pending" as const,
+                          submittedById,
                       })),
                       skipDuplicates: true,
                   }),
@@ -312,23 +339,30 @@ async function recordPendingCatalogCandidates(
               ]
             : []),
     ]);
+
+    return unseen.length - created.length;
 }
 
 export async function processBemaniCatalogUpdates(
     music: SyncMusicInput[],
-    trustedAdminSync: boolean
+    trustedAdminSync: boolean,
+    submittedById: number
 ) {
     const updates = await detectCatalogUpdates(music);
     if (updates.length === 0) {
-        return { detected: 0, pending: 0, applied: 0 };
+        return { detected: 0, pending: 0, applied: 0, overLimit: 0 };
     }
 
     if (!trustedAdminSync) {
-        await recordPendingCatalogCandidates(updates);
+        const overLimit = await recordPendingCatalogCandidates(
+            updates,
+            submittedById
+        );
         return {
             detected: updates.length,
-            pending: updates.length,
+            pending: updates.length - overLimit,
             applied: 0,
+            overLimit,
         };
     }
 
@@ -336,7 +370,12 @@ export async function processBemaniCatalogUpdates(
     await Promise.all(
         updates.map((update) => recordCatalogCandidate(update, "applied"))
     );
-    return { detected: updates.length, pending: 0, applied: updates.length };
+    return {
+        detected: updates.length,
+        pending: 0,
+        applied: updates.length,
+        overLimit: 0,
+    };
 }
 
 export function parseMusicCatalogSnapshot(value: unknown) {

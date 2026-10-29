@@ -12,7 +12,8 @@ import {
     failSyncAttempt,
     getSyncUser,
 } from "@/features/sync/server/sync-attempt-data";
-import { verifySyncToken } from "@/lib/bookmarklet";
+import { readJsonBody } from "@/lib/api/read-json-body";
+import { isSyncTokenExpired, verifySyncToken } from "@/lib/bookmarklet";
 import {
     CACHE_TAGS,
     getChartRankingTag,
@@ -23,6 +24,11 @@ import { isLocale, type Locale } from "@/lib/i18n/routing";
 import { processBemaniCatalogUpdates } from "@/lib/services/music/catalog-sync";
 import { type SyncMusicInput } from "@/lib/services/music/update-music";
 import { type ChartIdMap, loadChartIds } from "@/lib/services/user/chart-ids";
+import {
+    type ChartLimitMap,
+    isWithinChartLimits,
+    loadChartLimits,
+} from "@/lib/services/user/chart-limits";
 import { keepTodayGrade, updateGrade } from "@/lib/services/user/update-grade";
 import { updatePlayData } from "@/lib/services/user/update-play-data";
 import { updatePlayerProfile } from "@/lib/services/user/update-player-profile";
@@ -277,6 +283,38 @@ function formatSkippedCharts(skippedCharts: SkippedChart[]) {
     return `DB에 등록되지 않은 채보 ${skippedCharts.length}개를 건너뛰었습니다: ${preview}${remainder > 0 ? ` 외 ${remainder}개` : ""}`;
 }
 
+function dropOutOfRangeSheets(music: SyncMusicInput[], limits: ChartLimitMap) {
+    let rejected = 0;
+    const kept = music.flatMap((item) => {
+        const sheet = item.sheet.filter((chart) => {
+            const within = isWithinChartLimits(
+                limits.get(`${item["@index"]}:${chart.difficulty}`),
+                {
+                    difficulty: chart.difficulty,
+                    judge: chart.judge,
+                    maxCombo: chart.max_combo,
+                    gradeBasic: chart.grade_basic,
+                }
+            );
+            if (!within) rejected += 1;
+            return within;
+        });
+        return sheet.length > 0 ? [{ ...item, sheet }] : [];
+    });
+    return { kept, rejected };
+}
+
+function joinNotices(...notices: (string | null)[]) {
+    const text = notices.filter(Boolean).join(" ");
+    return text || null;
+}
+
+function formatOutOfRange(rejected: number) {
+    return rejected > 0
+        ? `채보 노트 수 · 최대 Grd 를 벗어난 기록 ${rejected}개를 저장하지 않았습니다.`
+        : null;
+}
+
 export async function POST(request: NextRequest) {
     const copy = getResponseCopy(request);
 
@@ -288,13 +326,12 @@ export async function POST(request: NextRequest) {
         return json(copy.jsonOnly, 415);
     }
 
-    const contentLength = Number(request.headers.get("content-length"));
-    if (Number.isFinite(contentLength) && contentLength > MAX_SYNC_BODY_BYTES) {
+    const read = await readJsonBody(request, MAX_SYNC_BODY_BYTES);
+    if (read.tooLarge) {
         return json(copy.tooLarge, 413);
     }
 
-    const body = await request.json().catch(() => null);
-    const parsed = syncRequestSchema.safeParse(body);
+    const parsed = syncRequestSchema.safeParse(read.body);
     if (!parsed.success) {
         console.warn("BEMANI sync payload validation failed", {
             issues: parsed.error.issues.slice(0, 10).map((issue) => ({
@@ -305,13 +342,21 @@ export async function POST(request: NextRequest) {
         return json(copy.invalidPayload, 400);
     }
 
-    const tokenPayload = verifySyncToken(parsed.data.token);
-    if (!tokenPayload) {
+    const verifiedToken = verifySyncToken(parsed.data.token);
+    if (verifiedToken.status === "invalid") {
         return json(copy.invalidToken, 401);
     }
+    if (verifiedToken.status === "expired") {
+        return json(copy.expiredToken, 401);
+    }
+    const tokenPayload = verifiedToken.payload;
 
     const user = await getSyncUser(tokenPayload.userId);
-    if (!user || user.syncTokenVersion !== tokenPayload.version) {
+    if (
+        !user ||
+        user.syncTokenVersion !== tokenPayload.version ||
+        isSyncTokenExpired(tokenPayload, user.role)
+    ) {
         return json(copy.expiredToken, 401);
     }
 
@@ -336,6 +381,19 @@ export async function POST(request: NextRequest) {
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
         : null;
+    const chartLimits = await loadChartLimits();
+    const historyInRange = history.filter((item) =>
+        isWithinChartLimits(
+            chartLimits.get(`${item.music}:${item.difficulty}`),
+            {
+                difficulty: item.difficulty,
+                judge: item.judge_count,
+                maxCombo: item.max_combo,
+                gradeBasic: item.grade_basic,
+            }
+        )
+    );
+    let outOfRange = history.length - historyInRange.length;
     const syncAttempt = await createSyncAttempt(
         user.id,
         music ? "full" : "recent",
@@ -374,27 +432,39 @@ export async function POST(request: NextRequest) {
         await updatePlayerProfile(user.id, player);
 
         const { insertedPlays, skippedCharts: skippedRecentCharts } =
-            await updateRecentPlay(user.id, history, syncId);
+            await updateRecentPlay(user.id, historyInRange, syncId);
         let changedRecords = 0;
         let changedChartIds: number[] = [];
         let grades: Awaited<ReturnType<typeof updateGrade>> | null = null;
         let syncNotice = formatSkippedCharts(skippedRecentCharts);
         let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
-            catalogUpdates = await processBemaniCatalogUpdates(
-                music,
-                user.role === "admin"
-            );
+            const { overLimit, ...catalogCounts } =
+                await processBemaniCatalogUpdates(
+                    music,
+                    user.role === "admin",
+                    user.id
+                );
+            catalogUpdates = catalogCounts;
+            if (overLimit > 0)
+                console.warn("BEMANI catalog candidates over limit", {
+                    userId: user.id,
+                    syncId,
+                    candidates: overLimit,
+                });
             // 곡 목록 반영 뒤 채보 지도를 한 번 읽어 확인 · 저장이 같이 쓴다(2026-10-16 Q2 — 예전에는 두 번 더 읽었다)
             const chartIds = await loadChartIds();
-            const { knownMusic, skippedCharts } = filterKnownMusic(
-                music,
-                chartIds
-            );
+            const { knownMusic: registeredMusic, skippedCharts } =
+                filterKnownMusic(music, chartIds);
             syncNotice = formatSkippedCharts([
                 ...skippedRecentCharts,
                 ...skippedCharts,
             ]);
+            const { kept: knownMusic, rejected } = dropOutOfRangeSheets(
+                registeredMusic,
+                chartLimits
+            );
+            outOfRange += rejected;
 
             if (knownMusic.length > 0) {
                 ({ changedRecords, changedChartIds } = await updatePlayData(
@@ -420,10 +490,16 @@ export async function POST(request: NextRequest) {
             }
         );
 
+        if (outOfRange > 0)
+            console.warn("BEMANI sync values out of chart range", {
+                userId: user.id,
+                syncId,
+                rows: outOfRange,
+            });
         await completeSyncAttempt(syncId, {
             insertedPlays,
             changedRecords,
-            notice: syncNotice,
+            notice: joinNotices(syncNotice, formatOutOfRange(outOfRange)),
         });
 
         // 공용 캐시는 이번 동기화로 실제로 바뀐 만큼만 비운다(2026-10-15 S3) — 바뀐 게 없으면 본인 프로필만
