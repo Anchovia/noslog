@@ -130,6 +130,7 @@ export const enMessages = {
     "community.action.unavailable": "This item cannot be changed right now.",
     "community.action.failed":
         "Couldn’t save. Your input is preserved; please try again.",
+    "community.dailyLimit": "You've reached today's limit. Try again tomorrow.",
     "pattern.evaluate": "Rate",
     "music.info.levelConstant": "Official Level",
     "record.summaryGuest": "Log in to see your record and rank.",
@@ -176,8 +177,9 @@ export const enMessages = {
     "pattern.switchToAll": "Compare with all charts",
     "pattern.computed":
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
+    "pattern.computedNone": "No published chart to calculate from",
     "pattern.computedMissing":
-        "Values stay empty for songs without a published chart. Meter changes stay empty for charts extracted from video, because their time signature is unknown.",
+        "Meter changes stay empty for charts extracted from video, because their time signature is unknown.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
@@ -351,6 +353,8 @@ export const enMessages = {
     "poll.error.invalid": "Check the poll and try again.",
     "poll.error.locked":
         "The question and options cannot change once votes come in.",
+    "poll.error.published":
+        "The question and options of a poll on a published post cannot change. Only the deadline can be changed.",
     "poll.error.closed": "A closed poll cannot be edited.",
     "poll.error.question": "Enter a question.",
     "poll.error.options": "Enter 2 to 20 options.",
@@ -718,6 +722,8 @@ export const enMessages = {
     "feedback.attachmentError": "This attachment is not allowed.",
     "feedback.success": "Your report has been submitted.",
     "feedback.submitError": "Could not submit your report.",
+    "feedback.dailyLimit":
+        "You've reached today's report limit. Send it again tomorrow.",
     "feedback.uploadError": "Could not process the image upload request.",
     "music.action.voteLogin": "Log in to vote.",
     "music.action.voteInvalid": "Please check your vote.",
@@ -1628,17 +1634,6 @@ export const enMessages = {
     "settings.loginRequired": "Login required.",
     "settings.checkInput": "Please check the information you entered.",
     "settings.validation.avatarUrl": "Enter a valid image URL.",
-    "settings.validation.nicknameRequired": "Enter a nickname.",
-    "settings.validation.nicknameMax":
-        "Enter a nickname no longer than 20 characters.",
-    "settings.validation.countryRequired": "Choose a country.",
-    "settings.validation.localeRequired": "Choose a language.",
-    "settings.validation.discordNameMax":
-        "Enter a Discord name no longer than 32 characters.",
-    "settings.validation.discordTagCharacters":
-        "Use only letters, numbers, periods, and underscores in the Discord tag.",
-    "settings.validation.discordTagMax":
-        "Enter a Discord tag no longer than 32 characters.",
     "settings.validation.arcadeRequired": "Choose the arcade again.",
     "settings.userNotFound": "Could not find your user information.",
     "settings.invalidAvatarUrl": "This profile image URL is not allowed.",
@@ -1747,6 +1742,7 @@ export const enMessages = {
     "arcades.region": "Region",
     "arcades.legend": "Map legend",
     "arcades.cluster": "{count} arcades",
+    "arcades.clusterMore": "+{count} more",
     "arcades.legendSelected": "White pin: selected arcade",
     "arcades.details": "Arcade details",
     "arcades.directions": "Directions",
