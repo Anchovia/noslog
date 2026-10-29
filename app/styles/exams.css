@@ -130,6 +130,9 @@
     color: inherit;
     background-image: none;
 }
+:root[data-input="pointer"] .noslog-ui .nl-exam-select__option:focus-visible {
+    outline: none;
+}
 /* 레일 줄 = Spectrum 2 메뉴 항목 — 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900, 고른 줄 = 셀렉트 목록 고른 줄과 같은 surface/control + 600 */
 .noslog-ui .nl-exam-rail button:is(:focus-visible, :active) {
     background: var(--nl-surface-control-hover);

@@ -304,14 +304,19 @@ html[data-theme="light"] .noslog-ui,
         )
         translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
 }
-/* 올림 · 누름 · 키 포커스 = 같은 색(Spectrum 2 hover · down · key-focus 같은 단계). 올림만 포인터 장치에서 */
+/* 올림 · 누름 · 키 포커스 = 같은 색(Spectrum 2 hover · down · key-focus 같은 단계). 올림만 포인터 장치에서.
+   바쁨은 다시 누를 수 없어 올림 · 누름을 받지 않는다(Spectrum 2 pending) */
 @media (hover: hover) {
-    .noslog-ui .nl-button:not(:disabled, [data-locked]):hover {
+    .noslog-ui
+        .nl-button:not(:disabled, [data-locked], [aria-busy="true"]):hover {
         background: var(--nl-primary-hover);
     }
 }
 .noslog-ui
-    .nl-button:not(:disabled, [data-locked]):is(:active, :focus-visible) {
+    .nl-button:not(:disabled, [data-locked]):is(
+        :not([aria-busy="true"]):active,
+        :focus-visible
+    ) {
     background: var(--nl-primary-hover);
 }
 /* 고스트 · 아이콘 버튼(ActionButton)의 기본 크기 = 줄의 컨트롤 높이 */
@@ -358,7 +363,8 @@ html[data-theme="light"] .noslog-ui,
     .noslog-ui
         :is(.nl-button--secondary, .nl-button--ghost):not(
             :disabled,
-            [data-locked]
+            [data-locked],
+            [aria-busy="true"]
         ):hover {
         background: var(--nl-surface-control-hover);
         color: var(--nl-content-strong);
@@ -368,7 +374,7 @@ html[data-theme="light"] .noslog-ui,
     :is(.nl-button--secondary, .nl-button--ghost):not(
         :disabled,
         [data-locked]
-    ):is(:active, :focus-visible) {
+    ):is(:not([aria-busy="true"]):active, :focus-visible) {
     background: var(--nl-surface-control-hover);
     color: var(--nl-content-strong);
 }
@@ -379,13 +385,18 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 위험 버튼 = Spectrum 2 negative fill, 올림 · 누름 · 키 포커스 한 단계 어둡게 */
 @media (hover: hover) {
-    .noslog-ui .nl-button--danger:not(:disabled, [data-locked]):hover {
+    .noslog-ui
+        .nl-button--danger:not(
+            :disabled,
+            [data-locked],
+            [aria-busy="true"]
+        ):hover {
         background: var(--nl-feedback-destructive-hover);
     }
 }
 .noslog-ui
     .nl-button--danger:not(:disabled, [data-locked]):is(
-        :active,
+        :not([aria-busy="true"]):active,
         :focus-visible
     ) {
     background: var(--nl-feedback-destructive-hover);
@@ -1514,6 +1525,21 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-content-on-media);
     background: var(--nl-surface-media-scrim);
 }
+/* 사진 위 닫기 · 넘김 = 미디어 위 버튼 — 올림 · 누름 · 키 포커스에 quiet 올림 면 */
+@media (hover: hover) {
+    .noslog-ui :is(.nl-photo-viewer__close, .nl-photo-viewer__nav):hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui
+    :is(.nl-photo-viewer__close, .nl-photo-viewer__nav):is(
+        :active,
+        :focus-visible
+    ) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
 .noslog-ui .nl-photo-viewer__nav--previous {
     left: var(--nl-spacing-8);
 }
@@ -1937,6 +1963,10 @@ html[data-theme="light"] .noslog-ui,
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
+}
+/* 키보드 위치 표시는 키보드로 움직일 때만(lib/input-modality) — 마우스로 연 창은 올리기 전 첫 줄을 칠하지 않는다 */
+:root[data-input="pointer"] .noslog-ui .nl-pick-row[data-active]:not(:hover) {
+    background-image: none;
 }
 @media (hover: hover) {
     .noslog-ui .nl-pick-row:not([aria-disabled="true"]):hover {
@@ -2533,6 +2563,19 @@ html[data-theme="light"] .noslog-ui,
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
 }
+/* 링크인 태그(프로필 기여) — 올리면 반전 태그(GitHub 토픽) */
+@media (hover: hover) {
+    .noslog-ui a.nl-tag:hover {
+        border-color: var(--nl-primary-default);
+        background: var(--nl-primary-default);
+        color: var(--nl-primary-on-primary);
+    }
+}
+.noslog-ui a.nl-tag:is(:active, :focus-visible) {
+    border-color: var(--nl-primary-default);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
 /* 상태 태그(이벤트 진행 · 글 승인, 2026-09-23 S-c) = 글자만 알림 표시색. 기본 배지 면(gray-400 #444) 위에서는 초록 3.93 · 빨강 3.26 : 1 로
    4.5 에 못 미쳐(2026-10-26 axe) 상태 태그만 카드 면 + 둘레 선으로 둔다. 색 단독으로 뜻을 전하지 않는다 — 글자가 늘 상태 이름을 말한다(WCAG 1.4.1) */
 .noslog-ui .nl-tag--status {
@@ -2627,6 +2670,31 @@ html[data-theme="light"] .noslog-ui,
     content: "";
     position: absolute;
     inset: calc((var(--nl-icon-small) - var(--nl-control-height)) / 2);
+}
+/* 올림 · 누름 · 키 포커스 — 아이콘 둘레 원 24 면(Spectrum 2 ContextualHelp). 면은 자리를 차지하지 않는다 */
+.noslog-ui .nl-info-trigger {
+    isolation: isolate;
+}
+.noslog-ui .nl-info-trigger::after {
+    content: "";
+    position: absolute;
+    z-index: calc(var(--nl-layer-above) * -1);
+    inset: calc((var(--nl-icon-small) - var(--nl-spacing-24)) / 2);
+    border-radius: var(--nl-radius-full);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-info-trigger:hover {
+        color: var(--nl-content-strong);
+    }
+    .noslog-ui .nl-info-trigger:hover::after {
+        background: var(--nl-surface-control-hover);
+    }
+}
+.noslog-ui .nl-info-trigger:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-info-trigger:is(:active, :focus-visible)::after {
+    background: var(--nl-surface-control-hover);
 }
 @media (forced-colors: active) {
     .noslog-ui :focus-visible,
@@ -2757,7 +2825,7 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui
-        .nl-markdown-editor:not([data-invalid]):not(
+        .nl-markdown-editor:not([data-invalid], [data-readonly]):not(
             :has(.nl-markdown-editor__input:focus)
         ):hover {
         border-color: var(--nl-border-input-hover);
@@ -2765,6 +2833,11 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-markdown-editor[data-invalid] {
     border-color: var(--nl-feedback-destructive);
+}
+/* 읽기 전용(보내는 중) = 입력칸 읽기 전용과 같이 경계 투명 · surface/surface */
+.noslog-ui .nl-markdown-editor[data-readonly] {
+    border-color: transparent;
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-markdown-editor__head {
     display: flex;
@@ -3333,6 +3406,15 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     background: transparent;
     color: inherit;
     font: inherit;
+}
+/* 숫자 칸의 브라우저 기본 ▲▼ 는 두지 않는다 — 단위 입력은 값 칸과 단위 글자뿐이다 */
+.noslog-ui .nl-unit-input__field {
+    appearance: textfield;
+}
+.noslog-ui .nl-unit-input__field::-webkit-inner-spin-button,
+.noslog-ui .nl-unit-input__field::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
 }
 .noslog-ui .nl-unit-input__unit {
     flex-shrink: 0;

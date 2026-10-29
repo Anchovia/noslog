@@ -1,5 +1,7 @@
 "use client";
 
+import "@/lib/input-modality";
+
 import { Check } from "lucide-react";
 import { useId, useRef, useState } from "react";
 
