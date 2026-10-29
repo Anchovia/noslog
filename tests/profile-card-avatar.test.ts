@@ -72,6 +72,26 @@ describe("프로필 카드 사진(2026-09-30 — 직접 올린 webp 사진이면
         expect(await toCardAvatar(new Uint8Array(huge))).toBeNull();
     });
 
+    it.each(["avif", "tiff"] as const)(
+        "sharp 가 읽는 %s 라도 받는 형식이 아니면 넘기지 않고 null",
+        async (format) => {
+            const bytes = await sharp({
+                create: {
+                    width: 300,
+                    height: 200,
+                    channels: 3,
+                    background: { r: 200, g: 120, b: 60 },
+                },
+            })
+                [format]()
+                .toBuffer();
+            expect((await sharp(bytes).metadata()).format).toBe(
+                format === "avif" ? "heif" : "tiff"
+            );
+            expect(await toCardAvatar(new Uint8Array(bytes))).toBeNull();
+        }
+    );
+
     it("읽지 못하는 파일이면 null — 카드는 이름 첫 글자로 그린다", async () => {
         expect(
             await toCardAvatar(new TextEncoder().encode("not an image"))
