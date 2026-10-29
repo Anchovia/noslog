@@ -183,7 +183,7 @@ export default async function AdminSyncsPage({
                                 </div>
                             </div>
                             <details className="border-t-nl-stroke border-nl-divider pt-nl-12">
-                                <summary className="nl-emphasis-label flex cursor-pointer list-none items-center justify-between text-nl-content">
+                                <summary className="nl-admin-summary nl-emphasis-label flex cursor-pointer list-none items-center justify-between text-nl-content">
                                     <span className="flex items-center gap-nl-8">
                                         <DatabaseZap className="nl-icon-small" />
                                         수신 데이터 상태

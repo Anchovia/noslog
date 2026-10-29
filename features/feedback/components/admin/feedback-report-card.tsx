@@ -39,7 +39,7 @@ export default function FeedbackReportCard({
                 <div className="flex items-start justify-between gap-nl-12">
                     <Link
                         href={`/profile/${report.user.id}`}
-                        className="nl-emphasis-label truncate text-nl-content hover:underline"
+                        className="nl-link nl-emphasis-label truncate"
                     >
                         {report.user.name}
                     </Link>
@@ -61,7 +61,7 @@ export default function FeedbackReportCard({
                         <Link
                             href={report.arcade.href}
                             target="_blank"
-                            className="nl-emphasis-label text-nl-content hover:underline"
+                            className="nl-link nl-emphasis-label"
                         >
                             {report.arcade.name}
                         </Link>

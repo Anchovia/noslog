@@ -167,7 +167,7 @@ export default async function EditTierListPage({
 
             {current ? (
                 <details className="group rounded-nl-control bg-nl-surface p-nl-12">
-                    <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
+                    <summary className="nl-admin-card-summary nl-emphasis-label cursor-pointer list-none text-nl-content">
                         서열표 정보
                     </summary>
                     <div className="mt-nl-12 border-t-nl-stroke border-nl-divider pt-nl-12">

@@ -94,7 +94,7 @@ export default async function AdminTiersPage() {
 
             {legacyTierLists.length > 0 ? (
                 <details className="rounded-nl-control bg-nl-surface px-nl-12 py-nl-12">
-                    <summary className="nl-emphasis-label cursor-pointer list-none text-nl-content">
+                    <summary className="nl-admin-card-summary nl-emphasis-label cursor-pointer list-none text-nl-content">
                         기존 보관 서열표 {legacyTierLists.length}개
                     </summary>
                     <div className="mt-nl-12 flex flex-col border-t-nl-stroke border-nl-divider pt-nl-8">

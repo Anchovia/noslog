@@ -255,55 +255,6 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-strong);
     text-decoration: none;
 }
-/* 누름 = Spectrum 2 pressScale — 원근 max(높이, 폭 ÷ 3, 24) 안에서 2px 들어간다(즉시).
-   폭은 CSS 로 읽지 못해 높이와 24 만 견준다 — 폭이 높이의 세 배를 넘는 버튼은 S2 보다 조금 더 들어간다 */
-.noslog-ui
-    .nl-button:not(
-        :disabled,
-        [data-locked],
-        [aria-busy="true"],
-        [aria-disabled="true"]
-    ):active {
-    transform: perspective(
-            max(var(--nl-control-height-large), var(--nl-spacing-24))
-        )
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
-/* 고스트 · 아이콘 버튼은 줄의 컨트롤 높이가 제 높이라 원근도 그 높이. sm · lg 규칙이 뒤에서 이긴다 */
-.noslog-ui
-    :is(.nl-button--ghost, .nl-button--icon):not(
-        :disabled,
-        [data-locked],
-        [aria-busy="true"],
-        [aria-disabled="true"]
-    ):active {
-    transform: perspective(max(var(--nl-control-height), var(--nl-spacing-24)))
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
-.noslog-ui
-    .nl-button--compact:not(
-        :disabled,
-        [data-locked],
-        [aria-busy="true"],
-        [aria-disabled="true"]
-    ):active {
-    transform: perspective(
-            max(var(--nl-control-height-compact), var(--nl-spacing-24))
-        )
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
-.noslog-ui
-    .nl-button--large:not(
-        :disabled,
-        [data-locked],
-        [aria-busy="true"],
-        [aria-disabled="true"]
-    ):active {
-    transform: perspective(
-            max(var(--nl-control-height-large), var(--nl-spacing-24))
-        )
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
 /* 올림 · 누름 · 키 포커스 = 같은 색(Spectrum 2 hover · down · key-focus 같은 단계). 올림만 포인터 장치에서.
    바쁨은 다시 누를 수 없어 올림 · 누름을 받지 않는다(Spectrum 2 pending) */
 @media (hover: hover) {
@@ -862,14 +813,37 @@ html[data-theme="light"] .noslog-ui,
     cursor: pointer;
     border-radius: var(--nl-radius-control);
 }
+/* 줄 면 없이 체크 상자 · 글자만 반응한다(Spectrum 2 CheckboxGroup) — 체크 상자는 그룹 제목 선에 그대로 */
 @media (hover: hover) {
     .noslog-ui .nl-selection-list__option:not([data-disabled="true"]):hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        color: var(--nl-content-strong);
     }
+    .noslog-ui
+        .nl-selection-list__option:not([data-disabled="true"]):hover
+        .nl-check__box {
+        border-color: var(--nl-content-strong);
+    }
+    .noslog-ui
+        .nl-selection-list__option:not([data-disabled="true"]):hover
+        input:checked
+        ~ .nl-check__box {
+        background: var(--nl-primary-hover);
+    }
+}
+.noslog-ui
+    .nl-selection-list__option:not([data-disabled="true"]):is(
+        :active,
+        :has(:focus-visible)
+    ) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-selection-list__option:not([data-disabled="true"]):is(
+        :active,
+        :has(:focus-visible)
+    )
+    .nl-check__box {
+    border-color: var(--nl-content-strong);
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
@@ -1937,7 +1911,7 @@ html[data-theme="light"] .noslog-ui,
     align-items: center;
     gap: var(--nl-spacing-12);
     min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
     color: var(--nl-content-default);
     text-align: left;
@@ -2812,6 +2786,126 @@ html[data-theme="light"] .noslog-ui,
         color: HighlightText;
     }
 }
+/* 고대비 모드에서도 버튼 · 메뉴 항목 · 누르는 줄의 올림 · 누름이 보이게 시스템 색 면(Spectrum 2 · Fluent 2 —
+   평소 면과 글자색을 맞바꾼다). 시스템 색이 덮지 않게 그 순간만 강제 색을 끄고, 안 글자도 같은 색으로 맞춘다 */
+@media (forced-colors: active) and (hover: hover) {
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-exam-select__option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            .nl-recent-play,
+            .nl-destination,
+            .nl-settings__row,
+            .nl-announcements__adjacent-link,
+            .nl-exam-stage__row,
+            .nl-musecat-result,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):hover {
+        forced-color-adjust: none;
+        background: Highlight;
+        color: HighlightText;
+    }
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-exam-select__option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            .nl-recent-play,
+            .nl-destination,
+            .nl-settings__row,
+            .nl-announcements__adjacent-link,
+            .nl-exam-stage__row,
+            .nl-musecat-result,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):hover
+        * {
+        color: HighlightText;
+    }
+}
+@media (forced-colors: active) {
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-exam-select__option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            .nl-recent-play,
+            .nl-destination,
+            .nl-settings__row,
+            .nl-announcements__adjacent-link,
+            .nl-exam-stage__row,
+            .nl-musecat-result,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):active {
+        forced-color-adjust: none;
+        background: Highlight;
+        color: HighlightText;
+    }
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-exam-select__option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            .nl-recent-play,
+            .nl-destination,
+            .nl-settings__row,
+            .nl-announcements__adjacent-link,
+            .nl-exam-stage__row,
+            .nl-musecat-result,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):active
+        * {
+        color: HighlightText;
+    }
+}
 
 /* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로.
    상자 = 입력칸 경계 · 모서리 · 면 입력 면. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
@@ -2934,7 +3028,7 @@ html[data-theme="light"] .noslog-ui,
 }
 
 /* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens.css 의 움직임 토큰만 쓴다.
-   목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
+   목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 
 /* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
    label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과 · 순위표 줄),

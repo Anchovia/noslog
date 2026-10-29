@@ -53,6 +53,16 @@
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
+/* 누르는 악곡 카드 · 채보 줄 = 한 단계 면이라 올림 · 누름 · 키 포커스도 홈 이동 칸처럼 한 단계 위 면 */
+@media (hover: hover) {
+    .noslog-ui a.nl-music-card:not([aria-disabled="true"]):hover {
+        background: var(--nl-surface-control-hover);
+    }
+}
+.noslog-ui
+    a.nl-music-card:not([aria-disabled="true"]):is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
+}
 .noslog-ui .nl-music-card__body {
     display: flex;
     flex: 1;
