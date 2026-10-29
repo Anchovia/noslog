@@ -86,11 +86,6 @@
     background: var(--nl-surface-control-hover);
     color: var(--nl-content-strong);
 }
-/* 누름 = Spectrum 2 pressScale. 원근은 max(높이, 폭 ÷ 3, 24) 인데 칸 높이 · 폭을 CSS 로 못 읽어 컨트롤 높이로 쓴다 */
-.noslog-ui .nl-home-tile:active {
-    transform: perspective(max(var(--nl-control-height), var(--nl-spacing-24)))
-        translate3d(0, 0, calc(var(--nl-stroke-strong) * -1));
-}
 @media (hover: hover) {
     .noslog-ui .nl-home-tile:hover {
         background: var(--nl-surface-control-hover);

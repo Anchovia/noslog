@@ -23,7 +23,7 @@
 
 - 누르는 것은 면으로 구분한다. 밝은 면(주) › 어두운 면(보조) › 글자만(고스트).
 - 모양은 Spectrum 2 Button(주 = primary fill · 보조 = secondary fill · 위험 = negative)과 ActionButton quiet(고스트)이다. 모서리는 모든 변형 `radius/control`, 글자는 `nl-control` 크기에 bold(`--nl-type-weight-strong`)다.
-- 보조 · 고스트는 올리면 면 `surface/control-hover` · 글자 `content/strong` 이다. 누르면 원근 안에서 2px 들어간다([기초값 — 올림 · 누름](../foundations.md#올림--누름)).
+- 보조 · 고스트는 올리면 면 `surface/control-hover` · 글자 `content/strong` 이다. 누름도 같은 색이고 모양은 바뀌지 않는다([기초값 — 올림 · 누름](../foundations.md#올림--누름)).
 - 면 없는 누르는 것(헤더 로그인 · ≡ · 쪽 번호 · 스테퍼 버튼 · 검색칸 안 버튼 · 좋아요 · 답글 토글 · 미디어 위 버튼)도 고스트와 같은 ActionButton quiet 올림을 쓴다. 모서리는 그 요소 것이다.
 - 위험 버튼은 확인 창 안의 마지막(확정) 버튼에만 쓴다. 그 창을 여는 버튼 · 신고 버튼은 보조다. 빨간 테두리 · 빨간 글자 모양은 쓰지 않는다.
 
@@ -39,10 +39,10 @@
 ## 상태
 
 - 올림 = 주 `primary/hover`, 보조 · 고스트 `surface/control-hover` + `content/strong`, 위험 `feedback/destructive-hover`. 누름 · 키 포커스도 같은 색이고 누름 전용 색은 없다.
-- 누름 = `perspective(max(제 높이, 24px)) translate3d(0, 0, -2px)`(Spectrum 2 pressScale, 즉시). 폭 ÷ 3 은 CSS 로 읽지 못해 견주지 않는다.
+- 누름 = 올림과 같은 색만. 들어가거나 줄어드는 모양은 없다.
 - 비활성 = 흐린 면 `surface/control` + 흐린 글자 `content/disabled`. 고스트는 면 없이 글자만 흐리다. 바쁘지 않은 `aria-disabled` 버튼 링크도 같다. 올림 · 누름은 걸리지 않는다.
 - 포커스 = 흰 2 선 한 줄 · 간격 0.
-- 바쁨 — `ActionButton busy`: 스피너 16 + 진행형 라벨, 다시 누를 수 없다. 비활성처럼 흐리게 하지 않는다.
+- 바쁨 — `ActionButton busy`: 스피너 16 + 진행형 라벨, 다시 누를 수 없다. 비활성처럼 흐리게 하지 않는다. 올림 · 누름은 걸리지 않고 평소 면 그대로다. 키 포커스는 다른 버튼과 같다.
 - 잠김 — 로그인이 필요한 동작은 `data-locked`. 비활성과 같은 모양이고 이유를 보여 준다.
 - 복사 성공은 누른 버튼 글자가 2초 「복사됨」 으로 바뀐다. 체크 표시 · 상자 없이 글자만, 알림은 화면 읽기로.
 
@@ -68,6 +68,7 @@
 
 ## 바뀐 기록
 
+- [2026-10-29 바쁨 버튼의 올림](../../decisions/2026-10-29-busy-button-hover.md)
 - [2026-10-28 전수 검수 고른 자리 — 합격 인증 로그아웃 링크](../../decisions/2026-10-28-audit-choices.md)
 - [2026-10-28 전수 검수 — 큰 줄 아이콘 버튼 · 좌우 안쪽](../../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-27 운영보다 나빠진 자리 — 버튼 모서리 · 높이 · 고스트 글자](../../decisions/2026-10-27-production-regression-fixes.md)
