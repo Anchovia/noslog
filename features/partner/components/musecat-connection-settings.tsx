@@ -94,7 +94,7 @@ export function MusecatConnectionRow({
     const meta = useMetaLine(settings);
     return (
         <IntentLink
-            className="nl-settings__row nl-hover-layer"
+            className="nl-settings__row"
             href={`${href("/settings")}${DETAIL_QUERY}`}
         >
             <span className="nl-settings__row-lead">

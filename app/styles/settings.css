@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 @media (hover: hover) {
@@ -248,7 +248,7 @@
     border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__rows > * {
-    padding-block: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__row {
@@ -283,7 +283,7 @@
     color: var(--nl-content-subdued);
 }
 @media (hover: hover) {
-    .noslog-ui button.nl-settings__row:hover {
+    .noslog-ui :is(a, button).nl-settings__row:hover {
         --nl-state-layer: var(--nl-interaction-row);
         background-image: linear-gradient(
             var(--nl-state-layer),
@@ -291,7 +291,7 @@
         );
     }
 }
-.noslog-ui button.nl-settings__row:is(:active, :focus-visible) {
+.noslog-ui :is(a, button).nl-settings__row:is(:active, :focus-visible) {
     --nl-state-layer: var(--nl-interaction-row);
     background-image: linear-gradient(
         var(--nl-state-layer),
