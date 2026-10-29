@@ -114,7 +114,7 @@
         "knip": "^6.34.0",
         "lint-staged": "^17.0.8",
         "postcss": "^8",
-        "prettier": "^3.9.5",
+        "prettier": "^3.9.10",
         "prettier-plugin-tailwindcss": "^0.8.0",
         "prisma": "^7.10.1",
         "prisma-lint": "^0.13.1",
@@ -129,6 +129,9 @@
         "lodash": "4.18.1",
         "@prisma/config": {
             "deepmerge-ts": "8.0.2"
+        },
+        "@vercel/cli-config": {
+            "zod": "$zod"
         },
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3"
