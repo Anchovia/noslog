@@ -34,6 +34,7 @@ import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-sche
 import type { ArcadeBounds } from "@/features/arcades/types/arcade-geography";
 
 // 핀 하나의 SVG — lucide map-pin 기하(24 상자). 채움 핀이라 아이콘 스트로크 규칙 밖
+const CLUSTER_LIST_LIMIT = 5;
 const PIN_PATH =
     "M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z";
 // lucide circle-question-mark 에서 원을 뺀 물음표 — 둥근 버튼 배경이 원 역할을 한다
@@ -51,6 +52,7 @@ export default function ArcadeDiscoveryMap({
     appKey,
     arcades,
     selectedId,
+    highlightedId = null,
     onSelect,
     onSearchArea,
     onStateChange,
@@ -67,6 +69,8 @@ export default function ArcadeDiscoveryMap({
     appKey: string;
     arcades: PublicArcade[];
     selectedId: number | null;
+    /** 목록 카드에 올리거나 키 포커스한 동안만 강조하는 핀 — 흰 핀 · 이름 판 · 맨 위, 크기는 그대로 */
+    highlightedId?: number | null;
     onSelect: (id: number) => void;
     onSearchArea?: (bounds: ArcadeBounds) => void;
     /** 불러오는 중 · 준비 · 실패 — 목록 페이지가 지도가 떴을 때만 시트 배치를 쓴다 */
@@ -107,6 +111,7 @@ export default function ArcadeDiscoveryMap({
     );
     const renderRef = useRef<(() => void) | null>(null);
     const selectionRef = useRef<(() => void) | null>(null);
+    const highlightRef = useRef<(() => void) | null>(null);
     // 지도 중심이 멈출 때 알림(뮤즈캣 목록 「지도에서 고르기」) — 지도 만드는 효과 안에서 부른다
     const centerChanged = useEffectEvent(
         (center: { latitude: number; longitude: number }) =>
@@ -124,6 +129,7 @@ export default function ArcadeDiscoveryMap({
     const showLabels = useEffectEvent(() => labels);
     const currentArcades = useEffectEvent(() => arcades);
     const currentSelected = useEffectEvent(() => selectedId);
+    const currentHighlighted = useEffectEvent(() => highlightedId);
     const reportState = useEffectEvent((next: "loading" | "ready" | "error") =>
         onStateChange?.(next)
     );
@@ -233,11 +239,36 @@ export default function ArcadeDiscoveryMap({
                             face.style.height = `${diameter}px`;
                             face.textContent = String(group.points.length);
                             button.append(face);
+                            // 올리면 묶음 안 이름 목록 — 다섯까지, 나머지는 개수로
+                            const list = document.createElement("span");
+                            list.className =
+                                "nl-arcade-marker__label nl-arcade-marker__label--hover nl-arcade-marker__label--list nl-metadata";
+                            list.setAttribute("aria-hidden", "true");
+                            for (const point of group.points.slice(
+                                0,
+                                CLUSTER_LIST_LIMIT
+                            )) {
+                                const name = document.createElement("span");
+                                name.textContent = point.arcade.name;
+                                list.append(name);
+                            }
+                            if (group.points.length > CLUSTER_LIST_LIMIT) {
+                                const more = document.createElement("span");
+                                more.textContent = t("arcades.clusterMore", {
+                                    count:
+                                        group.points.length -
+                                        CLUSTER_LIST_LIMIT,
+                                });
+                                list.append(more);
+                            }
+                            button.append(list);
                         } else {
                             button.setAttribute(
                                 "aria-pressed",
                                 String(selected)
                             );
+                            if (arcade.id === currentHighlighted())
+                                button.dataset.highlighted = "true";
                             const svg = document.createElementNS(
                                 "http://www.w3.org/2000/svg",
                                 "svg"
@@ -252,16 +283,16 @@ export default function ArcadeDiscoveryMap({
                             path.setAttribute("d", PIN_PATH);
                             svg.append(path);
                             button.append(svg);
-                            if (showLabels()) {
-                                // 이름은 버튼의 접근성 이름이 이미 말한다 — 판은 보이기만
-                                const label = document.createElement("span");
-                                label.className =
-                                    "nl-arcade-marker__label nl-metadata";
-                                label.setAttribute("aria-hidden", "true");
-                                label.textContent = arcade.name;
-                                button.append(label);
-                                named.push(label);
-                            }
+                            // 이름은 버튼의 접근성 이름이 이미 말한다 — 판은 보이기만.
+                            // 이름 판을 켜지 않은 지도는 올림 · 키 포커스 때만 띄운다
+                            const label = document.createElement("span");
+                            label.className = showLabels()
+                                ? "nl-arcade-marker__label nl-metadata"
+                                : "nl-arcade-marker__label nl-arcade-marker__label--hover nl-metadata";
+                            label.setAttribute("aria-hidden", "true");
+                            label.textContent = arcade.name;
+                            button.append(label);
+                            if (showLabels()) named.push(label);
                         }
                         button.addEventListener("click", () => {
                             if (cluster) {
@@ -294,9 +325,32 @@ export default function ArcadeDiscoveryMap({
                             xAnchor: 0.5,
                             // 핀은 끝이 좌표를 가리키고, 버블은 중심이 좌표
                             yAnchor: cluster ? 0.5 : 1,
-                            zIndex: selected ? 3 : cluster ? 1 : 2,
+                            zIndex: button.dataset.highlighted
+                                ? 4
+                                : selected
+                                  ? 3
+                                  : cluster
+                                    ? 1
+                                    : 2,
                         });
                         overlays.push(overlay);
+                        // 올리거나 포커스한 마커의 이름 판이 이웃 핀 아래로 가리지 않게 맨 위로
+                        const raise = () => overlay.setZIndex(4);
+                        const lower = () =>
+                            overlay.setZIndex(
+                                button.dataset.highlighted
+                                    ? 4
+                                    : button.getAttribute("aria-pressed") ===
+                                        "true"
+                                      ? 3
+                                      : cluster
+                                        ? 1
+                                        : 2
+                            );
+                        button.addEventListener("pointerenter", raise);
+                        button.addEventListener("pointerleave", lower);
+                        button.addEventListener("focus", raise);
+                        button.addEventListener("blur", lower);
                         if (!cluster) pins.set(arcade.id, { button, overlay });
                         if (focused === button.dataset.markerKey)
                             button.focus({ preventScroll: true });
@@ -349,6 +403,29 @@ export default function ArcadeDiscoveryMap({
                     }
                     previousSelected = selected;
                     if (showLabels()) render();
+                };
+                // 강조만 바뀌면 그 두 핀의 표시와 겹침 순서만 바꾼다
+                let previousHighlighted: number | null = null;
+                highlightRef.current = () => {
+                    const highlighted = currentHighlighted();
+                    if (highlighted === previousHighlighted) return;
+                    for (const id of [previousHighlighted, highlighted]) {
+                        const pin = id === null ? undefined : pins.get(id);
+                        if (!pin) continue;
+                        if (id === highlighted) {
+                            pin.button.dataset.highlighted = "true";
+                            pin.overlay.setZIndex(4);
+                        } else {
+                            delete pin.button.dataset.highlighted;
+                            pin.overlay.setZIndex(
+                                pin.button.getAttribute("aria-pressed") ===
+                                    "true"
+                                    ? 3
+                                    : 2
+                            );
+                        }
+                    }
+                    previousHighlighted = highlighted;
                 };
                 const markBounds = () => {
                     if (programmaticMove.current) return;
@@ -421,6 +498,7 @@ export default function ArcadeDiscoveryMap({
             overlays.forEach((overlay) => overlay.setMap(null));
             renderRef.current = null;
             selectionRef.current = null;
+            highlightRef.current = null;
             pins.clear();
             mapRef.current = null;
             apiRef.current = null;
@@ -435,6 +513,10 @@ export default function ArcadeDiscoveryMap({
     useEffect(() => {
         selectionRef.current?.();
     }, [selectedId]);
+
+    useEffect(() => {
+        highlightRef.current?.();
+    }, [highlightedId]);
 
     // 카드를 누르면 그 핀으로 — 이미 더 가까이 보고 있으면 확대 단계는 그대로 두고 옮기기만 한다
     const focusArcade = useEffectEvent((id: number) => {
