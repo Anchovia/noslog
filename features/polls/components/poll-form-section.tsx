@@ -39,6 +39,7 @@ export default function PollFormSection({
     locales,
     locale,
     votes = 0,
+    published = false,
 }: {
     value: PollInput | null;
     onChange: (poll: PollInput | null) => void;
@@ -48,6 +49,8 @@ export default function PollFormSection({
     locale: Locale;
     /** 이미 들어온 표 — 1 이상이면 질문 · 선택지가 잠긴다 */
     votes?: number;
+    /** 공개판이 있는 이벤트 글 — 투표를 새로 달거나 지우지 못하고 마감만 바꾼다 */
+    published?: boolean;
 }) {
     const [open, setOpen] = useState(false);
     const locked = votes > 0;
@@ -84,7 +87,7 @@ export default function PollFormSection({
                             <ActionButton
                                 variant="ghost"
                                 size="sm"
-                                disabled={locked}
+                                disabled={locked || published}
                                 onClick={() => onChange(null)}
                             >
                                 {labels.remove}
@@ -101,6 +104,7 @@ export default function PollFormSection({
             ) : (
                 <ActionButton
                     variant="secondary"
+                    disabled={published}
                     onClick={() => {
                         onChange(emptyPollInput(locales[0]));
                         setOpen(true);
@@ -124,6 +128,7 @@ export default function PollFormSection({
                 labels={labels}
                 locales={locales}
                 locked={locked}
+                published={published}
             />
         </section>
     );
