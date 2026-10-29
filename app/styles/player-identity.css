@@ -193,3 +193,11 @@
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-regular);
 }
+@media (hover: hover) {
+    .noslog-ui a.nl-tag:hover .nl-contribution-label__prefix {
+        color: inherit;
+    }
+}
+.noslog-ui a.nl-tag:is(:active, :focus-visible) .nl-contribution-label__prefix {
+    color: inherit;
+}

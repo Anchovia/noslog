@@ -8,6 +8,7 @@
 - 면 `surface/tag` · 글자 `content/on-tag` · 테두리 없음.
 - 분류 · 표시에는 색을 쓰지 않는다(공지 분류 · 미션 종류 · 기여 라벨).
 - 한 줄에 태그는 하나. 누르지 않는 라벨은 이 하나만 쓴다.
+- 링크인 태그(프로필 「기여 Lv.N」)는 올림 · 누름 · 키 포커스에 강조형 `--strong` 과 같은 반전(면 `primary/default` · 글자 `primary/on-primary`)이 된다. 안의 흐린 접두 글자도 같은 글자색을 따른다.
 - 강조형 `--strong` = 반전(주 버튼과 같은 면 `primary/default` · 글자 `primary/on-primary`). 한 줄에 하나까지.
 - 관리자 `Badge` 의 변형은 기본 하나와 상태 셋(success · danger · score = 경고)이다. 모양이 같은 변형(outline · basic · recital)은 기본으로 합친다.
 
@@ -36,6 +37,7 @@
 
 ## 바뀐 기록
 
+- [2026-10-29 링크인 태그의 올림](../../decisions/2026-10-29-tag-link-hover.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)
 - [2026-10-27 운영자 태그 「Admin」 없앰](../../decisions/2026-10-27-admin-tag-removal.md)
