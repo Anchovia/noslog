@@ -69,37 +69,11 @@
     display: flex;
     min-width: 0;
 }
-/* 격자 카드 = 자켓 1:1 + 아래 이름(emphasis-label) · 상태(metadata) — 서열표 카드처럼 면 없이 */
+/* 격자 카드 = 악곡 격자 카드(nl-music-card--grid) 그대로. 칸 li 가 flex 라 폭만 채운다 */
 .noslog-ui .nl-bingo-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
     width: 100%;
-    min-width: 0;
 }
-/* 올림 = 제목 밑줄 — 이벤트 카드와 같은 그림 카드 규칙(2026-10-15 hover 점검) */
-@media (hover: hover) {
-    .noslog-ui .nl-bingo-card:hover .nl-bingo-card__title {
-        text-decoration: underline;
-        text-underline-position: under;
-    }
-}
-.noslog-ui .nl-bingo-card__cover {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: var(--nl-radius-control);
-    flex-shrink: 0;
-}
-.noslog-ui .nl-bingo-card__cover[data-empty="true"] {
-    border: var(--nl-stroke-default) solid var(--nl-border-divider);
-}
-.noslog-ui .nl-bingo-card__body {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-.noslog-ui :is(.nl-bingo-card__title, .nl-bingo-row-item__title),
+.noslog-ui .nl-bingo-row-item__title,
 .noslog-ui .nl-bingo-card__status {
     min-width: 0;
     overflow: hidden;
@@ -110,7 +84,7 @@
 .noslog-ui .nl-bingo-card__chance {
     color: var(--nl-content-default);
 }
-/* 미니 판 — 칸 6 · 사이 2 · 판 안쪽 4. 격자 카드는 자켓 오른쪽 아래(진행 트랙 위 8, 2026-09-22 — 자켓 카테고리 레이블과 같은 자리) */
+/* 미니 판 — 칸 6 · 사이 2 · 판 안쪽 4. 격자 카드는 자켓 오른쪽 아래(진행 트랙 위 8) — 자켓 카테고리 판과 같은 자리 · 같은 면 */
 .noslog-ui .nl-bingo-mini {
     display: grid;
     grid-template-columns: repeat(
@@ -120,7 +94,7 @@
     gap: var(--nl-spacing-2);
     padding: var(--nl-spacing-4);
     border-radius: var(--nl-radius-small);
-    background: var(--nl-surface-media-scrim);
+    background: var(--nl-surface-surface);
     position: absolute;
     right: var(--nl-spacing-8);
     bottom: calc(var(--nl-spacing-8) + var(--nl-spacing-4));
@@ -132,7 +106,7 @@
     background: var(--nl-border-divider);
 }
 .noslog-ui .nl-bingo-mini > [data-completed="true"] {
-    background: var(--nl-content-on-media);
+    background: var(--nl-content-default);
 }
 /* 자켓 위 진행 트랙 4 — 트랙 색은 공용 진행 막대와 같은 border/divider */
 .noslog-ui .nl-bingo-card__track {
@@ -206,9 +180,6 @@
 }
 .noslog-ui .nl-bingo-row-item > .nl-bingo-mini > span {
     background: var(--nl-border-divider);
-}
-.noslog-ui .nl-bingo-row-item > .nl-bingo-mini > [data-completed="true"] {
-    background: var(--nl-content-default);
 }
 .noslog-ui .nl-bingo-recent {
     display: flex;

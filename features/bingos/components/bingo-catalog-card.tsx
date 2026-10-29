@@ -24,7 +24,7 @@ function BingoMini({ completed }: { completed: ReadonlySet<number> }) {
 }
 
 /**
- * 빙고 목록 항목(2026-09-22 재설계) — 격자(기본) = 자켓 + 아래 이름 · 상태, 목록 = 자켓 48 행 + 글 아래 진행 막대.
+ * 빙고 목록 항목 — 격자(기본) = 악곡 격자 카드(면 카드 · 자켓 + 이름 · 상태), 목록 = 자켓 48 행 + 글 아래 진행 막대.
  * 로그인하면 미니 판 · 진행 막대 · 상태(칸 · 해금 · 풀보드 · 찬스), 게스트는 버전 · 보상만
  */
 export default function BingoCatalogCard({
@@ -116,13 +116,15 @@ export default function BingoCatalogCard({
             </IntentLink>
         );
     return (
-        <IntentLink href={href(`/bingo/${item.id}`)} className="nl-bingo-card">
+        <IntentLink
+            href={href(`/bingo/${item.id}`)}
+            className="nl-music-card nl-music-card--grid nl-bingo-card"
+        >
             <MusicJacket
                 appearance="foundation"
                 index={item.musicIndex}
                 background={item.background}
                 title={item.title}
-                className="nl-bingo-card__cover"
             >
                 {isAuthenticated ? (
                     <>
@@ -131,17 +133,17 @@ export default function BingoCatalogCard({
                     </>
                 ) : null}
             </MusicJacket>
-            <span className="nl-bingo-card__body">
-                <span className="nl-emphasis-label nl-bingo-card__title">
-                    {item.title}
+            <span className="nl-music-card__body">
+                <span className="nl-music-card__identity">
+                    <span className="nl-emphasis-label">{item.title}</span>
+                    {meta}
                 </span>
-                {meta}
             </span>
         </IntentLink>
     );
 }
 
-/** 빙고 카드 스켈레톤 — 같은 틀(격자: 자켓 1:1 + 이름 · 상태 두 줄 / 목록: 자켓 48 + 두 줄) */
+/** 빙고 카드 스켈레톤 — 같은 틀(격자: 악곡 격자 카드 + 이름 · 상태 두 줄 / 목록: 자켓 48 + 두 줄) */
 export function BingoCatalogCardSkeleton({
     view = "grid",
 }: {
@@ -158,11 +160,16 @@ export function BingoCatalogCardSkeleton({
             </div>
         );
     return (
-        <div className="nl-bingo-card" aria-hidden="true">
-            <span className="nl-jacket nl-bingo-card__cover nl-skeleton" />
-            <span className="nl-bingo-card__body">
-                <SkeletonText className="nl-emphasis-label" width="l" />
-                <SkeletonText className="nl-metadata" width="s" />
+        <div
+            className="nl-music-card nl-music-card--grid nl-bingo-card"
+            aria-hidden="true"
+        >
+            <span className="nl-jacket nl-skeleton" />
+            <span className="nl-music-card__body">
+                <span className="nl-music-card__identity">
+                    <SkeletonText className="nl-emphasis-label" width="l" />
+                    <SkeletonText className="nl-metadata" width="s" />
+                </span>
             </span>
         </div>
     );
