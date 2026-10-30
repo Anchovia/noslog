@@ -13,6 +13,12 @@ const mocks = vi.hoisted(() => ({
     translationFindMany: vi.fn(),
     blobList: vi.fn(),
     blobDel: vi.fn(),
+    reportDeleteMany: vi.fn(),
+    musecatActionDeleteMany: vi.fn(),
+    outboxDeleteMany: vi.fn(),
+    codeDeleteMany: vi.fn(),
+    accessDeleteMany: vi.fn(),
+    refreshDeleteMany: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -29,6 +35,12 @@ vi.mock("@/lib/db", () => ({
         user: { findMany: mocks.userFindMany },
         communityEvent: { findMany: mocks.eventFindMany },
         announcementTranslation: { findMany: mocks.translationFindMany },
+        communityOpinionReport: { deleteMany: mocks.reportDeleteMany },
+        musecatAction: { deleteMany: mocks.musecatActionDeleteMany },
+        partnerOutboxMessage: { deleteMany: mocks.outboxDeleteMany },
+        oAuthAuthorizationCode: { deleteMany: mocks.codeDeleteMany },
+        oAuthAccessToken: { deleteMany: mocks.accessDeleteMany },
+        oAuthRefreshToken: { deleteMany: mocks.refreshDeleteMany },
         $executeRaw: mocks.executeRaw,
     },
 }));
@@ -68,6 +80,45 @@ describe("개인정보 6개월 보관 정리", () => {
         mocks.userFindMany.mockResolvedValue([]);
         mocks.eventFindMany.mockResolvedValue([]);
         mocks.translationFindMany.mockResolvedValue([]);
+        mocks.reportDeleteMany.mockResolvedValue({ count: 2 });
+        mocks.musecatActionDeleteMany.mockResolvedValue({ count: 3 });
+        mocks.outboxDeleteMany.mockResolvedValue({ count: 4 });
+        mocks.codeDeleteMany.mockResolvedValue({ count: 1 });
+        mocks.accessDeleteMany.mockResolvedValue({ count: 5 });
+        mocks.refreshDeleteMany.mockResolvedValue({ count: 6 });
+    });
+
+    it("처리한 신고 · 뮤즈캣 요청 · 끝난 알림은 6개월, 만료된 OAuth 코드 · 토큰은 만료 하루 뒤 지운다", async () => {
+        const result = await runPrivacyRetention(
+            new Date("2026-07-27T03:00:00+09:00")
+        );
+
+        expect(result).toMatchObject({
+            opinionReportsDeleted: 2,
+            musecatActionsDeleted: 3,
+            partnerOutboxDeleted: 4,
+            oauthCredentialsDeleted: 12,
+            failed: 0,
+        });
+        const cutoff = new Date("2026-01-26T18:00:00.000Z");
+        expect(mocks.reportDeleteMany).toHaveBeenCalledWith({
+            where: { status: "resolved", updatedAt: { lte: cutoff } },
+        });
+        expect(mocks.musecatActionDeleteMany).toHaveBeenCalledWith({
+            where: { createdAt: { lte: cutoff } },
+        });
+        expect(mocks.outboxDeleteMany).toHaveBeenCalledWith({
+            where: {
+                status: { in: ["delivered", "dead"] },
+                createdAt: { lte: cutoff },
+            },
+        });
+        const expired = {
+            where: { expiresAt: { lt: new Date("2026-07-25T18:00:00.000Z") } },
+        };
+        expect(mocks.codeDeleteMany).toHaveBeenCalledWith(expired);
+        expect(mocks.accessDeleteMany).toHaveBeenCalledWith(expired);
+        expect(mocks.refreshDeleteMany).toHaveBeenCalledWith(expired);
     });
 
     it("처리 완료 자료를 유형별 보관 정책에 맞게 정리한다", async () => {

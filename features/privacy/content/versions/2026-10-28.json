@@ -1,0 +1,956 @@
+{
+    "ko": {
+        "title": "개인정보처리방침",
+        "dates": "최종 수정 2026년 10월 28일 · 시행 2026년 10월 28일",
+        "contents": "이 페이지에서",
+        "detailLabel": "자세히 보기",
+        "settingsLogin": "로그인 후 설정에서 관리",
+        "historyLink": "이전 버전 보기",
+        "summary": [
+            {
+                "title": "NosLog가 사용하는 것",
+                "text": "Discord 기본 식별 정보, 프로필 설정, 직접 동기화한 NOSTALGIA 기록, 제출물과 커뮤니티 활동, 기여 제안·채보 초안·채보 의견, 필수 서비스 로그",
+                "target": "data"
+            },
+            {
+                "title": "공개되는 것",
+                "text": "공개 프로필·기록·고정 기록·랭킹·평가·업적·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
+                "target": "public"
+            },
+            {
+                "title": "수집하지 않는 것",
+                "text": "비밀번호·액세스 토큰, 로컬 오디오, 정밀 위치, 광고·행동 분석, 결제 정보 — 판매하지 않습니다",
+                "target": "not-collected"
+            },
+            {
+                "title": "내가 할 수 있는 것",
+                "text": "설정에서 수정·공개 제어, 회원 탈퇴, 개인정보 이메일 문의, 방침 이력 열람",
+                "target": "rights"
+            }
+        ],
+        "sections": [
+            {
+                "id": "operator",
+                "title": "1. 운영자·적용 범위·연령",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog는 KONAMI와 무관한 NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스입니다. 이 방침은 NosLog 웹사이트의 한국어·일본어·영어 경로와 계정 기능, 이용자 제출물에 적용됩니다."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "법률 검토 대기",
+                        "text": "운영자 활동명은 「계롤(Anchovia)」입니다. 법적으로 필요한 운영자·책임자 정보의 충족 여부는 릴리스 전 검토 예정입니다."
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "운영자",
+                        "operator": "계롤(Anchovia)",
+                        "emailLabel": "이메일",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog 계정은 만 14세 이상부터 만들 수 있습니다. 계정 없이도 공개 정보는 열람할 수 있습니다."
+                    }
+                ]
+            },
+            {
+                "id": "data",
+                "title": "2. 처리하는 개인정보와 이용 목적",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discord 로그인",
+                        "text": "Discord 사용자 식별자, 표시 이름, 사용자 이름을 받아 회원 식별과 로그인에 사용합니다. Discord 비밀번호와 액세스 토큰은 저장하지 않습니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "프로필 및 게임 기록",
+                        "text": "닉네임, 노스텔지어 플레이어명, 국가, 선호 오락실, 프로필 공개 설정, 플레이·판정·레이팅·동기화 기록, 본인이 고른 고정 기록(채보 최대 3개와 한 줄 소감)을 프로필과 기록 서비스를 제공하는 데 사용합니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "검정 및 피드백",
+                        "text": "검정 합격 증빙 이미지, 심사 결과·메모, 피드백 내용과 첨부 이미지를 제출 심사와 문의 처리에 사용합니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "커뮤니티 활동",
+                        "text": "패턴 평가, 서열 투표, 의견, 답글, 좋아요, 신고를 악곡 정보 제공과 커뮤니티 운영에 사용합니다. 의견과 답글은 작성자 이름과 함께 공개되고, 좋아요는 개수만 공개됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "기여 제안",
+                        "text": "악곡 채보 정보(BPM · 노트 수 · 길이 · 수록일)에 대해 제안한 값과 근거(영상 · 페이지 주소, 설명), 처리 결과와 반려 사유를 운영자 검토와 악곡 정보 개선에 사용합니다. 운영자가 반영한 값은 악곡 정보로 공개되고, 그 값의 출처로 제안과 근거가 기록됩니다. 반영된 제안, 처리 완료된 오락실 제보, 기체 확인(하루 1회)은 기여 점수로 기록되어 기여 등급을 정합니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "채보 초안과 채보 의견",
+                        "text": "직접 만든 채보 초안(노트 배치 · 타이밍)과 그 진행 상태(작성 중 · 검토 대기 · 수정 요청 · 공개), 재생 시각을 붙인 채보 의견을 운영자 검토와 공개 채보 개선에 사용합니다. 검토를 요청한 초안은 운영자가 공개 채보로 게시할 수 있고, 게시된 뒤에는 다른 기여나 운영자의 수정으로 바뀔 수 있습니다. 운영자가 공개한 초안은 작성자로 기록되고 공개할 때마다 기여 점수가 쌓이며, 공개 채보에 남긴 의견이 해결되면 그것도 기여 점수로 기록됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "업적",
+                        "text": "동기화한 기록과 사이트 활동(의견 · 좋아요 · 패턴 평가 · 검정)으로 업적 달성 여부와 NosLog 가 확인한 날짜를 계산해 저장하고, 본인이 고른 업적(최대 3개)을 프로필 머리에 표시하는 데 사용합니다. 업적 페이지에는 단계마다 달성한 인원 수만 보이고 달성한 사람 목록은 없습니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "자동 생성 정보",
+                        "text": "접속 IP, 브라우저·기기 정보, 접속 시각, 요청 및 오류 로그가 서비스 보안, 장애 대응과 운영 과정에서 생성될 수 있습니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "방문 통계",
+                        "text": "페이지를 열면 접속 IP와 브라우저 정보로 그날만 쓰는 식별값을 만들어 하루 방문자 수를 셉니다. IP와 브라우저 정보 자체는 저장하지 않으며, 식별값은 다음 날 삭제합니다. 남는 것은 하루 방문자 수, 페이지별 조회 수, 시간대별 조회 수, 로그인 여부별 합계, API 호출 수 같은 합계뿐이고, 이 기능에는 쿠키를 쓰지 않습니다."
+                    }
+                ]
+            },
+            {
+                "id": "collection",
+                "title": "3. 수집 방법",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Discord 로그인, 이용자가 직접 입력하거나 업로드한 정보, BEMANI 기록 동기화 기능, 서비스 이용 중 자동으로 생성되는 로그를 통해 수집합니다."
+                    }
+                ]
+            },
+            {
+                "id": "public",
+                "title": "4. 공개되는 정보와 공개 설정",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "프로필의 닉네임·아바타·국가·검정 이력·경쟁 지표·순위·기록·고정 기록과 한 줄 소감은 데이터가 있으면 공개됩니다. 플레이 점수를 비공개로 하면 고정 기록도 다른 사람에게 보이지 않습니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "노스텔지어 플레이어명, Discord, 선호 오락실, 플레이 횟수, 플레이 활동 5가지는 설정에서 공개 여부를 직접 제어합니다. 숨긴 항목은 방문자에게 표시되지 않지만, 계정에서 삭제되는 것은 아닙니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "공개 아바타는 공개 저장소에 저장되며 프로필·랭킹·공유 카드에 표시될 수 있습니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "기여 등급·점수·종류별 반영 수는 프로필에 공개되고, 기여 등급 3 이상과 운영자 표시는 랭킹·의견·답글의 이름 옆에 보입니다. 기여 제안은 운영자가 반영한 값만 악곡 정보로 공개됩니다. 제안자 이름, 근거, 반려된 제안은 공개하지 않으며 제안 목록은 본인에게만 보입니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "공개된 기여 채보에는 작성자 이름과 기여 등급이 채보 뷰어에 표시되고, 공개 채보에 남긴 채보 의견은 이름 · 기여 등급 · 재생 시각 · 날짜와 함께 공개됩니다. 채보 초안과 초안에 남긴 의견은 작성자와 운영자만 봅니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "업적은 공개 프로필과 업적 페이지에 보입니다. 플레이 점수를 비공개로 하면 다른 사람에게는 실력 · 수집 · 곡 묶음 · 계절 업적이 보이지 않고(기록 범위가 드러나므로), 도전 · 커뮤니티 업적은 그대로 보입니다. 업적 진행 값은 본인에게만 보입니다."
+                    }
+                ]
+            },
+            {
+                "id": "not-collected",
+                "title": "5. 수집하지 않는 것",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "Discord 비밀번호와 액세스 토큰을 저장하지 않습니다.",
+                            "Discord 이메일·서버·메시지 권한을 요청하지 않습니다.",
+                            "BEMANI 비밀번호와 공식 사이트 세션 쿠키를 받지 않습니다.",
+                            "채보 뷰어·에디터에서 선택한 로컬 오디오는 브라우저에만 남고 서버로 업로드되지 않습니다.",
+                            "정밀 위치 정보를 요청하지 않습니다.",
+                            "외부 분석 도구와 광고·마케팅 추적 도구를 사용하지 않습니다. 방문 통계는 개인을 알아볼 수 없는 하루 합계로만 직접 집계합니다.",
+                            "개인정보를 판매하거나 광고 목적으로 제공하지 않습니다.",
+                            "결제 카드 정보를 수집하지 않습니다."
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "retention",
+                "title": "6. 보유 및 삭제",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "계정, 프로필, 플레이 및 동기화 기록: 회원 탈퇴 또는 삭제 요청 시까지",
+                            "아바타: 교체·삭제하거나 회원 탈퇴할 때까지",
+                            "처리 완료된 피드백: 완료일로부터 6개월 후 내용과 첨부 이미지 전체 삭제",
+                            "승인된 검정 제출: 심사 완료 6개월 후 증빙 이미지와 심사 메모 삭제, 합격 이력은 회원 탈퇴 시까지 보관",
+                            "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
+                            "의견·답글: 작성자가 지우거나 회원 탈퇴할 때까지. 번역문은 원문과 함께 보관하고, 원문을 고치거나 지우면 함께 삭제",
+                            "기여 제안: 회원 탈퇴 시까지. 탈퇴하면 제안 기록은 삭제되고, 이미 반영된 값과 그 근거(주소 · 설명)는 제안자와 연결되지 않은 출처 기록으로 남습니다.",
+                            "기여 점수 기록: 회원 탈퇴 시까지. 원본(제안·제보 등)이 보관 기간으로 삭제되어도 점수 기록은 남습니다.",
+                            "채보 초안과 초안 의견: 회원 탈퇴 시까지(초안은 채보마다 하나이며, 공개된 뒤 다시 열면 그때의 공개 채보로 새로 시작합니다). 탈퇴하면 삭제되고, 이미 공개된 채보는 작성자 표시 없이 남습니다.",
+                            "채보 의견: 작성자가 지우거나(해결 전까지) 회원 탈퇴할 때까지. 운영자가 가린 의견은 공개되지 않으며 탈퇴 시 함께 삭제됩니다.",
+                            "업적과 프로필 업적 진열: 회원 탈퇴 시까지. 달성한 단계는 이후 기록이 바뀌어도 자동으로 지우지 않습니다. 다만 업적 기준을 바꾸거나 업적을 없애 운영자가 다시 판정하면, 없어진 업적과 새 기준에 못 미치는 단계는 삭제됩니다.",
+                            "고정 기록과 한 줄 소감: 본인이 바꾸거나 지우거나 회원 탈퇴할 때까지. 고른 채보가 삭제되면 함께 삭제됩니다.",
+                            "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
+                        ]
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "보유 기간이 끝나거나 처리 목적을 달성한 개인정보는 지체 없이 삭제합니다. 회원 탈퇴 시 계정과 기록, 업로드 파일이 활성 시스템에서 삭제됩니다."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "법률 검토 대기",
+                        "text": "백업·제공자 보관 기간과 삭제 창은 릴리스 전 검증 후 확정 문안으로 반영됩니다. 확정 전에는 「즉시 영구 삭제」 표현을 쓰지 않습니다."
+                    }
+                ]
+            },
+            {
+                "id": "providers",
+                "title": "7. 위탁 및 국외 이전",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Vercel",
+                        "text": "웹 호스팅, 서버 실행과 운영 로그 처리를 맡깁니다. 서버 실행 리전은 대한민국 서울(icn1)이며, 서비스 이용 시 네트워크를 통해 전송되어 서비스 제공 기간 동안 처리됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Vercel Blob",
+                        "text": "아바타와 제출 이미지를 저장합니다. 저장 리전은 대한민국 서울(icn1)이며, 검정 증빙과 피드백 이미지는 비공개 저장소에 보관합니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "PlanetScale",
+                        "text": "회원과 서비스 데이터를 PostgreSQL 데이터베이스에 저장합니다. 저장 리전은 대한민국 서울(Google Cloud asia-northeast3)이며 서비스 제공 기간 동안 처리됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Google (Gemini API)",
+                        "text": "의견·답글을 쓰거나 고치면 그 글의 본문만 다른 두 언어로 번역하려고 Google에 보내고, 번역문을 저장해 「번역 보기」에 씁니다. 작성자 이름 등 다른 정보는 보내지 않습니다. 무료 이용 등급이라 Google이 보낸 글과 번역 결과를 서비스 개선에 쓸 수 있고 Google의 검토자가 볼 수 있습니다. Google의 국외 서버에서 처리될 수 있습니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "국외 이전을 원하지 않으면 Discord 로그인을 진행하지 않거나 회원 탈퇴를 요청할 수 있습니다. 다만 이 경우 로그인 기반 기능을 이용할 수 없습니다."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "법률 검토 대기",
+                        "text": "리전·하위처리자·로그 보관 기간은 릴리스 환경 검증 후 확정 문안으로 반영됩니다."
+                    }
+                ]
+            },
+            {
+                "id": "external",
+                "title": "8. 외부 서비스",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discord",
+                        "text": "로그인 시 미국 소재 Discord와 기본 식별 정보(identify 권한)만 주고받습니다. Discord가 처리하는 정보에는 Discord의 정책이 적용됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "KONAMI/BEMANI",
+                        "text": "기록 동기화는 이용자가 공식 사이트에서 직접 실행하며, 공식 사이트 세션은 KONAMI의 약관과 정책이 적용됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Kakao Maps",
+                        "text": "오락실 지도를 열 때 카카오 지도 서비스에 접속 정보가 전송될 수 있습니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "X",
+                        "text": "홈의 공식 소식 위젯을 불러올 때 X가 접속 정보를 처리할 수 있습니다. 위젯에는 추적 제한(DNT) 설정을 적용합니다."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "법률 검토 대기",
+                        "text": "비필수 외부 임베드의 사전 동의·알림 요건은 법률 검토 후 확정됩니다."
+                    }
+                ]
+            },
+            {
+                "id": "storage",
+                "title": "9. 쿠키와 기기 저장",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "user_session_cookie",
+                        "text": "필수 로그인 세션 쿠키입니다. 최대 14일 유지되며 차단하면 로그인 기능을 쓸 수 없습니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "noslog-locale",
+                        "text": "언어 기본값 쿠키입니다. 최대 1년 유지되며 차단하면 경로·브라우저 설정으로 대체됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "기기 로컬 저장",
+                        "text": "테마, 메트로놈 볼륨, Strict Performance 설정은 브라우저에만 저장되고 계정에 동기화되지 않습니다. 지우면 기본값으로 동작합니다."
+                    }
+                ]
+            },
+            {
+                "id": "rights",
+                "title": "10. 이용자 권리",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "이용자 또는 법정대리인은 개인정보 열람, 정정, 삭제, 처리 정지를 요청할 수 있습니다. 프로필 설정에서 직접 정보를 수정하거나 회원 탈퇴를 할 수 있으며, 위 이메일로도 요청할 수 있습니다."
+                    }
+                ]
+            },
+            {
+                "id": "security",
+                "title": "11. 안전성 확보 조치",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "접근 권한을 필요한 운영자로 제한하고, 전송 구간 암호화, 관리자 권한 확인, 비공개 증빙 저장소, 업로드 형식·용량 검증과 세션 보호 조치를 적용합니다."
+                    }
+                ]
+            },
+            {
+                "id": "history",
+                "title": "12. 방침 변경 및 이력",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "내용이 변경되면 시행 전에 서비스 공지사항을 통해 안내합니다. 단순 번역·오탈자 수정은 최종 수정일만 갱신하며, 실질 변경은 새 시행 버전으로 기록합니다."
+                    }
+                ]
+            }
+        ]
+    },
+    "ja": {
+        "title": "プライバシーポリシー",
+        "dates": "最終更新 2026年10月28日 · 施行 2026年10月28日",
+        "contents": "このページの内容",
+        "detailLabel": "詳しく見る",
+        "settingsLogin": "ログインして設定で管理",
+        "historyLink": "過去のバージョンを見る",
+        "summary": [
+            {
+                "title": "NosLogが使用するもの",
+                "text": "Discordの基本識別情報、プロフィール設定、ユーザーが同期したNOSTALGIA記録、提出物とコミュニティ活動、情報の提案・譜面の下書き・譜面への意見、必須のサービスログ",
+                "target": "data"
+            },
+            {
+                "title": "公開されるもの",
+                "text": "公開プロフィール・記録・固定記録・ランキング・評価・実績・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
+                "target": "public"
+            },
+            {
+                "title": "収集しないもの",
+                "text": "パスワード・アクセストークン、ローカル音源、正確な位置情報、広告・行動分析、決済情報 — 販売もしません",
+                "target": "not-collected"
+            },
+            {
+                "title": "ユーザーができること",
+                "text": "設定での修正・公開管理、退会、プライバシーメールでの問い合わせ、ポリシー履歴の閲覧",
+                "target": "rights"
+            }
+        ],
+        "sections": [
+            {
+                "id": "operator",
+                "title": "1. 運営者・適用範囲・年齢",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLogはKONAMIと無関係の、NOSTALGIAの記録・ランキング・アーカイブ非公式ファンサービスです。本ポリシーはNosLogウェブサイトの韓国語・日本語・英語ルートとアカウント機能、ユーザーの提出物に適用されます。"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "法的レビュー待ち",
+                        "text": "運営者の活動名は「계롤(Anchovia)」です。法令上必要な運営者・責任者情報を満たしているかは、リリース前に確認予定です。"
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "運営者",
+                        "operator": "계롤(Anchovia)",
+                        "emailLabel": "メール",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLogアカウントは14歳以上から作成できます。アカウントがなくても公開情報は閲覧できます。"
+                    }
+                ]
+            },
+            {
+                "id": "data",
+                "title": "2. 取り扱う個人情報と利用目的",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discordログイン",
+                        "text": "Discordのユーザー識別子、表示名、ユーザー名を取得し、会員の識別とログインに使用します。Discordのパスワードおよびアクセストークンは保存しません。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "プロフィールおよびゲーム記録",
+                        "text": "ニックネーム、ノスタルジアのプレーヤー名、国・地域、よく利用するゲームセンター、プロフィール公開設定、プレー・判定・レーティング・同期記録、本人が選んだ固定記録(譜面最大3つとひとことコメント)を、プロフィールと記録サービスの提供に使用します。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "検定およびフィードバック",
+                        "text": "検定合格の証明画像、審査結果・メモ、フィードバック内容と添付画像を、提出内容の審査および問い合わせ対応に使用します。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "コミュニティ活動",
+                        "text": "パターン評価、序列投票、意見、返信、いいね、報告を、楽曲情報の提供とコミュニティ運営に使用します。意見と返信は投稿者名とともに公開され、いいねは件数のみ公開されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "情報の提案",
+                        "text": "楽曲の譜面情報(BPM・ノーツ数・長さ・収録日)について提案した値と根拠(動画・ページのURL、説明)、処理結果と却下理由を、運営者による確認と楽曲情報の改善に使用します。運営者が反映した値は楽曲情報として公開され、その値の出典として提案と根拠が記録されます。反映された提案、処理済みのゲームセンター報告、筐体の確認(1日1回)は貢献ポイントとして記録され、貢献ランクを決めます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "譜面の下書きと譜面への意見",
+                        "text": "ユーザーが作成した譜面の下書き(ノーツ配置・タイミング)とその進行状況(作成中・確認待ち・修正依頼・公開)、再生時刻を付けた譜面への意見を、運営者による確認と公開譜面の改善に使用します。レビューを依頼した下書きは運営者が公開譜面として掲載でき、掲載後はほかの貢献や運営者の修正により変わることがあります。運営者が公開した下書きは作成者として記録され、公開のたびに貢献ポイントが加算されます。公開譜面に残した意見が解決された場合も貢献ポイントとして記録されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "実績",
+                        "text": "同期した記録とサイトでの活動(意見・いいね・譜面傾向の評価・検定)から実績の達成状況とNosLogが確認した日付を計算して保存し、本人が選んだ実績(最大3つ)をプロフィールの上部に表示するために使用します。実績ページには段階ごとの達成人数のみを表示し、達成したユーザーの一覧は表示しません。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "自動的に生成される情報",
+                        "text": "接続IP、ブラウザー・端末情報、接続時刻、リクエストおよびエラーログが、サービスのセキュリティ、障害対応、運営の過程で生成される場合があります。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "訪問統計",
+                        "text": "ページを開くと、接続IPとブラウザー情報からその日だけ使う識別値を作り、1日の訪問者数を数えます。IPとブラウザー情報そのものは保存せず、識別値は翌日に削除します。残るのは1日の訪問者数、ページごとの閲覧数、時間帯ごとの閲覧数、ログイン状態別の合計、APIの呼び出し回数といった合計のみで、この機能ではCookieを使用しません。"
+                    }
+                ]
+            },
+            {
+                "id": "collection",
+                "title": "3. 収集方法",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Discordログイン、ユーザーが直接入力またはアップロードした情報、BEMANI記録同期機能、およびサービス利用中に自動生成されるログを通じて収集します。"
+                    }
+                ]
+            },
+            {
+                "id": "public",
+                "title": "4. 公開される情報と公開設定",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "プロフィールのニックネーム・アバター・国・検定履歴・競技指標・順位・記録・固定記録とひとことコメントは、データがあれば公開されます。プレースコアを非公開にすると、固定記録も他の人には表示されません。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "プレーヤー名、Discord、よく行くゲームセンター、プレー回数、プレー活動の5つは、設定で公開するかどうかを直接管理できます。非表示にした項目は訪問者に表示されませんが、アカウントから削除されるわけではありません。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "公開アバターは公開ストレージに保存され、プロフィール・ランキング・共有カードに表示されることがあります。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "貢献ランク・ポイント・種類別の反映数はプロフィールに公開され、貢献ランク3以上と運営者の表示はランキング・意見・返信の名前の横に表示されます。情報の提案は、運営者が反映した値のみ楽曲情報として公開されます。提案者名、根拠、却下された提案は公開せず、提案の一覧は本人にのみ表示されます。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "公開された貢献譜面には、作成者名と貢献ランクが譜面ビューアーに表示され、公開譜面に残した譜面への意見は名前・貢献ランク・再生時刻・日付とともに公開されます。譜面の下書きと下書きに残した意見は、作成者と運営者のみが閲覧します。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "実績は公開プロフィールと実績ページに表示されます。プレースコアを非公開にすると、他のユーザーには実力・コレクション・楽曲セット・季節の実績が表示されず(記録の範囲が分かるため)、チャレンジ・コミュニティの実績はそのまま表示されます。実績の進捗は本人にのみ表示されます。"
+                    }
+                ]
+            },
+            {
+                "id": "not-collected",
+                "title": "5. 収集しないもの",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "Discordのパスワードとアクセストークンを保存しません。",
+                            "Discordのメール・サーバー・メッセージ権限を要求しません。",
+                            "BEMANIのパスワードと公式サイトのセッションCookieを受け取りません。",
+                            "譜面ビューア・エディタで選択したローカル音源はブラウザーに残り、サーバーへアップロードされません。",
+                            "正確な位置情報を要求しません。",
+                            "外部の分析ツールや広告・マーケティング追跡ツールを使用しません。訪問統計は、個人を識別できない1日単位の合計としてのみ独自に集計します。",
+                            "個人情報を販売したり、広告目的で提供したりしません。",
+                            "決済カード情報を収集しません。"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "retention",
+                "title": "6. 保管および削除",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "アカウント、プロフィール、プレーおよび同期記録：退会または削除の依頼まで",
+                            "アバター：変更・削除または退会まで",
+                            "対応済みのフィードバック：対応完了日から6か月後に内容と添付画像をすべて削除",
+                            "承認された検定提出：審査完了から6か月後に証明画像と審査メモを削除し、合格履歴は退会まで保管",
+                            "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
+                            "意見・返信：投稿者が削除するか退会するまで。翻訳文は原文とともに保管し、原文を編集・削除すると一緒に削除",
+                            "情報の提案：退会まで。退会すると提案の記録は削除され、すでに反映された値とその根拠(URL・説明)は提案者と結び付かない出典記録として残ります。",
+                            "貢献ポイントの記録：退会まで。元の記録(提案・報告など)が保管期間により削除されても、ポイントの記録は残ります。",
+                            "譜面の下書きと下書きへの意見：退会まで(下書きは譜面ごとに1つで、公開後にもう一度開くとその時点の公開譜面から新しく始まります)。退会すると削除され、すでに公開された譜面は作成者の表示なしで残ります。",
+                            "譜面への意見：投稿者が削除する(解決前まで)か退会するまで。運営者が非表示にした意見は公開されず、退会時に一緒に削除されます。",
+                            "実績とプロフィールの実績表示：退会まで。達成した段階は、その後記録が変わっても自動では削除しません。ただし、実績の基準を変更したり実績を廃止したりして運営者が再判定した場合、廃止された実績と新しい基準に満たない段階は削除されます。",
+                            "固定記録とひとことコメント：本人が変更・削除するか退会するまで。選んだ譜面が削除された場合は一緒に削除されます。",
+                            "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
+                        ]
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "保管期間が終了した、または取扱目的を達成した個人情報は遅滞なく削除します。退会すると、アカウントと記録、アップロードファイルがアクティブなシステムから削除されます。"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "法的レビュー待ち",
+                        "text": "バックアップおよびプロバイダー側の保持期間・削除ウィンドウは、リリース前の検証後に確定した文言を反映します。確定までは「直ちに完全削除」という表現は使用しません。"
+                    }
+                ]
+            },
+            {
+                "id": "providers",
+                "title": "7. 委託および国外移転",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Vercel",
+                        "text": "Webホスティング、サーバー実行、運営ログの処理を委託します。サーバー実行リージョンは韓国・ソウル（icn1）で、サービス利用時にネットワーク経由で送信され、サービス提供期間中に処理されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Vercel Blob",
+                        "text": "アバターと提出画像を保存します。保存リージョンは韓国・ソウル（icn1）で、検定の証明画像とフィードバック画像は非公開ストレージに保管します。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "PlanetScale",
+                        "text": "会員およびサービスデータをPostgreSQLデータベースに保存します。保存リージョンは韓国・ソウル（Google Cloud asia-northeast3）で、サービス提供期間中に処理されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Google（Gemini API）",
+                        "text": "意見・返信を投稿または編集すると、その本文のみをほかの2言語に翻訳するためにGoogleへ送信し、翻訳文を保存して「翻訳を見る」に使用します。投稿者名などほかの情報は送信しません。無料利用枠のため、Googleは送信された本文と翻訳結果をサービス改善に使用でき、Googleのレビュアーが閲覧する場合があります。Googleの国外サーバーで処理される場合があります。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "国外移転を希望しない場合は、Discordログインを行わないか、退会を依頼できます。ただし、その場合はログインが必要な機能を利用できません。"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "法的レビュー待ち",
+                        "text": "リージョン・サブプロセッサー・ログ保持期間は、リリース環境の検証後に確定した文言を反映します。"
+                    }
+                ]
+            },
+            {
+                "id": "external",
+                "title": "8. 外部サービス",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discord",
+                        "text": "ログイン時、米国に所在するDiscordと基本識別情報（identify権限）のみを送受信します。Discordが取り扱う情報にはDiscordのポリシーが適用されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "KONAMI/BEMANI",
+                        "text": "記録同期はユーザーが公式サイトで直接実行し、公式サイトのセッションにはKONAMIの規約とポリシーが適用されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Kakao Maps",
+                        "text": "ゲームセンターの地図を開くと、Kakaoの地図サービスに接続情報が送信されることがあります。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "X",
+                        "text": "ホームの公式ニュースウィジェットを読み込むと、Xが接続情報を処理することがあります。ウィジェットにはトラッキング制限（DNT）を適用しています。"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "法的レビュー待ち",
+                        "text": "非必須の外部埋め込みに関する事前同意・通知の要否は、法的レビュー後に確定します。"
+                    }
+                ]
+            },
+            {
+                "id": "storage",
+                "title": "9. Cookieと端末内保存",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "user_session_cookie",
+                        "text": "必須のログインセッションCookieです。最長14日間保持され、ブロックするとログイン機能を利用できません。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "noslog-locale",
+                        "text": "言語設定のCookieです。最長1年間保持され、ブロックするとルート・ブラウザー設定で代替されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "端末内ローカル保存",
+                        "text": "テーマ、メトロノーム音量、Strict Performance設定はブラウザーにのみ保存され、アカウントには同期されません。削除すると既定値で動作します。"
+                    }
+                ]
+            },
+            {
+                "id": "rights",
+                "title": "10. ユーザーの権利",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "ユーザーまたは法定代理人は、個人情報の開示、訂正、削除、取扱停止を請求できます。プロフィール設定から情報の修正や退会を行えるほか、上記メールアドレスからも請求できます。"
+                    }
+                ]
+            },
+            {
+                "id": "security",
+                "title": "11. 安全管理措置",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "アクセス権限を必要な運営者に限定し、通信の暗号化、管理者権限の確認、非公開の証明画像ストレージ、アップロード形式・容量の検証、セッション保護を実施します。"
+                    }
+                ]
+            },
+            {
+                "id": "history",
+                "title": "12. ポリシーの変更と履歴",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "内容を変更する場合は、施行前にサービスのお知らせでご案内します。軽微な翻訳・誤記の修正は最終更新日のみ更新し、実質的な変更は新しい施行バージョンとして記録します。"
+                    }
+                ]
+            }
+        ]
+    },
+    "en": {
+        "title": "Privacy Policy",
+        "dates": "Last updated October 28, 2026 · Effective October 28, 2026",
+        "contents": "On this page",
+        "detailLabel": "See details",
+        "settingsLogin": "Manage in Settings after logging in",
+        "historyLink": "View previous versions",
+        "summary": [
+            {
+                "title": "What NosLog uses",
+                "text": "Discord basic identity, your profile settings, NOSTALGIA records you deliberately sync, submissions and community activity, information suggestions, chart drafts and chart comments, and essential service logs",
+                "target": "data"
+            },
+            {
+                "title": "What becomes public",
+                "text": "Your public profile, records, pinned records, rankings, evaluations, achievements, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
+                "target": "public"
+            },
+            {
+                "title": "What NosLog does not collect",
+                "text": "Passwords and access tokens, local audio, precise location, advertising or behavioral analytics, payment data — and nothing is sold",
+                "target": "not-collected"
+            },
+            {
+                "title": "Your controls",
+                "text": "Edit and manage visibility in Settings, delete your account, contact us by email, and read the policy history",
+                "target": "rights"
+            }
+        ],
+        "sections": [
+            {
+                "id": "operator",
+                "title": "1. Operator, scope, and eligibility",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog is an unofficial NOSTALGIA records, rankings, and archive fan service unaffiliated with KONAMI. This policy covers the Korean, Japanese, and English routes of the NosLog website, account features, and user submissions."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "Pending legal review",
+                        "text": "The operator uses the name \"계롤(Anchovia)\". Whether the legally required operator/controller information is complete remains subject to pre-release review."
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "Operator",
+                        "operator": "계롤(Anchovia)",
+                        "emailLabel": "Email",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "You must be at least 14 years old to create or use a NosLog account. Public information remains available without an account."
+                    }
+                ]
+            },
+            {
+                "id": "data",
+                "title": "2. Personal information we process and why",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discord login",
+                        "text": "We receive your Discord user identifier, display name, and username to identify your account and provide login. We do not store your Discord password or access token."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Profile and game records",
+                        "text": "We use your nickname, NOSTALGIA player name, country or region, preferred arcade, profile visibility settings, play, judgement, rating, and sync records, and the pinned records you choose (up to three charts, each with a one-line note) to provide profile and record services."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Exams and feedback",
+                        "text": "We use exam-passing evidence images, review results and notes, feedback text, and attached images to review submissions and respond to inquiries."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Community activity",
+                        "text": "We use pattern ratings, tier votes, opinions, replies, likes, and reports to provide song information and run the community. Opinions and replies are public with the author's name; only like counts are public."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Information suggestions",
+                        "text": "We use the values you suggest for chart information (BPM, note count, length, release date), your sources (video or page links and notes), and the review result and any rejection reason to review suggestions and improve music information. Values an admin applies become public music information, and the suggestion and its source are recorded as that value's origin. Applied suggestions, resolved arcade reports and cabinet checks (once a day) are recorded as contribution points that set your contribution level."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Chart drafts and chart comments",
+                        "text": "We use the chart drafts you make (note layout and timing), their progress (draft, pending review, changes requested, published), and chart comments tied to a playback time to review charts and improve published charts. A draft you submit for review may be published by an admin as the public chart, and after that it may change through other contributions or admin edits. A published draft records you as its author and adds contribution points each time it is published; a comment on a public chart that gets resolved is also recorded as contribution points."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Achievements",
+                        "text": "We calculate which achievements you have reached, and the date NosLog confirmed each one, from the records you sync and your activity on the site (opinions, likes, pattern ratings and exams). We store them and show the achievements you choose (up to three) at the top of your profile. The achievement page shows only how many players reached each tier, never a list of who did."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Automatically generated information",
+                        "text": "Connection IP addresses, browser and device information, access times, requests, and error logs may be generated for service security, incident response, and operations."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Visit statistics",
+                        "text": "When you open a page, we create an identifier used only for that day from your connection IP and browser information to count daily visitors. We do not store the IP or browser information itself, and the identifier is deleted the next day. Only totals remain, such as daily visitors, views per page, views per hour, totals split by whether the visitor was signed in, and API call counts. This feature does not use cookies."
+                    }
+                ]
+            },
+            {
+                "id": "collection",
+                "title": "3. How we collect information",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "We collect information through Discord login, information users directly enter or upload, the BEMANI record sync feature, and logs automatically generated while using the service."
+                    }
+                ]
+            },
+            {
+                "id": "public",
+                "title": "4. Public data and visibility",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Your profile nickname, avatar, country, exam history, competitive metrics, ranks, records, and pinned records with their notes are public when the data exists. If you make your play scores private, your pinned records are hidden from others too."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Five groups — NOSTALGIA player name, Discord, preferred arcade, play count, and play activity — are controlled directly in Settings. Hidden items are not shown to visitors, but they are not deleted from your account."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Public avatars are stored in public storage and may appear on profiles, rankings, and generated share cards."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Your contribution level, points and counts by type are shown on your profile, and contribution levels 3 and above and the admin label appear next to your name in rankings, opinions and replies. For suggestions, only values an admin applies are published as music information. Your name, your sources and rejected suggestions are not made public, and your suggestion list is visible only to you."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Published contributed charts show the author's name and contribution level in the chart viewer, and chart comments on public charts are public with the name, contribution level, playback time and date. Chart drafts and comments on drafts are visible only to their author and admins."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Achievements appear on your public profile and on the achievement page. If your play scores are private, other people do not see your skill, collection, song set or season achievements (they reveal the range of your records); challenge and community achievements stay visible. Achievement progress is shown only to you."
+                    }
+                ]
+            },
+            {
+                "id": "not-collected",
+                "title": "5. What we do not collect",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "We do not store your Discord password or access token.",
+                            "We do not request Discord email, guild, or message scopes.",
+                            "We do not receive your BEMANI password or official-site session cookie.",
+                            "Local audio selected in the chart viewer/editor stays in your browser and is never uploaded.",
+                            "We do not request precise device location.",
+                            "We do not use third-party analytics tools or advertising or marketing tracking tools. Visit statistics are counted in-house only as daily totals that cannot identify individuals.",
+                            "We do not sell personal information or share it for advertising.",
+                            "We do not collect payment-card information."
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "retention",
+                "title": "6. Retention and deletion",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "Account, profile, play, and sync records: until account deletion or a deletion request",
+                            "Avatar: until it is replaced or deleted, or until account deletion",
+                            "Resolved feedback: all content and attached images are deleted six months after resolution",
+                            "Approved exam submissions: evidence images and review notes are deleted six months after review; passing history is retained until account deletion",
+                            "Rejected exam submissions: submission records and evidence images are deleted six months after review",
+                            "Opinions and replies: until the author deletes them or deletes their account. Translations are kept with the original and deleted when the original is edited or deleted",
+                            "Suggestions: until you delete your account. The suggestion records are then deleted; values already applied and their sources (links and notes) remain as source records no longer linked to you.",
+                            "Contribution points: until you delete your account. Point records remain even after the originals (suggestions, reports) are deleted under their retention periods.",
+                            "Chart drafts and draft comments: until account deletion (one draft per chart; reopening it after it is published starts again from the public chart at that time). They are deleted when you delete your account, and charts already published remain without the author credit.",
+                            "Chart comments: until the author deletes them (before they are resolved) or deletes their account. Comments hidden by an admin are not public and are deleted with the account.",
+                            "Achievements and your profile achievement showcase: until account deletion. A tier you have reached is not removed automatically, even if your records change later. However, when an admin re-evaluates achievements after changing their thresholds or retiring an achievement, retired achievements and tiers below the new thresholds are removed.",
+                            "Pinned records and notes: until you change or remove them, or delete your account. If a chosen chart is deleted, its pin is deleted with it.",
+                            "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
+                        ]
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "We delete personal information without undue delay when its retention period ends or its purpose has been fulfilled. When you delete your account, your account, records, and uploaded files are removed from active systems."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "Pending legal review",
+                        "text": "Backup and provider retention windows will be reflected in final wording after pre-release verification. Until then we do not claim \"immediate and permanent deletion everywhere.\""
+                    }
+                ]
+            },
+            {
+                "id": "providers",
+                "title": "7. Service providers and international transfers",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Vercel",
+                        "text": "Vercel provides web hosting, server execution, and operational log processing. The server execution region is Seoul, South Korea (icn1). Data is transmitted over the network when the service is used and processed for the duration of service provision."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Vercel Blob",
+                        "text": "Vercel Blob stores avatars and submission images. The storage region is Seoul, South Korea (icn1). Exam evidence and feedback images are kept in private storage."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "PlanetScale",
+                        "text": "PlanetScale stores member and service data in a PostgreSQL database. The storage region is Seoul, South Korea (Google Cloud asia-northeast3), and data is processed for the duration of service provision."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Google (Gemini API)",
+                        "text": "When you post or edit an opinion or reply, only its text is sent to Google to translate it into the other two languages, and the translations are stored for \"See translation\". We send no other information such as the author's name. Because we use Google's free tier, Google may use the submitted text and results to improve its services, and Google reviewers may see them. It may be processed on Google servers outside your country."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "If you do not want your information transferred internationally, you may choose not to use Discord login or request account deletion. Login-based features will then be unavailable."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "Pending legal review",
+                        "text": "Regions, subprocessors, and log retention will be reflected in final wording after release-environment verification."
+                    }
+                ]
+            },
+            {
+                "id": "external",
+                "title": "8. External services",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "Discord",
+                        "text": "At login we exchange only basic identity (the identify scope) with Discord in the United States. Information processed by Discord is subject to its own policies."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "KONAMI/BEMANI",
+                        "text": "Record sync is run by you on the official site; the official-site session is governed by KONAMI's terms and policies."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Kakao Maps",
+                        "text": "Opening an arcade map may transmit connection information to Kakao's map service."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "X",
+                        "text": "Loading the official news widget on Home may let X process connection information. The widget is configured with Do Not Track."
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "Pending legal review",
+                        "text": "Whether nonessential third-party embeds require prior consent or notice will be settled by legal review."
+                    }
+                ]
+            },
+            {
+                "id": "storage",
+                "title": "9. Cookies and device storage",
+                "blocks": [
+                    {
+                        "kind": "item",
+                        "title": "user_session_cookie",
+                        "text": "The essential login session cookie. It lasts up to 14 days; blocking it disables login features."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "noslog-locale",
+                        "text": "The language preference cookie. It lasts up to 1 year; blocking it falls back to route and browser resolution."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Device-local storage",
+                        "text": "Theme, metronome volume, and Strict Performance settings are stored only in your browser and are not synced to your account. Clearing them restores defaults."
+                    }
+                ]
+            },
+            {
+                "id": "rights",
+                "title": "10. Your rights",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Users or their legal representatives may request access to, correction or deletion of, or restriction of processing of personal information. You may update information or delete your account in Settings, or contact us at the email above."
+                    }
+                ]
+            },
+            {
+                "id": "security",
+                "title": "11. Security measures",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "We limit access to necessary operators and apply encryption in transit, administrator authorization checks, private evidence storage, upload type and size validation, and session protection."
+                    }
+                ]
+            },
+            {
+                "id": "history",
+                "title": "12. Changes and history",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "If this policy changes, we will announce the change through service notices before it takes effect. Minor translation or typo fixes update only the last-updated date; material changes are recorded as a new effective version."
+                    }
+                ]
+            }
+        ]
+    }
+}

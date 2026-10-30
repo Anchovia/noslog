@@ -1,5 +1,6 @@
 import "server-only";
 
+import { Prisma } from "@prisma/client";
 import { updateTag } from "next/cache";
 
 import { setAchievementShowcase } from "@/features/achievements/server/achievement-service";
@@ -207,7 +208,11 @@ export async function saveSettingsPrivacy(
         scoresVisibilityChanged = await db.$transaction(async (tx) => {
             const current = await tx.user.findUnique({
                 where: { id: userId },
-                select: { hidePlayScores: true, hidePlayActivity: true },
+                select: {
+                    hidePlayScores: true,
+                    hidePlayActivity: true,
+                    translationConsentAt: true,
+                },
             });
             await tx.user.update({
                 where: { id: userId },
@@ -218,8 +223,23 @@ export async function saveSettingsPrivacy(
                     hidePlayCount: !values.showPlayCount,
                     hidePlayActivity: !values.showPlayActivity,
                     hidePlayScores: !values.showPlayScores,
+                    // 처음 동의한 시각을 남긴다 — 다시 저장해도 바꾸지 않는다
+                    translationConsentAt: values.allowTranslation
+                        ? (current?.translationConsentAt ?? new Date())
+                        : null,
                 },
             });
+            // 동의를 거두면 만들어 둔 번역도 지운다 — 남은 번역문이 보이면 철회가 화면에 드러나지 않는다
+            if (current?.translationConsentAt && !values.allowTranslation) {
+                await tx.communityChartEvaluation.updateMany({
+                    where: { userId },
+                    data: { opinionTranslations: Prisma.DbNull },
+                });
+                await tx.communityOpinionReply.updateMany({
+                    where: { userId },
+                    data: { translations: Prisma.DbNull },
+                });
+            }
             // 파트너가 이미 받아 간 기록도 거둬야 하니 공개 → 비공개일 때 무효화를 알린다
             if (
                 (current?.hidePlayScores === false && !values.showPlayScores) ||

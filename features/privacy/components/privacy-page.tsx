@@ -11,8 +11,10 @@ import { localizePath } from "@/lib/i18n/routing";
 
 function PolicyBlock({
     block,
+    sectionTitle,
 }: {
     block: PrivacyCopy["sections"][number]["blocks"][number];
+    sectionTitle: string;
 }) {
     switch (block.kind) {
         case "warning":
@@ -55,6 +57,37 @@ function PolicyBlock({
                     </dd>
                 </dl>
             );
+        case "table":
+            return (
+                // 좁은 폭에서 가로로 미는 상자 — 키보드로도 밀 수 있게 포커스를 받는다
+                <div
+                    className="nl-privacy-table"
+                    role="group"
+                    aria-label={sectionTitle}
+                    tabIndex={0}
+                >
+                    <table>
+                        <thead>
+                            <tr>
+                                {block.head.map((cell) => (
+                                    <th key={cell} scope="col">
+                                        {cell}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {block.rows.map((row) => (
+                                <tr key={row.join("|")}>
+                                    {row.map((cell, index) => (
+                                        <td key={index}>{cell}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
         default:
             return <p>{block.text}</p>;
     }
@@ -90,7 +123,7 @@ export default function PrivacyPage({
             <div className="nl-privacy-summary">
                 {copy.summary.map((group) => (
                     <section
-                        key={group.target}
+                        key={group.title}
                         className="nl-privacy-summary__group"
                     >
                         <h2 className="nl-component-title">{group.title}</h2>
@@ -124,7 +157,11 @@ export default function PrivacyPage({
                             {section.title}
                         </h2>
                         {section.blocks.map((block, index) => (
-                            <PolicyBlock key={index} block={block} />
+                            <PolicyBlock
+                                key={index}
+                                block={block}
+                                sectionTitle={section.title}
+                            />
                         ))}
                         {section.id === "rights" ? (
                             <div className="nl-privacy-actions">

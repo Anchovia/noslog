@@ -12,12 +12,18 @@ const mocks = vi.hoisted(() => ({
     setShowcase: vi.fn(),
     setPinned: vi.fn(),
     invalidateRecords: vi.fn(),
+    clearOpinionTranslations: vi.fn(),
+    clearReplyTranslations: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => {
     const db = {
         user: { findUnique: mocks.findUser, update: mocks.updateUser },
         arcade: { findFirst: mocks.findArcade },
+        communityChartEvaluation: {
+            updateMany: mocks.clearOpinionTranslations,
+        },
+        communityOpinionReply: { updateMany: mocks.clearReplyTranslations },
         $transaction: (run: (tx: unknown) => Promise<unknown>) => run(db),
     };
     return { default: db };
@@ -60,6 +66,7 @@ const privacy = {
     showPlayCount: false,
     showPlayActivity: false,
     showPlayScores: false,
+    allowTranslation: false,
 };
 
 describe("P10 settings save boundaries", () => {
@@ -272,7 +279,7 @@ describe("P10 settings save boundaries", () => {
         expect((await saveSettingsPrivacy(data)).success).toBe(false);
         expect(mocks.updateUser).not.toHaveBeenCalled();
     });
-    it("updates only the six privacy fields on the authenticated account", async () => {
+    it("updates only the privacy fields on the authenticated account", async () => {
         expect(
             (
                 await saveSettingsPrivacy(
@@ -293,9 +300,36 @@ describe("P10 settings save boundaries", () => {
                 hidePlayCount: true,
                 hidePlayActivity: true,
                 hidePlayScores: true,
+                translationConsentAt: null,
             },
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();
+    });
+    it("번역 동의는 처음 켠 시각을 지키고, 거두면 만들어 둔 번역을 지운다", async () => {
+        const consentedAt = new Date("2026-10-01T00:00:00Z");
+        const dataOf = () => mocks.updateUser.mock.calls.at(-1)?.[0].data;
+
+        mocks.findUser.mockResolvedValue({ translationConsentAt: null });
+        await saveSettingsPrivacy(
+            settingsFormData({ ...privacy, allowTranslation: true })
+        );
+        expect(dataOf().translationConsentAt).toBeInstanceOf(Date);
+
+        mocks.findUser.mockResolvedValue({ translationConsentAt: consentedAt });
+        await saveSettingsPrivacy(
+            settingsFormData({ ...privacy, allowTranslation: true })
+        );
+        expect(dataOf().translationConsentAt).toBe(consentedAt);
+        expect(mocks.clearOpinionTranslations).not.toHaveBeenCalled();
+
+        await saveSettingsPrivacy(settingsFormData(privacy));
+        expect(dataOf().translationConsentAt).toBeNull();
+        expect(mocks.clearOpinionTranslations).toHaveBeenCalledWith(
+            expect.objectContaining({ where: { userId: 9 } })
+        );
+        expect(mocks.clearReplyTranslations).toHaveBeenCalledWith(
+            expect.objectContaining({ where: { userId: 9 } })
+        );
     });
     it("점수나 활동을 공개에서 비공개로 바꿀 때만 파트너 기록 무효화를 같은 트랜잭션에 넣는다", async () => {
         const open = { hidePlayScores: false, hidePlayActivity: false };

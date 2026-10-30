@@ -25,7 +25,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(selected).toHaveAttribute("href", "#privacy-storage");
         await page.goForward();
         await expect(selected).toHaveAttribute("href", "#privacy-history");
-        for (const id of ["data", "retention", "operator"]) {
+        for (const id of ["data", "destruction", "operator"]) {
             // 읽는 위치 = 절 제목의 scroll-margin-top(헤더 높이 + 16, privacy.css)
             await page.locator(`#privacy-${id}`).evaluate((target) =>
                 target.scrollIntoView({
@@ -65,10 +65,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(
             copy.title
         );
-        await expect(page.locator(".nl-privacy-section")).toHaveCount(12);
+        await expect(page.locator(".nl-privacy-section")).toHaveCount(
+            copy.sections.length
+        );
         await expect(
             page.locator(".nl-privacy .nl-status--warning")
-        ).toHaveCount(4);
+        ).toHaveCount(1);
         for (const width of [320, 390, 520, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });
             expect(
@@ -88,9 +90,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.locator(".nl-privacy-contents summary").click();
         const toc = page.locator(".nl-privacy-contents__compact nav");
-        await expect(toc.getByRole("link")).toHaveCount(12);
+        await expect(toc.getByRole("link")).toHaveCount(copy.sections.length);
         await toc
-            .getByRole("link", { name: copy.sections[8].title, exact: true })
+            .getByRole("link", {
+                name: copy.sections.find(({ id }) => id === "storage")!.title,
+                exact: true,
+            })
             .click();
         await expect(page.locator("#privacy-storage")).toBeFocused();
         await expect(
@@ -106,10 +111,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .evaluate((el) => el.getBoundingClientRect().top)
         ).toBeGreaterThanOrEqual(headerBottom);
         await expect(
-            page.getByRole("link", {
-                name: "sodacandy77@naver.com",
-                exact: true,
-            })
+            page
+                .getByRole("link", {
+                    name: "sodacandy77@naver.com",
+                    exact: true,
+                })
+                .first()
         ).toHaveAttribute("href", "mailto:sodacandy77@naver.com");
         expect(
             (await new AxeBuilder({ page }).include(".nl-privacy").analyze())
@@ -144,7 +151,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
             .getByRole("link", { name: copy.title, exact: true })
             .first()
             .click();
-        await expect(page.locator(".nl-privacy-section")).toHaveCount(12);
+        await expect(page.locator(".nl-privacy-section")).toHaveCount(
+            copy.sections.length
+        );
         expect(errors).toEqual([]);
     });
 
@@ -153,7 +162,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
     }) => {
         await page.setViewportSize({ width: 320, height: 900 });
         await page.goto(`/${locale}/privacy`);
-        await expect(page.locator(".nl-privacy-section")).toHaveCount(12);
+        await expect(page.locator(".nl-privacy-section")).toHaveCount(
+            getPrivacyCopy(locale).sections.length
+        );
         const textSpacing = await page.addStyleTag({
             content:
                 ".nl-privacy * { line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; } .nl-privacy p { margin-bottom: 2em !important; }",
@@ -181,7 +192,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.locator("#privacy-history")).toBeVisible();
         await expect(
             page.locator(".nl-privacy .nl-status--warning")
-        ).toHaveCount(4);
+        ).toHaveCount(1);
         expect(
             (await new AxeBuilder({ page }).include(".nl-privacy").analyze())
                 .violations

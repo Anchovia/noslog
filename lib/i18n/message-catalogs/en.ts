@@ -795,6 +795,8 @@ export const enMessages = {
     "onboarding.error.nicknameRequired": "Enter a nickname.",
     "onboarding.error.nicknameMax":
         "Your nickname must be 20 characters or fewer.",
+    "onboarding.ageConfirm": "I am 14 or older",
+    "onboarding.error.ageRequired": "You must be 14 or older to sign up.",
     "onboarding.error.countryRequired": "Select a country or region.",
     "onboarding.error.nicknameTaken": "That nickname is already in use.",
     "onboarding.error.generic": "Could not complete profile setup.",
@@ -1539,6 +1541,9 @@ export const enMessages = {
     "settings.showPlayScores": "Show play scores",
     "settings.scoresCoupling":
         "When off, you are excluded from rankings and the scores and records on your profile are hidden from other players.",
+    "settings.allowTranslation": "Allow translation of my opinions and replies",
+    "settings.allowTranslationHelp":
+        "When on, the text of your opinions and replies is sent to Google Gemini and translated into the other two languages. On the free tier, Google may use it to improve its services and human reviewers may read it. Turning this off also deletes existing translations.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",

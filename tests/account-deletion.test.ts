@@ -7,6 +7,22 @@ const mocks = vi.hoisted(() => ({
     userDelete: vi.fn(),
     deleteBlobStrict: vi.fn(),
     revalidateTag: vi.fn(),
+    revokeGrantByUser: vi.fn(),
+    disconnectMusecat: vi.fn(),
+    dispatchPartnerOutbox: vi.fn(),
+}));
+vi.mock("next/server", () => ({ after: (task: () => unknown) => task() }));
+vi.mock("@/features/partner/server/oauth-service", () => ({
+    revokeGrantByUser: mocks.revokeGrantByUser,
+}));
+vi.mock("@/features/musecat/server/musecat-connection-service", () => ({
+    disconnectMusecat: mocks.disconnectMusecat,
+}));
+vi.mock("@/features/partner/server/partner-outbox", () => ({
+    dispatchPartnerOutbox: mocks.dispatchPartnerOutbox,
+}));
+vi.mock("@/features/partner/server/partner-settings-data", () => ({
+    MUSECAT_OAUTH_CLIENT_ID: "musecat",
 }));
 vi.mock("next/cache", () => ({ revalidateTag: mocks.revalidateTag }));
 
@@ -60,6 +76,9 @@ describe("회원 탈퇴", () => {
         mocks.deleteBlobStrict.mockResolvedValue(undefined);
         mocks.userDelete.mockResolvedValue({ id: 7 });
         mocks.destroy.mockResolvedValue(undefined);
+        mocks.revokeGrantByUser.mockResolvedValue(undefined);
+        mocks.disconnectMusecat.mockResolvedValue(undefined);
+        mocks.dispatchPartnerOutbox.mockResolvedValue(undefined);
     });
 
     it.each(["탈퇴", " 회원 탈퇴", "회원 탈퇴 "])(
@@ -116,6 +135,17 @@ describe("회원 탈퇴", () => {
         expect(mocks.deleteBlobStrict.mock.invocationCallOrder[2]).toBeLessThan(
             mocks.userDelete.mock.invocationCallOrder[0]
         );
+    });
+
+    it("계정을 지우기 전에 뮤즈캣 연결을 폐기하고 해제 알림을 보낸다", async () => {
+        await deleteAccount("회원 탈퇴");
+
+        expect(mocks.revokeGrantByUser).toHaveBeenCalledWith(7, "musecat");
+        expect(mocks.disconnectMusecat).toHaveBeenCalledWith(7);
+        expect(
+            mocks.disconnectMusecat.mock.invocationCallOrder[0]
+        ).toBeLessThan(mocks.userDelete.mock.invocationCallOrder[0]);
+        expect(mocks.dispatchPartnerOutbox).toHaveBeenCalledOnce();
     });
 
     it("파일 삭제에 실패하면 계정 삭제를 중단한다", async () => {

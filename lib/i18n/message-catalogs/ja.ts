@@ -788,6 +788,8 @@ export const jaMessages = {
     "onboarding.error.nicknameRequired": "ニックネームを入力してください。",
     "onboarding.error.nicknameMax":
         "ニックネームは20文字以内で入力してください。",
+    "onboarding.ageConfirm": "14歳以上です",
+    "onboarding.error.ageRequired": "登録できるのは14歳以上の方です。",
     "onboarding.error.countryRequired": "国・地域を選択してください。",
     "onboarding.error.nicknameTaken":
         "このニックネームはすでに使用されています。",
@@ -1532,6 +1534,9 @@ export const jaMessages = {
     "settings.showPlayScores": "プレースコアを公開",
     "settings.scoresCoupling":
         "オフにするとランキングの集計から除外され、自分のプロフィールのスコア・記録がほかのプレイヤーに表示されません。",
+    "settings.allowTranslation": "意見・返信の翻訳を許可",
+    "settings.allowTranslationHelp":
+        "オンにすると、自分の意見・返信の本文を Google Gemini に送り、ほかの2言語に翻訳します。無料枠のため、Google が送られた文章をサービス改善に使い、レビュー担当者が読む場合があります。オフにすると作成済みの翻訳も削除します。",
     "settings.activityCoupling":
         "最終プレーと最近のプレーが一緒に公開されます。",
     "settings.changeArcade": "変更",

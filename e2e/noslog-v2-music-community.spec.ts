@@ -41,6 +41,7 @@ const opinions: OpinionPage["items"] = Array.from(
         replyCount: 0,
         language: "ja" as const,
         translations: {},
+        translatable: false,
     })
 );
 const distribution = [12.0, 12.3, 12.8, 12.9, 13.0, 13.1, 13.3, 13.5, 13.8].map(

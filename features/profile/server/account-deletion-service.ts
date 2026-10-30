@@ -1,7 +1,12 @@
 import "server-only";
 
 import { revalidateTag } from "next/cache";
+import { after } from "next/server";
 
+import { disconnectMusecat } from "@/features/musecat/server/musecat-connection-service";
+import { revokeGrantByUser } from "@/features/partner/server/oauth-service";
+import { dispatchPartnerOutbox } from "@/features/partner/server/partner-outbox";
+import { MUSECAT_OAUTH_CLIENT_ID } from "@/features/partner/server/partner-settings-data";
 import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
 import { deleteBlobStrict } from "@/lib/blob";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
@@ -90,7 +95,11 @@ export async function deleteAccount(
         for (const url of uploadedUrls) {
             await deleteBlobStrict(url);
         }
+        // 연결 표는 계정과 함께 지워지므로, 그 전에 뮤즈캣 쪽 토큰을 폐기하고 해제 알림을 outbox 에 넣는다
+        await revokeGrantByUser(session.id, MUSECAT_OAUTH_CLIENT_ID);
+        await disconnectMusecat(session.id);
         await db.user.delete({ where: { id: session.id } });
+        after(() => dispatchPartnerOutbox().catch(() => null));
         invalidateDeletedAccount(session.id);
         await session.destroy();
         return { success: true as const };

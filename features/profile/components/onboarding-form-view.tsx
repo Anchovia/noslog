@@ -98,6 +98,7 @@ export default function OnboardingFormView({
         defaultValues: {
             username: "",
             country: undefined,
+            ageConfirmed: false,
             ...ONBOARDING_PRIVACY_DEFAULTS,
         },
     });
@@ -169,9 +170,15 @@ export default function OnboardingFormView({
 
     async function next() {
         clearErrors("root");
-        const valid = await trigger(["username", "country"]);
+        const valid = await trigger(["username", "country", "ageConfirmed"]);
         if (!valid) {
-            setFocus(getValues("username").trim() ? "country" : "username");
+            setFocus(
+                !getValues("username").trim()
+                    ? "username"
+                    : !getValues("country")
+                      ? "country"
+                      : "ageConfirmed"
+            );
             return;
         }
         if (!(await checkNicknameNow())) {
@@ -362,6 +369,28 @@ export default function OnboardingFormView({
                                 </p>
                             ) : null}
                         </fieldset>
+                        <div>
+                            <Checkbox
+                                label={t("onboarding.ageConfirm")}
+                                disabled={isSubmitting}
+                                aria-invalid={Boolean(errors.ageConfirmed)}
+                                aria-describedby={
+                                    errors.ageConfirmed
+                                        ? "onboarding-age-error"
+                                        : undefined
+                                }
+                                {...register("ageConfirmed")}
+                            />
+                            {errors.ageConfirmed ? (
+                                <p
+                                    id="onboarding-age-error"
+                                    className="nl-field__help nl-field__error"
+                                    role="alert"
+                                >
+                                    {errors.ageConfirmed.message}
+                                </p>
+                            ) : null}
+                        </div>
                     </>
                 ) : (
                     <fieldset

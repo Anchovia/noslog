@@ -65,6 +65,9 @@ async function profile(canvas: HTMLElement, globals: Record<string, unknown>) {
         c.getByRole("radio", { name: t["onboarding.country.jp"] })
     );
     await userEvent.click(
+        c.getByRole("checkbox", { name: t["onboarding.ageConfirm"] })
+    );
+    await userEvent.click(
         c.getByRole("button", { name: t["onboarding.next"] })
     );
     await waitFor(() =>
@@ -96,6 +99,34 @@ export const RequiredErrors: Story = {
         });
         await expect(input).toHaveAttribute("aria-invalid", "true");
         await expect(input).toHaveFocus();
+        await expect(args.submitAction).not.toHaveBeenCalled();
+    },
+};
+export const AgeRequired: Story = {
+    play: async ({ canvasElement, globals, args }) => {
+        const c = within(canvasElement);
+        const t = messages(globals);
+        await userEvent.type(
+            c.getByRole("textbox", { name: t["onboarding.nickname"] }),
+            "Noslog Tester"
+        );
+        await userEvent.click(
+            c.getByRole("radio", { name: t["onboarding.country.jp"] })
+        );
+        await userEvent.click(
+            c.getByRole("button", { name: t["onboarding.next"] })
+        );
+        const age = c.getByRole("checkbox", {
+            name: t["onboarding.ageConfirm"],
+        });
+        await waitFor(() => expect(age).toHaveFocus());
+        await expect(age).toHaveAttribute("aria-invalid", "true");
+        await expect(await c.findByRole("alert")).toHaveTextContent(
+            t["onboarding.error.ageRequired"]
+        );
+        await expect(c.getByRole("heading", { level: 1 })).toHaveTextContent(
+            t["onboarding.title"]
+        );
         await expect(args.submitAction).not.toHaveBeenCalled();
     },
 };
@@ -149,6 +180,9 @@ export const NicknameTaken: Story = {
             c.getByRole("radio", {
                 name: t["onboarding.country.kr"],
             })
+        );
+        await userEvent.click(
+            c.getByRole("checkbox", { name: t["onboarding.ageConfirm"] })
         );
         await userEvent.click(
             c.getByRole("button", { name: t["onboarding.next"] })

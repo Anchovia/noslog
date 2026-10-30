@@ -8,7 +8,7 @@ import {
     privacyVersionPeriod,
 } from "@/features/privacy/content/privacy-content";
 
-describe("개인정보처리방침 이전 버전", () => {
+describe("개인정보 처리방침 이전 버전", () => {
     it("보관한 버전은 세 언어 모두 방침 형식을 지킨다", () => {
         for (const version of PRIVACY_PREVIOUS_VERSIONS)
             for (const locale of ["ko", "ja", "en"] as const)
@@ -20,9 +20,9 @@ describe("개인정보처리방침 이전 버전", () => {
     it("세 언어 모두 새 시행일로 바뀌었고 직전 버전과 다르다", () => {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const effective = {
-            ko: "시행 2026년 10월 28일",
-            ja: "施行 2026年10月28日",
-            en: "Effective October 28, 2026",
+            ko: "시행 2026년 11월 6일",
+            ja: "施行 2026年11月6日",
+            en: "Effective November 6, 2026",
         } as const;
         for (const locale of ["ko", "ja", "en"] as const) {
             expect(getPrivacyCopy(locale).dates).toContain(effective[locale]);
@@ -32,45 +32,54 @@ describe("개인정보처리방침 이전 버전", () => {
         }
     });
 
-    it("세 언어 모두 기여 제안의 이용 · 공개 · 보유를 알린다(2026-09-25)", () => {
-        const title = {
-            ko: "기여 제안",
-            ja: "情報の提案",
-            en: "Information suggestions",
-        } as const;
+    it("세 언어 모두 법이 정한 항목을 같은 절 순서로 싣는다(2026-11-06 판)", () => {
+        const ids = [
+            "operator",
+            "data",
+            "destruction",
+            "third-party",
+            "providers",
+            "transfer",
+            "public",
+            "rights",
+            "security",
+            "storage",
+            "external",
+            "ai",
+            "children",
+            "contact",
+            "history",
+        ];
         for (const locale of ["ko", "ja", "en"] as const) {
             const copy = getPrivacyCopy(locale);
+            expect(copy.sections.map((section) => section.id)).toEqual(ids);
+            expect(copy.summary).toHaveLength(6);
             const text = (id: string) =>
                 JSON.stringify(
                     copy.sections.find((section) => section.id === id)
                 );
-            expect(text("data")).toContain(title[locale]);
+            // 제3자 제공 — 뮤즈캣 연결과 무료 Gemini 번역은 동의를 받는 제공
+            expect(text("third-party")).toContain("Google LLC");
+            expect(text("third-party")).toContain("musecat.app");
+            // 국외 이전 — 받는 자 연락처와 저장 위치
+            expect(text("transfer")).toContain("privacy@vercel.com");
+            expect(text("transfer")).toContain("privacy@planetscale.com");
+            expect(text("transfer")).toContain("asia-northeast3");
+            // 보호책임자 실명과 권익침해 구제 기관
+            expect(text("contact")).toContain("전병훈");
+            for (const phone of ["1833-6972", "118", "182"])
+                expect(text("contact")).toContain(phone);
+            // 기기 저장 — 오락실 찾기 기준 위치
+            expect(text("storage")).toContain("noslog.musecat.origin");
+            // 개정 전후 대조표
+            expect(
+                copy.sections
+                    .find((section) => section.id === "history")
+                    ?.blocks.some((block) => block.kind === "table")
+            ).toBe(true);
+            // 공개 설정 — 기여 · 업적 · 고정 기록 공개 범위는 이전 판 문장을 그대로 둔다
             expect(text("public")).toContain(
                 { ko: "제안자 이름", ja: "提案者名", en: "Your name" }[locale]
-            );
-            expect(text("retention")).toContain(
-                { ko: "기여 제안:", ja: "情報の提案：", en: "Suggestions:" }[
-                    locale
-                ]
-            );
-            // 3단계 — 채보 초안 · 채보 의견의 이용 · 공개 · 보유
-            expect(text("data")).toContain(
-                {
-                    ko: "채보 초안과 채보 의견",
-                    ja: "譜面の下書きと譜面への意見",
-                    en: "Chart drafts and chart comments",
-                }[locale]
-            );
-            expect(text("retention")).toContain(
-                {
-                    ko: "채보 의견:",
-                    ja: "譜面への意見：",
-                    en: "Chart comments:",
-                }[locale]
-            );
-            // 업적 — 이용 · 점수 비공개일 때 공개 범위 · 보유
-            expect(text("data")).toContain(
-                { ko: "업적", ja: "実績", en: "Achievements" }[locale]
             );
             expect(text("public")).toContain(
                 {
@@ -79,38 +88,8 @@ describe("개인정보처리방침 이전 버전", () => {
                     en: "skill, collection, song set or season achievements",
                 }[locale]
             );
-            // 2026-09-26 — 고정 기록의 이용 · 공개 · 보유, 업적 기준 변경 뒤 다시 판정하면 단계를 지움
-            expect(text("data")).toContain(
-                { ko: "고정 기록", ja: "固定記録", en: "pinned records" }[
-                    locale
-                ]
-            );
             expect(text("public")).toContain(
-                { ko: "고정 기록", ja: "固定記録", en: "pinned records" }[
-                    locale
-                ]
-            );
-            expect(text("retention")).toContain(
-                {
-                    ko: "고정 기록과 한 줄 소감:",
-                    ja: "固定記録とひとことコメント：",
-                    en: "Pinned records and notes:",
-                }[locale]
-            );
-            expect(text("retention")).toContain(
-                {
-                    ko: "새 기준에 못 미치는 단계는 삭제됩니다",
-                    ja: "新しい基準に満たない段階は削除されます",
-                    en: "tiers below the new thresholds are removed",
-                }[locale]
-            );
-            // 2단계 — 기여 점수 기록은 원본이 지워져도 탈퇴 전까지 남는다
-            expect(text("retention")).toContain(
-                {
-                    ko: "기여 점수 기록:",
-                    ja: "貢献ポイントの記録：",
-                    en: "Contribution points:",
-                }[locale]
+                { ko: "6가지", ja: "6つ", en: "six items" }[locale]
             );
         }
     });
@@ -149,7 +128,7 @@ describe("개인정보처리방침 이전 버전", () => {
     });
 
     it("없는 버전 주소는 찾지 않는다", () => {
-        expect(getPrivacyVersion("2026-10-28")).toBeNull();
+        expect(getPrivacyVersion("2026-11-06")).toBeNull();
         expect(getPrivacyVersion("toString")).toBeNull();
     });
 });

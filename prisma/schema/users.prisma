@@ -21,6 +21,8 @@ model User {
   hidePlayActivity          Boolean                     @default(true) @map("hide_play_activity")
   // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
   hidePlayScores            Boolean                     @default(false) @map("hide_play_scores")
+  // 무료 Gemini 는 보낸 글을 Google 이 학습에 쓸 수 있어 국외 제3자 제공이다 — 동의한 사람의 글만 번역한다
+  translationConsentAt      DateTime?                   @map("translation_consent_at")
   preferredArcade           Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
   role                      UserRole                    @default(user)
   syncTokenVersion          Int                         @default(0) @map("sync_token_version")

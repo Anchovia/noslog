@@ -198,8 +198,20 @@
         .nl-privacy
         .nl-status__copy
         > .nl-body-secondary:not(:first-child),
-    .noslog-ui .nl-privacy-contact dt {
+    .noslog-ui .nl-privacy-contact dt,
+    .noslog-ui .nl-privacy-table :is(th, td) {
         color: black;
+    }
+    /* 종이에는 가로로 밀 곳이 없다 — 표를 폭에 맞춰 줄바꿈하고 칸 선을 검정으로 */
+    .noslog-ui .nl-privacy-table {
+        overflow: visible;
+    }
+    .noslog-ui .nl-privacy-table :is(th, td) {
+        border-bottom-color: black;
+        white-space: normal;
+    }
+    .noslog-ui .nl-privacy-table tr {
+        break-inside: avoid;
     }
     .noslog-ui .nl-privacy h2,
     .noslog-ui .nl-privacy h3 {

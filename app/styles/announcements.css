@@ -270,12 +270,14 @@
     padding: 0;
     line-height: var(--nl-type-line-height-ui);
 }
-/* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다 */
-.noslog-ui .nl-announcement-body__table {
+/* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다. 개인정보 처리방침 표도 같은 표 */
+.noslog-ui .nl-announcement-body__table,
+.noslog-ui .nl-privacy-table {
     min-width: 0;
     overflow-x: auto;
 }
-.noslog-ui .nl-announcement-body table {
+.noslog-ui .nl-announcement-body table,
+.noslog-ui .nl-privacy-table table {
     width: 100%;
     border-collapse: collapse;
     font-size: var(--nl-type-size-14);
@@ -283,7 +285,9 @@
 }
 /* 표 줄 = 목록 행(한 줄일 때 컨트롤 높이 · 아래 선 포함). 여러 줄 칸은 그만큼 늘어난다 */
 .noslog-ui .nl-announcement-body th,
-.noslog-ui .nl-announcement-body td {
+.noslog-ui .nl-announcement-body td,
+.noslog-ui .nl-privacy-table th,
+.noslog-ui .nl-privacy-table td {
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     padding: calc(
             (
@@ -299,7 +303,8 @@
     overflow-wrap: normal;
 }
 /* 머리 칸 = Spectrum 2 TableView 머리 글자 bold */
-.noslog-ui .nl-announcement-body th {
+.noslog-ui .nl-announcement-body th,
+.noslog-ui .nl-privacy-table th {
     color: var(--nl-content-subdued);
     font-weight: var(--nl-type-weight-strong);
     white-space: nowrap;

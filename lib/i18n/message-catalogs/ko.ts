@@ -286,7 +286,7 @@ export const koMessages = {
     "header.moreMenu": "더 보기 메뉴",
     "header.profileLabel": "{name} 프로필",
     "header.language": "언어",
-    "footer.privacy": "개인정보처리방침",
+    "footer.privacy": "개인정보 처리방침",
     "shell.music": "악곡",
     "shell.charts": "채보 뷰어",
     "shell.rankings": "랭킹",
@@ -746,7 +746,7 @@ export const koMessages = {
     "auth.error.destinationRejected":
         "요청한 페이지로 이동할 수 없어 홈으로 이동합니다.",
     "auth.reviewBeforeLogin": "로그인 전에 {privacy}을 확인해주세요.",
-    "auth.privacy": "개인정보처리방침",
+    "auth.privacy": "개인정보 처리방침",
     "auth.browseWithoutLogin": "로그인 없이 둘러보기",
     "auth.error.invalidState":
         "로그인 요청이 만료되었습니다. 다시 시도해주세요.",
@@ -789,6 +789,8 @@ export const koMessages = {
     "onboarding.error.invalid": "입력한 정보를 확인해주세요.",
     "onboarding.error.nicknameRequired": "닉네임을 입력해주세요.",
     "onboarding.error.nicknameMax": "닉네임은 20자 이하로 입력해주세요.",
+    "onboarding.ageConfirm": "만 14세 이상입니다",
+    "onboarding.error.ageRequired": "만 14세 이상만 가입할 수 있습니다.",
     "onboarding.error.countryRequired": "국가를 선택해주세요.",
     "onboarding.error.nicknameTaken": "이미 사용 중인 닉네임입니다.",
     "onboarding.error.generic": "프로필 설정을 완료하지 못했습니다.",
@@ -1525,6 +1527,9 @@ export const koMessages = {
     "settings.showPlayScores": "플레이 점수 공개",
     "settings.scoresCoupling":
         "비활성화 시 랭킹 집계에서 제외되며, 본인 프로필의 점수 · 기록이 다른 플레이어에게 보이지 않습니다.",
+    "settings.allowTranslation": "의견 · 답글 번역 허용",
+    "settings.allowTranslationHelp":
+        "켜면 내 의견 · 답글 본문을 Google Gemini로 보내 다른 두 언어로 번역합니다. 무료 이용 등급이라 Google이 보낸 글을 서비스 개선에 쓰고 검토자가 읽을 수 있습니다. 끄면 만들어 둔 번역도 지웁니다.",
     "settings.activityCoupling":
         "마지막 플레이와 최근 플레이가 함께 공개됩니다.",
     "settings.changeArcade": "변경",

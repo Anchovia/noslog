@@ -30,10 +30,15 @@ describe("온보딩 스키마", () => {
 
     it("닉네임의 바깥 공백만 정리하고 입력한 대소문자를 보존한다", () => {
         expect(
-            schemaFor("ko").parse({ username: " carol ", country: "ko-KR" })
+            schemaFor("ko").parse({
+                username: " carol ",
+                country: "ko-KR",
+                ageConfirmed: true,
+            })
         ).toEqual({
             username: "carol",
             country: "ko-KR",
+            ageConfirmed: true,
             showNostalgiaName: false,
             showDiscordIdentity: false,
             showPreferredArcade: false,
@@ -51,15 +56,37 @@ describe("온보딩 스키마", () => {
         ["carol\n", "ja-JP"],
         ["ca\u0000rol", "global"],
     ])("경계 밖 입력을 거부한다", (username, country) => {
-        expect(schemaFor("en").safeParse({ username, country }).success).toBe(
-            false
-        );
+        expect(
+            schemaFor("en").safeParse({ username, country, ageConfirmed: true })
+                .success
+        ).toBe(false);
+    });
+
+    it("만 14세 이상 확인이 없으면 가입을 받지 않는다", () => {
+        for (const ageConfirmed of [false, undefined]) {
+            const result = schemaFor("ko").safeParse({
+                username: "carol",
+                country: "ko-KR",
+                ageConfirmed,
+            });
+            expect(result.success).toBe(false);
+        }
+        expect(
+            schemaFor("ko")
+                .safeParse({
+                    username: "carol",
+                    country: "ko-KR",
+                    ageConfirmed: false,
+                })
+                .error?.flatten().fieldErrors.ageConfirmed
+        ).toEqual(["만 14세 이상만 가입할 수 있습니다."]);
     });
 
     it("폼 값과 FormData 변환을 한곳에서 왕복한다", () => {
         const parsed = schemaFor("ko").parse({
             username: "carol",
             country: "global",
+            ageConfirmed: true,
         });
         const formData = createOnboardingFormData(parsed, "ja");
 
