@@ -3,22 +3,25 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
-// 개요의 패턴 경향은 채보 데이터 계산값(같은 난이도 · 전곡 두 기준, 0–1)이다. 변박 null = 박자표를 알 수 없음
+// 개요의 패턴 경향은 채보 데이터 계산값(같은 난이도 · 전곡 두 기준, 0–1)이다. 변박은 기준과 상관없는 0–3 단계
 const tendency = {
     difficulty: {
         stairs: 0.9,
         repetition: 1,
         polyrhythm: 0.13,
         offset: 0.21,
-        chords: null,
     },
     all: {
         stairs: 0.82,
         repetition: 0.88,
         polyrhythm: 0.08,
         offset: 0.13,
-        chords: null,
     },
+    meter: 2,
+    tempoChanges: 78,
+    tenutoCount: 120,
+    glissandoCount: 8,
+    trillCount: 0,
 };
 
 // 패턴 경향은 상세 데이터에 늘 함께 와서 탭을 옮겨도 다시 받지 않는다 — 고정 값을 보이려면
@@ -135,7 +138,7 @@ test("Music detail enters Overview and keeps the four difficulty choices on one 
     await expect(page.getByRole("radio", { name: /^Expert/ })).toBeChecked();
 });
 
-test("Pattern trend shows five computed values and switches between the difficulty and all charts", async ({
+test("Pattern trend shows four computed values with the meter level and switches between the difficulty and all charts", async ({
     page,
 }) => {
     await openOverviewWithPattern(page, tendency);
@@ -152,10 +155,26 @@ test("Pattern trend shows five computed values and switches between the difficul
         "100%",
         "13%",
         "21%",
-        "—",
+        "보통",
     ]);
-    // 변박은 박자표를 알 수 없어 빈 막대
-    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(4);
+    await expect(
+        page.locator(".nl-facts > div", { hasText: "변속" }).locator("dd")
+    ).toHaveText("78회");
+    const fact = (label: string) =>
+        page
+            .locator(".nl-facts > div", {
+                has: page.getByText(label, { exact: true }),
+            })
+            .locator("dd");
+    await expect(fact("테누토 수")).toHaveText("120");
+    await expect(fact("글리산도 수")).toHaveText("8");
+    await expect(fact("트릴 수")).toHaveText("0");
+    // 변박은 칸 막대 3칸 가운데 단계만큼 채운다
+    const steps = bars.locator(".nl-bar-list__track--steps > span");
+    await expect(steps).toHaveCount(3);
+    await expect(
+        bars.locator(".nl-bar-list__track--steps > .nl-bar-list__fill")
+    ).toHaveCount(2);
     const basis = page.getByRole("button", {
         name: "전곡 기준으로 보기",
         exact: true,
@@ -173,7 +192,7 @@ test("Pattern trend shows five computed values and switches between the difficul
         "88%",
         "8%",
         "13%",
-        "—",
+        "보통",
     ]);
     await back.click();
     await expect(bars.locator(".nl-bar-list__value").first()).toHaveText("90%");
@@ -184,6 +203,7 @@ test("Pattern trend shows five computed values and switches between the difficul
     await help.click();
     const dialog = page.getByRole("dialog", { name: "패턴 경향 기준" });
     await expect(dialog).toContainText("상위 1%의 중앙값을 100%로 둡니다");
+    await expect(dialog).toContainText("1–3건반씩 같은 방향으로");
     await expect(dialog).not.toContainText("악곡의 특색일 정도");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -204,6 +224,16 @@ test("A chart without a published chart blurs the bar graph under the lock card 
     await expect(card).toHaveAttribute("aria-hidden", "true");
     await expect(card).toHaveCSS("filter", "blur(5px)");
     await expect(card.locator(".nl-bar-list__row")).toHaveCount(5);
+    // 채보로 세는 정보 줄은 값 대신 「—」
+    for (const label of ["변속", "테누토 수", "글리산도 수", "트릴 수"]) {
+        await expect(
+            page
+                .locator(".nl-facts > div", {
+                    has: page.getByText(label, { exact: true }),
+                })
+                .locator("dd")
+        ).toHaveText("—");
+    }
     await expect(
         page.getByRole("button", { name: "전곡 기준으로 보기" })
     ).toHaveCount(0);
@@ -302,7 +332,7 @@ for (const locale of ["ko", "ja", "en"]) {
         page,
     }, testInfo) => {
         await openOverviewWithPattern(page, tendency, locale);
-        await expect(page.locator(".nl-bar-list__fill")).toHaveCount(4);
+        await expect(page.locator(".nl-bar-list__fill")).toHaveCount(6);
         for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });
             // 1056+ 는 왼쪽 머리 열 + 오른쪽 탭 내용 두 열 (2026-09-16 데스크톱 B)

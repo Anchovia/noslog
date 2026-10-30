@@ -179,7 +179,21 @@ export const enMessages = {
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
     "pattern.computedNone": "No published chart to calculate from",
     "pattern.computedMissing":
-        "Meter changes stay empty for charts extracted from video, because their time signature is unknown.",
+        "Meter changes stay empty for songs with no guide found.",
+    "pattern.meter.0": "None",
+    "pattern.meter.1": "Low",
+    "pattern.meter.2": "Medium",
+    "pattern.meter.3": "High",
+    "pattern.computedDefinition.stairs":
+        "Counts notes one hand plays while moving 1–3 keys at a time in the same direction. Stairs that hit each key twice also count.",
+    "pattern.computedDefinition.repetition":
+        "Counts notes where one hand hits the same key again within 0.25 seconds, at least twice in a row. Shorter gaps count more.",
+    "pattern.computedDefinition.polyrhythm":
+        "Counts two-beat spans where one hand plays eighths or sixteenths and the other plays triplets.",
+    "pattern.computedDefinition.offset":
+        "Counts notes that sit almost together but are off by up to 0.12 seconds. The notes before and after must be at least twice that gap away.",
+    "pattern.computedDefinition.chords":
+        "A per-song record of how much the time signature changes, taken from Japanese and Korean community guides. Charts with time signatures entered by hand are measured from the chart.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
@@ -591,6 +605,11 @@ export const enMessages = {
     "music.record.recentPlays": "Recent Plays",
     "music.record.noRecentPlays": "No recent play records.",
     "music.info.noteCount": "Note Count",
+    "music.info.tempoChanges": "Tempo Changes",
+    "music.info.tempoChangesCount": "{count}",
+    "music.info.tenutoCount": "Tenuto Count",
+    "music.info.glissandoCount": "Glissando Count",
+    "music.info.trillCount": "Trill Count",
     "music.info.duration": "Duration",
     "music.info.releaseDate": "Release Date",
     "music.info.unlock": "Unlock Condition",

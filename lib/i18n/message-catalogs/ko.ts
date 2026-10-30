@@ -176,8 +176,21 @@ export const koMessages = {
     "pattern.computed":
         "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
     "pattern.computedNone": "공개 채보가 없어 계산할 수 없어요",
-    "pattern.computedMissing":
-        "영상에서 추출해 박자표를 알 수 없는 채보는 변박 값을 비워 둡니다.",
+    "pattern.computedMissing": "공략 글을 찾지 못한 곡은 변박을 비워 둡니다.",
+    "pattern.meter.0": "없음",
+    "pattern.meter.1": "적음",
+    "pattern.meter.2": "보통",
+    "pattern.meter.3": "많음",
+    "pattern.computedDefinition.stairs":
+        "한 손이 1–3건반씩 같은 방향으로 옮겨 가며 치는 노트를 셉니다. 같은 자리를 두 번씩 치며 옮겨 가는 계단도 넣습니다.",
+    "pattern.computedDefinition.repetition":
+        "한 손이 같은 건반을 0.25초 안에 다시 치는 일이 두 번 이상 이어진 노트를 셉니다. 간격이 짧을수록 크게 셉니다.",
+    "pattern.computedDefinition.polyrhythm":
+        "두 박 안에서 한 손은 8분 · 16분, 다른 손은 셋잇단으로 치는 구간을 셉니다.",
+    "pattern.computedDefinition.offset":
+        "동시치기처럼 붙어 있지만 0.12초 안에서 어긋난 노트를 셉니다. 앞뒤 노트와는 그 차이의 두 배 이상 떨어져 있어야 합니다.",
+    "pattern.computedDefinition.chords":
+        "박자표가 바뀌는 정도를 ノスしるべ · BEMANI wiki · 나무위키 공략 글로 정한 곡별 기록입니다. 사람이 박자표를 넣은 채보는 채보에서 셉니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
@@ -589,6 +602,11 @@ export const koMessages = {
     "music.record.recentPlays": "최근 플레이",
     "music.record.noRecentPlays": "최근 플레이 기록이 없습니다.",
     "music.info.noteCount": "노트 수",
+    "music.info.tempoChanges": "변속",
+    "music.info.tempoChangesCount": "{count}회",
+    "music.info.tenutoCount": "테누토 수",
+    "music.info.glissandoCount": "글리산도 수",
+    "music.info.trillCount": "트릴 수",
     "music.info.duration": "곡 길이",
     "music.info.releaseDate": "수록일",
     "music.info.unlock": "해금 조건",

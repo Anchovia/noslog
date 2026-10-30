@@ -2366,7 +2366,7 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 가로 막대 목록 BarList — 줄 = 라벨 control · 트랙 8(모서리 4) · 값 metric-value 오른쪽 정렬, 줄 사이 8, 열 사이 12.
    트랙 클래스는 진행 막대(업적 · 그레이드 · 기여)도 같이 쓴다 — 진행 막대 트랙은 구분선 색, 카드 위 막대 목록 트랙은 control 면.
-   채움은 차트 단일 색(선 차트와 같은 색) */
+   채움은 차트 단일 색(선 차트와 같은 색). 칸 막대(--steps)는 트랙을 칸 사이 2 로 나누고 바깥 모서리만 둥글다 */
 .noslog-ui .nl-bar-list {
     display: flex;
     flex-direction: column;
@@ -2395,6 +2395,19 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-bar-list .nl-bar-list__track {
     background: var(--nl-surface-control);
+}
+.noslog-ui .nl-bar-list .nl-bar-list__track--steps {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--nl-spacing-2);
+    background: none;
+}
+.noslog-ui .nl-bar-list__track--steps > span:not(.nl-bar-list__fill) {
+    background: var(--nl-surface-control);
+}
+.noslog-ui .nl-bar-list__track--steps > .nl-bar-list__fill {
+    border-radius: 0;
 }
 .noslog-ui .nl-bar-list__fill {
     display: block;

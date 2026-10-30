@@ -178,7 +178,21 @@ export const jaMessages = {
         "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
     "pattern.computedNone": "公開譜面がないため計算できません",
     "pattern.computedMissing":
-        "動画から抽出して拍子がわからない譜面は変拍子の値を空欄にします。",
+        "攻略記事が見つからない曲は変拍子を空欄にします。",
+    "pattern.meter.0": "なし",
+    "pattern.meter.1": "少ない",
+    "pattern.meter.2": "普通",
+    "pattern.meter.3": "多い",
+    "pattern.computedDefinition.stairs":
+        "片手が同じ方向へ1–3鍵ずつ移りながら弾くノーツを数えます。同じ位置を2回ずつ弾きながら移る階段も含みます。",
+    "pattern.computedDefinition.repetition":
+        "片手が0.25秒以内に同じ鍵盤をもう一度弾く動きが2回以上続いたノーツを数えます。間隔が短いほど大きく数えます。",
+    "pattern.computedDefinition.polyrhythm":
+        "2拍の中で片手が8分・16分、もう片手が3連符を弾く区間を数えます。",
+    "pattern.computedDefinition.offset":
+        "同時押しのように近いものの0.12秒以内でずれたノーツを数えます。前後のノーツとはそのずれの2倍以上離れている必要があります。",
+    "pattern.computedDefinition.chords":
+        "拍子の変わり方を、ノスしるべ・BEMANI wiki・ナムウィキの攻略記事から曲ごとに記録したものです。人が拍子を入力した譜面は譜面から数えます。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",
@@ -586,6 +600,11 @@ export const jaMessages = {
     "music.record.recentPlays": "最近のプレー",
     "music.record.noRecentPlays": "最近のプレー記録がありません。",
     "music.info.noteCount": "ノーツ数",
+    "music.info.tempoChanges": "ソフラン",
+    "music.info.tempoChangesCount": "{count}回",
+    "music.info.tenutoCount": "テヌート数",
+    "music.info.glissandoCount": "グリッサンド数",
+    "music.info.trillCount": "トリル数",
     "music.info.duration": "楽曲の長さ",
     "music.info.releaseDate": "収録日",
     "music.info.unlock": "解禁条件",

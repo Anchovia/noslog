@@ -1,19 +1,27 @@
-import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
 import {
+    type MeterLevel,
+    PATTERN_STRENGTH_AXES,
     type PatternMetrics,
     patternReference,
     patternStrength,
+    type PatternStrengthAxis,
 } from "@/lib/chart-pattern/patternMetrics";
 
-export type PatternAxis = (typeof PATTERN_AXES)[number];
 /** 항목별 세기 0–1(100% = 기준 안 상위 1% 중앙값). null = 계산할 수 없음 */
-export type PatternStrengths = Record<PatternAxis, number | null>;
+export type PatternStrengths = Record<PatternStrengthAxis, number | null>;
 
 export interface PatternTendency {
     /** 같은 난이도 공개 채보 기준 */
     difficulty: PatternStrengths;
     /** 모든 공개 채보 기준 */
     all: PatternStrengths;
+    /** 변박 단계 — 기준과 상관없이 같다. null = 기록 없음 */
+    meter: MeterLevel | null;
+    /** 채보 정보 줄 — 변속 횟수와 노트 종류별 개수. 기준과 상관없이 같다 */
+    tempoChanges: number;
+    tenutoCount: number;
+    glissandoCount: number;
+    trillCount: number;
 }
 
 export interface PatternMetricRow extends PatternMetrics {
@@ -30,15 +38,11 @@ export function buildPatternTendency(
     if (!row) return null;
     const strengths = (peers: PatternMetricRow[]) =>
         Object.fromEntries(
-            PATTERN_AXES.map((axis) => [
+            PATTERN_STRENGTH_AXES.map((axis) => [
                 axis,
                 patternStrength(
                     row[axis],
-                    patternReference(
-                        peers
-                            .map((peer) => peer[axis])
-                            .filter((value) => value !== null)
-                    )
+                    patternReference(peers.map((peer) => peer[axis]))
                 ),
             ])
         ) as PatternStrengths;
@@ -47,5 +51,10 @@ export function buildPatternTendency(
             rows.filter((peer) => peer.difficulty === row.difficulty)
         ),
         all: strengths(rows),
+        meter: row.chords,
+        tempoChanges: row.tempoChanges,
+        tenutoCount: row.tenutoCount,
+        glissandoCount: row.glissandoCount,
+        trillCount: row.trillCount,
     };
 }

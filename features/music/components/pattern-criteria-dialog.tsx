@@ -13,7 +13,7 @@ const LEVELS = [0, 1, 2, 3, 4] as const;
  * 「패턴 경향 기준」 ⓘ + 창 — 개요 제목 줄과 평가 탭 패턴 투표 기준 줄이 같은 창을 연다.
  * 기준 = 모든 곡 대비 세기(곡 안 비중 아님) · 단계 이름 0–4 는 막대 단계 색 네모와 함께 (2026-09-23 A1 + B2)
  * 안 = 소제목 「단계」 · 「항목」 + 구분선 줄 목록(2026-09-26 I1)
- * 개요(computed)는 채보에서 계산한 백분율이라 0–4 단계 대신 계산 기준과 「—」 뜻을 보인다
+ * 개요(computed)는 채보에서 계산한 백분율이라 0–4 단계 대신 계산 기준 · 항목마다 세는 법 · 「—」 뜻을 보인다
  */
 export default function PatternCriteriaDialog({
     variant = "vote",
@@ -76,7 +76,11 @@ export default function PatternCriteriaDialog({
                                 {t(`pattern.axis.${axis}`)}
                             </dt>
                             <dd className="nl-body-secondary nl-muted">
-                                {t(`pattern.definition.${axis}`)}
+                                {t(
+                                    computed
+                                        ? `pattern.computedDefinition.${axis}`
+                                        : `pattern.definition.${axis}`
+                                )}
                             </dd>
                         </div>
                     ))}
