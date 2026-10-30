@@ -58,9 +58,19 @@ const contentSchema = z
                 `공지 내용은 ${ANNOUNCEMENT_CONTENT_MAX_LENGTH}자 이하로 입력해주세요.`
             )
     );
+// 칸이 없으면 undefined(그대로 둠), 빈 문자열이면 null(배너 빼기)
+const bannerUrlSchema = z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => (value === undefined ? undefined : value || null))
+    .refine((value) => !value || URL.canParse(value), {
+        error: "배너 주소가 잘못됐습니다.",
+    });
 const translationSchema = z.object({
     title: titleSchema,
     content: contentSchema,
+    bannerUrl: bannerUrlSchema,
 });
 // 관리자 화면은 한국어 전용 — datetime-local 값(시간대 없는 `YYYY-MM-DDTHH:mm`)은 서버 시간대와 무관하게
 // 한국 시간(UTC+9)으로 읽고 쓴다. 운영 서버(UTC)에서 `new Date("…T10:00")` 이 9시간 뒤로 밀려
@@ -194,6 +204,9 @@ export function announcementFormInputFromFormData(formData: FormData) {
                 {
                     title: readString(formData, `title.${locale}`),
                     content: readString(formData, `content.${locale}`),
+                    bannerUrl: formData.has(`bannerUrl.${locale}`)
+                        ? readString(formData, `bannerUrl.${locale}`)
+                        : undefined,
                 },
             ])
         ),
@@ -229,6 +242,9 @@ export function createAnnouncementFormData(
     for (const locale of ANNOUNCEMENT_LOCALES) {
         formData.set(`title.${locale}`, values.translations[locale].title);
         formData.set(`content.${locale}`, values.translations[locale].content);
+        const bannerUrl = values.translations[locale].bannerUrl;
+        if (bannerUrl !== undefined)
+            formData.set(`bannerUrl.${locale}`, bannerUrl ?? "");
     }
     if (id !== undefined) formData.set("id", String(id));
     if (values.poll !== undefined)

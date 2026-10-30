@@ -59,6 +59,9 @@ export function createOnboardingSchema(t: Translator) {
         ageConfirmed: z
             .boolean()
             .refine((value) => value, t("onboarding.error.ageRequired")),
+        termsAccepted: z
+            .boolean()
+            .refine((value) => value, t("onboarding.error.termsRequired")),
         // 가입 직후 공개 설정. 설정 화면과 같은 6개 — 처음 상태는 ONBOARDING_PRIVACY_DEFAULTS
         ...(Object.fromEntries(
             ONBOARDING_PRIVACY_KEYS.map((key) => [
@@ -81,6 +84,7 @@ export function onboardingInputFromFormData(formData: FormData) {
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
         ageConfirmed: formData.get("ageConfirmed") === "true",
+        termsAccepted: formData.get("termsAccepted") === "true",
         // 보내지 않은 칸은 처음 상태로(예전 화면 · 새 칸이 없는 요청)
         ...Object.fromEntries(
             ONBOARDING_PRIVACY_KEYS.map((key) => {
@@ -104,6 +108,7 @@ export function createOnboardingFormData(
     formData.set("username", values.username);
     formData.set("country", values.country);
     formData.set("ageConfirmed", String(values.ageConfirmed));
+    formData.set("termsAccepted", String(values.termsAccepted));
     for (const key of ONBOARDING_PRIVACY_KEYS)
         formData.set(key, String(values[key]));
     formData.set("locale", locale);

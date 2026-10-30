@@ -268,6 +268,8 @@ export const jaMessages = {
     "common.jacket": "{title}のジャケット",
     "common.notifications": "通知",
     "common.notFoundTitle": "ページが見つかりません。",
+    "terms.metaDescription":
+        "NosLog の利用規約です。非公式サービスの告知、会員が投稿したコンテンツの権利、禁止事項を記載します。",
     "privacy.metaDescription":
         "NosLogがどの情報をなぜ集め、どのくらい保管し、どう削除できるかを説明します。",
     "common.notFoundDescription": "URLが変更されたか、存在しないページです。",
@@ -300,6 +302,7 @@ export const jaMessages = {
     "header.profileLabel": "{name}のプロフィール",
     "header.language": "言語",
     "footer.privacy": "プライバシーポリシー",
+    "footer.terms": "利用規約",
     "shell.music": "楽曲",
     "shell.charts": "譜面ビューア",
     "shell.rankings": "ランキング",
@@ -761,8 +764,10 @@ export const jaMessages = {
         "セッションの有効期限が切れました。もう一度ログインしてください。",
     "auth.error.destinationRejected":
         "リクエストされたページへ移動できないため、ホームへ移動します。",
-    "auth.reviewBeforeLogin": "ログイン前に{privacy}をご確認ください。",
+    "auth.reviewBeforeLogin":
+        "ログイン前に{terms}と{privacy}をご確認ください。",
     "auth.privacy": "プライバシーポリシー",
+    "auth.terms": "利用規約",
     "auth.browseWithoutLogin": "ログインせずに見る",
     "auth.error.invalidState":
         "ログインの有効期限が切れました。もう一度お試しください。",
@@ -808,7 +813,10 @@ export const jaMessages = {
     "onboarding.error.nicknameMax":
         "ニックネームは20文字以内で入力してください。",
     "onboarding.ageConfirm": "14歳以上です",
+    "onboarding.termsConsent": "{terms}に同意します",
     "onboarding.error.ageRequired": "登録できるのは14歳以上の方です。",
+    "onboarding.error.termsRequired":
+        "登録するには利用規約への同意が必要です。",
     "onboarding.error.countryRequired": "国・地域を選択してください。",
     "onboarding.error.nicknameTaken":
         "このニックネームはすでに使用されています。",
@@ -1668,7 +1676,7 @@ export const jaMessages = {
         "画像アップロードのリクエストを処理できませんでした。",
     "settings.deleteTitle": "アカウント削除",
     "settings.deleteDescription":
-        "アカウントとすべての記録・提出資料を完全に削除します。",
+        "アカウントと記録・提出資料を完全に削除します。公開された譜面と反映された貢献の値は、投稿者との紐づけを外して残ります。",
     "settings.deleteIrreversible": "削除した情報は復元できません。",
     "settings.deleteWarning":
         "アカウント、プロフィール、プレー・同期記録、コミュニティ活動、フィードバック、検定提出、アップロード画像が直ちに完全削除されます。",

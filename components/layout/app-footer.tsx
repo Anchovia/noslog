@@ -10,6 +10,8 @@ export default async function AppFooter() {
         <footer className="nl-footer">
             <div className="nl-footer__content">
                 <FooterLinks
+                    termsHref={getLocalizedHref("/terms", locale)}
+                    termsLabel={t("footer.terms")}
                     privacyHref={getLocalizedHref("/privacy", locale)}
                     privacyLabel={t("footer.privacy")}
                     externalLabel={t("shell.externalLink")}

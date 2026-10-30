@@ -269,6 +269,8 @@ export const enMessages = {
     "common.jacket": "{title} jacket",
     "common.notifications": "Notifications",
     "common.notFoundTitle": "Page Not Found",
+    "terms.metaDescription":
+        "NosLog Terms of Service: the unofficial service notice, rights in content members post, and prohibited conduct.",
     "privacy.metaDescription":
         "What information NosLog collects and why, how long it is kept, and how to delete it.",
     "common.notFoundDescription":
@@ -302,6 +304,7 @@ export const enMessages = {
     "header.profileLabel": "{name}'s profile",
     "header.language": "Language",
     "footer.privacy": "Privacy Policy",
+    "footer.terms": "Terms of Service",
     "shell.music": "Music",
     "shell.charts": "Chart Viewer",
     "shell.rankings": "Rankings",
@@ -768,8 +771,10 @@ export const enMessages = {
     "auth.error.sessionExpired": "Your session expired. Please log in again.",
     "auth.error.destinationRejected":
         "That destination was unavailable, so you will continue to Home.",
-    "auth.reviewBeforeLogin": "Please review the {privacy} before logging in.",
+    "auth.reviewBeforeLogin":
+        "Please review the {terms} and {privacy} before logging in.",
     "auth.privacy": "Privacy Policy",
+    "auth.terms": "Terms of Service",
     "auth.browseWithoutLogin": "Browse without logging in",
     "auth.error.invalidState": "Your login request expired. Please try again.",
     "auth.error.oauthConfig": "Login is temporarily unavailable.",
@@ -815,7 +820,10 @@ export const enMessages = {
     "onboarding.error.nicknameMax":
         "Your nickname must be 20 characters or fewer.",
     "onboarding.ageConfirm": "I am 14 or older",
+    "onboarding.termsConsent": "I agree to the {terms}",
     "onboarding.error.ageRequired": "You must be 14 or older to sign up.",
+    "onboarding.error.termsRequired":
+        "You must agree to the Terms of Service to sign up.",
     "onboarding.error.countryRequired": "Select a country or region.",
     "onboarding.error.nicknameTaken": "That nickname is already in use.",
     "onboarding.error.generic": "Could not complete profile setup.",
@@ -1669,7 +1677,7 @@ export const enMessages = {
         "Could not process the image upload request.",
     "settings.deleteTitle": "Delete Account",
     "settings.deleteDescription":
-        "Permanently deletes your account, records, and submissions.",
+        "Permanently deletes your account, records, and submissions. Published charts and applied contribution values remain with the link to you removed.",
     "settings.deleteIrreversible": "Deleted information cannot be recovered.",
     "settings.deleteWarning":
         "Your account, profile, play and sync records, community activity, feedback, exam submissions, and uploaded images will be permanently deleted immediately.",

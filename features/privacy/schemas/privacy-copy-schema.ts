@@ -32,6 +32,14 @@ const contact = z.object({
     emailLabel: z.string(),
     email: z.email(),
 });
+export const policyBlockSchema = z.discriminatedUnion("kind", [
+    paragraph,
+    item,
+    warning,
+    list,
+    contact,
+    table,
+]);
 export const privacyCopySchema = z.object({
     title: z.string(),
     dates: z.string(),
@@ -53,16 +61,7 @@ export const privacyCopySchema = z.object({
             z.object({
                 id: z.string(),
                 title: z.string(),
-                blocks: z.array(
-                    z.discriminatedUnion("kind", [
-                        paragraph,
-                        item,
-                        warning,
-                        list,
-                        contact,
-                        table,
-                    ])
-                ),
+                blocks: z.array(policyBlockSchema),
             })
         )
         .min(1),

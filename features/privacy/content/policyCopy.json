@@ -85,7 +85,7 @@
                             [
                                 "로그인",
                                 "회원 식별과 로그인 유지",
-                                "Discord 사용자 식별자 · 사용자 이름 · 표시 이름 · 프로필 사진 주소",
+                                "Discord 사용자 식별자 · 사용자 이름 · 표시 이름 · 프로필 사진 주소, 이용약관 동의 시각",
                                 "탈퇴할 때까지"
                             ],
                             [
@@ -680,7 +680,7 @@
                             [
                                 "ログイン",
                                 "会員の識別とログイン維持",
-                                "Discordのユーザー識別子・ユーザー名・表示名・プロフィール画像のアドレス",
+                                "Discordのユーザー識別子・ユーザー名・表示名・プロフィール画像のアドレス、利用規約に同意した日時",
                                 "退会まで"
                             ],
                             [
@@ -1278,7 +1278,7 @@
                             [
                                 "Login",
                                 "Identifying members and keeping you logged in",
-                                "Discord user ID, username, display name and avatar URL",
+                                "Discord user ID, username, display name and avatar URL, and the time you accepted the Terms of Service",
                                 "Until you delete your account"
                             ],
                             [

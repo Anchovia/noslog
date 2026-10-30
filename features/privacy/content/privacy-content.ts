@@ -85,7 +85,10 @@ function policyDate(key: string, locale: Locale) {
     }).format(Date.UTC(year, month - 1, day));
 }
 
-export function privacyVersionPeriod(version: PrivacyVersion, locale: Locale) {
+export function privacyVersionPeriod(
+    version: { effective: string; until: string },
+    locale: Locale
+) {
     const separator = locale === "ja" ? "〜" : " – ";
     return `${policyDate(version.effective, locale)}${separator}${policyDate(version.until, locale)}`;
 }

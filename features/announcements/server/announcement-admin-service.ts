@@ -105,6 +105,7 @@ function translationRows(input: AnnouncementValues) {
         locale,
         title: input.translations[locale].title,
         content: input.translations[locale].content,
+        bannerUrl: input.translations[locale].bannerUrl,
     }));
 }
 
@@ -202,7 +203,12 @@ export async function updateAnnouncement(
             select: {
                 publishedAt: true,
                 translations: {
-                    select: { locale: true, title: true, content: true },
+                    select: {
+                        locale: true,
+                        title: true,
+                        content: true,
+                        bannerUrl: true,
+                    },
                 },
             },
         });
@@ -236,7 +242,9 @@ export async function updateAnnouncement(
                             const changed =
                                 !previous ||
                                 previous.title !== row.title ||
-                                previous.content !== row.content;
+                                previous.content !== row.content ||
+                                (row.bannerUrl !== undefined &&
+                                    previous.bannerUrl !== row.bannerUrl);
                             return {
                                 where: {
                                     announcementId_locale: {
@@ -250,6 +258,7 @@ export async function updateAnnouncement(
                                     ? {
                                           title: row.title,
                                           content: row.content,
+                                          bannerUrl: row.bannerUrl,
                                           modifiedAt: now,
                                       }
                                     : {},

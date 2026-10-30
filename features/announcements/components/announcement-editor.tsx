@@ -23,6 +23,8 @@ import MarkdownEditor from "@/components/ui/markdown-editor";
 import ResponsiveDialog from "@/components/ui/responsive-dialog";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
+import AnnouncementBanner from "@/features/announcements/components/announcement-banner";
+import AnnouncementBannerBuilder from "@/features/announcements/components/announcement-banner-builder";
 import AnnouncementBody from "@/features/announcements/components/announcement-body";
 import AnnouncementDeleteButton from "@/features/announcements/components/announcement-delete-button";
 import TierChangeImageBuilder from "@/features/announcements/components/tier-change-image-builder";
@@ -70,7 +72,10 @@ export interface AnnouncementEditorData {
     activeFrom: string;
     expiresAt: string;
     isPublished: boolean;
-    translations: Record<Locale, { title: string; content: string }>;
+    translations: Record<
+        Locale,
+        { title: string; content: string; bannerUrl: string }
+    >;
     /** 글에 딸린 투표(2026-09-23 V2) — 없으면 null, 표가 들어왔으면 votes 로 잠근다 */
     poll?: { input: PollInput; votes: number } | null;
 }
@@ -84,9 +89,9 @@ export const emptyAnnouncementEditorData: AnnouncementEditorData = {
     expiresAt: "",
     isPublished: false,
     translations: {
-        ko: { title: "", content: "" },
-        ja: { title: "", content: "" },
-        en: { title: "", content: "" },
+        ko: { title: "", content: "", bannerUrl: "" },
+        ja: { title: "", content: "", bannerUrl: "" },
+        en: { title: "", content: "", bannerUrl: "" },
     },
 };
 
@@ -160,7 +165,8 @@ export default function AnnouncementEditor({
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [songImageBusy, setSongImageBusy] = useState(false);
     const [summaryImageBusy, setSummaryImageBusy] = useState(false);
-    const tierImageBusy = songImageBusy || summaryImageBusy;
+    const [bannerBusy, setBannerBusy] = useState(false);
+    const tierImageBusy = songImageBusy || summaryImageBusy || bannerBusy;
     const [pending, setPending] = useState<SaveMode | null>(null);
     // 저장 상태(2026-09-23 L2) — 저장 안 한 변경 · 저장 중 · 저장됨 · 저장 실패
     const [saveState, setSaveState] = useState<"saved" | "failed" | null>(null);
@@ -610,6 +616,16 @@ export default function AnnouncementEditor({
                                                                 "제목 없음"}
                                                         </h1>
                                                     </header>
+                                                    <AnnouncementBanner
+                                                        url={
+                                                            translations[item]
+                                                                ?.bannerUrl
+                                                        }
+                                                        title={
+                                                            translations[item]
+                                                                ?.title ?? ""
+                                                        }
+                                                    />
                                                     <AnnouncementBody
                                                         content={value}
                                                         locale={item}
@@ -627,9 +643,31 @@ export default function AnnouncementEditor({
                 })}
             </AreaTabs>
 
+            <AnnouncementBannerBuilder
+                titles={{
+                    ko: translations?.ko?.title ?? "",
+                    ja: translations?.ja?.title ?? "",
+                    en: translations?.en?.title ?? "",
+                }}
+                bannerUrls={{
+                    ko: translations?.ko?.bannerUrl ?? "",
+                    ja: translations?.ja?.bannerUrl ?? "",
+                    en: translations?.en?.bannerUrl ?? "",
+                }}
+                upload={uploadAnnouncementImage}
+                disabled={pending !== null || songImageBusy || summaryImageBusy}
+                onBusyChange={setBannerBusy}
+                onChange={(urls) => {
+                    for (const item of ANNOUNCEMENT_LOCALES)
+                        setValue(`translations.${item}.bannerUrl`, urls[item], {
+                            shouldDirty: true,
+                        });
+                }}
+            />
+
             <TierChangeImageBuilder
                 locale={locale}
-                disabled={pending !== null || summaryImageBusy}
+                disabled={pending !== null || summaryImageBusy || bannerBusy}
                 onBusyChange={setSongImageBusy}
                 onAttach={async (file, data) => {
                     const targetLocale = locale;
@@ -653,7 +691,7 @@ export default function AnnouncementEditor({
 
             <TierRebalanceImageBuilder
                 locale={locale}
-                disabled={pending !== null || songImageBusy}
+                disabled={pending !== null || songImageBusy || bannerBusy}
                 onBusyChange={setSummaryImageBusy}
                 onAttach={async (file, data) => {
                     const targetLocale = locale;

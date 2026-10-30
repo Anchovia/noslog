@@ -20,6 +20,12 @@
 .noslog-ui .nl-announcements__heading h1 {
     min-width: 0;
 }
+/* 글 배너 — 1100 × 280 그림을 읽기 폭에 맞춘다 */
+.noslog-ui .nl-announcement-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+}
 /* 공지 줄(2026-09-26 R1) — 분류 태그 · 제목 · 오른쪽 (고정 핀 16 →4→) 날짜 한 줄(핀 = 2026-09-28 A4). 672 미만은 「태그 … 날짜」 위 →4→ 제목 */
 .noslog-ui .nl-announcement-row {
     display: grid;

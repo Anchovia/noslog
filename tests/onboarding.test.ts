@@ -51,6 +51,7 @@ function onboardingForm(
     formData.set("username", username);
     formData.set("country", country);
     formData.set("ageConfirmed", "true");
+    formData.set("termsAccepted", "true");
     if (locale) formData.set("locale", locale);
     return formData;
 }
@@ -67,6 +68,15 @@ describe("최초 프로필 설정", () => {
             profileCompletedAt: new Date("2026-07-19"),
         });
         mocks.userUpdate.mockResolvedValue({ id: 9 });
+    });
+
+    it("이용약관 동의가 없으면 저장하지 않는다", async () => {
+        const refused = onboardingForm();
+        refused.delete("termsAccepted");
+        expect(await completeOnboarding(refused)).toMatchObject({
+            success: false,
+        });
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
     });
 
     it("만 14세 이상 확인이 없으면 저장하지 않는다", async () => {
@@ -94,6 +104,7 @@ describe("최초 프로필 설정", () => {
                 hidePlayActivity: true,
                 hidePlayScores: false,
                 profileCompletedAt: expect.any(Date),
+                termsAcceptedAt: expect.any(Date),
             },
         });
         expect(mocks.session.profileCompleted).toBe(true);
@@ -136,6 +147,7 @@ describe("최초 프로필 설정", () => {
                 hidePlayActivity: true,
                 hidePlayScores: false,
                 profileCompletedAt: expect.any(Date),
+                termsAcceptedAt: expect.any(Date),
             },
         });
     });

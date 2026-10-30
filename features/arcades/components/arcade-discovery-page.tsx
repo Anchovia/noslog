@@ -656,6 +656,8 @@ export default function ArcadeDiscoveryPage({
                 {/* 시트 배치에서는 페이지가 스크롤되지 않아 셸 푸터 대신 목록 끝에 같은 푸터를 둔다 */}
                 <div className="nl-arcades__footer">
                     <FooterLinks
+                        termsHref={href("/terms")}
+                        termsLabel={t("footer.terms")}
                         privacyHref={href("/privacy")}
                         privacyLabel={t("footer.privacy")}
                         externalLabel={t("shell.externalLink")}

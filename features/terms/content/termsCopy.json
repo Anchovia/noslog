@@ -1,0 +1,506 @@
+{
+    "ko": {
+        "title": "이용약관",
+        "dates": "최종 수정 2026년 10월 31일 · 시행 2026년 12월 1일",
+        "contents": "이 페이지에서",
+        "historyLink": "이전 버전 보기",
+        "privacyLink": "개인정보 처리방침: 파기 절차",
+        "sections": [
+            {
+                "id": "purpose",
+                "title": "제1조 목적과 운영자",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "이 약관은 NosLog 를 쓰는 조건과 운영자 · 회원의 권리와 의무를 정합니다. NosLog 는 아래 운영자가 무료로 운영합니다."
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "운영자",
+                        "operator": "전병훈(계롤 · Anchovia)",
+                        "emailLabel": "이메일",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "법률 검토 대기",
+                        "text": "이 약관은 변호사 검토를 아직 받지 않았습니다."
+                    }
+                ]
+            },
+            {
+                "id": "unofficial",
+                "title": "제2조 비공식 서비스",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog 는 NOSTALGIA 의 기록 · 랭킹 · 아카이브를 다루는 비공식 팬 서비스입니다. KONAMI 와 공식 NOSTALGIA 서비스는 NosLog 를 운영하거나 보증하지 않습니다. 악곡 · 자켓 · 로고 · 상표의 권리는 각 권리자에게 있습니다. 권리자가 요청하면 운영자는 내용을 확인하고 해당 자료를 고치거나 내립니다."
+                    }
+                ]
+            },
+            {
+                "id": "changes",
+                "title": "제3조 약관의 효력과 변경",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "회원은 가입할 때 이 약관에 동의합니다. 약관을 바꾸면 시행일 · 바뀌는 내용 · 이유를 시행 15일 전부터, 회원에게 불리하면 30일 전부터 공지합니다. 회원이 시행일까지 거부 의사를 밝히지 않고 계속 쓰면 동의한 것으로 봅니다. 동의하지 않으면 탈퇴할 수 있습니다."
+                    }
+                ]
+            },
+            {
+                "id": "account",
+                "title": "제4조 가입과 계정",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "가입은 Discord 계정으로 하며 만 14세 이상만 할 수 있습니다. 회원은 자기 Discord 계정과 동기화 도구를 다른 사람이 쓰지 않게 관리합니다."
+                    }
+                ]
+            },
+            {
+                "id": "sync",
+                "title": "제5조 기록 동기화",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "회원이 공식 사이트에서 동기화 도구를 직접 실행하면 플레이 기록이 NosLog 로 옵니다. 운영자는 공식 사이트 비밀번호와 쿠키를 받지 않습니다. 공식 사이트가 바뀌면 동기화가 멈추거나 기록이 다를 수 있습니다."
+                    }
+                ]
+            },
+            {
+                "id": "content",
+                "title": "제6조 회원이 올린 콘텐츠",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "의견 · 답글 · 한 줄 소감 · 곡 정보 제안 · 채보 기여 · 이벤트 글 · 프로필 이미지의 권리는 회원 또는 원래 권리자에게 있습니다. 회원은 올릴 권리가 있는 것만 올립니다. 회원은 서비스 제공에 필요한 저장 · 복제 · 수정 · 공중 송신 · 전시 · 배포 · 번역을 기한과 지역 제한 없이 무상으로 허락합니다. 의견 · 답글 번역은 회원이 설정에서 허용한 글만 합니다."
+                    }
+                ]
+            },
+            {
+                "id": "contribution",
+                "title": "제7조 기여",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "곡 정보 제안과 채보는 운영자가 확인한 뒤 반영하며, 고치거나 반려할 수 있습니다. 기여 Lv 은 권한을 주지 않는 표시입니다. 공개된 채보와 수정 이력, 반영된 값과 근거는 탈퇴 뒤에도 작성자 연결을 끊고 남습니다."
+                    }
+                ]
+            },
+            {
+                "id": "conduct",
+                "title": "제8조 하면 안 되는 일",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "다른 사람의 계정이나 동기화 도구를 쓰는 일",
+                            "기록을 꾸며 내거나 동기화 자료를 고쳐 보내는 일",
+                            "욕설 · 혐오 표현 · 스팸 · 다른 사람의 민감한 정보를 올리는 일",
+                            "다른 사람의 저작권 · 상표권 등 권리를 침해하는 일",
+                            "서비스를 방해하거나 보안을 우회하거나 자동으로 대량 수집하는 일",
+                            "운영자나 공식 서비스인 척하는 일"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "restriction",
+                "title": "제9조 글 가리기와 이용 제한",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "회원이 제8조를 어기면 운영자는 글을 가리거나 지우고, 기록을 랭킹에서 빼고, 이용을 제한하거나 계정을 해지할 수 있습니다. 운영자는 이유를 알리고 회원은 문의 메일로 이의를 낼 수 있습니다. 다른 이용자의 피해를 막아야 할 만큼 급하면 조치한 뒤에 알립니다."
+                    }
+                ]
+            },
+            {
+                "id": "withdrawal",
+                "title": "제10조 탈퇴",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "회원은 설정에서 언제든 탈퇴할 수 있습니다. 지워지는 정보와 작성자 연결을 끊고 남는 정보는 개인정보 처리방침에 적습니다."
+                    }
+                ]
+            },
+            {
+                "id": "service",
+                "title": "제11조 서비스 변경과 중단",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "운영자는 기능을 바꾸거나 일부를 멈출 수 있습니다. 서비스를 끝낼 때는 30일 전에 공지합니다. 공식 사이트 변경 등 운영자가 막을 수 없는 일로 멈추면 곧바로 공지합니다."
+                    }
+                ]
+            },
+            {
+                "id": "liability",
+                "title": "제12조 책임",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog 는 무료 팬 서비스이며 기록 · 랭킹 · 채보 · 번역이 정확하다고 보증하지 않습니다. 운영자는 공식 사이트나 외부 서비스의 장애, 회원 사이의 분쟁으로 생긴 손해에 책임지지 않습니다. 운영자의 고의나 중대한 과실로 생긴 손해는 예외입니다."
+                    }
+                ]
+            },
+            {
+                "id": "law",
+                "title": "제13조 언어와 적용 법",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "약관은 세 언어로 제공하며 뜻이 다르면 한국어판을 따릅니다. 이 약관에는 대한민국 법을 적용합니다. 다만 회원이 사는 나라의 강행 규정이 주는 보호는 그대로입니다. 문의는 제1조의 이메일로 받습니다."
+                    }
+                ]
+            },
+            {
+                "id": "addendum",
+                "title": "부칙",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "이 약관은 2026년 12월 1일부터 시행합니다. 그 전에 새로 가입하는 회원에게는 가입할 때부터 적용합니다."
+                    }
+                ]
+            }
+        ]
+    },
+    "ja": {
+        "title": "利用規約",
+        "dates": "最終更新 2026年10月31日・施行 2026年12月1日",
+        "contents": "このページの内容",
+        "historyLink": "過去のバージョンを見る",
+        "privacyLink": "プライバシーポリシー：破棄の手続き",
+        "sections": [
+            {
+                "id": "purpose",
+                "title": "第1条 目的と運営者",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "本規約は、NosLog を利用する条件と、運営者および会員の権利と義務を定めます。NosLog は下記の運営者が無料で運営します。"
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "運営者",
+                        "operator": "전병훈（チョン・ビョンフン、계롤・Anchovia）",
+                        "emailLabel": "メール",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "法的レビュー待ち",
+                        "text": "本規約は弁護士のレビューをまだ受けていません。"
+                    }
+                ]
+            },
+            {
+                "id": "unofficial",
+                "title": "第2条 非公式サービス",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog は NOSTALGIA の記録・ランキング・アーカイブを扱う非公式ファンサービスです。KONAMI と公式 NOSTALGIA サービスは NosLog を運営も保証もしていません。楽曲・ジャケット・ロゴ・商標の権利は各権利者にあります。権利者から要請があれば、運営者は内容を確認し、該当する資料を修正または削除します。"
+                    }
+                ]
+            },
+            {
+                "id": "changes",
+                "title": "第3条 規約の効力と変更",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "会員は登録時に本規約に同意します。規約を変更するときは、施行日・変更内容・理由を施行の15日前から、会員に不利な変更は30日前からお知らせします。施行日までに拒否の意思を示さず利用を続けた会員は、同意したものとみなします。同意しない場合は退会できます。"
+                    }
+                ]
+            },
+            {
+                "id": "account",
+                "title": "第4条 登録とアカウント",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "登録は Discord アカウントで行い、14歳以上の方に限ります。会員は自分の Discord アカウントと同期ツールを他人に使わせないよう管理します。"
+                    }
+                ]
+            },
+            {
+                "id": "sync",
+                "title": "第5条 記録の同期",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "会員が公式サイトで同期ツールを自分で実行すると、プレー記録が NosLog に届きます。運営者は公式サイトのパスワードと Cookie を受け取りません。公式サイトが変わると、同期が止まったり記録が異なったりする場合があります。"
+                    }
+                ]
+            },
+            {
+                "id": "content",
+                "title": "第6条 会員が投稿したコンテンツ",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "コメント・返信・ひとことコメント・楽曲情報の提案・譜面の投稿・イベント投稿・プロフィール画像の権利は、会員または元の権利者にあります。会員は投稿する権利のあるものだけを投稿します。会員は、サービスの提供に必要な保存・複製・修正・公衆送信・展示・配布・翻訳を、期間と地域の制限なく無償で許諾します。コメント・返信の翻訳は、会員が設定で許可した投稿に限ります。"
+                    }
+                ]
+            },
+            {
+                "id": "contribution",
+                "title": "第7条 投稿による協力",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "楽曲情報の提案と譜面は運営者が確認してから反映し、修正または却下する場合があります。貢献 Lv は権限を与えない表示です。公開された譜面と修正履歴、反映された値と根拠は、退会後も投稿者との紐づけを外して残ります。"
+                    }
+                ]
+            },
+            {
+                "id": "conduct",
+                "title": "第8条 禁止事項",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "他人のアカウントや同期ツールを使うこと",
+                            "記録を捏造したり、同期データを改ざんして送ったりすること",
+                            "暴言・ヘイト表現・スパム・他人の機微な情報を投稿すること",
+                            "他人の著作権・商標権などの権利を侵害すること",
+                            "サービスの妨害、セキュリティの回避、自動での大量収集を行うこと",
+                            "運営者や公式サービスになりすますこと"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "restriction",
+                "title": "第9条 投稿の非表示と利用制限",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "会員が第8条に違反した場合、運営者は投稿を非表示または削除し、記録をランキングから外し、利用を制限し、アカウントを解約することがあります。運営者は理由を伝え、会員は問い合わせメールで異議を申し立てられます。他の利用者の被害を防ぐ緊急の必要があるときは、措置の後で伝えます。"
+                    }
+                ]
+            },
+            {
+                "id": "withdrawal",
+                "title": "第10条 退会",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "会員は設定からいつでも退会できます。削除される情報と、投稿者との紐づけを外して残る情報はプライバシーポリシーに記載します。"
+                    }
+                ]
+            },
+            {
+                "id": "service",
+                "title": "第11条 サービスの変更と停止",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "運営者は機能を変更し、または一部を停止することがあります。サービスを終了するときは30日前にお知らせします。公式サイトの変更など運営者が防げない事情で止まったときは、すぐにお知らせします。"
+                    }
+                ]
+            },
+            {
+                "id": "liability",
+                "title": "第12条 責任",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog は無料のファンサービスであり、記録・ランキング・譜面・翻訳の正確さを保証しません。運営者は、公式サイトや外部サービスの障害、会員間の紛争で生じた損害について責任を負いません。運営者の故意または重大な過失による損害はこの限りではありません。"
+                    }
+                ]
+            },
+            {
+                "id": "law",
+                "title": "第13条 言語と準拠法",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "本規約は三つの言語で提供し、意味が異なるときは韓国語版に従います。本規約には大韓民国の法律を適用します。ただし、会員が住む国の強行規定による保護は失われません。お問い合わせは第1条のメールで受け付けます。"
+                    }
+                ]
+            },
+            {
+                "id": "addendum",
+                "title": "附則",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "本規約は2026年12月1日から施行します。それより前に新しく登録する会員には、登録時から適用します。"
+                    }
+                ]
+            }
+        ]
+    },
+    "en": {
+        "title": "Terms of Service",
+        "dates": "Last updated October 31, 2026 · Effective December 1, 2026",
+        "contents": "On this page",
+        "historyLink": "View previous versions",
+        "privacyLink": "Privacy Policy: how data is destroyed",
+        "sections": [
+            {
+                "id": "purpose",
+                "title": "Article 1. Purpose and operator",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "These terms set the conditions for using NosLog and the rights and duties of the operator and members. The operator named below runs NosLog free of charge."
+                    },
+                    {
+                        "kind": "contact",
+                        "operatorLabel": "Operator",
+                        "operator": "Jeon Byeonghun (전병훈, known as 계롤 / Anchovia)",
+                        "emailLabel": "Email",
+                        "email": "sodacandy77@naver.com"
+                    },
+                    {
+                        "kind": "warning",
+                        "title": "Pending legal review",
+                        "text": "These terms have not yet been reviewed by a lawyer."
+                    }
+                ]
+            },
+            {
+                "id": "unofficial",
+                "title": "Article 2. Unofficial service",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog is an unofficial fan service for NOSTALGIA records, rankings, and archives. KONAMI and the official NOSTALGIA service do not run or endorse NosLog. Rights in songs, jackets, logos, and trademarks belong to their respective owners. If a rights holder asks, the operator checks the request and corrects or removes the material."
+                    }
+                ]
+            },
+            {
+                "id": "changes",
+                "title": "Article 3. Effect and changes",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Members agree to these terms when they sign up. When the terms change, the operator announces the effective date, the changes, and the reason 15 days in advance, or 30 days in advance if the change is unfavorable to members. Members who keep using NosLog through the effective date without objecting are treated as having agreed. Members who disagree can delete their account."
+                    }
+                ]
+            },
+            {
+                "id": "account",
+                "title": "Article 4. Sign-up and accounts",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Sign-up uses a Discord account and is open to people aged 14 or older. Members keep their Discord account and sync tool from being used by anyone else."
+                    }
+                ]
+            },
+            {
+                "id": "sync",
+                "title": "Article 5. Record sync",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "When a member runs the sync tool on the official site, their play records are sent to NosLog. The operator does not receive official site passwords or cookies. Changes to the official site can stop the sync or make records differ."
+                    }
+                ]
+            },
+            {
+                "id": "content",
+                "title": "Article 6. Content members post",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Rights in comments, replies, one-line notes, song information suggestions, chart contributions, event posts, and profile images belong to the member or the original rights holder. Members post only what they have the right to post. Members grant, free of charge and without limit of time or territory, the storage, reproduction, modification, public transmission, display, distribution, and translation needed to provide the service. Comments and replies are translated only when the member has allowed it in settings."
+                    }
+                ]
+            },
+            {
+                "id": "contribution",
+                "title": "Article 7. Contributions",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "The operator reviews song information suggestions and charts before applying them, and may edit or reject them. Contributor Lv is a label and grants no permissions. Published charts with their revision history, and applied values with their sources, remain after account deletion with the link to the author removed."
+                    }
+                ]
+            },
+            {
+                "id": "conduct",
+                "title": "Article 8. Prohibited conduct",
+                "blocks": [
+                    {
+                        "kind": "list",
+                        "items": [
+                            "Using another person's account or sync tool",
+                            "Fabricating records or altering sync data before sending it",
+                            "Posting abuse, hate speech, spam, or other people's sensitive information",
+                            "Infringing copyright, trademark, or other rights",
+                            "Disrupting the service, bypassing security, or collecting data in bulk by automated means",
+                            "Impersonating the operator or an official service"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "restriction",
+                "title": "Article 9. Hidden posts and restrictions",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "If a member breaks Article 8, the operator may hide or delete posts, remove records from rankings, restrict use, or terminate the account. The operator gives the reason, and the member can object by email. When urgent action is needed to prevent harm to other users, the operator gives notice afterward."
+                    }
+                ]
+            },
+            {
+                "id": "withdrawal",
+                "title": "Article 10. Account deletion",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "Members can delete their account in settings at any time. The Privacy Policy lists what is deleted and what remains with the link to the author removed."
+                    }
+                ]
+            },
+            {
+                "id": "service",
+                "title": "Article 11. Changes and suspension",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "The operator may change features or suspend part of the service. The operator announces the end of the service 30 days in advance. If the service stops for reasons the operator cannot prevent, such as a change to the official site, the operator announces it right away."
+                    }
+                ]
+            },
+            {
+                "id": "liability",
+                "title": "Article 12. Liability",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "NosLog is a free fan service and does not guarantee that records, rankings, charts, or translations are accurate. The operator is not liable for damage caused by outages of the official site or outside services, or by disputes between members. This does not apply to damage caused by the operator's intent or gross negligence."
+                    }
+                ]
+            },
+            {
+                "id": "law",
+                "title": "Article 13. Language and governing law",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "These terms are provided in three languages, and the Korean version prevails if the meanings differ. The laws of the Republic of Korea apply. Protection under mandatory rules of the member's country of residence stays in place. Questions go to the email address in Article 1."
+                    }
+                ]
+            },
+            {
+                "id": "addendum",
+                "title": "Addendum",
+                "blocks": [
+                    {
+                        "kind": "paragraph",
+                        "text": "These terms take effect on December 1, 2026. For members who sign up before that date, they apply from sign-up."
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -42,8 +42,12 @@ export default async function EditAnnouncementPage({
             return [
                 locale,
                 row
-                    ? { title: row.title, content: row.content }
-                    : { title: "", content: "" },
+                    ? {
+                          title: row.title,
+                          content: row.content,
+                          bannerUrl: row.bannerUrl ?? "",
+                      }
+                    : { title: "", content: "", bannerUrl: "" },
             ];
         })
     ) as AnnouncementEditorData["translations"];

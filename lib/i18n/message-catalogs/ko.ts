@@ -266,6 +266,8 @@ export const koMessages = {
     "common.jacket": "{title} 자켓",
     "common.notifications": "알림",
     "common.notFoundTitle": "페이지를 찾을 수 없습니다.",
+    "terms.metaDescription":
+        "NosLog 이용약관입니다. 비공식 서비스 고지와 회원이 올린 콘텐츠의 권리, 하면 안 되는 일을 적습니다.",
     "privacy.metaDescription":
         "NosLog 가 어떤 정보를 왜 모으고, 얼마나 보관하며, 어떻게 지울 수 있는지 안내합니다.",
     "common.notFoundDescription":
@@ -300,6 +302,7 @@ export const koMessages = {
     "header.profileLabel": "{name} 프로필",
     "header.language": "언어",
     "footer.privacy": "개인정보 처리방침",
+    "footer.terms": "이용약관",
     "shell.music": "악곡",
     "shell.charts": "채보 뷰어",
     "shell.rankings": "랭킹",
@@ -763,8 +766,9 @@ export const koMessages = {
     "auth.error.sessionExpired": "세션이 만료되었습니다. 다시 로그인해주세요.",
     "auth.error.destinationRejected":
         "요청한 페이지로 이동할 수 없어 홈으로 이동합니다.",
-    "auth.reviewBeforeLogin": "로그인 전에 {privacy}을 확인해주세요.",
+    "auth.reviewBeforeLogin": "로그인 전에 {terms}과 {privacy}을 확인해주세요.",
     "auth.privacy": "개인정보 처리방침",
+    "auth.terms": "이용약관",
     "auth.browseWithoutLogin": "로그인 없이 둘러보기",
     "auth.error.invalidState":
         "로그인 요청이 만료되었습니다. 다시 시도해주세요.",
@@ -808,7 +812,9 @@ export const koMessages = {
     "onboarding.error.nicknameRequired": "닉네임을 입력해주세요.",
     "onboarding.error.nicknameMax": "닉네임은 20자 이하로 입력해주세요.",
     "onboarding.ageConfirm": "만 14세 이상입니다",
+    "onboarding.termsConsent": "{terms}에 동의합니다",
     "onboarding.error.ageRequired": "만 14세 이상만 가입할 수 있습니다.",
+    "onboarding.error.termsRequired": "이용약관에 동의해야 가입할 수 있습니다.",
     "onboarding.error.countryRequired": "국가를 선택해주세요.",
     "onboarding.error.nicknameTaken": "이미 사용 중인 닉네임입니다.",
     "onboarding.error.generic": "프로필 설정을 완료하지 못했습니다.",
@@ -1653,7 +1659,7 @@ export const koMessages = {
     "settings.uploadRequestError": "이미지 업로드 요청을 처리하지 못했습니다.",
     "settings.deleteTitle": "회원 탈퇴",
     "settings.deleteDescription":
-        "계정과 모든 기록, 제출 자료를 영구 삭제합니다.",
+        "계정과 기록, 제출 자료를 영구 삭제합니다. 공개된 채보와 반영된 기여 값은 작성자 연결을 끊고 남습니다.",
     "settings.deleteIrreversible": "삭제한 정보는 복구할 수 없습니다.",
     "settings.deleteWarning":
         "계정, 프로필, 플레이·동기화 기록, 커뮤니티 활동, 피드백, 검정 제출과 업로드 이미지가 즉시 영구 삭제됩니다.",

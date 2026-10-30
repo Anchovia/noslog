@@ -19,7 +19,7 @@ export function createSettingsProfileSchema(
 ) {
     // 나이 확인은 가입 때 한 번만 받는다
     return createOnboardingSchema(t)
-        .omit({ ageConfirmed: true })
+        .omit({ ageConfirmed: true, termsAccepted: true })
         .extend({
             avatar: z.union([z.url(), z.literal("")], {
                 error: t("settings.validation.avatarUrl"),

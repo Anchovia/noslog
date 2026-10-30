@@ -9,7 +9,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 import { localizePath } from "@/lib/i18n/routing";
 
-function PolicyBlock({
+export function PolicyBlock({
     block,
     sectionTitle,
 }: {

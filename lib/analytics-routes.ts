@@ -47,6 +47,9 @@ export const PAGE_ROUTES: readonly AnalyticsRoute[] = [
         pattern: "/privacy/history/[version]",
         label: "개인정보처리방침 이전 버전",
     },
+    { pattern: "/terms", label: "이용약관" },
+    { pattern: "/terms/history", label: "이용약관 이전 버전 목록" },
+    { pattern: "/terms/history/[version]", label: "이용약관 이전 버전" },
 ];
 
 export const API_ROUTES: readonly AnalyticsRoute[] = [

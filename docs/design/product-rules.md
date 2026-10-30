@@ -629,6 +629,7 @@
   업로드를 지우고, 그 전에 뮤즈캣 연결(기록 읽기 허락과 내 뮤즈캣 계정 토큰)을 폐기해 해제 알림을 보낸다.
   [보관 규칙](../../lib/privacy-retention.ts)을 본다.
 - 가입할 때 「만 14세 이상입니다」 확인을 받는다. 확인 값은 저장하지 않고, 확인하지 않으면 가입을 받지 않는다.
+- 가입할 때 이용약관 동의를 받고 시각을 `users.terms_accepted_at` 에 저장한다. 약관이 생기기 전에 가입한 회원은 비어 있다. 약관을 바꾸면 보통 15일 전, 불리하면 30일 전에 공지하고, 지금 판을 `features/terms/content/versions/{effective}.json` 에 보관한다.
 - 처리방침의 처리 항목 · 보유 기간 표는 이 문서와 코드가 실제로 하는 일과 같아야 한다. 저장하는 칸이나 보관
   기간을 바꾸면 새 시행판을 낸다(지금 판을 `features/privacy/content/versions/{effective}.json` 에 보관하고, 개정
   전후 대조표를 「방침 변경」 절에 둔다).
@@ -637,7 +638,8 @@
   확인은 따로 기록한다.
 
 바뀐 기록: [2026-10-28 DB 위탁처 · 저장 리전](../decisions/2026-10-28-db-planetscale-seoul.md) ·
-[2026-10-30 개인정보 처리방침 개정](../decisions/2026-10-30-privacy-policy-rewrite.md)
+[2026-10-30 개인정보 처리방침 개정](../decisions/2026-10-30-privacy-policy-rewrite.md) ·
+[2026-10-31 이용약관 신설](../decisions/2026-10-31-terms-of-service.md)
 
 ## 업적
 

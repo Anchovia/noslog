@@ -34,11 +34,13 @@ describe("온보딩 스키마", () => {
                 username: " carol ",
                 country: "ko-KR",
                 ageConfirmed: true,
+                termsAccepted: true,
             })
         ).toEqual({
             username: "carol",
             country: "ko-KR",
             ageConfirmed: true,
+            termsAccepted: true,
             showNostalgiaName: false,
             showDiscordIdentity: false,
             showPreferredArcade: false,
@@ -57,8 +59,12 @@ describe("온보딩 스키마", () => {
         ["ca\u0000rol", "global"],
     ])("경계 밖 입력을 거부한다", (username, country) => {
         expect(
-            schemaFor("en").safeParse({ username, country, ageConfirmed: true })
-                .success
+            schemaFor("en").safeParse({
+                username,
+                country,
+                ageConfirmed: true,
+                termsAccepted: true,
+            }).success
         ).toBe(false);
     });
 
@@ -68,6 +74,7 @@ describe("온보딩 스키마", () => {
                 username: "carol",
                 country: "ko-KR",
                 ageConfirmed,
+                termsAccepted: true,
             });
             expect(result.success).toBe(false);
         }
@@ -77,9 +84,22 @@ describe("온보딩 스키마", () => {
                     username: "carol",
                     country: "ko-KR",
                     ageConfirmed: false,
+                    termsAccepted: true,
                 })
                 .error?.flatten().fieldErrors.ageConfirmed
         ).toEqual(["만 14세 이상만 가입할 수 있습니다."]);
+    });
+
+    it("이용약관 동의가 없으면 가입을 받지 않는다", () => {
+        const result = schemaFor("ko").safeParse({
+            username: "carol",
+            country: "ko-KR",
+            ageConfirmed: true,
+            termsAccepted: false,
+        });
+        expect(result.error?.flatten().fieldErrors.termsAccepted).toEqual([
+            "이용약관에 동의해야 가입할 수 있습니다.",
+        ]);
     });
 
     it("폼 값과 FormData 변환을 한곳에서 왕복한다", () => {
@@ -87,6 +107,7 @@ describe("온보딩 스키마", () => {
             username: "carol",
             country: "global",
             ageConfirmed: true,
+            termsAccepted: true,
         });
         const formData = createOnboardingFormData(parsed, "ja");
 
