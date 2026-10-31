@@ -118,11 +118,32 @@
     border-top: 0;
     padding-top: 0;
 }
+/* 머리 줄 전체가 펼침 단추 — 올림 · 포커스는 펼침 줄(nl-disclosure > summary)과 같다 */
 .noslog-ui .nl-achievement-row__main {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-12);
     min-width: 0;
+    margin-inline: calc(var(--nl-spacing-12) * -1);
+    padding: var(--nl-spacing-4) var(--nl-spacing-12);
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+}
+.noslog-ui button.nl-achievement-row__main {
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .noslog-ui button.nl-achievement-row__main:hover {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
 }
 .noslog-ui .nl-achievement-row__text {
     display: flex;
@@ -139,12 +160,6 @@
 }
 .noslog-ui .nl-achievement-row[data-earned="false"] .nl-achievement-row__name {
     color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-achievement-row__actions {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: var(--nl-spacing-4);
 }
 
 /* 상세(D1) — 단계 사다리, 육각 24 · 조건 · 날짜 또는 진행 · 달성 인원 */

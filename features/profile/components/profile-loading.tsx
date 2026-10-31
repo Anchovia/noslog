@@ -564,16 +564,7 @@ export function ProfileAchievementsTabSkeleton() {
                                     width="l"
                                 />
                             </div>
-                            <div className="nl-achievement-row__actions">
-                                <span
-                                    className={foundationButtonClass({
-                                        variant: "ghost",
-                                        size: "icon-sm",
-                                    })}
-                                >
-                                    <ChevronDown aria-hidden />
-                                </span>
-                            </div>
+                            <ChevronDown className="nl-icon" aria-hidden />
                         </div>
                     </li>
                 ))}
