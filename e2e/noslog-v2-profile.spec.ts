@@ -428,7 +428,7 @@ test("achievements tab filters song sets and seasons, and one-song ladders show 
     await songSets.click();
     await expect(songSets).toHaveAttribute("aria-pressed", "true");
     const rows = page.locator(".nl-achievement-row");
-    // 한 곡 사다리는 첫 단계 조건만, 모든 채보 풀콤보 묶음은 금 III 조건 하나
+    // 한 곡 사다리는 첫 단계 조건만, 모든 채보 묶음은 조건 하나
     await expect(
         rows
             .filter({ hasText: "1분이 아니야" })
@@ -436,9 +436,9 @@ test("achievements tab filters song sets and seasons, and one-song ladders show 
     ).toHaveText("小犬のワルツ S 이상");
     await expect(
         rows
-            .filter({ hasText: "1인 4역" })
+            .filter({ hasText: "나쁜사과" })
             .locator(".nl-achievement-row__text > .nl-achievement-row__number")
-    ).toHaveText("魔王 모든 난이도 풀콤보");
+    ).toHaveText("Bad Apple 모든 난이도 S 이상");
     await expect(page.locator("main")).not.toContainText("achievement.");
     expect(
         await page.evaluate(

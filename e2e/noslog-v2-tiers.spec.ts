@@ -182,7 +182,8 @@ async function prepare(
         await expect(
             page.locator(".nl-tiers").getByRole("alert")
         ).toContainText("서열 데이터를 불러오지 못했습니다.");
-    else
+    // 결과 수 줄은 1056 미만에만 있다
+    else if (page.viewportSize()!.width < 1056)
         await expect(
             page.locator(".nl-tiers [role=status]:not(.sr-only)").first()
         ).toContainText(unpublished ? "" : "18");
@@ -340,25 +341,37 @@ test("list rows keep 48 jackets, the goal outline and the contribution", async (
     expect(link.searchParams.get("returnTo")).toContain("view=list");
 });
 
+// 닫힌 직후 잠깐은 다시 열지 않는다(useSelectOpen 의 REOPEN_GUARD_MS) — 열릴 때까지 다시 누른다
+async function chooseTierList(
+    page: Page,
+    name: string,
+    whileOpen?: () => Promise<void>
+) {
+    const option = page.getByRole("option", { name, exact: true });
+    await expect(async () => {
+        await page
+            .getByRole("combobox", { name: "서열표 선택", exact: true })
+            .click();
+        await expect(option).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await whileOpen?.();
+    await option.click();
+}
+
 test("all four tier lists update the link context and guide without removing the filters", async ({
     page,
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
     for (const goal of ["s", "990k", "pianist"]) {
-        await page
-            .getByRole("combobox", { name: "서열표 선택", exact: true })
-            .click();
-        await page
-            .getByRole("option", {
-                name: {
-                    s: "S 서열표",
-                    "990k": "990k 서열표",
-                    pianist: "Pianist 서열표",
-                }[goal],
-                exact: true,
-            })
-            .click();
+        await chooseTierList(
+            page,
+            {
+                s: "S 서열표",
+                "990k": "990k 서열표",
+                pianist: "Pianist 서열표",
+            }[goal]!
+        );
         await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
             "href",
             new RegExp(`mode=basic&goal=${goal}`)
@@ -368,15 +381,11 @@ test("all four tier lists update the link context and guide without removing the
         ).toBeVisible();
     }
     // Recital 은 서열표가 하나 — 같은 스위처의 Recital 묶음에서 고른다
-    await page
-        .getByRole("combobox", { name: "서열표 선택", exact: true })
-        .click();
-    await expect(
-        page.getByRole("group", { name: "Recital", exact: true })
-    ).toBeVisible();
-    await page
-        .getByRole("option", { name: "Recital 서열표", exact: true })
-        .click();
+    await chooseTierList(page, "Recital 서열표", async () => {
+        await expect(
+            page.getByRole("group", { name: "Recital", exact: true })
+        ).toBeVisible();
+    });
     await expect(
         page.getByRole("combobox", { name: "서열표 선택", exact: true })
     ).toHaveText("Recital 서열표");
@@ -429,12 +438,7 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
 }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    await page
-        .getByRole("combobox", { name: "서열표 선택", exact: true })
-        .click();
-    await page
-        .getByRole("option", { name: "Pianist 서열표", exact: true })
-        .click();
+    await chooseTierList(page, "Pianist 서열표");
     await page
         .getByRole("button", { name: "Pianist 서열표 안내", exact: true })
         .click();
@@ -545,7 +549,7 @@ test("sorts songs inside each band and offers the score order only when signed i
         .click();
     await expect(page).toHaveURL(/sort=score/);
     // 기록 없는 곡(5번째)이 구간 맨 앞, 구간 순서는 그대로
-    expect(await firstTitle()).toContain("LongOriginalTitleWithoutSpaces");
+    await expect.poll(firstTitle).toContain("LongOriginalTitleWithoutSpaces");
     await expect(page.locator(".nl-tier-band").first()).toHaveAccessibleName(
         "14.5"
     );
@@ -554,7 +558,7 @@ test("sorts songs inside each band and offers the score order only when signed i
         .getByRole("menuitemradio", { name: "서열표 순", exact: true })
         .click();
     await expect(page).not.toHaveURL(/sort=/);
-    expect(await firstTitle()).toContain("STULTI 3-1");
+    await expect.poll(firstTitle).toContain("STULTI 3-1");
 
     await prepare(page, { guest: true });
     await sort.click();

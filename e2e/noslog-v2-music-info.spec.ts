@@ -170,10 +170,12 @@ test("Pattern trend shows four computed values with the meter level and switches
     await expect(fact("글리산도 수")).toHaveText("8");
     await expect(fact("트릴 수")).toHaveText("0");
     // 변박은 칸 막대 3칸 가운데 단계만큼 채운다
-    const steps = bars.locator(".nl-bar-list__track--steps > span");
+    const steps = bars.locator(
+        ".nl-bar-list__track--steps > span:not(.nl-bar-list__steps-fill)"
+    );
     await expect(steps).toHaveCount(3);
     await expect(
-        bars.locator(".nl-bar-list__track--steps > .nl-bar-list__fill")
+        bars.locator(".nl-bar-list__steps-fill > .nl-bar-list__fill")
     ).toHaveCount(2);
     const basis = page.getByRole("button", {
         name: "전곡 기준으로 보기",

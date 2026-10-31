@@ -38,6 +38,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await expect(page.locator(".nl-footer__content")).toHaveCount(1);
             for (const width of widths) {
                 await page.setViewportSize({ width, height: 900 });
+                // 지도를 불러오는 동안은 시트 배치라, 실패로 풀리기 전에 재지 않게 결과를 기다린다
+                if (route === "/gamecenter")
+                    await expect(
+                        page.locator(".nl-arcade-map")
+                    ).not.toHaveAttribute("data-state", "loading");
                 // 오락실은 1056 미만에서 지도가 뜨면 화면 높이에 고정되고, 셸 푸터 대신 시트 목록 끝에 같은 푸터를 둔다
                 const sheetFooter =
                     route === "/gamecenter" &&

@@ -52,13 +52,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await expect(
                 rankSummary.locator('[data-rank="country"]')
             ).toHaveText(`#${ranks[1].rank.toLocaleString("ko-KR")}`);
-            const grade = await rankSummary
-                .locator(".nl-metric-display")
-                .first()
-                .textContent();
-            expect(Math.round(Number(grade!.replace(/,/g, "")))).toBe(
-                ranks[0].value
-            );
+            await expect
+                .poll(async () => {
+                    const grade = await rankSummary
+                        .locator(".nl-metric-display")
+                        .first()
+                        .textContent();
+                    return Math.round(Number(grade!.replace(/,/g, "")));
+                })
+                .toBe(ranks[0].value);
             await expectNoHorizontalOverflow(page);
         }
         expect(pageErrors).toEqual([]);
