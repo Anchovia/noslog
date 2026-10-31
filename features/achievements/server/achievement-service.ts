@@ -122,7 +122,7 @@ export async function collectAchievementMetrics(
             FROM music_charts chart
             LEFT JOIN play_data play
                 ON play.chart_id = chart.id AND play.user_id = ${userId}`,
-        // 30일 넘게 다른 의견이 없던 채보(나온 지 30일 안 된 채보는 빼고)에 단 의견 중 남에게 「도움이 돼요」 를 받은 것
+        // 30일 넘게 다른 의견이 없던 채보(나온 지 30일 안 된 채보는 빼고)에 단 의견 중 남에게 「좋아요」 를 받은 것
         db.$queryRaw<{ revived: number }[]>`
             SELECT count(*)::int AS revived
             FROM community_chart_evaluations mine

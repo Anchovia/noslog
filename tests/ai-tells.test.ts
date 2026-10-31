@@ -12,6 +12,12 @@ import { koMessages } from "@/lib/i18n/message-catalogs/ko";
 
 const catalogs = { ko: koMessages, ja: jaMessages, en: enMessages };
 
+// docs/ai-check.md 「NosLog 에서 정한 예외」 의 업적 이름 느낌표
+const exclamationAllowed = new Set([
+    "achievement.name.megalovania",
+    "achievement.name.helpful",
+]);
+
 const bannedWords: Record<keyof typeof catalogs, RegExp[]> = {
     ko: [
         /완벽(하게|한)/,
@@ -41,8 +47,12 @@ describe("메시지 카탈로그의 AI 티", () => {
 
         it(`${locale}: 이모지 · 느낌표 · 줄표(—)가 없다`, () => {
             const found = entries
-                .filter(([, value]) =>
-                    /(?![©®™])\p{Extended_Pictographic}|[!！]|—/u.test(value)
+                .filter(
+                    ([key, value]) =>
+                        !(locale === "ko" && exclamationAllowed.has(key)) &&
+                        /(?![©®™])\p{Extended_Pictographic}|[!！]|—/u.test(
+                            value
+                        )
                 )
                 .map(([key, value]) => `${key}: ${value}`);
             expect(found).toEqual([]);

@@ -260,7 +260,7 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         metric: "patternEvaluations",
         thresholds: { 1: 10, 2: 50, 3: 100, 4: 200, 5: 500 },
     },
-    // 30일 넘게 의견이 없던 채보에 단 첫 의견 중 「도움이 돼요」 를 받은 것
+    // 30일 넘게 의견이 없던 채보에 단 첫 의견 중 「좋아요」 를 받은 것
     {
         key: "revived-opinion",
         category: "community",

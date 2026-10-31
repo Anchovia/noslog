@@ -655,7 +655,7 @@
   그 곡을 세기, S 대신 풀콤보로 세기. 한 난이도만 보는 한 곡 묶음은 그 난이도에서 S → 풀콤보 → Pianist 이고, 모든
   채보나 풀콤보로 세는 한 곡 묶음은 금 III 하나다. 「한 곡 완주」 는 한 곡의 모든 채보가 S 이상인 곡 수, 「레벨
   사다리」 는 Lv.1 부터 끊기지 않고 S 이상 채보가 있는 가장 높은 레벨이다(Real 의 ◆ 는 세지 않는다). 「오래된 악보」 는 나온 지 30일이 넘고 30일 넘게 다른
-  의견이 없던 채보에 쓴 의견 중 다른 사람에게 「도움이 돼요」 를 받은 것의 수다.
+  의견이 없던 채보에 쓴 의견 중 다른 사람에게 「좋아요」 를 받은 것의 수다.
 - 판정은 동기화마다 끝에, 기록과 Grd 를 갱신한 뒤 한다. 새로 도달한 단계만 더하고(`user_achievements`, 사용자 ·
   업적 · 단계마다 한 행), 값이 나중에 내려가도 단계를 빼지 않는다. 예외는 관리자 「업적 다시 판정」 에서 「기준에
   못 미치는 단계도 빼기」 를 체크했을 때뿐이다(기본 꺼짐, 기준을 바꾼 뒤 쓴다). 이때는 없어진 업적의 단계, 업적에
@@ -691,7 +691,8 @@
 [2026-10-31 세 마왕 · 피협 업적](../decisions/2026-10-31-achievement-demon-kings-concertos.md) ·
 [2026-10-31 1인 4역 업적 삭제](../decisions/2026-10-31-achievement-erlkonig-removed.md) ·
 [2026-10-31 왕벌의 비행 삭제 · Basic 마스터 이름](../decisions/2026-10-31-achievement-bumblebee-exam-basic.md) ·
-[2026-10-31 Recital 마스터 · 패턴칼럼니스트 이름](../decisions/2026-10-31-achievement-recital-pattern-names.md)
+[2026-10-31 Recital 마스터 · 패턴칼럼니스트 이름](../decisions/2026-10-31-achievement-recital-pattern-names.md) ·
+[2026-10-31 업적 이름 느낌표 예외 · 좋아요 업적](../decisions/2026-10-31-achievement-name-exclamation.md)
 
 ## 뮤즈캣 협업
 
