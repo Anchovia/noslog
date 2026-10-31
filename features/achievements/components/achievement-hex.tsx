@@ -5,7 +5,6 @@ import {
     Bell,
     BookMarked,
     BookOpen,
-    Bug,
     Cake,
     CalendarDays,
     Castle,
@@ -20,7 +19,6 @@ import {
     DoorOpen,
     Drama,
     Feather,
-    Flag,
     Flame,
     FlameKindling,
     Flower,
@@ -47,7 +45,6 @@ import {
     MoonStar,
     Mountain,
     Music,
-    Music4,
     Palette,
     PawPrint,
     Piano,
@@ -69,7 +66,6 @@ import {
     Trophy,
     Truck,
     Tv,
-    Users,
     Utensils,
     Zap,
 } from "lucide-react";
@@ -114,7 +110,6 @@ export const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
     "hard-normal": Gauge,
     sakuzyo: Trash2,
     "waltz-dogs-cat": PawPrint,
-    "turkish-march": Flag,
     flower: Flower,
     mei: Moon,
     sasoribi: FlameKindling,
@@ -145,11 +140,8 @@ export const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
     wakhmaninov: Signature,
     "grand-slam": Trophy,
     "demon-kings": Mountain,
-    "piano-concertos": Music4,
-    erlkonig: Users,
     bells: Bell,
     "minute-waltz": Dog,
-    bumblebee: Bug,
 };
 
 /** 단계 숫자 알약 — 로마 숫자 I–V(2026-09-25) */

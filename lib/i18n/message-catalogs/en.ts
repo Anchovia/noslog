@@ -2249,7 +2249,6 @@ export const enMessages = {
     "achievement.name.hard-normal": "Not So Normal",
     "achievement.name.sakuzyo": "Sakuzyo",
     "achievement.name.waltz-dogs-cat": "Cats and Dogs",
-    "achievement.name.turkish-march": "Alla Turca",
     "achievement.name.flower": "FLOWER Everywhere",
     "achievement.name.mei": "Mei",
     "achievement.name.sasoribi": "Wakhmaninov",
@@ -2280,11 +2279,8 @@ export const enMessages = {
     "achievement.name.wakhmaninov": "Virkato",
     "achievement.name.grand-slam": "Grand Slam",
     "achievement.name.demon-kings": "Three Demon Kings",
-    "achievement.name.piano-concertos": "Piano Concertos",
-    "achievement.name.erlkonig": "One Voice, Four Roles",
     "achievement.name.bells": "Bells",
     "achievement.name.minute-waltz": "Minute Waltz",
-    "achievement.name.bumblebee": "Flight of the Bumblebee",
     "achievement.condition.s-rank": "S or better on {count} charts",
     "achievement.condition.score-990k": "990,000+ on {count} charts",
     "achievement.condition.full-combo": "Full combo on {count} charts",
@@ -2330,8 +2326,6 @@ export const enMessages = {
         "S or better on {count} Sakuzyo (削除) songs",
     "achievement.condition.waltz-dogs-cat":
         "S or better on {count} dog and cat waltzes",
-    "achievement.condition.turkish-march":
-        "S or better on {count} Turkish Marches (Mozart and Beethoven)",
     "achievement.condition.flower": "S or better on {count} FLOWER versions",
     "achievement.condition.mei.1": "S or better on 冥",
     "achievement.condition.mei.2": "Full combo on 冥",
@@ -2384,17 +2378,11 @@ export const enMessages = {
         "S or better on {count} versions of 凛として咲く花の如く",
     "achievement.condition.demon-kings":
         "S or better on {count} Expert charts of 魔王, ambages and 山の魔王の宮殿にて",
-    "achievement.condition.piano-concertos":
-        "S or better on {count} piano concertos",
-    "achievement.condition.erlkonig": "Full combo on every difficulty of 魔王",
     "achievement.condition.bells":
         "Full combo on {count} of La Campanella and The Bells",
     "achievement.condition.minute-waltz.1": "S or better on 小犬のワルツ",
     "achievement.condition.minute-waltz.2": "Full combo on 小犬のワルツ",
     "achievement.condition.minute-waltz.3": "PIANIST on 小犬のワルツ",
-    "achievement.condition.bumblebee.1": "S or better on 熊蜂の飛行 Expert",
-    "achievement.condition.bumblebee.2": "Full combo on 熊蜂の飛行 Expert",
-    "achievement.condition.bumblebee.3": "PIANIST on 熊蜂の飛行 Expert",
     // 뮤즈캣 연동(2026-10-20) — 파트너 동의 화면 · 설정 › 연결
     "partner.consent.title": "Send my NosLog records to {client}",
     "partner.consent.subtitle": "Only the records you choose are sent.",

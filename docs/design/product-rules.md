@@ -683,7 +683,15 @@
 [2026-10-31 한 곡 전 난이도 업적 이름](../decisions/2026-10-31-achievement-strike-name.md) ·
 [2026-10-31 의견 업적 이름](../decisions/2026-10-31-achievement-opinion-name.md) ·
 [2026-10-31 피아노 학원 업적 이름](../decisions/2026-10-31-achievement-piano-school-name.md) ·
-[2026-10-31 한 손 업적 삭제](../decisions/2026-10-31-achievement-one-hand-removed.md)
+[2026-10-31 한 손 업적 삭제](../decisions/2026-10-31-achievement-one-hand-removed.md) ·
+[2026-10-31 이름만 Normal 업적 이름](../decisions/2026-10-31-achievement-hard-normal-name.md) ·
+[2026-10-31 사쿠죠 · 터키 행진곡 업적](../decisions/2026-10-31-achievement-sakuzyo-turkish-march.md) ·
+[2026-10-31 FLOWER · 흑건 백건 업적 이름](../decisions/2026-10-31-achievement-flower-keyboard-names.md) ·
+[2026-10-31 와 샌즈 · 배드애플 업적 이름](../decisions/2026-10-31-achievement-sans-bad-apple-names.md) ·
+[2026-10-31 세 마왕 · 피협 업적](../decisions/2026-10-31-achievement-demon-kings-concertos.md) ·
+[2026-10-31 1인 4역 업적 삭제](../decisions/2026-10-31-achievement-erlkonig-removed.md) ·
+[2026-10-31 왕벌의 비행 삭제 · Basic 마스터 이름](../decisions/2026-10-31-achievement-bumblebee-exam-basic.md) ·
+[2026-10-31 Recital 마스터 · 패턴칼럼니스트 이름](../decisions/2026-10-31-achievement-recital-pattern-names.md)
 
 ## 뮤즈캣 협업
 

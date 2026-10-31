@@ -431,14 +431,18 @@ describe("조건을 정한 곡 묶음", () => {
         ).toEqual({ value: 1 });
     });
 
-    it("Expert 로 정한 한 곡 업적은 다른 난이도의 램프를 보지 않는다", () => {
-        const [song] = ACHIEVEMENT_SONG_SETS.bumblebee.songs;
+    it("Expert 로 정한 묶음은 다른 난이도의 기록을 세지 않는다", () => {
+        const [song] = ACHIEVEMENT_SONG_SETS["demon-kings"].songs;
         expect(
             chartAchievementMetrics([
-                row(song, "Hard", { sRank: true, pianist: true }),
+                row(song, "Hard", { sRank: true }),
                 row(song, "Expert", { sRank: true }),
-            ])["songSet:bumblebee"]
+            ])["songSet:demon-kings"]
         ).toEqual({ value: 1 });
-        expect(getAchievementDefinition("bumblebee")?.unit).toBe("lamp");
+        expect(
+            chartAchievementMetrics([row(song, "Hard", { sRank: true })])[
+                "songSet:demon-kings"
+            ]
+        ).toEqual({ value: 0 });
     });
 });
