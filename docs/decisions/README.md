@@ -71,6 +71,8 @@
 | 2026-10-31 | [점수 등급 이름을 랭크로 통일](./2026-10-31-score-grade-label-rank.md)                                                                                                         | 문구 · 화면       |
 | 2026-10-31 | [빙고 카탈로그 「풀보드 완료」를 「빙고 완료」로](./2026-10-31-bingo-complete-name.md)                                                                                         | 디자인 · 화면     |
 | 2026-10-31 | [채보 없는 곡 패턴 경향 흐림 막대 드러남 없음](./2026-10-31-pattern-lock-no-reveal.md)                                                                                         | 디자인 · 화면     |
+| 2026-10-31 | [막대 목록 라벨 열을 줄이 함께 씀](./2026-10-31-bar-list-shared-label-column.md)                                                                                               | 디자인 · 부품     |
+| 2026-10-31 | [칸 막대 드러남을 한 줄로](./2026-10-31-bar-list-steps-single-reveal.md)                                                                                                       | 디자인 · 부품     |
 | 2026-10-31 | [열린 셀렉트 트리거를 다시 누르면 닫힘](./2026-10-31-select-press-close.md)                                                                                                    | 디자인 · 동작     |
 | 2026-10-31 | [설정 테마 칸 안내 문구](./2026-10-31-settings-theme-device-copy.md)                                                                                                           | 디자인 · 화면     |
 | 2026-10-31 | [Discord 연결을 뮤즈캣과 같은 줄 · 상세로](./2026-10-31-settings-discord-connection-detail.md)                                                                                 | 디자인 · 화면     |

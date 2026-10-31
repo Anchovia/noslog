@@ -42,9 +42,9 @@
 
 `BarList` — 항목 몇 개의 크기 비교.
 
-- 줄 = 라벨 `nl-control` · 트랙 8(`radius/small` · `surface/control`) · 값 `nl-metric-value` 오른쪽. 줄 사이 8 · 열 사이 12. 채움 = 차트 단일 색. 항목의 `color` 로 줄마다 바꿀 수 있다.
+- 줄 = 라벨 `nl-control` · 트랙 8(`radius/small` · `surface/control`) · 값 `nl-metric-value` 오른쪽. 줄 사이 8 · 열 사이 12. 라벨 열은 줄이 함께 쓰는 한 폭(가장 긴 라벨에 맞춤)이라 모든 줄의 트랙이 같은 x 에서 시작한다. 채움 = 차트 단일 색. 항목의 `color` 로 줄마다 바꿀 수 있다.
 - 값이 없는 항목은 막대 없이 값 자리 「—」. 모두 없어도 빈 트랙을 그린다(문장으로 바꾸지 않는다).
-- 순서 있는 단계(변박 없음 · 적음 · 보통 · 많음)는 칸 막대 줄(`steps`)로 둔다. 같은 트랙을 칸 사이 2 로 나누고 바깥 모서리만 둥글다. 채운 칸 = 단계, 빈 칸 = `surface/control`, 값 자리는 단계 글자. 반 칸은 없다(Apple HIG level indicator · Ant Design Progress steps).
+- 순서 있는 단계(변박 없음 · 적음 · 보통 · 많음)는 칸 막대 줄(`steps`)로 둔다. 같은 트랙을 칸 사이 2 로 나누고 바깥 모서리만 둥글다. 채운 칸 = 단계, 빈 칸 = `surface/control`, 값 자리는 단계 글자. 나타날 때 칸마다 따로 드러나지 않고 채운 칸 전체가 다른 막대처럼 왼쪽에서 오른쪽으로 한 번에 훑는다(⑯). 반 칸은 없다(Apple HIG level indicator · Ant Design Progress steps).
 
 ## 진행 막대
 
@@ -67,3 +67,5 @@
 - [2026-09-23 색 표시 모양 · 크기](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-23)
 - [2026-09-19 기록 추이 그래프 · 가리킨 점](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-19)
 - [2026-09-16 판정 분포 · 선 그래프 점 하나](../../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16)
+- [2026-10-31 막대 목록 라벨 열을 줄이 함께 씀](../../decisions/2026-10-31-bar-list-shared-label-column.md)
+- [2026-10-31 칸 막대 드러남을 한 줄로](../../decisions/2026-10-31-bar-list-steps-single-reveal.md)

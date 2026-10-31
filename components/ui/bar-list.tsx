@@ -42,17 +42,30 @@ export default function BarList({
                             className="nl-bar-list__track nl-bar-list__track--steps"
                             aria-hidden
                         >
-                            {Array.from({ length: row.steps }, (_, step) =>
-                                row.value !== null && step < row.value ? (
-                                    <span
-                                        key={step}
-                                        className="nl-bar-list__fill nl-chart-reveal"
-                                        style={{ background: row.color }}
-                                    />
-                                ) : (
-                                    <span key={step} />
-                                )
-                            )}
+                            {Array.from({ length: row.steps }, (_, step) => (
+                                <span key={step} />
+                            ))}
+                            {row.value !== null && row.value > 0 ? (
+                                <span
+                                    className="nl-bar-list__steps-fill nl-chart-reveal"
+                                    style={{
+                                        gridTemplateColumns: `repeat(${row.steps}, minmax(0, 1fr))`,
+                                    }}
+                                >
+                                    {Array.from(
+                                        { length: row.value },
+                                        (_, step) => (
+                                            <span
+                                                key={step}
+                                                className="nl-bar-list__fill"
+                                                style={{
+                                                    background: row.color,
+                                                }}
+                                            />
+                                        )
+                                    )}
+                                </span>
+                            ) : null}
                         </dd>
                     ) : (
                         <dd className="nl-bar-list__track" aria-hidden>
