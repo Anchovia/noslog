@@ -175,7 +175,7 @@ export const koMessages = {
     "pattern.switchToAll": "전곡 기준으로 보기",
     "pattern.computed":
         "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
-    "pattern.computedNone": "공개 채보가 없어 계산할 수 없어요",
+    "pattern.computedNone": "아직 계산되지 않았습니다",
     "pattern.computedMissing": "공략 글을 찾지 못한 곡은 변박을 비워 둡니다.",
     "pattern.meter.0": "없음",
     "pattern.meter.1": "적음",

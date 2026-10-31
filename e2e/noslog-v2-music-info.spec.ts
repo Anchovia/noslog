@@ -218,7 +218,7 @@ test("A chart without a published chart blurs the bar graph under the lock card 
     const lock = page.locator(".nl-overview .nl-pattern-lock");
     await expect(lock).toHaveAttribute("data-locked", "true");
     await expect(lock.locator(".nl-pattern-lock__card")).toHaveText(
-        "공개 채보가 없어 계산할 수 없어요"
+        "아직 계산되지 않았습니다"
     );
     const card = lock.locator(".nl-overview__card");
     await expect(card).toHaveAttribute("aria-hidden", "true");

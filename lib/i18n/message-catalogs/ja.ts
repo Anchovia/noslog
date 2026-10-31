@@ -176,7 +176,7 @@ export const jaMessages = {
     "pattern.switchToAll": "全曲基準で表示",
     "pattern.computed":
         "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
-    "pattern.computedNone": "公開譜面がないため計算できません",
+    "pattern.computedNone": "まだ計算されていません",
     "pattern.computedMissing":
         "攻略記事が見つからない曲は変拍子を空欄にします。",
     "pattern.meter.0": "なし",

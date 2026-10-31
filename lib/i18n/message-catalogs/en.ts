@@ -177,7 +177,7 @@ export const enMessages = {
     "pattern.switchToAll": "Compare with all charts",
     "pattern.computed":
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
-    "pattern.computedNone": "No published chart to calculate from",
+    "pattern.computedNone": "Not calculated yet",
     "pattern.computedMissing":
         "Meter changes stay empty for songs with no guide found.",
     "pattern.meter.0": "None",
