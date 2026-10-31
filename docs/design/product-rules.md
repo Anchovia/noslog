@@ -680,7 +680,10 @@
 [2026-09-26](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-26) ·
 [2026-10-28 곡 묶음 · 계절 업적 추가](../decisions/2026-10-28-achievement-song-sets.md) ·
 [2026-10-28 밈 · 일화 업적 추가 · 이름 바꿈](../decisions/2026-10-28-achievement-memes.md) ·
-[2026-10-31 한 곡 전 난이도 업적 이름](../decisions/2026-10-31-achievement-strike-name.md)
+[2026-10-31 한 곡 전 난이도 업적 이름](../decisions/2026-10-31-achievement-strike-name.md) ·
+[2026-10-31 의견 업적 이름](../decisions/2026-10-31-achievement-opinion-name.md) ·
+[2026-10-31 피아노 학원 업적 이름](../decisions/2026-10-31-achievement-piano-school-name.md) ·
+[2026-10-31 한 손 업적 삭제](../decisions/2026-10-31-achievement-one-hand-removed.md)
 
 ## 뮤즈캣 협업
 

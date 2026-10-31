@@ -46,7 +46,6 @@ export async function collectAchievementMetrics(
     const [
         [plays],
         categories,
-        oneHand,
         stats,
         exams,
         opinions,
@@ -77,12 +76,6 @@ export async function collectAchievementMetrics(
                 AND p.rank IN (${Prisma.join(S_RANKS)})
             WHERE m.category_short IN (${Prisma.join(categoryCodes)})
             GROUP BY m.category_short`,
-        // 한 손 여부는 최근 플레이 응답에만 있다 — 최근 기록 누적(ChartPlayHistory)에서 센다
-        db.chartPlayHistory.findMany({
-            where: { userId: userId, isOnehand: true, rank: { in: S_RANKS } },
-            distinct: ["chartId"],
-            select: { chartId: true },
-        }),
         db.playerStats.findUnique({
             where: { userId },
             select: { gradeBasic: true },
@@ -166,7 +159,6 @@ export async function collectAchievementMetrics(
         fullComboCharts: { value: plays?.full_combo ?? 0 },
         pianistCharts: { value: plays?.pianist ?? 0 },
         realSRankCharts: { value: plays?.real_s_rank ?? 0 },
-        oneHandSRankCharts: { value: oneHand.length },
         // User.grade_basic 은 100 배 정수(화면은 /100)
         basicGrade: { value: Math.floor((stats?.gradeBasic ?? 0) / 100) },
         examBasic: {

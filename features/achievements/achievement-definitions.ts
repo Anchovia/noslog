@@ -27,7 +27,6 @@ const BASE_ACHIEVEMENT_METRICS = [
     "fullComboCharts",
     "pianistCharts",
     "realSRankCharts",
-    "oneHandSRankCharts",
     "basicGrade",
     "examBasic",
     "examRecital",
@@ -176,12 +175,6 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         category: "skill",
         metric: "realSRankCharts",
         thresholds: { 1: 1, 2: 10, 3: 50, 4: 150, 5: 300 },
-    },
-    {
-        key: "one-hand",
-        category: "skill",
-        metric: "oneHandSRankCharts",
-        thresholds: { 1: 1, 2: 10, 3: 50, 4: 100, 5: 200 },
     },
     {
         key: "basic-grade",
