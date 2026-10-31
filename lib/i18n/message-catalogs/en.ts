@@ -179,7 +179,7 @@ export const enMessages = {
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
     "pattern.computedNone": "Not calculated yet",
     "pattern.computedMissing":
-        "Meter changes stay empty for songs with no guide found.",
+        "Meter changes stay empty for songs we could not confirm.",
     "pattern.meter.0": "None",
     "pattern.meter.1": "Low",
     "pattern.meter.2": "Medium",

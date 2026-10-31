@@ -258,6 +258,17 @@ describe("pattern metrics", () => {
         expect(songMeterLevel(truth.index)).toBe(3);
         expect(songMeterLevel("missing")).toBeNull();
     });
+
+    it("keeps songs with no confirmed meter out of the record", () => {
+        const kaijin = musicCatalog.find((music) =>
+            music.title.startsWith("海神")
+        )!;
+        expect(songMeterLevel(kaijin.index)).toBe(3);
+        const unmentioned = musicCatalog.find(
+            (music) => music.title === "女神の微睡"
+        )!;
+        expect(songMeterLevel(unmentioned.index)).toBeNull();
+    });
 });
 
 describe("pattern strength", () => {
