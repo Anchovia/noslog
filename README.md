@@ -198,7 +198,7 @@ GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행
 NosLog는 Vercel(함수 지역 icn1)에서 운영하며 데이터베이스는 PlanetScale Postgres(서울)를 사용합니다. 앱은 `DATABASE_URL`(PgBouncer 6432)로, 배포 때 마이그레이션은 `DATABASE_MIGRATION_URL`(직접 연결 5432)로 붙습니다. Production 배포에는 Production DB, 공개·비공개 Blob 저장소, Cron Secret과 서비스 인증 환경변수가 필요합니다.
 
 - 자동 배포는 `main` 브랜치만 합니다(`vercel.json`). 다른 브랜치는 미리보기 빌드를 만들지 않습니다.
-- 배포 빌드(`vercel-build`)는 `prisma migrate deploy`를 먼저 실행하므로, 마이그레이션은 `main` 병합과 함께 운영 DB에 적용됩니다. DB 이름을 바꾸는 등 옛 코드와 같이 돌 수 없는 변경은 `MAINTENANCE_MODE`로 점검 화면을 켜고 배포합니다.
+- 배포 빌드(`vercel-build`)는 `prisma migrate deploy`를 먼저 실행하므로, 마이그레이션은 `main` 병합과 함께 운영 DB에 적용됩니다. 이어서 공개 채보의 패턴 경향 값을 다시 채우므로 배포 뒤에 따로 돌릴 명령은 없습니다. DB 이름을 바꾸는 등 옛 코드와 같이 돌 수 없는 변경은 `MAINTENANCE_MODE`로 점검 화면을 켜고 배포합니다.
 
 일반적인 배포 흐름은 다음과 같습니다.
 

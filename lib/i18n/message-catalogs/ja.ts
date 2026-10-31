@@ -177,7 +177,6 @@ export const jaMessages = {
     "pattern.computed":
         "公開譜面のノーツ配置から計算した値です。同じ基準の譜面のうち上位1%の中央値を100%とします。",
     "pattern.computedNone": "まだ計算されていません",
-    "pattern.computedMissing": "変拍子を確認できなかった曲は空欄にします。",
     "pattern.meter.0": "なし",
     "pattern.meter.1": "少ない",
     "pattern.meter.2": "普通",
