@@ -43,6 +43,7 @@ model AnnouncementTranslation {
   locale         LocaleCode
   title          String
   content        String
+  bannerUrl      String?      @map("banner_url")
   modifiedAt     DateTime?    @map("modified_at")
   announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
 

@@ -7,6 +7,7 @@ import type { ChartDetail } from "@/components/music/music-detail-types";
 import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
 import { readTokenPixels } from "@/lib/design-tokens";
 import useElementWidth from "@/lib/hooks/use-element-width";
+import { scoreTone } from "@/lib/music/score-tone";
 
 import ScorePins from "./score-pins";
 
@@ -111,7 +112,7 @@ export default function ScoreScatter({
                             y2={axis}
                             className="nl-score-scatter__axis"
                         />
-                        {/* 참가자 한 명 = 점 하나 — 핀으로 묶인 사람도 여기에는 남는다 */}
+                        {/* 참가자 한 명 = 점 하나 — 핀으로 묶인 사람도 여기에는 남는다. 색은 순위표 점수 글자와 같은 scoreTone */}
                         {scores.map((score, index) => (
                             <circle
                                 key={`${score}-${index}`}
@@ -120,6 +121,7 @@ export default function ScoreScatter({
                                 r={score === myScore ? 4 : 3}
                                 className="nl-score-scatter__dot"
                                 data-me={score === myScore ? "" : undefined}
+                                data-tone={scoreTone(score)}
                             />
                         ))}
                         {guides

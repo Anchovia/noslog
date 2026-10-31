@@ -232,7 +232,7 @@ function ReplyRow({
         text: reply.body,
         language: reply.language,
         translations: reply.translations,
-        enabled: translationEnabled,
+        enabled: translationEnabled && reply.translatable,
         signedIn: Boolean(accountId),
     });
     return (

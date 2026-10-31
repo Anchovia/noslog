@@ -165,6 +165,8 @@ const opinionSchema = z.object({
     replyCount: z.number().int().min(0),
     language: textLanguageSchema,
     translations: storedTranslationsSchema,
+    // 작성자가 번역에 동의했는지 — 아니면 번역 버튼을 두지 않는다
+    translatable: z.boolean(),
 });
 const opinionReplySchema = z.object({
     id: z.number().int(),
@@ -185,6 +187,8 @@ const opinionReplySchema = z.object({
     canReact: z.boolean(),
     language: textLanguageSchema,
     translations: storedTranslationsSchema,
+    // 작성자가 번역에 동의했는지 — 아니면 번역 버튼을 두지 않는다
+    translatable: z.boolean(),
 });
 export const opinionReplyListSchema = z.object({
     items: z.array(opinionReplySchema),

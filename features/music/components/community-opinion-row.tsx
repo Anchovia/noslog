@@ -60,7 +60,7 @@ export default function CommunityOpinionRow({
         text: item.opinion,
         language: item.language,
         translations: item.translations,
-        enabled: translationEnabled,
+        enabled: translationEnabled && item.translatable,
         signedIn: Boolean(accountId),
     });
     const name = item.user.username ?? t("ranking.unknownPlayer");

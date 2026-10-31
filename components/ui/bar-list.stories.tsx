@@ -29,3 +29,27 @@ export const Loading: Story = {
     render: () => <BarListSkeleton labels={["Normal", "Hard", "Expert"]} />,
 };
 export const Empty: Story = { args: { rows: [] } };
+export const Steps: Story = {
+    args: {
+        label: "패턴 경향",
+        max: 1,
+        rows: [
+            { key: "stairs", label: "계단", value: 0.62, display: "62%" },
+            {
+                key: "chords",
+                label: "변박",
+                value: 2,
+                steps: 3,
+                display: "보통",
+            },
+            {
+                key: "none",
+                label: "없음",
+                value: 0,
+                steps: 3,
+                display: "없음",
+            },
+            { key: "unknown", label: "기록 없음", value: null, steps: 3 },
+        ],
+    },
+};

@@ -6,12 +6,16 @@ import Disclosure from "@/components/ui/disclosure";
 
 export default function PrivacyContents({
     title,
+    idPrefix = "privacy",
     sections,
 }: {
     title: string;
+    idPrefix?: string;
     sections: { id: string; title: string }[];
 }) {
-    const [active, setActive] = useState(`privacy-${sections[0]?.id ?? ""}`);
+    const [active, setActive] = useState(
+        `${idPrefix}-${sections[0]?.id ?? ""}`
+    );
     const disclosure = useRef<HTMLDetailsElement>(null);
     const anchor = useRef<{ id: string; scrollY: number } | null>(null);
 
@@ -27,7 +31,7 @@ export default function PrivacyContents({
 
     useEffect(() => {
         const targets = sections
-            .map(({ id }) => document.getElementById(`privacy-${id}`))
+            .map(({ id }) => document.getElementById(`${idPrefix}-${id}`))
             .filter((node): node is HTMLElement => !!node);
         let frame = 0;
         let navigationFrame = 0;
@@ -77,10 +81,10 @@ export default function PrivacyContents({
             window.removeEventListener("hashchange", onHistory);
             window.removeEventListener("popstate", onHistory);
         };
-    }, [sections]);
+    }, [idPrefix, sections]);
 
     function navigate(id: string) {
-        const targetId = `privacy-${id}`;
+        const targetId = `${idPrefix}-${id}`;
         if (window.location.hash !== `#${targetId}`)
             window.history.pushState(null, "", `#${targetId}`);
         selectTarget(targetId);
@@ -89,9 +93,11 @@ export default function PrivacyContents({
         <li key={section.id}>
             <a
                 className="nl-body-secondary nl-link"
-                href={`#privacy-${section.id}`}
+                href={`#${idPrefix}-${section.id}`}
                 aria-current={
-                    active === `privacy-${section.id}` ? "location" : undefined
+                    active === `${idPrefix}-${section.id}`
+                        ? "location"
+                        : undefined
                 }
                 onClick={(event) => {
                     if (

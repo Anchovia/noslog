@@ -22,6 +22,16 @@ export const TIER_CHANGE_IMAGE_PALETTE = {
     up: "#f2735f",
     down: "#70b8ff",
 } as const;
+// 그림 양식의 값이라 화면 토큰으로 더하지 않는다. 다크 화면 값과 같게 맞춘 고정 색
+export const ANNOUNCEMENT_BANNER_PALETTE = {
+    surface: "#1b1b1b",
+    border: "#323232",
+    heading: "#f2f2f2",
+    brand: "#a8a8a8",
+    date: "#8a8a8a",
+    mark: "#dbdbdb",
+    cat: "#111111",
+} as const;
 export const TIER_IMAGE_FONT_FAMILY = "NosLogTierChangeExport";
 let fontReady: Promise<void> | undefined;
 export async function loadTierImageFont() {

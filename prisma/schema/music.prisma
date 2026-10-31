@@ -190,6 +190,10 @@ model ChartPatternMetric {
   polyrhythm        Float
   offset            Float
   chords            Float?
+  tempoChanges      Int        @default(0) @map("tempo_changes")
+  tenutoCount       Int        @default(0) @map("tenuto_count")
+  glissandoCount    Int        @default(0) @map("glissando_count")
+  trillCount        Int        @default(0) @map("trill_count")
   updatedAt         DateTime   @updatedAt @map("updated_at")
 
   @@map("chart_pattern_metrics")

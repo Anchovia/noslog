@@ -17,37 +17,41 @@ export type SettingsCategory = z.infer<typeof settingsCategorySchema>;
 export function createSettingsProfileSchema(
     t: ReturnType<typeof createTranslator>
 ) {
-    return createOnboardingSchema(t).extend({
-        avatar: z.union([z.url(), z.literal("")], {
-            error: t("settings.validation.avatarUrl"),
-        }),
-        preferredArcadeId: z.union(
-            [
-                z.literal(""),
-                z
-                    .string()
-                    .regex(/^[1-9]\d*$/)
-                    .refine((value) => Number.isSafeInteger(Number(value))),
-            ],
-            { error: t("settings.validation.arcadeRequired") }
-        ),
-        // 프로필 머리에 걸 업적 키(쉼표로 이음, 최대 3 · 빈 값 = 자동). 폼에 없으면 바꾸지 않는다(2026-09-25 D1)
-        achievementShowcase: z
-            .string()
-            .regex(/^(?:[a-z0-9-]{1,64}(?:,[a-z0-9-]{1,64}){0,2})?$/, {
-                error: t("achievement.pin.failed"),
-            })
-            .optional(),
-        // 프로필 고정 기록(2026-09-26 S2) — 고른 순서대로 JSON(채보 · 한 줄 소감), 빈 값 = 자동. 폼에 없으면 바꾸지 않는다
-        pinnedRecords: z
-            .string()
-            .max(2000)
-            .refine(
-                (value) => pinnedRecordsValueSchema.safeParse(value).success,
-                { error: t("profile.pinned.failed") }
-            )
-            .optional(),
-    });
+    // 나이 확인은 가입 때 한 번만 받는다
+    return createOnboardingSchema(t)
+        .omit({ ageConfirmed: true, termsAccepted: true })
+        .extend({
+            avatar: z.union([z.url(), z.literal("")], {
+                error: t("settings.validation.avatarUrl"),
+            }),
+            preferredArcadeId: z.union(
+                [
+                    z.literal(""),
+                    z
+                        .string()
+                        .regex(/^[1-9]\d*$/)
+                        .refine((value) => Number.isSafeInteger(Number(value))),
+                ],
+                { error: t("settings.validation.arcadeRequired") }
+            ),
+            // 프로필 머리에 걸 업적 키(쉼표로 이음, 최대 3 · 빈 값 = 자동). 폼에 없으면 바꾸지 않는다(2026-09-25 D1)
+            achievementShowcase: z
+                .string()
+                .regex(/^(?:[a-z0-9-]{1,64}(?:,[a-z0-9-]{1,64}){0,2})?$/, {
+                    error: t("achievement.pin.failed"),
+                })
+                .optional(),
+            // 프로필 고정 기록(2026-09-26 S2) — 고른 순서대로 JSON(채보 · 한 줄 소감), 빈 값 = 자동. 폼에 없으면 바꾸지 않는다
+            pinnedRecords: z
+                .string()
+                .max(2000)
+                .refine(
+                    (value) =>
+                        pinnedRecordsValueSchema.safeParse(value).success,
+                    { error: t("profile.pinned.failed") }
+                )
+                .optional(),
+        });
 }
 export type SettingsProfileFormValues = z.input<
     ReturnType<typeof createSettingsProfileSchema>
@@ -63,6 +67,8 @@ export const settingsPrivacySchema = z.object({
     showPlayCount: z.boolean(),
     showPlayActivity: z.boolean(),
     showPlayScores: z.boolean(),
+    // 공개 설정이 아니라 동의 — 켠 사람의 의견 · 답글만 Gemini 로 번역한다(개인정보 처리방침 「생성형 AI 번역」)
+    allowTranslation: z.boolean(),
 });
 // 칸 아래 설명 한 줄이 붙는 공개 설정 — 설정 화면 · 가입 화면 공용
 export const PRIVACY_HELP: Partial<
@@ -70,6 +76,7 @@ export const PRIVACY_HELP: Partial<
 > = {
     showPlayActivity: "settings.activityCoupling",
     showPlayScores: "settings.scoresCoupling",
+    allowTranslation: "settings.allowTranslationHelp",
 };
 export type SettingsPrivacyValues = z.infer<typeof settingsPrivacySchema>;
 

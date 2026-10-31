@@ -13,6 +13,9 @@ export default async function LegacyProfileSettings({
     const query = new URLSearchParams({
         category: discordError ? "connections" : "profile",
     });
-    if (discordError) query.set("discordError", discordError);
+    if (discordError) {
+        query.set("partner", "discord");
+        query.set("discordError", discordError);
+    }
     redirect(`${localizePath("/settings", locale)}?${query}`);
 }

@@ -34,7 +34,7 @@ Figma · Z1 · 옛 브리프 · 핸드오프 · 감사 문서 · PDF · 레거�
 
 ## 화면
 
-[홈](./pages/home.md) · [악곡 목록 · 채보 보기](./pages/music-list.md) · [악곡 상세](./pages/music-detail.md) · [서열표](./pages/tiers.md) · [빙고](./pages/bingo.md) · [검정](./pages/exams.md) · [프로필](./pages/profile.md) · [업적](./pages/achievements.md) · [설정](./pages/settings.md) · [가입 온보딩 · 로그인](./pages/onboarding-login.md) · [개인정보](./pages/privacy.md) · [데이터 동기화](./pages/sync.md) · [오락실](./pages/arcades.md) · [랭킹](./pages/rankings.md) · [파트너 동의](./pages/partner-consent.md) · [피드백 · 오류 제보](./pages/feedback.md) · [소식 · 공지](./pages/news.md) · [이벤트](./pages/events.md) · [관리자 공지 작성](./pages/admin-announcements.md) · [채보 뷰어](./pages/chart-viewer.md) · [채보 에디터](./pages/chart-editor.md)
+[홈](./pages/home.md) · [악곡 목록 · 채보 보기](./pages/music-list.md) · [악곡 상세](./pages/music-detail.md) · [서열표](./pages/tiers.md) · [빙고](./pages/bingo.md) · [검정](./pages/exams.md) · [프로필](./pages/profile.md) · [업적](./pages/achievements.md) · [설정](./pages/settings.md) · [가입 온보딩 · 로그인](./pages/onboarding-login.md) · [개인정보](./pages/privacy.md) · [이용약관](./pages/terms.md) · [데이터 동기화](./pages/sync.md) · [오락실](./pages/arcades.md) · [랭킹](./pages/rankings.md) · [파트너 동의](./pages/partner-consent.md) · [피드백 · 오류 제보](./pages/feedback.md) · [소식 · 공지](./pages/news.md) · [이벤트](./pages/events.md) · [관리자 공지 작성](./pages/admin-announcements.md) · [채보 뷰어](./pages/chart-viewer.md) · [채보 에디터](./pages/chart-editor.md)
 
 화면 문서 양식: 구성(위에서 아래) · 폭별 · 상태 · 동작 · 하지 않는 것 · 부품 고유 크기 · 바뀐 기록.
 

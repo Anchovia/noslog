@@ -23,7 +23,7 @@ import {
     chartFieldValue,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
 import type { PatternStrengths } from "@/features/music/lib/pattern-tendency";
-import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
+import { PATTERN_STRENGTH_AXES } from "@/lib/chart-pattern/patternMetrics";
 import { rankTone, scoreTone } from "@/lib/music/score-tone";
 
 import PatternCriteriaDialog from "./pattern-criteria-dialog";
@@ -35,11 +35,11 @@ const PLACEHOLDER_STRENGTHS: PatternStrengths = {
     repetition: 0.35,
     polyrhythm: 0.8,
     offset: 0.45,
-    chords: 0.25,
 };
+const PLACEHOLDER_METER = 1;
 
 /**
- * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 기준 전환) ② 내 기록 요약 띠 ③ 채보 정보
+ * 개요 탭 — ① 패턴 경향(가로 막대 4줄 + 변박 칸 막대 · 제목 줄 오른쪽 기준 전환) ② 내 기록 요약 띠 ③ 채보 정보
  * ④ 서열 변경 이력(접힘). 값이 없는 구역은 두지 않는다 (2026-09-16).
  * 채보 정보의 BPM · 노트 수 · 길이 · 수록일은 비어 있어도 줄을 두고 「추가」 로 기여를 받는다(2026-09-23)
  */
@@ -56,6 +56,7 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
             ? tendency.all
             : tendency.difficulty
         : null;
+    const meter = tendency ? tendency.meter : PLACEHOLDER_METER;
     const id = useId();
     const record = data.userPlayData;
     const pendingOptions = myPendingChartFieldsOptions(
@@ -85,11 +86,36 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                       ? `${chart.bpm_min}–${chart.bpm_max}`
                       : String(chart.bpm_min),
         },
+        // 공개 채보로 세는 값이라 채보가 없으면 「—」
+        {
+            label: t("music.info.tempoChanges"),
+            numeric: true,
+            value: tendency
+                ? t("music.info.tempoChangesCount", {
+                      count: tendency.tempoChanges.toLocaleString(locale),
+                  })
+                : null,
+        },
         {
             label: t("music.info.noteCount"),
             numeric: true,
             field: "note_count",
             value: chart.note_count?.toLocaleString(locale) ?? null,
+        },
+        {
+            label: t("music.info.tenutoCount"),
+            numeric: true,
+            value: tendency?.tenutoCount.toLocaleString(locale) ?? null,
+        },
+        {
+            label: t("music.info.glissandoCount"),
+            numeric: true,
+            value: tendency?.glissandoCount.toLocaleString(locale) ?? null,
+        },
+        {
+            label: t("music.info.trillCount"),
+            numeric: true,
+            value: tendency?.trillCount.toLocaleString(locale) ?? null,
         },
         {
             label: t("detail.duration"),
@@ -200,24 +226,41 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                             <BarList
                                 max={1}
                                 label={t("pattern.title")}
-                                rows={PATTERN_AXES.map((axis) => {
-                                    const value = (strengths ??
-                                        PLACEHOLDER_STRENGTHS)[axis];
-                                    return {
-                                        key: axis,
-                                        label: t(`pattern.axis.${axis}`),
-                                        value,
+                                rows={[
+                                    ...PATTERN_STRENGTH_AXES.map((axis) => {
+                                        const value = (strengths ??
+                                            PLACEHOLDER_STRENGTHS)[axis];
+                                        return {
+                                            key: axis,
+                                            label: t(`pattern.axis.${axis}`),
+                                            value,
+                                            display:
+                                                value === null
+                                                    ? undefined
+                                                    : `${Math.round(value * 100)}%`,
+                                            // 0–4 단계 색을 25% 마다(파랑 → 하늘 → 노랑 → 주황 → 빨강)
+                                            color:
+                                                value === null
+                                                    ? undefined
+                                                    : `var(--nl-pattern-level-${Math.round(value * 4)})`,
+                                        };
+                                    }),
+                                    {
+                                        key: "chords",
+                                        label: t("pattern.axis.chords"),
+                                        value: meter,
+                                        steps: 3,
                                         display:
-                                            value === null
+                                            meter === null
                                                 ? undefined
-                                                : `${Math.round(value * 100)}%`,
-                                        // 0–4 단계 색을 25% 마다(파랑 → 하늘 → 노랑 → 주황 → 빨강)
+                                                : t(`pattern.meter.${meter}`),
+                                        // 막대와 같은 단계 색 — 3단계를 0–4 색에 비례로 맞춘다
                                         color:
-                                            value === null
+                                            meter === null
                                                 ? undefined
-                                                : `var(--nl-pattern-level-${Math.round(value * 4)})`,
-                                    };
-                                })}
+                                                : `var(--nl-pattern-level-${Math.round((meter / 3) * 4)})`,
+                                    },
+                                ]}
                             />
                         </div>
                         {!strengths ? (
@@ -358,7 +401,11 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                                             />
                                         </span>
                                     ) : (
-                                        fact.value
+                                        (fact.value ?? (
+                                            <span className="nl-facts__empty">
+                                                —
+                                            </span>
+                                        ))
                                     )}
                                 </dd>
                             </div>

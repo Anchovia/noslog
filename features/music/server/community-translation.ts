@@ -103,6 +103,7 @@ async function translateCommunityText(text: string, targets: Locale[]) {
     return null;
 }
 
+// 작성자가 번역 동의(설정 › 공개 설정)를 한 글만 — 무료 Gemini 는 보낸 글을 Google 이 학습에 쓸 수 있다
 async function loadSource(kind: "opinion" | "reply", id: number) {
     if (kind === "opinion") {
         const row = await db.communityChartEvaluation.findFirst({
@@ -111,6 +112,7 @@ async function loadSource(kind: "opinion" | "reply", id: number) {
                 excluded: false,
                 opinionHidden: false,
                 opinion: { not: null },
+                user: { translationConsentAt: { not: null } },
             },
             select: { opinion: true, opinionTranslations: true },
         });
@@ -128,6 +130,7 @@ async function loadSource(kind: "opinion" | "reply", id: number) {
             id,
             hidden: false,
             evaluation: { excluded: false, opinionHidden: false },
+            user: { translationConsentAt: { not: null } },
         },
         select: { body: true, translations: true },
     });

@@ -141,11 +141,13 @@ describe("announcement summary and detail reads", () => {
         );
         expect(compact.length).toBe(full.length);
         if (full.length) {
-            const { content: ignored, ...metadata } = localizeAnnouncement(
-                full[0],
-                "ja"
-            );
+            const {
+                content: ignored,
+                bannerUrl,
+                ...metadata
+            } = localizeAnnouncement(full[0], "ja");
             expect(ignored).toBe(content);
+            expect(bannerUrl).toBeNull();
             expect(localizeAnnouncementSummary(compact[0], "ja")).toEqual(
                 metadata
             );
@@ -158,5 +160,20 @@ describe("announcement summary and detail reads", () => {
         expect(eligibleAnnouncementSummaries([item], new Date())).toEqual([]);
         mocks.detail.mockResolvedValue({ ...record(1), isPublished: false });
         expect(await getAnnouncement("ko", "notice-1")).toBeNull();
+    });
+});
+
+describe("공지 배너", () => {
+    it("언어마다 자기 배너 주소를 돌려주고, 없으면 null 이다", () => {
+        const item = record(1);
+        item.translations[1] = {
+            ...item.translations[1],
+            bannerUrl: "https://blob.example/announcements/1/ja.png",
+        } as (typeof item.translations)[number];
+        const [full] = eligibleAnnouncements([item], new Date());
+        expect(localizeAnnouncement(full, "ja").bannerUrl).toBe(
+            "https://blob.example/announcements/1/ja.png"
+        );
+        expect(localizeAnnouncement(full, "ko").bannerUrl).toBeNull();
     });
 });

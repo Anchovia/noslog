@@ -62,6 +62,7 @@ export async function completeOnboarding(
                 hidePlayActivity: !result.data.showPlayActivity,
                 hidePlayScores: !result.data.showPlayScores,
                 profileCompletedAt: new Date(),
+                termsAcceptedAt: new Date(),
             },
         });
     } catch (error) {

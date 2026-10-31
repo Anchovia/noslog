@@ -19,7 +19,7 @@ export function getSafeAuthReturnPath(value: string | undefined) {
         const path = stripLocaleFromPath(pathname);
         if (
             path !== "/" &&
-            !/^\/(music|rankings|tiers|bingo|exams|arcades|bookmarklet|profile|settings|feedback|privacy|announcements|authorize|gamecenter)(?:\/|$)/.test(
+            !/^\/(music|rankings|tiers|bingo|exams|arcades|bookmarklet|profile|settings|feedback|privacy|terms|announcements|authorize|gamecenter)(?:\/|$)/.test(
                 path
             )
         )

@@ -25,7 +25,7 @@ function BingoMini({ completed }: { completed: ReadonlySet<number> }) {
 
 /**
  * 빙고 목록 항목 — 격자(기본) = 악곡 격자 카드(면 카드 · 자켓 + 이름 · 상태), 목록 = 자켓 48 행 + 글 아래 진행 막대.
- * 로그인하면 미니 판 · 진행 막대 · 상태(칸 · 해금 · 풀보드 · 찬스), 게스트는 버전 · 보상만
+ * 로그인하면 미니 판 · 진행 막대 · 상태(칸 · 해금 · 빙고 완료 · 찬스), 게스트는 버전 · 보상만
  */
 export default function BingoCatalogCard({
     item,

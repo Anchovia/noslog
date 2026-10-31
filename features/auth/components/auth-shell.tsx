@@ -15,7 +15,8 @@ export default async function AuthShell({
     onboarding?: boolean;
 }) {
     const { t, locale } = await getServerI18n();
-    const privacy = t("auth.reviewBeforeLogin").split("{privacy}");
+    const [beforeTerms, rest] = t("auth.reviewBeforeLogin").split("{terms}");
+    const [beforePrivacy, afterPrivacy] = rest.split("{privacy}");
     return (
         <div
             className={cn(
@@ -29,7 +30,15 @@ export default async function AuthShell({
             <div className="nl-auth-bottom">
                 {!onboarding ? (
                     <p className="nl-metadata nl-muted">
-                        {privacy[0]}
+                        {beforeTerms}
+                        <Link
+                            prefetch={false}
+                            className="nl-link nl-text-link--underlined"
+                            href={localizePath("/terms", locale)}
+                        >
+                            {t("auth.terms")}
+                        </Link>
+                        {beforePrivacy}
                         <Link
                             prefetch={false}
                             className="nl-link nl-text-link--underlined"
@@ -37,7 +46,7 @@ export default async function AuthShell({
                         >
                             {t("auth.privacy")}
                         </Link>
-                        {privacy[1]}
+                        {afterPrivacy}
                     </p>
                 ) : null}
                 <AuthLanguage />

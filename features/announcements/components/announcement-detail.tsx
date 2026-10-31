@@ -14,6 +14,7 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { SITE_URL } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 
+import AnnouncementBanner from "./announcement-banner";
 import AnnouncementBody from "./announcement-body";
 import AnnouncementCategoryTag from "./announcement-category-tag";
 import { announcementDate } from "./announcement-row";
@@ -71,6 +72,10 @@ export default async function AnnouncementDetail({
                     </div>
                     <h1 className="nl-page-title">{announcement.title}</h1>
                 </header>
+                <AnnouncementBanner
+                    url={announcement.bannerUrl}
+                    title={announcement.title}
+                />
                 <AnnouncementBody
                     content={announcement.content}
                     locale={locale}

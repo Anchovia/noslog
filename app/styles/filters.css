@@ -334,8 +334,19 @@
 }
 .noslog-ui .nl-filter-icon-trigger .nl-filter-count {
     position: absolute;
-    top: var(--nl-spacing-4);
-    right: var(--nl-spacing-4);
+    top: calc(var(--nl-spacing-4) * -1);
+    right: calc(var(--nl-spacing-4) * -1);
+}
+/* 트리거 안 개수 배지는 반전 면(primary) — 트리거 면(surface/control)과 같은 색이면 원이 안 보인다. 둘레 링은 바탕색으로 단추 경계와 떼어 낸다 */
+.noslog-ui .nl-filter-trigger .nl-filter-count,
+.noslog-ui .nl-filter-icon-trigger .nl-filter-count {
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+    font-weight: var(--nl-type-weight-semibold);
+    box-shadow: 0 0 0 var(--nl-stroke-strong) var(--nl-surface-canvas);
+}
+.noslog-ui .nl-filter-trigger .nl-filter-count {
+    box-shadow: none;
 }
 /* 컨트롤 묶음(툴바 + 결과 수 행) 안쪽 12 · 목록까지는 컨테이너 24 */
 .noslog-ui .nl-filter-control-block {

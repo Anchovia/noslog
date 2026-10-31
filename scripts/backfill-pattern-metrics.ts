@@ -1,11 +1,12 @@
 // 패턴 경향 원점수 채우기 — 공개 채보마다 chart_pattern_metrics 한 줄을 지금 계산식으로 다시 쓴다.
-// 공개 화면 저장 · 기여 반영은 그때그때 계산하지만, SQL 로 한꺼번에 공개한 채보와 계산식 버전을 올린 뒤에는 이걸로 채운다.
+// 공개 화면 저장 · 기여 반영은 그때그때 계산하지만, SQL 로 한꺼번에 공개한 채보, 계산식 버전을 올리거나 곡별 변박 기록(lib/chart-pattern/meterRecord.json)을 고친 뒤에는 이걸로 채운다.
 // 실행: npm run db:backfill:pattern-metrics(.env 의 DB). 다른 DB 는 --env-file=<파일>
 import { loadEnvFile } from "node:process";
 
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
+import { songMeterLevel } from "../lib/chart-pattern/meterRecord";
 import {
     computePatternMetrics,
     isMeterKnown,
@@ -39,6 +40,7 @@ async function main() {
             chartId: true,
             publishedRevision: true,
             publishedContent: true,
+            chart: { select: { musicIdx: true } },
             revisions: {
                 where: { kind: { not: "publish" } },
                 orderBy: { number: "desc" },
@@ -65,6 +67,7 @@ async function main() {
             publishedRevision,
             ...computePatternMetrics(document.data, {
                 meterKnown: isMeterKnown(lastEdit?.kind),
+                songMeter: songMeterLevel(pattern.chart.musicIdx),
             }),
         };
         await db.chartPatternMetric.upsert({

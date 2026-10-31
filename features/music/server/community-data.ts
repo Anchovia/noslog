@@ -123,7 +123,14 @@ export async function getCommunityOpinions(
                 opinionCreatedAt: true,
                 opinionUpdatedAt: true,
                 opinionTranslations: true,
-                user: { select: { id: true, username: true, avatar: true } },
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        avatar: true,
+                        translationConsentAt: true,
+                    },
+                },
                 _count: {
                     select: {
                         helpful: true,
@@ -175,6 +182,7 @@ export async function getCommunityOpinions(
             translations: communityTranslationsSchema.parse(
                 row.opinionTranslations ?? {}
             ),
+            translatable: row.user.translationConsentAt !== null,
         })),
         translationEnabled: isCommunityTranslationEnabled(),
         total,
@@ -388,7 +396,14 @@ export async function getOpinionReplies(
                 translations: true,
                 createdAt: true,
                 updatedAt: true,
-                user: { select: { id: true, username: true, avatar: true } },
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        avatar: true,
+                        translationConsentAt: true,
+                    },
+                },
                 _count: { select: { likes: true } },
                 likes: {
                     where: { userId: userId ?? -1 },
@@ -434,6 +449,7 @@ export async function getOpinionReplies(
             translations: communityTranslationsSchema.parse(
                 row.translations ?? {}
             ),
+            translatable: row.user.translationConsentAt !== null,
         })),
         translationEnabled: isCommunityTranslationEnabled(),
         // 새 답글은 보이는 의견에만(지운 의견 자리에는 받지 않는다)

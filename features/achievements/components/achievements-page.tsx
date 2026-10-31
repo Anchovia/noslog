@@ -5,7 +5,6 @@ import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import FilterChips from "@/components/ui/filter-chips";
-import IconButton from "@/components/ui/icon-button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import SortMenu from "@/components/ui/sort-menu";
 import {
@@ -82,13 +81,19 @@ function AchievementRow({
     const earnedDate = tier ? achievedAt(tier) : undefined;
     return (
         <li className="nl-achievement-row" data-earned={tier > 0}>
-            <div className="nl-achievement-row__main">
+            <button
+                type="button"
+                className="nl-achievement-row__main"
+                aria-expanded={open}
+                aria-controls={detailId}
+                onClick={() => setOpen((value) => !value)}
+            >
                 <AchievementHex
                     achievementKey={key}
                     tier={tier}
                     label={text.aria(key, tier)}
                 />
-                <div className="nl-achievement-row__text">
+                <span className="nl-achievement-row__text">
                     <span className="nl-achievement-row__title">
                         {/* 한 열 목록 줄 = 이름 16/600 + 설명 14(다른 한 열 목록과 같게, 2026-10-01 D3) */}
                         <span className="nl-entity-title nl-achievement-row__name">
@@ -124,22 +129,12 @@ function AchievementRow({
                             tier={progress.nextTier}
                         />
                     ) : null}
-                </div>
-                <div className="nl-achievement-row__actions">
-                    <IconButton
-                        size="compact"
-                        label={`${text.name(key)} · ${t("achievement.detail")}`}
-                        aria-expanded={open}
-                        aria-controls={detailId}
-                        onClick={() => setOpen((value) => !value)}
-                    >
-                        <ChevronDown
-                            className="nl-disclosure__chevron"
-                            aria-hidden
-                        />
-                    </IconButton>
-                </div>
-            </div>
+                </span>
+                <ChevronDown
+                    className="nl-icon nl-disclosure__chevron"
+                    aria-hidden
+                />
+            </button>
             {/* 상세(D1) — 단계 사다리 · 달성 인원(명단 없음) */}
             <ol id={detailId} className="nl-achievement-ladder" hidden={!open}>
                 {steps.map(({ tier: step }) => {

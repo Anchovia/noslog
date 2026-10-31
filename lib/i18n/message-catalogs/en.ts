@@ -110,7 +110,7 @@ export const enMessages = {
     "ranking.playerCount": "Players",
     "ranking.avatar": "Profile image",
     "ranking.player": "Player",
-    "ranking.grade": "Grade",
+    "ranking.grade": "Rank",
     "ranking.unknownPlayer": "Unnamed user",
     "ranking.signIn": "Sign in to see my rank",
     "ranking.range": "Records {first}–{last} of {total} players",
@@ -177,9 +177,23 @@ export const enMessages = {
     "pattern.switchToAll": "Compare with all charts",
     "pattern.computed":
         "Calculated from the note layout of the published chart. 100% is the median of the top 1% of charts in the same group.",
-    "pattern.computedNone": "No published chart to calculate from",
+    "pattern.computedNone": "Not calculated yet",
     "pattern.computedMissing":
-        "Meter changes stay empty for charts extracted from video, because their time signature is unknown.",
+        "Meter changes stay empty for songs we could not confirm.",
+    "pattern.meter.0": "None",
+    "pattern.meter.1": "Low",
+    "pattern.meter.2": "Medium",
+    "pattern.meter.3": "High",
+    "pattern.computedDefinition.stairs":
+        "Counts notes one hand plays while moving 1–3 keys at a time in the same direction. Stairs that hit each key twice also count.",
+    "pattern.computedDefinition.repetition":
+        "Counts notes where one hand hits the same key again within 0.25 seconds, at least twice in a row. Shorter gaps count more.",
+    "pattern.computedDefinition.polyrhythm":
+        "Counts two-beat spans where one hand plays eighths or sixteenths and the other plays triplets.",
+    "pattern.computedDefinition.offset":
+        "Counts notes that sit almost together but are off by up to 0.12 seconds. The notes before and after must be at least twice that gap away.",
+    "pattern.computedDefinition.chords":
+        "A per-song record of how much the time signature changes, taken from Japanese and Korean community guides. Charts with time signatures entered by hand are measured from the chart.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
@@ -255,6 +269,8 @@ export const enMessages = {
     "common.jacket": "{title} jacket",
     "common.notifications": "Notifications",
     "common.notFoundTitle": "Page Not Found",
+    "terms.metaDescription":
+        "NosLog Terms of Service: the unofficial service notice, rights in content members post, and prohibited conduct.",
     "privacy.metaDescription":
         "What information NosLog collects and why, how long it is kept, and how to delete it.",
     "common.notFoundDescription":
@@ -288,6 +304,7 @@ export const enMessages = {
     "header.profileLabel": "{name}'s profile",
     "header.language": "Language",
     "footer.privacy": "Privacy Policy",
+    "footer.terms": "Terms of Service",
     "shell.music": "Music",
     "shell.charts": "Chart Viewer",
     "shell.rankings": "Rankings",
@@ -591,6 +608,11 @@ export const enMessages = {
     "music.record.recentPlays": "Recent Plays",
     "music.record.noRecentPlays": "No recent play records.",
     "music.info.noteCount": "Note Count",
+    "music.info.tempoChanges": "Tempo Changes",
+    "music.info.tempoChangesCount": "{count}",
+    "music.info.tenutoCount": "Tenuto Count",
+    "music.info.glissandoCount": "Glissando Count",
+    "music.info.trillCount": "Trill Count",
     "music.info.duration": "Duration",
     "music.info.releaseDate": "Release Date",
     "music.info.unlock": "Unlock Condition",
@@ -749,8 +771,10 @@ export const enMessages = {
     "auth.error.sessionExpired": "Your session expired. Please log in again.",
     "auth.error.destinationRejected":
         "That destination was unavailable, so you will continue to Home.",
-    "auth.reviewBeforeLogin": "Please review the {privacy} before logging in.",
+    "auth.reviewBeforeLogin":
+        "Please review the {terms} and {privacy} before logging in.",
     "auth.privacy": "Privacy Policy",
+    "auth.terms": "Terms of Service",
     "auth.browseWithoutLogin": "Browse without logging in",
     "auth.error.invalidState": "Your login request expired. Please try again.",
     "auth.error.oauthConfig": "Login is temporarily unavailable.",
@@ -795,6 +819,11 @@ export const enMessages = {
     "onboarding.error.nicknameRequired": "Enter a nickname.",
     "onboarding.error.nicknameMax":
         "Your nickname must be 20 characters or fewer.",
+    "onboarding.ageConfirm": "I am 14 or older",
+    "onboarding.termsConsent": "I agree to the {terms}",
+    "onboarding.error.ageRequired": "You must be 14 or older to sign up.",
+    "onboarding.error.termsRequired":
+        "You must agree to the Terms of Service to sign up.",
     "onboarding.error.countryRequired": "Select a country or region.",
     "onboarding.error.nicknameTaken": "That nickname is already in use.",
     "onboarding.error.generic": "Could not complete profile setup.",
@@ -937,7 +966,7 @@ export const enMessages = {
     "bingo.summaryProgress": "Progress",
     "bingo.summaryReward": "Total reward",
     "bingo.summaryPerLine": "Per line",
-    "bingo.summaryFull": "Full board",
+    "bingo.summaryFull": "Bingo complete",
     "bingo.linesProgress": "Lines {lines}/{required}",
     "bingo.legendDone": "Completed {count}",
     "bingo.legendLines": "{count} lines complete",
@@ -947,18 +976,18 @@ export const enMessages = {
     "bingo.checked": "Complete",
     "bingo.totalReward": "Total {value} nos",
     "bingo.rewardStructure":
-        "Required lines {lines} · Per line {line} nos · Full board +{full} nos",
+        "Required lines {lines} · Per line {line} nos · Bingo complete +{full} nos",
     "bingo.missions": "Missions",
     "bingo.missionsAll": "All {count}",
     "bingo.recent": "Recently recorded Bingo",
     "bingo.unlocked": "Unlock complete",
-    "bingo.fullBoard": "Full board complete",
+    "bingo.fullBoard": "Bingo complete",
     "bingo.cells": "Cells {count}/25",
     "bingo.catalog.status": "Status",
     "bingo.catalog.all": "All",
     "bingo.catalog.progress": "In progress",
     "bingo.catalog.unlocked": "Unlock complete",
-    "bingo.catalog.full": "Full board complete",
+    "bingo.catalog.full": "Bingo complete",
     "bingo.catalog.chance": "Bingo chance",
     "bingo.catalog.sort.release": "Release order",
     "bingo.catalog.sort.recent": "Recently recorded",
@@ -1517,6 +1546,10 @@ export const enMessages = {
         "Authenticate with your currently connected Discord account. To use another login account, choose Change login account.",
     "settings.discordRefreshComplete": "Discord information refreshed.",
     "settings.discordChangeComplete": "Login account changed.",
+    "settings.discordScopeTitle": "What NosLog uses on Discord",
+    "settings.discordScope.id": "Account ID",
+    "settings.discordScope.name": "Name · username",
+    "settings.discordScope.avatar": "Profile Image",
     "settings.account": "Account",
     "settings.profileSummary":
         "Nickname · Country or region · Preferred arcade",
@@ -1539,6 +1572,9 @@ export const enMessages = {
     "settings.showPlayScores": "Show play scores",
     "settings.scoresCoupling":
         "When off, you are excluded from rankings and the scores and records on your profile are hidden from other players.",
+    "settings.allowTranslation": "Allow translation of my opinions and replies",
+    "settings.allowTranslationHelp":
+        "When on, the text of your opinions and replies is sent to Google Gemini and translated into the other two languages. On the free tier, Google may use it to improve its services and human reviewers may read it. Turning this off also deletes existing translations.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",
@@ -1567,7 +1603,7 @@ export const enMessages = {
     "settings.experienceSummary": "Language · Theme",
     "settings.profileTitle": "Profile",
     "settings.themeLabel": "Theme",
-    "settings.themeDevice": "Applies only to this browser.",
+    "settings.themeDevice": "Saved on this device only.",
     "settings.theme.system": "System",
     "settings.theme.dark": "Dark",
     "settings.theme.light": "Light",
@@ -1645,7 +1681,7 @@ export const enMessages = {
         "Could not process the image upload request.",
     "settings.deleteTitle": "Delete Account",
     "settings.deleteDescription":
-        "Permanently deletes your account, records, and submissions.",
+        "Permanently deletes your account, records, and submissions. Published charts and applied contribution values remain with the link to you removed.",
     "settings.deleteIrreversible": "Deleted information cannot be recovered.",
     "settings.deleteWarning":
         "Your account, profile, play and sync records, community activity, feedback, exam submissions, and uploaded images will be permanently deleted immediately.",
@@ -2186,7 +2222,6 @@ export const enMessages = {
     "achievement.name.full-combo": "Full Combo",
     "achievement.name.pianist": "Pianist",
     "achievement.name.real-s-rank": "Real Conqueror",
-    "achievement.name.one-hand": "One Hand",
     "achievement.name.basic-grade": "Official Grd",
     "achievement.name.category-bm": "BEMANI Conqueror",
     "achievement.name.category-org": "ORIGINAL Conqueror",
@@ -2194,7 +2229,7 @@ export const enMessages = {
     "achievement.name.category-var": "VARIETY Conqueror",
     "achievement.name.exam-basic": "Basic Exam",
     "achievement.name.exam-recital": "Recital Exam",
-    "achievement.name.opinion": "Opinions",
+    "achievement.name.opinion": "Commenter",
     "achievement.name.helpful": "Helpful",
     "achievement.name.pattern-evaluation": "Pattern Ratings",
     "achievement.name.chopin": "Chopin Competition",
@@ -2204,7 +2239,7 @@ export const enMessages = {
     "achievement.name.rachmaninoff": "Big Hands",
     "achievement.name.impressionism": "Impressionist",
     "achievement.name.nutcracker": "Nutcracker",
-    "achievement.name.piano-school": "Piano Lessons",
+    "achievement.name.piano-school": "Bible",
     "achievement.name.four-seasons": "Four Seasons",
     "achievement.name.spring": "Spring Breeze",
     "achievement.name.summer": "Midsummer",
@@ -2218,7 +2253,6 @@ export const enMessages = {
     "achievement.name.hard-normal": "Not So Normal",
     "achievement.name.sakuzyo": "Sakuzyo",
     "achievement.name.waltz-dogs-cat": "Cats and Dogs",
-    "achievement.name.turkish-march": "Alla Turca",
     "achievement.name.flower": "FLOWER Everywhere",
     "achievement.name.mei": "Mei",
     "achievement.name.sasoribi": "Wakhmaninov",
@@ -2232,7 +2266,7 @@ export const enMessages = {
     "achievement.name.cats": "Cat Person",
     "achievement.name.food": "Foodie",
     "achievement.name.keyboard": "Ebony and Ivory",
-    "achievement.name.all-difficulty": "Clean Sweep",
+    "achievement.name.all-difficulty": "Strike",
     "achievement.name.level-ladder": "Do-Re-Mi",
     "achievement.name.revived-opinion": "Revival",
     "achievement.name.garbage-truck": "Garbage Day",
@@ -2249,18 +2283,13 @@ export const enMessages = {
     "achievement.name.wakhmaninov": "Virkato",
     "achievement.name.grand-slam": "Grand Slam",
     "achievement.name.demon-kings": "Three Demon Kings",
-    "achievement.name.piano-concertos": "Piano Concertos",
-    "achievement.name.erlkonig": "One Voice, Four Roles",
     "achievement.name.bells": "Bells",
     "achievement.name.minute-waltz": "Minute Waltz",
-    "achievement.name.bumblebee": "Flight of the Bumblebee",
     "achievement.condition.s-rank": "S or better on {count} charts",
     "achievement.condition.score-990k": "990,000+ on {count} charts",
     "achievement.condition.full-combo": "Full combo on {count} charts",
     "achievement.condition.pianist": "PIANIST on {count} charts",
     "achievement.condition.real-s-rank": "S or better on {count} Real charts",
-    "achievement.condition.one-hand":
-        "S or better with one hand on {count} charts",
     "achievement.condition.basic-grade": "Official Grd {count} or higher",
     "achievement.condition.category":
         "S or better on {percent}% of {category} songs",
@@ -2301,8 +2330,6 @@ export const enMessages = {
         "S or better on {count} Sakuzyo (削除) songs",
     "achievement.condition.waltz-dogs-cat":
         "S or better on {count} dog and cat waltzes",
-    "achievement.condition.turkish-march":
-        "S or better on {count} Turkish Marches (Mozart and Beethoven)",
     "achievement.condition.flower": "S or better on {count} FLOWER versions",
     "achievement.condition.mei.1": "S or better on 冥",
     "achievement.condition.mei.2": "Full combo on 冥",
@@ -2355,17 +2382,11 @@ export const enMessages = {
         "S or better on {count} versions of 凛として咲く花の如く",
     "achievement.condition.demon-kings":
         "S or better on {count} Expert charts of 魔王, ambages and 山の魔王の宮殿にて",
-    "achievement.condition.piano-concertos":
-        "S or better on {count} piano concertos",
-    "achievement.condition.erlkonig": "Full combo on every difficulty of 魔王",
     "achievement.condition.bells":
         "Full combo on {count} of La Campanella and The Bells",
     "achievement.condition.minute-waltz.1": "S or better on 小犬のワルツ",
     "achievement.condition.minute-waltz.2": "Full combo on 小犬のワルツ",
     "achievement.condition.minute-waltz.3": "PIANIST on 小犬のワルツ",
-    "achievement.condition.bumblebee.1": "S or better on 熊蜂の飛行 Expert",
-    "achievement.condition.bumblebee.2": "Full combo on 熊蜂の飛行 Expert",
-    "achievement.condition.bumblebee.3": "PIANIST on 熊蜂の飛行 Expert",
     // 뮤즈캣 연동(2026-10-20) — 파트너 동의 화면 · 설정 › 연결
     "partner.consent.title": "Send my NosLog records to {client}",
     "partner.consent.subtitle": "Only the records you choose are sent.",

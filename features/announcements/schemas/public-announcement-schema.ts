@@ -68,7 +68,10 @@ export const publicAnnouncementSchema = announcementMetadataSchema
     .extend({
         translations: z
             .array(
-                translationMetadataSchema.extend({ content: boundedText(5000) })
+                translationMetadataSchema.extend({
+                    content: boundedText(5000),
+                    bannerUrl: z.string().nullable().default(null),
+                })
             )
             .refine(completeLocales),
     })
@@ -125,10 +128,13 @@ export function localizeAnnouncement(
     record: PublicAnnouncementRecord,
     locale: Locale
 ) {
+    const translation = record.translations.find(
+        (item) => item.locale === locale
+    )!;
     return {
         ...localizeAnnouncementSummary(record, locale),
-        content: record.translations.find((item) => item.locale === locale)!
-            .content,
+        content: translation.content,
+        bannerUrl: translation.bannerUrl,
     };
 }
 

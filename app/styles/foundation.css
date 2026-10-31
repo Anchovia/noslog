@@ -64,6 +64,7 @@ html[data-theme="light"] .noslog-ui,
         .nl-settings__row,
         .nl-privacy-contents a,
         .nl-disclosure > summary,
+        .nl-achievement-row__main,
         .nl-announcements__adjacent-link,
         .nl-tier-switch,
         .nl-tier-band-option,
@@ -2366,23 +2367,23 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 가로 막대 목록 BarList — 줄 = 라벨 control · 트랙 8(모서리 4) · 값 metric-value 오른쪽 정렬, 줄 사이 8, 열 사이 12.
    트랙 클래스는 진행 막대(업적 · 그레이드 · 기여)도 같이 쓴다 — 진행 막대 트랙은 구분선 색, 카드 위 막대 목록 트랙은 control 면.
-   채움은 차트 단일 색(선 차트와 같은 색) */
+   채움은 차트 단일 색(선 차트와 같은 색). 칸 막대(--steps)는 트랙을 칸 사이 2 로 나누고 바깥 모서리만 둥글다 */
 .noslog-ui .nl-bar-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
+    display: grid;
+    /* 라벨 최소 40 — 누적 막대 라벨과 같은 값. 열을 줄이 함께 써서 가장 긴 라벨에 맞춘 한 폭이 된다 */
+    grid-template-columns:
+        minmax(calc(var(--nl-spacing-32) + var(--nl-spacing-8)), max-content)
+        minmax(0, 1fr)
+        minmax(calc(var(--nl-spacing-32) + var(--nl-spacing-8)), max-content);
+    gap: var(--nl-spacing-8) var(--nl-spacing-12);
     margin: 0;
     min-width: 0;
 }
 .noslog-ui .nl-bar-list__row {
     display: grid;
-    /* 라벨 최소 40 — 누적 막대 라벨과 같은 값 */
-    grid-template-columns:
-        minmax(calc(var(--nl-spacing-32) + var(--nl-spacing-8)), max-content)
-        minmax(0, 1fr)
-        minmax(calc(var(--nl-spacing-32) + var(--nl-spacing-8)), max-content);
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
     align-items: center;
-    gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-bar-list__row > dt {
     white-space: nowrap;
@@ -2395,6 +2396,31 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-bar-list .nl-bar-list__track {
     background: var(--nl-surface-control);
+}
+.noslog-ui .nl-bar-list .nl-bar-list__track--steps {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--nl-spacing-2);
+    background: none;
+}
+.noslog-ui .nl-bar-list__track--steps {
+    position: relative;
+}
+.noslog-ui
+    .nl-bar-list__track--steps
+    > span:not(.nl-bar-list__steps-fill, .nl-bar-list__fill) {
+    background: var(--nl-surface-control);
+}
+/* 채운 칸은 같은 칸 격자를 한 장으로 덮어 드러남을 한 번만 건다 — 칸마다 따로 돌지 않고 트랙을 왼쪽부터 한 번에 훑는다 */
+.noslog-ui .nl-bar-list__steps-fill {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    gap: var(--nl-spacing-2);
+}
+.noslog-ui .nl-bar-list__steps-fill > .nl-bar-list__fill {
+    border-radius: 0;
 }
 .noslog-ui .nl-bar-list__fill {
     display: block;

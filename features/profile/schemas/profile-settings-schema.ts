@@ -55,6 +55,13 @@ export function createOnboardingSchema(t: Translator) {
         country: z.enum(profileCountrySchema.options, {
             error: t("onboarding.error.countryRequired"),
         }),
+        // 만 14세 미만은 법정대리인 동의가 필요해 받지 않는다(개인정보 보호법 제22조의2) — 확인만 받고 저장하지 않는다
+        ageConfirmed: z
+            .boolean()
+            .refine((value) => value, t("onboarding.error.ageRequired")),
+        termsAccepted: z
+            .boolean()
+            .refine((value) => value, t("onboarding.error.termsRequired")),
         // 가입 직후 공개 설정. 설정 화면과 같은 6개 — 처음 상태는 ONBOARDING_PRIVACY_DEFAULTS
         ...(Object.fromEntries(
             ONBOARDING_PRIVACY_KEYS.map((key) => [
@@ -76,6 +83,8 @@ export function onboardingInputFromFormData(formData: FormData) {
     return {
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
+        ageConfirmed: formData.get("ageConfirmed") === "true",
+        termsAccepted: formData.get("termsAccepted") === "true",
         // 보내지 않은 칸은 처음 상태로(예전 화면 · 새 칸이 없는 요청)
         ...Object.fromEntries(
             ONBOARDING_PRIVACY_KEYS.map((key) => {
@@ -98,6 +107,8 @@ export function createOnboardingFormData(
     const formData = new FormData();
     formData.set("username", values.username);
     formData.set("country", values.country);
+    formData.set("ageConfirmed", String(values.ageConfirmed));
+    formData.set("termsAccepted", String(values.termsAccepted));
     for (const key of ONBOARDING_PRIVACY_KEYS)
         formData.set(key, String(values[key]));
     formData.set("locale", locale);

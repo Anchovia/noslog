@@ -37,6 +37,7 @@ export async function getAdminAnnouncement(id: number) {
                     locale: true,
                     title: true,
                     content: true,
+                    bannerUrl: true,
                     modifiedAt: true,
                 },
             },

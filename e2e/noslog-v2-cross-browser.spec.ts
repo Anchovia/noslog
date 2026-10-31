@@ -66,10 +66,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(trigger).toHaveText(copy.option("Pianist"));
         await expect(page).toHaveURL(/goal=pianist/);
         await expect(trigger).toBeFocused();
-        await trigger.click();
-        await page
-            .getByRole("option", { name: copy.option("990k"), exact: true })
-            .click();
+        // 닫힌 직후 잠깐은 다시 열지 않는다(useSelectOpen 의 REOPEN_GUARD_MS) — 열릴 때까지 다시 누른다
+        const option990k = page.getByRole("option", {
+            name: copy.option("990k"),
+            exact: true,
+        });
+        await expect(async () => {
+            await trigger.click();
+            await expect(option990k).toBeVisible({ timeout: 1_000 });
+        }).toPass();
+        await option990k.click();
         await expect(page).toHaveURL(/goal=990k/);
         const scan = await new AxeBuilder({ page })
             .include(".nl-tiers")

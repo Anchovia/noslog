@@ -98,6 +98,8 @@ export default function OnboardingFormView({
         defaultValues: {
             username: "",
             country: undefined,
+            ageConfirmed: false,
+            termsAccepted: false,
             ...ONBOARDING_PRIVACY_DEFAULTS,
         },
     });
@@ -169,9 +171,22 @@ export default function OnboardingFormView({
 
     async function next() {
         clearErrors("root");
-        const valid = await trigger(["username", "country"]);
+        const valid = await trigger([
+            "username",
+            "country",
+            "ageConfirmed",
+            "termsAccepted",
+        ]);
         if (!valid) {
-            setFocus(getValues("username").trim() ? "country" : "username");
+            setFocus(
+                !getValues("username").trim()
+                    ? "username"
+                    : !getValues("country")
+                      ? "country"
+                      : !getValues("ageConfirmed")
+                        ? "ageConfirmed"
+                        : "termsAccepted"
+            );
             return;
         }
         if (!(await checkNicknameNow())) {
@@ -202,6 +217,7 @@ export default function OnboardingFormView({
         }
     }
     const nicknameField = register("username");
+    const termsConsent = t("onboarding.termsConsent").split("{terms}");
     const nicknameOk =
         nickname?.available &&
         !errors.username &&
@@ -362,6 +378,64 @@ export default function OnboardingFormView({
                                 </p>
                             ) : null}
                         </fieldset>
+                        <div>
+                            <Checkbox
+                                label={t("onboarding.ageConfirm")}
+                                disabled={isSubmitting}
+                                aria-invalid={Boolean(errors.ageConfirmed)}
+                                aria-describedby={
+                                    errors.ageConfirmed
+                                        ? "onboarding-age-error"
+                                        : undefined
+                                }
+                                {...register("ageConfirmed")}
+                            />
+                            {errors.ageConfirmed ? (
+                                <p
+                                    id="onboarding-age-error"
+                                    className="nl-field__help nl-field__error"
+                                    role="alert"
+                                >
+                                    {errors.ageConfirmed.message}
+                                </p>
+                            ) : null}
+                        </div>
+                        <div>
+                            <Checkbox
+                                label={
+                                    <>
+                                        {termsConsent[0]}
+                                        {/* 온보딩 입력이 사라지지 않게 새 탭으로 연다 */}
+                                        <a
+                                            className="nl-link nl-text-link--underlined"
+                                            href={href("/terms")}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {t("auth.terms")}
+                                        </a>
+                                        {termsConsent[1]}
+                                    </>
+                                }
+                                disabled={isSubmitting}
+                                aria-invalid={Boolean(errors.termsAccepted)}
+                                aria-describedby={
+                                    errors.termsAccepted
+                                        ? "onboarding-terms-error"
+                                        : undefined
+                                }
+                                {...register("termsAccepted")}
+                            />
+                            {errors.termsAccepted ? (
+                                <p
+                                    id="onboarding-terms-error"
+                                    className="nl-field__help nl-field__error"
+                                    role="alert"
+                                >
+                                    {errors.termsAccepted.message}
+                                </p>
+                            ) : null}
+                        </div>
                     </>
                 ) : (
                     <fieldset

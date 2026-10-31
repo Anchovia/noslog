@@ -265,3 +265,22 @@ describe("관리자 공지사항 스키마", () => {
         expect(toDateTimeLocalValue(null)).toBe("");
     });
 });
+
+describe("공지 배너 주소", () => {
+    const parse = (bannerUrl?: string) =>
+        announcementFormSchema.safeParse({
+            ...validInput,
+            translations: {
+                ...validInput.translations,
+                ko: { ...translation, bannerUrl },
+            },
+        });
+
+    it("칸이 없으면 그대로 두고, 빈 값이면 뺀다", () => {
+        expect(parse().data?.translations.ko.bannerUrl).toBeUndefined();
+        expect(parse("").data?.translations.ko.bannerUrl).toBeNull();
+    });
+    it("주소가 아니면 받지 않는다", () => {
+        expect(parse("banner").success).toBe(false);
+    });
+});

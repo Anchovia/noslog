@@ -62,12 +62,13 @@ const queryDetail = unstable_cache(
                         locale: true,
                         title: true,
                         content: true,
+                        bannerUrl: true,
                         modifiedAt: true,
                     },
                 },
             },
         }),
-    ["public-announcement-detail-v1"],
+    ["public-announcement-detail-v2"],
     cacheOptions
 );
 

@@ -351,7 +351,7 @@
     justify-content: space-between;
     gap: var(--nl-spacing-16);
 }
-/* 폰 — 버튼이 있는 두 칸 줄(프로필 이미지 · 연결 계정 · 선호 오락실 · 프로필 업적 · 고정 기록)은 버튼을 아래 줄로(사이 12) */
+/* 폰 — 버튼이 있는 두 칸 줄(프로필 이미지 · 선호 오락실 · 프로필 업적 · 고정 기록)은 버튼을 아래 줄로(사이 12) */
 @media (max-width: 671px) {
     .noslog-ui .nl-settings__row--stack,
     .noslog-ui .nl-settings__rows > .nl-settings__zone {

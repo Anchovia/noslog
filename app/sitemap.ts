@@ -22,6 +22,7 @@ const staticRoutes: Array<{
     { path: "/gamecenter", changeFrequency: "weekly", priority: 0.8 },
     { path: "/bookmarklet", changeFrequency: "monthly", priority: 0.6 },
     { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
+    { path: "/terms", changeFrequency: "monthly", priority: 0.3 },
     { path: "/announcements", changeFrequency: "weekly", priority: 0.6 },
     { path: "/events", changeFrequency: "weekly", priority: 0.6 },
 ];

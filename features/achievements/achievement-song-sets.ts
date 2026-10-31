@@ -284,13 +284,6 @@ export const ACHIEVEMENT_SONG_SETS = {
             "2dd7cc6161556e1d900f8c358283335f", // 猫のワルツ
         ],
     },
-    "turkish-march": {
-        category: "songSet",
-        songs: [
-            "50f4f382a533e9afb6a30ab25a5b1079", // トルコ行進曲
-            "60c606f860d9ec9caa2cb058776d9f86", // トルコ行進曲
-        ],
-    },
     flower: {
         category: "songSet",
         songs: [
@@ -574,23 +567,6 @@ export const ACHIEVEMENT_SONG_SETS = {
             "36e81658370f16786fae59c65e5fb118", // 山の魔王の宮殿にて
         ],
     },
-    "piano-concertos": {
-        category: "songSet",
-        songs: [
-            "bd8a09b514519664420ca5e4c023e5e2", // ピアノ協奏曲第1番第1楽章
-            "548a12c3ab2fac8bb336e7cf2ae902d6", // ピアノ協奏曲第2番第1楽章
-            "fafafc96f6a22ee35fbae8acb5319978", // ピアノ協奏曲第1楽章
-            "818b48940c2d17325904fbab68689046", // ピアノ協奏曲第1番“蠍火”
-        ],
-    },
-    erlkonig: {
-        category: "songSet",
-        everyChart: true,
-        lamp: "fullCombo",
-        songs: [
-            "be03c65ed737a7805dde4d1deb53474e", // 魔王
-        ],
-    },
     bells: {
         category: "songSet",
         lamp: "fullCombo",
@@ -603,13 +579,6 @@ export const ACHIEVEMENT_SONG_SETS = {
         category: "songSet",
         songs: [
             "0ff2ac56c4fd26219090d5b5cfcad29c", // 小犬のワルツ
-        ],
-    },
-    bumblebee: {
-        category: "songSet",
-        difficulty: "Expert",
-        songs: [
-            "26db1890305f125eeb0ab1dc5c8ac3b4", // 熊蜂の飛行
         ],
     },
 } as const satisfies Record<string, AchievementSongSet>;

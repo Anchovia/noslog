@@ -22,6 +22,10 @@ export interface PrivacyRetentionResult {
     analyticsSaltsDeleted: number;
     analyticsCountsDeleted: number;
     orphanUploadsDeleted: number;
+    opinionReportsDeleted: number;
+    musecatActionsDeleted: number;
+    partnerOutboxDeleted: number;
+    oauthCredentialsDeleted: number;
     failed: number;
 }
 
@@ -41,6 +45,70 @@ async function cleanAnalytics(now: Date, result: PrivacyRetentionResult) {
     } catch (error) {
         result.failed += 1;
         console.error("방문 통계 보관 만료 정리 실패", error);
+    }
+}
+
+// 처리방침 「보유 기간」 에 적은 나머지 기록 — 처리한 신고(신고된 글 사본 포함) · 뮤즈캣에 보낸 요청 · 보내기를 마친 알림은 6개월,
+// 만료된 OAuth 코드 · 토큰은 만료 하루 뒤(만료 직후 들어온 요청을 거절 사유로 구분하려고 하루를 둔다)
+async function cleanExpiredRecords(
+    now: Date,
+    cutoff: Date,
+    result: PrivacyRetentionResult
+) {
+    const steps: [string, () => Promise<void>][] = [
+        [
+            "처리한 신고",
+            async () => {
+                const { count } = await db.communityOpinionReport.deleteMany({
+                    where: { status: "resolved", updatedAt: { lte: cutoff } },
+                });
+                result.opinionReportsDeleted = count;
+            },
+        ],
+        [
+            "뮤즈캣 요청 기록",
+            async () => {
+                const { count } = await db.musecatAction.deleteMany({
+                    where: { createdAt: { lte: cutoff } },
+                });
+                result.musecatActionsDeleted = count;
+            },
+        ],
+        [
+            "파트너 알림 대기열",
+            async () => {
+                const { count } = await db.partnerOutboxMessage.deleteMany({
+                    where: {
+                        status: { in: ["delivered", "dead"] },
+                        createdAt: { lte: cutoff },
+                    },
+                });
+                result.partnerOutboxDeleted = count;
+            },
+        ],
+        [
+            "만료된 OAuth 코드 · 토큰",
+            async () => {
+                const expired = { expiresAt: { lt: subDays(now, 1) } };
+                const counts = await Promise.all([
+                    db.oAuthAuthorizationCode.deleteMany({ where: expired }),
+                    db.oAuthAccessToken.deleteMany({ where: expired }),
+                    db.oAuthRefreshToken.deleteMany({ where: expired }),
+                ]);
+                result.oauthCredentialsDeleted = counts.reduce(
+                    (sum, { count }) => sum + count,
+                    0
+                );
+            },
+        ],
+    ];
+    for (const [label, run] of steps) {
+        try {
+            await run();
+        } catch (error) {
+            result.failed += 1;
+            console.error(`${label} 보관 만료 정리 실패`, error);
+        }
     }
 }
 
@@ -175,6 +243,10 @@ export async function runPrivacyRetention(
         analyticsSaltsDeleted: 0,
         analyticsCountsDeleted: 0,
         orphanUploadsDeleted: 0,
+        opinionReportsDeleted: 0,
+        musecatActionsDeleted: 0,
+        partnerOutboxDeleted: 0,
+        oauthCredentialsDeleted: 0,
         failed: 0,
     };
 
@@ -240,6 +312,7 @@ export async function runPrivacyRetention(
     }
 
     await cleanAnalytics(now, result);
+    await cleanExpiredRecords(now, cutoff, result);
     await cleanOrphanUploads(now, result);
 
     return result;

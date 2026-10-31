@@ -9,6 +9,12 @@ export default async function Footer() {
         <footer className="nl-metadata flex min-h-nl-control-compact items-center gap-nl-12 border-t-nl-stroke border-nl-divider bg-nl-surface px-nl-16 py-nl-8 text-nl-subdued">
             <span>&copy; 2026 NosLog</span>
             <IntentLink
+                href={getLocalizedHref("/terms", locale)}
+                className="transition-colors duration-nl-state hover:text-nl-content"
+            >
+                {t("footer.terms")}
+            </IntentLink>
+            <IntentLink
                 href={getLocalizedHref("/privacy", locale)}
                 className="transition-colors duration-nl-state hover:text-nl-content"
             >

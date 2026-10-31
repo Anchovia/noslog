@@ -54,6 +54,9 @@ function messages(globals: Record<string, unknown>) {
             : "ko"
     );
 }
+function termsName(t: ReturnType<typeof messages>) {
+    return t["onboarding.termsConsent"].replace("{terms}", t["auth.terms"]);
+}
 async function profile(canvas: HTMLElement, globals: Record<string, unknown>) {
     const c = within(canvas);
     const t = messages(globals);
@@ -64,6 +67,10 @@ async function profile(canvas: HTMLElement, globals: Record<string, unknown>) {
     await userEvent.click(
         c.getByRole("radio", { name: t["onboarding.country.jp"] })
     );
+    await userEvent.click(
+        c.getByRole("checkbox", { name: t["onboarding.ageConfirm"] })
+    );
+    await userEvent.click(c.getByRole("checkbox", { name: termsName(t) }));
     await userEvent.click(
         c.getByRole("button", { name: t["onboarding.next"] })
     );
@@ -96,6 +103,64 @@ export const RequiredErrors: Story = {
         });
         await expect(input).toHaveAttribute("aria-invalid", "true");
         await expect(input).toHaveFocus();
+        await expect(args.submitAction).not.toHaveBeenCalled();
+    },
+};
+export const AgeRequired: Story = {
+    play: async ({ canvasElement, globals, args }) => {
+        const c = within(canvasElement);
+        const t = messages(globals);
+        await userEvent.type(
+            c.getByRole("textbox", { name: t["onboarding.nickname"] }),
+            "Noslog Tester"
+        );
+        await userEvent.click(
+            c.getByRole("radio", { name: t["onboarding.country.jp"] })
+        );
+        await userEvent.click(c.getByRole("checkbox", { name: termsName(t) }));
+        await userEvent.click(
+            c.getByRole("button", { name: t["onboarding.next"] })
+        );
+        const age = c.getByRole("checkbox", {
+            name: t["onboarding.ageConfirm"],
+        });
+        await waitFor(() => expect(age).toHaveFocus());
+        await expect(age).toHaveAttribute("aria-invalid", "true");
+        await expect(await c.findByRole("alert")).toHaveTextContent(
+            t["onboarding.error.ageRequired"]
+        );
+        await expect(c.getByRole("heading", { level: 1 })).toHaveTextContent(
+            t["onboarding.title"]
+        );
+        await expect(args.submitAction).not.toHaveBeenCalled();
+    },
+};
+export const TermsRequired: Story = {
+    play: async ({ canvasElement, globals, args }) => {
+        const c = within(canvasElement);
+        const t = messages(globals);
+        await userEvent.type(
+            c.getByRole("textbox", { name: t["onboarding.nickname"] }),
+            "Noslog Tester"
+        );
+        await userEvent.click(
+            c.getByRole("radio", { name: t["onboarding.country.jp"] })
+        );
+        await userEvent.click(
+            c.getByRole("checkbox", { name: t["onboarding.ageConfirm"] })
+        );
+        await userEvent.click(
+            c.getByRole("button", { name: t["onboarding.next"] })
+        );
+        const terms = c.getByRole("checkbox", { name: termsName(t) });
+        await waitFor(() => expect(terms).toHaveFocus());
+        await expect(terms).toHaveAttribute("aria-invalid", "true");
+        await expect(await c.findByRole("alert")).toHaveTextContent(
+            t["onboarding.error.termsRequired"]
+        );
+        await expect(
+            c.getByRole("link", { name: t["auth.terms"] })
+        ).toHaveAttribute("target", "_blank");
         await expect(args.submitAction).not.toHaveBeenCalled();
     },
 };
@@ -150,6 +215,10 @@ export const NicknameTaken: Story = {
                 name: t["onboarding.country.kr"],
             })
         );
+        await userEvent.click(
+            c.getByRole("checkbox", { name: t["onboarding.ageConfirm"] })
+        );
+        await userEvent.click(c.getByRole("checkbox", { name: termsName(t) }));
         await userEvent.click(
             c.getByRole("button", { name: t["onboarding.next"] })
         );

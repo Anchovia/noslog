@@ -195,13 +195,12 @@ export default function TierBrowserPage({
                   count: selected.length - 1,
               });
     }
-    // 결과 수 — 폰은 악곡 목록처럼 제목(스위처) 아래 메타 글줄 맨 앞, Wide 는 정렬 · 보기 툴바 아래(악곡 목록과 같은 자리)
-    const countClass = wide ? "nl-body-secondary" : "nl-metadata";
+    // 결과 수 — 폰만 제목(스위처) 아래 메타 글줄 맨 앞에 쓴다. Wide 는 쓰지 않는다
     const countText = pending ? (
         // 글자 대신 결과 수 자리 스켈레톤(안내는 화면 읽기에만)
         <>
             <span className="sr-only">{t("tiers.loading")}</span>
-            <SkeletonText className={countClass} width="s" />
+            <SkeletonText className="nl-metadata" width="s" />
         </>
     ) : data?.list ? (
         t("tiers.songCount", {
@@ -209,11 +208,6 @@ export default function TierBrowserPage({
         })
     ) : (
         ""
-    );
-    const resultCount = (
-        <p className={`${countClass} nl-muted`} role="status">
-            {countText}
-        </p>
     );
     // 제목 아래 메타 글줄(2026-09-22 A) — 「2,159곡 · 9월 2일 업데이트 · 안내」. Wide 는 곡 수 없이 업데이트 · 안내
     const updated = data?.list ? new Date(data.list.updatedAt) : null;
@@ -530,16 +524,14 @@ export default function TierBrowserPage({
                             ) : null}
                             {wide ? viewSwitch : null}
                         </div>
-                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
-                        {wide ? (
-                            resultCount
-                        ) : (
+                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M */}
+                        {!wide ? (
                             <div className="nl-tier-scope">
                                 {sortMenu}
                                 {stripSelect}
                                 {viewSwitch}
                             </div>
-                        )}
+                        ) : null}
                     </div>
                     <AppliedTokens
                         label={t("tiers.conditions")}

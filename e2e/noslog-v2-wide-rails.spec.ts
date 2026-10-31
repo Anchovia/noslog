@@ -128,12 +128,10 @@ for (const locale of ["ko", "ja", "en"]) {
                 ).toBeLessThanOrEqual(1200);
                 await expectNoHorizontalOverflow(page);
                 if (tier) {
-                    // Wide = 정렬 · 띠 값 · 보기 전환 툴바 →12→ 결과 수(가이드 「서열표」), 그 아래 폭은 결과 수 없음
+                    // Wide = 정렬 · 띠 값 · 보기 전환 툴바, 결과 수는 어느 폭에서도 결과 영역에 없다(가이드 「서열표」)
                     const results = page.locator(".nl-tier-results");
                     const toolbar = results.locator(".nl-tier-toolbar");
-                    await expect(results.getByRole("status")).toHaveCount(
-                        width >= 1056 ? 1 : 0
-                    );
+                    await expect(results.getByRole("status")).toHaveCount(0);
                     if (width >= 1056) {
                         const sort = (await toolbar
                             .locator(".nl-filter-trigger")
@@ -141,9 +139,6 @@ for (const locale of ["ko", "ja", "en"]) {
                             .boundingBox())!;
                         const view = (await toolbar
                             .locator(".nl-segments")
-                            .boundingBox())!;
-                        const count = (await results
-                            .getByRole("status")
                             .boundingBox())!;
                         const row = (await toolbar.boundingBox())!;
                         expect(sort.x).toBeCloseTo(row.x, 1);
@@ -154,9 +149,6 @@ for (const locale of ["ko", "ja", "en"]) {
                         expect(sort.y + sort.height / 2).toBeCloseTo(
                             view.y + view.height / 2,
                             1
-                        );
-                        expect(count.y).toBeGreaterThanOrEqual(
-                            row.y + row.height
                         );
                     }
                 }

@@ -4,6 +4,8 @@ import {
     buildPatternTendency,
     type PatternMetricRow,
 } from "@/features/music/lib/pattern-tendency";
+import musicCatalog from "@/prisma/data/music-catalog.json";
+import { songMeterLevel } from "@/lib/chart-pattern/meterRecord";
 import {
     computePatternMetrics,
     isMeterKnown,
@@ -51,17 +53,48 @@ const chart = (
     notes,
 });
 
-const known = { meterKnown: true };
+const known = { meterKnown: true, songMeter: null };
 const range = (count: number) => Array.from({ length: count }, (_, i) => i);
 
 describe("pattern metrics", () => {
-    it("scores rising single notes as stairs, not repetition", () => {
+    it("scores single notes moving 1–3 keys one way as stairs, not repetition", () => {
         const metrics = computePatternMetrics(
             chart(range(32).map((i) => note(i * 120, (i % 8) * 3))),
             known
         );
         expect(metrics.stairs).toBeGreaterThan(0);
         expect(metrics.repetition).toBe(0);
+    });
+
+    it("does not count leaps wider than three keys as stairs", () => {
+        const metrics = computePatternMetrics(
+            chart(range(32).map((i) => note(i * 120, (i % 4) * 6))),
+            known
+        );
+        expect(metrics.stairs).toBe(0);
+    });
+
+    it("counts stairs that hit each key twice", () => {
+        const metrics = computePatternMetrics(
+            chart(
+                range(32).map((i) => note(i * 120, (Math.floor(i / 2) % 8) * 3))
+            ),
+            known
+        );
+        expect(metrics.stairs).toBeGreaterThan(0);
+    });
+
+    it("leaves glissando notes out of stairs", () => {
+        const metrics = computePatternMetrics(
+            chart(
+                range(32).map((i) => ({
+                    ...note(i * 120, (i % 8) * 3),
+                    type: "glissando" as const,
+                }))
+            ),
+            known
+        );
+        expect(metrics.stairs).toBe(0);
     });
 
     it("scores the same key hit again as repetition, not stairs", () => {
@@ -71,6 +104,14 @@ describe("pattern metrics", () => {
         );
         expect(metrics.repetition).toBeGreaterThan(0);
         expect(metrics.stairs).toBe(0);
+    });
+
+    it("needs the key hit again at least twice in a row for repetition", () => {
+        const pairs = range(16).flatMap((i) => [
+            note(i * 960, 12),
+            note(i * 960 + 120, 12),
+        ]);
+        expect(computePatternMetrics(chart(pairs), known).repetition).toBe(0);
     });
 
     it("gives faster repetition a larger score", () => {
@@ -116,29 +157,117 @@ describe("pattern metrics", () => {
         expect(computePatternMetrics(chart(run), known).offset).toBe(0);
     });
 
-    it("measures meter changes from time signatures", () => {
-        const notes = range(16).map((i) => note(i * 480, 12));
+    it("grades meter changes from time signatures entered by hand", () => {
+        const notes = range(40).map((i) => note(i * 480, 12));
+        const at = (tick: number, numerator: number): ChartTimingPoint => ({
+            ...four,
+            id: `t${tick}`,
+            tick,
+            numerator,
+        });
+        // 4/4 아홉 마디 뒤 3/4 한 마디: 10% 미만이라 적음
+        expect(
+            computePatternMetrics(
+                chart(notes, [four, at(1920 * 9, 3), at(1920 * 9 + 1440, 4)]),
+                known
+            ).chords
+        ).toBe(1);
+        // 주 박자가 아닌 마디가 30% 를 넘으면 많음
+        expect(
+            computePatternMetrics(chart(notes, [four, at(1920 * 5, 3)]), known)
+                .chords
+        ).toBe(3);
+    });
+
+    it("uses the song record when the chart has one time signature", () => {
+        const single = chart(range(16).map((i) => note(i * 480, 12)));
+        expect(computePatternMetrics(single, known).chords).toBeNull();
+        expect(
+            computePatternMetrics(single, { meterKnown: true, songMeter: 2 })
+                .chords
+        ).toBe(2);
+        expect(
+            computePatternMetrics(single, { meterKnown: true, songMeter: 0 })
+                .chords
+        ).toBe(0);
+    });
+
+    it("ignores time signatures of charts straight from video", () => {
+        expect(isMeterKnown("vid2bmap")).toBe(false);
+        expect(isMeterKnown("manual")).toBe(true);
+        expect(isMeterKnown(undefined)).toBe(true);
         const threeFour: ChartTimingPoint = {
             ...four,
             id: "t1",
             tick: 1920 * 3,
-            timeMs: 4800,
             numerator: 3,
         };
-        expect(computePatternMetrics(chart(notes), known).chords).toBe(0);
+        const notes = range(16).map((i) => note(i * 480, 12));
         expect(
-            computePatternMetrics(chart(notes, [four, threeFour]), known).chords
-        ).toBeGreaterThan(0);
+            computePatternMetrics(chart(notes, [four, threeFour]), {
+                meterKnown: false,
+                songMeter: null,
+            }).chords
+        ).toBeNull();
     });
 
-    it("leaves meter changes unknown for charts straight from video", () => {
-        expect(isMeterKnown("vid2bmap")).toBe(false);
-        expect(isMeterKnown("manual")).toBe(true);
-        expect(isMeterKnown(undefined)).toBe(true);
-        expect(
-            computePatternMetrics(chart([note(0, 12)]), { meterKnown: false })
-                .chords
-        ).toBeNull();
+    it("counts tempo changes between sections of a beat or longer", () => {
+        const notes = range(40).map((i) => note(i * 480, 12));
+        const at = (tick: number, bpm: number): ChartTimingPoint => ({
+            ...four,
+            id: `t${tick}`,
+            tick,
+            bpm,
+        });
+        const changes = (points: ChartTimingPoint[]) =>
+            computePatternMetrics(chart(notes, points), known).tempoChanges;
+        expect(changes([four])).toBe(0);
+        expect(changes([four, at(1920, 180), at(3840, 150)])).toBe(2);
+        // 2% 안의 흔들림, 한 박이 안 되는 구간, 2배 · 절반은 세지 않는다
+        expect(changes([four, at(1920, 152)])).toBe(0);
+        expect(changes([four, at(1920, 180), at(2000, 150)])).toBe(0);
+        expect(changes([four, at(1920, 300), at(3840, 150)])).toBe(0);
+    });
+
+    it("counts notes by type", () => {
+        const typed = (tick: number, type: ChartNote["type"]) => ({
+            ...note(tick, 12),
+            type,
+        });
+        const metrics = computePatternMetrics(
+            chart([
+                typed(0, "standard"),
+                typed(480, "tenuto"),
+                typed(960, "tenuto"),
+                typed(1440, "glissando"),
+                typed(1920, "trill"),
+                typed(2400, "trill"),
+                typed(2880, "trill"),
+            ]),
+            known
+        );
+        expect(metrics.tenutoCount).toBe(2);
+        expect(metrics.glissandoCount).toBe(1);
+        expect(metrics.trillCount).toBe(3);
+    });
+
+    it("reads the song meter record by music index", () => {
+        const truth = musicCatalog.find(
+            (music) => music.title === "TRUTH behind U"
+        )!;
+        expect(songMeterLevel(truth.index)).toBe(3);
+        expect(songMeterLevel("missing")).toBeNull();
+    });
+
+    it("keeps songs with no confirmed meter out of the record", () => {
+        const kaijin = musicCatalog.find((music) =>
+            music.title.startsWith("海神")
+        )!;
+        expect(songMeterLevel(kaijin.index)).toBe(3);
+        const unmentioned = musicCatalog.find(
+            (music) => music.title === "女神の微睡"
+        )!;
+        expect(songMeterLevel(unmentioned.index)).toBeNull();
     });
 });
 
@@ -170,6 +299,10 @@ describe("pattern strength", () => {
             polyrhythm: 0,
             offset: 0,
             chords: null,
+            tempoChanges: 3,
+            tenutoCount: 4,
+            glissandoCount: 5,
+            trillCount: 6,
         });
         const rows = [
             row(1, "Hard", 10),
@@ -179,7 +312,11 @@ describe("pattern strength", () => {
         const tendency = buildPatternTendency(rows, 1);
         expect(tendency?.difficulty.stairs).toBe(0.5);
         expect(tendency?.all.stairs).toBe(0.25);
-        expect(tendency?.all.chords).toBeNull();
+        expect(tendency?.meter).toBeNull();
+        expect(tendency?.tempoChanges).toBe(3);
+        expect(tendency?.tenutoCount).toBe(4);
+        expect(tendency?.glissandoCount).toBe(5);
+        expect(tendency?.trillCount).toBe(6);
         expect(buildPatternTendency(rows, 9)).toBeNull();
     });
 });
