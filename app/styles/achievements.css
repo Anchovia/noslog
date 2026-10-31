@@ -184,7 +184,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: var(--nl-spacing-4) var(--nl-spacing-8);
+    gap: 0 var(--nl-spacing-8);
     min-width: 0;
 }
 
