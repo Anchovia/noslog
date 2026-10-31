@@ -5,6 +5,7 @@ import { Check, ChevronDown } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { overlayPosition } from "@/components/ui/overlay-position";
+import { useSelectOpen } from "@/components/ui/use-select-open";
 import type { TierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import {
     normalizeTierModeGoal,
@@ -32,8 +33,10 @@ export default function TierListSwitcher({
     const t = useTranslations();
     const name = (list: TierList) =>
         t("tiers.goalOption", { goal: tierListLabel(list.mode, list.goal) });
+    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
         <Select.Root
+            {...openState}
             value={encode(value)}
             onValueChange={(next) => {
                 const [mode, goal] = next.split(":") as [
@@ -59,6 +62,7 @@ export default function TierListSwitcher({
                 <div className="noslog-ui">
                     <Select.Content
                         className="nl-select-menu"
+                        onEscapeKeyDown={onEscapeKeyDown}
                         position="popper"
                         sideOffset={overlayPosition.sideOffset}
                         align="start"

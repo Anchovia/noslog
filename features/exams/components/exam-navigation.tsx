@@ -13,6 +13,7 @@ import type {
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { useSelectOpen } from "@/components/ui/use-select-open";
 
 export default function ExamNavigation({
     mode,
@@ -33,6 +34,7 @@ export default function ExamNavigation({
     getState: (exam: ExamDashboardItem) => ReactNode;
 }) {
     const t = useTranslations();
+    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
         <div className="nl-exam-navigation">
             <SegmentedControl
@@ -60,6 +62,7 @@ export default function ExamNavigation({
                         {t("exams.select")}
                     </label>
                     <Select.Root
+                        {...openState}
                         value={selected.slug}
                         onValueChange={(slug) => {
                             const exam = exams.find(
@@ -81,6 +84,7 @@ export default function ExamNavigation({
                         <Select.Portal>
                             <Select.Content
                                 className="noslog-ui nl-exam-select__popup"
+                                onEscapeKeyDown={onEscapeKeyDown}
                                 position="popper"
                                 sideOffset={overlayPosition.sideOffset}
                                 collisionPadding={

@@ -70,6 +70,22 @@ export const EscapeReopens: Story = {
         await userEvent.keyboard("{Escape}");
     },
 };
+export const PressTriggerCloses: Story = {
+    play: async ({ canvasElement }) => {
+        const trigger = within(canvasElement).getByRole("combobox", {
+            name: "난이도",
+        });
+        await userEvent.click(trigger);
+        await screen.findByRole("listbox");
+        // 열린 동안 Radix 가 본문 포인터를 막아 두므로 검사를 끄고 누른다
+        await userEvent.click(trigger, { pointerEventsCheck: 0 });
+        await expect(trigger).toHaveAttribute("aria-expanded", "false");
+        // 닫힌 뒤 같은 누름이 다시 열지 않는다
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        await expect(trigger).toHaveAttribute("aria-expanded", "false");
+        await expect(screen.queryByRole("listbox")).toBeNull();
+    },
+};
 export const Outlined: Story = { args: { outlined: true } };
 export const Compact: Story = { args: { size: "sm" } };
 export const Disabled: Story = { args: { disabled: true } };
