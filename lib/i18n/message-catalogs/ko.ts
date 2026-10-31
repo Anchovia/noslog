@@ -176,7 +176,6 @@ export const koMessages = {
     "pattern.computed":
         "공개 채보의 노트 배치로 계산한 값입니다. 같은 기준 채보 가운데 상위 1%의 중앙값을 100%로 둡니다.",
     "pattern.computedNone": "아직 계산되지 않았습니다",
-    "pattern.computedMissing": "변박을 확인하지 못한 곡은 비워 둡니다.",
     "pattern.meter.0": "없음",
     "pattern.meter.1": "적음",
     "pattern.meter.2": "보통",

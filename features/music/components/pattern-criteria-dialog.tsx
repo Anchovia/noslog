@@ -86,9 +86,11 @@ export default function PatternCriteriaDialog({
                     ))}
                 </dl>
             </section>
-            <p className="nl-metadata nl-metadata--long">
-                {t(computed ? "pattern.computedMissing" : "pattern.scale")}
-            </p>
+            {!computed && (
+                <p className="nl-metadata nl-metadata--long">
+                    {t("pattern.scale")}
+                </p>
+            )}
         </ModalDialog>
     );
 }
