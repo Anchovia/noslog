@@ -29,7 +29,7 @@
 
 ## 개수 배지
 
-`nl-filter-count` — 「필터」 트리거 안 적용 그룹 수. 개수 전용이라 태그와 다른 모양이다: 원 20 · 면 `surface/control`(트리거 면 위에서 보이게) · 글자 `nl-metadata`. 점수 핀의 「+N」 도 같은 모양 + 1px `border/divider`.
+`nl-filter-count` — 「필터」 트리거 안 적용 그룹 수. 개수 전용이라 태그와 다른 모양이다: 원 20 · 글자 `nl-metadata`. 트리거 안에서는 면 `primary/default` · 글자 `primary/on-primary` · 굵기 600(트리거 면 `surface/control` 과 같은 색이면 원이 안 보인다). 아이콘 트리거에서는 오른쪽 위 모서리에 4 걸치고 둘레에 2px `surface/canvas` 링을 둔다([결정](../../decisions/2026-10-31-filter-count-inverted-badge.md)). 점수 핀의 「+N」 은 면 `surface/control` + 1px `border/divider` 그대로.
 
 ## 새 소식 점
 

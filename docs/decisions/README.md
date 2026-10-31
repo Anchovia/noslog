@@ -78,6 +78,7 @@
 | 2026-10-31 | [합격 인증 찍을 것 번호 목록](./2026-10-31-exam-proof-checklist-number.md)                                                                                                     | 디자인 · 화면(검정) |
 | 2026-10-31 | [설정 테마 칸 안내 문구](./2026-10-31-settings-theme-device-copy.md)                                                                                                           | 디자인 · 화면       |
 | 2026-10-31 | [Discord 연결을 뮤즈캣과 같은 줄 · 상세로](./2026-10-31-settings-discord-connection-detail.md)                                                                                 | 디자인 · 화면       |
+| 2026-10-31 | [필터 개수 배지를 반전 면으로](./2026-10-31-filter-count-inverted-badge.md)                                                                                                    | 디자인              |
 | 2026-10-30 | [공지 글 배너를 본문과 따로 둔 칸으로](./2026-10-30-announcement-banner.md)                                                                                                    | 기능 · 화면(공지)   |
 | 2026-10-30 | [패턴 경향 계산을 NOSTALGIA 플레이에 맞게 다시](./2026-10-30-pattern-tendency-v2.md) (일부 대체됨)                                                                             | 기능                |
 | 2026-10-30 | [개인정보 처리방침 개정 — 법정 항목 순서 · 표 · 번역 동의](./2026-10-30-privacy-policy-rewrite.md)                                                                             | 기능                |
