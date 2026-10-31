@@ -322,7 +322,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-judgement-label {
     display: inline-flex;
