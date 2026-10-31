@@ -107,7 +107,7 @@ export const koMessages = {
     "ranking.playerCount": "플레이어 수",
     "ranking.avatar": "프로필 이미지",
     "ranking.player": "플레이어",
-    "ranking.grade": "등급",
+    "ranking.grade": "랭크",
     "ranking.unknownPlayer": "이름 없는 사용자",
     "ranking.signIn": "로그인하고 내 순위 확인",
     "ranking.range": "전체 {total}명 중 {first}–{last}번째 기록",
@@ -2368,7 +2368,7 @@ export const koMessages = {
     "partner.consent.item.ranks.help": "국가 · 전체 순위",
     "partner.consent.item.song_records": "곡별 기록",
     "partner.consent.item.song_records.help":
-        "곡 · 난이도마다 최고 점수 · Grd · 등급. 형식을 맞추는 중이라 아직 보낼 수 없어요",
+        "곡 · 난이도마다 최고 점수 · Grd · 랭크. 형식을 맞추는 중이라 아직 보낼 수 없어요",
     "partner.consent.item.recent_plays": "최근 플레이",
     "partner.consent.item.recent_plays.help": "최근 50곡 · 플레이 시각",
     "partner.consent.privateScores":

@@ -23,7 +23,7 @@
 | 순위         | 순위표와 같음 — 1 · 2 · 3 = `exam/tier-top` · `high` · `mid`, 그 밖 `content/subdued`                                                                                                               |
 | 점수         | 점수 목표 색 `--nl-score-goal-*` — 950k 이상 S 노랑 · 990k 이상 살구 · 100만 Pianist 분홍(FC 무시)                                                                                                  |
 | Grd · 레이팅 | 구간 색 `--nl-grade-band-1…5`(기준값 `GRADE_BAND_CUTS`) — 6,000 아래 기본 · 6,000 판정 NEAR 파랑 · 6,500 GOOD 하늘 · 7,000 S 노랑 · 7,500 990k 살구 · 8,000 Pianist 분홍. 두 모드 · 두 값 같은 기준 |
-| 등급         | S 노랑 · P 분홍 · A+ · A · B 는 별칭 `--nl-score-grade-*`(A+ = `difficulty/text-expert` · A = `difficulty/expert` · B = `local-data/single`, 막대 색에만)                                           |
+| 랭크         | S 노랑 · P 분홍 · A+ · A · B 는 별칭 `--nl-score-grade-*`(A+ = `difficulty/text-expert` · A = `difficulty/expert` · B = `local-data/single`, 막대 색에만)                                           |
 | 최대 콤보    | FC(fc_type 2 이상 · Pianist)면 `achievement/full-combo` 초록                                                                                                                                        |
 
 - 단계가 이어지는 값(서열 값)은 `tone` 대신 항목 `color` 로 값 글자색을 직접 준다.

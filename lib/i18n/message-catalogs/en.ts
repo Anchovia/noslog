@@ -110,7 +110,7 @@ export const enMessages = {
     "ranking.playerCount": "Players",
     "ranking.avatar": "Profile image",
     "ranking.player": "Player",
-    "ranking.grade": "Grade",
+    "ranking.grade": "Rank",
     "ranking.unknownPlayer": "Unnamed user",
     "ranking.signIn": "Sign in to see my rank",
     "ranking.range": "Records {first}–{last} of {total} players",
