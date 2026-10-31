@@ -7,7 +7,7 @@
         "dev": "next dev",
         "prebuild": "npm run generate:jacket-manifest",
         "build": "next build",
-        "vercel-build": "npm run db:migrate:deploy && npm run build",
+        "vercel-build": "npm run db:migrate:deploy && npm run db:backfill:pattern-metrics && npm run build",
         "start": "next start",
         "postinstall": "prisma generate",
         "db:migrate:deploy": "prisma migrate deploy",
