@@ -170,16 +170,8 @@ export default function ExamProofUpload({
                                     "passLabel",
                                     "playerName",
                                 ] as const
-                            ).map((key, index) => (
-                                <li key={key}>
-                                    <span
-                                        className="nl-sync-step__number nl-emphasis-label"
-                                        aria-hidden
-                                    >
-                                        {index + 1}
-                                    </span>
-                                    <span>{t(`exams.proof.${key}`)}</span>
-                                </li>
+                            ).map((key) => (
+                                <li key={key}>{t(`exams.proof.${key}`)}</li>
                             ))}
                         </ol>
                     </div>
