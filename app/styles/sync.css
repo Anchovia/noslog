@@ -285,7 +285,8 @@
     align-items: center;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-sync-overview-step > .nl-sync-step__number {
+.noslog-ui .nl-sync-overview-step > .nl-sync-step__number,
+.noslog-ui .nl-exam-proof__checklist li > .nl-sync-step__number {
     background: none;
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
     color: var(--nl-content-subdued);

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Camera, Check, ChevronRight } from "lucide-react";
+import { Camera, ChevronRight } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -161,7 +161,7 @@ export default function ExamProofUpload({
                         <p className="nl-body-secondary nl-muted">
                             {t("exams.proof.intro")}
                         </p>
-                        <ul className="nl-exam-proof__checklist nl-body-secondary">
+                        <ol className="nl-exam-proof__checklist nl-body-secondary">
                             {(
                                 [
                                     "finalResult",
@@ -170,16 +170,18 @@ export default function ExamProofUpload({
                                     "passLabel",
                                     "playerName",
                                 ] as const
-                            ).map((key) => (
+                            ).map((key, index) => (
                                 <li key={key}>
-                                    <Check
-                                        className="nl-icon-small"
+                                    <span
+                                        className="nl-sync-step__number nl-emphasis-label"
                                         aria-hidden
-                                    />
-                                    {t(`exams.proof.${key}`)}
+                                    >
+                                        {index + 1}
+                                    </span>
+                                    <span>{t(`exams.proof.${key}`)}</span>
                                 </li>
                             ))}
-                        </ul>
+                        </ol>
                     </div>
                     {exam.submissionStatus === "rejected" ? (
                         <StatusMessage

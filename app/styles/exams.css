@@ -489,11 +489,13 @@
 }
 .noslog-ui .nl-exam-proof__checklist li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-exam-proof__checklist svg {
-    color: var(--nl-content-subdued);
+.noslog-ui .nl-exam-proof__checklist li > span:last-child {
+    display: flex;
+    align-items: center;
+    min-height: var(--nl-icon-large);
 }
 .noslog-ui .nl-exam-proof__guidance {
     display: flex;
