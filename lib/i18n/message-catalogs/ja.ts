@@ -2259,7 +2259,7 @@ export const jaMessages = {
     "achievement.name.cats": "猫の下僕",
     "achievement.name.food": "はらぺこピアニスト",
     "achievement.name.keyboard": "黒鍵と白鍵",
-    "achievement.name.all-difficulty": "全譜面制覇",
+    "achievement.name.all-difficulty": "ストライク",
     "achievement.name.level-ladder": "ドレミファソラシド",
     "achievement.name.revived-opinion": "埋もれた楽譜",
     "achievement.name.garbage-truck": "お風呂が沸きました",

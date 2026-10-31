@@ -2234,7 +2234,7 @@ export const koMessages = {
     "achievement.name.cats": "고양이 집사",
     "achievement.name.food": "배고픈 피아니스트",
     "achievement.name.keyboard": "흑건 백건",
-    "achievement.name.all-difficulty": "전 난이도",
+    "achievement.name.all-difficulty": "스트라이크",
     "achievement.name.level-ladder": "도레미파솔라시도",
     "achievement.name.revived-opinion": "묵은 채보",
     "achievement.name.garbage-truck": "트럭 후진음",

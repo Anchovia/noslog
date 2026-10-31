@@ -2264,7 +2264,7 @@ export const enMessages = {
     "achievement.name.cats": "Cat Person",
     "achievement.name.food": "Foodie",
     "achievement.name.keyboard": "Ebony and Ivory",
-    "achievement.name.all-difficulty": "Clean Sweep",
+    "achievement.name.all-difficulty": "Strike",
     "achievement.name.level-ladder": "Do-Re-Mi",
     "achievement.name.revived-opinion": "Revival",
     "achievement.name.garbage-truck": "Garbage Day",
