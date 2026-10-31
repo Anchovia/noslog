@@ -4,6 +4,8 @@ SET LOCAL lock_timeout = '5s';
 SET LOCAL statement_timeout = '60s';
 
 -- AlterTable
+-- 다른 표의 시각 칸과 같은 Prisma 기본형(DateTime)에 맞춘다
+-- squawk-ignore prefer-timestamp-tz
 ALTER TABLE "users" ADD COLUMN     "translation_consent_at" TIMESTAMP(3);
 
 COMMIT;
