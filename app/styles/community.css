@@ -154,6 +154,10 @@
     pointer-events: none;
     user-select: none;
 }
+/* 흐린 자리표시 막대는 값이 아니라 드러날 것이 없다. 드러남(clip-path)이 도는 동안 흐림 가장자리가 막대 상자 높이로 잘려 보인다 */
+.noslog-ui .nl-pattern-lock[data-locked] .nl-chart-reveal {
+    animation: none;
+}
 .noslog-ui .nl-pattern-lock__overlay {
     position: absolute;
     inset: 0;
