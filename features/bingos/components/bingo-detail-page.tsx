@@ -148,7 +148,7 @@ export default function BingoDetailPage({
                     ) : null}
                 </header>
 
-                {/* 보상 구조는 펼침 없이 한 줄(2026-09-22) — 필요 줄 · 줄당 · 풀보드 · 총 보상 */}
+                {/* 보상 구조는 펼침 없이 한 줄(2026-09-22) — 필요 줄 · 줄당 · 빙고 완료 · 총 보상 */}
                 <p className="nl-bingo-summary nl-metadata nl-muted">
                     {[
                         t("bingo.requiredLinesLabel", {
