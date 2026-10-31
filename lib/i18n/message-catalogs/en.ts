@@ -1546,6 +1546,10 @@ export const enMessages = {
         "Authenticate with your currently connected Discord account. To use another login account, choose Change login account.",
     "settings.discordRefreshComplete": "Discord information refreshed.",
     "settings.discordChangeComplete": "Login account changed.",
+    "settings.discordScopeTitle": "What NosLog uses on Discord",
+    "settings.discordScope.id": "Account ID",
+    "settings.discordScope.name": "Name · username",
+    "settings.discordScope.avatar": "Profile Image",
     "settings.account": "Account",
     "settings.profileSummary":
         "Nickname · Country or region · Preferred arcade",

@@ -1539,6 +1539,10 @@ export const jaMessages = {
         "現在連携している Discord アカウントで再認証してください。ログインアカウントを変える場合は、ログインアカウントの変更を選択してください。",
     "settings.discordRefreshComplete": "Discord 情報を更新しました。",
     "settings.discordChangeComplete": "ログインアカウントを変更しました。",
+    "settings.discordScopeTitle": "NosLog が Discord で使うもの",
+    "settings.discordScope.id": "アカウント ID",
+    "settings.discordScope.name": "名前 · ユーザー名",
+    "settings.discordScope.avatar": "プロフィール画像",
     "settings.account": "アカウント",
     "settings.profileSummary":
         "ニックネーム・国・地域・お気に入りゲームセンター",

@@ -11,7 +11,9 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { getUser } from "@/lib/user";
 
 import AccountSettings from "./account-settings";
-import ConnectionSettings from "./connection-settings";
+import ConnectionSettings, {
+    DiscordConnectionDetail,
+} from "./connection-settings";
 import ExperienceSettings from "./experience-settings";
 import PrivacySettings from "./privacy-settings";
 import ProfileSettings from "./profile-settings";
@@ -44,18 +46,21 @@ async function AccountSettingsContent({
         return <ProfileSettings user={user} arcades={arcades} />;
     if (category === "privacy")
         return <PrivacySettings initialValues={user.privacy} />;
+    if (partner === "discord")
+        return (
+            <DiscordConnectionDetail
+                displayName={user.discordName}
+                error={error}
+                result={result}
+            />
+        );
     const musecat = await getMusecatSettings(user.id);
     if (partner === "musecat") {
         if (!musecat.visible) redirect(connectionsHref);
         return <MusecatConnectionDetail settings={musecat} />;
     }
     return (
-        <ConnectionSettings
-            displayName={user.discordName}
-            error={error}
-            result={result}
-            musecat={musecat}
-        />
+        <ConnectionSettings displayName={user.discordName} musecat={musecat} />
     );
 }
 
@@ -87,7 +92,10 @@ export default async function SettingsPage({
             category={category}
             authenticated={Boolean(user)}
             // 뮤즈캣 상세는 모드가 꺼져도 연결 기록이 있으면 보이고(없으면 아래에서 연결로 돌려보낸다), 제목 · 뒤로는 상세가 그린다
-            subpage={category === "connections" && params.partner === "musecat"}
+            subpage={
+                category === "connections" &&
+                (params.partner === "musecat" || params.partner === "discord")
+            }
         >
             {category && category !== "experience" ? (
                 <Suspense

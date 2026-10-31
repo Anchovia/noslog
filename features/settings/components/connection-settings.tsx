@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -9,22 +10,66 @@ import {
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
 import DiscordIcon from "@/components/ui/discord-icon";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { StatusMessage } from "@/components/ui/status-message";
 import { MusecatConnectionRow } from "@/features/partner/components/musecat-connection-settings";
 import type { MusecatSettings } from "@/features/partner/server/partner-settings-data";
 
+const DISCORD_DETAIL_QUERY = "?category=connections&partner=discord";
+const DISCORD_SCOPES = ["id", "name", "avatar"] as const;
+
+/** 설정 › 연결 목록 — 줄마다 누르면 상세로 간다. Discord 와 뮤즈캣이 같은 모양 */
 export default function ConnectionSettings({
+    displayName,
+    musecat,
+}: {
+    displayName: string;
+    /** 뮤즈캣 연동(2026-10-20) — visible 일 때만 줄을 보인다 */
+    musecat?: MusecatSettings;
+}) {
+    const t = useTranslations();
+    const href = useLocalizedHref();
+    return (
+        <div className="nl-settings__form">
+            <div className="nl-settings__rows">
+                <IntentLink
+                    className="nl-settings__row"
+                    href={`${href("/settings")}${DISCORD_DETAIL_QUERY}`}
+                >
+                    <span className="nl-settings__row-lead">
+                        <span className="nl-settings__logo" aria-hidden>
+                            <DiscordIcon />
+                        </span>
+                        <span className="nl-settings__row-copy">
+                            <span className="nl-control">Discord</span>
+                            <span className="nl-metadata nl-muted">
+                                {t("settings.loginAccount")} · {displayName}
+                            </span>
+                        </span>
+                    </span>
+                    <ChevronRight
+                        className="nl-settings__row-chevron"
+                        aria-hidden
+                    />
+                </IntentLink>
+                {musecat?.visible ? (
+                    <MusecatConnectionRow settings={musecat} />
+                ) : null}
+            </div>
+        </div>
+    );
+}
+
+/** Discord 연결 상세 — 뮤즈캣 상세와 같은 순서. 로그인 계정이라 「연결 끊기」 대신 새로고침 · 계정 변경을 둔다 */
+export function DiscordConnectionDetail({
     displayName,
     error,
     result,
-    musecat,
 }: {
     displayName: string;
     error?: string;
     result?: string;
-    /** 뮤즈캣 연동(2026-10-20) — visible 일 때만 줄을 보인다 */
-    musecat?: MusecatSettings;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -48,7 +93,7 @@ export default function ConnectionSettings({
         setPending(mode);
         const params = new URLSearchParams({
             mode,
-            returnTo: `${href("/settings")}?category=connections`,
+            returnTo: `${href("/settings")}${DISCORD_DETAIL_QUERY}`,
         });
         // OAuth requires a top-level document navigation to the provider.
         window.location.assign(
@@ -68,45 +113,16 @@ export default function ConnectionSettings({
             : "");
     return (
         <div className="nl-settings__form" aria-busy={pending !== null}>
-            {/* 연결 줄(2026-10-01 D1) — Discord · GitHub · Twitch 식. 로고 · 이름 왼쪽, 버튼 오른쪽 */}
-            <div className="nl-settings__rows">
-                <div className="nl-settings__row nl-settings__row--stack">
-                    <div className="nl-settings__row-lead">
-                        <span className="nl-settings__logo" aria-hidden>
-                            <DiscordIcon />
-                        </span>
-                        <div className="nl-settings__row-copy">
-                            <p className="nl-control">{displayName}</p>
-                            <p className="nl-metadata nl-muted">
-                                Discord · {t("settings.loginAccount")}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="nl-settings__actions">
-                        {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
-                        <ActionButton
-                            variant="secondary"
-                            className="nl-auth-discord"
-                            disabled={pending === "change"}
-                            busy={pending === "refresh"}
-                            busyLabel={t("settings.refreshingDiscord")}
-                            onClick={() => authenticate("refresh")}
-                        >
-                            {t("settings.refreshDiscord")}
-                        </ActionButton>
-                        <Button
-                            ref={changeButton}
-                            variant="secondary"
-                            disabled={pending !== null}
-                            onClick={() => setConfirmChange(true)}
-                        >
-                            {t("settings.changeLoginAccount")}
-                        </Button>
-                    </div>
+            <div className="nl-settings__row-lead">
+                <span className="nl-settings__logo" aria-hidden>
+                    <DiscordIcon />
+                </span>
+                <div className="nl-settings__row-copy">
+                    <h1 className="nl-section-title">Discord</h1>
+                    <span className="nl-metadata nl-muted">
+                        {t("settings.loginAccount")} · {displayName}
+                    </span>
                 </div>
-                {musecat?.visible ? (
-                    <MusecatConnectionRow settings={musecat} />
-                ) : null}
             </div>
             {errorMessage && !confirmChange ? (
                 <StatusMessage
@@ -124,6 +140,45 @@ export default function ConnectionSettings({
                     )}
                 </p>
             ) : null}
+            <section className="nl-settings__zone nl-settings__zone--compact">
+                <h2 className="nl-component-title">
+                    {t("settings.discordScopeTitle")}
+                </h2>
+                <ul className="nl-settings__rows">
+                    {DISCORD_SCOPES.map((scope) => (
+                        <li key={scope} className="nl-settings__row">
+                            <span className="nl-control">
+                                {t(`settings.discordScope.${scope}`)}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+            <div className="nl-settings__zone nl-settings__zone--compact">
+                {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
+                <div className="nl-button-row">
+                    <ActionButton
+                        variant="secondary"
+                        className="nl-auth-discord"
+                        disabled={pending === "change"}
+                        busy={pending === "refresh"}
+                        busyLabel={t("settings.refreshingDiscord")}
+                        onClick={() => authenticate("refresh")}
+                    >
+                        {t("settings.refreshDiscord")}
+                    </ActionButton>
+                </div>
+                <div className="nl-button-row">
+                    <Button
+                        ref={changeButton}
+                        variant="secondary"
+                        disabled={pending !== null}
+                        onClick={() => setConfirmChange(true)}
+                    >
+                        {t("settings.changeLoginAccount")}
+                    </Button>
+                </div>
+            </div>
             <ModalDialog
                 className="nl-settings-dialog"
                 open={confirmChange}

@@ -79,25 +79,23 @@ function PrivacyRows({ t }: { t: Translate }) {
     );
 }
 
-function ConnectionRows({ t }: { t: Translate }) {
+function ConnectionRows() {
     return (
         <div className="nl-settings__rows">
-            <div className="nl-settings__row nl-settings__row--stack">
+            <div className="nl-settings__row">
                 <div className="nl-settings__row-lead">
                     <span className="nl-settings__logo">
                         <DiscordIcon />
                     </span>
                     <div className="nl-settings__row-copy">
-                        <SkeletonText className="nl-control" width="m" />
-                        <p className="nl-metadata nl-muted">
-                            Discord · {t("settings.loginAccount")}
-                        </p>
+                        <p className="nl-control">Discord</p>
+                        <SkeletonText className="nl-metadata" width="m" />
                     </div>
                 </div>
-                <div className="nl-settings__actions">
-                    <ButtonSkeleton label={t("settings.refreshDiscord")} />
-                    <ButtonSkeleton label={t("settings.changeLoginAccount")} />
-                </div>
+                <ChevronRight
+                    className="nl-settings__row-chevron"
+                    aria-hidden
+                />
             </div>
         </div>
     );
@@ -159,7 +157,7 @@ export default async function SettingsLoading({
                 ) : category === "privacy" ? (
                     <PrivacyRows t={t} />
                 ) : category === "connections" ? (
-                    <ConnectionRows t={t} />
+                    <ConnectionRows />
                 ) : (
                     <AccountRows t={t} />
                 )}
