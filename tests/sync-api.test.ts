@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
     dataSyncFindFirst: vi.fn(),
     dataSyncCreate: vi.fn(),
     dataSyncUpdate: vi.fn(),
+    playDataFindMany: vi.fn(),
     musicChartFindMany: vi.fn(),
     processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
@@ -40,6 +41,7 @@ vi.mock("@/lib/db", () => ({
             update: mocks.dataSyncUpdate,
         },
         musicChart: { findMany: mocks.musicChartFindMany },
+        playData: { findMany: mocks.playDataFindMany },
     },
 }));
 vi.mock("@/lib/services/user/update-grade", () => ({
@@ -818,6 +820,18 @@ describe("POST /api/receivePlayerData", () => {
         const sheets = body.totalData!.data.music[0].sheet;
         sheets[1].grade_basic = 100_000_000;
         sheets[2].judge = [400, 30, 15, 5, 0];
+        mocks.playDataFindMany.mockResolvedValue(
+            [12, 13].map((chartId) => ({
+                chartId,
+                gradeBasic: 1,
+                gradeRecital: 1,
+                chart: {
+                    difficulty: "Hard",
+                    noteCount: 500,
+                    levelConstant: 10,
+                },
+            }))
+        );
 
         const response = await POST(createRequest(body));
 
@@ -860,6 +874,19 @@ describe("POST /api/receivePlayerData", () => {
         sheets[1].grade_recital = Math.ceil(maxHard * 1.25) + 1;
         sheets[2].grade_recital = 100_000_000;
 
+        mocks.playDataFindMany.mockResolvedValue(
+            [12, 13].map((chartId) => ({
+                chartId,
+                gradeBasic: 1,
+                gradeRecital: 1,
+                chart: {
+                    difficulty: "Hard",
+                    noteCount: 500,
+                    levelConstant: 10,
+                },
+            }))
+        );
+
         const response = await POST(createRequest(body));
 
         expect(response.status).toBe(200);
@@ -870,6 +897,86 @@ describe("POST /api/receivePlayerData", () => {
             expect.any(Map),
             [12, 13]
         );
+    });
+
+    it("노트 수 · 상수를 모르는 채보도 Grd 절대 상한을 넘으면 저장하지 않는다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue(
+            (["Normal", "Hard", "Expert"] as const).map(
+                (difficulty, index) => ({
+                    id: 11 + index,
+                    musicIdx: "test-music",
+                    difficulty,
+                    noteCount: null,
+                    levelConstant: null,
+                })
+            )
+        );
+        mocks.playDataFindMany.mockResolvedValue([]);
+        const body = requestBody(true);
+        const sheets = body.totalData!.data.music[0].sheet;
+        sheets[0].grade_basic = getMaxBasicGrade(15, 9999, "Normal")! + 1;
+        sheets[1].grade_recital = 100_000_000;
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [expect.objectContaining({ sheet: [sheets[2]] })],
+            10,
+            expect.any(Map),
+            []
+        );
+    });
+
+    it("값 검사에 걸린 채보라도 저장된 기록이 범위 밖이면 남기지 않는다", async () => {
+        const chart = {
+            difficulty: "Hard",
+            noteCount: 500,
+            levelConstant: 10,
+        };
+        mocks.musicChartFindMany.mockResolvedValue(
+            (["Normal", "Hard", "Expert"] as const).map(
+                (difficulty, index) => ({
+                    id: 11 + index,
+                    musicIdx: "test-music",
+                    difficulty,
+                    noteCount: 500,
+                    levelConstant: 10,
+                })
+            )
+        );
+        mocks.playDataFindMany.mockResolvedValue([
+            { chartId: 12, gradeBasic: 1, gradeRecital: null, chart },
+            { chartId: 13, gradeBasic: 100_000_000, gradeRecital: 0, chart },
+        ]);
+        const body = requestBody(true);
+        const sheets = body.totalData!.data.music[0].sheet;
+        sheets[1].grade_recital = 100_000_000;
+        sheets[2].grade_recital = 100_000_000;
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [expect.objectContaining({ sheet: [sheets[0]] })],
+            10,
+            expect.any(Map),
+            [12]
+        );
+    });
+
+    it("같은 채보가 두 번 오면 거절한다", async () => {
+        const body = requestBody(true);
+        const music = body.totalData!.data.music;
+        body.totalData!.data.music = [music[0], music[0]];
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(400);
+        expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
+        expect(mocks.updatePlayData).not.toHaveBeenCalled();
     });
 
     it("등록된 채보가 하나도 없으면 기존 개인 기록을 덮어쓰지 않는다", async () => {

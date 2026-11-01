@@ -28,6 +28,7 @@ import {
     type ChartLimitMap,
     isWithinChartLimits,
     loadChartLimits,
+    selectKeptChartIds,
 } from "@/lib/services/user/chart-limits";
 import { keepTodayGrade, updateGrade } from "@/lib/services/user/update-grade";
 import { updatePlayData } from "@/lib/services/user/update-play-data";
@@ -308,6 +309,19 @@ function dropOutOfRangeSheets(
     return { kept, rejectedChartIds };
 }
 
+// 공식 응답에는 같은 채보가 두 번 오지 않는다. 받으면 클리어 랭크 수가 부푼다
+function hasDuplicateCharts(music: SyncMusicInput[]) {
+    const seen = new Set<string>();
+    for (const item of music) {
+        for (const chart of item.sheet) {
+            const key = `${item["@index"]}:${chart.difficulty}`;
+            if (seen.has(key)) return true;
+            seen.add(key);
+        }
+    }
+    return false;
+}
+
 function joinNotices(...notices: (string | null)[]) {
     const text = notices.filter(Boolean).join(" ");
     return text || null;
@@ -388,6 +402,9 @@ export async function POST(request: NextRequest) {
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
         : null;
+    if (music && hasDuplicateCharts(music)) {
+        return json(copy.invalidPayload, 400);
+    }
     const chartLimits = await loadChartLimits();
     const historyInRange = history.filter((item) =>
         isWithinChartLimits(
@@ -476,7 +493,9 @@ export async function POST(request: NextRequest) {
                     knownMusic,
                     syncId,
                     chartIds,
-                    rejectedChartIds
+                    rejectedChartIds.length > 0
+                        ? await selectKeptChartIds(user.id, rejectedChartIds)
+                        : []
                 ));
                 grades = await refreshDerived(changedChartIds);
                 await updateDummy();

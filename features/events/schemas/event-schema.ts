@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -185,7 +186,10 @@ export function reviewUpdate(
     now: Date,
     publishedAt: Date | null
 ) {
-    const reviewed = { reviewerId, reviewedAt: now };
+    const reviewed = {
+        reviewedById: reviewerId,
+        reviewedAt: now,
+    } satisfies Prisma.CommunityEventUncheckedUpdateManyInput;
     if (decision === "approve")
         return {
             ...reviewed,
