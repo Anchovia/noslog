@@ -31,9 +31,7 @@ export default function FooterLinks({
                     <ExternalLink aria-hidden />
                 </a>
             </div>
-            <p className="nl-footer__notice nl-body-secondary nl-muted">
-                {notice}
-            </p>
+            <p className="nl-footer__notice nl-metadata nl-muted">{notice}</p>
         </>
     );
 }
