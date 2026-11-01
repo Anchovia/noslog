@@ -190,7 +190,7 @@ export const jaMessages = {
     "pattern.computedDefinition.offset":
         "同時押しのように近いものの0.12秒以内でずれたノーツを数えます。前後のノーツとはそのずれの2倍以上離れている必要があります。",
     "pattern.computedDefinition.chords":
-        "拍子の変わり方を、ノスしるべ・BEMANI wiki・ナムウィキの攻略記事から曲ごとに記録したものです。人が拍子を入力した譜面は譜面から数えます。",
+        "主なBPM・拍子から外れている時間の割合で決めます。攻略記事や人が確認した曲はその記録を使います。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",

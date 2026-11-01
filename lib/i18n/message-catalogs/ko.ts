@@ -189,7 +189,7 @@ export const koMessages = {
     "pattern.computedDefinition.offset":
         "동시치기처럼 붙어 있지만 0.12초 안에서 어긋난 노트를 셉니다. 앞뒤 노트와는 그 차이의 두 배 이상 떨어져 있어야 합니다.",
     "pattern.computedDefinition.chords":
-        "박자표가 바뀌는 정도를 ノスしるべ · BEMANI wiki · 나무위키 공략 글로 정한 곡별 기록입니다. 사람이 박자표를 넣은 채보는 채보에서 셉니다.",
+        "주된 BPM · 박자표에서 벗어난 시간의 비율로 매깁니다. 공략 글이나 사람이 확인한 곡은 그 기록을 씁니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",

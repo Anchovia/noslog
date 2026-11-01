@@ -191,7 +191,7 @@ export const enMessages = {
     "pattern.computedDefinition.offset":
         "Counts notes that sit almost together but are off by up to 0.12 seconds. The notes before and after must be at least twice that gap away.",
     "pattern.computedDefinition.chords":
-        "A per-song record of how much the time signature changes, taken from Japanese and Korean community guides. Charts with time signatures entered by hand are measured from the chart.",
+        "Graded by the share of the song spent away from its main BPM and time signature. Songs confirmed in community guides or by a person use that record.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",

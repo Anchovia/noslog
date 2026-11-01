@@ -8,7 +8,7 @@ import type { ChartDocument, ChartHand, ChartNoteType } from "./schema";
 import { sortTimingPoints, tickToMilliseconds } from "./timing";
 
 /** 식이나 계수를 바꾸면 올린다 — 다른 버전 값끼리는 비교하지 않는다 */
-export const PATTERN_METRICS_VERSION = 2;
+export const PATTERN_METRICS_VERSION = 3;
 
 /** 변박 단계 0 없음 · 1 적음 · 2 보통 · 3 많음 */
 export type MeterLevel = 0 | 1 | 2 | 3;
@@ -313,26 +313,37 @@ function offset(heads: Head[]) {
     return loads;
 }
 
-/** 마디 수로 센, 가장 많이 쓰인 박자표가 아닌 마디의 비율 */
+/**
+ * 가장 오래 이어진 BPM · 박자표에서 벗어난 시간의 비율. 한 박이 안 되는 구간은 박 보정이라 빼고,
+ * 2배 · 절반은 영상 추출이 박자선을 두 배로 잡은 것과 구분되지 않아 같은 BPM 으로 본다.
+ */
 function meterChanges(document: ChartDocument) {
     const points = sortTimingPoints(document.timingPoints);
     const end = Math.max(
         points.at(-1)!.tick,
         ...document.notes.map((note) => note.tick + note.durationTicks)
     );
-    const measures = new Map<string, number>();
+    const near = (ratio: number, target: number) =>
+        Math.abs(ratio / target - 1) <= TEMPO_TOLERANCE;
+    const groups: { bpm: number; signature: string; ms: number }[] = [];
     points.forEach((point, index) => {
-        const until = points[index + 1]?.tick ?? end;
-        const length =
-            (document.ticksPerQuarter * 4 * point.numerator) /
-            point.denominator;
-        const count = Math.max(1, Math.ceil((until - point.tick) / length));
-        const key = `${point.numerator}/${point.denominator}`;
-        measures.set(key, (measures.get(key) ?? 0) + count);
+        const ticks = (points[index + 1]?.tick ?? end) - point.tick;
+        if (ticks < document.ticksPerQuarter) return;
+        const signature = `${point.numerator}/${point.denominator}`;
+        const ms = ((ticks / document.ticksPerQuarter) * 60000) / point.bpm;
+        const group = groups.find((candidate) => {
+            const ratio = point.bpm / candidate.bpm;
+            return (
+                candidate.signature === signature &&
+                (near(ratio, 1) || near(ratio, 2) || near(ratio, 0.5))
+            );
+        });
+        if (group) group.ms += ms;
+        else groups.push({ bpm: point.bpm, signature, ms });
     });
-    const counts = [...measures.values()];
-    const total = counts.reduce((sum, count) => sum + count, 0);
-    return (total - Math.max(...counts)) / total;
+    const total = groups.reduce((sum, group) => sum + group.ms, 0);
+    if (total === 0) return 0;
+    return (total - Math.max(...groups.map((group) => group.ms))) / total;
 }
 
 /**
@@ -359,31 +370,21 @@ function tempoChanges(document: ChartDocument) {
     }).length;
 }
 
-/** 사람이 넣은 박자표가 둘 이상일 때의 단계 — 주 박자가 아닌 마디 10% 미만 적음 · 30% 미만 보통 · 그 위 많음 */
+/** 벗어난 시간 0 없음 · 10% 미만 적음 · 30% 미만 보통 · 그 위 많음 */
 function meterLevel(ratio: number): MeterLevel {
+    if (ratio === 0) return 0;
     if (ratio < 0.1) return 1;
     if (ratio < 0.3) return 2;
     return 3;
 }
 
 /**
- * 영상 추출은 박자선만 잡고 마디선을 따로 읽지 않아 박자표가 늘 기본값이다 — 공개본 직전 편집(공개 버전 제외)이
- * 영상 추출 가져오기면 채보의 박자표를 쓰지 않는다. 직전 편집이 없으면 처음부터 사람이 쓴 채보다.
- */
-export function isMeterKnown(lastEditKind: string | undefined) {
-    return lastEditKind !== "vid2bmap";
-}
-
-/**
- * songMeter = 곡별 변박 기록(meterRecord). 공개 채보는 거의 영상 추출이라 박자표가 하나뿐이고,
- * 노트 강세 · BPM 변화 · 분할 전환으로는 변박 곡을 가려내지 못해 사람이 넣은 박자표가 둘 이상일 때만 채보에서 센다.
+ * songMeter = 곡별 변박 기록(meterRecord). 영상 추출 채보는 곡 중간의 박자표 변화가 없어
+ * BPM 이 일정한 변박 곡은 채보에서 나오지 않으므로, 기록이 있으면 기록을 쓴다.
  */
 export function computePatternMetrics(
     document: ChartDocument,
-    {
-        meterKnown,
-        songMeter,
-    }: { meterKnown: boolean; songMeter: MeterLevel | null }
+    { songMeter }: { songMeter: MeterLevel | null }
 ): PatternMetrics {
     const points = sortTimingPoints(document.timingPoints);
     const heads: Head[] = document.notes
@@ -398,7 +399,6 @@ export function computePatternMetrics(
         }))
         .sort((a, b) => a.t - b.t || a.center - b.center);
     const rows = handRows(heads);
-    const ratio = meterKnown ? meterChanges(document) : 0;
     const countType = (type: ChartNoteType) =>
         document.notes.filter((note) => note.type === type).length;
     return {
@@ -406,7 +406,7 @@ export function computePatternMetrics(
         repetition: summarize(repetition(rows)),
         polyrhythm: summarize(polyrhythm(heads, document.ticksPerQuarter)),
         offset: summarize(offset(heads)),
-        chords: ratio > 0 ? meterLevel(ratio) : songMeter,
+        chords: songMeter ?? meterLevel(meterChanges(document)),
         tempoChanges: tempoChanges(document),
         tenutoCount: countType("tenuto"),
         glissandoCount: countType("glissando"),

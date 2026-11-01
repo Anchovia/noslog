@@ -9,7 +9,6 @@ import { PrismaClient } from "@prisma/client";
 import { songMeterLevel } from "../lib/chart-pattern/meterRecord";
 import {
     computePatternMetrics,
-    isMeterKnown,
     PATTERN_METRICS_VERSION,
 } from "../lib/chart-pattern/patternMetrics";
 import { chartDocumentSchema } from "../lib/chart-pattern/schema";
@@ -41,11 +40,6 @@ async function main() {
             publishedRevision: true,
             publishedContent: true,
             chart: { select: { musicIdx: true } },
-            revisions: {
-                where: { kind: { not: "publish" } },
-                orderBy: { number: "desc" },
-                select: { number: true, kind: true },
-            },
         },
     });
     let written = 0;
@@ -59,14 +53,10 @@ async function main() {
             invalid.push(pattern.chartId);
             continue;
         }
-        const lastEdit = pattern.revisions.find(
-            (revision) => revision.number <= publishedRevision
-        );
         const data = {
             version: PATTERN_METRICS_VERSION,
             publishedRevision,
             ...computePatternMetrics(document.data, {
-                meterKnown: isMeterKnown(lastEdit?.kind),
                 songMeter: songMeterLevel(pattern.chart.musicIdx),
             }),
         };
