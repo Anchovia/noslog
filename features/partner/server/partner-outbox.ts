@@ -23,7 +23,8 @@ export type PartnerShareItemName = (typeof PARTNER_SHARE_ITEMS)[number];
 const GIVE_UP_AFTER_MS = 26 * 60 * 60 * 1000;
 const BACKOFF_BASE_MS = 5_000;
 const BACKOFF_CAP_MS = 5 * 60 * 1000;
-const LOCK_SECONDS = 60;
+// 한 번에 20건 × 건당 10초를 다 써도 다음 실행이 같은 건을 집지 않는 길이
+const LOCK_SECONDS = 300;
 
 export async function enqueuePartnerMessage(
     tx: Prisma.TransactionClient,

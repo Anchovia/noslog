@@ -5,6 +5,8 @@ import {
     EDITABLE_DRAFT_STATUSES,
     USER_DRAFT_MAX_NOTES,
     chartCommentInputSchema,
+    chartCommentListQuerySchema,
+    chartRowIdSchema,
     draftReviewSchema,
     saveUserDraftSchema,
 } from "@/features/contributions/schemas/chart-draft-schema";
@@ -95,6 +97,27 @@ describe("시각 댓글", () => {
                 chartId: 3,
                 timeMs: 0,
                 body: "가".repeat(CHART_COMMENT_MAX_LENGTH + 1),
+            }).success
+        ).toBe(false);
+    });
+
+    it("액션의 행 id 인자에 Prisma 조건 객체를 받지 않는다", () => {
+        expect(chartRowIdSchema.safeParse(3).success).toBe(true);
+        expect(chartRowIdSchema.safeParse({ gt: 0 }).success).toBe(false);
+    });
+
+    it("목록 조회 인자에 Prisma 조건 객체를 받지 않는다", () => {
+        expect(
+            chartCommentListQuerySchema.safeParse({ chartId: 3 }).success
+        ).toBe(true);
+        expect(
+            chartCommentListQuerySchema.safeParse({ chartId: { gt: 0 } })
+                .success
+        ).toBe(false);
+        expect(
+            chartCommentListQuerySchema.safeParse({
+                chartId: 3,
+                draftId: { not: 0 },
             }).success
         ).toBe(false);
     });

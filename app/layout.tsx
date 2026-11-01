@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     creator: SITE_NAME,
     publisher: SITE_NAME,
     category: "game",
-    referrer: "origin-when-cross-origin",
+    referrer: "strict-origin-when-cross-origin",
     robots: {
         index: true,
         follow: true,

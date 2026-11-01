@@ -341,11 +341,11 @@ async function recordPendingCatalogCandidates(
         ...(pending.length
             ? [
                   db.musicCatalogCandidate.updateMany({
-                      where: { id: { in: pending } },
+                      // 읽은 뒤 운영자가 반려 · 반영했으면 대기로 되돌리지 않는다
+                      where: { id: { in: pending }, status: "pending" },
                       data: {
                           seenCount: { increment: 1 },
                           lastSeenAt: now,
-                          status: "pending",
                       },
                   }),
               ]

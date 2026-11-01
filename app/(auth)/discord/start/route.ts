@@ -34,6 +34,15 @@ export async function GET(request: NextRequest) {
         (isLocale(cookieLocale)
             ? cookieLocale
             : localeFromAcceptLanguage(request.headers.get("accept-language")));
+    // 다른 사이트의 링크가 진행 중인 인증 값과 재확인 값을 지우지 못하게 한다(Fetch Metadata)
+    if (request.headers.get("sec-fetch-site") === "cross-site") {
+        const url = new URL(
+            session.id ? returnTo : localizePath("/login", locale),
+            request.url
+        );
+        if (!session.id) url.searchParams.set("returnTo", returnTo);
+        return NextResponse.redirect(url);
+    }
     const clientId = serverEnv.DISCORD_CLIENT_ID;
     const redirectUri = serverEnv.DISCORD_REDIRECT_URI;
     if (mode && (!session.id || !session.profileCompleted)) {

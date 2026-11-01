@@ -13,6 +13,10 @@ function withoutQuery(value: unknown) {
     }
 }
 
+function shortText(value: unknown) {
+    return typeof value === "string" ? value.slice(0, 64) : null;
+}
+
 // 브라우저가 보내는 CSP 위반 보고(report-uri) — 함수 로그에 요약 한 줄만 남기고 늘 204
 export async function POST(request: Request) {
     const read = await readJsonBody(request, MAX_REPORT_BYTES);
@@ -24,9 +28,10 @@ export async function POST(request: Request) {
             : undefined;
     if (report) {
         console.warn("CSP violation", {
-            directive:
-                report["effective-directive"] ?? report["violated-directive"],
-            disposition: report.disposition,
+            directive: shortText(
+                report["effective-directive"] ?? report["violated-directive"]
+            ),
+            disposition: shortText(report.disposition),
             blocked: withoutQuery(report["blocked-uri"]),
             document: withoutQuery(report["document-uri"]),
         });

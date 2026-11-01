@@ -8,7 +8,9 @@ import { CONTRIBUTION_POINTS } from "@/features/contributions/contribution-level
 import {
     CHART_COMMENT_DAILY_LIMIT,
     chartCommentInputSchema,
+    chartCommentListQuerySchema,
     type ChartDraftStatus,
+    chartRowIdSchema,
     draftReviewSchema,
     EDITABLE_DRAFT_STATUSES,
     saveUserDraftSchema,
@@ -131,7 +133,8 @@ export async function openMyChartDraft(
     chartId: number
 ): Promise<MyChartDraft | null> {
     const session = await getSession();
-    if (!session.id) return null;
+    if (!session.id || !chartRowIdSchema.safeParse(chartId).success)
+        return null;
     const chart = await db.musicChart.findUnique({
         where: { id: chartId },
         select: {
@@ -251,6 +254,8 @@ export async function submitMyChartDraft(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(chartId).success)
+        return { success: false, message: t("contribution.draft.locked") };
     try {
         const draft = await db.chartDraft.findUnique({
             where: { userId_chartId: { userId: session.id, chartId } },
@@ -312,6 +317,8 @@ export async function withdrawMyChartDraft(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(chartId).success)
+        return { success: false, message: t("contribution.draft.locked") };
     const updated = await db.chartDraft.updateMany({
         where: { userId: session.id, chartId, status: "pending" },
         data: { status: "draft", submittedAt: null },
@@ -338,10 +345,12 @@ export interface ChartCommentItem {
  * 시각 댓글 목록 — draftId 가 있으면 그 초안의 작성자와 운영자만, 없으면 공개 채보 댓글(누구나).
  * 운영자가 가린 댓글은 빠진다. 시각 순.
  */
-export async function listChartComments(query: {
-    chartId: number;
-    draftId?: number;
-}): Promise<ChartCommentItem[] | null> {
+export async function listChartComments(
+    input: unknown
+): Promise<ChartCommentItem[] | null> {
+    const parsed = chartCommentListQuerySchema.safeParse(input);
+    if (!parsed.success) return null;
+    const query = parsed.data;
     const session = await getSession();
     if (query.draftId) {
         if (!session.id) return null;
@@ -478,6 +487,8 @@ export async function deleteMyChartComment(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: t("contribution.submitError") };
     const deleted = await db.chartComment.deleteMany({
         where: { id: commentId, userId: session.id, resolved: false },
     });
@@ -821,6 +832,8 @@ export async function resolveChartComment(
     commentId: number
 ): Promise<ActionResult> {
     const admin = await requireAdmin();
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: "댓글을 찾을 수 없습니다." };
     const comment = await db.chartComment.findUnique({
         where: { id: commentId },
         select: {
@@ -857,6 +870,8 @@ export async function hideChartComment(
     commentId: number
 ): Promise<ActionResult> {
     await requireAdmin();
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: "댓글을 찾을 수 없습니다." };
     const updated = await db.chartComment.updateMany({
         where: { id: commentId },
         data: { hidden: true },

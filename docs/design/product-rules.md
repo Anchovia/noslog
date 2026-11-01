@@ -57,6 +57,7 @@
 - 관리자 권한은 Discord 2단계 인증을 켠 계정이 로그인했을 때만 쓴다. 마지막 Discord 인증에서 받은 값을 세션에 두고,
   꺼져 있으면 일반 사용자로 다룬 뒤 연결 설정에 안내한다. 관리자 계정은 연결된 Discord 계정을 바꾸지 못한다.
   동기화 토큰의 관리자 권한(곡 정보 즉시 반영 · 자켓 저장)은 2단계가 켜진 세션에서 발급한 토큰에만 있고, 그 밖의 토큰은 자기 기록만 올린다.
+- 다른 사이트의 링크로 Discord 인증을 시작하지 않는다(`Sec-Fetch-Site: cross-site` 이면 시작하지 않고 돌려보낸다).
 - 역할 변경과 동기화 토큰 초기화는 같은 계정의 Discord 재확인을 받은 뒤 10분 안에만 된다. 탈퇴 재확인과 따로 센다.
 - `User.sessionVersion` 이 쿠키의 값과 다르면 `getSession` 은 로그아웃으로 돌려준다. 값이 없는 쿠키는 0 으로 본다.
   이 값을 올리는 일은 [사고 대응](../operations/incident-response.md)에서만 한다.
@@ -66,7 +67,8 @@
 바뀐 기록: [2026-10-01](../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01) ·
 [2026-10-24](../decisions/2026-10-24-guide-code-alignment.md) ·
 [2026-10-29 보안 점검 수정](../decisions/2026-10-29-security-hardening.md) ·
-[2026-11-01 코드 방어 다섯 가지](../decisions/2026-11-01-security-defenses.md)
+[2026-11-01 코드 방어 다섯 가지](../decisions/2026-11-01-security-defenses.md) ·
+[2026-11-02 보안 낮음 · 참고 항목 정리](../decisions/2026-11-02-security-low-cleanup.md)
 
 ## 공개 프로필, 공개 범위, 공유
 

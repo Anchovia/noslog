@@ -189,9 +189,9 @@ export async function completeMusecatConnect(params: URLSearchParams) {
         cache: "no-store",
         signal: AbortSignal.timeout(10_000),
     })
-        .then((response) => response.json())
-        .catch(() => null)) as { sub?: string; username?: string } | null;
-    if (!me?.sub)
+        .then((response) => (response.ok ? response.json() : null))
+        .catch(() => null)) as { sub?: unknown; username?: unknown } | null;
+    if (typeof me?.sub !== "string" || !me.sub)
         return { ok: false as const, error: "profile_fetch", returnTo };
     const now = Date.now();
     const userId = session.id;
@@ -202,7 +202,7 @@ export async function completeMusecatConnect(params: URLSearchParams) {
     const generation = (existing?.generation ?? 0) + 1;
     const data = {
         musecatSubject: me.sub,
-        musecatUsername: me.username ?? null,
+        musecatUsername: typeof me.username === "string" ? me.username : null,
         generation,
         status: "active" as const,
         scopes: (token.json.scope ?? "account:access").split(" "),

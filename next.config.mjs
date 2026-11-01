@@ -130,9 +130,11 @@ const nextConfig = {
                 hostname: "cdn.discordapp.com",
                 pathname,
             })),
-            {
+            // 자켓 대체 주소 일부는 http · 슬래시 두 개로 저장돼 있다
+            ...["/game/**", "//game/**"].map((pathname) => ({
                 hostname: "p.eagate.573.jp",
-            },
+                pathname,
+            })),
             ...(blobPublicHost
                 ? [
                       {

@@ -294,11 +294,10 @@ describe("BEMANI 악곡 카탈로그 자동 감지", () => {
         });
         expect(mocks.candidateCreateMany).not.toHaveBeenCalled();
         expect(mocks.candidateUpdateMany).toHaveBeenCalledWith({
-            where: { id: { in: [9] } },
+            where: { id: { in: [9] }, status: "pending" },
             data: {
                 seenCount: { increment: 1 },
                 lastSeenAt: expect.any(Date),
-                status: "pending",
             },
         });
     });

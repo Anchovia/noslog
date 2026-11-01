@@ -14,6 +14,8 @@ import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
 import { logSecurityEvent } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
+const DISCORD_TIMEOUT_MS = 10_000;
+
 interface DiscordTokenResponse {
     access_token?: string;
 }
@@ -145,6 +147,7 @@ export async function GET(request: NextRequest) {
                     redirect_uri: redirectUri,
                 }),
                 cache: "no-store",
+                signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
             }
         );
         if (!tokenResponse.ok) {
@@ -161,6 +164,7 @@ export async function GET(request: NextRequest) {
             {
                 headers: { Authorization: `Bearer ${token.access_token}` },
                 cache: "no-store",
+                signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
             }
         );
         if (!userResponse.ok) {

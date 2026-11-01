@@ -28,10 +28,7 @@ export async function withdrawMyChartDraft(chartId: number, locale: string) {
     return withdrawMyChartDraftService(chartId, locale);
 }
 
-export async function listChartComments(query: {
-    chartId: number;
-    draftId?: number;
-}) {
+export async function listChartComments(query: unknown) {
     return listChartCommentsService(query);
 }
 

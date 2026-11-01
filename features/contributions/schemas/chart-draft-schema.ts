@@ -73,6 +73,14 @@ export const chartCommentInputSchema = z.object({
 });
 export type ChartCommentInput = z.infer<typeof chartCommentInputSchema>;
 
+/** 서버 액션 인자는 타입 표시와 달리 아무 값이나 올 수 있다 */
+export const chartRowIdSchema = z.number().int().positive();
+
+export const chartCommentListQuerySchema = z.object({
+    chartId: z.number().int().positive(),
+    draftId: z.number().int().positive().optional(),
+});
+
 export const draftReviewSchema = z.object({
     draftId: z.number().int().positive(),
     // 운영자가 본 판 — 그사이 작성자가 회수 · 수정 · 다시 요청했으면 처리하지 않는다

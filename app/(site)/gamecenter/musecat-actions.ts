@@ -16,6 +16,7 @@ import {
     setFavorite,
     withdrawFault,
 } from "@/features/musecat/server/musecat-arcade-service";
+import { IMAGE_CONTENT_TYPES } from "@/lib/image-upload-rules";
 
 /** 뮤즈캣 오락실 동작(A 방향) — 쓰기는 한 번만 보내고 자동 재시도하지 않는다(뮤즈캣 예제 규칙) */
 const MAX_MESSAGE = 2000;
@@ -51,7 +52,11 @@ export async function reportMusecatFault(formData: FormData) {
         !MUSECAT_DISRUPTIONS.includes(disruption as MusecatDisruption) ||
         !message ||
         message.length > MAX_MESSAGE ||
-        photos.some((photo) => photo.size > 15 * 1024 * 1024)
+        photos.some(
+            (photo) =>
+                photo.size > 15 * 1024 * 1024 ||
+                !(IMAGE_CONTENT_TYPES as readonly string[]).includes(photo.type)
+        )
     ) {
         return { ok: false as const, error: "invalid" as const };
     }
@@ -165,24 +170,19 @@ export async function editMusecatNostalgiaGame(input: {
             slug: slugInput,
             gameId: remoteId,
             currency: z.string().max(8),
+            quantity: z.number().int().min(0).max(50),
+            location: z.string().max(100),
+            prices: z
+                .array(
+                    z.object({
+                        label: z.string().max(20),
+                        amount: z.number().min(0),
+                    })
+                )
+                .max(4),
         })
         .safeParse(input);
     if (!ids.success) return invalid;
-    if (
-        !Number.isInteger(input.quantity) ||
-        input.quantity < 0 ||
-        input.quantity > 50 ||
-        input.location.length > 100 ||
-        input.prices.length > 4 ||
-        input.prices.some(
-            (price) =>
-                !Number.isFinite(price.amount) ||
-                price.amount < 0 ||
-                price.label.length > 20
-        )
-    ) {
-        return { ok: false as const, error: "invalid" as const };
-    }
     const result = await editNostalgiaGame({
         gameId: input.gameId,
         quantity: input.quantity,
