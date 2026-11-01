@@ -126,6 +126,20 @@ export async function getMyChartDraftStatus(
         : null;
 }
 
+/** 지금 고칠 수 있는 내 초안 — 쓰지 않으므로 GET 화면이 부른다. 없거나 공개까지 끝났으면 null(openMyChartDraft 로 연다) */
+export async function findMyOpenChartDraft(
+    chartId: number
+): Promise<MyChartDraft | null> {
+    const session = await getSession();
+    if (!session.id || !chartRowIdSchema.safeParse(chartId).success)
+        return null;
+    const draft = await db.chartDraft.findUnique({
+        where: { userId_chartId: { userId: session.id, chartId } },
+        select: draftSelect,
+    });
+    return draft && draft.status !== "approved" ? toMyDraft(draft) : null;
+}
+
 /**
  * 내 초안을 열거나 새로 만든다. 공개 채보가 있으면 그것을 복사해 시작하고, 없으면 빈 채보.
  * 공개까지 끝난 초안을 다시 열면 지금 공개본으로 새로 시작한다.

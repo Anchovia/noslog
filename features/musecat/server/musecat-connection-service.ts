@@ -180,8 +180,8 @@ export async function completeMusecatConnect(params: URLSearchParams) {
             redirect_uri: serverEnv.MUSECAT_REDIRECT_URI ?? "",
             code_verifier: pending.verifier,
         })
-    );
-    if (token.status !== 200 || !token.json?.access_token) {
+    ).catch(() => null);
+    if (token?.status !== 200 || !token.json?.access_token) {
         return { ok: false as const, error: "token_exchange", returnTo };
     }
     const me = (await fetch(`${musecatOrigin()}/developer/v1/me`, {
@@ -312,7 +312,11 @@ export async function getMusecatAccessToken(userId: number) {
         blockedUntil?: Date
     ) => {
         await db.musecatConnection.updateMany({
-            where: { id: row.id, refreshAttemptId: attemptId },
+            where: {
+                id: row.id,
+                refreshAttemptId: attemptId,
+                status: "active",
+            },
             data: {
                 status,
                 lastErrorCode: code,
@@ -341,8 +345,9 @@ export async function getMusecatAccessToken(userId: number) {
             "needs_reconnect"
         );
     }
-    await db.musecatConnection.updateMany({
-        where: { id: row.id, refreshAttemptId: attemptId },
+    // 갱신 중에 연결을 끊었으면 새 토큰을 저장하지도 쓰지도 않는다
+    const saved = await db.musecatConnection.updateMany({
+        where: { id: row.id, refreshAttemptId: attemptId, status: "active" },
         data: {
             accessTokenEnc: encryptMusecatToken(
                 result.json.access_token,
@@ -363,12 +368,29 @@ export async function getMusecatAccessToken(userId: number) {
             lastErrorCode: null,
         },
     });
+    if (saved.count !== 1)
+        return { ok: false as const, error: "not_connected" };
     return {
         ok: true as const,
         token: result.json.access_token,
         generation: row.generation,
         connectionId: row.id,
     };
+}
+
+/** 뮤즈캣이 토큰을 401 로 거절했을 때 — 그 뒤 다시 연결했으면 새 연결은 그대로 둔다 */
+export async function markMusecatNeedsReconnect(token: {
+    connectionId: number;
+    generation: number;
+}) {
+    await db.musecatConnection.updateMany({
+        where: {
+            id: token.connectionId,
+            generation: token.generation,
+            status: "active",
+        },
+        data: { status: "needs_reconnect", lastErrorCode: "http_401" },
+    });
 }
 
 /** 연결 끊기 — NosLog 쪽은 바로 막고, live 면 뮤즈캣 토큰 폐기를 한 번 부른다(RFC 7009, 실패해도 막은 상태 유지) */

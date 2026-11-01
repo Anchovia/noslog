@@ -15,6 +15,7 @@ import type {
 import {
     getMusecatAccessToken,
     getMusecatConnection,
+    markMusecatNeedsReconnect,
 } from "@/features/musecat/server/musecat-connection-service";
 import {
     checkMusecatCampaign,
@@ -117,7 +118,10 @@ export async function getMusecatArcadePage(slug: string) {
         musecatId,
         token.token
     );
-    if (!detail.ok) return null;
+    if (!detail.ok) {
+        if (detail.status === 401) await markMusecatNeedsReconnect(token);
+        return null;
+    }
     const arcade = fromMusecatArcade(
         detail.data,
         notices.ok ? notices.data : [],
@@ -236,7 +240,9 @@ async function liveToken() {
                     ? ("needs_reconnect" as const)
                     : token.error === "rate_limited"
                       ? ("rate_limited" as const)
-                      : ("not_connected" as const),
+                      : token.error === "busy"
+                        ? ("failed" as const)
+                        : ("not_connected" as const),
         };
     }
     return { ...token, userId: session.id };
@@ -266,8 +272,14 @@ async function recordAction(input: {
     });
 }
 
-function failureFrom(status: number | null): MusecatActionResult {
-    if (status === 401) return { ok: false, error: "needs_reconnect" };
+async function failureFrom(
+    token: { connectionId: number; generation: number },
+    status: number | null
+): Promise<MusecatActionResult> {
+    if (status === 401) {
+        await markMusecatNeedsReconnect(token);
+        return { ok: false, error: "needs_reconnect" };
+    }
     if (status === 403) return { ok: false, error: "visit_required" };
     if (status === 409) return { ok: false, error: "conflict" };
     if (status === 429) return { ok: false, error: "rate_limited" };
@@ -326,7 +338,7 @@ export async function reportFault(input: {
     });
     return result.ok
         ? { ok: true, xp: result.data.xp_feedback?.xp }
-        : failureFrom(result.status);
+        : failureFrom(token, result.status);
 }
 
 export async function reactToFault(input: {
@@ -358,7 +370,7 @@ export async function reactToFault(input: {
               : "rejected",
         httpStatus: result.ok ? 200 : result.status,
     });
-    return result.ok ? { ok: true } : failureFrom(result.status);
+    return result.ok ? { ok: true } : failureFrom(token, result.status);
 }
 
 /** 본인 신고 거두기 — 뮤즈캣 요청 본문 문서가 비어 live 는 아직 막아 둔다 */
@@ -389,7 +401,7 @@ export async function setFavorite(input: {
         arcade: input.musecatArcadeId,
         favorited: input.favorited,
     });
-    return result.ok ? { ok: true } : failureFrom(result.status);
+    return result.ok ? { ok: true } : failureFrom(token, result.status);
 }
 
 /** 버전 업데이트 확인 — 뮤즈캣에서 오늘 방문 인증을 했어야 한다(캠페인 안 B). 없으면 403 → visit_required */
@@ -413,7 +425,7 @@ export async function checkCampaign(input: {
         gameId: input.gameId,
         result: input.result,
     });
-    return result.ok ? { ok: true } : failureFrom(result.status);
+    return result.ok ? { ok: true } : failureFrom(token, result.status);
 }
 
 /** NOSTALGIA 기체 정보 고치기(정보 수정 안 b) — 뮤즈캣 게임 편집 델타 문서가 비어 live 는 아직 막아 둔다 */
