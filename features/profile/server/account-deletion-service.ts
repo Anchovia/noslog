@@ -25,6 +25,7 @@ function invalidateDeletedAccount(userId: number) {
         CACHE_TAGS.chartEvaluations,
         CACHE_TAGS.tierLists,
         CACHE_TAGS.musicDetails,
+        CACHE_TAGS.events,
     ]) {
         revalidateTag(tag, { expire: 0 });
     }

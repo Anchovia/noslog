@@ -288,7 +288,16 @@ export function isProposalRejectReason(
 export const chartFieldProposalReviewSchema = z.discriminatedUnion("decision", [
     z.object({
         decision: z.literal("apply"),
-        ids: z.array(z.coerce.number().int().positive()).min(1).max(100),
+        /** 운영자가 본 판 — 그 뒤에 작성자가 값을 바꿨으면 반영하지 않는다 */
+        versions: z
+            .array(
+                z.object({
+                    id: z.coerce.number().int().positive(),
+                    updatedAt: z.coerce.date(),
+                })
+            )
+            .min(1)
+            .max(100),
         /** 고쳐서 반영(2026-10-01 C2) — 한 건만 고를 때, 비어 있으면 제안 값 그대로 */
         value: z.string().trim().min(1).max(64).optional(),
     }),

@@ -1971,6 +1971,8 @@ export const jaMessages = {
     "contribution.draft.conflict":
         "別のウィンドウでこの下書きが変更されました。再読み込みしてからもう一度お試しください。",
     "contribution.draft.saved": "保存しました。",
+    "contribution.draft.unchanged":
+        "公開中の譜面と同じです。譜面を直してからレビューを依頼してください。",
     "contribution.draft.overlap":
         "重なっているノーツを直してから確認を依頼してください。",
     "contribution.draft.submitted": "確認を依頼しました · 運営者が確認します。",

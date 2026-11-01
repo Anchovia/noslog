@@ -1949,6 +1949,8 @@ export const koMessages = {
     "contribution.draft.conflict":
         "다른 창에서 이 초안이 바뀌었습니다. 새로고침한 뒤 다시 시도해 주세요.",
     "contribution.draft.saved": "저장했습니다.",
+    "contribution.draft.unchanged":
+        "공개본과 달라진 곳이 없습니다. 채보를 고친 뒤 검토를 요청해 주세요.",
     "contribution.draft.overlap": "겹치는 노트를 고친 뒤 검토를 요청해 주세요.",
     "contribution.draft.submitted":
         "검토를 요청했습니다 · 운영자가 확인합니다.",

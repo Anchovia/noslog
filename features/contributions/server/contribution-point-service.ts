@@ -4,6 +4,7 @@ import type { Prisma } from "@prisma/client";
 import { updateTag } from "next/cache";
 
 import {
+    CABINET_CHECK_MAX_POINTS,
     CONTRIBUTION_KINDS,
     type ContributionKind,
     type ContributionTotals,
@@ -91,7 +92,11 @@ export async function getContributionTotals(
     });
     for (const row of rows) {
         const current = totals.get(row.userId) ?? emptyTotals();
-        current.points += row._sum.points ?? 0;
+        const points = row._sum.points ?? 0;
+        current.points +=
+            row.kind === "cabinet_check"
+                ? Math.min(points, CABINET_CHECK_MAX_POINTS)
+                : points;
         if (CONTRIBUTION_KINDS.includes(row.kind as ContributionKind)) {
             current[row.kind as ContributionKind] += row._count._all;
         }

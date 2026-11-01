@@ -1,12 +1,13 @@
 import { getUserRole } from "@/features/users/server/user-data";
 import { recordExternalCall, recordPageView } from "@/lib/analytics";
 import { isBotUserAgent, isExternalEvent } from "@/lib/analytics-routes";
+import { readJsonBody } from "@/lib/api/read-json-body";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-const MAX_BODY_LENGTH = 1024;
+const MAX_BODY_BYTES = 1024;
 
 function noContent() {
     return new Response(null, {
@@ -23,12 +24,9 @@ export async function POST(request: Request) {
     const userAgent = request.headers.get("user-agent");
     if (isBotUserAgent(userAgent)) return noContent();
 
-    let body: unknown;
-    try {
-        body = JSON.parse((await request.text()).slice(0, MAX_BODY_LENGTH));
-    } catch {
-        return new Response(null, { status: 400 });
-    }
+    const read = await readJsonBody(request, MAX_BODY_BYTES);
+    if (read.tooLarge) return new Response(null, { status: 413 });
+    const { body } = read;
     if (!body || typeof body !== "object") return noContent();
     const { type, path, name } = body as {
         type?: unknown;

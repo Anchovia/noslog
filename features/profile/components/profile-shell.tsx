@@ -6,7 +6,10 @@ import { summarizeAchievements } from "@/features/achievements/achievement-defin
 import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-service";
 import { getProfileHeaderContext } from "@/features/profile/server/profile-overview-service";
 import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
-import { hideProfileScores } from "@/features/profile/server/score-visibility";
+import {
+    hideProfileActivity,
+    hideProfileScores,
+} from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
 
@@ -28,7 +31,9 @@ export default async function ProfileShell({ id }: { id: number }) {
     const scoresHidden = !isOwner && profileData.user.hide_play_scores;
     const user = scoresHidden
         ? hideProfileScores(profileData.user)
-        : profileData.user;
+        : isOwner
+          ? profileData.user
+          : hideProfileActivity(profileData.user);
     const [header, ownerPrivate] = await Promise.all([
         scoresHidden
             ? null

@@ -25,6 +25,13 @@ const text = (max: number) =>
 const localeText = (max: number) =>
     z.partialRecord(z.enum(SUPPORTED_LOCALES), text(max));
 
+const pollRowId = z.number().int().positive().max(2147483647);
+
+export const pollVoteSchema = z.object({
+    pollId: pollRowId,
+    optionIds: z.array(pollRowId).max(POLL_MAX_OPTIONS),
+});
+
 export const pollOptionInputSchema = z.object({
     /** 이미 있는 선택지면 그 번호 — 표를 지키며 글만 고칠 때 쓴다 */
     id: z.number().int().positive().optional(),

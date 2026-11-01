@@ -14,7 +14,10 @@ import Button from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { votePoll } from "@/features/polls/server/poll-actions";
-import type { PublicPoll } from "@/features/polls/server/poll-service";
+import type {
+    PollVoteResult,
+    PublicPoll,
+} from "@/features/polls/server/poll-service";
 
 /**
  * 글에 붙는 투표 위젯 — 투표 전에는 선택지 줄, 투표 뒤에는 라벨 오른쪽 퍼센트 + 그 아래 막대.
@@ -48,9 +51,11 @@ export default function PollWidget({
     } | null>(null);
 
     const voted = state.myOptionIds.length > 0;
-    const total = state.options.reduce((sum, option) => sum + option.votes, 0);
     const closed = state.closed;
-    const showResults = state.showResults || voted;
+    const showResults = state.showResults;
+    const total = state.showResults
+        ? state.options.reduce((sum, option) => sum + option.votes, 0)
+        : 0;
     const canVote = isAuthenticated && !closed;
     // 자격이 없는 사람에게 「투표하면 결과가 보입니다」 같은 설명 대신 로그인 길을 둔다
     const loginToVote = !isAuthenticated && !closed && !showResults;
@@ -59,11 +64,7 @@ export default function PollWidget({
         setSaved(false);
         setFailed(null);
         startTransition(async () => {
-            let result: {
-                success: boolean;
-                message?: string;
-                retryable?: boolean;
-            };
+            let result: PollVoteResult;
             try {
                 result = await votePoll(state.id, optionIds);
             } catch {
@@ -77,30 +78,14 @@ export default function PollWidget({
                 // 한 개 투표는 누른 줄만 되돌린다 — 여러 개는 고르던 것을 두고 「투표하기」 로 다시 낸다
                 if (!state.multiple) setPicked(state.myOptionIds);
                 setFailed({
-                    message: result.message ?? t("poll.voteFailed"),
+                    message: result.message,
                     optionIds,
                     retryable: result.retryable === true,
                 });
                 return;
             }
-            // 내 표만 다시 세어 화면을 맞춘다 — 새로 고치지 않아도 결과가 바뀐다
-            setState((prev) => ({
-                ...prev,
-                myOptionIds: optionIds,
-                options: prev.options.map((option) => {
-                    const was = prev.myOptionIds.includes(option.id);
-                    const now = optionIds.includes(option.id);
-                    return {
-                        ...option,
-                        votes: option.votes + (now ? 1 : 0) - (was ? 1 : 0),
-                    };
-                }),
-                voterCount:
-                    prev.voterCount +
-                    (prev.myOptionIds.length === 0 && optionIds.length > 0
-                        ? 1
-                        : 0),
-            }));
+            // 서버가 돌려준 값으로 맞춘다 — 새로 고치지 않아도 결과가 바뀐다
+            setState(result.poll);
             setEditing(false);
             setSaved(true);
         });
@@ -187,7 +172,7 @@ export default function PollWidget({
             ) : loginToVote ? null : !editing ? (
                 <p className="nl-body-secondary nl-muted">
                     {t(
-                        closed
+                        closed || voted
                             ? "poll.resultsAfterClose"
                             : "poll.resultsAfterVote"
                     )}

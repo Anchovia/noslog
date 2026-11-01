@@ -54,7 +54,8 @@ export default async function ProfileAchievementsRoute({
     const scoresHidden = !isOwner && profileData.user.hide_play_scores;
     const records = achievementRecordsForViewer(
         profileData.user.achievements,
-        scoresHidden
+        scoresHidden,
+        !isOwner && profileData.user.hide_play_activity
     );
     // 진행 값(K1)은 본인에게만 — 남의 기록 값은 불러오지 않는다
     const [metrics, recipients] = await Promise.all([

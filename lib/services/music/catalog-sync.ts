@@ -6,6 +6,7 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import db from "@/lib/db";
+import { logServerError } from "@/lib/observability/server";
 import {
     type BemaniMusicCatalogInput,
     type SyncMusicInput,
@@ -17,6 +18,10 @@ const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
 const NEW_CANDIDATES_PER_SYNC = 20;
 const NEW_CANDIDATES_PER_DAY = 100;
 const CANDIDATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+// 검토 대기 후보 전체 상한 — 계정을 여럿 써도 표가 끝없이 자라지 않게. 전곡이 한꺼번에 바뀌어도 들어가는 크기
+const MAX_PENDING_CANDIDATES = 1000;
+// 한 사람이 전체 상한을 혼자 채우지 못하게
+const MAX_PENDING_CANDIDATES_PER_SUBMITTER = 200;
 const difficultyOrder = new Map(
     ["Normal", "Hard", "Expert", "Real"].map((difficulty, index) => [
         difficulty,
@@ -220,9 +225,7 @@ async function recordCatalogCandidate(
                           reviewedAt: now,
                           appliedAt: now,
                       }
-                    : existing.status === "rejected"
-                      ? {}
-                      : { status: "pending" }),
+                    : {}),
             },
             select: { id: true },
         });
@@ -270,30 +273,47 @@ async function recordPendingCatalogCandidates(
         (update) =>
             !found.has(key(update.payload.musicIndex, update.fingerprint))
     );
-    const reopened = existing
-        .filter((item) => item.status !== "rejected")
+    const pending = existing
+        .filter((item) => item.status === "pending")
         .map((item) => item.id);
-    const rejected = existing
-        .filter((item) => item.status === "rejected")
+    // 반려 · 반영한 후보는 다시 봐도 검토 대기로 되돌리지 않는다
+    const settled = existing
+        .filter((item) => item.status !== "pending")
         .map((item) => item.id);
     const now = new Date();
-    const submittedToday = unseen.length
-        ? await db.musicCatalogCandidate.count({
-              where: {
-                  submittedById,
-                  createdAt: {
-                      gte: new Date(now.getTime() - CANDIDATE_WINDOW_MS),
+    const [submittedToday, pendingTotal, pendingMine] = unseen.length
+        ? await Promise.all([
+              db.musicCatalogCandidate.count({
+                  where: {
+                      submittedById,
+                      createdAt: {
+                          gte: new Date(now.getTime() - CANDIDATE_WINDOW_MS),
+                      },
                   },
-              },
-          })
-        : 0;
+              }),
+              db.musicCatalogCandidate.count({
+                  where: { status: "pending" },
+              }),
+              db.musicCatalogCandidate.count({
+                  where: { status: "pending", submittedById },
+              }),
+          ])
+        : [0, 0, 0];
+    if (unseen.length && pendingTotal >= MAX_PENDING_CANDIDATES)
+        logServerError(new Error("Pending catalog candidates are full"), {
+            event: "catalog.candidates.full",
+            routePath: "/api/receivePlayerData",
+            routeType: "route",
+        });
     const created = unseen.slice(
         0,
         Math.max(
             0,
             Math.min(
                 NEW_CANDIDATES_PER_SYNC,
-                NEW_CANDIDATES_PER_DAY - submittedToday
+                NEW_CANDIDATES_PER_DAY - submittedToday,
+                MAX_PENDING_CANDIDATES - pendingTotal,
+                MAX_PENDING_CANDIDATES_PER_SUBMITTER - pendingMine
             )
         )
     );
@@ -318,10 +338,10 @@ async function recordPendingCatalogCandidates(
                   }),
               ]
             : []),
-        ...(reopened.length
+        ...(pending.length
             ? [
                   db.musicCatalogCandidate.updateMany({
-                      where: { id: { in: reopened } },
+                      where: { id: { in: pending } },
                       data: {
                           seenCount: { increment: 1 },
                           lastSeenAt: now,
@@ -330,10 +350,10 @@ async function recordPendingCatalogCandidates(
                   }),
               ]
             : []),
-        ...(rejected.length
+        ...(settled.length
             ? [
                   db.musicCatalogCandidate.updateMany({
-                      where: { id: { in: rejected } },
+                      where: { id: { in: settled } },
                       data: { seenCount: { increment: 1 }, lastSeenAt: now },
                   }),
               ]

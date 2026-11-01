@@ -1974,6 +1974,8 @@ export const enMessages = {
     "contribution.draft.conflict":
         "This draft changed in another window. Reload and try again.",
     "contribution.draft.saved": "Saved.",
+    "contribution.draft.unchanged":
+        "This matches the published chart. Edit the chart, then request a review.",
     "contribution.draft.overlap":
         "Fix overlapping notes before requesting a review.",
     "contribution.draft.submitted":

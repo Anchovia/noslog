@@ -43,7 +43,7 @@ export function sortAchievementDefinitions(
     const latest = new Map<string, string>();
     for (const item of records.earned) {
         const current = latest.get(item.key);
-        if (!current || item.achievedAt > current)
+        if (item.achievedAt && (!current || item.achievedAt > current))
             latest.set(item.key, item.achievedAt);
     }
     const score = (definition: AchievementDefinition): number | null => {

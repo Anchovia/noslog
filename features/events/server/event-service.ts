@@ -1,5 +1,6 @@
 import "server-only";
 
+import { Prisma } from "@prisma/client";
 import { revalidatePath, unstable_cache, updateTag } from "next/cache";
 
 import {
@@ -261,9 +262,10 @@ export async function saveEvent(
     try {
         // 글과 투표를 한 번에 — 투표가 규칙에 막히면 글 저장도 되돌린다(2026-09-23 V2)
         const saved = await db.$transaction(async (tx) => {
+            // 앞서 읽은 뒤에 반려됐으면 행을 찾지 못해 대기로 되돌리지 않는다
             const row = existing
                 ? await tx.communityEvent.update({
-                      where: { id: existing.id },
+                      where: { id: existing.id, status: { not: "rejected" } },
                       data,
                       select: { id: true, publishedAt: true },
                   })
@@ -310,6 +312,11 @@ export async function saveEvent(
                 success: false,
                 message: t(POLL_SAVE_MESSAGE_KEYS[error.reason]),
             };
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2025"
+        )
+            return { success: false, message: t("events.rejected.body") };
         logServerError(error, {
             event: "events.save.failed",
             routePath: "/events",

@@ -8,7 +8,10 @@ import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-s
 import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { getProfileStats } from "@/features/profile/server/profile-stats-service";
-import { hideProfileScores } from "@/features/profile/server/score-visibility";
+import {
+    hideProfileActivity,
+    hideProfileScores,
+} from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
 
@@ -69,13 +72,21 @@ export default async function ProfileStatsRoute({
     const mode = query.mode === "recital" ? "recital" : "basic";
     const [stats, initialProgress, ownerPrivate] = await Promise.all([
         getProfileStats(id),
-        getPublicProfileProgress(id, { mode, metric: "grade", range: "90" }),
+        getPublicProfileProgress(
+            id,
+            { mode, metric: "grade", range: "90" },
+            { owner: isOwner }
+        ),
         // 본인에게는 숨긴 플레이 횟수도 자물쇠와 함께(2026-09-26 P1)
         isOwner ? getOwnerPrivateFields(id) : null,
     ]);
     return (
         <ProfileStats
-            user={profileData.user}
+            user={
+                isOwner
+                    ? profileData.user
+                    : hideProfileActivity(profileData.user)
+            }
             stats={stats}
             initialProgress={initialProgress}
             privatePlayCount={ownerPrivate?.playCount ?? null}

@@ -273,6 +273,21 @@ export async function submitMyChartDraft(
                 success: false,
                 message: t("contribution.draft.overlap"),
             };
+        const pattern = await db.chartPattern.findUnique({
+            where: { chartId },
+            select: { publishedContent: true },
+        });
+        const published = chartDocumentSchema.safeParse(
+            pattern?.publishedContent
+        );
+        if (
+            published.success &&
+            JSON.stringify(published.data) === JSON.stringify(document.data)
+        )
+            return {
+                success: false,
+                message: t("contribution.draft.unchanged"),
+            };
         await db.chartDraft.update({
             where: { id: draft.id },
             data: { status: "pending", submittedAt: new Date() },
