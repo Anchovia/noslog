@@ -79,7 +79,9 @@ export async function updatePlayData(
     music: SyncMusicInput[],
     sync_id: number,
     // 동기화 라우트가 곡 목록 반영 뒤 한 번 읽어 넘긴다 — 없으면 여기서 읽는다
-    knownChartIds?: ChartIdMap
+    knownChartIds?: ChartIdMap,
+    // 값 검사에 걸려 빠진 채보 — 응답에 있었으니 기존 기록을 지우지 않고 그대로 둔다
+    keptChartIds: number[] = []
 ) {
     const startTime = Date.now(); // 시작 시간
     const chartIds = knownChartIds ?? (await loadChartIds());
@@ -131,6 +133,21 @@ export async function updatePlayData(
             C: 0,
             D: 0,
         }; // 클리어 랭크 저장 변수
+        const countClear = (rank: string, fcType: number) => {
+            if (rank in score) {
+                score[rank as keyof typeof score]++;
+            }
+            if (fcType === 2) {
+                score["F"]++;
+            }
+        };
+        // 남겨 둔 기록도 프로필의 클리어 랭크 수에 그대로 센다
+        const keptChartIdSet = new Set(keptChartIds);
+        for (const record of previousRecords) {
+            if (keptChartIdSet.has(record.chartId)) {
+                countClear(record.rank, record.fcType);
+            }
+        }
 
         for (const data of music) {
             for (const sheet of data.sheet) {
@@ -142,12 +159,7 @@ export async function updatePlayData(
                 }
                 const normalizedRank = normalizeBemaniRank(sheet.rank);
                 // DB에 등록된 채보만 클리어 랭크와 개인 기록에 반영함
-                if (normalizedRank in score) {
-                    score[normalizedRank as keyof typeof score]++;
-                }
-                if (sheet.fc_type === 2) {
-                    score["F"]++;
-                }
+                countClear(normalizedRank, sheet.fc_type);
                 const record = {
                     userId: user_id,
                     chartId: chart_id,
@@ -246,7 +258,10 @@ export async function updatePlayData(
                     where: {
                         userId: user_id,
                         chartId: {
-                            notIn: newPlayData.map((record) => record.chartId),
+                            notIn: [
+                                ...newPlayData.map((record) => record.chartId),
+                                ...keptChartIds,
+                            ],
                         },
                     },
                 });
@@ -289,9 +304,10 @@ export async function updatePlayData(
         const duration = Date.now() - startTime; // 종료 시간
         console.info(`===[플레이 데이터 업데이트 성공(${duration}ms)]===`);
         // 순위 · 점수 분포 캐시를 비울 채보 — 바뀐 기록과 이번 응답에서 빠져 지워진 기록
-        const nextChartIds = new Set(
-            newPlayData.map((record) => record.chartId)
-        );
+        const nextChartIds = new Set([
+            ...newPlayData.map((record) => record.chartId),
+            ...keptChartIds,
+        ]);
         const removedChartIds = previousRecords
             .map((record) => record.chartId)
             .filter(

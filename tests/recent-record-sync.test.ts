@@ -410,6 +410,26 @@ describe("recent/full record persistence with an isolated transaction double", (
         expect(state.records).toHaveLength(1);
         expect(state.snapshots).toHaveLength(1);
     });
+    it("keeps the existing row and its clear count when the chart was rejected by the range check", async () => {
+        await updatePlayData(1, full(), 2);
+        mocks.db.playerStats.upsert.mockClear();
+        const before = structuredClone(state.records);
+
+        const result = await updatePlayData(1, [], 3, undefined, [10]);
+
+        expect(state.records).toEqual(before);
+        expect(result.changedChartIds).toEqual([]);
+        expect(mocks.db.playerStats.upsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                update: expect.objectContaining({
+                    [`score${before[0].rank}`]: 1,
+                }),
+            })
+        );
+
+        await updatePlayData(1, [], 4);
+        expect(state.records).toHaveLength(0);
+    });
     it("rolls back a failed full replacement without losing existing partial records", async () => {
         state.history.push(history(1, "2026/09/20 10:00"));
         await updateRecentBestRecords(1, 1);

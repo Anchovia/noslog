@@ -96,6 +96,11 @@ function validToken(issuedDaysAgo = 0) {
     };
 }
 
+function adminMfaToken() {
+    const token = validToken();
+    return { ...token, payload: { ...token.payload, adminMfa: true } };
+}
+
 function musicSheet(difficulty: "Normal" | "Hard" | "Expert") {
     return {
         difficulty,
@@ -701,7 +706,8 @@ describe("POST /api/receivePlayerData", () => {
             requestBody(true).totalData?.data.music,
             10,
             // 곡 목록 반영 뒤 한 번 읽은 채보 지도를 넘긴다(2026-10-16 Q2)
-            expect.any(Map)
+            expect.any(Map),
+            []
         );
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.updateDummy).toHaveBeenCalledOnce();
@@ -747,7 +753,8 @@ describe("POST /api/receivePlayerData", () => {
                 }),
             ],
             10,
-            expect.any(Map)
+            expect.any(Map),
+            []
         );
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
@@ -788,18 +795,22 @@ describe("POST /api/receivePlayerData", () => {
                 }),
             ],
             10,
-            expect.any(Map)
+            expect.any(Map),
+            []
         );
     });
 
     it("노트 수 · 최대 Grd 를 벗어난 줄은 저장하지 않고 동기화 내역에 남긴다", async () => {
         mocks.musicChartFindMany.mockResolvedValue(
-            (["Normal", "Hard", "Expert"] as const).map((difficulty) => ({
-                musicIdx: "test-music",
-                difficulty,
-                noteCount: 500,
-                levelConstant: 10,
-            }))
+            (["Normal", "Hard", "Expert"] as const).map(
+                (difficulty, index) => ({
+                    id: 11 + index,
+                    musicIdx: "test-music",
+                    difficulty,
+                    noteCount: 500,
+                    levelConstant: 10,
+                })
+            )
         );
         const body = requestBody(true);
         body.recentData.data.player.history_list.history[0].max_combo = 501;
@@ -815,7 +826,8 @@ describe("POST /api/receivePlayerData", () => {
             1,
             [expect.objectContaining({ sheet: [musicSheet("Normal")] })],
             10,
-            expect.any(Map)
+            expect.any(Map),
+            [12, 13]
         );
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
@@ -905,6 +917,7 @@ describe("POST /api/receivePlayerData", () => {
     });
 
     it("관리자 전체 연동은 감지한 카탈로그 변경을 즉시 반영한다", async () => {
+        mocks.verifySyncToken.mockReturnValue(adminMfaToken());
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             syncTokenVersion: 0,
@@ -968,8 +981,30 @@ describe("POST /api/receivePlayerData", () => {
         warn.mockRestore();
     });
 
+    it("2단계 표시가 없는 관리자 토큰은 자기 기록만 올리고 관리자 권한을 쓰지 못한다", async () => {
+        mocks.userFindUnique.mockResolvedValue({
+            id: 1,
+            syncTokenVersion: 0,
+            role: "admin",
+            stats: { gradeBasic: 1000, gradeRecital: null },
+        });
+
+        const response = await POST(createRequest(requestBody(true)));
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).toHaveBeenCalled();
+        expect(mocks.processBemaniCatalogUpdates).toHaveBeenCalledWith(
+            requestBody(true).totalData?.data.music,
+            false,
+            1
+        );
+        expect(data).not.toHaveProperty("missingJackets");
+    });
+
     it("자켓 목록 조회가 실패해도 관리자 동기화는 성공으로 끝난다", async () => {
         vi.spyOn(console, "error").mockImplementation(() => undefined);
+        mocks.verifySyncToken.mockReturnValue(adminMfaToken());
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             syncTokenVersion: 0,

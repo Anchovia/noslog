@@ -11,6 +11,8 @@ interface SyncTokenPayload {
     version: number;
     // 발급 시각(초). 만료 규칙 전에 만든 토큰에는 없다
     iat?: number;
+    // 2단계를 켠 관리자 세션에서 발급했을 때만 true. 토큰으로는 세션의 2단계 값을 볼 수 없어 발급 때 새긴다
+    adminMfa?: true;
 }
 
 export type SyncTokenVerification =
@@ -104,7 +106,7 @@ function sign(value: string) {
 }
 
 export function createSyncToken(
-    payload: Pick<SyncTokenPayload, "userId" | "version">,
+    payload: Pick<SyncTokenPayload, "userId" | "version" | "adminMfa">,
     now = new Date()
 ) {
     const encodedPayload = Buffer.from(
@@ -112,6 +114,7 @@ export function createSyncToken(
             userId: payload.userId,
             version: payload.version,
             iat: Math.floor(now.getTime() / 1000),
+            adminMfa: payload.adminMfa,
         })
     ).toString("base64url");
 

@@ -45,6 +45,19 @@ describe("동기화 토큰 발급", () => {
             payload: { userId: 3, version: 2, iat: issuedAt.getTime() / 1000 },
         });
     });
+
+    it("2단계를 켠 관리자 세션의 토큰에만 adminMfa 를 새긴다", () => {
+        const token = createSyncToken(
+            { userId: 3, version: 2, adminMfa: true },
+            issuedAt
+        );
+
+        expect(payloadOf(token).adminMfa).toBe(true);
+        expect(verifySyncToken(token, issuedAt)).toMatchObject({
+            status: "valid",
+            payload: { adminMfa: true },
+        });
+    });
 });
 
 describe("동기화 토큰 확인", () => {

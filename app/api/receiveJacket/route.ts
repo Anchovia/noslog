@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
         !user ||
         user.syncTokenVersion !== tokenPayload.version ||
         user.role !== "admin" ||
+        tokenPayload.adminMfa !== true ||
         isSyncTokenExpired(tokenPayload, user.role)
     ) {
         return json(403, { saved: false });
