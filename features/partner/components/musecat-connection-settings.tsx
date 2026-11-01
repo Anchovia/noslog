@@ -258,8 +258,8 @@ export function MusecatConnectionDetail({
                                             <span
                                                 className={
                                                     sent
-                                                        ? "nl-metadata"
-                                                        : "nl-metadata nl-muted"
+                                                        ? "nl-control"
+                                                        : "nl-control nl-muted"
                                                 }
                                             >
                                                 {t(
@@ -323,7 +323,7 @@ export function MusecatConnectionDetail({
                                                     `partner.settings.scope.${scope}`
                                                 )}
                                             </span>
-                                            <span className="nl-metadata nl-muted">
+                                            <span className="nl-control nl-muted">
                                                 {t(
                                                     `partner.settings.scope.${mode}`
                                                 )}

@@ -90,7 +90,7 @@ export default async function SettingsLayout({
                                     >
                                         {t(titles[item])}
                                     </span>
-                                    <span className="nl-body-secondary nl-muted nl-settings__summary">
+                                    <span className="nl-metadata nl-muted nl-settings__summary">
                                         {t(summaries[item])}
                                     </span>
                                 </span>

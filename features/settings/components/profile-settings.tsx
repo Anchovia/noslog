@@ -379,7 +379,9 @@ export default function ProfileSettings({
                         <p className="nl-control">
                             {t("settings.nostalgiaName")}
                         </p>
-                        <p className="nl-body">{user.nostalgiaName || "—"}</p>
+                        <p className="nl-control nl-muted">
+                            {user.nostalgiaName || "—"}
+                        </p>
                     </div>
                     <Controller
                         control={control}
@@ -433,7 +435,7 @@ export default function ProfileSettings({
                             {t("settings.preferredArcade")}
                         </p>
                         <div className="nl-settings__arcade-row">
-                            <p className="nl-body-secondary nl-muted">
+                            <p className="nl-control nl-muted">
                                 {selectedArcade
                                     ? `${selectedArcade.name}${selectedArcade.region ? ` · ${selectedArcade.region}` : ""}`
                                     : t("settings.none")}
@@ -530,7 +532,7 @@ export default function ProfileSettings({
                             role="status"
                             className={
                                 busy || saved
-                                    ? "nl-body-secondary nl-muted"
+                                    ? "nl-control nl-muted"
                                     : "sr-only"
                             }
                         >

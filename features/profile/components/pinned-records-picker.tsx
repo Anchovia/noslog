@@ -100,13 +100,13 @@ export default function PinnedRecordsPicker({
             <div className="nl-settings__arcade-row">
                 {records.length ? (
                     // 고른 것이 없으면 값 자리는 비워 둔다(자동 = 베스트 상위 3곡, 글자 설명 없음 — 2026-10-01 사용자)
-                    <p className="nl-body">
+                    <p className="nl-control nl-muted">
                         {selected
                             .map((item) => byChart.get(item.chartId)!.title)
                             .join(" · ")}
                     </p>
                 ) : (
-                    <p className="nl-body nl-muted">
+                    <p className="nl-control nl-muted">
                         {t("profile.noSyncedRecords")}
                     </p>
                 )}

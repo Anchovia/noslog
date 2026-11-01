@@ -133,9 +133,7 @@ export default function PrivacySettings({
                 <p
                     role="status"
                     className={
-                        saving || saved
-                            ? "nl-body-secondary nl-muted"
-                            : "sr-only"
+                        saving || saved ? "nl-control nl-muted" : "sr-only"
                     }
                 >
                     {saving ? t("settings.saving") : saved}

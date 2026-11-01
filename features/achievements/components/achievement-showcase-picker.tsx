@@ -81,7 +81,7 @@ export default function AchievementShowcasePicker({
                         ))}
                     </p>
                 ) : (
-                    <p className="nl-body-secondary nl-muted">
+                    <p className="nl-control nl-muted">
                         {t("achievement.empty")}
                     </p>
                 )}
