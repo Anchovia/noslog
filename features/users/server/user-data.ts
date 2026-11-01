@@ -40,7 +40,6 @@ export function getDiscordLinkingUser(userId: number) {
             avatar: true,
             avatarUserManaged: true,
             role: true,
-            sessionVersion: true,
         },
     });
 }

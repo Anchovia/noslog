@@ -38,7 +38,7 @@ Vercel 운영 환경 변수에서 `MAINTENANCE_MODE=true` 로 바꾸고 다시 �
 
 ## 4. 세션 끊기
 
-전원은 `COOKIE_PASSWORD` 교체로 끊는다. 쿠키를 푸는 키가 바뀌므로 모든 경로에서 확실히 끊긴다.
+전원은 `COOKIE_PASSWORD` 교체로 끊는다. 쿠키를 푸는 키가 바뀌므로 모두 끊긴다.
 
 한 사람만 끊을 때는 코드의 `revokeUserSessions`(`features/users/server/user-session-service.ts`)와 같은 일을 운영 DB 에서 한다.
 
@@ -48,7 +48,7 @@ UPDATE users SET session_version = session_version + 1 WHERE id = 대상_id;
 SELECT id, session_version FROM users WHERE id = 대상_id;
 ```
 
-이 방법은 `getSessionUser` 를 거치는 곳에서만 끊는다. 관리자 권한은 모두 여기를 거친다. `getSession()` 의 `session.id` 를 바로 읽는 일반 사용자 기능은 쿠키가 만료될 때까지 통과한다(세션 수명 14일). 끊으려는 쿠키가 일반 기능을 써도 안 되면 `COOKIE_PASSWORD` 를 바꾼다.
+쿠키를 푸는 `getSession` 이 버전을 비교하므로 관리자 · 일반 기능 모두 다음 요청부터 로그아웃으로 처리된다. `proxy.ts` 는 언어와 온보딩 이동만 보고 권한을 판단하지 않아 비교하지 않는다.
 
 동기화 토큰은 세션과 따로 산다. 관리자 화면의 연동 토큰 초기화나 `BOOKMARKLET_SECRET` 교체로 끊는다.
 

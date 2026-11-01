@@ -12,7 +12,7 @@ import {
     stripLocaleFromPath,
 } from "./lib/i18n/routing";
 import db from "./lib/db";
-import getSession from "./lib/session";
+import { getUncheckedSession } from "./lib/session";
 import { recordApiCall } from "./lib/analytics";
 import { getMaintenanceConfig } from "./features/recovery/server/maintenance-config";
 import { createTranslator, getMessages } from "./lib/i18n/messages";
@@ -139,7 +139,7 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
         });
     }
 
-    const session = await getSession();
+    const session = await getUncheckedSession();
     // 언어 · 통계용 역할이 세션에 없을 때만 DB 를 읽어 세션에 채운다 — 로그인 API 호출마다 읽지 않게(2026-10-15 S8)
     const needsLocale = Boolean(session.id) && !isLocale(session.locale);
     const needsRole =

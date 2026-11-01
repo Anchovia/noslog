@@ -659,37 +659,6 @@ describe("Discord OAuth", () => {
         expect(mocks.userUpdate).not.toHaveBeenCalled();
     });
 
-    it("끊긴 쿠키로 로그인하면 계정 연결이 아니라 새 로그인으로 새 버전을 받는다", async () => {
-        mocks.session.id = 3;
-        mocks.session.sessionVersion = 0;
-        mocks.session.discordOAuthState = "state";
-        mockDiscordSuccess();
-        mocks.userFindUnique
-            .mockResolvedValueOnce({
-                id: 3,
-                discordId: "discord-1",
-                avatar: null,
-                sessionVersion: 1,
-            })
-            .mockResolvedValueOnce({
-                id: 3,
-                avatar: null,
-                role: "user",
-                sessionVersion: 1,
-                profileCompletedAt: new Date("2026-07-19"),
-            });
-        mocks.userUpdate.mockResolvedValueOnce({
-            id: 3,
-            role: "user",
-            sessionVersion: 1,
-        });
-        await completeDiscordOAuth(
-            request("/discord/complete?code=code&state=state")
-        );
-        expect(mocks.session.id).toBe(3);
-        expect(mocks.session.sessionVersion).toBe(1);
-    });
-
     it("실패를 사유와 함께 남기고 받은 code 는 남기지 않는다", async () => {
         const log = vi.spyOn(console, "warn").mockImplementation(() => {});
         mocks.session.discordOAuthState = "expected-state";

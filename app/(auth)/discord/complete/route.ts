@@ -72,22 +72,13 @@ export async function GET(request: NextRequest) {
     const code = request.nextUrl.searchParams.get("code");
     const state = request.nextUrl.searchParams.get("state");
     const session = await getSession();
-    const sessionUser = session.id
+    const currentUser = session.id
         ? await getDiscordLinkingUser(session.id)
         : null;
-    // 끊긴 쿠키로 다시 로그인하면 계정 연결이 아니라 새 로그인으로 처리해야 새 버전을 받는다
-    const currentUser =
-        sessionUser &&
-        (session.sessionVersion ?? 0) === sessionUser.sessionVersion
-            ? sessionUser
-            : null;
     if (session.id && !currentUser) {
         delete session.id;
         delete session.profileCompleted;
         delete session.locale;
-        delete session.sessionVersion;
-        delete session.discordMfaEnabled;
-        delete session.adminVerification;
     }
     const isLinking = Boolean(currentUser);
     const expectedState = session.discordOAuthState;

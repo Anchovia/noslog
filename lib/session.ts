@@ -2,7 +2,9 @@ import "server-only";
 
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
+import db from "@/lib/db";
 import { serverEnv } from "@/lib/env/server";
 import type { Locale } from "@/lib/i18n/routing";
 
@@ -56,7 +58,8 @@ interface SessionContent {
 
 const SESSION_TTL_SECONDS = 14 * 24 * 60 * 60;
 
-export default async function getSession() {
+/** 권한을 판단하지 않고 언어 · 온보딩 이동만 보는 proxy 용. 모든 요청에서 DB 를 읽지 않게 버전을 비교하지 않는다 */
+export async function getUncheckedSession() {
     return getIronSession<SessionContent>(await cookies(), {
         cookieName: "user_session_cookie",
         password: serverEnv.COOKIE_PASSWORD,
@@ -69,4 +72,32 @@ export default async function getSession() {
             priority: "high",
         },
     });
+}
+
+const readSessionVersion = cache((userId: number) =>
+    db.user.findUnique({
+        where: { id: userId },
+        select: { sessionVersion: true },
+    })
+);
+
+export default async function getSession() {
+    const session = await getUncheckedSession();
+    if (!session.id) return session;
+
+    const user = await readSessionVersion(session.id);
+    // 서버 컴포넌트에서는 쿠키를 지울 수 없어 이 요청에서만 로그아웃 상태로 돌려준다. 쿠키는 다음 저장이나 로그인이 덮어쓴다
+    if (user && (session.sessionVersion ?? 0) !== user.sessionVersion) {
+        delete session.id;
+        delete session.profileCompleted;
+        delete session.role;
+        delete session.discordMfaEnabled;
+        delete session.adminVerification;
+        delete session.deletionVerification;
+        delete session.oauthAuthorize;
+        delete session.musecatConnect;
+        delete session.musecatMock;
+        delete session.onboardingReturnTo;
+    }
+    return session;
 }
