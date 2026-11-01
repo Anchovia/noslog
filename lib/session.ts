@@ -14,13 +14,23 @@ interface SessionContent {
     role?: string;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
-    discordOAuthMode?: "refresh" | "change" | "delete";
+    discordOAuthMode?: "refresh" | "change" | "delete" | "admin";
     discordOAuthUserId?: number;
     deletionVerification?: {
         userId: number;
         discordId: string;
         verifiedAt: number;
     };
+    /** 역할 변경 · 동기화 토큰 초기화 앞의 Discord 재확인. 탈퇴 재확인으로 관리자 작업이 열리지 않게 칸을 나눈다 */
+    adminVerification?: {
+        userId: number;
+        discordId: string;
+        verifiedAt: number;
+    };
+    /** User.sessionVersion 과 다르면 로그아웃으로 친다. 이 칸이 생기기 전의 쿠키는 0 으로 본다 */
+    sessionVersion?: number;
+    /** 마지막 Discord 인증 때 받은 mfa_enabled. true 가 아니면 관리자 권한을 주지 않는다 */
+    discordMfaEnabled?: boolean;
     onboardingReturnTo?: string;
     /** 파트너 OAuth 동의 대기(뮤즈캣 연동 B, 2026-10-20) — /oauth/authorize 가 검사한 요청을 동의 화면까지 들고 간다 */
     oauthAuthorize?: {

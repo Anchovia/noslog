@@ -61,3 +61,23 @@ export function createServerErrorEvent(
 export function logServerError(error: unknown, context: ServerErrorContext) {
     console.error(JSON.stringify(createServerErrorEvent(error, context)));
 }
+
+/** 칸을 정해 두어 토큰 · 비밀값 · 세션 원문이 로그에 들어가지 않게 한다 */
+export interface SecurityEvent {
+    event: string;
+    actorUserId?: number;
+    targetUserId?: number;
+    mode?: string;
+    reason?: string;
+    role?: string;
+}
+
+export function logSecurityEvent(event: SecurityEvent) {
+    console.warn(
+        JSON.stringify({
+            level: "warn",
+            timestamp: new Date().toISOString(),
+            ...event,
+        })
+    );
+}

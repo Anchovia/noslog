@@ -34,6 +34,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { getSessionUser } from "@/lib/user";
 
 function translatorFor(requestedLocale: string) {
     const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
@@ -55,11 +56,8 @@ function logDraftError(error: unknown, event: string, routePath: string) {
     logServerError(error, { event, routePath, routeType: "action" });
 }
 
-async function isAdminUser(userId: number) {
-    const user = await db.user.findUnique({
-        where: { id: userId },
-        select: { role: true },
-    });
+async function isAdminUser() {
+    const { user } = await getSessionUser();
     return user?.role === "admin";
 }
 
@@ -354,7 +352,7 @@ export async function listChartComments(query: {
         if (
             !draft ||
             draft.chartId !== query.chartId ||
-            (draft.userId !== session.id && !(await isAdminUser(session.id)))
+            (draft.userId !== session.id && !(await isAdminUser()))
         )
             return null;
     }
@@ -411,8 +409,7 @@ export async function addChartComment(
             if (
                 !draft ||
                 draft.chartId !== chartId ||
-                (draft.userId !== session.id &&
-                    !(await isAdminUser(session.id)))
+                (draft.userId !== session.id && !(await isAdminUser()))
             )
                 return {
                     success: false,

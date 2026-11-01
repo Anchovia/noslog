@@ -28,6 +28,8 @@ model User {
   preferredArcade           Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
   role                      UserRole                    @default(user)
   syncTokenVersion          Int                         @default(0) @map("sync_token_version")
+  // 올리면 이전에 받은 로그인 쿠키가 모두 무효가 된다 — iron-session 은 서버에 세션을 두지 않아 이 값으로만 끊을 수 있다
+  sessionVersion            Int                         @default(0) @map("session_version")
   createdAt                 DateTime                    @default(now()) @map("created_at")
   updatedAt                 DateTime                    @updatedAt @map("updated_at")
   playData                  PlayData[]

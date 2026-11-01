@@ -13,7 +13,7 @@ import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale } from "@/lib/i18n/routing";
-import { logServerError } from "@/lib/observability/server";
+import { logSecurityEvent, logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
 function invalidateDeletedAccount(userId: number) {
@@ -100,6 +100,11 @@ export async function deleteAccount(
         await revokeGrantByUser(session.id, MUSECAT_OAUTH_CLIENT_ID);
         await disconnectMusecat(session.id);
         await db.user.delete({ where: { id: session.id } });
+        logSecurityEvent({
+            event: "account.deleted",
+            actorUserId: session.id,
+            targetUserId: session.id,
+        });
         after(() => dispatchPartnerOutbox().catch(() => null));
         invalidateDeletedAccount(session.id);
         await session.destroy();

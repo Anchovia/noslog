@@ -247,6 +247,6 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
 // 점검 · 온보딩 확인 없이 열린다
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|fonts/|bg/|brand/|flag/|flags/|grade/|icon/|icons/|images/|favicon.ico$|icon-192.png$|logo.png$|main_signup.png$).*)",
+        "/((?!_next/static|_next/image|fonts/|bg/|brand/|flag/|flags/|grade/|icon/|icons/|images/|.well-known/security.txt$|favicon.ico$|icon-192.png$|logo.png$|main_signup.png$).*)",
     ],
 };

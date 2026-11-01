@@ -1232,7 +1232,7 @@ export const jaMessages = {
     "sync.history": "同期履歴",
     "sync.guideTitle": "はじめての同期",
     "sync.guideIntro":
-        "初回に登録すれば、次回からは公式サイトで実行するだけです。",
+        "ブックマークレットの登録は1回だけです。次回からは公式サイトで実行します。",
     "sync.privateBookmark":
         "自分のアカウント専用です。他の人と共有しないでください。",
     "sync.loginStep": "公式サイトにログイン",
@@ -1241,7 +1241,7 @@ export const jaMessages = {
     "sync.runInstruction":
         "公式サイトで、保存した「{bookmarklet}」ブックマークを実行してください。",
     "sync.mobileRun":
-        "モバイル版Chromeでは、アドレスバーにブックマーク名を入力し、候補に表示されたブックマークをタップして実行してください。ブックマークメニューから開くと実行されません。",
+        "モバイル版Chromeでは、アドレスバーにブックマーク名を入力して候補のブックマークをタップしてください。ブックマークメニューから開くと実行されません。",
     "sync.returnInstruction":
         "完了の案内が表示されたら、このページに戻って結果を確認してください。",
     "sync.setup": "ブックマークレットの登録",
@@ -1251,25 +1251,24 @@ export const jaMessages = {
     "sync.status.cooldown": "待機中",
     "sync.status.partial": "完了・一部除外",
     "sync.delayed": "いつもより時間がかかっています。",
-    "sync.timedOut": "許可された時間内に完了しませんでした。",
+    "sync.timedOut": "時間内に終わりませんでした。",
     "sync.tryAgain": "もう一度同期",
     "sync.reinstall": "ブックマークレットを登録し直す",
     "sync.cooldown":
-        "同期したばかりです。{count}秒後にもう一度お試しください。",
+        "同期したばかりです。{count}秒後にもう一度同期してください。",
     "sync.help": "ヘルプ・セキュリティ",
-    "sync.whatSent": "何を送りますか",
-    "sync.howWorks": "手順",
+    "sync.whatSent": "送る情報",
     "sync.limitations": "制限事項",
     "sync.sentDescription":
-        "NosLogはプレイヤー情報と最近のプレー履歴を受け取ります。p.eagateのパスワードとログインCookieは受け取りません。",
+        "プレイヤー情報とプレー記録を送ります。p.eagateのパスワードとログインCookieは送りません。",
     "sync.limitDescription":
-        "Basic Passがなくても、最近の30プレーを同期するたびに記録を蓄積し、ベスト記録・Grd・Ratingを更新します。全記録を受信すると公式の値に補正します。",
+        "Basic Passがない場合は最近の30プレーだけを取得します。同期するたびに記録がたまり、ベスト記録とGrd、Ratingに反映されます。Basic Passがある場合は全記録を取得し、公式サイトの記録と同じになります。",
     "sync.recentHelp":
-        "最近のプレーを蓄積して個人記録を更新しました。これまでのベスト記録と今回取得できなかった値は保持されます。Basic Passで全記録を受信すると公式の値に補正します。",
+        "最近のプレーを記録に追加しました。これまでのベスト記録と今回取得できなかった値はそのまま残します。Basic Passがある場合は全記録を取得し、公式サイトの記録と同じになります。",
     "sync.security":
-        "このブックマークレットは現在のNosLogアカウント専用です。p.eagateのパスワードとログインCookieはNosLogへ送信されません。",
+        "このブックマークレットは自分のNosLogアカウント専用です。p.eagateのパスワードとログインCookieは送りません。",
     "sync.setupSecurity":
-        "このブックマークレットは現在のNosLogアカウント専用です。他の人と共有しないでください。p.eagateのパスワードとログインCookieはNosLogへ送信されません。",
+        "このブックマークレットは自分のNosLogアカウント専用です。他の人と共有しないでください。p.eagateのパスワードとログインCookieは送りません。",
     "sync.changes": "今回変わった記録",
     "sync.excludedTitle": "一部の譜面を除外",
     "sync.excludedCount": "除外した譜面 {count}件",
@@ -1278,9 +1277,7 @@ export const jaMessages = {
     "sync.invalidate": "既存のブックマークレットを無効化",
     "sync.invalidateConfirm": "無効化",
     "sync.invalidateHelp":
-        "このアカウントの既存のブックマークレットは直ちに無効になります。無効化後は登録し直す必要があります。",
-    "sync.description":
-        "ブックマークレットを登録してNOSTALGIAのプレーデータを同期できます。",
+        "これまでに登録したブックマークレットはすぐに使えなくなります。登録し直してください。",
     "sync.metaDescription":
         "ブックマークレットを使ってNOSTALGIAのプレーデータをNosLogへ安全に同期する方法をご案内します。",
     "sync.none": "同期履歴はまだありません。",
@@ -1288,7 +1285,7 @@ export const jaMessages = {
     "sync.failed": "前回の同期に失敗しました。",
     "sync.last": "同期 {distance}",
     "sync.loginStatus": "ログインすると同期状況を確認できます。",
-    "sync.processingHelp": "完了後に処理結果を確認できます。",
+    "sync.processingHelp": "完了するとこの画面に結果が表示されます。",
     "sync.failedHelp": "ログイン状態を確認して、もう一度同期してください。",
     "sync.resultHelp": "直近の処理結果を下で確認できます。",
     "sync.emptyHelp": "同期すると処理結果がここに表示されます。",
@@ -1296,7 +1293,7 @@ export const jaMessages = {
         "再発行すると既存のブックマークレットは無効になります。再発行後に登録し直してください。",
     "sync.step.install": "ブックマークレットを登録",
     "sync.loginToCreate":
-        "ログインするとアカウント専用のブックマークレットを作成できます。",
+        "ログインすると自分のアカウント専用のブックマークレットが作られます。",
     "sync.step.run": "記録を同期",
     "sync.pegateLogin": "p.eagate NOSTALGIAページにログイン",
     "sync.runBookmarklet":
@@ -1312,7 +1309,7 @@ export const jaMessages = {
     "sync.copyAddress": "ブックマークレットのアドレスをコピー",
     "sync.mobileAdd": "1. このページをブラウザのブックマークに追加します。",
     "sync.mobileEdit":
-        "2. 下のアドレスをコピーし、追加したブックマークのURLに貼り付けて保存してください。",
+        "2. 下のアドレスをコピーします。追加したブックマークのURLに貼り付けて保存してください。",
     "sync.mobileAddAlt": "モバイルでブックマークを追加する方法",
     "sync.mobileEditAlt": "モバイルでブックマークのアドレスを編集する方法",
     "sync.latestResult": "直近の同期結果",
@@ -1333,7 +1330,7 @@ export const jaMessages = {
     "sync.recentAnalysis": "最近のプレーを分析可能",
     "sync.chartCount": "{count}譜面",
     "sync.chartRatio": "{current} / {total}譜面",
-    "sync.notice": "一部の未登録譜面は個人記録から除外されました。",
+    "sync.notice": "NosLogにない譜面は個人記録から除きました。",
     "sync.lessThanSecond": "1秒未満",
     "sync.seconds": "{count}秒",
     "sync.minutes": "{count}分",
@@ -1344,13 +1341,13 @@ export const jaMessages = {
     "sync.regenerateHelp":
         "再発行後、下の「NosLog 同期」ボタンをブックマークバーへ登録し直してください。",
     "sync.cancel": "キャンセル",
-    "sync.regenerating": "再発行中",
+    "sync.regenerating": "無効化中",
     "sync.regenerateAction": "再発行",
     "sync.loginRequired": "ログインが必要です。",
     "sync.regenerateSuccess":
         "同期トークンを再発行しました。ブックマークレットを登録し直してください。",
     "sync.regenerateError":
-        "同期トークンを再発行できませんでした。もう一度お試しください。",
+        "既存のブックマークレットを無効化できませんでした。もう一度お試しください。",
     "sync.gifPlaceholder": "{label} GIF用スペース",
     "sync.gifPending": "サンプルGIF準備中",
     "profile.fallbackTitle": "ユーザープロフィール",
@@ -1533,6 +1530,10 @@ export const jaMessages = {
     "settings.changeLoginAccountWarning":
         "次回から新しく認証した Discord アカウントでログインします。続行すると Discord 認証に移動します。",
     "settings.continue": "続行",
+    "settings.adminMfaRequired":
+        "Discord の二要素認証がオフのため、管理者権限を使えません。Discord で二要素認証をオンにしてから、もう一度ログインしてください。",
+    "settings.adminDiscordLocked":
+        "管理者アカウントはログイン用の Discord アカウントを変更できません。",
     "settings.discordIdentityMismatch":
         "現在連携している Discord アカウントで再認証してください。ログインアカウントを変える場合は、ログインアカウントの変更を選択してください。",
     "settings.discordRefreshComplete": "Discord 情報を更新しました。",

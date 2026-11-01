@@ -16,6 +16,7 @@ export const SESSION_USER_SELECT = {
     showLocalizedMusicTitle: true,
     preferredArcadeId: true,
     syncTokenVersion: true,
+    sessionVersion: true,
 } satisfies Prisma.UserSelect;
 
 export type SessionUser = Prisma.UserGetPayload<{
@@ -30,6 +31,16 @@ export const getSessionUser = cache(async () => {
               select: SESSION_USER_SELECT,
           })
         : null;
+
+    // 서버 컴포넌트에서는 쿠키를 지울 수 없어, 이 요청에서만 로그아웃 상태로 돌려준다. 쿠키는 다음 로그인이 덮어쓴다
+    if (user && (session.sessionVersion ?? 0) !== user.sessionVersion) {
+        delete session.id;
+        delete session.profileCompleted;
+        return { session, user: null };
+    }
+    if (user?.role === "admin" && session.discordMfaEnabled !== true) {
+        return { session, user: { ...user, role: "user" as const } };
+    }
 
     return { session, user };
 });

@@ -1,0 +1,5 @@
+Contact: https://github.com/Anchovia/noslog/security/advisories/new
+Expires: 2027-10-31T15:00:00.000Z
+Preferred-Languages: ko, en, ja
+Canonical: https://noslog.app/.well-known/security.txt
+Policy: https://github.com/Anchovia/noslog/blob/main/SECURITY.md

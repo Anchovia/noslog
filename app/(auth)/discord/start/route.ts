@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
     const mode =
         requestedMode === "refresh" ||
         requestedMode === "change" ||
-        requestedMode === "delete"
+        requestedMode === "delete" ||
+        requestedMode === "admin"
             ? requestedMode
             : undefined;
     const cookieLocale = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
@@ -55,6 +56,7 @@ export async function GET(request: NextRequest) {
 
     const state = randomBytes(32).toString("hex");
     delete session.deletionVerification;
+    delete session.adminVerification;
     session.discordOAuthState = state;
     session.discordOAuthReturnTo = returnTo;
     session.discordOAuthMode = mode;

@@ -9,10 +9,15 @@ const mocks = vi.hoisted(() => ({
         discordOAuthState: undefined as string | undefined,
         discordOAuthReturnTo: undefined as string | undefined,
         discordOAuthMode: undefined as
-            "refresh" | "change" | "delete" | undefined,
+            "refresh" | "change" | "delete" | "admin" | undefined,
         deletionVerification: undefined as
             | { userId: number; discordId: string; verifiedAt: number }
             | undefined,
+        adminVerification: undefined as
+            | { userId: number; discordId: string; verifiedAt: number }
+            | undefined,
+        sessionVersion: undefined as number | undefined,
+        discordMfaEnabled: undefined as boolean | undefined,
         discordOAuthUserId: undefined as number | undefined,
         onboardingReturnTo: undefined as string | undefined,
         save: vi.fn(),
@@ -70,9 +75,11 @@ function jsonResponse(data: unknown, status = 200) {
 function mockDiscordSuccess({
     id = "discord-1",
     avatar = "avatar-hash",
+    mfa = false,
 }: {
     id?: string;
     avatar?: string | null;
+    mfa?: boolean;
 } = {}) {
     mocks.fetch
         .mockResolvedValueOnce(jsonResponse({ access_token: "access-token" }))
@@ -82,6 +89,7 @@ function mockDiscordSuccess({
                 username: "discord-user",
                 global_name: "Discord User",
                 avatar,
+                mfa_enabled: mfa,
             })
         );
 }
@@ -96,6 +104,9 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthReturnTo = undefined;
         mocks.session.discordOAuthMode = undefined;
         mocks.session.deletionVerification = undefined;
+        mocks.session.adminVerification = undefined;
+        mocks.session.sessionVersion = undefined;
+        mocks.session.discordMfaEnabled = undefined;
         mocks.session.discordOAuthUserId = undefined;
         mocks.session.onboardingReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
@@ -129,6 +140,7 @@ describe("Discord OAuth", () => {
             id: 7,
             discordId: "discord-1",
             avatar: null,
+            sessionVersion: 0,
         });
         mockDiscordSuccess();
         const response = await completeDiscordOAuth(
@@ -163,6 +175,7 @@ describe("Discord OAuth", () => {
                 id: mismatch === "session" ? 8 : 7,
                 discordId: "discord-1",
                 avatar: null,
+                sessionVersion: 0,
             });
             mockDiscordSuccess({
                 id: mismatch === "identity" ? "other" : "discord-1",
@@ -275,7 +288,7 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthState = "state";
         mockDiscordSuccess();
         mocks.userFindUnique
-            .mockResolvedValueOnce({ id: 1, avatar: null })
+            .mockResolvedValueOnce({ id: 1, avatar: null, sessionVersion: 0 })
             .mockResolvedValueOnce({
                 id: 2,
                 avatar: null,
@@ -302,7 +315,11 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthReturnTo = "/profile/settings";
         mockDiscordSuccess();
         mocks.userFindUnique
-            .mockResolvedValueOnce({ id: 1, avatar: customAvatar })
+            .mockResolvedValueOnce({
+                id: 1,
+                avatar: customAvatar,
+                sessionVersion: 0,
+            })
             .mockResolvedValueOnce(null);
 
         const response = await completeDiscordOAuth(
@@ -330,6 +347,7 @@ describe("Discord OAuth", () => {
                 id: 1,
                 avatar: null,
                 avatarUserManaged: true,
+                sessionVersion: 0,
             })
             .mockResolvedValueOnce(null);
         await completeDiscordOAuth(
@@ -356,6 +374,7 @@ describe("Discord OAuth", () => {
                 id: 1,
                 discordId: "same-discord",
                 avatar: null,
+                sessionVersion: 0,
             })
             .mockResolvedValueOnce({ id: 1 });
         await completeDiscordOAuth(
@@ -381,6 +400,7 @@ describe("Discord OAuth", () => {
             id: 1,
             discordId: "original-discord",
             avatar: null,
+            sessionVersion: 0,
         });
         const response = await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
@@ -402,7 +422,11 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthUserId = 1;
         mocks.session.discordOAuthReturnTo =
             "/en/settings?category=connections";
-        mocks.userFindUnique.mockResolvedValueOnce({ id: 2, avatar: null });
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 2,
+            avatar: null,
+            sessionVersion: 0,
+        });
         const response = await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
         );
@@ -443,7 +467,12 @@ describe("Discord OAuth", () => {
                 discordName: "Discord User",
                 discordUsername: "discord-user",
             }),
-            select: { id: true, locale: true, role: true },
+            select: {
+                id: true,
+                locale: true,
+                role: true,
+                sessionVersion: true,
+            },
         });
         expect(mocks.session.id).toBe(7);
         expect(mocks.session.profileCompleted).toBe(false);
@@ -518,5 +547,161 @@ describe("Discord OAuth", () => {
         expect(mocks.userUpdate).not.toHaveBeenCalled();
         expect(mocks.revalidateTag).not.toHaveBeenCalled();
         expect(mocks.session.id).toBe(3);
+    });
+
+    it("2단계 인증이 꺼진 관리자는 로그인만 되고 연결 설정에서 안내를 본다", async () => {
+        const log = vi.spyOn(console, "warn").mockImplementation(() => {});
+        mocks.session.discordOAuthState = "state";
+        mockDiscordSuccess({ mfa: false });
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 3,
+            avatar: null,
+            role: "admin",
+            sessionVersion: 2,
+            profileCompletedAt: new Date("2026-07-19"),
+        });
+        mocks.userUpdate.mockResolvedValueOnce({
+            id: 3,
+            role: "admin",
+            sessionVersion: 2,
+        });
+        const response = await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        const target = new URL(response.headers.get("location")!);
+        expect(mocks.session.id).toBe(3);
+        expect(mocks.session.sessionVersion).toBe(2);
+        expect(mocks.session.discordMfaEnabled).toBe(false);
+        expect(target.pathname).toBe("/profile/settings");
+        expect(target.searchParams.get("discordError")).toBe(
+            "admin_mfa_required"
+        );
+        expect(log.mock.calls.map(([line]) => JSON.parse(line).event)).toEqual([
+            "auth.discord.succeeded",
+            "auth.discord.admin-mfa-denied",
+        ]);
+        log.mockRestore();
+    });
+
+    function startAdminReauth() {
+        mocks.session.id = 1;
+        mocks.session.discordOAuthState = "state";
+        mocks.session.discordOAuthMode = "admin";
+        mocks.session.discordOAuthUserId = 1;
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 1,
+            discordId: "discord-1",
+            avatar: null,
+            role: "admin",
+            sessionVersion: 0,
+        });
+    }
+
+    it("관리자 재확인은 2단계 인증이 켜진 같은 Discord 만 통과한다", async () => {
+        startAdminReauth();
+        mockDiscordSuccess({ mfa: true });
+        const response = await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        expect(mocks.session.adminVerification).toEqual({
+            userId: 1,
+            discordId: "discord-1",
+            verifiedAt: expect.any(Number),
+        });
+        expect(mocks.session.deletionVerification).toBeUndefined();
+        expect(new URL(response.headers.get("location")!).pathname).toBe(
+            "/admin/users"
+        );
+    });
+
+    it("관리자 재확인에서 2단계 인증이 꺼져 있으면 통과시키지 않는다", async () => {
+        startAdminReauth();
+        mockDiscordSuccess({ mfa: false });
+        const response = await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        const target = new URL(response.headers.get("location")!);
+        expect(mocks.session.adminVerification).toBeUndefined();
+        expect(mocks.session.discordMfaEnabled).toBe(false);
+        expect(target.pathname).toBe("/profile/settings");
+        expect(target.searchParams.get("discordError")).toBe(
+            "admin_mfa_required"
+        );
+    });
+
+    it("관리자 재확인에서 다른 Discord 계정이면 통과시키지 않는다", async () => {
+        startAdminReauth();
+        mockDiscordSuccess({ id: "other", mfa: true });
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        expect(mocks.session.adminVerification).toBeUndefined();
+    });
+
+    it("관리자 계정은 연결된 Discord 계정을 바꾸지 못한다", async () => {
+        mocks.session.id = 1;
+        mocks.session.discordOAuthState = "state";
+        mocks.session.discordOAuthMode = "change";
+        mocks.session.discordOAuthUserId = 1;
+        mockDiscordSuccess({ id: "attacker", mfa: true });
+        mocks.userFindUnique
+            .mockResolvedValueOnce({
+                id: 1,
+                discordId: "discord-1",
+                avatar: null,
+                role: "admin",
+                sessionVersion: 0,
+            })
+            .mockResolvedValueOnce(null);
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+    });
+
+    it("끊긴 쿠키로 로그인하면 계정 연결이 아니라 새 로그인으로 새 버전을 받는다", async () => {
+        mocks.session.id = 3;
+        mocks.session.sessionVersion = 0;
+        mocks.session.discordOAuthState = "state";
+        mockDiscordSuccess();
+        mocks.userFindUnique
+            .mockResolvedValueOnce({
+                id: 3,
+                discordId: "discord-1",
+                avatar: null,
+                sessionVersion: 1,
+            })
+            .mockResolvedValueOnce({
+                id: 3,
+                avatar: null,
+                role: "user",
+                sessionVersion: 1,
+                profileCompletedAt: new Date("2026-07-19"),
+            });
+        mocks.userUpdate.mockResolvedValueOnce({
+            id: 3,
+            role: "user",
+            sessionVersion: 1,
+        });
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+        expect(mocks.session.id).toBe(3);
+        expect(mocks.session.sessionVersion).toBe(1);
+    });
+
+    it("실패를 사유와 함께 남기고 받은 code 는 남기지 않는다", async () => {
+        const log = vi.spyOn(console, "warn").mockImplementation(() => {});
+        mocks.session.discordOAuthState = "expected-state";
+        await completeDiscordOAuth(
+            request("/discord/complete?code=secret-code&state=wrong")
+        );
+        const line = log.mock.calls[0][0] as string;
+        expect(JSON.parse(line)).toMatchObject({
+            event: "auth.discord.failed",
+            reason: "invalid_state",
+        });
+        expect(line).not.toContain("secret-code");
+        log.mockRestore();
     });
 });

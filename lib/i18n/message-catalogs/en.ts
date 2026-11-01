@@ -1241,7 +1241,7 @@ export const enMessages = {
     "sync.history": "Sync history",
     "sync.guideTitle": "Set up your first sync",
     "sync.guideIntro":
-        "Register once, then run the bookmarklet on the official site whenever you want to sync.",
+        "You only register the bookmarklet once. After that, run it on the official site.",
     "sync.privateBookmark":
         "This bookmark is for your account only. Do not share it.",
     "sync.loginStep": "Sign in to the official site",
@@ -1260,24 +1260,23 @@ export const enMessages = {
     "sync.status.cooldown": "Cooldown",
     "sync.status.partial": "Completed · some excluded",
     "sync.delayed": "This is taking longer than usual.",
-    "sync.timedOut": "The attempt did not finish in the allowed time.",
+    "sync.timedOut": "The sync didn't finish in time.",
     "sync.tryAgain": "Try sync again",
     "sync.reinstall": "Reinstall bookmarklet",
-    "sync.cooldown": "You just synced. You can try again in {count} sec.",
+    "sync.cooldown": "You just synced. Sync again in {count} sec.",
     "sync.help": "Help & security",
-    "sync.whatSent": "What is sent",
-    "sync.howWorks": "How it works",
+    "sync.whatSent": "Data sent",
     "sync.limitations": "Limitations",
     "sync.sentDescription":
-        "NosLog receives your player information and recent play history. It does not receive your p.eagate password or login cookie.",
+        "Your player information and play records are sent. Your p.eagate password and login cookie are not.",
     "sync.limitDescription":
-        "Without Basic Pass, each sync adds your recent 30 plays to your records and updates your best records, Grd and Rating. A full sync reconciles them with official values.",
+        "Without Basic Pass, only your last 30 plays are imported. Each sync adds to your records and updates your best scores, Grd and Rating. With Basic Pass, all your records are imported and match the official site.",
     "sync.recentHelp":
-        "Your recent plays have been added to update your personal records. Existing bests and values absent from this response are preserved. A full sync with Basic Pass reconciles them with official values.",
+        "Your recent plays were added to your records. Earlier bests and values missing from this sync stay as they were. With Basic Pass, all your records are imported and match the official site.",
     "sync.security":
-        "This bookmarklet belongs to your NosLog account. Your p.eagate password and login cookie are never sent to NosLog.",
+        "This bookmarklet only works with your NosLog account. Your p.eagate password and login cookie are not sent.",
     "sync.setupSecurity":
-        "This bookmarklet belongs to your NosLog account. Do not share it with anyone. Your p.eagate password and login cookie are never sent to NosLog.",
+        "This bookmarklet only works with your NosLog account. Do not share it. Your p.eagate password and login cookie are not sent.",
     "sync.changes": "What changed",
     "sync.excludedTitle": "Some charts excluded",
     "sync.excludedCount": "{count} charts excluded",
@@ -1286,9 +1285,7 @@ export const enMessages = {
     "sync.invalidate": "Invalidate existing bookmarklets",
     "sync.invalidateConfirm": "Invalidate",
     "sync.invalidateHelp":
-        "Existing bookmarklets for this account expire immediately. You must reinstall the bookmarklet after invalidating them.",
-    "sync.description":
-        "Register the bookmarklet to sync your NOSTALGIA play records.",
+        "Bookmarklets you registered before stop working right away. Register the bookmarklet again.",
     "sync.metaDescription":
         "Learn how to safely sync your NOSTALGIA play records to NosLog with a bookmarklet.",
     "sync.none": "No sync history yet.",
@@ -1296,14 +1293,14 @@ export const enMessages = {
     "sync.failed": "The last sync failed.",
     "sync.last": "Synced {distance}",
     "sync.loginStatus": "Log in to check your sync status.",
-    "sync.processingHelp": "You can review the result when it finishes.",
+    "sync.processingHelp": "The result appears here when it finishes.",
     "sync.failedHelp": "Check your login status and try syncing again.",
     "sync.resultHelp": "You can review the latest result below.",
     "sync.emptyHelp": "Your result will appear here after a sync.",
     "sync.regenerateWarning":
         "Regenerating expires the existing bookmarklet. Register it again afterward.",
     "sync.step.install": "Register the bookmarklet",
-    "sync.loginToCreate": "Log in to create a bookmarklet for your account.",
+    "sync.loginToCreate": "Log in to get a bookmarklet for your account.",
     "sync.step.run": "Sync records",
     "sync.pegateLogin": "Log in to the p.eagate NOSTALGIA page",
     "sync.runBookmarklet":
@@ -1319,7 +1316,7 @@ export const enMessages = {
     "sync.copyAddress": "Copy bookmarklet address",
     "sync.mobileAdd": "1. Add this page to your browser bookmarks.",
     "sync.mobileEdit":
-        "2. Copy the address below, paste it into the saved bookmark’s URL field, and save.",
+        "2. Copy the address below. Paste it into the saved bookmark’s URL field and save.",
     "sync.mobileAddAlt": "How to add a bookmark on mobile",
     "sync.mobileEditAlt": "How to edit a bookmark address on mobile",
     "sync.latestResult": "Latest Sync Result",
@@ -1341,7 +1338,7 @@ export const enMessages = {
     "sync.chartCount": "{count} charts",
     "sync.chartRatio": "{current} / {total} charts",
     "sync.notice":
-        "Some unregistered charts were excluded from personal records.",
+        "Charts not on NosLog were left out of your personal records.",
     "sync.lessThanSecond": "Under 1 second",
     "sync.seconds": "{count} sec",
     "sync.minutes": "{count} min",
@@ -1352,13 +1349,13 @@ export const enMessages = {
     "sync.regenerateHelp":
         "After regenerating, add the NosLog Sync button below to your bookmarks bar again.",
     "sync.cancel": "Cancel",
-    "sync.regenerating": "Regenerating",
+    "sync.regenerating": "Invalidating",
     "sync.regenerateAction": "Regenerate",
     "sync.loginRequired": "Login required.",
     "sync.regenerateSuccess":
         "Sync token regenerated. Please register the bookmarklet again.",
     "sync.regenerateError":
-        "Could not regenerate the sync token. Please try again.",
+        "Could not invalidate your bookmarklets. Please try again.",
     "sync.gifPlaceholder": "{label} GIF placeholder",
     "sync.gifPending": "Example GIF coming soon",
     "profile.fallbackTitle": "User Profile",
@@ -1540,6 +1537,10 @@ export const enMessages = {
     "settings.changeLoginAccountWarning":
         "Future logins will use the newly authenticated Discord account. Continuing takes you to Discord authentication.",
     "settings.continue": "Continue",
+    "settings.adminMfaRequired":
+        "Admin access is off because Discord two-factor authentication is disabled. Turn it on in Discord, then log in again.",
+    "settings.adminDiscordLocked":
+        "Admin accounts can't change their login Discord account.",
     "settings.discordIdentityMismatch":
         "Authenticate with your currently connected Discord account. To use another login account, choose Change login account.",
     "settings.discordRefreshComplete": "Discord information refreshed.",

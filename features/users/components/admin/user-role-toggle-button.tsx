@@ -37,6 +37,13 @@ export default function UserRoleToggleButton({
                 );
                 if (!result.success) {
                     toast.error(result.message);
+                    if ("reauthenticationRequired" in result)
+                        window.location.assign(
+                            new URL(
+                                "/discord/start?mode=admin",
+                                window.location.origin
+                            ).href
+                        );
                     return;
                 }
 

@@ -9,6 +9,8 @@ const mocks = vi.hoisted(() => ({
     chartPlayHistoryGroupBy: vi.fn(),
     revalidatePath: vi.fn(),
     logServerError: vi.fn(),
+    logSecurityEvent: vi.fn(),
+    session: {} as { adminVerification?: unknown },
 }));
 
 vi.mock("@/lib/admin", () => ({ requireAdmin: mocks.requireAdmin }));
@@ -26,7 +28,9 @@ vi.mock("@/lib/db", () => ({
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
+    logSecurityEvent: mocks.logSecurityEvent,
 }));
+vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 
 import { resetUserSyncToken, updateUserRole } from "@/app/admin/users/actions";
 import { listAdminUsers } from "@/features/users/server/user-admin-service";
@@ -49,7 +53,15 @@ describe("관리자 사용자 관리", () => {
         vi.clearAllMocks();
         mocks.requireAdmin.mockResolvedValue({ id: 1, role: "admin" });
         mocks.userFindMany.mockResolvedValue([]);
-        mocks.userFindUnique.mockResolvedValue({ id: 2 });
+        mocks.userFindUnique.mockResolvedValue({
+            id: 2,
+            discordId: "discord-1",
+        });
+        mocks.session.adminVerification = {
+            userId: 1,
+            discordId: "discord-1",
+            verifiedAt: Date.now(),
+        };
         mocks.userUpdate.mockResolvedValue({
             id: 2,
             syncTokenVersion: 4,
@@ -221,7 +233,9 @@ describe("관리자 사용자 관리", () => {
     });
 
     it("존재하지 않는 사용자의 토큰을 변경하지 않는다", async () => {
-        mocks.userFindUnique.mockResolvedValue(null);
+        mocks.userFindUnique
+            .mockResolvedValueOnce({ discordId: "discord-1" })
+            .mockResolvedValueOnce(null);
 
         await expect(resetUserSyncToken(tokenForm())).resolves.toEqual({
             success: false,
@@ -243,5 +257,56 @@ describe("관리자 사용자 관리", () => {
             routePath: "/admin/users",
             routeType: "action",
         });
+    });
+
+    it.each([
+        ["없으면", undefined],
+        [
+            "10분이 지났으면",
+            {
+                userId: 1,
+                discordId: "discord-1",
+                verifiedAt: Date.now() - 10 * 60 * 1000,
+            },
+        ],
+        [
+            "다른 Discord 면",
+            { userId: 1, discordId: "other", verifiedAt: Date.now() },
+        ],
+    ])("Discord 재확인이 %s 역할과 토큰을 바꾸지 않는다", async (_, value) => {
+        mocks.session.adminVerification = value;
+        for (const result of [
+            await updateUserRole(roleForm()),
+            await resetUserSyncToken(tokenForm()),
+        ]) {
+            expect(result).toMatchObject({
+                success: false,
+                reauthenticationRequired: true,
+            });
+        }
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+        expect(mocks.logSecurityEvent).not.toHaveBeenCalled();
+    });
+
+    it("역할 변경과 토큰 초기화를 누가 누구에게 했는지만 남긴다", async () => {
+        await updateUserRole(roleForm());
+        await resetUserSyncToken(tokenForm());
+        expect(mocks.logSecurityEvent.mock.calls).toEqual([
+            [
+                {
+                    event: "admin.user.role-changed",
+                    actorUserId: 1,
+                    targetUserId: 2,
+                    role: "admin",
+                },
+            ],
+            [
+                {
+                    event: "admin.user.sync-token-reset",
+                    actorUserId: 1,
+                    targetUserId: 2,
+                },
+            ],
+        ]);
     });
 });
