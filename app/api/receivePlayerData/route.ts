@@ -297,6 +297,7 @@ function dropOutOfRangeSheets(
                 judge: chart.judge,
                 maxCombo: chart.max_combo,
                 gradeBasic: chart.grade_basic,
+                gradeRecital: chart.grade_recital,
             });
             const chartId = chartIds.get(key);
             if (!within && chartId) rejectedChartIds.push(chartId);

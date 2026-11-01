@@ -13,7 +13,12 @@ export type SyncedChartValues = {
     judge: [number, number, number, number, number];
     maxCombo: number;
     gradeBasic: number;
+    // 최근 플레이에는 없고 전체 기록에만 있다
+    gradeRecital?: number;
 };
+
+// Recital 최대 Grd 식은 확인되지 않았다. 운영 기록 11,751건에서 Basic 최대의 1.181배까지 나와 여유를 두고 잡는다
+const RECITAL_GRADE_LIMIT_RATIO = 1.25;
 
 export async function loadChartLimits(): Promise<ChartLimitMap> {
     const charts = await db.musicChart.findMany({
@@ -53,5 +58,9 @@ export function isWithinChartLimits(
         noteCount,
         values.difficulty
     );
-    return maxGrade == null || values.gradeBasic <= maxGrade;
+    if (maxGrade == null) return true;
+    return (
+        values.gradeBasic <= maxGrade &&
+        (values.gradeRecital ?? 0) <= maxGrade * RECITAL_GRADE_LIMIT_RATIO
+    );
 }

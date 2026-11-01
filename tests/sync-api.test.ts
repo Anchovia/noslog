@@ -81,6 +81,7 @@ vi.mock("@/features/achievements/server/achievement-service", () => ({
 }));
 
 import { POST } from "@/app/api/receivePlayerData/route";
+import { getMaxBasicGrade } from "@/lib/music/max-grade";
 
 const origin = "https://p.eagate.573.jp";
 const DAY_SECONDS = 24 * 60 * 60;
@@ -837,6 +838,38 @@ describe("POST /api/receivePlayerData", () => {
                     "채보 노트 수 · 최대 Grd 를 벗어난 기록 3개를 저장하지 않았습니다.",
             }),
         });
+    });
+
+    it("Recital Grd 는 Basic 최대의 1.25배까지만 저장한다", async () => {
+        mocks.musicChartFindMany.mockResolvedValue(
+            (["Normal", "Hard", "Expert"] as const).map(
+                (difficulty, index) => ({
+                    id: 11 + index,
+                    musicIdx: "test-music",
+                    difficulty,
+                    noteCount: 500,
+                    levelConstant: 10,
+                })
+            )
+        );
+        const body = requestBody(true);
+        const sheets = body.totalData!.data.music[0].sheet;
+        const maxNormal = getMaxBasicGrade(10, 500, "Normal")!;
+        const maxHard = getMaxBasicGrade(10, 500, "Hard")!;
+        sheets[0].grade_recital = Math.floor(maxNormal * 1.181);
+        sheets[1].grade_recital = Math.ceil(maxHard * 1.25) + 1;
+        sheets[2].grade_recital = 100_000_000;
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayData).toHaveBeenCalledWith(
+            1,
+            [expect.objectContaining({ sheet: [sheets[0]] })],
+            10,
+            expect.any(Map),
+            [12, 13]
+        );
     });
 
     it("등록된 채보가 하나도 없으면 기존 개인 기록을 덮어쓰지 않는다", async () => {
