@@ -235,9 +235,6 @@ export default function SyncSetup({
                                 />
                             </div>
                         </Disclosure>
-                        <p className="nl-metadata nl-muted">
-                            {t("sync.privateBookmark")}
-                        </p>
                     </section>
                 </li>
                 <li className="nl-sync-guide-step">

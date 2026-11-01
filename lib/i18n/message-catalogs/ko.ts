@@ -1288,7 +1288,7 @@ export const koMessages = {
     "sync.regenerateWarning":
         "재발급하면 기존 북마클릿이 만료됩니다. 재발급 후 북마클릿을 다시 등록해주세요.",
     "sync.step.install": "북마클릿 등록",
-    "sync.loginToCreate": "로그인하면 내 계정 전용 북마클릿이 만들어집니다.",
+    "sync.loginToCreate": "로그인시 내 계정 전용 북마클릿이 만들어집니다.",
     "sync.step.run": "기록 동기화",
     "sync.pegateLogin": "p.eagate NOSTALGIA 페이지에 로그인",
     "sync.runBookmarklet": "북마크바의 NosLog 동기화 클릭 및 동기화 완료",
