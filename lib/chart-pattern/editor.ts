@@ -463,7 +463,9 @@ export interface ChartNoteConflict {
 
 function occupancySegments(
     note: ChartNote,
-    ticksPerQuarter: number
+    ticksPerQuarter: number,
+    fromTick: number,
+    toTick: number
 ): ChartNoteOccupancySegment[] {
     if (note.type === "standard") {
         return [
@@ -487,9 +489,14 @@ function occupancySegments(
         );
         const endTick = note.tick + note.durationTicks;
         const segments: ChartNoteOccupancySegment[] = [];
+        // 트릴 구간은 길이에 비례해 늘어나므로 상대 노트와 시간이 겹치는 구간만 만든다
+        const firstIndex = Math.max(
+            0,
+            Math.ceil((fromTick - note.tick) / stepTicks) - 1
+        );
         for (
-            let startTick = note.tick, index = 0;
-            startTick < endTick;
+            let index = firstIndex, startTick = note.tick + index * stepTicks;
+            startTick < endTick && startTick <= toTick;
             startTick += stepTicks, index += 1
         ) {
             const fromFirst = index % 2 === 0;
@@ -595,13 +602,41 @@ export function chartNotesOverlap(
     const secondEnd = second.tick + second.durationTicks;
     if (first.tick > secondEnd || second.tick > firstEnd) return false;
 
-    const firstSegments = occupancySegments(first, ticksPerQuarter);
-    const secondSegments = occupancySegments(second, ticksPerQuarter);
-    return firstSegments.some((firstSegment) =>
-        secondSegments.some((secondSegment) =>
-            occupancySegmentsOverlap(firstSegment, secondSegment)
-        )
+    const fromTick = Math.max(first.tick, second.tick);
+    const toTick = Math.min(firstEnd, secondEnd);
+    const firstSegments = occupancySegments(
+        first,
+        ticksPerQuarter,
+        fromTick,
+        toTick
     );
+    const secondSegments = occupancySegments(
+        second,
+        ticksPerQuarter,
+        fromTick,
+        toTick
+    );
+    // 구간은 시작 · 끝 틱 모두 오름차순이라, 시간이 겹치는 쌍만 앞으로 훑으면 된다
+    let secondStart = 0;
+    for (const firstSegment of firstSegments) {
+        while (
+            secondStart < secondSegments.length &&
+            secondSegments[secondStart].endTick < firstSegment.startTick
+        ) {
+            secondStart += 1;
+        }
+        for (
+            let index = secondStart;
+            index < secondSegments.length &&
+            secondSegments[index].startTick <= firstSegment.endTick;
+            index += 1
+        ) {
+            if (occupancySegmentsOverlap(firstSegment, secondSegments[index])) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 function conflictKey({ firstId, secondId }: ChartNoteConflict) {
@@ -639,6 +674,36 @@ export function findChartNoteConflicts(
         active.push(note);
     }
     return conflicts;
+}
+
+/**
+ * 겹침이 있는지만 본다. 첫 겹침에서 멈추므로, 비교 중인 노트는 한 시점의 칸을 나눠 쓰는 28개를 넘지 않는다.
+ * 목록이 필요 없는 서버 검사는 이것을 쓴다
+ */
+export function hasChartNoteConflicts(
+    notes: ChartNote[],
+    ticksPerQuarter: number
+) {
+    const sorted = [...notes].sort(
+        (first, second) =>
+            first.tick - second.tick ||
+            first.durationTicks - second.durationTicks
+    );
+    let active: ChartNote[] = [];
+    for (const note of sorted) {
+        active = active.filter(
+            (candidate) => candidate.tick + candidate.durationTicks >= note.tick
+        );
+        if (
+            active.some((candidate) =>
+                chartNotesOverlap(candidate, note, ticksPerQuarter)
+            )
+        ) {
+            return true;
+        }
+        active.push(note);
+    }
+    return false;
 }
 
 export function hasNewChartNoteConflicts(

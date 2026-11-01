@@ -153,6 +153,7 @@
 | 2026-11-02 | [Recital Grd 상한은 Basic 최대의 1.25배](./2026-11-02-recital-grade-limit.md) (일부 대체됨)                                                                                    | 기능                |
 | 2026-11-02 | [보안 낮음 · 참고 항목 정리](./2026-11-02-security-low-cleanup.md)                                                                                                             | 기능                |
 | 2026-11-02 | [값이 빈 채보에도 Grd 상한](./2026-11-02-sync-unknown-chart-limits.md)                                                                                                         | 기능                |
+| 2026-11-02 | [채보 틱 한도와 겹침 검사 비용](./2026-11-02-chart-tick-limits.md)                                                                                                             | 기능                |
 
 ## 대체됨
 

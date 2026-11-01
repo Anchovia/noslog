@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
     CHART_COMMENT_MAX_LENGTH,
     EDITABLE_DRAFT_STATUSES,
+    USER_DRAFT_MAX_END_TICK,
     USER_DRAFT_MAX_NOTES,
+    USER_DRAFT_MAX_PATH_POINTS,
+    USER_DRAFT_MAX_PATTERN_TICKS,
     chartCommentInputSchema,
     chartCommentListQuerySchema,
     chartRowIdSchema,
@@ -66,6 +69,76 @@ describe("유저 채보 초안", () => {
                 document: { ...document, durationMs: 31 * 60 * 1000 },
             }).success
         ).toBe(false);
+    });
+});
+
+describe("유저 초안 틱 한도", () => {
+    const trill = (id: string, tick: number, durationTicks: number) => ({
+        id,
+        type: "trill",
+        hand: "left",
+        tick,
+        durationTicks,
+        lane: 0,
+        width: 1,
+        pairLane: 1,
+        pairWidth: 1,
+        points: [],
+    });
+    const accepts = (notes: unknown[]) =>
+        saveUserDraftSchema.safeParse({
+            chartId: 3,
+            baseVersion: 0,
+            document: { ...document, notes },
+        }).success;
+
+    it("노트 끝 틱 한도를 넘으면 받지 않는다", () => {
+        const standard = {
+            id: "s",
+            type: "standard",
+            hand: "left",
+            durationTicks: 0,
+            lane: 0,
+            width: 1,
+            points: [],
+        };
+        expect(accepts([{ ...standard, tick: USER_DRAFT_MAX_END_TICK }])).toBe(
+            true
+        );
+        expect(
+            accepts([{ ...standard, tick: USER_DRAFT_MAX_END_TICK + 1 }])
+        ).toBe(false);
+    });
+
+    it("트릴 · 글리산도 길이 합 한도를 넘으면 받지 않는다", () => {
+        const half = USER_DRAFT_MAX_PATTERN_TICKS / 2;
+        expect(accepts([trill("a", 0, half), trill("b", half, half)])).toBe(
+            true
+        );
+        expect(accepts([trill("a", 0, half), trill("b", half, half + 1)])).toBe(
+            false
+        );
+    });
+
+    it("경로 제어점 합 한도를 넘으면 받지 않는다", () => {
+        const glissando = (points: number) => ({
+            id: "g",
+            type: "glissando",
+            hand: "left",
+            tick: 0,
+            durationTicks: 480,
+            lane: 0,
+            width: 1,
+            points: Array.from({ length: points }, () => ({
+                tickOffset: 240,
+                lane: 1,
+                width: 1,
+            })),
+        });
+        expect(accepts([glissando(USER_DRAFT_MAX_PATH_POINTS)])).toBe(true);
+        expect(accepts([glissando(USER_DRAFT_MAX_PATH_POINTS + 1)])).toBe(
+            false
+        );
     });
 });
 

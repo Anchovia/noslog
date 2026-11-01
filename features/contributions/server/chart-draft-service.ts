@@ -14,6 +14,7 @@ import {
     draftReviewSchema,
     EDITABLE_DRAFT_STATUSES,
     saveUserDraftSchema,
+    userDraftDocumentSchema,
 } from "@/features/contributions/schemas/chart-draft-schema";
 import {
     awardContribution,
@@ -25,7 +26,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import { contributionRevisionMessage } from "@/lib/chart-pattern/chartSource";
-import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
+import { hasChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     type ChartDocument,
     chartDocumentSchema,
@@ -84,7 +85,7 @@ function toMyDraft(row: {
     submittedAt: Date | null;
     updatedAt: Date;
 }): MyChartDraft | null {
-    const document = chartDocumentSchema.safeParse(row.content);
+    const document = userDraftDocumentSchema.safeParse(row.content);
     if (!document.success) return null;
     return {
         id: row.id,
@@ -263,14 +264,14 @@ export async function submitMyChartDraft(
         });
         if (!draft || !isEditable(draft.status))
             return { success: false, message: t("contribution.draft.locked") };
-        const document = chartDocumentSchema.safeParse(draft.content);
+        const document = userDraftDocumentSchema.safeParse(draft.content);
         if (!document.success)
             return { success: false, message: t("contribution.draft.invalid") };
         if (
-            findChartNoteConflicts(
+            hasChartNoteConflicts(
                 document.data.notes,
                 document.data.ticksPerQuarter
-            ).length
+            )
         )
             return {
                 success: false,
@@ -577,7 +578,7 @@ export async function listChartDraftsForReview(
     });
     const labels = await getNameLabels(rows.map((row) => row.user.id));
     return rows.flatMap((row) => {
-        const document = chartDocumentSchema.safeParse(row.content);
+        const document = userDraftDocumentSchema.safeParse(row.content);
         if (!document.success) return [];
         const published = chartDocumentSchema.safeParse(
             row.chart.pattern?.publishedContent
@@ -682,14 +683,14 @@ export async function reviewChartDraft(
         return { success: true, message: "수정을 요청했습니다." };
     }
 
-    const document = chartDocumentSchema.safeParse(draft.content);
+    const document = userDraftDocumentSchema.safeParse(draft.content);
     if (!document.success)
         return { success: false, message: "초안 형식이 올바르지 않습니다." };
     if (
-        findChartNoteConflicts(
+        hasChartNoteConflicts(
             document.data.notes,
             document.data.ticksPerQuarter
-        ).length
+        )
     )
         return {
             success: false,

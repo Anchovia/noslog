@@ -10,6 +10,7 @@ import {
     flipChartNotesHorizontally,
     getChartEditorNavigationDurationMs,
     getChartEditorVerticalLayout,
+    hasChartNoteConflicts,
     getMinimumChartNoteDurationTicks,
     getChartNoteHorizontalResizeHandle,
     getGlissandoSnapRenderPoints,
@@ -248,6 +249,85 @@ describe("채보 편집 연산", () => {
         };
 
         expect(chartNotesOverlap(trill, middleNote, 480)).toBe(true);
+    });
+
+    it("긴 트릴 뒤쪽의 노트도 그 시점의 트릴 자리로 판정한다", () => {
+        const longTrill: ChartNote = {
+            ...trill,
+            tick: 0,
+            durationTicks: 1_000_000,
+            lane: 0,
+            width: 1,
+            pairLane: 20,
+            pairWidth: 1,
+            trillSnapDivisor: 8,
+        };
+        const at = (tick: number, lane: number): ChartNote => ({
+            ...standard,
+            id: "at",
+            tick,
+            lane,
+            width: 1,
+        });
+
+        // 240틱마다 자리가 번갈아, 짝수 번째 경계는 첫 자리 · 홀수 번째 경계는 둘째 자리다
+        expect(chartNotesOverlap(longTrill, at(960_000, 0), 480)).toBe(true);
+        expect(chartNotesOverlap(longTrill, at(960_000, 20), 480)).toBe(false);
+        expect(chartNotesOverlap(longTrill, at(960_240, 20), 480)).toBe(true);
+        expect(chartNotesOverlap(at(960_240, 0), longTrill, 480)).toBe(false);
+    });
+
+    it("칸이 다른 긴 트릴 둘은 겹치지 않고, 칸이 만나면 겹친다", () => {
+        const long = (
+            id: string,
+            lane: number,
+            pairLane: number
+        ): ChartNote => ({
+            ...trill,
+            id,
+            tick: 0,
+            durationTicks: 1_000_000,
+            lane,
+            width: 1,
+            pairLane,
+            pairWidth: 1,
+            trillSnapDivisor: 64,
+        });
+
+        expect(chartNotesOverlap(long("a", 0, 1), long("b", 10, 11), 480)).toBe(
+            false
+        );
+        // 같은 박자로 움직이는 이웃 트릴은 맞닿기만 하고, 마주 보면 구간 가운데서 교차한다
+        expect(chartNotesOverlap(long("a", 0, 1), long("b", 1, 2), 480)).toBe(
+            false
+        );
+        expect(chartNotesOverlap(long("a", 0, 1), long("b", 1, 0), 480)).toBe(
+            true
+        );
+    });
+
+    it("겹침 여부는 목록과 같은 답을 내고 첫 겹침에서 멈춘다", () => {
+        const sameLane = Array.from(
+            { length: 20_000 },
+            (_, index): ChartNote => ({
+                ...standard,
+                id: `long-${index}`,
+                type: "tenuto",
+                tick: index,
+                durationTicks: 1_000_000,
+            })
+        );
+
+        expect(hasChartNoteConflicts(sameLane, 480)).toBe(true);
+        expect(hasChartNoteConflicts([standard, glissando, trill], 480)).toBe(
+            findChartNoteConflicts([standard, glissando, trill], 480).length > 0
+        );
+        expect(
+            hasChartNoteConflicts(
+                [standard, { ...standard, id: "overlap", lane: 4 }],
+                480
+            )
+        ).toBe(true);
     });
 
     it("기존 충돌 해결은 허용하고 새 충돌만 식별한다", () => {
