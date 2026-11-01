@@ -4,7 +4,10 @@ import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
-import { useTranslations } from "@/components/i18n/locale-provider";
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
@@ -84,18 +87,19 @@ export default function SyncSetup({
     onOfficial,
     showHeading = true,
 }: {
-    bookmarklet: string;
-    onOfficial: () => void;
+    bookmarklet: string | null;
+    onOfficial?: () => void;
     showHeading?: boolean;
 }) {
     const t = useTranslations();
+    const href = useLocalizedHref();
     const StepHeading = showHeading ? "h3" : "h2";
     const anchor = useRef<HTMLAnchorElement>(null);
     const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
         "idle"
     );
     useEffect(() => {
-        anchor.current?.setAttribute("href", bookmarklet);
+        if (bookmarklet) anchor.current?.setAttribute("href", bookmarklet);
     }, [bookmarklet]);
     // 「복사됨」 은 2초 뒤 원래 글자로(버튼 부품 규칙 — 프로필 · 서열표 내보내기와 같은 시간)
     useEffect(() => {
@@ -105,6 +109,7 @@ export default function SyncSetup({
     }, [copyState]);
     // 메인 버튼은 드래그 대상이라 라벨을 바꾸지 않고(드래그하면 북마크 이름이 된다) 토스트로 알린다
     async function copy(announce = false) {
+        if (!bookmarklet) return;
         try {
             await navigator.clipboard.writeText(bookmarklet);
             setCopyState("copied");
@@ -138,22 +143,37 @@ export default function SyncSetup({
                         </div>
                         <div className="nl-sync-install-card">
                             <div className="nl-sync-install-card__target">
-                                <ButtonLink
-                                    ref={anchor}
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        void copy(true);
-                                    }}
-                                    draggable
-                                    plain
-                                    variant="secondary"
-                                    className="nl-sync-step-action"
-                                >
-                                    {t("sync.bookmarklet")}
-                                </ButtonLink>
+                                {bookmarklet ? (
+                                    <ButtonLink
+                                        ref={anchor}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            void copy(true);
+                                        }}
+                                        draggable
+                                        plain
+                                        variant="secondary"
+                                        className="nl-sync-step-action"
+                                    >
+                                        {t("sync.bookmarklet")}
+                                    </ButtonLink>
+                                ) : (
+                                    <ButtonLink
+                                        href={href(
+                                            "/login?returnTo=/bookmarklet"
+                                        )}
+                                        className="nl-sync-step-action"
+                                    >
+                                        {t("common.login")}
+                                    </ButtonLink>
+                                )}
                             </div>
                             <p className="nl-body-secondary nl-muted">
-                                {t("sync.drag")}
+                                {t(
+                                    bookmarklet
+                                        ? "sync.drag"
+                                        : "sync.loginToCreate"
+                                )}
                             </p>
                         </div>
                         <Disclosure
@@ -186,6 +206,7 @@ export default function SyncSetup({
                                 </p>
                                 <Button
                                     variant="secondary"
+                                    disabled={!bookmarklet}
                                     onClick={() => void copy()}
                                 >
                                     {t(

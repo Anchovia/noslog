@@ -10,7 +10,6 @@ import {
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
 import Button from "@/components/ui/button";
-import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -147,49 +146,21 @@ export default function SyncPage({
         return (
             <PageContainer
                 width="reading"
-                className="nl-sync-page nl-sync-page--guest"
+                className="nl-sync-page nl-sync-page--first"
             >
                 <h1 className="nl-page-title">{t("sync.title")}</h1>
-                <p className="nl-metadata nl-muted">{t("sync.description")}</p>
                 <div className="nl-sync-columns">
+                    <div className="nl-sync-column">
+                        <SyncSetup bookmarklet={null} />
+                    </div>
                     <div className="nl-sync-column">
                         <section className="nl-sync-zone">
                             <h2 className="nl-section-title">
-                                {t("sync.howWorks")}
+                                {t("sync.limitations")}
                             </h2>
-                            <ol className="nl-sync-overview">
-                                {(
-                                    [
-                                        "sync.step.install",
-                                        "sync.loginStep",
-                                        "sync.step.run",
-                                    ] as const
-                                ).map((key, index) => (
-                                    <li
-                                        key={key}
-                                        className="nl-sync-overview-step"
-                                    >
-                                        <span
-                                            className="nl-sync-step__number nl-emphasis-label"
-                                            aria-hidden
-                                        >
-                                            {index + 1}
-                                        </span>
-                                        <span className="nl-component-title">
-                                            {t(key)}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ol>
                             <p className="nl-body-secondary nl-muted">
-                                {t("sync.loginToCreate")}
+                                {t("sync.limitDescription")}
                             </p>
-                            <ButtonLink
-                                href={href("/login?returnTo=/bookmarklet")}
-                                className="nl-sync-primary"
-                            >
-                                {t("common.login")}
-                            </ButtonLink>
                         </section>
                         <section className="nl-sync-zone">
                             <h2 className="nl-section-title">
@@ -200,14 +171,6 @@ export default function SyncPage({
                             </p>
                         </section>
                     </div>
-                    <section className="nl-sync-zone">
-                        <h2 className="nl-section-title">
-                            {t("sync.limitations")}
-                        </h2>
-                        <p className="nl-body-secondary nl-muted">
-                            {t("sync.limitDescription")}
-                        </p>
-                    </section>
                 </div>
             </PageContainer>
         );
