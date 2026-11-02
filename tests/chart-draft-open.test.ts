@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
     update: vi.fn(),
     count: vi.fn(),
     findChart: vi.fn(),
+    deleteMany: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -22,6 +23,7 @@ vi.mock("@/lib/db", () => ({
             findUnique: mocks.findUnique,
             create: mocks.create,
             update: mocks.update,
+            deleteMany: mocks.deleteMany,
         },
         musicChart: { findUnique: mocks.findChart },
         $transaction: (run: (tx: unknown) => unknown) =>
@@ -37,6 +39,7 @@ vi.mock("@/lib/db", () => ({
 }));
 
 import {
+    deleteMyChartDraft,
     findMyOpenChartDraft,
     openMyChartDraft,
 } from "@/features/contributions/server/chart-draft-service";
@@ -128,5 +131,41 @@ describe("공개 전 초안 수 한도", () => {
         mocks.count.mockResolvedValue(49);
         mocks.create.mockResolvedValue(row("draft"));
         await expect(openMyChartDraft(5)).resolves.toMatchObject({ id: 3 });
+    });
+});
+
+describe("초안 삭제", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        mocks.session.id = 9;
+    });
+
+    it("내 초안 중 고칠 수 있는 상태만 지운다", async () => {
+        mocks.deleteMany.mockResolvedValue({ count: 1 });
+        await expect(deleteMyChartDraft(3, "ko")).resolves.toMatchObject({
+            success: true,
+        });
+        expect(mocks.deleteMany).toHaveBeenCalledWith({
+            where: {
+                id: 3,
+                userId: 9,
+                status: { in: ["draft", "changes_requested"] },
+            },
+        });
+    });
+
+    it("남의 초안 · 검토 중 · 공개된 초안은 지워지지 않으면 실패로 알린다", async () => {
+        mocks.deleteMany.mockResolvedValue({ count: 0 });
+        await expect(deleteMyChartDraft(3, "ko")).resolves.toMatchObject({
+            success: false,
+        });
+    });
+
+    it("로그인하지 않으면 지우지 않는다", async () => {
+        mocks.session.id = undefined;
+        await expect(deleteMyChartDraft(3, "ko")).resolves.toMatchObject({
+            success: false,
+        });
+        expect(mocks.deleteMany).not.toHaveBeenCalled();
     });
 });

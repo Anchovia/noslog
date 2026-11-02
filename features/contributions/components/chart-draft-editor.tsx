@@ -8,8 +8,9 @@ import ChartTimingEditor, {
     type ChartEditorMetadata,
 } from "@/components/admin/chart-pattern/chartTimingEditor";
 import { useTranslations } from "@/components/i18n/locale-provider";
+import ButtonLink from "@/components/ui/button-link";
+import ResultState from "@/components/ui/result-state";
 import { LoadingStatus } from "@/components/ui/skeleton";
-import { StatusMessage } from "@/components/ui/status-message";
 import { USER_DRAFT_MAX_OPEN } from "@/features/contributions/schemas/chart-draft-schema";
 import type { MyChartDraft } from "@/features/contributions/server/chart-draft-service";
 
@@ -25,10 +26,13 @@ export default function ChartDraftEditor({
     metadata,
     initialDraft,
     backHref,
+    profileHref,
 }: {
     metadata: ChartEditorMetadata;
     initialDraft: MyChartDraft | null;
     backHref: string;
+    /** 한도에 닿았을 때 초안을 지우러 가는 내 프로필 「기여」 구역 */
+    profileHref: string;
 }) {
     const t = useTranslations();
     const [state, setState] = useState<OpenState>(
@@ -59,11 +63,20 @@ export default function ChartDraftEditor({
     if (state.kind === "failed") throw state.error;
     if (state.kind === "limit")
         return (
-            <StatusMessage
-                severity="warning"
-                title={t("contribution.draft.limit", {
+            <ResultState
+                message={t("contribution.draft.limit", {
                     count: USER_DRAFT_MAX_OPEN,
                 })}
+                action={
+                    <div className="flex flex-wrap gap-nl-12">
+                        <ButtonLink href={profileHref} variant="secondary">
+                            {t("contribution.draft.limitMine")}
+                        </ButtonLink>
+                        <ButtonLink href={backHref} variant="secondary">
+                            {t("editor.back")}
+                        </ButtonLink>
+                    </div>
+                }
             />
         );
     if (state.kind === "opening")

@@ -73,6 +73,10 @@ export const enMessages = {
     "community.delete.reply.body":
         "Only this reply will be deleted. This can't be undone.",
     "community.delete.reply.action": "Delete reply",
+    "community.delete.draft.title": "Delete draft",
+    "community.delete.draft.body":
+        "Delete this draft? You can't restore it after deleting.",
+    "community.delete.draft.action": "Delete draft",
     "community.reply": "Reply",
     "community.replyCount": "Replies ({count})",
     "community.replyHide": "Hide replies",
@@ -1970,7 +1974,11 @@ export const enMessages = {
     "contribution.rejectReason.format": "The value does not follow the format",
     "contribution.rejectReason.other": "Other",
     "contribution.rejectReason": "Reason: {reason}",
-    "contribution.draft.limit": "You can keep up to {count} drafts open.",
+    "contribution.draft.limit":
+        "You can keep up to {count} drafts open. Delete one in My suggestions, then open this chart again.",
+    "contribution.draft.limitMine": "View my suggestions",
+    "contribution.draft.delete": "Delete",
+    "contribution.draft.deleted": "Draft deleted.",
     "contribution.draft.invalid": "The chart format is invalid.",
     "contribution.draft.locked":
         "This draft can't be edited right now. If it's in review, withdraw the request first.",

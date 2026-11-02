@@ -5,9 +5,11 @@ const mocks = vi.hoisted(() => ({
     deleteMany: vi.fn(),
     count: vi.fn(),
     create: vi.fn(),
+    lock: vi.fn(),
 }));
 
 const transactionClient = {
+    $executeRaw: mocks.lock,
     uploadTokenGrant: {
         deleteMany: mocks.deleteMany,
         count: mocks.count,
@@ -51,9 +53,9 @@ describe("이미지 업로드 토큰 발급 제한", () => {
             data: { userId: 2, purpose: "profile-avatar" },
             select: { id: true },
         });
-        expect(mocks.transaction).toHaveBeenCalledWith(expect.any(Function), {
-            isolationLevel: "Serializable",
-        });
+        expect(mocks.lock.mock.invocationCallOrder[0]).toBeLessThan(
+            mocks.count.mock.invocationCallOrder[0]
+        );
     });
 
     it("최근 한 시간에 10회 발급했으면 추가 발급을 거부한다", async () => {

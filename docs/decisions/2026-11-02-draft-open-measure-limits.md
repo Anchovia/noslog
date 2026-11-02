@@ -1,6 +1,6 @@
 # 초안 수 · 저장 · 마디 한도
 
-- 상태: 유효
+- 상태: 일부 대체됨(틱과 시각 검사 · 초안 삭제) → [새 파일](./2026-11-02-draft-delete-timing-order.md)
 - 날짜: 2026-11-02
 - 분야: 기능
 - 고른 사람: 사용자([시안](https://claude.ai/artifact/7k7tD6ehAd1hAqUAN7ZAC6) 1A · 2A)

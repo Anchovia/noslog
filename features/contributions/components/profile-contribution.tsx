@@ -1,11 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import {
     countMyChartFieldProposals,
     countUnseenContributionResults,
+    deleteMyChartDraft,
     listMyChartDrafts,
     listMyChartFieldProposals,
     markContributionResultsSeen,
@@ -27,6 +28,7 @@ import {
     contributionProgress,
     type ContributionTotals,
 } from "@/features/contributions/contribution-level";
+import { EDITABLE_DRAFT_STATUSES } from "@/features/contributions/schemas/chart-draft-schema";
 import {
     CHART_FIELD_PROPOSAL_STATUSES,
     type ChartFieldProposalField,
@@ -34,6 +36,7 @@ import {
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
 import type { MyChartDraftItem } from "@/features/contributions/server/chart-draft-service";
 import type { MyChartFieldProposal } from "@/features/contributions/server/chart-field-proposal-service";
+import DeleteContributionDialog from "@/features/music/components/delete-contribution-dialog";
 import type { MessageKey } from "@/lib/i18n/message-types";
 
 const RECENT_COUNT = 3;
@@ -92,6 +95,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
     const href = useLocalizedHref();
     const base = `/music/${item.chart.musicIndex}/${item.chart.difficulty.toLowerCase()}/pattern`;
     const tone = DRAFT_TONES[item.status];
+    const queryClient = useQueryClient();
     return (
         <li className="nl-profile-contribution__item">
             <div className="nl-profile-contribution__item-head">
@@ -103,12 +107,41 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                 >
                     {item.chart.title}
                 </IntentLink>
-                <span
-                    className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
-                    data-tone={tone}
-                >
-                    {t(`contribution.draftStatus.${item.status}`)}
-                </span>
+                <div className="flex shrink-0 items-center gap-nl-8">
+                    <span
+                        className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
+                        data-tone={tone}
+                    >
+                        {t(`contribution.draftStatus.${item.status}`)}
+                    </span>
+                    {EDITABLE_DRAFT_STATUSES.includes(item.status) ? (
+                        <DeleteContributionDialog
+                            kind="draft"
+                            trigger={
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    aria-label={`${item.chart.title} ${t("contribution.draft.delete")}`}
+                                >
+                                    {t("contribution.draft.delete")}
+                                </Button>
+                            }
+                            onConfirm={async () => {
+                                const result = await deleteMyChartDraft(
+                                    item.id,
+                                    locale
+                                );
+                                if (!result.success)
+                                    throw new Error(result.message);
+                            }}
+                            onDeleted={() =>
+                                void queryClient.invalidateQueries({
+                                    queryKey: ["contribution", "mine"],
+                                })
+                            }
+                        />
+                    ) : null}
+                </div>
             </div>
             {/* 메타 줄 = 난이도(난이도 색) · 종류 · 그때그때 다른 값 — 최근 플레이 · 기록 표와 같은 문법(2026-10-01 B) */}
             <p className="nl-metadata nl-muted">

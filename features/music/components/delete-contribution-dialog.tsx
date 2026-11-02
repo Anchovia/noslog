@@ -17,7 +17,7 @@ export default function DeleteContributionDialog({
     open: controlledOpen,
     onOpenChange,
 }: {
-    kind: "vote" | "evaluation" | "opinion" | "reply";
+    kind: "vote" | "evaluation" | "opinion" | "reply" | "draft";
     scope?: string;
     trigger?: ReactNode;
     open?: boolean;

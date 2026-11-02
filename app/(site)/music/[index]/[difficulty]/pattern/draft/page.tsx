@@ -64,6 +64,10 @@ export default async function ChartDraftPage({
                 }}
                 initialDraft={draft}
                 backHref={localizePath(`${musicPath}?tab=detail`, locale)}
+                profileHref={localizePath(
+                    `/profile/${session.id}#profile-contribution`,
+                    locale
+                )}
             />
         </div>
     );

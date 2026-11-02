@@ -70,6 +70,10 @@ export const koMessages = {
     "community.delete.reply.title": "이 답글을 삭제할까요?",
     "community.delete.reply.body": "답글만 삭제되고 되돌릴 수 없습니다.",
     "community.delete.reply.action": "답글 삭제",
+    "community.delete.draft.title": "초안 삭제",
+    "community.delete.draft.body":
+        "이 초안을 삭제할까요? 삭제한 초안은 복구할 수 없습니다.",
+    "community.delete.draft.action": "초안 삭제",
     "community.reply": "답글",
     "community.replyCount": "답글 {count}개",
     "community.replyHide": "답글 접기",
@@ -1945,7 +1949,11 @@ export const koMessages = {
     "contribution.rejectReason.format": "값 형식이 규칙과 다름",
     "contribution.rejectReason.other": "그 밖",
     "contribution.rejectReason": "사유: {reason}",
-    "contribution.draft.limit": "초안은 {count}개까지 열 수 있습니다.",
+    "contribution.draft.limit":
+        "초안은 {count}개까지 열 수 있습니다. 내 제안에서 지운 뒤 다시 열어 주세요.",
+    "contribution.draft.limitMine": "내 제안 보기",
+    "contribution.draft.delete": "삭제",
+    "contribution.draft.deleted": "초안을 삭제했습니다.",
     "contribution.draft.invalid": "채보 형식이 올바르지 않습니다.",
     "contribution.draft.locked":
         "지금은 이 초안을 고칠 수 없습니다. 검토 요청 중이면 먼저 요청을 취소해 주세요.",

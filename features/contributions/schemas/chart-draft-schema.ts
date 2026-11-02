@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
-import { countChartMeasures } from "@/lib/chart-pattern/timing";
+import {
+    countChartMeasures,
+    sortTimingPoints,
+} from "@/lib/chart-pattern/timing";
 
 /** 유저 초안 상태(2026-09-24 3단계) */
 export const CHART_DRAFT_STATUSES = [
@@ -82,6 +85,18 @@ export const userDraftDocumentSchema = chartDocumentSchema.superRefine(
                 code: "custom",
                 path: ["timingPoints"],
                 message: "too many measures",
+            });
+        // 틱과 시각의 일치는 보지 않는다 — 에디터가 시각만 옮기고, 공개 채보에도 어긋난 값이 있다
+        if (
+            sortTimingPoints(document.timingPoints).some(
+                (point, index, sorted) =>
+                    index > 0 && point.timeMs < sorted[index - 1].timeMs
+            )
+        )
+            ctx.addIssue({
+                code: "custom",
+                path: ["timingPoints"],
+                message: "time goes backward",
             });
     }
 );

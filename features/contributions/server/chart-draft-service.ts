@@ -367,6 +367,30 @@ export async function withdrawMyChartDraft(
     return { success: true, message: t("contribution.draft.withdrawn") };
 }
 
+/** 초안 삭제 — 고칠 수 있는 내 초안만. 검토 댓글은 함께 지워진다 */
+export async function deleteMyChartDraft(
+    draftId: number,
+    requestedLocale: string
+): Promise<ActionResult> {
+    const t = translatorFor(requestedLocale);
+    const session = await getSession();
+    if (!session.id)
+        return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(draftId).success)
+        return { success: false, message: t("contribution.draft.locked") };
+    const deleted = await db.chartDraft.deleteMany({
+        where: {
+            id: draftId,
+            userId: session.id,
+            status: { in: [...EDITABLE_DRAFT_STATUSES] },
+        },
+    });
+    if (!deleted.count)
+        return { success: false, message: t("contribution.draft.locked") };
+    revalidatePath("/admin/contributions");
+    return { success: true, message: t("contribution.draft.deleted") };
+}
+
 export interface ChartCommentItem {
     id: number;
     timeMs: number;

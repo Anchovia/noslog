@@ -72,6 +72,10 @@ export const jaMessages = {
     "community.delete.reply.title": "この返信を削除しますか？",
     "community.delete.reply.body": "返信のみ削除され、元に戻せません。",
     "community.delete.reply.action": "返信を削除",
+    "community.delete.draft.title": "下書きを削除",
+    "community.delete.draft.body":
+        "この下書きを削除しますか？削除した下書きは復元できません。",
+    "community.delete.draft.action": "下書きを削除",
     "community.reply": "返信",
     "community.replyCount": "返信{count}件",
     "community.replyHide": "返信を閉じる",
@@ -1968,7 +1972,11 @@ export const jaMessages = {
     "contribution.rejectReason.format": "値の形式が規則と違う",
     "contribution.rejectReason.other": "その他",
     "contribution.rejectReason": "理由: {reason}",
-    "contribution.draft.limit": "下書きは{count}件まで開けます。",
+    "contribution.draft.limit":
+        "下書きは{count}件まで開けます。自分の提案から削除して、もう一度開いてください。",
+    "contribution.draft.limitMine": "自分の提案を見る",
+    "contribution.draft.delete": "削除",
+    "contribution.draft.deleted": "下書きを削除しました。",
     "contribution.draft.invalid": "譜面の形式が正しくありません。",
     "contribution.draft.locked":
         "今はこの下書きを編集できません。確認依頼中の場合は、先に依頼を取り消してください。",

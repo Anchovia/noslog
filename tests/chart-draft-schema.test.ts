@@ -74,6 +74,34 @@ describe("유저 채보 초안", () => {
     });
 });
 
+describe("유저 초안 타이밍 순서", () => {
+    const withTimes = (first: number, second: number) =>
+        saveUserDraftSchema.safeParse({
+            chartId: 3,
+            baseVersion: 0,
+            document: {
+                ...document,
+                timingPoints: [
+                    { ...document.timingPoints[0], timeMs: first },
+                    {
+                        ...document.timingPoints[0],
+                        id: "second",
+                        tick: 1_920,
+                        timeMs: second,
+                    },
+                ],
+            },
+        }).success;
+
+    it("틱 계산값과 어긋난 시각은 받는다", () => {
+        expect(withTimes(0, 2_060.629)).toBe(true);
+    });
+
+    it("틱 순서로 시각이 거꾸로 가면 받지 않는다", () => {
+        expect(withTimes(5_000, 1_000)).toBe(false);
+    });
+});
+
 describe("유저 초안 틱 한도", () => {
     const trill = (id: string, tick: number, durationTicks: number) => ({
         id,
