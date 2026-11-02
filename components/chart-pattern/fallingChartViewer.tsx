@@ -28,6 +28,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import CompactSelect from "@/components/ui/compact-select";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
+import { loadPixi } from "@/lib/chart-pattern/loadPixi";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
@@ -1000,7 +1001,7 @@ export default function FallingChartViewer({
         let resizeObserver: ResizeObserver | null = null;
 
         void (async () => {
-            const pixi = await import("pixi.js");
+            const pixi = await loadPixi();
             if (disposed) return;
             const nextApplication = new pixi.Application();
             await nextApplication.init({

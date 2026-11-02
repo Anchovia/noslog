@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Application, Graphics } from "pixi.js";
 
+import { loadPixi } from "@/lib/chart-pattern/loadPixi";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
     EDITOR_COLORS,
@@ -669,7 +670,7 @@ export default function PixiNoteEditor({
         let application: Application | null = null;
 
         void (async () => {
-            const pixi = await import("pixi.js");
+            const pixi = await loadPixi();
             if (disposed) return;
             const nextApplication = new pixi.Application();
             await nextApplication.init({
