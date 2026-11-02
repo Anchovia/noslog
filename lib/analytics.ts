@@ -42,6 +42,16 @@ export function isAnalyticsEnabled(now = new Date()) {
     );
 }
 
+// Vercel Web Analytics 는 그것을 알린 방침 판의 시행일(서울 기준)부터 운영 배포에서만 켠다
+export const WEB_ANALYTICS_START_DATE = "2026-11-09";
+
+export function isWebAnalyticsEnabled(now = new Date()) {
+    return (
+        process.env.VERCEL_ENV === "production" &&
+        analyticsDateKey(now) >= WEB_ANALYTICS_START_DATE
+    );
+}
+
 // 통계 날짜는 서울 기준 — 한국 시각 자정에 하루가 바뀐다
 export function analyticsDateKey(now = new Date()) {
     return new Date(now.getTime() + 9 * 60 * 60 * 1000)

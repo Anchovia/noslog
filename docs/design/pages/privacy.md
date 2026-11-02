@@ -36,6 +36,7 @@
 
 ## 바뀐 기록
 
+- [2026-11-02 Vercel Web Analytics 추가 · 처리방침 새 판](../../decisions/2026-11-02-vercel-web-analytics.md)
 - [2026-10-30 개인정보 처리방침 개정 — 법정 항목 순서 · 표 · 번역 동의](../../decisions/2026-10-30-privacy-policy-rewrite.md)
 - [2026-10-28 전수 검수 — 이전 버전 머리 두 줄 크기](../../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)

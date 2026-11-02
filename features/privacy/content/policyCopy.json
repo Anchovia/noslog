@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보 처리방침",
-        "dates": "최종 수정 2026년 10월 30일 · 시행 2026년 11월 6일",
+        "dates": "최종 수정 2026년 11월 2일 · 시행 2026년 11월 9일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -29,7 +29,7 @@
             },
             {
                 "title": "처리 위탁",
-                "text": "Vercel · PlanetScale에 맡기며, 대한민국 서울 리전에 저장합니다",
+                "text": "Vercel · PlanetScale에 맡기며, 서비스 데이터는 대한민국 서울 리전에 저장합니다",
                 "target": "providers"
             },
             {
@@ -147,6 +147,12 @@
                                 "하루 방문자 수 집계",
                                 "접속 IP와 브라우저 정보로 만든 그날만 쓰는 식별값(IP와 브라우저 정보 자체는 저장하지 않음), 하루 방문자 수 · 페이지별 · 시간대별 조회 수 · 로그인 여부별 합계 · API 호출 수",
                                 "식별값은 다음 날, 합계는 90일 후 삭제"
+                            ],
+                            [
+                                "방문 분석(Vercel Web Analytics)",
+                                "유입 경로와 지역 · 기기별 이용 현황 파악",
+                                "페이지 경로(프로필 번호와 검색어는 빼고 보냄), 직전 페이지 주소, 국가 · 지역 · 도시, 기기 종류, OS · 브라우저와 버전, 접속 시각, 요청 정보로 만든 식별값(쿠키를 쓰지 않음)",
+                                "식별값은 24시간 후 폐기, 나머지는 Vercel이 정함(운영자는 12개월 동안 열람)"
                             ]
                         ]
                     },
@@ -195,7 +201,7 @@
                             "KONAMI 공식 사이트 비밀번호와 세션 쿠키",
                             "채보 뷰어 · 에디터에서 고른 음원 파일(브라우저 안에서만 쓰고 서버로 올리지 않습니다)",
                             "실명 · 전화번호 · 이메일 같은 연락처와 결제 정보",
-                            "광고 · 행태 분석용 정보"
+                            "광고용 정보와 다른 사이트까지 이어 보는 행태 정보"
                         ]
                     }
                 ]
@@ -272,7 +278,7 @@
                         "rows": [
                             [
                                 "Vercel Inc.",
-                                "웹 호스팅, 서버 실행, 운영 로그, 이미지 저장(Vercel Blob). 서버 실행과 이미지 저장 리전은 대한민국 서울(icn1)"
+                                "웹 호스팅, 서버 실행, 운영 로그, 이미지 저장(Vercel Blob), 방문 분석(Web Analytics). 서버 실행과 이미지 저장 리전은 대한민국 서울(icn1)"
                             ],
                             [
                                 "PlanetScale, Inc.",
@@ -307,11 +313,11 @@
                         "rows": [
                             [
                                 "Vercel Inc. · privacy@vercel.com",
-                                "미국(회사), 대한민국 서울 icn1(서버 실행 · 이미지 저장)",
+                                "미국(회사), 대한민국 서울 icn1(서버 실행 · 이미지 저장). 방문 분석 데이터의 저장 국가는 Vercel 공개 문서에 적혀 있지 않음",
                                 "서비스를 쓸 때마다 네트워크로 전송",
                                 "2절의 모든 항목, 업로드 이미지, 접속 로그",
-                                "호스팅 · 이미지 저장",
-                                "탈퇴하거나 위탁이 끝날 때까지. 서버 로그는 1일"
+                                "호스팅 · 이미지 저장 · 방문 분석",
+                                "탈퇴하거나 위탁이 끝날 때까지. 서버 로그는 1일, 방문 분석은 Vercel이 정함"
                             ],
                             [
                                 "PlanetScale, Inc. · privacy@planetscale.com",
@@ -428,7 +434,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "브라우저 설정에서 쿠키와 사이트 데이터를 막거나 지울 수 있습니다. 로그인 쿠키를 막으면 로그인할 수 없고, 다른 항목을 지우면 기본값으로 동작합니다. NosLog는 광고나 행태 분석 도구를 쓰지 않으며, 방문 통계는 쿠키 없이 하루 합계로만 셉니다."
+                        "text": "브라우저 설정에서 쿠키와 사이트 데이터를 막거나 지울 수 있습니다. 로그인 쿠키를 막으면 로그인할 수 없고, 다른 항목을 지우면 기본값으로 동작합니다. NosLog는 광고 도구를 쓰지 않습니다. 방문 통계는 쿠키 없이 하루 합계로 세고, Vercel Web Analytics도 쿠키 없이 방문을 기록합니다."
                     }
                 ]
             },
@@ -538,55 +544,24 @@
                         "kind": "table",
                         "head": [
                             "항목",
-                            "개정 전(2026년 10월 28일 판)",
+                            "개정 전(2026년 11월 6일 판)",
                             "개정 후"
                         ],
                         "rows": [
                             [
-                                "구성",
-                                "12절",
-                                "법이 정한 항목 순서로 15절, 위탁 · 국외 이전 · 제3자 제공은 표로"
+                                "방문 분석",
+                                "쓰지 않음",
+                                "Vercel Web Analytics로 페이지 경로 · 직전 페이지 주소 · 지역 · 기기 정보를 쿠키 없이 기록"
                             ],
                             [
-                                "제3자 제공",
-                                "적지 않음",
-                                "뮤즈캣 연결과 Google 번역을 동의를 받는 제공으로 적음"
+                                "처리 위탁 · 국외 이전",
+                                "Vercel에 호스팅과 이미지 저장을 맡김",
+                                "Vercel에 맡기는 일에 방문 분석을 더함"
                             ],
                             [
-                                "의견 · 답글 번역",
-                                "모든 글을 번역(위탁으로 적음)",
-                                "번역을 허용한 사람의 글만 번역"
-                            ],
-                            [
-                                "위치",
-                                "정밀 위치를 요청하지 않는다고 적음",
-                                "오락실 찾기에서 기기 위치를 쓰고 기기에만 저장함을 적음"
-                            ],
-                            [
-                                "처리 항목",
-                                "일부 기록이 빠짐",
-                                "이벤트 글 · 투표 · 빙고 진행 · 서열 투표 변경 기록 · 신고된 글 사본 · 악곡 추가 후보 · 기체 확인과 메모 · 프로필 사진 주소를 더함"
-                            ],
-                            [
-                                "보유 기간",
-                                "백업 · 로그 기간 확인 전",
-                                "처리한 신고와 뮤즈캣 요청 기록 6개월, 만료된 연결 토큰 하루, 백업 2일, 서버 로그 1일"
-                            ],
-                            ["만 14세", "방침에만 적음", "가입할 때 확인"],
-                            [
-                                "보호책임자 · 구제",
-                                "운영자 활동명만 적음",
-                                "보호책임자 실명과 권익침해 구제 기관 3곳"
-                            ],
-                            [
-                                "국외 이전",
-                                "리전만 적음",
-                                "받는 자 · 연락처 · 국가 · 시기와 방법 · 항목 · 목적 · 보유 기간"
-                            ],
-                            [
-                                "X 소식",
-                                "위젯으로 적음",
-                                "서버가 받아 오고 이미지는 X에서 불러옴"
+                                "분석 도구 안내",
+                                "행태 분석 도구를 쓰지 않는다고 적음",
+                                "광고 도구를 쓰지 않고, 다른 사이트까지 이어 보는 행태 정보를 처리하지 않는다고 적음"
                             ]
                         ]
                     }
@@ -596,7 +571,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年10月30日 · 施行 2026年11月6日",
+        "dates": "最終更新 2026年11月2日 · 施行 2026年11月9日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -624,7 +599,7 @@
             },
             {
                 "title": "取扱いの委託",
-                "text": "Vercel・PlanetScaleに委託し、韓国ソウルのリージョンに保存します",
+                "text": "Vercel・PlanetScaleに委託し、サービスデータは韓国ソウルのリージョンに保存します",
                 "target": "providers"
             },
             {
@@ -742,6 +717,12 @@
                                 "1日の訪問者数の集計",
                                 "アクセスIPとブラウザ情報から作るその日だけの識別値（IPとブラウザ情報そのものは保存しない）、1日の訪問者数・ページ別・時間帯別の閲覧数・ログイン有無別の合計・API呼び出し数",
                                 "識別値は翌日、合計は90日後に削除"
+                            ],
+                            [
+                                "訪問分析（Vercel Web Analytics）",
+                                "流入経路と地域・端末別の利用状況の把握",
+                                "ページのパス（プロフィール番号と検索語は除いて送信）、直前のページのアドレス、国・地域・都市、端末の種類、OS・ブラウザとバージョン、アクセス日時、リクエスト情報から作る識別値（Cookieは使わない）",
+                                "識別値は24時間後に破棄、その他はVercelが定める（運営者は12か月間閲覧）"
                             ]
                         ]
                     },
@@ -790,7 +771,7 @@
                             "KONAMI公式サイトのパスワードとセッションCookie",
                             "譜面ビューアー・エディターで選んだ音源ファイル（ブラウザ内でのみ使い、サーバーにアップロードしません）",
                             "実名・電話番号・メールアドレスなどの連絡先と決済情報",
-                            "広告・行動分析のための情報"
+                            "広告のための情報と、他のサイトをまたいで追跡する行動情報"
                         ]
                     }
                 ]
@@ -867,7 +848,7 @@
                         "rows": [
                             [
                                 "Vercel Inc.",
-                                "ウェブホスティング、サーバーの実行、運用ログ、画像の保存（Vercel Blob）。サーバー実行と画像保存のリージョンは韓国ソウル（icn1）"
+                                "ウェブホスティング、サーバーの実行、運用ログ、画像の保存（Vercel Blob）、訪問分析（Web Analytics）。サーバー実行と画像保存のリージョンは韓国ソウル（icn1）"
                             ],
                             [
                                 "PlanetScale, Inc.",
@@ -902,11 +883,11 @@
                         "rows": [
                             [
                                 "Vercel Inc. · privacy@vercel.com",
-                                "米国（会社）、韓国ソウル icn1（サーバー実行・画像保存）",
+                                "米国（会社）、韓国ソウル icn1（サーバー実行・画像保存）。訪問分析データの保存国はVercelの公開文書に記載なし",
                                 "サービス利用のたびにネットワークで送信",
                                 "2章のすべての項目、アップロード画像、アクセスログ",
-                                "ホスティング・画像保存",
-                                "退会または委託終了まで。サーバーログは1日"
+                                "ホスティング・画像保存・訪問分析",
+                                "退会または委託終了まで。サーバーログは1日、訪問分析はVercelが定める"
                             ],
                             [
                                 "PlanetScale, Inc. · privacy@planetscale.com",
@@ -1023,7 +1004,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "ブラウザの設定でCookieとサイトデータをブロック・削除できます。ログインCookieをブロックするとログインできず、ほかの項目を消すと既定値で動作します。NosLogは広告や行動分析のツールを使わず、訪問統計はCookieを使わずに1日の合計だけを数えます。"
+                        "text": "ブラウザの設定でCookieとサイトデータをブロック・削除できます。ログインCookieをブロックするとログインできず、ほかの項目を消すと既定値で動作します。NosLogは広告ツールを使いません。訪問統計はCookieを使わずに1日の合計を数え、Vercel Web AnalyticsもCookieを使わずに訪問を記録します。"
                     }
                 ]
             },
@@ -1134,57 +1115,22 @@
                     },
                     {
                         "kind": "table",
-                        "head": [
-                            "項目",
-                            "改定前（2026年10月28日版）",
-                            "改定後"
-                        ],
+                        "head": ["項目", "改定前（2026年11月6日版）", "改定後"],
                         "rows": [
                             [
-                                "構成",
-                                "12章",
-                                "法令が定める項目の順に15章、委託・外国への移転・第三者提供は表で記載"
+                                "訪問分析",
+                                "使わない",
+                                "Vercel Web Analyticsでページのパス・直前のページのアドレス・地域・端末の情報をCookieなしで記録"
                             ],
                             [
-                                "第三者提供",
-                                "記載なし",
-                                "ミューズキャット連携とGoogleの翻訳を、同意を得る提供として記載"
+                                "委託・外国への移転",
+                                "Vercelにホスティングと画像保存を委託",
+                                "Vercelへの委託に訪問分析を追加"
                             ],
                             [
-                                "意見・返信の翻訳",
-                                "すべての文章を翻訳（委託として記載）",
-                                "翻訳を許可した人の文章だけを翻訳"
-                            ],
-                            [
-                                "位置情報",
-                                "正確な位置情報を求めないと記載",
-                                "ゲームセンター検索で端末の位置を使い、端末にのみ保存することを記載"
-                            ],
-                            [
-                                "取り扱う項目",
-                                "一部の記録が抜けていた",
-                                "イベント投稿・投票・ビンゴの進捗・難易度表投票の変更記録・通報された文章の写し・楽曲追加の候補・筐体確認とメモ・プロフィール画像のアドレスを追加"
-                            ],
-                            [
-                                "保有期間",
-                                "バックアップ・ログの期間を確認前",
-                                "処理済みの通報とミューズキャットへのリクエスト記録は6か月、期限切れの連携トークンは1日、バックアップは2日、サーバーログは1日"
-                            ],
-                            ["14歳", "ポリシーにのみ記載", "登録時に確認"],
-                            [
-                                "責任者・相談窓口",
-                                "運営者の活動名のみ",
-                                "責任者の実名と相談窓口3か所"
-                            ],
-                            [
-                                "外国への移転",
-                                "リージョンのみ記載",
-                                "提供先・連絡先・国・時期と方法・項目・目的・保有期間"
-                            ],
-                            [
-                                "Xのお知らせ",
-                                "ウィジェットとして記載",
-                                "サーバーが取得し、画像はXから読み込む"
+                                "分析ツールの案内",
+                                "行動分析のツールを使わないと記載",
+                                "広告ツールを使わず、他のサイトをまたいで追跡する行動情報を扱わないと記載"
                             ]
                         ]
                     }
@@ -1194,7 +1140,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated October 30, 2026 · Effective November 6, 2026",
+        "dates": "Last updated November 2, 2026 · Effective November 9, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -1222,7 +1168,7 @@
             },
             {
                 "title": "Processors",
-                "text": "Vercel and PlanetScale, storing data in the Seoul, South Korea region",
+                "text": "Vercel and PlanetScale, storing service data in the Seoul, South Korea region",
                 "target": "providers"
             },
             {
@@ -1340,6 +1286,12 @@
                                 "Counting daily visitors",
                                 "A same-day identifier made from your IP and browser information (the IP and browser information themselves are not stored), daily visitors, views by page and hour, totals by login status, API call counts",
                                 "The identifier is deleted the next day and totals after 90 days"
+                            ],
+                            [
+                                "Visit analytics (Vercel Web Analytics)",
+                                "Understanding where visits come from and use by region and device",
+                                "Page path (sent without profile numbers or search terms), previous page address, country, region and city, device type, OS and browser with versions, time of visit, an identifier made from the request (no cookies)",
+                                "The identifier is discarded after 24 hours; Vercel sets the period for the rest (the operator can view it for 12 months)"
                             ]
                         ]
                     },
@@ -1388,7 +1340,7 @@
                             "Your KONAMI official site password and session cookies",
                             "Audio files you pick in the chart viewer or editor (used only inside your browser and never uploaded)",
                             "Real names, phone numbers, email addresses or payment information",
-                            "Information for advertising or behavioral analytics"
+                            "Information for advertising, or behavior tracked across other sites"
                         ]
                     }
                 ]
@@ -1465,7 +1417,7 @@
                         "rows": [
                             [
                                 "Vercel Inc.",
-                                "Web hosting, running the server, operational logs, image storage (Vercel Blob). Server and image storage region: Seoul, South Korea (icn1)"
+                                "Web hosting, running the server, operational logs, image storage (Vercel Blob), visit analytics (Web Analytics). Server and image storage region: Seoul, South Korea (icn1)"
                             ],
                             [
                                 "PlanetScale, Inc.",
@@ -1500,11 +1452,11 @@
                         "rows": [
                             [
                                 "Vercel Inc. · privacy@vercel.com",
-                                "United States (company); Seoul, South Korea icn1 (server and image storage)",
+                                "United States (company); Seoul, South Korea icn1 (server and image storage). Vercel's public documents do not state the storage country for visit analytics",
                                 "Over the network whenever you use the service",
                                 "All items in section 2, uploaded images, access logs",
-                                "Hosting and image storage",
-                                "Until you delete your account or the contract ends. Server logs for 1 day"
+                                "Hosting, image storage and visit analytics",
+                                "Until you delete your account or the contract ends. Server logs for 1 day; Vercel sets the period for visit analytics"
                             ],
                             [
                                 "PlanetScale, Inc. · privacy@planetscale.com",
@@ -1626,7 +1578,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "You can block or clear cookies and site data in your browser settings. Blocking the login cookie prevents login, and clearing other items resets them to defaults. NosLog uses no advertising or behavioral analytics tools, and visit statistics are counted as daily totals without cookies."
+                        "text": "You can block or clear cookies and site data in your browser settings. Blocking the login cookie prevents login, and clearing other items resets them to defaults. NosLog uses no advertising tools. Visit statistics are counted as daily totals without cookies, and Vercel Web Analytics also records visits without cookies."
                     }
                 ]
             },
@@ -1739,59 +1691,24 @@
                         "kind": "table",
                         "head": [
                             "Item",
-                            "Before (October 28, 2026 version)",
+                            "Before (November 6, 2026 version)",
                             "After"
                         ],
                         "rows": [
                             [
-                                "Structure",
-                                "12 sections",
-                                "15 sections in the order the law sets, with tables for processors, international transfers and sharing"
+                                "Visit analytics",
+                                "Not used",
+                                "Vercel Web Analytics records page path, previous page address, region and device information without cookies"
                             ],
                             [
-                                "Sharing",
-                                "Not listed",
-                                "Musecat connection and Google translation listed as sharing with consent"
+                                "Processors and international transfers",
+                                "Vercel handles hosting and image storage",
+                                "Visit analytics added to Vercel's work"
                             ],
                             [
-                                "Opinion and reply translation",
-                                "All text translated (listed as a processor)",
-                                "Only text from people who allow translation"
-                            ],
-                            [
-                                "Location",
-                                "Said precise location is never requested",
-                                "Says arcade search uses device location and keeps it on the device only"
-                            ],
-                            [
-                                "Items processed",
-                                "Some records were missing",
-                                "Added event posts, polls, bingo progress, the tier vote change log, copies of reported text, new song candidates, cabinet checks and notes, and the avatar URL"
-                            ],
-                            [
-                                "Retention",
-                                "Backup and log periods unconfirmed",
-                                "Resolved reports and Musecat request records 6 months, expired connection tokens 1 day, backups 2 days, server logs 1 day"
-                            ],
-                            [
-                                "Age 14",
-                                "Stated only in the policy",
-                                "Confirmed at sign-up"
-                            ],
-                            [
-                                "Privacy officer and remedies",
-                                "Operator's handle only",
-                                "The officer's real name and three remedy bodies"
-                            ],
-                            [
-                                "International transfers",
-                                "Regions only",
-                                "Recipient, contact, country, timing and method, items, purpose and retention"
-                            ],
-                            [
-                                "X news",
-                                "Described as a widget",
-                                "Fetched by the server, with images loaded from X"
+                                "Analytics tools notice",
+                                "Said no behavioral analytics tools are used",
+                                "Says no advertising tools are used and no behavior is tracked across other sites"
                             ]
                         ]
                     }

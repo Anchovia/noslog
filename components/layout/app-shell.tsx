@@ -8,16 +8,19 @@ import type { ShellAccount } from "@/components/layout/app-header";
 import AppHeader from "@/components/layout/app-header";
 import NavigationProgress from "@/components/layout/navigation-progress";
 import PageViewBeacon from "@/components/layout/page-view-beacon";
+import WebAnalytics from "@/components/layout/web-analytics";
 import { FeedbackUnreadProvider } from "@/features/feedback/components/feedback-unread";
 
 export default function AppShell({
     children,
     account,
     footer,
+    webAnalytics,
 }: {
     children: ReactNode;
     account: ShellAccount | null;
     footer: ReactNode;
+    webAnalytics: boolean;
 }) {
     const t = useTranslations();
 
@@ -37,6 +40,9 @@ export default function AppShell({
                 {footer}
                 {/* 관리자 계정과 관리자 셸(AdminShell)은 방문 통계에서 제외한다 */}
                 {account?.role !== "admin" ? <PageViewBeacon /> : null}
+                {webAnalytics && account?.role !== "admin" ? (
+                    <WebAnalytics />
+                ) : null}
             </div>
         </FeedbackUnreadProvider>
     );
