@@ -14,6 +14,7 @@ import {
     draftReviewSchema,
     EDITABLE_DRAFT_STATUSES,
     saveUserDraftSchema,
+    USER_DRAFT_MAX_OPEN,
     userDraftDocumentSchema,
 } from "@/features/contributions/schemas/chart-draft-schema";
 import {
@@ -149,7 +150,7 @@ export async function findMyOpenChartDraft(
  */
 export async function openMyChartDraft(
     chartId: number
-): Promise<MyChartDraft | null> {
+): Promise<MyChartDraft | "limit" | null> {
     const session = await getSession();
     if (!session.id || !chartRowIdSchema.safeParse(chartId).success)
         return null;
@@ -184,29 +185,39 @@ export async function openMyChartDraft(
         select: draftSelect,
     });
     if (existing && existing.status !== "approved") return toMyDraft(existing);
-    const row = existing
-        ? await db.chartDraft.update({
-              where: { id: existing.id },
-              data: {
-                  content: inputJson(start),
-                  version: { increment: 1 },
-                  status: "draft",
-                  baseRevision,
-                  submittedAt: null,
-                  reviewedAt: null,
-                  reviewedById: null,
-              },
-              select: draftSelect,
-          })
-        : await db.chartDraft.create({
-              data: {
-                  userId: session.id,
-                  chartId,
-                  content: inputJson(start),
-                  baseRevision,
-              },
-              select: draftSelect,
-          });
+    const userId = session.id;
+    // 세기와 쓰기 사이를 사람마다 잠가 동시에 연 요청이 한도를 넘지 않게 한다
+    const row = await db.$transaction(async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-draft-open:${userId}`}))`;
+        const open = await tx.chartDraft.count({
+            where: { userId, status: { not: "approved" } },
+        });
+        if (open >= USER_DRAFT_MAX_OPEN) return null;
+        return existing
+            ? tx.chartDraft.update({
+                  where: { id: existing.id },
+                  data: {
+                      content: inputJson(start),
+                      version: { increment: 1 },
+                      status: "draft",
+                      baseRevision,
+                      submittedAt: null,
+                      reviewedAt: null,
+                      reviewedById: null,
+                  },
+                  select: draftSelect,
+              })
+            : tx.chartDraft.create({
+                  data: {
+                      userId,
+                      chartId,
+                      content: inputJson(start),
+                      baseRevision,
+                  },
+                  select: draftSelect,
+              });
+    });
+    if (!row) return "limit";
     return toMyDraft(row);
 }
 
@@ -238,6 +249,9 @@ export async function saveMyChartDraft(
         });
         if (!draft || !isEditable(draft.status))
             return { success: false, message: t("contribution.draft.locked") };
+        const quota = await claimUploadTokenQuota(session.id, "draft-save");
+        if (!quota.allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         // 초당 1번으로 막되 거절하지 않고 기다린다 — 검토 요청 직전 저장은 자동 저장 바로 뒤에 올 수 있다. 수를 세지 않으니 행도 늘지 않고, 동시 요청은 아래 버전 조건이 막는다
         const wait = Math.min(
             draft.updatedAt.getTime() + DRAFT_SAVE_MIN_INTERVAL_MS - Date.now(),

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
+import { countChartMeasures } from "@/lib/chart-pattern/timing";
 
 /** 유저 초안 상태(2026-09-24 3단계) */
 export const CHART_DRAFT_STATUSES = [
@@ -27,6 +28,10 @@ export const USER_DRAFT_MAX_END_TICK = 10_000_000;
 export const USER_DRAFT_MAX_PATTERN_TICKS = 2_000_000;
 /** 경로 제어점 합 한도 — 겹침 검사는 같은 틱에 몰린 제어점을 쌍으로 비교한다 */
 export const USER_DRAFT_MAX_PATH_POINTS = 2_000;
+/** 마디 수 합 한도 — 타이밍 값만으로 뷰어가 만드는 표시가 수천만 개로 늘어나 탭이 멈추지 않게 한다 */
+export const USER_DRAFT_MAX_MEASURES = 5_000;
+/** 공개 전 초안 수 한도 — 계정 하나가 채보마다 초안을 채워 저장 공간을 쓰지 못하게 한다 */
+export const USER_DRAFT_MAX_OPEN = 50;
 
 export const CHART_COMMENT_MAX_LENGTH = 500;
 /** 한 사람이 24시간에 남길 수 있는 공개 채보 댓글 수 — 장난 방지 */
@@ -71,6 +76,12 @@ export const userDraftDocumentSchema = chartDocumentSchema.superRefine(
                 code: "custom",
                 path: ["notes"],
                 message: "notes too long",
+            });
+        if (countChartMeasures(document) > USER_DRAFT_MAX_MEASURES)
+            ctx.addIssue({
+                code: "custom",
+                path: ["timingPoints"],
+                message: "too many measures",
             });
     }
 );

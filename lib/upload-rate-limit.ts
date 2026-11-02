@@ -23,6 +23,7 @@ const QUOTAS = {
     "community-translation": { limit: 20, windowMs: HOUR_MS },
     "event-save": WRITE_QUOTA,
     "draft-comment": WRITE_QUOTA,
+    "draft-save": WRITE_QUOTA,
 } satisfies Record<string, { limit: number; windowMs: number }>;
 
 export type UploadPurpose = keyof typeof QUOTAS;

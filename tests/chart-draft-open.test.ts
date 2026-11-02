@@ -5,6 +5,8 @@ const mocks = vi.hoisted(() => ({
     findUnique: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
+    count: vi.fn(),
+    findChart: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -21,10 +23,23 @@ vi.mock("@/lib/db", () => ({
             create: mocks.create,
             update: mocks.update,
         },
+        musicChart: { findUnique: mocks.findChart },
+        $transaction: (run: (tx: unknown) => unknown) =>
+            run({
+                $executeRaw: vi.fn(),
+                chartDraft: {
+                    count: mocks.count,
+                    create: mocks.create,
+                    update: mocks.update,
+                },
+            }),
     },
 }));
 
-import { findMyOpenChartDraft } from "@/features/contributions/server/chart-draft-service";
+import {
+    findMyOpenChartDraft,
+    openMyChartDraft,
+} from "@/features/contributions/server/chart-draft-service";
 import { createDefaultChartDocument } from "@/lib/chart-pattern/schema";
 
 function row(status: string) {
@@ -73,5 +88,45 @@ describe("초안 화면 GET 은 DB 에 쓰지 않는다", () => {
         mocks.session.id = undefined;
         await expect(findMyOpenChartDraft(5)).resolves.toBeNull();
         expect(mocks.findUnique).not.toHaveBeenCalled();
+    });
+});
+
+describe("공개 전 초안 수 한도", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        mocks.session.id = 9;
+        mocks.findChart.mockResolvedValue({
+            id: 5,
+            bpmMin: 120,
+            durationSeconds: 0,
+            pattern: null,
+        });
+    });
+
+    it("50개가 차면 새 초안을 만들지 않는다", async () => {
+        mocks.findUnique.mockResolvedValue(null);
+        mocks.count.mockResolvedValue(50);
+        await expect(openMyChartDraft(5)).resolves.toBe("limit");
+        expect(mocks.create).not.toHaveBeenCalled();
+    });
+
+    it("공개까지 끝난 초안을 다시 여는 것도 센다", async () => {
+        mocks.findUnique.mockResolvedValue(row("approved"));
+        mocks.count.mockResolvedValue(50);
+        await expect(openMyChartDraft(5)).resolves.toBe("limit");
+        expect(mocks.update).not.toHaveBeenCalled();
+    });
+
+    it("이미 있는 초안은 한도가 차도 열린다", async () => {
+        mocks.findUnique.mockResolvedValue(row("draft"));
+        mocks.count.mockResolvedValue(50);
+        await expect(openMyChartDraft(5)).resolves.toMatchObject({ id: 3 });
+    });
+
+    it("한도 안이면 만든다", async () => {
+        mocks.findUnique.mockResolvedValue(null);
+        mocks.count.mockResolvedValue(49);
+        mocks.create.mockResolvedValue(row("draft"));
+        await expect(openMyChartDraft(5)).resolves.toMatchObject({ id: 3 });
     });
 });

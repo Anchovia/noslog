@@ -12,8 +12,10 @@ import {
     chartRowIdSchema,
     draftReviewSchema,
     saveUserDraftSchema,
+    userDraftDocumentSchema,
 } from "@/features/contributions/schemas/chart-draft-schema";
 import { CONTRIBUTION_POINTS } from "@/features/contributions/contribution-level";
+import { countChartMeasures } from "@/lib/chart-pattern/timing";
 import { createDefaultChartDocument } from "@/lib/chart-pattern/schema";
 
 const document = createDefaultChartDocument({ bpm: 120, durationMs: 60_000 });
@@ -102,12 +104,19 @@ describe("유저 초안 틱 한도", () => {
             width: 1,
             points: [],
         };
-        expect(accepts([{ ...standard, tick: USER_DRAFT_MAX_END_TICK }])).toBe(
-            true
-        );
-        expect(
-            accepts([{ ...standard, tick: USER_DRAFT_MAX_END_TICK + 1 }])
-        ).toBe(false);
+        // 4/4 로는 이 틱이 마디 한도에 먼저 닿으므로 틱 한도만 보도록 마디를 늘린다
+        const longMeasures = document.timingPoints.map((point) => ({
+            ...point,
+            numerator: 8,
+        }));
+        const acceptsTick = (tick: number) =>
+            userDraftDocumentSchema.safeParse({
+                ...document,
+                timingPoints: longMeasures,
+                notes: [{ ...standard, tick }],
+            }).success;
+        expect(acceptsTick(USER_DRAFT_MAX_END_TICK)).toBe(true);
+        expect(acceptsTick(USER_DRAFT_MAX_END_TICK + 1)).toBe(false);
     });
 
     it("트릴 · 글리산도 길이 합 한도를 넘으면 받지 않는다", () => {
@@ -224,5 +233,65 @@ describe("운영자 결정 · 점수", () => {
     it("채보 공개 20점 · 해결된 채보 의견 1점", () => {
         expect(CONTRIBUTION_POINTS.chart).toBe(20);
         expect(CONTRIBUTION_POINTS.chart_comment).toBe(1);
+    });
+});
+
+describe("유저 초안 마디 수 한도", () => {
+    const point = (id: string, tick: number, timeMs: number) => ({
+        id,
+        tick,
+        timeMs,
+        bpm: 1000,
+        numerator: 1,
+        denominator: 32 as const,
+    });
+    const note = (tick: number) => ({
+        id: "note",
+        type: "standard" as const,
+        hand: "left" as const,
+        tick,
+        durationTicks: 0,
+        lane: 0,
+        width: 1,
+        points: [],
+    });
+
+    it("타이밍 값으로 마디를 부풀린 초안을 거절한다", () => {
+        const document = {
+            ...createDefaultChartDocument({ bpm: 120, durationMs: 0 }),
+            timingPoints: [point("a", 0, 0), point("b", 5_000_000, 86_400_000)],
+            notes: [note(5_000_000)],
+        };
+        expect(countChartMeasures(document)).toBe(11_520_000);
+        expect(userDraftDocumentSchema.safeParse(document).success).toBe(false);
+    });
+
+    it("느린 구간의 노트로 곡 끝을 늘린 초안도 거절한다", () => {
+        const document = {
+            ...createDefaultChartDocument({ bpm: 120, durationMs: 0 }),
+            timingPoints: [
+                { ...point("a", 0, 0), bpm: 1 },
+                point("b", 9_000_000, 1),
+            ],
+            notes: [note(8_999_999), note(9_000_001)],
+        };
+        expect(countChartMeasures(document)).toBeGreaterThan(5_000);
+        expect(userDraftDocumentSchema.safeParse(document).success).toBe(false);
+    });
+
+    it("4/4 · 120 BPM 10분은 300마디로 통과한다", () => {
+        const document = {
+            ...createDefaultChartDocument({ bpm: 120, durationMs: 600_000 }),
+            timingPoints: [
+                {
+                    ...point("a", 0, 0),
+                    bpm: 120,
+                    numerator: 4,
+                    denominator: 4 as const,
+                },
+            ],
+        };
+        expect(countChartMeasures(document)).toBe(300);
+        expect(userDraftDocumentSchema.safeParse(document).success).toBe(true);
     });
 });

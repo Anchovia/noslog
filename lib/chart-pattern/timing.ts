@@ -1,4 +1,4 @@
-import type { ChartTimingPoint } from "./schema";
+import type { ChartDocument, ChartTimingPoint } from "./schema";
 
 const MINUTES_TO_MILLISECONDS = 60_000;
 
@@ -274,6 +274,38 @@ export function getMeasureMarkers(
                     activePoint.denominator !== previousPoint.denominator),
         };
     });
+}
+
+/** 뷰어가 만드는 마디 표시 수 — 표시를 만들지 않고 타이밍 구간마다 나눗셈으로 센다 */
+export function countChartMeasures(document: ChartDocument) {
+    const sorted = sortTimingPoints(document.timingPoints);
+    const endTicks = document.notes
+        .map((note) => note.tick + note.durationTicks)
+        .sort((first, second) => first - second);
+    let endMs = document.durationMs;
+    let anchorIndex = 0;
+    for (const tick of endTicks) {
+        while (sorted[anchorIndex + 1]?.tick <= tick) anchorIndex += 1;
+        const anchor = sorted[anchorIndex];
+        endMs = Math.max(
+            endMs,
+            anchor.timeMs +
+                ((tick - anchor.tick) * MINUTES_TO_MILLISECONDS) /
+                    anchor.bpm /
+                    document.ticksPerQuarter
+        );
+    }
+    return sorted.reduce((count, point, index) => {
+        const segmentEndMs = Math.min(
+            endMs,
+            sorted[index + 1]?.timeMs ?? endMs
+        );
+        if (segmentEndMs <= point.timeMs) return count;
+        const measureMs =
+            (MINUTES_TO_MILLISECONDS / point.bpm) *
+            ((4 * point.numerator) / point.denominator);
+        return count + (segmentEndMs - point.timeMs) / measureMs;
+    }, 0);
 }
 
 export function getMeasurePanels(

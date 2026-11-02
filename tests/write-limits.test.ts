@@ -57,6 +57,10 @@ beforeEach(() => {
 });
 
 describe("채보 초안 저장 간격", () => {
+    beforeEach(() => {
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+    });
+
     function lastSaved(msAgo: number) {
         mocks.draftFindUnique.mockResolvedValue({
             id: 3,
@@ -98,6 +102,22 @@ describe("채보 초안 저장 간격", () => {
             success: true,
             version: 3,
         });
+    });
+});
+
+describe("채보 초안 저장 한도", () => {
+    it("사람 한도에 닿으면 어느 초안이든 저장하지 않는다", async () => {
+        mocks.draftFindUnique.mockResolvedValue({
+            id: 3,
+            status: "draft",
+            updatedAt: new Date(Date.now() - 5_000),
+        });
+        mocks.claim.mockResolvedValue({ allowed: false, grantId: null });
+        await expect(saveMyChartDraft(saveInput, "ko")).resolves.toMatchObject({
+            success: false,
+        });
+        expect(mocks.claim).toHaveBeenCalledWith(9, "draft-save");
+        expect(mocks.draftUpdateMany).not.toHaveBeenCalled();
     });
 });
 

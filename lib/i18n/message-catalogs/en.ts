@@ -1970,6 +1970,7 @@ export const enMessages = {
     "contribution.rejectReason.format": "The value does not follow the format",
     "contribution.rejectReason.other": "Other",
     "contribution.rejectReason": "Reason: {reason}",
+    "contribution.draft.limit": "You can keep up to {count} drafts open.",
     "contribution.draft.invalid": "The chart format is invalid.",
     "contribution.draft.locked":
         "This draft can't be edited right now. If it's in review, withdraw the request first.",

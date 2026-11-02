@@ -1,6 +1,6 @@
 # 쓰기 한도 · OAuth 토큰 한도 · 신고 글 가리기 · 활성 연결 하나 · COOP
 
-- 상태: 유효
+- 상태: 일부 대체됨(초안 저장 한도) → [2026-11-02 초안 수 · 저장 · 마디 한도](./2026-11-02-draft-open-measure-limits.md)
 - 날짜: 2026-11-02
 - 분야: 기능
 - 고른 사람: 사용자([시안](https://claude.ai/artifact/5xYtpNRPNX2S9qnu3KVxoo) 다섯 판 모두 추천안)

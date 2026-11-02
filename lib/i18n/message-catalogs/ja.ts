@@ -1968,6 +1968,7 @@ export const jaMessages = {
     "contribution.rejectReason.format": "値の形式が規則と違う",
     "contribution.rejectReason.other": "その他",
     "contribution.rejectReason": "理由: {reason}",
+    "contribution.draft.limit": "下書きは{count}件まで開けます。",
     "contribution.draft.invalid": "譜面の形式が正しくありません。",
     "contribution.draft.locked":
         "今はこの下書きを編集できません。確認依頼中の場合は、先に依頼を取り消してください。",

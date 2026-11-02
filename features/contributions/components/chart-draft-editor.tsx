@@ -9,12 +9,15 @@ import ChartTimingEditor, {
 } from "@/components/admin/chart-pattern/chartTimingEditor";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { LoadingStatus } from "@/components/ui/skeleton";
+import { StatusMessage } from "@/components/ui/status-message";
+import { USER_DRAFT_MAX_OPEN } from "@/features/contributions/schemas/chart-draft-schema";
 import type { MyChartDraft } from "@/features/contributions/server/chart-draft-service";
 
 type OpenState =
     | { kind: "opening" }
     | { kind: "open"; draft: MyChartDraft }
     | { kind: "missing" }
+    | { kind: "limit" }
     | { kind: "failed"; error: unknown };
 
 /** 고칠 초안이 없으면 서버 액션으로 열고(같은 출처 요청만 쓴다) 에디터를 보여 준다 */
@@ -41,13 +44,28 @@ export default function ChartDraftEditor({
         opened.current = true;
         openMyChartDraft(metadata.chartId).then(
             (draft) =>
-                setState(draft ? { kind: "open", draft } : { kind: "missing" }),
+                setState(
+                    draft === "limit"
+                        ? { kind: "limit" }
+                        : draft
+                          ? { kind: "open", draft }
+                          : { kind: "missing" }
+                ),
             (error: unknown) => setState({ kind: "failed", error })
         );
     }, [metadata.chartId]);
 
     if (state.kind === "missing") notFound();
     if (state.kind === "failed") throw state.error;
+    if (state.kind === "limit")
+        return (
+            <StatusMessage
+                severity="warning"
+                title={t("contribution.draft.limit", {
+                    count: USER_DRAFT_MAX_OPEN,
+                })}
+            />
+        );
     if (state.kind === "opening")
         return (
             <div aria-busy="true">
