@@ -100,6 +100,15 @@ if (
     );
 }
 
+// 없으면 OAuth issuer 를 요청 헤더에서 만들게 된다. 위와 같은 이유로 배포 주소가 있을 때만 본다
+if (
+    process.env.VERCEL_URL &&
+    serverEnv.VERCEL_ENV === "production" &&
+    !serverEnv.APP_URL
+) {
+    throw new Error("APP_URL is required when VERCEL_ENV is production");
+}
+
 if (serverEnv.DATABASE_EXPECTED_HOST) {
     const actualHost = new URL(serverEnv.DATABASE_URL).hostname;
     if (actualHost !== serverEnv.DATABASE_EXPECTED_HOST) {
