@@ -279,6 +279,7 @@ export const enMessages = {
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",
     "upload.limitReached": "You can upload up to {count} images per hour.",
+    "common.tooManyRequests": "Too many requests. Try again in a moment.",
     "common.copied": "Copied",
     "maintenance.title": "Under Maintenance",
     "maintenance.heading": "We're performing maintenance.",

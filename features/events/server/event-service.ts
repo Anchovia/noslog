@@ -260,6 +260,9 @@ export async function saveEvent(
         ...(submit ? { submittedAt: now } : {}),
     };
     try {
+        const quota = await claimUploadTokenQuota(writer.userId, "event-save");
+        if (!quota.allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         // 글과 투표를 한 번에 — 투표가 규칙에 막히면 글 저장도 되돌린다(2026-09-23 V2)
         const saved = await db.$transaction(async (tx) => {
             // 앞서 읽은 뒤에 반려됐으면 행을 찾지 못해 대기로 되돌리지 않는다

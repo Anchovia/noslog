@@ -278,6 +278,8 @@ export const koMessages = {
     "common.retry": "다시 시도",
     "upload.limitReached":
         "이미지는 한 시간에 최대 {count}회까지 업로드할 수 있습니다.",
+    "common.tooManyRequests":
+        "요청이 너무 많습니다. 잠시 뒤에 다시 시도해 주세요.",
     "common.copied": "복사됨",
     "maintenance.title": "점검 중",
     "maintenance.heading": "점검 중입니다.",

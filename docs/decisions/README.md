@@ -155,6 +155,7 @@
 | 2026-11-02 | [값이 빈 채보에도 Grd 상한](./2026-11-02-sync-unknown-chart-limits.md)                                                                                                         | 기능                |
 | 2026-11-02 | [채보 틱 한도와 겹침 검사 비용](./2026-11-02-chart-tick-limits.md)                                                                                                             | 기능                |
 | 2026-11-02 | [뮤즈캣 오류 처리와 초안 화면 GET 쓰기](./2026-11-02-musecat-errors-draft-open.md)                                                                                             |
+| 2026-11-02 | [쓰기 한도 · OAuth 토큰 한도 · 신고 글 가리기 · 활성 연결 하나 · COOP](./2026-11-02-security-choices.md)                                                                       |
 
 ## 대체됨
 

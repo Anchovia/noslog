@@ -13,6 +13,8 @@ export interface AdminOpinionReport {
     status: OpinionReportStatus;
     reporter: { id: number; name: string };
     author: { id: number; name: string };
+    // 공개 목록에서 가렸는지 — 의견 · 답글이 지워졌으면 null
+    hidden: boolean | null;
     // 의견이 있는 채보 상세 — 의견 · 답글이 지워졌으면 null
     chart: { title: string; difficulty: string; href: string } | null;
 }

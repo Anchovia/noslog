@@ -1,6 +1,7 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import {
+    opinionReportHiddenUpdateSchema,
     type OpinionReportStatus,
     opinionReportStatusUpdateInputFromFormData,
     opinionReportStatusUpdateSchema,
@@ -9,6 +10,7 @@ import type { AdminOpinionReport } from "@/features/feedback/types/opinion-repor
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
+import { getChartEvaluationTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
@@ -54,8 +56,13 @@ export async function listOpinionReports(
             include: {
                 user: { select: userSelect },
                 author: { select: userSelect },
-                evaluation: { select: chartSelect },
-                reply: { select: { evaluation: { select: chartSelect } } },
+                evaluation: { select: { opinionHidden: true, ...chartSelect } },
+                reply: {
+                    select: {
+                        hidden: true,
+                        evaluation: { select: chartSelect },
+                    },
+                },
             },
             orderBy: { createdAt: "desc" },
             take: 100,
@@ -72,6 +79,10 @@ export async function listOpinionReports(
                 snapshot: report.opinionSnapshot,
                 createdAt: report.createdAt.toISOString(),
                 status,
+                hidden:
+                    report.reply?.hidden ??
+                    report.evaluation?.opinionHidden ??
+                    null,
                 reporter: { id: report.user.id, name: userName(report.user) },
                 author: { id: report.author.id, name: userName(report.author) },
                 chart: chart
@@ -140,5 +151,62 @@ export async function updateOpinionReportStatus(
                 ? "신고를 처리 완료했습니다."
                 : "신고를 다시 열었습니다.",
         status: input.status,
+    };
+}
+
+/** 신고된 의견 · 답글을 공개 목록에서 가리거나 되돌린다 */
+export async function setOpinionReportTargetHidden(
+    formData: FormData
+): Promise<ActionResult> {
+    await requireAdmin();
+    const parsed = opinionReportHiddenUpdateSchema.safeParse({
+        reportId: formData.get("reportId"),
+        hidden: formData.get("hidden"),
+    });
+    if (!parsed.success)
+        return { success: false, message: "신고 처리 요청을 확인해주세요." };
+    const hidden = parsed.data.hidden === "true";
+
+    try {
+        const report = await db.communityOpinionReport.findUnique({
+            where: { id: parsed.data.reportId },
+            select: {
+                replyId: true,
+                evaluationId: true,
+                evaluation: { select: { chartId: true } },
+                reply: {
+                    select: { evaluation: { select: { chartId: true } } },
+                },
+            },
+        });
+        const chartId =
+            report?.reply?.evaluation.chartId ?? report?.evaluation?.chartId;
+        if (!report || chartId === undefined)
+            return { success: false, message: "작성자가 지운 글입니다." };
+        if (report.replyId !== null) {
+            await db.communityOpinionReply.update({
+                where: { id: report.replyId },
+                data: { hidden },
+            });
+        } else {
+            await db.communityChartEvaluation.update({
+                where: { id: report.evaluationId! },
+                data: { opinionHidden: hidden },
+            });
+        }
+        updateTag(getChartEvaluationTag(chartId));
+    } catch (error) {
+        logServerError(error, {
+            event: "admin.opinion-report.hide.failed",
+            routePath: "/admin/feedback",
+            routeType: "action",
+        });
+        return { success: false, message: "글 상태를 변경하지 못했습니다." };
+    }
+
+    revalidatePath("/admin/feedback");
+    return {
+        success: true,
+        message: hidden ? "글을 가렸습니다." : "글을 다시 보이게 했습니다.",
     };
 }

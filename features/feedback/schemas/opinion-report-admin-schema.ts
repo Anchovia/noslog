@@ -15,6 +15,11 @@ export const opinionReportStatusUpdateSchema = z.object({
     status: opinionReportStatusSchema,
 });
 
+export const opinionReportHiddenUpdateSchema = z.object({
+    reportId: opinionReportStatusUpdateSchema.shape.reportId,
+    hidden: z.enum(["true", "false"], { error: "잘못된 요청입니다." }),
+});
+
 export type OpinionReportStatus = z.infer<typeof opinionReportStatusSchema>;
 
 export function opinionReportStatusUpdateInputFromFormData(formData: FormData) {
@@ -31,5 +36,15 @@ export function createOpinionReportStatusUpdateFormData(
     const formData = new FormData();
     formData.set("reportId", String(reportId));
     formData.set("status", status);
+    return formData;
+}
+
+export function createOpinionReportHiddenUpdateFormData(
+    reportId: number,
+    hidden: boolean
+) {
+    const formData = new FormData();
+    formData.set("reportId", String(reportId));
+    formData.set("hidden", String(hidden));
     return formData;
 }

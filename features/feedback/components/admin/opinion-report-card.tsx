@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { AdminOpinionReport } from "@/features/feedback/types/opinion-report-admin";
 
+import OpinionReportHideButton from "./opinion-report-hide-button";
 import OpinionReportStatusButton from "./opinion-report-status-button";
 
 export default function OpinionReportCard({
@@ -64,6 +65,12 @@ export default function OpinionReportCard({
                     </p>
                 </div>
             ) : null}
+            {report.hidden === null ? null : (
+                <OpinionReportHideButton
+                    reportId={report.id}
+                    hidden={report.hidden}
+                />
+            )}
             <OpinionReportStatusButton
                 reportId={report.id}
                 status={report.status}

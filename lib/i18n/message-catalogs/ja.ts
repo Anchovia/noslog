@@ -277,6 +277,8 @@ export const jaMessages = {
     "common.retryLater": "しばらくしてからもう一度お試しください。",
     "common.retry": "再試行",
     "upload.limitReached": "画像のアップロードは1時間に{count}回までです。",
+    "common.tooManyRequests":
+        "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
     "common.copied": "コピーしました",
     "maintenance.title": "メンテナンス中",
     "maintenance.heading": "ただいまメンテナンス中です。",

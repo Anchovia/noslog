@@ -7,6 +7,9 @@ import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/routing";
 const HOUR_MS = 60 * 60 * 1000;
 const IMAGE_UPLOAD_QUOTA = { limit: 10, windowMs: HOUR_MS };
 
+// 스크립트 반복만 막는 쓰기 한도 — 사람이 쓰는 속도로는 닿지 않는다
+const WRITE_QUOTA = { limit: 300, windowMs: 5 * 60 * 1000 };
+
 // 목적마다 한도 · 창 — 이미지 업로드 토큰 말고도 비용이 드는 요청(이용자 글 번역)을 같은 표로 센다
 const QUOTAS = {
     "profile-avatar": IMAGE_UPLOAD_QUOTA,
@@ -18,6 +21,8 @@ const QUOTAS = {
     "event-image": IMAGE_UPLOAD_QUOTA,
     "announcement-image": IMAGE_UPLOAD_QUOTA,
     "community-translation": { limit: 20, windowMs: HOUR_MS },
+    "event-save": WRITE_QUOTA,
+    "draft-comment": WRITE_QUOTA,
 } satisfies Record<string, { limit: number; windowMs: number }>;
 
 export type UploadPurpose = keyof typeof QUOTAS;

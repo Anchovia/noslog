@@ -37,6 +37,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 import { getSessionUser } from "@/lib/user";
 
 function translatorFor(requestedLocale: string) {
@@ -98,6 +99,8 @@ function toMyDraft(row: {
         updatedAt: row.updatedAt.toISOString(),
     };
 }
+
+const DRAFT_SAVE_MIN_INTERVAL_MS = 1_000;
 
 const draftSelect = {
     id: true,
@@ -231,10 +234,16 @@ export async function saveMyChartDraft(
     try {
         const draft = await db.chartDraft.findUnique({
             where: { userId_chartId: { userId: session.id, chartId } },
-            select: { id: true, status: true },
+            select: { id: true, status: true, updatedAt: true },
         });
         if (!draft || !isEditable(draft.status))
             return { success: false, message: t("contribution.draft.locked") };
+        // 초당 1번으로 막되 거절하지 않고 기다린다 — 검토 요청 직전 저장은 자동 저장 바로 뒤에 올 수 있다. 수를 세지 않으니 행도 늘지 않고, 동시 요청은 아래 버전 조건이 막는다
+        const wait = Math.min(
+            draft.updatedAt.getTime() + DRAFT_SAVE_MIN_INTERVAL_MS - Date.now(),
+            DRAFT_SAVE_MIN_INTERVAL_MS
+        );
+        if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
         const updated = await db.chartDraft.updateMany({
             where: { id: draft.id, version: baseVersion },
             data: { content: inputJson(document), version: { increment: 1 } },
@@ -439,6 +448,12 @@ export async function addChartComment(
                     success: false,
                     message: t("contribution.comment.invalid"),
                 };
+            const quota = await claimUploadTokenQuota(
+                session.id,
+                "draft-comment"
+            );
+            if (!quota.allowed)
+                return { success: false, message: t("common.tooManyRequests") };
         } else {
             const pattern = await db.chartPattern.findUnique({
                 where: { chartId },

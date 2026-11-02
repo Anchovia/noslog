@@ -204,6 +204,63 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             expect(await findActiveGrant(userId, clientId)).toBeNull();
         });
 
+        it("gives a new generation to a reconnect and keeps one active grant", async () => {
+            const grantUser = await db.user.create({
+                data: { username: `oauth-grant-test-${Date.now()}` },
+                select: { id: true },
+            });
+            const approve = () =>
+                approveAuthorization({
+                    userId: grantUser.id,
+                    clientId,
+                    scopes: ["profile"],
+                    sharedItems: [],
+                    redirectUri,
+                    codeChallenge: challenge,
+                });
+            const grants = () =>
+                db.oAuthGrant.findMany({
+                    where: { userId: grantUser.id, clientId },
+                    orderBy: { id: "asc" },
+                });
+            // 동시에 처음 연결해도 활성 연결은 하나
+            await Promise.all([approve(), approve(), approve(), approve()]);
+            expect(await grants()).toHaveLength(1);
+            const [first] = await grants();
+            expect(first.generation).toBe(1);
+
+            await db.oAuthGrant.update({
+                where: { id: first.id },
+                data: { revokedAt: new Date(), revokedReason: "user" },
+            });
+            await approve();
+            expect((await grants()).map((g) => g.generation)).toEqual([1, 2]);
+
+            // 만료만 된 줄은 닫히고 다음 세대가 시작된다
+            const [, second] = await grants();
+            await db.oAuthGrant.update({
+                where: { id: second.id },
+                data: { familyExpiresAt: new Date(Date.now() - 1000) },
+            });
+            await approve();
+            const after = await grants();
+            expect(after.map((g) => g.generation)).toEqual([1, 2, 3]);
+            expect(after[1].revokedAt).not.toBeNull();
+            expect(after[2].revokedAt).toBeNull();
+
+            await expect(
+                db.oAuthGrant.create({
+                    data: {
+                        userId: grantUser.id,
+                        clientId,
+                        scopes: after[2].scopes,
+                        familyExpiresAt: new Date(Date.now() + 60_000),
+                    },
+                })
+            ).rejects.toMatchObject({ code: "P2002" });
+            await db.user.delete({ where: { id: grantUser.id } });
+        });
+
         it("refuses to widen scope on refresh", async () => {
             const code = await approveAuthorization({
                 userId,
