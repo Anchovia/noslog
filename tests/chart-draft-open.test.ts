@@ -30,6 +30,7 @@ vi.mock("@/lib/db", () => ({
             run({
                 $executeRaw: vi.fn(),
                 chartDraft: {
+                    findUnique: mocks.findUnique,
                     count: mocks.count,
                     create: mocks.create,
                     update: mocks.update,
@@ -124,6 +125,14 @@ describe("공개 전 초안 수 한도", () => {
         mocks.findUnique.mockResolvedValue(row("draft"));
         mocks.count.mockResolvedValue(50);
         await expect(openMyChartDraft(5)).resolves.toMatchObject({ id: 3 });
+    });
+
+    it("잠금을 기다리는 사이 같은 채보 초안이 생겼으면 만들지 않고 돌려준다", async () => {
+        mocks.findUnique
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce(row("draft"));
+        await expect(openMyChartDraft(5)).resolves.toMatchObject({ id: 3 });
+        expect(mocks.create).not.toHaveBeenCalled();
     });
 
     it("한도 안이면 만든다", async () => {

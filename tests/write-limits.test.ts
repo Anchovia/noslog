@@ -25,6 +25,7 @@ vi.mock("@/lib/db", () => ({
             findUnique: mocks.draftFindUnique,
             updateMany: mocks.draftUpdateMany,
         },
+        chartPattern: { findUnique: async () => null },
         chartComment: { create: mocks.commentCreate },
         oAuthAccessToken: { count: mocks.tokenCount },
     },
@@ -33,6 +34,7 @@ vi.mock("@/lib/db", () => ({
 import {
     addChartComment,
     saveMyChartDraft,
+    submitMyChartDraft,
 } from "@/features/contributions/server/chart-draft-service";
 import { isOAuthTokenLimitReached } from "@/features/partner/server/oauth-service";
 import { createDefaultChartDocument } from "@/lib/chart-pattern/schema";
@@ -54,6 +56,24 @@ beforeEach(() => {
     vi.clearAllMocks();
     mocks.session.id = 9;
     mocks.draftUpdateMany.mockResolvedValue({ count: 1 });
+});
+
+describe("채보 초안 검토 요청", () => {
+    it("요청 직전에 지워지거나 잠긴 초안은 잠김으로 끝난다", async () => {
+        mocks.draftFindUnique.mockResolvedValue({
+            id: 3,
+            status: "draft",
+            content: createDefaultChartDocument({ bpm: 120, durationMs: 0 }),
+        });
+        mocks.draftUpdateMany.mockResolvedValue({ count: 0 });
+        await expect(submitMyChartDraft(5, "ko")).resolves.toMatchObject({
+            success: false,
+        });
+        expect(mocks.draftUpdateMany.mock.calls[0][0].where).toMatchObject({
+            id: 3,
+            status: { in: ["draft", "changes_requested"] },
+        });
+    });
 });
 
 describe("채보 초안 저장 간격", () => {
@@ -94,6 +114,15 @@ describe("채보 초안 저장 간격", () => {
             saveMyChartDraft(saveInput, "ko"),
         ]);
         expect(results.map((r) => r.success)).toEqual([true, false]);
+    });
+
+    it("기다리는 동안 잠긴 초안은 덮어쓰지 않도록 상태도 조건에 넣는다", async () => {
+        lastSaved(5_000);
+        await saveMyChartDraft(saveInput, "ko");
+        expect(mocks.draftUpdateMany.mock.calls[0][0].where).toMatchObject({
+            version: 2,
+            status: { in: ["draft", "changes_requested"] },
+        });
     });
 
     it("자동 저장 간격(1.5초)이면 저장된다", async () => {

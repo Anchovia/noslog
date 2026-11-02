@@ -842,6 +842,8 @@ function drawSheetNote(
             const hex = hexes[index];
             const yBottom = yForRenderedTick(hex.startTick) - 0.5;
             const yTop = yForRenderedTick(hex.endTick) + 0.5;
+            // 긴 트릴은 여러 패널에 걸쳐 그려진다 — 이 패널 밖 조각은 보이지 않으니 그레이디언트를 만들지 않는다
+            if (yBottom < chartTop || yTop > chartBottom) continue;
             const middle = (yBottom + yTop) / 2;
             // 악보는 세로가 촘촘해 육각형이 낮다 — 모서리를 높이에 맞춰 화살표처럼 보이지 않게
             const bevel = Math.min(

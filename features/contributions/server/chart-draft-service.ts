@@ -189,13 +189,19 @@ export async function openMyChartDraft(
     // 세기와 쓰기 사이를 사람마다 잠가 동시에 연 요청이 한도를 넘지 않게 한다
     const row = await db.$transaction(async (tx) => {
         await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-draft-open:${userId}`}))`;
+        // 잠금을 기다리는 동안 같은 채보를 연 다른 요청이 만들었을 수 있다
+        const current = await tx.chartDraft.findUnique({
+            where: { userId_chartId: { userId, chartId } },
+            select: draftSelect,
+        });
+        if (current && current.status !== "approved") return current;
         const open = await tx.chartDraft.count({
             where: { userId, status: { not: "approved" } },
         });
         if (open >= USER_DRAFT_MAX_OPEN) return null;
-        return existing
+        return current
             ? tx.chartDraft.update({
-                  where: { id: existing.id },
+                  where: { id: current.id },
                   data: {
                       content: inputJson(start),
                       version: { increment: 1 },
@@ -259,7 +265,12 @@ export async function saveMyChartDraft(
         );
         if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
         const updated = await db.chartDraft.updateMany({
-            where: { id: draft.id, version: baseVersion },
+            // 기다리는 동안 검토 요청 · 삭제가 끝났을 수 있어 상태도 다시 본다
+            where: {
+                id: draft.id,
+                version: baseVersion,
+                status: { in: [...EDITABLE_DRAFT_STATUSES] },
+            },
             data: { content: inputJson(document), version: { increment: 1 } },
         });
         if (updated.count !== 1)
@@ -329,10 +340,15 @@ export async function submitMyChartDraft(
                 success: false,
                 message: t("contribution.draft.unchanged"),
             };
-        await db.chartDraft.update({
-            where: { id: draft.id },
+        const submitted = await db.chartDraft.updateMany({
+            where: {
+                id: draft.id,
+                status: { in: [...EDITABLE_DRAFT_STATUSES] },
+            },
             data: { status: "pending", submittedAt: new Date() },
         });
+        if (!submitted.count)
+            return { success: false, message: t("contribution.draft.locked") };
         revalidatePath("/admin");
         revalidatePath("/admin/contributions");
         return { success: true, message: t("contribution.draft.submitted") };

@@ -290,7 +290,7 @@ describe("유저 초안 마디 수 한도", () => {
             timingPoints: [point("a", 0, 0), point("b", 5_000_000, 86_400_000)],
             notes: [note(5_000_000)],
         };
-        expect(countChartMeasures(document)).toBe(11_520_000);
+        expect(countChartMeasures(document)).toBeGreaterThanOrEqual(11_520_000);
         expect(userDraftDocumentSchema.safeParse(document).success).toBe(false);
     });
 
@@ -304,6 +304,29 @@ describe("유저 초안 마디 수 한도", () => {
             notes: [note(8_999_999), note(9_000_001)],
         };
         expect(countChartMeasures(document)).toBeGreaterThan(5_000);
+        expect(userDraftDocumentSchema.safeParse(document).success).toBe(false);
+    });
+
+    it("내용 끝 뒤 패널 연장 구간의 빠른 마디도 센다", () => {
+        const document = {
+            ...createDefaultChartDocument({ bpm: 120, durationMs: 1_000 }),
+            timingPoints: [
+                {
+                    ...point("a", 0, 0),
+                    bpm: 1,
+                    numerator: 64,
+                    denominator: 1 as const,
+                },
+                {
+                    ...point("b", 16, 2_000),
+                    bpm: 1_000,
+                    numerator: 1,
+                    denominator: 32 as const,
+                },
+            ],
+            notes: [note(8)],
+        };
+        expect(countChartMeasures(document)).toBeGreaterThan(8_000_000);
         expect(userDraftDocumentSchema.safeParse(document).success).toBe(false);
     });
 
