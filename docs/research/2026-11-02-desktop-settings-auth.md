@@ -286,3 +286,294 @@
 GitHub · Linear · Spotify 동의 화면은 공개 그림을 찾지 못했다. Discord 문서 · GitHub 문서에는 동의 화면 그림이 없었다. 문서에 그림이 없거나 흐름도만 있던 곳: Figma · Zoom · Clerk · Okta · Shopify · X · Atlassian. Facebook · Strava 동의 그림은 있으나 로그인을 캡처하지 않아 비교에 넣지 않았다. Auth0 동의 문서는 404, Chess.com 가입은 403, Riot 가입은 404 라 세지 않았다.
 
 Notion 가입(`onboard/Notion_가입.jpg`)은 앱을 흐리게 깐 위의 창이다. 면 약 495, 안쪽 360. Discord 가입(`onboard/Discord_가입.jpg`)은 면 480, 안쪽 416. Linear 가입은 잰 값 288 만 있다.
+
+## 왼쪽 사이드바 실측
+
+폭 1440. 머리 왼쪽은 머리 안 첫 요소 x, 칸은 틀 왼쪽–오른쪽 · 글자 시작 x, 줄은 줄 높이/줄 간격 · 글자 크기 · 굵기, 가운데는 본문 가운데와 창 가운데(720)의 차이, 위는 첫 줄 위 / 제목 위다. 자동 측정값이고 캡처로 확인한 곳은 아래 「눈으로 확인」 에 적는다.
+
+| 묶음          | 곳                     | 주소                                                                                     | 상태            | 머리 왼쪽 | 칸                    | 줄                      | 본문           | 가운데 | 위          | 고른 줄                               | 캡처                       |
+| ------------- | ---------------------- | ---------------------------------------------------------------------------------------- | --------------- | --------- | --------------------- | ----------------------- | -------------- | ------ | ----------- | ------------------------------------- | -------------------------- |
+| 서비스        | Stripe Docs            | https://docs.stripe.com/payments/accept-a-payment                                        | ok              |           | 0–280 · 글자 28       | 20/32 · 14px · 400      | 328–1127(799)  | 8      | 124 / 181   | 700 · 면 없음 · 아이콘 20/32          | Stripe_Docs.jpg            |
+| 서비스        | Stripe Privacy         | https://stripe.com/privacy                                                               | ok              | 192       | 180–450 · 글자 196    | 20/28 · 15px · 425      | 450–1260(810)  | 135    | 130 / 25    | 미확인 · 아이콘 0/9                   | Stripe_Privacy.jpg         |
+| 서비스        | Twitch Dev             | https://dev.twitch.tv/docs/authentication/                                               | ok              | 0         | 0–250 · 글자 30       | 46/46 · 16px · 500      | 281–1230(949)  | 36     | 111 / 80    | 500 · 면 없음 · 아이콘 0/31           | Twitch_Dev.jpg             |
+| 서비스        | Discord Dev            | https://discord.com/developers/docs/intro                                                | ok              | 50        | 0–319 · 선 · 글자 46  | 34/35 · 14.7px · 400    | 420–1381(961)  | 181    | 143 / 193   | 400 · 면 없음 · 아이콘 4/25           | Discord_Dev.jpg            |
+| 서비스        | GitHub Docs            | https://docs.github.com/en/get-started/start-your-journey/about-github-and-git           | ok              | 0         | 0–326 · 선 · 글자 28  | 32/56 · 20px · 600      | 350–1090(740)  | 0      | 125 / 133   | 400 · 면 없음 · 아이콘 13/22          | GitHub_Docs.jpg            |
+| 서비스        | MDN                    | https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a                              | ok              | 10        | 0–297 · 글자 16       | 32/40 · 16px · 600      | 329–1097(768)  | -7     | -42 / 205   | 400 · 면 · 아이콘 0/36                | MDN.jpg                    |
+| 서비스        | React                  | https://react.dev/learn/thinking-in-react                                                | ok              |           | 0–336 · 글자 20       | 46/46 · 15px · 700      | 368–1264(896)  | 96     | 114 / 122   | 500 · 면 · 아이콘 8/10                | React.jpg                  |
+| 서비스        | Next.js                | https://nextjs.org/docs/app/getting-started/installation                                 | ok              | 16        | 0–300 · 글자 20       | 36/37 · 16px · 400      | 358–1074(716)  | -4     | 120 / 156   | 400 · 면 · 아이콘 3/32                | Next_js.jpg                |
+| 서비스        | Tailwind               | https://tailwindcss.com/docs/installation/using-vite                                     | ok              |           | 24–264 · 글자 41      | 24/32 · 14px · 400      | 376–1352(976)  | 144    | 117 / 129   | 600 · 면 없음 · 왼쪽 선 · 아이콘 0/33 | Tailwind.jpg               |
+| 서비스        | Vercel Docs            | https://vercel.com/docs/getting-started-with-vercel                                      | ok              | 16        | 0–300 · 글자 12       | 36/37 · 14px · 400      | 333–1101(768)  | -3     | 76 / 136    | 400 · 면 · 아이콘 26/32               | Vercel_Docs.jpg            |
+| 서비스        | Supabase Docs          | https://supabase.com/docs/guides/getting-started/architecture                            | ok              |           | 0–325 · 선 · 글자 40  | 19/29 · 16px · 500      | 349–1055(706)  | -18    | 74 / 166    | 미확인 · 아이콘 1/40                  | Supabase_Docs.jpg          |
+| 서비스        | Cloudflare Docs        | https://developers.cloudflare.com/workers/get-started/guide/                             | ok              | 24        | 0–300 · 선 · 글자 79  | 32/33 · 16px · 400      | 402–1050(648)  | 6      | 67 / 129    | 600 · 면 · 아이콘 0/380               | Cloudflare_Docs.jpg        |
+| 서비스        | Prisma Docs            | https://www.prisma.io/docs/orm/overview/introduction/what-is-prisma                      | ok              | 25        | 0–268 · 글자 24       | 36/36 · 14px · 500      | 347–1093(747)  | 0      | 143 / 227   | 미확인 · 아이콘 17/27                 | Prisma_Docs.jpg            |
+| 서비스        | Linear Docs            | https://linear.app/docs/start-guide                                                      | ok              | 24        | 0–280 · 선 · 글자 69  | 36/36 · 16px · 400      | 372–1022(650)  | -23    | 21 / 112    | 510 · 면 없음 · 아이콘 18/19          | Linear_Docs.jpg            |
+| 서비스        | Notion Dev             | https://developers.notion.com/docs/getting-started                                       | ok              | 36        | 20–308 · 선 · 글자 36 | 32/33 · 14px · 400      | -1–0(1)        | -720   | 142 / 168   | 600 · 면 · 아이콘 7/30                | Notion_Dev.jpg             |
+| 서비스        | Slack API              | https://api.slack.com/authentication/basics                                              | ok              |           | 0–300 · 글자 19       | 30/34 · 15px · 500      | 360–1133(773)  | 27     | 91 / 139    | 500 · 면 · 아이콘 0/21                | Slack_API.jpg              |
+| 서비스        | Shopify Dev            | https://shopify.dev/docs/apps/getting-started                                            | ok              | 16        | 0–284 · 글자 250      | 32/32 · 16px · 400      | 340–815(475)   | -142   | 56 / 100    | 600 · 면 · 아이콘 24/28               | Shopify_Dev.jpg            |
+| 서비스        | Microsoft Learn        | https://learn.microsoft.com/en-us/azure/app-service/overview                             | ok              | -1        | 0–275 · 선 · 글자 40  | 33/37 · 14px · 400      | 376–1064(688)  | 0      | 347 / 335   | 600 · 면 · 아이콘 0/24                | Microsoft_Learn.jpg        |
+| 서비스        | Apple Developer        | https://developer.apple.com/documentation/swiftui/view                                   | ok              |           | 0–432 · 글자 20       | 25/35 · 14px · 600      | 526–1346(820)  | 216    | 106 / 216   | 400 · 면 · 아이콘 1/28                | Apple_Developer.jpg        |
+| 서비스        | Google Developers      | https://developers.google.com/identity/protocols/oauth2                                  | ok              | 6         | 0–269 · 글자 24       | 24/24 · 13px · 400      | 16–1192(1176)  | -116   | 269 / 280   | 500 · 면 · 아이콘 0/11                | Google_Developers.jpg      |
+| 서비스        | AWS Docs               | https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html                       | ok              | -65       | 0–301 · 선 · 글자 28  | 28/28 · 14px · 400      | 325–1043(718)  | -36    | 223 / 149   | 700 · 면 없음 · 아이콘 0/21           | AWS_Docs.jpg               |
+| 서비스        | Figma Dev              | https://developers.figma.com/docs/rest-api/                                              | ok              |           | 0–300 · 선 · 글자 32  | 30/63 · 12px · 500      | 395–1060(665)  | 8      | 123 / 135   | 500 · 면 없음 · 아이콘 0/24           | Figma_Dev.jpg              |
+| 서비스        | Spotify Dev            | https://developer.spotify.com/documentation/web-api                                      | ok              | 24        | 0–300 · 글자 28       | 30/38 · 16px · 400      | 332–1232(900)  | 62     | 128 / 72    | 700 · 면 · 아이콘 19/22               | Spotify_Dev.jpg            |
+| 서비스        | Riot Dev               | https://developer.riotgames.com/docs/portal                                              | ok              |           | 0–251 · 선 · 글자 15  | 17/22 · 15px · 400      | 446–1246(800)  | 126    | 65 / 577    | 미확인 · 아이콘 0/13                  | Riot_Dev.jpg               |
+| 서비스        | Kakao Dev              | https://developers.kakao.com/docs/latest/ko/kakaologin/common                            | ok              | 32        | 0–260 · 선 · 글자 32  | 37/37 · 16px · 600      | 300–1160(860)  | 10     | 158 / 19    | 미확인 · 아이콘 5/73                  | Kakao_Dev.jpg              |
+| 서비스        | Naver Dev              | https://developers.naver.com/docs/login/overview/overview.md                             | ok              |           | 136–390 · 글자 136    | 20/37 · 18px · 700      | 424–1304(880)  | 144    | 343 / 342   | 미확인 · 아이콘 0/6                   | Naver_Dev.jpg              |
+| 서비스        | Toss Dev               | https://docs.tosspayments.com/guides/v2/get-started                                      | ok              |           | 0–236 · 글자 30       | 34/35 · 16px · 500      |                |        | 72 / 237    | 500 · 면 · 아이콘 5/37                | Toss_Dev.jpg               |
+| 서비스        | LINE Dev               | https://developers.line.biz/en/docs/line-login/overview/                                 | ok              | 32        | 68–228 · 글자 68      | 36/61 · 14px · 400      | 308–1168(860)  | 18     | 394 / 394   | 700 · 면 · 아이콘 0/10                | LINE_Dev.jpg               |
+| 서비스        | Sentry Docs            | https://docs.sentry.io/platforms/javascript/                                             | ok              | 12        | 0–300 · 선 · 글자 29  | 37/37 · 15px · 400      | 368–1359(991)  | 144    | 76 / 172    | 400 · 면 · 아이콘 15/24               | Sentry_Docs.jpg            |
+| 서비스        | Docker Docs            | https://docs.docker.com/get-started/docker-overview/                                     | ok              | 16        | 0–320 · 글자 24       | 22/30 · 14.72px · 400   | 352–1035(683)  | -26    | 125 / 175   | 400 · 면 · 아이콘 0/5                 | Docker_Docs.jpg            |
+| 서비스        | GitLab Docs            | https://docs.gitlab.com/user/ssh/                                                        | ok              |           | 20–292 · 글자 40      | 24/42 · 14px · 400      | 352–1068(716)  | -10    | -18 / 200   | 400 · 면 없음 · 아이콘 0/33           | GitLab_Docs.jpg            |
+| 서비스        | npm Docs               | https://docs.npmjs.com/about-npm                                                         | ok              | 24        | 0–270 · 글자 16       | 32/48 · 13.3333px · 400 | 318–1092(774)  | -15    | 82 / 114    | 400 · 면 · 아이콘 7/9                 | npm_Docs.jpg               |
+| 서비스        | Vue                    | https://vuejs.org/guide/introduction.html                                                | ok              | 32        | 0–304 · 선 · 글자 32  | 28/28 · 12px · 600      | 400–1088(688)  | 24     | 89 / 119    | 400 · 면 없음 · 아이콘 1/38           | Vue.jpg                    |
+| 서비스        | Svelte                 | https://svelte.dev/docs/svelte/overview                                                  | ok              |           | 0–292 · 글자 44       | 24/24 · 16px · 400      | 340–1100(760)  | 0      | 172 / 160   | 400 · 면 없음 · 아이콘 0/40           | Svelte.jpg                 |
+| 서비스        | Google Policies        | https://policies.google.com/privacy                                                      | ok              | 20        | 0–304 · 글자 20       | 48/48 · 14px · 500      | 445–997(552)   | 1      | 110 / 448   | 500 · 면 없음 · 아이콘 0/16           | Google_Policies.jpg        |
+| 서비스        | Google Help            | https://support.google.com/accounts/answer/3024190                                       | 왼쪽 칸 못 찾음 | 16        |                       |                         | 193–895        |        |             |                                       | Google_Help.jpg            |
+| 서비스        | Slack Help             | https://slack.com/help/articles/115004071768-What-is-Slack-                              | 왼쪽 칸 못 찾음 | 11        |                       |                         | 260–880        |        |             |                                       | Slack_Help.jpg             |
+| 서비스        | Notion Help            | https://www.notion.com/help/start-here                                                   | ok              |           | 0–280 · 선 · 글자 24  | 32/32 · 16px · 400      | 458–1262(804)  | 140    | 168 / 152   | 미확인 · 아이콘 14/19                 | Notion_Help.jpg            |
+| 서비스        | GitHub Policies        | https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement | ok              | 0         | 0–326 · 선 · 글자 28  | 32/56 · 20px · 600      | 350–1090(740)  | 0      | 125 / 133   | 400 · 면 없음 · 아이콘 7/12           | GitHub_Policies.jpg        |
+| 서비스        | Spotify Legal          | https://www.spotify.com/us/legal/privacy-policy/                                         | 왼쪽 칸 못 찾음 | 167       |                       |                         | 150–1290       |        |             |                                       | Spotify_Legal.jpg          |
+| 서비스        | Apple Support          | https://support.apple.com/guide/iphone/welcome/ios                                       | 왼쪽 칸 못 찾음 |           |                       |                         | 312–1129       |        |             |                                       | Apple_Support.jpg          |
+| 서비스        | Instapaper             | https://www.instapaper.com/save                                                          | ok              |           | 8–212 · 글자 16       | 36/40 · 14px · 400      | 359–1003(644)  | -39    | 212 / 100   | 400 · 면 · 아이콘 6/6                 | Instapaper.jpg             |
+| 서비스        | Bing Settings          | https://www.bing.com/account/general                                                     | ok              | 31        | 15–255 · 글자 94      | 44/59 · 14px · 700      |                |        | 164 / 29    | 미확인 · 아이콘 0/6                   | Bing_Settings.jpg          |
+| 서비스        | Ecosia Settings        | https://www.ecosia.org/settings                                                          | 왼쪽 칸 못 찾음 | 24        |                       |                         | 86–1046        |        |             |                                       | Ecosia_Settings.jpg        |
+| 서비스        | DuckDuckGo Settings    | https://duckduckgo.com/settings                                                          | 왼쪽 칸 못 찾음 | 4         |                       |                         | 167–626        |        |             |                                       | DuckDuckGo_Settings.jpg    |
+| 서비스        | Google Search Settings | https://www.google.com/preferences                                                       | 왼쪽 칸 못 찾음 |           |                       |                         |                |        |             |                                       | Google_Search_Settings.jpg |
+| 서비스        | YouTube Help           | https://support.google.com/youtube/answer/57407                                          | 왼쪽 칸 못 찾음 | 16        |                       |                         | 193–895        |        |             |                                       | YouTube_Help.jpg           |
+| 서비스        | Steamworks             | https://partner.steamgames.com/doc/home                                                  | ok              |           | 16–376 · 글자 16      | 18/21 · 14px · 400      |                |        | 198 /       | 400 · 면 없음 · 아이콘 0/13           | Steamworks.jpg             |
+| 서비스        | osu! Docs              | https://osu.ppy.sh/docs/index.html                                                       | ok              |           | 0–230 · 글자 15       | 28/28 · 13px · 700      | 230–835(605)   | -187   | 219 / 0     | 미확인 · 아이콘 0/38                  | osu!_Docs.jpg              |
+| 서비스        | Postman Docs           | https://learning.postman.com/docs/introduction/overview/                                 | ok              | 16        | 0–330 · 선 · 글자 40  | 18/24 · 14px · 400      | 362–1408(1046) | 165    | 142 / 162   | 미확인 · 아이콘 15/72                 | Postman_Docs.jpg           |
+| 서비스        | Mozilla Support        | https://support.mozilla.org/en-US/kb/get-started-firefox-overview-main-features          | 막힘 의심       |           |                       |                         |                |        |             |                                       | Mozilla_Support.jpg        |
+| 서비스        | Airbnb Terms           | https://www.airbnb.com/help/article/2908                                                 | 왼쪽 칸 못 찾음 | 68        |                       |                         | 188–820        |        |             |                                       | Airbnb_Terms.jpg           |
+| 서비스        | Zoom Help              | https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060732                | ok              | -1        | 60–360 · 글자 92      | 21/58 · 16px · 500      | 400–1380(980)  | 170    | 356 / 275   | 500 · 면 없음 · 아이콘 0/5            | Zoom_Help.jpg              |
+| 서비스        | Atlassian Support      | https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-project/  | 왼쪽 칸 못 찾음 | 105       |                       |                         | 150–897        |        |             |                                       | Atlassian_Support.jpg      |
+| 디자인 시스템 | Material 3             | https://m3.material.io/components/navigation-drawer/specs                                | 왼쪽 칸 못 찾음 | 0         |                       |                         |                |        |             |                                       | Material_3.jpg             |
+| 디자인 시스템 | Carbon                 | https://carbondesignsystem.com/components/UI-shell-left-panel/usage/                     | ok              | 0         | 0–256 · 글자 0        | 32/32 · 16px · 400      | 326–990(664)   | -62    | 104 / 136   | 400 · 면 없음 · 아이콘 8/45           | Carbon.jpg                 |
+| 디자인 시스템 | Polaris                | https://polaris-react.shopify.com/components/navigation/navigation                       | ok              | 16        | 0–284 · 글자 250      | 28/32 · 16px · 400      | 340–1082(742)  | -9     | 56 / 80     | 600 · 면 · 아이콘 32/49               | Polaris.jpg                |
+| 디자인 시스템 | Primer                 | https://primer.style/product/components/nav-list/                                        | ok              | -1        | 0–300 · 선 · 글자 24  | 36/36 · 14px · 600      | 366–1094(728)  | 10     | 189 / 161   | 미확인 · 아이콘 3/33                  | Primer.jpg                 |
+| 디자인 시스템 | Atlassian DS           | https://atlassian.design/components/side-navigation/examples                             | ok              | 32        | 0–350 · 선 · 글자 12  | 32/32 · 14px · 400      | 405–1161(756)  | 63     | -2728 / 171 | 400 · 면 · 아이콘 0/99                | Atlassian_DS.jpg           |
+| 디자인 시스템 | Spectrum               | https://spectrum.adobe.com/page/side-navigation/                                         | 왼쪽 칸 못 찾음 | 4         |                       |                         | 142–1129       |        |             |                                       | Spectrum.jpg               |
+| 디자인 시스템 | Fluent                 | https://fluent2.microsoft.design/components/web/react/core/nav/usage                     | ok              | 32        | 0–320 · 선 · 글자 47  | 31/39 · 14px · 400      | 352–1120(768)  | 16     | 95 / 139    | 600 · 면 없음 · 아이콘 7/31           | Fluent.jpg                 |
+| 디자인 시스템 | Ant Design             | https://ant.design/components/menu                                                       | ok              | 0         | 0–289 · 선 · 글자 44  | 40/44 · 14px · 400      | 348–1276(928)  | 92     | 100 / 0     | 미확인 · 아이콘 0/24                  | Ant_Design.jpg             |
+| 디자인 시스템 | Mantine                | https://mantine.dev/core/nav-link/                                                       | ok              | 16        | 16–236 · 선 · 글자 28 | 34/34 · 14px · 400      | 286–1108(822)  | -23    | -1314 / 132 | 미확인 · 아이콘 0/70                  | Mantine.jpg                |
+| 디자인 시스템 | Chakra                 | https://chakra-ui.com/docs/components/tabs                                               | ok              | 32        | 20–276 · 글자 36      | 33/34 · 14px · 400      | 324–1104(780)  | -6     | -2777 / 188 | 500 · 면 · 아이콘 0/107               | Chakra.jpg                 |
+| 디자인 시스템 | Radix                  | https://www.radix-ui.com/themes/docs/overview/getting-started                            | 왼쪽 칸 못 찾음 |           |                       |                         | 428–1158       |        |             |                                       | Radix.jpg                  |
+| 디자인 시스템 | shadcn                 | https://ui.shadcn.com/docs/components/sidebar                                            | ok              | 24        | 8–296 · 글자 27       | 30/32 · 12.8px · 500    | 400–1040(640)  | 0      | -1627 / 112 | 미확인 · 아이콘 0/91                  | shadcn.jpg                 |
+| 디자인 시스템 | GOV.UK DS              | https://design-system.service.gov.uk/components/service-navigation/                      | ok              | 170       | 170–430 · 글자 170    | 23/35 · 16px · 400      | 460–1182(722)  | 101    | 154 / 191   | 700 · 면 · 아이콘 0/36                | GOV_UK_DS.jpg              |
+| 디자인 시스템 | Apple HIG              | https://developer.apple.com/design/human-interface-guidelines/sidebars                   | ok              |           | 230–430 · 글자 245    | 18/32 · 14px · 400      | 470–1210(740)  | 120    | 199 / 136   | 600 · 면 없음 · 아이콘 0/19           | Apple_HIG.jpg              |
+| 디자인 시스템 | Geist                  | https://vercel.com/geist/button                                                          | ok              | 127       | 103–363 · 글자 120    | 40/44 · 16px · 400      | 411–1273(862)  | 122    | 123 / 112   | 미확인 · 아이콘 6/27                  | Geist.jpg                  |
+| 디자인 시스템 | Base Web               | https://baseweb.design/components/side-navigation/                                       | 왼쪽 칸 못 찾음 |           |                       |                         |                |        |             |                                       | Base_Web.jpg               |
+| 디자인 시스템 | Toss TDS               | https://tossmini-docs.toss.im/tds-mobile/start/                                          | ok              |           | 0–256 · 글자 24       | 33/37 · 14px · 400      | 304–1136(832)  | 0      | 80 /        | 600 · 면 · 아이콘 5/47                | Toss_TDS.jpg               |
+
+### 눈으로 확인
+
+캡처를 열어 본 곳: GOV.UK Design System · Stripe 처리방침 · Geist · Apple HIG · Naver Developers · Tailwind · Next.js · GitHub 정책 · Vercel Docs · Microsoft Learn · Google 처리방침 · Toss TDS.
+
+- 틀 안에 놓는 방식: GOV.UK Design System · Stripe 처리방침 · Naver Developers 는 사이드바 글자 시작이 머리 로고와 같은 줄이고 오른쪽 선이 없다. Geist · Apple HIG 도 틀 안이다.
+- 창 끝에 붙이는 방식: Next.js · Vercel Docs · GitHub 정책은 사이드바가 창 끝에 붙고, 머리 로고도 창 끝에 있어 둘이 같은 줄이다. 머리만 틀 안이고 사이드바만 창 끝인 곳은 캡처로 본 곳에는 없다.
+- 고른 줄: GOV.UK 는 면 없이 굵게, Stripe 는 굵게 + 왼쪽 선, Vercel Docs · Next.js 는 면 + 둥근 모서리.
+
+표본: 실제 서비스 54곳 중 사이드바를 잰 곳 43곳, 없거나 못 찾은 곳 11곳. 디자인 시스템 17곳 중 13곳, 못 찾은 곳 4곳. 자동 측정: 창 끝 39곳 · 틀 안 4곳(서비스), 창 끝 10곳 · 틀 안 3곳(디자인 시스템). 폭 중앙값 292(서비스) · 260(디자인 시스템), 글자 14–15, 줄 간격 중앙값 36 · 34. 줄 대부분이 아이콘인 곳은 서비스 13곳 · 디자인 시스템 1곳. 틀 안 표본이 7곳이라 많지는 않다. 자동 측정은 칸을 잘못 고른 곳이 섞일 수 있어(스크롤 뒤 값 · Bing 등) 안에 쓴 곳만 캡처로 확인했다.
+
+## 오류 화면(404 제외) 실측
+
+2026-11-04. 위 「오류 · 점검」 줄은 404 뿐이라 서버 오류 · 서비스 오류 화면을 따로 찍었다. 폭 1440 · 높이 900, headless chromium. 공개 정적 오류 페이지(`/500.html` 등)와 잘못된 퍼센트 인코딩 주소(`/%`)로 띄웠다. 버튼 · 링크는 캡처를 하나씩 열어 센 값이다. 전체 표 `~/noslog-research/desktop-rest-pages/status/error/results.md`, 캡처는 같은 폴더.
+
+실제 서비스 30곳 · 틀 35개(막힘 18 · CDN 틀 5종 · 웹서버 기본 틀 36 · 빈 화면 7 은 세지 않음).
+
+| 버튼 수  | 틀 수(35) | 어디                                                                                                                                                                                                                                                                    |
+| -------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0개      | 24        | 모든 틀이 0개인 곳 21: GitHub · GitLab · Microsoft · Airbnb · Qiita · Cookpad · Heroku · Dribbble · Kickstarter · Coinbase · Speaker Deck · Redmine · Instacart · Kakao · Goodreads · OpenStreetMap · RubyGems.org · DEV Community · CrowdWorks · Google · Yahoo! JAPAN |
+| 1개      | 9         | 홈으로 3(Mastodon · Wantedly · Patreon), 이전 페이지로 3(Basecamp · CHUNITHM-NET · Rakuten), 검색 제출 1(NYT), 다시 시도하기 1(Naver 블로그), BACK 1(maimai DX NET 앱 오류)                                                                                             |
+| 2개      | 2         | Naver 로그인 도메인(이전 페이지로 · 새로 고침), maimai DX NET 503(바깥 사이트 두 곳)                                                                                                                                                                                    |
+| 3개 이상 | 0         |                                                                                                                                                                                                                                                                         |
+
+- 「다시 시도 + 홈으로」 두 버튼 조합은 35틀 중 0.
+- 버튼 없이 글자 링크만 둔 곳 16. 링크는 연락처 · 상태 페이지(GitHub · Airbnb · Qiita · Heroku · Dribbble · Kickstarter · Coinbase · Speaker Deck · Instacart · OpenStreetMap)와 홈 · 뒤로(GitLab · Cookpad · Redmine · RubyGems.org · CrowdWorks · Yahoo! JAPAN)다.
+- 버튼도 본문 링크도 없는 곳 5: Microsoft · Kakao · Goodreads · DEV Community · Google.
+- 정렬은 가운데 24틀 · 왼쪽 10틀 · 섞임 1틀. 내비게이션 있는 전역 머리는 Microsoft · NYT 2곳뿐.
+- CDN 틀(CloudFront · Cloudflare 400 · 520 · Akamai · Azure Front Door)은 모두 버튼 0. Next.js 기본 오류 화면은 서버 오류 「Reload」 1개, 클라이언트 오류 「Reload · Back」 2개(설치된 next 소스 `global-error.js`).
+
+디자인 시스템 8곳(문서 9개): GOV.UK(문제 · 이용 불가 페이지) · The National Archives · GOV.GR 은 버튼 0, 필요하면 연락 링크. Alberta(「Go to home page」) · PatternFly(「Return to last page」 또는 「Go to home page」) · Geist(재시도해도 안전할 때만 「Try Again」)는 버튼 1. Australian Agriculture 는 0–1. Siemens iX 는 「Reload · Go back · Open homepage」 3개. 문구는 기술 용어 · 농담 · 「Oops」 를 쓰지 않는다는 데 대부분 같다.
+
+미확인: 앱 안 「Something went wrong」 오류 경계 화면(X · YouTube · Discord · Slack · Spotify · Notion · Figma · Netflix · Twitch · Reddit)은 띄우지 못했고 공식 스크린샷도 찾지 못했다. Apple · Amazon · Netflix · Spotify · Discord · Slack · Notion · Figma · Vercel · Stripe · Linear · Reddit · X · Instagram · Facebook · LinkedIn · Dropbox · Twitch · Steam · Coupang · Toss · Wikipedia · Cloudflare · Atlassian · Shopify · Medium · Pinterest · Zoom · osu! · V-ARCHIVE 는 자체 오류 틀을 띄우지 못했다. PatternFly 문서 페이지 · Pando · Visma · Canada.ca · NHS 지침은 확인하지 못했다.
+
+## 설정 부품 실측(머리 · 구역 · 줄 · 조작 · 사진)
+
+2026-11-05. 설정 화면에서 아직 고르지 않은 부분(머리 · 구역 제목 · 줄 구성 · 스위치 · 셀렉트 · 버튼 · 입력칸 · 프로필 사진 줄)을 새로 쟀다. 폭 1440 · 높이 900 headless Playwright(로그아웃)로 14곳을 실측했고, 로그인 뒤 화면 18곳은 공식 도움말 · 블로그 그림으로 봤다. 숫자는 캡처를 하나씩 열어 센 값이고, 한 곳이 여러 형태를 쓰면 형태마다 셌다. 그 부분이 보이지 않는 곳은 분모에서 뺐다. 전체 표 · 서비스별 잰 값은 `~/noslog-research/desktop-rest-pages/settings2/results.md`, 캡처는 같은 폴더, 도구는 `_tools/settings2.cjs` · `settings2_build.py` 다.
+
+표본: 실제 서비스 32곳(실측 14 · 공식 그림 18), 디자인 시스템 · 가이드 10곳. 막혀서 세지 않은 곳 13곳.
+
+### 부분별 분포(실제 서비스)
+
+| 부분        | 분모 | 형태와 곳 수                                                                                                                                                     |
+| ----------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 머리 제목   | 30   | 쪽 제목 15 · 위 띠 화면 이름 5 · 없음 5 · 위 띠 서비스 제목 3 · 메뉴 칸 위 서비스 제목 2(Chrome · Atlassian)                                                     |
+| 설정 검색   | 30   | 없음 23 · 쪽 안 전폭 검색칸 3(VS Code · Monkeytype · osu!) · 메뉴 위 2(Discord · Chess.com) · 내용 위 가운데 1(Chrome) · 제목 줄 오른쪽 돋보기 1(Spotify)        |
+| 분류 탭     | 30   | 없음 19 · 가로 탭 10 · 세로 아이콘 탭 1                                                                                                                          |
+| 구역 제목   | 32   | 면 없이 제목 아래 줄 15 · 면 바깥 위 7 · 없음 6 · 카드 안 2(Vercel · Cloudflare) · 왼쪽 칸 1 · 면 안 1                                                           |
+| 제목 굵기   | 26   | 굵게 16 · 보통 10                                                                                                                                                |
+| 제목 설명   | 26   | 없음 16 · 있음 10                                                                                                                                                |
+| 담는 면     | 32   | 면 없음 19 · 구역마다 면 하나 7 · 줄마다 카드 2 · 구역마다 카드 2 · 카드 격자 1 · 메뉴와 함께 면 하나 1                                                          |
+| 조작 위치   | 31   | 오른쪽 14 · 아래로 쌓기 9 · 두 칸(오른쪽 조작 칸) 7 · 왼쪽 1(Chess.com)                                                                                          |
+| 구분선      | 31   | 없음 13 · 줄 사이 8 · 묶음 사이만 7 · 줄마다 카드 3                                                                                                              |
+| 왼쪽 아이콘 | 31   | 없음 26 · 있음 5                                                                                                                                                 |
+| 끝 꺾쇠     | 31   | 없음 27 · 있음 4(Chrome · Discord · Reddit · Microsoft)                                                                                                          |
+| 스위치      | 18   | 채운 알약 + 흰 손잡이 8 · 체크박스 5 · On/Off 글자 버튼 2 · 손잡이 안 체크 2 · 끔 테두리 + 작은 손잡이 1(Chrome)                                                 |
+| 셀렉트      | 25   | 테두리 둥근 사각 7 · 테두리 + 옅은 면 4 · 채운 면 3 · 값 글자만(다음 화면 · 링크 · 꺾쇠 · 펼침) 6 · 알약 2 · 직각 3                                              |
+| 버튼 채움   | 25   | 채움 19 · 테두리 12 · 글자만 7                                                                                                                                   |
+| 버튼 모양   | 23   | 둥근 사각 12 · 알약 9 · 직각 2                                                                                                                                   |
+| 입력칸      | 9    | 테두리 3 · 테두리 + 옅은 면 2 · 채운 면 2 · 채운 면 + 밑줄 1(Chrome) · 인라인 편집 1(Atlassian). 근거 약함                                                       |
+| 사진 줄     | 11   | 메뉴 위 원 + 이름 3 · 큰 원 + 아래 버튼 · 글자 3 · 원 + 연필 · 카메라 배지 2 · Chrome 줄 안 원 + 하위 쪽 격자 1 · YouTube 미리보기 상자 1 · Atlassian 띠 위 원 1 |
+
+줄 높이(조작이 오른쪽인 줄): Chrome 48(한 줄) · 64(두 줄) 잰 값, Brave 92 잰 값. 그림 눈대중으로 Linear · Notion 약 60, Discord 약 56, Reddit 약 48 이다.
+
+### 디자인 시스템 · 가이드(10곳)
+
+| 가이드                                | 설정 화면 지침                                                                                                                              |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Windows 앱 설정(Fluent)               | 쪽 최대 폭 약 1000–1100 한 열, 구역 머리 BodyStrong, SettingsCard(제목 · 설명 · 아이콘 · 오른쪽 조작, 누르는 카드는 꺾쇠), 바꾸면 바로 반영 |
+| Material 3                            | 스위치 트랙 52x32 · 손잡이 끔 16 · 켬 24, 리스트 줄 왼쪽 16 · 뒤 요소 오른쪽 24, 뒤쪽 스위치 구성                                           |
+| Apple HIG                             | 스위치는 리스트 줄 안에서만, macOS 폼에서 켜고 끄기 하나면 체크박스                                                                         |
+| Carbon                                | 라벨은 위, 입력 높이 40, 입력 사이 32 · 구역 사이 40 · 버튼 앞 48, 토글 48x24                                                               |
+| Polaris 설정 템플릿                   | 구역마다 heading + subheading, 저장은 Save Bar, 설정이 많으면 주석형(왼쪽 제목 · 오른쪽 폼)                                                 |
+| Primer · Atlassian · Fluent 2 · Geist | 스위치는 바로 저장되는 켜고 끄기에만, 제출이 필요하면 체크박스. Primer 는 라벨 · 설명과 양끝 맞춤                                           |
+| Ant Design Pro 예제(실측)             | 라벨 위 · 채운 입력 32, 오른쪽 열 큰 원 + 업로드 버튼, 국가는 셀렉트                                                                        |
+
+### 세지 않은 곳 · 미확인
+
+- 세지 않음 13: Firefox(about: 쪽 안 열림) · Qwant(지역 차단) · Lichess(로그인 벽) · Wordle(전면 광고) · Keybr(404) · Monkeytype 1차(쿠키 창, 다시 찍어 셈) · Bluesky · Spotify 뉴스룸 그림(모바일) · Slack · Google 계정(그림 없음) · M3 창 크기 쪽(404) · Spectrum 2 스위치(404) · Polaris 옛 주소(새 주소로 다시 찍음).
+- 미확인(공식 그림 못 찾음): X · Twitch · Steam · Zoom · Dropbox · Stripe Dashboard · Naver · Kakao · Toss · Shopify 관리자 · YouTube 일반 계정 · Medium · Pinterest · LinkedIn · Instagram · WhatsApp · Duolingo · Supabase · Netlify.
+- 공식 그림 값은 모두 눈대중이다. YouTube Studio 는 공식 도식이고 osu! 는 게임 안 옵션 패널이다.
+
+## 설정 내용 칸 맨 위 제목(2026-11-05)
+
+질문: 왼쪽 메뉴나 탭으로 분류를 고르는 설정 화면에서 내용 칸 맨 위에 무엇을 두는가. 「설정」 제목 아래 분류 이름을 또 쓰는 꼴이 있는지 본다. 위 설정 실측 캡처를 다시 판정하고 공식 · 매체 그림을 더했다. 원본은 `~/noslog-research/desktop-rest-pages/settings-title/`(results.md · 캡처).
+
+꼴: A 분류 이름만 · B 앱 제목(「Settings」 · 「STEAM SETTINGS」 등) + 분류 이름 · C 앱 제목만 · D 제목 없음.
+
+| 꼴      | 곳 수(분모 45) | 서비스                                                                                                                                                                                    |
+| ------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A       | 13             | Linear · GitHub · Discord · Notion · Proton Mail · Airtable · Ghost · Mastodon · Pinterest · WordPress · Yahoo 검색 · Telegram 데스크톱 · Home Assistant(뒤 둘은 하위 쪽으로 들어가는 꼴) |
+| B       | 15             | Chrome · Startpage · Bing · Apple 계정 · osu! · Chess.com · VS Code · Microsoft 계정 · Slack(옛) · Steam · X · Instagram · Facebook(2022) · YouTube · Netlify(2017)                       |
+| C       | 9              | DuckDuckGo · Google 검색 설정 · Reddit · SearXNG · Asana · GitLab(2023) · LinkedIn · Twitch · Dropbox                                                                                     |
+| D       | 4              | Mojeek · Figma · Tidal(2018) · Zoom 관리자(옛)                                                                                                                                            |
+| 그 밖에 | 4              | Discourse · Trello(사용자 머리 + 탭) · Docker Hub(빵부스러기) · YouTube Studio(분류마다 B · C)                                                                                            |
+
+- 메뉴 형태별: 왼쪽 메뉴 29곳은 A 11 · B 13 · C 3 · D 1 · 그 밖에 1, 탭 14곳은 B 2 · C 6 · D 3 · 그 밖에 3.
+- B 15곳은 모두 앱 제목을 메뉴 위 · 위 띠 · 창 머리 · 탭 이름에 두고, 내용 칸 맨 위는 분류 이름이다. 내용 칸에 앱 제목과 분류 이름을 위아래로 겹쳐 둔 곳은 45곳 중 0곳이다.
+- 메뉴 위 글(분모 43): 앱 제목 20 · 사용자 머리 5 · 뒤로 링크 4 · 묶음 라벨 3 · 없음 3.
+- 분류 제목 아래 구역 소제목(A · B 28곳): 있음 16 · 없음 12.
+
+가이드(분모 9): 분류 메뉴가 있는 설정의 제목을 정한 곳은 Fluent NavigationView(Header 는 고른 분류의 쪽 제목) · Apple HIG Settings(창 제목을 보이는 분류 이름으로) · Android Settings 패턴(하위 화면 제목은 연 라벨과 같은 말) 3곳으로 모두 A 다. 근거 약함. Fluent 앱 설정 지침 · Polaris 설정 템플릿은 분류 없는 한 쪽 설정이라 C, Primer PageHeader · Atlassian Page header 는 설정 전용 규칙이 없고, GitLab Pajamas · GNOME HIG 는 미확인.
+
+세지 않음: ChatGPT(캡차) · Firefox(about: 쪽 안 열림) · WordPress Playground(로딩 안 끝남, 공식 문서 그림으로 셈) · Bluesky · Atlassian 계정 · Vercel · Cloudflare · ClickUp(그림의 메뉴나 내용 맨 위가 잘림). 미확인: Shopify 관리자 · Medium · Substack · Duolingo · 1Password · Bitbucket · Naver · Kakao.
+
+한계: 그림 출처는 실측 10 · 공식 그림 21 · 공식 아닌 그림 14(매체 · 보안업체 · 제3자 갤러리)다. Slack · Facebook · YouTube · GitLab · Docker Hub · Netlify · Tidal · Dropbox 는 2017–2023 옛 화면이다. 그림 한 장이 분류 하나만 보여 줘서 분류마다 꼴이 다를 수 있고, 크기는 대부분 눈대중이다.
+
+## 유명 서비스 다크 설정 한 벌(2026-11-06)
+
+질문: 사용자 수가 가장 많은 서비스들의 다크 설정 화면은 어떻게 생겼나. 칸마다 흔한 값을 섞지 않고, 서비스 한 곳의 화면을 한 벌로 옮긴다. 원본은 `~/noslog-research/desktop-rest-pages/settings-full/`(results.md · 캡처 · 시안).
+
+사용자 수 순위 38곳(지표가 MAU · DAU · 활성 설치 · 등록 계정으로 섞이고 시점이 2016–2026 이라 근거 약함) 가운데 분류 메뉴 · 탭 꼴이면서 다크 설정 화면을 실측 · 공식 그림 · 공개 토큰으로 확인할 수 있는 곳은 Chrome(7위) · GitHub(24위) · Steam(27위) · Twitch(28위) · Discord(30위) · VS Code(32위) · Linear(37위)다. 위 23곳은 로그인 벽이거나 공식 다크 그림이 없었다.
+
+| 서비스  | 사용자 수 · 지표 · 시점      | 다크 확인                                          | 한 벌 요약                                                                                                        |
+| ------- | ---------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Chrome  | 20억 활성 설치 · 2016        | 실측 chrome://settings 6쪽                         | 메뉴 266 · 고른 줄 #8ab4f8 알약 면 · 카드 680 #292a2d 둥근 8 · 줄 48/64 · 선 1px · 스위치 26×16 · 셀렉트 200×36   |
+| GitHub  | 2.25억 개발자 계정 · 2026-09 | Primer 공개 토큰 + 2022 · 2021 공식 그림           | 메뉴 256 · 왼쪽 막대 4 · 본문 768 · 제목 24/400 + 밑줄 · 라벨 위 칸 아래로 쌓는 폼 · 면 없음 · ToggleSwitch 64×32 |
+| Steam   | 1.32억 MAU · 2021            | 공식 그림 2장(도움말 · 공지)                       | 메뉴 191 #2a2d34 면 · 제목 22/700 · 줄 42 + 선 1px · 면 없음 · 스위치 38×22 #1a9fff                               |
+| Discord | 9,000만 DAU 이상 · 2025      | 공식 그림 2장(2025 Data & Privacy · 2024 Profiles) | 메뉴 235 #1a191e · 가운데 칸 663 · 라벨 16/600 + 설명 · 줄 사이 선 없음 · 스위치 48×24 #5865f2                    |
+
+- Twitch 를 빼고 Discord 를 넣었다. Twitch 는 월 방문자 1.05억, Discord 는 하루 활성 9,000만이라 지표가 다르고, 월 활성은 Discord 가 크다고 봤다(보도된 MAU 2억 이상과 맞음, 1차 미확인). Twitch 공식 다크 그림은 탭 한 장뿐이었다.
+- 뺀 큰 곳: Edge(숫자가 2017 옛 Edge 것, 다크 그림은 2021 옛 설정) · Firefox(about:preferences 안 열림, 공식 다크 그림 없음) · ChatGPT(캡차 · 봇 확인) · Google 계정 · Facebook · Instagram · YouTube · LinkedIn · X(공식 다크 설정 그림 없음).
+- 값 68칸 가운데 눈대중이 섞인 칸 23(34%), 미확인 7(10%). Chrome 20% · GitHub 44% · Steam 31% · Discord 44%. Discord 2025 그림은 배율 1.55 를 추정해 쟀다.
+- 그림에 없어 다른 값으로 대신한 것: Steam 일반 버튼 · 사진, Discord 셀렉트 · 입력칸 색, GitHub 공개 여부 줄의 ToggleSwitch(실제 쪽은 체크박스 + 저장 버튼). 1440 폭 모양은 Chrome 밖 셋 모두 미확인이다.
+
+## GitHub 설정 한 벌 세부 실측(2026-11-06 · 11-07)
+
+설정을 GitHub 모양 + NosLog 토큰으로 정한 뒤, 판마다 다시 잰 것이다. 로그인하지 않았고 localhost 는 열지 않았다. 원본(캡처 · 서비스별 줄 · 재구성 HTML)은 `~/noslog-research/desktop-rest-pages/settings-full/` 의 `photo/` · `tabs/` · `delete/` · `display/` · `logout/` 아래 `results.md`. 라벨은 실측(DOM · CSS) · 그림잼(공식 그림 픽셀 ÷ 배율) · 눈대중 · 미확인.
+
+### 사진 칸(GitHub settings/profile)
+
+근거는 docs 공식 그림 1장(라이트, 배율 2), 공개 리포에 올라온 저장 페이지 8개(2021-02 ~ 2025-03, 사진 칸 마크업 모두 같음), 지금 GitHub 공개 CSS 를 그 마크업에 입혀 다크로 그린 재구성이다. 공식 다크 그림은 없다.
+
+| 항목           | 값                                                                                                                       | 라벨          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| 열 나눔        | 내용 768 안 `col-md-8` · `col-md-4`, 폼 열 501.33 · 사진 열 234.67, 사이 32, 사진 열은 왼쪽에서 533.33                   | 실측 · 그림잼 |
+| 라벨           | 「Profile picture」 14/600 줄 21, 아래 8 → 원                                                                            | 실측          |
+| 원             | 200×200 원, 테두리는 선이 아니라 바깥 그림자 1px(다크 흰 15%)라 보이는 원은 202                                          | 실측          |
+| Edit 상자      | `.btn` 이 아닌 유틸 조합. 62.67×31, 안쪽 4 8, 14/400, 면 = 쪽 바탕색, 선 1px, 둥글기 6, 연필 16 + 「Edit」               | 실측 · 그림잼 |
+| Edit 자리      | 원 상자 왼쪽 아래에서 왼쪽 8 · 아래 8, 원 테두리에 걸쳐 앉음                                                             | 실측          |
+| 원 아래        | 글 없음. 형식 · 용량 안내는 오류 때만 나오는 숨은 글                                                                     | 실측          |
+| Edit 를 누르면 | 드롭다운(폭 160) 「Upload a photo…」 · 「Remove photo」(확인 창). 사진이 없으면 빈 원이 아니라 identicon, 그 색 · 모양은 | 실측 · 미확인 |
+
+### 화면 설정 · 연결 · 계정 쪽 배치(GitHub)
+
+근거는 저장 마크업(settings/keys 2026-08 · profile · organizations 2022), docs 공식 그림 4장(배율 1–3), Primer 공개 CSS 재구성이다. settings/appearance · admin · applications · sessions 저장본은 못 찾았다(미확인).
+
+| 쪽        | 값                                                                                                                                                                                | 라벨          |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| 공통      | 쪽 제목 Subhead 24/400, 아래 8 + 선 1px + 16                                                                                                                                      | 실측          |
+| 화면      | 라벨 14/600 → 6 → select(높이 32 · 안쪽 5 24 5 12 · 둥글기 6 · 폭은 글 길이만큼), 아래 캡션 12px. appearance 「Theme mode」 는 캡션이 select 오른쪽 같은 줄                       | 실측 · 그림잼 |
+| 연결      | `Box`(선 1px · 둥글기 6) 안 `Box-row`(안쪽 16, 줄 사이 선 1px), 왼쪽 그림 칸 · 제목 14/600 · 메타 14/400 회색 · 오른쪽 작은 위험 버튼(28). 줄 전체 링크 + 꺾쇠 목록은 GitHub 에서 | 실측 · 미확인 |
+| 계정      | `Subhead--spacious`(위 40) 구역 + 일반 버튼(32). 위험 구역은 `Subhead-heading--danger`(600 · 빨강) → 문단 → `btn-danger`(빨간 글, 쉴 때 면은 일반 버튼과 같음)                    | 실측(CSS)     |
+| 계정 순서 | Change username → Export account data → Account succession → Delete account(번역 스크립트 문구 순서, 배치 근거 아님)                                                              | 실측(문구)    |
+
+### 계정 삭제 자리(실제 서비스 30곳 · 디자인 시스템 6곳)
+
+데스크톱 웹 설정에서 계정 삭제를 두는 방식. 공식 도움말 그림 · 공개 소스 · 비공식 캡처(공식이 없을 때만)로 세고, 캡처를 하나씩 열어 다시 분류했다. Instagram · Facebook 은 같은 구현이라 독립 구현은 29.
+
+| 방식                          | 수            | 서비스                                                                                            |
+| ----------------------------- | ------------- | ------------------------------------------------------------------------------------------------- |
+| 위험 구역(제목 · 설명 · 버튼) | 10            | GitHub · GitLab · Discord · Slack · Atlassian · Chess.com · Pinterest · velog · Stripe · Substack |
+| 따로 쪽 · 사이트              | 6             | Twitch · Spotify · Apple · Lichess · Duolingo · mixi                                              |
+| 보통 목록 줄                  | 5             | X · Instagram · Facebook · Google · 네이버                                                        |
+| 쪽 아래 링크 · 버튼 한 줄     | 5             | Figma · Cloudflare · Microsoft · Mastodon · Steam                                                 |
+| 빨간 테두리 상자              | 2 · 근거 약함 | Vercel · Supabase                                                                                 |
+| 회색 띠 구역 이름 + 줄        | 2 · 근거 약함 | Dropbox · Reddit(옛)                                                                              |
+
+- 위험 구역 10곳 안: 제목 빨강 2(GitHub · GitLab), 버튼 채운 빨강 5 · 빨간 글자 2 · 회색 3.
+- 30곳 중 18곳이 쪽 맨 아래(또는 목록 · 메뉴 마지막)에 둔다. 맨 아래가 아닌 곳은 Slack · Chess.com · 네이버 3곳.
+- 디자인 시스템: 위험 버튼은 확인 단계에 둔다 5(Primer · Pajamas · Atlassian · Polaris · Apple HIG), 쪽에서는 덜 강조한다 3(근거 약함), 설정 쪽 빨간 「Danger zone」 제목 1(Primer), 빨간 테두리 상자 0. Material 3 · Fluent 2 는 미확인.
+- 모양 미확인으로 분모에서 뺌: Netlify · Medium · 카카오계정 · note · pixiv · Qiita · Zenn. 대상 아님: Linear · osu! · 당근 · 토스 · 치지직.
+
+### 파괴 동작 줄의 색 · 로그아웃 자리(실제 서비스 54곳 · 디자인 시스템 14곳)
+
+탈퇴 · 비활성화가 목록 줄인 곳(독립 구현 8)의 색: 색 없음 6(X · Meta · Google · 네이버 · 밀리의서재 · 카카오톡), 제목만 빨강 1(Notion, 꺾쇠 회색), 아이콘 · 제목 · 꺾쇠 모두 빨강 1(Bluesky). 근거 약함.
+
+| 지금 기기 로그아웃 자리 | 수            | 서비스                                                                                                                 |
+| ----------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 머리 · 아바타 메뉴에만  | 44            | GitHub · GitLab · Notion · Linear · Slack · Figma · Vercel · Stripe · Claude.ai · Google · Reddit 등(근거 약함 4 포함) |
+| 설정 사이드바 맨 아래   | 5             | Discord(빨강) · Misskey(빨강) · Bluesky(빨강) · Mastodon(기본색) · 네이버(회색 작은 링크)                              |
+| 설정 본문               | 3 · 근거 약함 | ChatGPT(Security 줄, 메뉴에도 있음) · Element(계정 카드 안 버튼) · Perplexity(글만)                                    |
+| 쪽 머리 띠              | 2 · 근거 약함 | Apple 계정 웹 · 쿠팡                                                                                                   |
+
+- 설정 본문 맨 위에 로그아웃 버튼만 따로 둔 곳 0, 지금 기기 로그아웃을 탈퇴와 같은 구역에 둔 곳 0. 탈퇴와 이웃하는 것은 「다른 기기 모두 로그아웃」 이다(이웃 5 · 다른 쪽 5).
+- 메뉴 안 로그아웃 색: 기본색 23 · 빨강 6 · 회색 3 · 파랑 1. 메뉴 안 자리: 맨 아래 구분선 뒤 혼자 4(GitHub · GitLab · Figma · Claude.ai), 묶음 끝 6, 가운데 1.
+- 디자인 시스템 위험 메뉴 항목 · 목록 줄: 평소부터 빨간 글자 6(Primer · Apple HIG · Polaris · Ant · shadcn/Radix · Atlassian), 올리거나 포커스했을 때만 빨강 1(Carbon), 위험 변형 없음 5(Material 3 · Fluent 2 · Spectrum · Base Web · SAP UI5), 해당 없음 2. 가장 많이 겹치는 말은 「맨 끝, 구분선 뒤」(Primer · Apple · Fluent · Carbon · shadcn).
+- 미확인 약 17곳은 셈에서 뺐다. 옛 그림: Discord 로그아웃 · Google 2021 · Canva 2021 · Qiita 2020. 배율은 대부분 추정.
+
+### 화면 설정 옵션 · 배치(게임 기록 16곳 · 일반 25곳 · 디자인 시스템 8곳)
+
+서비스마다 그 분류가 하나라도 있으면 1로 셌다(게임 쪽은 머리 · 사이드바에만 둔 곳도 셈). X · Reddit 은 봇 확인에 막혀 세지 않았다.
+
+| 분류                    | 게임 /16 | 일반 /25 | 합 /41 |
+| ----------------------- | -------- | -------- | ------ |
+| 테마                    | 10       | 20       | 30     |
+| 언어                    | 9        | 19       | 28     |
+| 이미지 · 미디어 표시    | 8        | 8        | 16     |
+| 내용 폭 · 레이아웃      | 6        | 6        | 12     |
+| 글자 크기 · 확대        | 1        | 11       | 12     |
+| 고대비 · 색약           | 1        | 11       | 12     |
+| 테마 색 · 강조색        | 4        | 8        | 12     |
+| 점수 · 기록 표시 방식   | 11       | 0        | 11     |
+| 시작 페이지 · 기본 모드 | 6        | 5        | 11     |
+| 움직임 줄이기           | 4        | 4        | 8      |
+| 날짜 · 시간 형식        | 1        | 7        | 8      |
+| 뷰어 · 게임 화면        | 6        | 0        | 6      |
+
+- 테마 조작(일반 20곳): select 6 · 메뉴 목록 3 · radio 3 · segmented 2 · 테마 카드 2 · 색 견본 1 · switch 1. 「시스템 따름」 값이 있는 곳 일반 17/20 · 게임 6/10.
+- 배치: 줄 목록 · 왼쪽 라벨(+설명) · 오른쪽 조작(Chrome · Linear · Monkeytype · Fluent 지침 · Discord), 라벨 위 · 조작 아래 쌓기(Sekai Viewer · Wikipedia · Discourse · GitHub 프로필), 테마 미리보기 카드 + 줄 목록(GitHub · DuckDuckGo · 다음, 근거 약함 3곳).
+- Chrome 「모양」 실측: 카드 680, 줄 48–49(설명 있으면 64), 라벨 · 설명 13, select 200×36, 스위치 26×16, 테마는 「모드」 select.
+- 디자인 시스템: 켜고 끄기는 즉시 적용 토글(Fluent · Carbon), 선택지 5–6개 이하는 라디오 · 세그먼트(Material 3 · Primer · Fluent), 앱 전용 모양 설정을 두지 말고 시스템을 따르라(Apple HIG), 저장 방식을 한 쪽에서 섞지 않는다(Pajamas).
+- 미확인: SEGA · KONAMI 공식 리듬게임 사이트(로그인 · 점검), Arcaea · EtternaOnline 등. 게임 쪽은 공개 소스 · 비공식 기록 사이트 비중이 크다. 로그인 없이 다크로 잰 테마 카드 화면은 DuckDuckGo 하나다.
