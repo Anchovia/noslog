@@ -405,3 +405,108 @@
 Google Maps 의 사진 없는 장소(「재회」, 2026-11-02, `services/nophoto-google-1.jpg`)는 사진 자리 408 × 240 에 기본 그림을 둔다. 목록에서 열면 상세 패널이 목록 패널 옆(x496 폭 408)에 하나 더 열린다. 네이버 지도의 사진 없는 장소 상세는 목록에서 번호를 얻지 못해 미확인이다(목록은 `services/nophoto-naver-list.jpg`, 사진 없는 줄은 칸이 없다).
 
 개요의 시설: Hostelworld 는 아이콘 + 짧은 글자 한 줄 뒤에 「View all 40 facilities」(`services/hostelworld-detail.jpg`), Airbnb 는 아이콘 + 글자 두 열 10개 뒤에 「Show all 32 amenities」(`services/airbnb2-detail-full.jpg`)를 둔다. 아이콘만 쓰는 곳은 실측한 상세에서 찾지 못했다.
+
+## 지도 핀과 이름
+
+2026-11-02 촬영. 캡처는 `~/noslog-research/desktop-arcades/pins/`(2배 캡처는 `pins/x2/`). 크기는 2배 캡처에서 눈으로 잰 값(CSS px, ±2)이다.
+
+| 서비스          | 평소 핀                                 | 이름                                           | 고른 핀                                      |
+| --------------- | --------------------------------------- | ---------------------------------------------- | -------------------------------------------- |
+| Google Maps     | 빨강 둥근 핀 약 23×26, 흰 점, 흰 테두리 | 옆, 상자 없는 흰 테두리 글자, 자리 없으면 왼쪽 | 물방울 약 29×39, 어두운 빨강 점, 이름 빨강   |
+| 네이버 지도     | 산호색 원 약 21, 흰 건물 아이콘         | 아래 가운데 두 줄, 상자 없음, 하위는 약 7 점   | 물방울 약 36×44, 두꺼운 흰 테두리, 이름 굵게 |
+| 카카오맵        | 흰 물방울 약 20×31, 파란 테두리와 글자  | 없음, 패널 줄 앞 글자로 짝                     | 파랗게 채운 약 30×38, 위에 이름 상자         |
+| Bing 지도       | 빨강 원 + 분류 아이콘 + 줄기            | 아래 두 줄, 상자 없음                          | 미확인                                       |
+| 다이닝코드      | 번호 원 + 말풍선, 하위는 파란 점        | 말풍선 안 이름 · 소개 두 줄                    | 미확인                                       |
+| Airbnb          | 흰 가격 알약                            | 없음                                           | 미확인                                       |
+| Google Hotels   | 흰 가격 알약 + 분류 아이콘              | 없음                                           | 미확인                                       |
+| 스타벅스 코리아 | 초록 별 물방울                          | 없음                                           | 미확인                                       |
+| Chase           | 파랑 · 분홍 번호 물방울                 | 없음                                           | 미확인                                       |
+| 코스트코 코리아 | 파랑 번호 물방울                        | 없음                                           | 미확인                                       |
+| IKEA            | 초록 글자 물방울, 묶음은 검은 원        | 없음                                           | 미확인                                       |
+| Resy            | 빨강 물방울                             | 없음                                           | 미확인                                       |
+
+핀이 찍힌 나머지: Crunch(주황 번호) · Gap(남색 물방울) · Levi's · Whole Foods(번호) · Zenius(파랑 물방울 + 묶음 수) · OpenStreetMap(빨강 물방울) · Orangetheory(주황 고리) · Round1 US(점) · Bank of America(묶음 수 + 빨강) · Ulta(주황 묶음 수). 합쳐 22곳이다. 목록 캡처 118장의 나머지는 막힘 · 지도 없음이다. Apple 지도는 웹 촬영이 실패해 미확인.
+
+목록에서 눌러 들어간 상세는 Google Maps · 네이버 지도 모두 다른 결과 핀을 남긴다(`pins/x2/google-selected.jpg` · `naver-selected.jpg`). 주소로 바로 연 상세만 고른 핀 하나다.
+
+지도 라이브러리: [Mapbox Marker](https://docs.mapbox.com/mapbox-gl-js/api/markers/) 기본 물방울 27×41 · `#3FB1CE`. [Leaflet Tooltip](https://leafletjs.com/reference.html) 기본 `direction: auto`(좌우 전환) · `permanent: false`. [Google Advanced Markers 겹침](https://developers.google.com/maps/documentation/javascript/examples/advanced-markers-collision) `collisionBehavior` 세 값. 카카오 `CustomOverlay` 는 `features/arcades/components/arcade-discovery-map.tsx` 가 이미 쓴다. Apple `MKMarkerAnnotationView` · MapLibre Marker 는 문서에서 값을 읽지 못해 미확인.
+
+### 묶음 · 점 · 올림 · 폰
+
+2026-11-02 촬영. 캡처는 `pins/x3/`.
+
+- 묶음: 네이버 지도는 축소하면 산호색 원 약 23 + 흰 숫자로 묶는다(`naver-out1.jpg`). 숫자가 달라도 크기가 같다. Google Maps · 카카오맵은 묶지 않고 쌓는다(`google-out.jpg` · `kakao-out.jpg`). IKEA 는 검은 원 + 옅은 고리, Zenius · Ulta 는 주황 원 + 옅은 고리, Bank of America 는 파랑 원이다.
+- 점: 네이버 지도에서 목록 4번째 익선슈팅클럽이 3번째 대빵오락실 옆에서 점이 됐고, 확대하면 점이 이름 핀이 된다(`naver-dot-fresh.jpg` · `naver-in.jpg`). 규칙은 캡처에서 읽은 것이다.
+- 올림: 네이버 지도는 핀과 점 모두 위에 폭 약 300 카드(이름 · 분류 · 주소 · 동작 줄)를 띄우고, 지도 위로 옮겨도 남는다. 카드 아래에 폭 약 10 · 높이 약 8 꼬리가 있고, 끝은 핀 위 약 4 에서 멈춘다. 점을 누르면 상세가 열리고 물방울 핀과 이름이 나온다(`naver-dot-click.jpg`). Google Maps · 카카오맵 올림은 핀을 맞히지 못해 미확인이고, 네이버 묶음 올림도 미확인이다.
+- 폰: Google Maps 폰 웹은 데스크톱과 같은 핀 · 이름이다(`m-google-map.jpg`). 네이버 지도 폰 웹은 파란 물방울에 이름 없이 아래 카드다(`m-naver-map.jpg`). 네이버 앱은 못 봤고 카카오맵 폰 웹은 앱 안내 창에 막혀 미확인이다(`m-kakao.jpg`).
+
+### 접기 손잡이 · 올림 요약 카드
+
+2026-11-04 촬영. 캡처는 `~/noslog-research/desktop-arcades/handle/` · `summary-card/shots/`, 곳마다의 줄은 `summary-card/notes.md`.
+
+- 카카오맵 접기 손잡이: 스프라이트(`img_navi2x.png`) 픽셀 실측으로 흰 몸통 18 × 50, 오른쪽 모서리 약 3, 테두리 없이 그림자(오른쪽 1 · 흐림 약 3 · 검정 약 20%), 채운 파랑 세모 5 × 10(`#007dff`).
+- 올림 요약 카드: 실제 서비스 30곳(막힘 29곳 제외), 디자인 시스템 · 지도 라이브러리 9곳. 사진 위 세로 9곳(Google 지도 300 × 184 · 사진 높이 104), 사진 옆 가로 6곳(카카오맵 406 × 223 · 사진 오른쪽 74), 글만 10곳(네이버 지도 300 × 119), 카드 없음 5곳.
+- 「자세히」 류 글자로 상세를 여는 곳은 5곳이다. 카카오맵 「상세보기」 파란 글자 링크, 스타벅스 코리아 「상세 정보 보기」 검정 채움 버튼 90 × 30, IKEA 「View details」 밑줄 링크, 이디야 「자세히보기」, 직방 「자세히 보기」(패널 안). 11곳은 글자 없이 카드나 이름이 상세 링크다.
+- 꼬리는 핀 위에 뜨는 InfoWindow 계열(네이버 · 카카오 · 스타벅스 코리아 · IKEA · Zenius · 이디야 · 네이버 부동산)에만 있다.
+
+### 기체 목록
+
+2026-11-05 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/cabinet-list/`(notes.md · shots/). 「기기 여러 대 + 기기마다 상태」를 보여 주는 실제 서비스 34곳(막힘 제외), 디자인 시스템 9곳, 가이드 · 설계 문서 8편.
+
+- 유형: 오른쪽 끝 상태 글자 줄 목록 6곳(Discord · Vercel · Netlify · npm · Reddit · Epic, 줄 60–70), 상태 아이콘 + 범례 9곳(PSN · Xbox · OpenAI · Notion · Linear · Slack · Figma · Dropbox · GitHub), 기기마다 상자 · 타일 5곳(카카오맵 충전현황 줄 41 · 사이 11 · 모서리 12, 네이버 지도 충전현황 2열 타일 174 × 80 · 사이 7 · 모서리 8), 종류별 「n/m 사용 가능」 묶음 6곳, 표 + 상태 칸 4곳(Zenius -I- vanisher Games 탭, 상태 칸 글자 + 면 색 4단계).
+- 가이드: 색만으로 상태를 전하지 않는다(Carbon 상태 지시자 패턴 · Atlassian Lozenge · GOV.UK Tag · Fluent), 상태 글은 1–2낱말(Polaris · GOV.UK), 같은 종류 항목은 카드보다 세로 목록(NN/g Cards), 목록 줄 56 · 72 · 88(Material 3 List).
+
+### 가동 확인 아이콘
+
+2026-11-06 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/checkin-icon/`(notes.md · shots/). 체크인 · 출석 · 작동 확인 동작에 붙은 아이콘을 실제 서비스 31곳(막힘 · 미확인 51곳 제외)과 디자인 시스템 8곳에서 셌다. 대부분 App Store 캡처라 실제 앱과 다를 수 있다.
+
+- 실제 서비스: 글자만 10곳(PlugShare · Chargemap · ChargeHub · Zapmap 등 충전 앱 4곳 모두), 체크 7곳(원 안 체크 Duolingo · Beli · OK캐쉬백, 원 없는 체크 Swarm · Pinball Map 「Confirm lineup」 · Every Door, 체크박스 Planning Center), 핀 3곳(タイトーステーション 핀 안 체크 · ナムコ · Planet Fitness), 달력 3곳(카카오페이 · L.POINT 출석체크 · 토스), 스탬프 2곳, QR 2곳, 깃발 · 엄지 · 사람 여럿(Zenius -I- vanisher) · 시계 각 1곳.
+- 오락실 · 기계 확인 쪽은 Pinball Map · Zenius -I- vanisher · 타이토 · 남코 4곳뿐이라 근거 약함.
+- 디자인 시스템: 원 안 체크 7곳, 달력 체크 6곳, 톱니 배지 체크 6곳, 사람 + 체크 6곳, 핀 + 체크 4곳(Material `where_to_vote` · `beenhere`, Lucide · Tabler `map-pin-check`, Fluent `location_checkmark`).
+
+### 상세 동작 줄
+
+2026-11-05 ~ 11-06 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/action-row/`(notes.md · shots/). 장소 상세에 길찾기 · 저장 · 공유 · 제보 같은 동작을 두는 실제 서비스 32곳(막힘 · 미확인 제외), 디자인 시스템 6곳, NN/g 글 3편.
+
+- 유형: 글자 버튼 가로 8곳(네이버 지도 알약 38 · 모서리 19 · 사이 6 · 15/500, 카카오맵 · Bing · 다이닝코드 · Chipotle · Best Buy · Michelin · GiGO), 동작 줄 없음 7곳(OSM · Hostelworld · IKEA · Costco · Zenius -I- vanisher · Bowlero · Round1 USA), 넓은 주 버튼 + 작은 버튼 4곳(Yandex 주 117 × 40 · 아이콘 48 × 40 · 모서리 12, Booking · 식신 · Starbucks), 아이콘 칸 + 아래 라벨 3곳(Google 지도 원 40 · 칸 73, Mapy · Atlas Obscura), 면 없는 아이콘 + 글자 3곳(2GIS 높이 24 · 13/500, Airbnb · komoot), 넓은 버튼 세로 3곳, 아이콘 버튼만 2곳, 글자 버튼 하나 2곳.
+- 지도 + 장소 패널만 보면 9곳이라 모양마다 1–3곳, 근거 약함. 오락실 쪽 5곳은 동작을 한 줄로 묶지 않는다.
+- 디자인 시스템: 주 버튼은 묶음에 하나(HIG 는 1–2), 같은 묶음은 같은 크기에 스타일로 강조(HIG · Carbon), 아이콘만 있는 버튼은 접근성 이름 필수 · NN/g 는 늘 보이는 라벨, 누름 영역 48(M3) · 44pt(HIG).
+
+### 기체마다의 확인 · 고장 신고 자리
+
+2026-11-06 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/cabinet-action/`(notes.md · shots/). 여러 기기 중 하나를 골라 이용자가 상태를 확인 · 제보하는 실제 서비스 31곳(막힘 47줄 제외), 디자인 시스템 7곳, NN/g 글 3편. 앱은 대부분 App Store 스크린샷이라 실제와 다를 수 있다.
+
+- 확인: 장소 단위 버튼 하나 9곳(PlugShare · ChargeHub · Zapmap · Open Charge Map · Pinball Map 「Confirm lineup」 · Insert Coin 「Confirm games」 · おとぱす · Go電池站 · Arcade Map, 그중 결과 고르기 화면 3곳), 기기 항목 안 버튼 3곳(LaunPot · Every Door · Wheelmap), 댓글 2곳, 남의 제보 확인 2곳(Waze · 티맵), 없음 17곳.
+- 고장 제보: 장소 상세 안 별도 버튼 · 링크 10곳, 앱 전체 별도 입구 8곳, 기기 항목을 누르면 열리는 화면 5곳(Insert Coin · Every Door · Speed Queen · PayRange · ChargePoint), 기기 항목 안 4곳(Pinball Map · LaunPot · Wheelmap · Flush), 체크인 화면 안 「실패」 3곳.
+- 오락실 쪽 6곳은 근거 약함. 장소 단위 확인은 「기체 목록이 맞다」 는 뜻이라 NosLog 의 기체마다 확인과 다르다.
+- 디자인 시스템: 줄 안 보조 동작이 셋보다 적으면 더보기 대신 바로 보이는 아이콘 버튼(Carbon · PatternFly), 밀어서 드러나는 동작은 다른 길이 있어야 한다(Material 3 · NN/g).
+
+2차(2026-11-06): 새 실제 서비스 30곳을 더해 61곳(`cabinet-action/notes-2.md` · shots2/), 디자인 시스템 9곳, NN/g 글 6편. 흐름은 별도 입구(기기 번호 · QR) 20곳, 장소 상세 안 별도 제보 15곳, 장소 단위 확인 12곳, 시스템 표시만 8곳, 항목을 누르면 화면 전환 5곳(Insert Coin · Every Door · Speed Queen · PayRange · ChargePoint), 실물 기기 QR · 버튼 5곳, 항목 안 버튼 4곳, 항목을 고르면 아래 버튼 3곳(ChargePoint · Blink · Dott). 오락실 운영사 공식 4곳(e-amusement 店舗検索 · GiGO · ナムコ · タイトー)은 기체 단위 확인 · 제보가 없다. Material 3 은 데스크톱에서 아래 시트 대신 옆 시트, 모달 시트 처음 높이 50% 이하, Polaris 는 마우스를 올릴 때만 보이는 줄 동작을 상세에도 둔다.
+
+### 개요 탭의 시설 구역
+
+2026-11-06 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/overview-facility/`(notes.md · shots/). 장소 상세 개요에 시설을 두는 실제 서비스 31곳, 디자인 시스템 8곳, NN/g 글 6편.
+
+- 모양: 개요에 전부 16곳, 몇 개만 줄여 보이고 넘김 12곳(네이버 지도 · Google Hotels · Google Maps · Airbnb · Hostelworld · 직방 · Trip.com · Agoda · Bing · Hipcamp · Booking.com · Yandex), 접기 1곳(카카오맵), 시설 칸 없음 2곳(2GIS · Zenius).
+- 줄여 보이는 12곳의 항목: 아이콘 + 이름 여러 열 6곳, 아이콘 위 · 이름 아래 칸 2곳(직방 · Trip.com 하이라이트), 가로 흐름 2곳, 1열 1곳(Google Hotels), 쉼표 한 줄 1곳(네이버 지도), 칩 1곳(Yandex).
+- 넘김: 다른 탭으로 2곳(네이버 → 정보 · Google Hotels → About), 창 4곳, 서랍 1곳, 같은 패널 바꿈 1곳(직방), 그 자리 펼침 2곳, 단추 없음 1곳. 문구에 수를 넣는 곳 4곳, 수 없음 8곳.
+- 네이버 지도 홈 탭: 정보 줄 안 가게 아이콘 18 + 쉼표 글 15/20 한 줄 말줄임, 가운데 「정보 더보기 ›」 알약 123×36. Google Hotels: 「Popular amenities」 16/20 굵기 500, 아이콘 18 → 8 → 이름 14/20, 줄 36, 글자 단추 204×32.
+- NN/g: 첫 단계에는 자주 쓰는 것 몇 개만(Progressive Disclosure), 「더보기」 만 쓰지 말고 목적지 낱말을 넣는다(Learn More Links), 같은 곳으로 가는 링크는 줄인다(Duplicate Links).
+
+### 기체 화면 남은 상태
+
+2026-11-07 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/cabinet-states/`(notes.md · shots/). 확인한 뒤 모양은 로그인해야 보여서 앱 스크린샷 · 도움말로만 셌다.
+
+- 최근 확인 목록(실제 서비스 30곳, 디자인 시스템 6곳): 패널 안 상자 10곳, 화면 안 탭 7곳, 별도 화면 · 창 7곳, 줄 안 요약만 6곳, 펼침 2곳. 결과는 아이콘 + 글자 6곳 · 색 글자 4곳, 시각은 절대 15곳 · 상대 12곳, 사람 이름은 22곳이 적는다. Pinball Map 최근 활동은 구분선 줄 · 아이콘 30 · 본문 14/21, MTB Project 이력 줄은 36 · 상태 14/700 색 글자.
+- 신고 다음 단계(실제 서비스 32곳, 디자인 시스템 6곳): 한 화면 15곳 · 여러 화면 12곳(단계 숫자 · 막대 없음). 보내기 버튼은 칸 밑 7곳 · 화면 아래 고정 4곳 · 머리 오른쪽 4곳. 빈 칸이면 버튼이 꺼지는 곳은 OSM 1곳(칸 318×254, 「Add Note」 94×38, opacity 0.65), 남은 글자 수를 보이는 곳은 Love Clean Streets 1곳. 보낸 뒤 새 화면은 Electroverse 1곳(「Thanks!」 + 전폭 「DONE」), 토스트 0곳. 디자인 시스템 5곳은 한도가 있으면 숫자를 보이라고 한다.
+- 로그아웃(실제 서비스 20곳): 버튼 그대로 두고 누르면 로그인 쪽 9곳(Pinball Map 은 링크를 DOM 으로 확인), 숨기고 안내 줄 5곳(Steam 띠 64 등), 가입 창 2곳, 버튼 위 작은 창 1곳(YouTube 357×160 · 모서리 24), 잠금(disabled) 0곳.
+- 확인한 뒤(실제 서비스 17곳): 모두의 횟수 · 시각 줄 8곳, 아이콘 채움 3곳(Every Door · Letterboxd · Duolingo), 내 횟수 글줄 3곳, 글자 바뀜 + 다시 누르면 취소 2곳, 버튼 그대로 정보 줄만 1곳(Insert Coin), 회색으로 꺼짐 1곳.
+- 디자인 시스템: 꺼진 버튼을 피하라는 곳 3곳(Atlassian · GOV.UK · Primer), 선택 상태는 채움 · 아이콘으로 바꾸라는 곳 3곳(Material 3 · HIG · Fluent).
+
+### 시설 목록
+
+2026-11-05 촬영. 캡처와 곳마다의 줄은 `~/noslog-research/desktop-arcades/facility-list/`(notes.md · shots/). 실제 서비스 30곳(막힘 · 미확인 19곳 제외), 디자인 시스템 7곳, 가이드 · 설계 문서 7건.
+
+- 유형: 아이콘 + 이름 한 열 줄(Airbnb 창 · 직방 패널 줄 48 · 코스트코 · Mapy · Yandex), 체크 + 이름 여러 열(Booking · Agoda · Google 호텔 2열 · Google Maps · Bing · Trip.com · Hostelworld · 楽天 · 코스트코), 아이콘 위 · 이름 아래 칸(네이버 지도 정보 탭 4칸 98 · 아이콘 30 · 이름 12, 다방 · 고캠핑 · Hipcamp · 이마트), 이름 · 값 표(ホットペッパー 「あり / なし ：메모」 · 모름 「—」, 카카오맵 · 스파크플러스 · 2GIS · IKEA), 알약 흐름(다이닝코드 · 패스트파이브).
+- 없음 표시: 대부분 빼기만 한다. 같은 자리에서 보이는 곳은 Agoda(취소선 + 회색) · Google 호텔(⊘ + 「No pets」) · Hipcamp(회색), 따로 모으는 곳은 Airbnb(「Not included」 묶음) · 네이버 지도(사선 아이콘 + 「주차 불가」 별도 구역).
+- 가이드: 아이콘 옆 글자를 늘 보이게(NN/g 아이콘 사용성 · Atlassian), 여백으로 묶기(NN/g 근접), 사양표는 두 열로 놓으면 찾기 어려우니 제목 있는 하위 묶음으로(Baymard 2018).
