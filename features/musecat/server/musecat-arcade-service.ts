@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { unstable_cache, updateTag } from "next/cache";
 
 import { arcadeDistance } from "@/features/arcades/arcade-discovery";
 import {
@@ -35,6 +36,7 @@ import {
     toMockMusecatArcade,
 } from "@/features/musecat/server/musecat-mock";
 import { getMusecatMode } from "@/features/musecat/server/musecat-mode";
+import { getMusecatArcadeTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
@@ -114,20 +116,71 @@ export async function getMusecatArcadePage(slug: string) {
     const token = await getMusecatAccessToken(viewer.userId);
     if (!token.ok) return null;
     const musecatId = await resolveMusecatId(slug);
-    const [detail, notices] = await getMusecatArcadeLive(
-        musecatId,
-        token.token
-    );
-    if (!detail.ok) {
-        if (detail.status === 401) await markMusecatNeedsReconnect(token);
+    const loaded = await loadMusecatArcadeLive(musecatId, slug, token.token);
+    if (!loaded.ok) {
+        if (loaded.status === 401) await markMusecatNeedsReconnect(token);
         return null;
     }
-    const arcade = fromMusecatArcade(
-        detail.data,
-        notices.ok ? notices.data : [],
-        slug
+    return loaded.arcade
+        ? { arcade: loaded.arcade, viewer, favorite: false }
+        : null;
+}
+
+// 다른 사용자의 뮤즈캣 제보로도 바뀌어 태그만으로는 새로워지지 않는다 — 5분 지나면 다시 묻는다
+const MUSECAT_ARCADE_REVALIDATE_SECONDS = 5 * 60;
+
+type LiveArcadeResult =
+    | { ok: true; arcade: MusecatArcade | null }
+    | { ok: false; status: number | null };
+
+class UncachedLiveArcade extends Error {
+    constructor(readonly result: LiveArcadeResult) {
+        super("musecat arcade response not cached");
+    }
+}
+
+/** 오락실 응답은 연결한 누구에게나 같다 — 토큰은 키에서 빼고 오락실 · 주소로만 나눠 담는다 */
+async function loadMusecatArcadeLive(
+    musecatId: string,
+    slug: string,
+    token: string
+): Promise<LiveArcadeResult> {
+    const cached = unstable_cache(
+        async (): Promise<LiveArcadeResult> => {
+            const [detail, notices] = await getMusecatArcadeLive(
+                musecatId,
+                token
+            );
+            if (!detail.ok) {
+                throw new UncachedLiveArcade({
+                    ok: false,
+                    status: detail.status,
+                });
+            }
+            const result = {
+                ok: true as const,
+                arcade: fromMusecatArcade(
+                    detail.data,
+                    notices.ok ? notices.data : [],
+                    slug
+                ),
+            };
+            // 공지만 실패한 응답을 5분 동안 「공지 없음」으로 굳히지 않는다
+            if (!notices.ok) throw new UncachedLiveArcade(result);
+            return result;
+        },
+        ["musecat-arcade-live-v1", musecatId, slug],
+        {
+            revalidate: MUSECAT_ARCADE_REVALIDATE_SECONDS,
+            tags: [getMusecatArcadeTag(musecatId)],
+        }
     );
-    return arcade ? { arcade, viewer, favorite: false } : null;
+    try {
+        return await cached();
+    } catch (error) {
+        if (error instanceof UncachedLiveArcade) return error.result;
+        throw error;
+    }
 }
 
 export interface MusecatListQuery {
@@ -336,9 +389,9 @@ export async function reportFault(input: {
               : "rejected",
         httpStatus: result.ok ? 200 : result.status,
     });
-    return result.ok
-        ? { ok: true, xp: result.data.xp_feedback?.xp }
-        : failureFrom(token, result.status);
+    if (!result.ok) return failureFrom(token, result.status);
+    updateTag(getMusecatArcadeTag(input.musecatArcadeId));
+    return { ok: true, xp: result.data.xp_feedback?.xp };
 }
 
 export async function reactToFault(input: {
@@ -370,7 +423,9 @@ export async function reactToFault(input: {
               : "rejected",
         httpStatus: result.ok ? 200 : result.status,
     });
-    return result.ok ? { ok: true } : failureFrom(token, result.status);
+    if (!result.ok) return failureFrom(token, result.status);
+    updateTag(getMusecatArcadeTag(input.musecatArcadeId));
+    return { ok: true };
 }
 
 /** 본인 신고 거두기 — 뮤즈캣 요청 본문 문서가 비어 live 는 아직 막아 둔다 */
@@ -425,7 +480,9 @@ export async function checkCampaign(input: {
         gameId: input.gameId,
         result: input.result,
     });
-    return result.ok ? { ok: true } : failureFrom(token, result.status);
+    if (!result.ok) return failureFrom(token, result.status);
+    updateTag(getMusecatArcadeTag(input.musecatArcadeId));
+    return { ok: true };
 }
 
 /** NOSTALGIA 기체 정보 고치기(정보 수정 안 b) — 뮤즈캣 게임 편집 델타 문서가 비어 live 는 아직 막아 둔다 */

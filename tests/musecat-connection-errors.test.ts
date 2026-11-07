@@ -10,6 +10,10 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
+vi.mock("next/cache", () => ({
+    unstable_cache: (fn: unknown) => fn,
+    updateTag: vi.fn(),
+}));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/features/musecat/server/musecat-mode", () => ({
     getMusecatMode: mocks.mode,

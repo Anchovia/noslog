@@ -28,3 +28,8 @@ export function getChartEvaluationTag(chartId: number) {
 export function getChartRankingTag(chartId: number) {
     return `chart-ranking-${chartId}`;
 }
+
+// 뮤즈캣 오락실 하나(상세 · 공지) — 이 오락실에 NosLog 에서 쓴 동작만 비운다
+export function getMusecatArcadeTag(musecatArcadeId: string) {
+    return `musecat-arcade-${musecatArcadeId}`;
+}
