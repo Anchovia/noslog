@@ -40,7 +40,7 @@
 | 2026-11-02 | [데스크톱 프로필 탭 뼈대 실측](../research/2026-11-02-desktop-profile.md)                                           |
 | 2026-11-02 | [데스크톱 오락실 목록 · 상세 뼈대 실측](../research/2026-11-02-desktop-arcades.md)                                  |
 | 2026-11-02 | [데스크톱 랭킹 · 서열표 뼈대 실측](../research/2026-11-02-desktop-rankings.md)                                      |
-| 2026-11-02 | [데스크톱 악곡 목록 · 악곡 상세 · 채보 뷰어 뼈대 실측](../research/2026-11-02-desktop-music.md)                     |
+| 2026-11-02 | [데스크톱 악곡 목록 · 채보 뷰어 뼈대 실측](../research/2026-11-02-desktop-music.md)                                 |
 | 2026-11-02 | [데스크톱 공통 층 — 헤더 · 폭 · 간격 · 글자 · 부품 크기 실측](../research/2026-11-02-desktop-foundation.md)         |
 | 2026-11-02 | [데스크톱 설정 · 약관 · 로그인 · 동기화 · 개발자 · 점검 뼈대 실측](../research/2026-11-02-desktop-settings-auth.md) |
 | 2026-11-02 | [임시 저장 초안 삭제](../research/2026-11-02-draft-delete.md)                                                       |
