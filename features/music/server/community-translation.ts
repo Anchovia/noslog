@@ -169,12 +169,20 @@ export async function fillCommunityTranslations(
     const next = { ...source.stored, ...translated };
     if (kind === "opinion")
         await db.communityChartEvaluation.updateMany({
-            where: { id, opinion: source.text },
+            where: {
+                id,
+                opinion: source.text,
+                user: { translationConsentAt: { not: null } },
+            },
             data: { opinionTranslations: next },
         });
     else
         await db.communityOpinionReply.updateMany({
-            where: { id, body: source.text },
+            where: {
+                id,
+                body: source.text,
+                user: { translationConsentAt: { not: null } },
+            },
             data: { translations: next },
         });
     return next;

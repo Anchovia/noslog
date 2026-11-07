@@ -34,7 +34,7 @@ describe("profile progress sources", () => {
         const result = await getPublicProfileProgress(
             1,
             profileProgressQuerySchema.parse({}),
-            now
+            { now }
         );
         expect(result).toMatchObject({ current: 5683, points: [] });
     });
@@ -58,21 +58,26 @@ describe("profile progress sources", () => {
             },
         ]);
         const query = profileProgressQuerySchema.parse({ range: "30" });
-        expect((await getPublicProfileProgress(1, query, now))?.points).toEqual(
-            [{ date: "2026-08-19T15:00:00.000Z", value: 5683.01 }]
-        );
+        expect(
+            (await getPublicProfileProgress(1, query, { now }))?.points
+        ).toEqual([{ date: "2026-08-19T15:00:00.000Z", value: 5683.01 }]);
         expect(
             (
                 await getPublicProfileProgress(
                     1,
                     { ...query, mode: "recital" },
-                    now
+                    { now }
                 )
             )?.points
         ).toEqual([]);
         expect(
-            (await getPublicProfileProgress(1, { ...query, range: "all" }, now))
-                ?.points
+            (
+                await getPublicProfileProgress(
+                    1,
+                    { ...query, range: "all" },
+                    { now }
+                )
+            )?.points
         ).toHaveLength(2);
     });
     it("queries only completed rating observations and never turns unavailable basis into zero", async () => {
@@ -82,7 +87,7 @@ describe("profile progress sources", () => {
                 metric: "rating",
                 range: "year",
             }),
-            now
+            { now }
         );
         expect(result).toMatchObject({
             status: "unavailable",
@@ -111,7 +116,7 @@ describe("profile progress sources", () => {
         const result = await getPublicProfileProgress(
             1,
             profileProgressQuerySchema.parse({ metric: "rating" }),
-            now
+            { now }
         );
         expect(result).toMatchObject({
             current: 3000.25,
@@ -130,7 +135,7 @@ describe("profile progress sources", () => {
         const result = await getPublicProfileProgress(
             1,
             profileProgressQuerySchema.parse({ metric: "rating" }),
-            now
+            { now }
         );
         expect(result?.points).toEqual([
             { date: "2026-09-01T10:00:00.000Z", value: 2000 },
@@ -147,7 +152,7 @@ describe("profile progress sources", () => {
             await getPublicProfileProgress(
                 1,
                 profileProgressQuerySchema.parse({}),
-                now
+                { now }
             )
         ).toBeNull();
         expect(mocks.grades).not.toHaveBeenCalled();

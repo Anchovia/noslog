@@ -83,7 +83,16 @@ export default function ChartFieldProposalReview({
             try {
                 const result = await reviewChartFieldProposals(
                     decision === "apply"
-                        ? { decision, ids, value }
+                        ? {
+                              decision,
+                              versions: proposals
+                                  .filter((row) => ids.includes(row.id))
+                                  .map(({ id, updatedAt }) => ({
+                                      id,
+                                      updatedAt,
+                                  })),
+                              value,
+                          }
                         : { decision, ids, reasonCode, reason }
                 );
                 if (!result.success) {

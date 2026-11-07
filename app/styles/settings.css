@@ -251,6 +251,9 @@
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
+.noslog-ui .nl-settings__rows .nl-field__label {
+    color: var(--nl-content-default);
+}
 .noslog-ui .nl-settings__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;

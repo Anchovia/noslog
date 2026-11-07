@@ -191,6 +191,7 @@ export interface AdminChartFieldProposal {
     status: string;
     rejectReason: string | null;
     createdAt: Date;
+    updatedAt: Date;
     reviewedAt: Date | null;
     user: { id: number; username: string | null };
     chart: {
@@ -260,6 +261,7 @@ export async function listChartFieldProposals(
                       status: row.status,
                       rejectReason: row.reviewNote,
                       createdAt: row.createdAt,
+                      updatedAt: row.updatedAt,
                       reviewedAt: row.reviewedAt,
                       user: row.user,
                       chart: {
@@ -357,11 +359,24 @@ export async function reviewChartFieldProposals(
         });
     }
     const review = result.data;
+    const seenVersions = new Map(
+        review.decision === "apply"
+            ? review.versions.map((item) => [item.id, item.updatedAt])
+            : []
+    );
     const now = new Date();
 
     try {
         const proposals = await db.chartFieldProposal.findMany({
-            where: { id: { in: review.ids }, status: "pending" },
+            where: {
+                id: {
+                    in:
+                        review.decision === "apply"
+                            ? [...seenVersions.keys()]
+                            : review.ids,
+                },
+                status: "pending",
+            },
             include: {
                 chart: { select: { difficulty: true, musicIdx: true } },
             },
@@ -405,7 +420,11 @@ export async function reviewChartFieldProposals(
                 // 먼저 대기 중인 제안을 차지한다 — 이미 처리됐으면 값 · 출처 · 점수를 쓰지 않는다(2026-10-16 D5)
                 const applied = await db.$transaction(async (tx) => {
                     const claimed = await tx.chartFieldProposal.updateMany({
-                        where: { id: proposal.id, status: "pending" },
+                        where: {
+                            id: proposal.id,
+                            status: "pending",
+                            updatedAt: seenVersions.get(proposal.id),
+                        },
                         data: {
                             status: "approved",
                             appliedValue:

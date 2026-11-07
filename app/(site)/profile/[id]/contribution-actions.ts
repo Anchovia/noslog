@@ -1,6 +1,9 @@
 "use server";
 
-import { listMyChartDrafts as listMyChartDraftsService } from "@/features/contributions/server/chart-draft-service";
+import {
+    deleteMyChartDraft as deleteMyChartDraftService,
+    listMyChartDrafts as listMyChartDraftsService,
+} from "@/features/contributions/server/chart-draft-service";
 import {
     countMyChartFieldProposals as countMyChartFieldProposalsService,
     countUnseenContributionResults as countUnseenContributionResultsService,
@@ -14,6 +17,10 @@ export async function listMyChartFieldProposals(limit: number) {
 
 export async function listMyChartDrafts(limit: number) {
     return listMyChartDraftsService(limit);
+}
+
+export async function deleteMyChartDraft(draftId: number, locale: string) {
+    return deleteMyChartDraftService(draftId, locale);
 }
 
 export async function countMyChartFieldProposals() {

@@ -1,6 +1,11 @@
 "use server";
 
-import { castVote } from "@/features/polls/server/poll-service";
+import { pollVoteSchema } from "@/features/polls/schemas/poll-schema";
+import {
+    castVote,
+    getPublicPoll,
+    type PollVoteResult,
+} from "@/features/polls/server/poll-service";
 import { getServerI18n } from "@/lib/i18n/server";
 import { logServerError } from "@/lib/observability/server";
 import { getUser } from "@/lib/user";
@@ -15,15 +20,32 @@ const VOTE_MESSAGE_KEYS = {
  * 표 내기 (2026-09-23) — 로그인한 사람만, 마감 전에는 고른 것을 통째로 바꿔 넣는다.
  * 비로그인은 결과만 보이고 여기서 막는다(디시 · 아카 · GitHub 과 같은 규칙).
  */
-export async function votePoll(pollId: number, optionIds: number[]) {
-    const { t } = await getServerI18n();
+export async function votePoll(
+    pollId: number,
+    optionIds: number[]
+): Promise<PollVoteResult> {
+    const { locale, t } = await getServerI18n();
     const user = await getUser();
     if (!user) return { success: false, message: t("poll.loginToVote") };
+    const input = pollVoteSchema.safeParse({ pollId, optionIds });
+    if (!input.success)
+        return { success: false, message: t("poll.voteFailed") };
     try {
-        const failed = await castVote(pollId, user.id, optionIds);
+        const failed = await castVote(
+            input.data.pollId,
+            user.id,
+            input.data.optionIds
+        );
         if (failed)
             return { success: false, message: t(VOTE_MESSAGE_KEYS[failed]) };
-        return { success: true };
+        // 표를 내기 전에는 표 수를 받지 못했으니, 이 표로 열린 결과를 함께 돌려준다
+        const poll = await getPublicPoll(
+            { id: input.data.pollId },
+            locale,
+            user.id
+        );
+        if (!poll) return { success: false, message: t("poll.voteFailed") };
+        return { success: true, poll };
     } catch (error) {
         logServerError(error, {
             event: "poll.vote.failed",

@@ -500,7 +500,8 @@ export function visibleAchievementDefinitions(scoresHidden: boolean) {
 export interface AchievementRecord {
     key: string;
     tier: number;
-    achievedAt: string;
+    /** 플레이 활동 비공개를 남이 볼 때는 없다 */
+    achievedAt?: string;
 }
 
 /** 한 사람의 업적 원자료 — 프로필 캐시에 싣고, 요약 · 목록은 여기서 계산한다 */
@@ -516,11 +517,29 @@ export function recipientKey(key: string, tier: number) {
     return `${key}:${tier}`;
 }
 
+/** 달성일은 그날 동기화했다는 뜻이라 날짜를 빼고, 줄 순서로도 드러나지 않게 다시 놓는다 */
+function withoutAchievementDates(
+    records: AchievementRecords
+): AchievementRecords {
+    return {
+        ...records,
+        earned: records.earned
+            .map(({ key, tier }) => ({ key, tier }))
+            .sort((a, b) => b.tier - a.tier || a.key.localeCompare(b.key)),
+    };
+}
+
 /** 보는 사람에게 넘길 자료만 — 점수 비공개면 실력 · 수집 줄을 뺀다 */
 export function achievementRecordsForViewer(
     records: AchievementRecords,
-    scoresHidden: boolean
+    scoresHidden: boolean,
+    activityHidden = false
 ): AchievementRecords {
+    if (activityHidden)
+        return achievementRecordsForViewer(
+            withoutAchievementDates(records),
+            scoresHidden
+        );
     if (!scoresHidden) return records;
     const visible = new Set(
         visibleAchievementDefinitions(true).map((definition) => definition.key)
@@ -609,7 +628,8 @@ export function summarizeAchievements(
         recent: [...earned]
             .sort(
                 (a, b) =>
-                    b.achievedAt.localeCompare(a.achievedAt) || b.tier - a.tier
+                    (b.achievedAt ?? "").localeCompare(a.achievedAt ?? "") ||
+                    b.tier - a.tier
             )
             .slice(0, ACHIEVEMENT_RECENT_COUNT),
     };

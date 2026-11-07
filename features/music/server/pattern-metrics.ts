@@ -9,7 +9,6 @@ import { CACHE_TAGS } from "@/lib/cache-tags";
 import { songMeterLevel } from "@/lib/chart-pattern/meterRecord";
 import {
     computePatternMetrics,
-    isMeterKnown,
     type MeterLevel,
     PATTERN_METRICS_VERSION,
 } from "@/lib/chart-pattern/patternMetrics";
@@ -27,20 +26,10 @@ export async function savePatternMetrics(
         where: { id: chartId },
         select: { musicIdx: true },
     });
-    const lastEdit = await transaction.chartPatternRevision.findFirst({
-        where: {
-            pattern: { chartId },
-            number: { lte: publishedRevision },
-            kind: { not: "publish" },
-        },
-        orderBy: { number: "desc" },
-        select: { kind: true },
-    });
     const data = {
         version: PATTERN_METRICS_VERSION,
         publishedRevision,
         ...computePatternMetrics(document, {
-            meterKnown: isMeterKnown(lastEdit?.kind),
             songMeter: songMeterLevel(chart.musicIdx),
         }),
     };

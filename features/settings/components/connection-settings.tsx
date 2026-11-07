@@ -108,7 +108,11 @@ export function DiscordConnectionDetail({
                       ? "settings.discordIdentityMismatch"
                       : error === "session_expired"
                         ? "settings.loginRequired"
-                        : "settings.discordError"
+                        : error === "admin_mfa_required"
+                          ? "settings.adminMfaRequired"
+                          : error === "admin_discord_locked"
+                            ? "settings.adminDiscordLocked"
+                            : "settings.discordError"
               )
             : "");
     return (

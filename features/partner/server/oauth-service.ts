@@ -125,6 +125,9 @@ async function ensureSubject(tx: Tx, userId: number, clientId: string) {
     return created.subject;
 }
 
+const OAUTH_TOKEN_HOURLY_LIMIT = 2_000;
+const OAUTH_TOKEN_WINDOW_MS = 60 * 60 * 1000;
+
 function activeGrantWhere(now: Date) {
     return { revokedAt: null, familyExpiresAt: { gt: now } };
 }
@@ -172,57 +175,87 @@ export async function approveAuthorization(input: {
         input.sharedItems.includes(item)
     );
     const code = createOAuthToken("code");
-    await db.$transaction(async (tx) => {
-        const subject = await ensureSubject(tx, input.userId, input.clientId);
-        const active = await tx.oAuthGrant.findFirst({
-            where: {
-                userId: input.userId,
-                clientId: input.clientId,
-                ...activeGrantWhere(now),
-            },
-            select: { id: true, sharedItems: true, generation: true },
-            orderBy: { id: "desc" },
-        });
-        const grant = active
-            ? await tx.oAuthGrant.update({
-                  where: { id: active.id },
-                  data: {
-                      scopes: grantScopes,
-                      sharedItems,
-                  },
-                  select: { id: true, generation: true },
-              })
-            : await tx.oAuthGrant.create({
-                  data: {
-                      userId: input.userId,
-                      clientId: input.clientId,
-                      scopes: grantScopes,
-                      sharedItems,
-                      familyExpiresAt: new Date(
-                          now.getTime() + OAUTH_FAMILY_TTL_MS
-                      ),
-                  },
-                  select: { id: true, generation: true },
-              });
-        if (active?.sharedItems.some((item) => !sharedItems.includes(item))) {
-            await enqueuePartnerMessage(tx, {
-                clientId: input.clientId,
-                grantId: grant.id,
-                kind: "records_invalidation",
-                generation: grant.generation,
-                payload: { sub: subject, service: "nostalgia" },
+    const save = () =>
+        db.$transaction(async (tx) => {
+            const subject = await ensureSubject(
+                tx,
+                input.userId,
+                input.clientId
+            );
+            const active = await tx.oAuthGrant.findFirst({
+                where: {
+                    userId: input.userId,
+                    clientId: input.clientId,
+                    ...activeGrantWhere(now),
+                },
+                select: { id: true, sharedItems: true, generation: true },
+                orderBy: { id: "desc" },
             });
-        }
-        await tx.oAuthAuthorizationCode.create({
-            data: {
-                codeHash: code.hash,
-                grantId: grant.id,
-                redirectUri: input.redirectUri,
-                codeChallenge: input.codeChallenge,
-                scopes: toDbScopes(input.scopes),
-                expiresAt: new Date(now.getTime() + OAUTH_CODE_TTL_MS),
-            },
+            if (!active) {
+                // 만료만 된 줄도 활성 유일 인덱스에 걸리므로 새 연결 전에 닫는다. 닫는 이유 값이 따로 없어 비워 둔다
+                await tx.oAuthGrant.updateMany({
+                    where: {
+                        userId: input.userId,
+                        clientId: input.clientId,
+                        revokedAt: null,
+                    },
+                    data: { revokedAt: now },
+                });
+            }
+            const last = active
+                ? null
+                : await tx.oAuthGrant.aggregate({
+                      where: { userId: input.userId, clientId: input.clientId },
+                      _max: { generation: true },
+                  });
+            const grant = active
+                ? await tx.oAuthGrant.update({
+                      where: { id: active.id },
+                      data: {
+                          scopes: grantScopes,
+                          sharedItems,
+                      },
+                      select: { id: true, generation: true },
+                  })
+                : await tx.oAuthGrant.create({
+                      data: {
+                          userId: input.userId,
+                          clientId: input.clientId,
+                          scopes: grantScopes,
+                          sharedItems,
+                          generation: (last?._max.generation ?? 0) + 1,
+                          familyExpiresAt: new Date(
+                              now.getTime() + OAUTH_FAMILY_TTL_MS
+                          ),
+                      },
+                      select: { id: true, generation: true },
+                  });
+            if (
+                active?.sharedItems.some((item) => !sharedItems.includes(item))
+            ) {
+                await enqueuePartnerMessage(tx, {
+                    clientId: input.clientId,
+                    grantId: grant.id,
+                    kind: "records_invalidation",
+                    generation: grant.generation,
+                    payload: { sub: subject, service: "nostalgia" },
+                });
+            }
+            await tx.oAuthAuthorizationCode.create({
+                data: {
+                    codeHash: code.hash,
+                    grantId: grant.id,
+                    redirectUri: input.redirectUri,
+                    codeChallenge: input.codeChallenge,
+                    scopes: toDbScopes(input.scopes),
+                    expiresAt: new Date(now.getTime() + OAUTH_CODE_TTL_MS),
+                },
+            });
         });
+    // 같은 연결을 동시에 처음 만들면 한쪽이 유일 인덱스에 걸린다. 다시 돌면 먼저 만든 연결을 고친다
+    await save().catch((error: unknown) => {
+        if ((error as { code?: unknown }).code !== "P2002") throw error;
+        return save();
     });
     return code.token;
 }
@@ -287,6 +320,17 @@ async function issueTokens(
         refresh_token: refresh.token,
         scope: formatOAuthScope(fromDbScopes(scopes)),
     };
+}
+
+/** 클라이언트가 지난 1시간에 받은 토큰이 한도에 닿았는지 — 토큰 행을 세므로 따로 기록하지 않는다 */
+export async function isOAuthTokenLimitReached(clientId: string) {
+    const issued = await db.oAuthAccessToken.count({
+        where: {
+            grant: { clientId },
+            createdAt: { gte: new Date(Date.now() - OAUTH_TOKEN_WINDOW_MS) },
+        },
+    });
+    return issued >= OAUTH_TOKEN_HOURLY_LIMIT;
 }
 
 /** grant_type=authorization_code. 이미 쓴 code 가 다시 오면 그 연결을 폐기한다(RFC 9700 §4.2.4) */

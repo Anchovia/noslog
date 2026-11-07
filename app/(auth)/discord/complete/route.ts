@@ -11,7 +11,10 @@ import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import { serverEnv } from "@/lib/env/server";
 import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
+import { logSecurityEvent } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+
+const DISCORD_TIMEOUT_MS = 10_000;
 
 interface DiscordTokenResponse {
     access_token?: string;
@@ -22,6 +25,7 @@ interface DiscordUserResponse {
     username: string;
     global_name: string | null;
     avatar: string | null;
+    mfa_enabled?: boolean;
 }
 
 function errorRedirect(
@@ -84,7 +88,14 @@ export async function GET(request: NextRequest) {
     const initiatingUserId = session.discordOAuthUserId;
     const returnTo = getSafeAuthReturnPath(session.discordOAuthReturnTo) ?? "/";
     const errorResponse = (error: string) => {
-        if (mode) {
+        logSecurityEvent({
+            event: "auth.discord.failed",
+            actorUserId: currentUser?.id,
+            mode,
+            reason: error,
+        });
+        // 복귀 주소 검사는 /admin 을 받지 않아, 관리자 재확인 실패는 안내가 보이는 연결 설정으로 보낸다
+        if (mode && mode !== "admin") {
             const url = new URL(returnTo, request.url);
             url.searchParams.set("discordError", error);
             return NextResponse.redirect(url);
@@ -136,6 +147,7 @@ export async function GET(request: NextRequest) {
                     redirect_uri: redirectUri,
                 }),
                 cache: "no-store",
+                signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
             }
         );
         if (!tokenResponse.ok) {
@@ -152,6 +164,7 @@ export async function GET(request: NextRequest) {
             {
                 headers: { Authorization: `Bearer ${token.access_token}` },
                 cache: "no-store",
+                signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
             }
         );
         if (!userResponse.ok) {
@@ -165,10 +178,29 @@ export async function GET(request: NextRequest) {
 
         const discordName = discordUser.global_name ?? discordUser.username;
         if (
-            (mode === "refresh" || mode === "delete") &&
+            (mode === "refresh" || mode === "delete" || mode === "admin") &&
             currentUser?.discordId !== discordUser.id
         )
             return errorResponse("identity_mismatch");
+        session.discordMfaEnabled = discordUser.mfa_enabled === true;
+        if (mode === "admin" && currentUser) {
+            if (!session.discordMfaEnabled) {
+                await session.save();
+                return errorResponse("admin_mfa_required");
+            }
+            session.adminVerification = {
+                userId: currentUser.id,
+                discordId: discordUser.id,
+                verifiedAt: Date.now(),
+            };
+            await session.save();
+            logSecurityEvent({
+                event: "auth.discord.succeeded",
+                actorUserId: currentUser.id,
+                mode,
+            });
+            return NextResponse.redirect(new URL("/admin/users", request.url));
+        }
         if (mode === "delete" && currentUser) {
             session.deletionVerification = {
                 userId: currentUser.id,
@@ -186,6 +218,13 @@ export async function GET(request: NextRequest) {
         if (currentUser) {
             if (linkedUser && linkedUser.id !== currentUser.id) {
                 return errorResponse("already_linked");
+            }
+            // 재확인은 연결된 Discord 로 하므로, 훔친 쿠키로 자기 Discord 를 연결하면 재확인이 뚫린다
+            if (
+                currentUser.role === "admin" &&
+                currentUser.discordId !== discordUser.id
+            ) {
+                return errorResponse("admin_discord_locked");
             }
 
             await updateDiscordIdentity(currentUser.id, {
@@ -209,6 +248,14 @@ export async function GET(request: NextRequest) {
             revalidateTag(getUserProfileTag(currentUser.id), "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
+            await session.save();
+            logSecurityEvent({
+                event: "auth.discord.succeeded",
+                actorUserId: currentUser.id,
+                mode,
+            });
+            if (currentUser.role === "admin" && !session.discordMfaEnabled)
+                return errorResponse("admin_mfa_required");
             const destination = new URL(returnTo, request.url);
             if (mode) destination.searchParams.set("discordResult", mode);
             return NextResponse.redirect(destination);
@@ -243,6 +290,7 @@ export async function GET(request: NextRequest) {
                       id: linkedUser.id,
                       locale: linkedUser.locale,
                       role: linkedUser.role,
+                      sessionVersion: linkedUser.sessionVersion,
                   }
             : await createDiscordUser({
                   discordId: discordUser.id,
@@ -261,12 +309,30 @@ export async function GET(request: NextRequest) {
         }
         session.id = user.id;
         session.role = user.role;
+        session.sessionVersion = user.sessionVersion;
         session.profileCompleted = profileCompleted;
         if (!profileCompleted) session.onboardingReturnTo = returnTo;
         if (profileCompleted && isLocale(user.locale)) {
             session.locale = user.locale;
         }
         await session.save();
+        logSecurityEvent({
+            event: "auth.discord.succeeded",
+            actorUserId: user.id,
+        });
+        if (
+            user.role === "admin" &&
+            !session.discordMfaEnabled &&
+            profileCompleted
+        ) {
+            logSecurityEvent({
+                event: "auth.discord.admin-mfa-denied",
+                actorUserId: user.id,
+            });
+            const settings = new URL("/profile/settings", request.url);
+            settings.searchParams.set("discordError", "admin_mfa_required");
+            return NextResponse.redirect(settings);
+        }
         return NextResponse.redirect(
             new URL(
                 profileCompleted

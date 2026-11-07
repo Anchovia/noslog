@@ -37,7 +37,9 @@ export async function GET(
                 }),
                 { status: 403, headers }
             );
-        const result = await getPublicProfileProgress(id.data, query.data);
+        const result = await getPublicProfileProgress(id.data, query.data, {
+            owner: session.id === id.data,
+        });
         return result
             ? NextResponse.json(createApiSuccess(result), { headers })
             : NextResponse.json(

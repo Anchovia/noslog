@@ -130,7 +130,7 @@ describe("이벤트 검토", () => {
             publishedTitle: working.title,
             publishedAt: first,
             reviewNote: null,
-            reviewerId: 9,
+            reviewedById: 9,
         });
         expect(
             reviewUpdate("approve", working, "", 9, now, null)

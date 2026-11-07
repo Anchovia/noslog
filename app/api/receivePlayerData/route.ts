@@ -28,6 +28,7 @@ import {
     type ChartLimitMap,
     isWithinChartLimits,
     loadChartLimits,
+    selectKeptChartIds,
 } from "@/lib/services/user/chart-limits";
 import { keepTodayGrade, updateGrade } from "@/lib/services/user/update-grade";
 import { updatePlayData } from "@/lib/services/user/update-play-data";
@@ -283,25 +284,42 @@ function formatSkippedCharts(skippedCharts: SkippedChart[]) {
     return `DB에 등록되지 않은 채보 ${skippedCharts.length}개를 건너뛰었습니다: ${preview}${remainder > 0 ? ` 외 ${remainder}개` : ""}`;
 }
 
-function dropOutOfRangeSheets(music: SyncMusicInput[], limits: ChartLimitMap) {
-    let rejected = 0;
+function dropOutOfRangeSheets(
+    music: SyncMusicInput[],
+    limits: ChartLimitMap,
+    chartIds: ChartIdMap
+) {
+    const rejectedChartIds: number[] = [];
     const kept = music.flatMap((item) => {
         const sheet = item.sheet.filter((chart) => {
-            const within = isWithinChartLimits(
-                limits.get(`${item["@index"]}:${chart.difficulty}`),
-                {
-                    difficulty: chart.difficulty,
-                    judge: chart.judge,
-                    maxCombo: chart.max_combo,
-                    gradeBasic: chart.grade_basic,
-                }
-            );
-            if (!within) rejected += 1;
+            const key = `${item["@index"]}:${chart.difficulty}`;
+            const within = isWithinChartLimits(limits.get(key), {
+                difficulty: chart.difficulty,
+                judge: chart.judge,
+                maxCombo: chart.max_combo,
+                gradeBasic: chart.grade_basic,
+                gradeRecital: chart.grade_recital,
+            });
+            const chartId = chartIds.get(key);
+            if (!within && chartId) rejectedChartIds.push(chartId);
             return within;
         });
         return sheet.length > 0 ? [{ ...item, sheet }] : [];
     });
-    return { kept, rejected };
+    return { kept, rejectedChartIds };
+}
+
+// 공식 응답에는 같은 채보가 두 번 오지 않는다. 받으면 클리어 랭크 수가 부푼다
+function hasDuplicateCharts(music: SyncMusicInput[]) {
+    const seen = new Set<string>();
+    for (const item of music) {
+        for (const chart of item.sheet) {
+            const key = `${item["@index"]}:${chart.difficulty}`;
+            if (seen.has(key)) return true;
+            seen.add(key);
+        }
+    }
+    return false;
 }
 
 function joinNotices(...notices: (string | null)[]) {
@@ -360,6 +378,9 @@ export async function POST(request: NextRequest) {
         return json(copy.expiredToken, 401);
     }
 
+    // 관리자 권한은 2단계를 켠 세션에서 발급한 토큰에만 준다. 자기 기록 동기화는 어느 토큰이든 된다
+    const adminSync = user.role === "admin" && tokenPayload.adminMfa === true;
+
     const { playerData, recentData, totalData } = parsed.data;
     if (
         playerData.status !== 0 ||
@@ -381,6 +402,9 @@ export async function POST(request: NextRequest) {
     const music: SyncMusicInput[] | null = totalData
         ? totalData.data.music
         : null;
+    if (music && hasDuplicateCharts(music)) {
+        return json(copy.invalidPayload, 400);
+    }
     const chartLimits = await loadChartLimits();
     const historyInRange = history.filter((item) =>
         isWithinChartLimits(
@@ -440,11 +464,7 @@ export async function POST(request: NextRequest) {
         let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
             const { overLimit, ...catalogCounts } =
-                await processBemaniCatalogUpdates(
-                    music,
-                    user.role === "admin",
-                    user.id
-                );
+                await processBemaniCatalogUpdates(music, adminSync, user.id);
             catalogUpdates = catalogCounts;
             if (overLimit > 0)
                 console.warn("BEMANI catalog candidates over limit", {
@@ -460,18 +480,22 @@ export async function POST(request: NextRequest) {
                 ...skippedRecentCharts,
                 ...skippedCharts,
             ]);
-            const { kept: knownMusic, rejected } = dropOutOfRangeSheets(
+            const { kept: knownMusic, rejectedChartIds } = dropOutOfRangeSheets(
                 registeredMusic,
-                chartLimits
+                chartLimits,
+                chartIds
             );
-            outOfRange += rejected;
+            outOfRange += rejectedChartIds.length;
 
             if (knownMusic.length > 0) {
                 ({ changedRecords, changedChartIds } = await updatePlayData(
                     user.id,
                     knownMusic,
                     syncId,
-                    chartIds
+                    chartIds,
+                    rejectedChartIds.length > 0
+                        ? await selectKeptChartIds(user.id, rejectedChartIds)
+                        : []
                 ));
                 grades = await refreshDerived(changedChartIds);
                 await updateDummy();
@@ -528,13 +552,12 @@ export async function POST(request: NextRequest) {
         }
 
         // 관리자 동기화만 자켓 없는 곡 목록을 받아 북마클릿이 공식 사이트에서 채운다 — 목록 실패가 동기화 결과를 뒤집지 않게
-        const missingJackets =
-            user.role === "admin"
-                ? await getMissingJacketIndexes().catch((error) => {
-                      console.error("Missing jacket lookup failed", error);
-                      return [];
-                  })
-                : undefined;
+        const missingJackets = adminSync
+            ? await getMissingJacketIndexes().catch((error) => {
+                  console.error("Missing jacket lookup failed", error);
+                  return [];
+              })
+            : undefined;
 
         return json(music ? copy.fullComplete : copy.recentComplete, 200, {
             syncScope: music ? "full" : "recent",

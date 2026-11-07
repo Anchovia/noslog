@@ -1,6 +1,7 @@
 import AppFooter from "@/components/layout/app-footer";
 import AppShell from "@/components/layout/app-shell";
 import { countUnreadFeedbackReplies } from "@/features/feedback/server/my-feedback-service";
+import { isWebAnalyticsEnabled } from "@/lib/analytics";
 import getSession from "@/lib/session";
 import { getUser } from "@/lib/user";
 
@@ -30,6 +31,7 @@ export default async function SiteLayout({
                     : null
             }
             footer={<AppFooter />}
+            webAnalytics={isWebAnalyticsEnabled()}
         >
             {children}
         </AppShell>

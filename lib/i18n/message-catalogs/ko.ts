@@ -70,6 +70,10 @@ export const koMessages = {
     "community.delete.reply.title": "이 답글을 삭제할까요?",
     "community.delete.reply.body": "답글만 삭제되고 되돌릴 수 없습니다.",
     "community.delete.reply.action": "답글 삭제",
+    "community.delete.draft.title": "초안 삭제",
+    "community.delete.draft.body":
+        "이 초안을 삭제할까요? 삭제한 초안은 복구할 수 없습니다.",
+    "community.delete.draft.action": "초안 삭제",
     "community.reply": "답글",
     "community.replyCount": "답글 {count}개",
     "community.replyHide": "답글 접기",
@@ -189,7 +193,7 @@ export const koMessages = {
     "pattern.computedDefinition.offset":
         "동시치기처럼 붙어 있지만 0.12초 안에서 어긋난 노트를 셉니다. 앞뒤 노트와는 그 차이의 두 배 이상 떨어져 있어야 합니다.",
     "pattern.computedDefinition.chords":
-        "박자표가 바뀌는 정도를 ノスしるべ · BEMANI wiki · 나무위키 공략 글로 정한 곡별 기록입니다. 사람이 박자표를 넣은 채보는 채보에서 셉니다.",
+        "주된 BPM · 박자표에서 벗어난 시간의 비율로 매깁니다. 공략 글이나 사람이 확인한 곡은 그 기록을 씁니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
@@ -278,6 +282,8 @@ export const koMessages = {
     "common.retry": "다시 시도",
     "upload.limitReached":
         "이미지는 한 시간에 최대 {count}회까지 업로드할 수 있습니다.",
+    "common.tooManyRequests":
+        "요청이 너무 많습니다. 잠시 뒤에 다시 시도해 주세요.",
     "common.copied": "복사됨",
     "maintenance.title": "점검 중",
     "maintenance.heading": "점검 중입니다.",
@@ -1229,7 +1235,7 @@ export const koMessages = {
     "sync.history": "동기화 이력",
     "sync.guideTitle": "처음 동기화하기",
     "sync.guideIntro":
-        "처음 한 번만 등록하면, 다음부터는 공식 사이트에서 실행하면 됩니다.",
+        "북마클릿은 한 번만 등록합니다. 그다음부터는 공식 사이트에서 실행합니다.",
     "sync.privateBookmark":
         "내 계정 전용 북마크입니다. 다른 사람과 공유하지 마세요.",
     "sync.loginStep": "공식 사이트에 로그인",
@@ -1238,7 +1244,7 @@ export const koMessages = {
     "sync.runInstruction":
         "공식 사이트에서 방금 저장한 ‘{bookmarklet}’ 북마크를 실행하세요.",
     "sync.mobileRun":
-        "모바일 Chrome에서는 주소창에 북마크 이름을 입력한 뒤, 추천 목록에 뜬 북마크를 눌러 실행하세요. 북마크 메뉴에서 누르면 실행되지 않습니다.",
+        "모바일 Chrome에서는 주소창에 북마크 이름을 입력하고 추천 목록에 뜬 북마크를 누르세요. 북마크 메뉴에서 누르면 실행되지 않습니다.",
     "sync.returnInstruction":
         "완료 안내가 뜨면 이 페이지로 돌아와 동기화 결과를 확인하세요.",
     "sync.setup": "북마클릿 등록",
@@ -1247,26 +1253,24 @@ export const koMessages = {
     "sync.status.timedOut": "시간 초과",
     "sync.status.cooldown": "대기 중",
     "sync.status.partial": "완료 · 일부 제외",
-    "sync.delayed": "평소보다 오래 걸리고 있습니다.",
-    "sync.timedOut": "허용된 시간 안에 완료되지 않았습니다.",
+    "sync.delayed": "평소보다 오래 걸립니다.",
+    "sync.timedOut": "시간 안에 끝나지 않았습니다.",
     "sync.tryAgain": "다시 동기화",
     "sync.reinstall": "북마클릿 다시 등록",
-    "sync.cooldown":
-        "방금 동기화했습니다. {count}초 후에 다시 시도할 수 있습니다.",
+    "sync.cooldown": "방금 동기화했습니다. {count}초 뒤에 다시 동기화하세요.",
     "sync.help": "도움말 · 보안",
-    "sync.whatSent": "무엇을 보내나요",
-    "sync.howWorks": "진행 과정",
+    "sync.whatSent": "보내는 정보",
     "sync.limitations": "제한 사항",
     "sync.sentDescription":
-        "NosLog는 플레이어 정보와 최근 플레이 기록을 받습니다. p.eagate 비밀번호와 로그인 쿠키는 받지 않습니다.",
+        "플레이어 정보와 플레이 기록을 보냅니다. p.eagate 비밀번호와 로그인 쿠키는 보내지 않습니다.",
     "sync.limitDescription":
-        "Basic Pass가 없어도 최근 30플레이를 동기화할 때마다 기록을 누적해 최고 기록·Grd·Rating을 갱신합니다. 전체 기록을 받으면 공식 값으로 보정합니다.",
+        "Basic Pass가 없으면 최근 30플레이만 가져옵니다. 동기화할 때마다 기록이 쌓여 최고 기록과 Grd, Rating에 반영됩니다. Basic Pass가 있으면 전체 기록을 가져와 공식 사이트 기록과 같아집니다.",
     "sync.recentHelp":
-        "최근 플레이를 누적해 개인 기록을 갱신했습니다. 기존 최고 기록과 최근 응답에 없는 값은 보존됩니다. Basic Pass로 전체 기록을 받으면 공식 값으로 보정합니다.",
+        "최근 플레이를 기록에 더했습니다. 이전 최고 기록과 이번에 받지 못한 값은 그대로 둡니다. Basic Pass가 있으면 전체 기록을 가져와 공식 사이트 기록과 같아집니다.",
     "sync.security":
-        "이 북마클릿은 현재 NosLog 계정 전용입니다. p.eagate 비밀번호와 로그인 쿠키는 NosLog로 전송되지 않습니다.",
+        "이 북마클릿은 내 NosLog 계정에서만 씁니다. p.eagate 비밀번호와 로그인 쿠키는 보내지 않습니다.",
     "sync.setupSecurity":
-        "이 북마클릿은 현재 NosLog 계정 전용이니 다른 사람과 공유하지 마세요. p.eagate 비밀번호와 로그인 쿠키는 NosLog로 전송되지 않습니다.",
+        "이 북마클릿은 내 NosLog 계정에서만 씁니다. 다른 사람과 공유하지 마세요. p.eagate 비밀번호와 로그인 쿠키는 보내지 않습니다.",
     "sync.changes": "이번에 달라진 기록",
     "sync.excludedTitle": "일부 채보 제외됨",
     "sync.excludedCount": "제외된 채보 {count}개",
@@ -1275,9 +1279,7 @@ export const koMessages = {
     "sync.invalidate": "기존 북마클릿 무효화",
     "sync.invalidateConfirm": "무효화",
     "sync.invalidateHelp":
-        "이 계정의 기존 북마클릿이 즉시 만료됩니다. 무효화 후 북마클릿을 다시 등록해야 합니다.",
-    "sync.description":
-        "북마클릿 등록으로 NOSTALGIA 기록을 동기화할 수 있습니다.",
+        "지금까지 등록한 북마클릿은 바로 쓸 수 없게 됩니다. 북마클릿을 다시 등록하세요.",
     "sync.metaDescription":
         "북마클릿으로 NOSTALGIA 플레이 기록을 NosLog에 안전하게 동기화하는 방법을 안내합니다.",
     "sync.none": "아직 동기화 기록이 없습니다.",
@@ -1285,14 +1287,14 @@ export const koMessages = {
     "sync.failed": "마지막 동기화에 실패했습니다.",
     "sync.last": "동기화 {distance}",
     "sync.loginStatus": "로그인 후 동기화 상태를 확인할 수 있습니다.",
-    "sync.processingHelp": "완료되면 처리 결과를 확인할 수 있습니다.",
+    "sync.processingHelp": "끝나면 이 화면에 결과가 나옵니다.",
     "sync.failedHelp": "로그인 상태를 확인한 뒤 다시 동기화해주세요.",
     "sync.resultHelp": "최근 처리 결과를 아래에서 확인할 수 있습니다.",
     "sync.emptyHelp": "동기화하면 처리 결과가 여기에 표시됩니다.",
     "sync.regenerateWarning":
         "재발급하면 기존 북마클릿이 만료됩니다. 재발급 후 북마클릿을 다시 등록해주세요.",
     "sync.step.install": "북마클릿 등록",
-    "sync.loginToCreate": "로그인하면 계정 전용 북마클릿을 생성할 수 있습니다.",
+    "sync.loginToCreate": "로그인시 내 계정 전용 북마클릿이 만들어집니다.",
     "sync.step.run": "기록 동기화",
     "sync.pegateLogin": "p.eagate NOSTALGIA 페이지에 로그인",
     "sync.runBookmarklet": "북마크바의 NosLog 동기화 클릭 및 동기화 완료",
@@ -1300,14 +1302,14 @@ export const koMessages = {
     "sync.runBookmarkletAlt": "북마크바에서 NosLog 동기화를 실행하는 방법",
     "sync.installDesktopAlt": "PC에서 북마클릿을 등록하는 방법",
     "sync.bookmarklet": "NosLog 동기화",
-    "sync.drag": "이 버튼을 북마크바로 드래그하세요",
+    "sync.drag": "이 버튼을 북마크바로 끌어다 놓으세요",
     "sync.desktopGuide": "PC에서 등록하는 방법",
     "sync.mobileGuide": "모바일에서 등록하는 방법",
     "sync.copied": "복사됨",
     "sync.copyAddress": "북마클릿 주소 복사",
     "sync.mobileAdd": "1. 현재 페이지를 브라우저 북마크에 추가합니다.",
     "sync.mobileEdit":
-        "2. 아래 주소를 복사해, 추가한 북마크의 주소(URL)에 붙여넣고 저장하세요.",
+        "2. 아래 주소를 복사합니다. 추가한 북마크의 주소(URL)에 붙여넣고 저장하세요.",
     "sync.mobileAddAlt": "모바일에서 북마크를 추가하는 방법",
     "sync.mobileEditAlt": "모바일에서 북마크 주소를 편집하는 방법",
     "sync.latestResult": "최근 동기화 결과",
@@ -1328,7 +1330,7 @@ export const koMessages = {
     "sync.recentAnalysis": "최근 플레이 분석 가능",
     "sync.chartCount": "{count} 채보",
     "sync.chartRatio": "{current} / {total} 채보",
-    "sync.notice": "일부 미등록 채보는 개인 기록에서 제외되었습니다.",
+    "sync.notice": "NosLog에 없는 채보는 개인 기록에서 뺐습니다.",
     "sync.lessThanSecond": "1초 미만",
     "sync.seconds": "{count}초",
     "sync.minutes": "{count}분",
@@ -1338,13 +1340,13 @@ export const koMessages = {
     "sync.regenerateHelp":
         "재발급 후 아래의 NosLog 동기화 버튼을 북마크바에 다시 등록해주세요.",
     "sync.cancel": "취소",
-    "sync.regenerating": "재발급 중",
+    "sync.regenerating": "무효화 중",
     "sync.regenerateAction": "재발급",
     "sync.loginRequired": "로그인이 필요합니다.",
     "sync.regenerateSuccess":
         "동기화 토큰을 재발급했습니다. 북마클릿을 다시 등록해주세요.",
     "sync.regenerateError":
-        "동기화 토큰을 재발급하지 못했습니다. 다시 시도해주세요.",
+        "기존 북마클릿을 무효화하지 못했습니다. 다시 시도해주세요.",
     "sync.gifPlaceholder": "{label} GIF 자리",
     "sync.gifPending": "예시 GIF 준비 중",
     "profile.fallbackTitle": "유저 프로필",
@@ -1525,6 +1527,10 @@ export const koMessages = {
     "settings.changeLoginAccountWarning":
         "다음 로그인부터 새로 인증한 Discord 계정을 사용합니다. 계속하면 Discord 인증으로 이동합니다.",
     "settings.continue": "계속",
+    "settings.adminMfaRequired":
+        "Discord 2단계 인증이 꺼져 있어 관리자 권한을 쓸 수 없습니다. Discord에서 2단계 인증을 켠 뒤 다시 로그인해주세요.",
+    "settings.adminDiscordLocked":
+        "관리자 계정은 로그인 Discord 계정을 바꿀 수 없습니다.",
     "settings.discordIdentityMismatch":
         "현재 연결된 Discord 계정으로 다시 인증해주세요. 로그인 계정을 바꾸려면 로그인 계정 변경을 선택해주세요.",
     "settings.discordRefreshComplete": "Discord 정보를 새로고침했습니다.",
@@ -1943,12 +1949,19 @@ export const koMessages = {
     "contribution.rejectReason.format": "값 형식이 규칙과 다름",
     "contribution.rejectReason.other": "그 밖",
     "contribution.rejectReason": "사유: {reason}",
+    "contribution.draft.limit":
+        "초안은 {count}개까지 열 수 있습니다. 내 제안에서 지운 뒤 다시 열어 주세요.",
+    "contribution.draft.limitMine": "내 제안 보기",
+    "contribution.draft.delete": "삭제",
+    "contribution.draft.deleted": "초안을 삭제했습니다.",
     "contribution.draft.invalid": "채보 형식이 올바르지 않습니다.",
     "contribution.draft.locked":
         "지금은 이 초안을 고칠 수 없습니다. 검토 요청 중이면 먼저 요청을 취소해 주세요.",
     "contribution.draft.conflict":
         "다른 창에서 이 초안이 바뀌었습니다. 새로고침한 뒤 다시 시도해 주세요.",
     "contribution.draft.saved": "저장했습니다.",
+    "contribution.draft.unchanged":
+        "공개본과 달라진 곳이 없습니다. 채보를 고친 뒤 검토를 요청해 주세요.",
     "contribution.draft.overlap": "겹치는 노트를 고친 뒤 검토를 요청해 주세요.",
     "contribution.draft.submitted":
         "검토를 요청했습니다 · 운영자가 확인합니다.",

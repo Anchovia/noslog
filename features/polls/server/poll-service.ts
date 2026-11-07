@@ -238,24 +238,35 @@ export async function savePublishedPoll(
     return null;
 }
 
-export type PublicPoll = {
+type PublicPollBase = {
     id: number;
     question: string;
     multiple: boolean;
     maxChoices: number | null;
     closesAt: string | null;
     closed: boolean;
-    /** 결과를 지금 보여 줄지 — 「투표한 뒤」 · 「마감한 뒤」 규칙까지 계산해 둔다 */
-    showResults: boolean;
     showVoters: boolean;
     voterCount: number;
     myOptionIds: number[];
-    options: { id: number; text: string; votes: number }[];
 };
+
+/** showResults 는 「투표한 뒤」 · 「마감한 뒤」 규칙까지 계산한 값이다. 거짓이면 표 수를 응답에 싣지 않는다 */
+export type PublicPoll = PublicPollBase &
+    (
+        | { showResults: false; options: { id: number; text: string }[] }
+        | {
+              showResults: true;
+              options: { id: number; text: string; votes: number }[];
+          }
+    );
+
+export type PollVoteResult =
+    | { success: true; poll: PublicPoll }
+    | { success: false; message: string; retryable?: boolean };
 
 /** 공개 화면이 쓰는 값 — 로그인하지 않았으면 결과만 보여 주고 투표는 막는다 */
 export async function getPublicPoll(
-    owner: PollOwner,
+    owner: PollOwner | { id: number },
     locale: Locale,
     userId: number | null,
     now = new Date()
@@ -288,6 +299,14 @@ export async function getPublicPoll(
     ]);
     const closed = poll.closesAt ? poll.closesAt <= now : false;
     const voted = mine.length > 0;
+    const showResults =
+        poll.results === "ALWAYS" ||
+        (poll.results === "AFTER_VOTE" && voted) ||
+        (poll.results === "AFTER_CLOSE" && closed);
+    const options = poll.options.map((option) => ({
+        id: option.id,
+        text: pickLocaleText(localeTexts(option.translations), locale),
+    }));
     return {
         id: poll.id,
         question: pickLocaleText(
@@ -303,18 +322,18 @@ export async function getPublicPoll(
         maxChoices: poll.maxChoices,
         closesAt: poll.closesAt?.toISOString() ?? null,
         closed,
-        showResults:
-            poll.results === "ALWAYS" ||
-            (poll.results === "AFTER_VOTE" && voted) ||
-            (poll.results === "AFTER_CLOSE" && closed),
         showVoters: poll.showVoters,
         voterCount: voters?.count ?? 0,
         myOptionIds: mine.map((row) => row.optionId),
-        options: poll.options.map((option) => ({
-            id: option.id,
-            text: pickLocaleText(localeTexts(option.translations), locale),
-            votes: option._count.votes,
-        })),
+        ...(showResults
+            ? {
+                  showResults,
+                  options: options.map((option, index) => ({
+                      ...option,
+                      votes: poll.options[index]._count.votes,
+                  })),
+              }
+            : { showResults, options }),
     };
 }
 

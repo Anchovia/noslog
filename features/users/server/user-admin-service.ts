@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 
+import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
 import {
     type UserAdminFilters,
     type UserRole,
@@ -17,11 +18,19 @@ import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { getUserSyncHealth } from "@/lib/admin/sync-health";
 import db from "@/lib/db";
-import { logServerError } from "@/lib/observability/server";
+import { logSecurityEvent, logServerError } from "@/lib/observability/server";
 import { formatKstMinute } from "@/lib/player-stats";
+import getSession from "@/lib/session";
 
-type UserRoleUpdateResult = ActionResult<{ role: UserRole }>;
-type UserSyncTokenResetResult = ActionResult<{ syncTokenVersion: number }>;
+type ReauthenticationRequired = {
+    success: false;
+    message: string;
+    reauthenticationRequired: true;
+};
+type UserRoleUpdateResult =
+    ActionResult<{ role: UserRole }> | ReauthenticationRequired;
+type UserSyncTokenResetResult =
+    ActionResult<{ syncTokenVersion: number }> | ReauthenticationRequired;
 
 function logUserAdminError(
     error: unknown,
@@ -33,6 +42,27 @@ function logUserAdminError(
         routePath: "/admin/users",
         routeType,
     });
+}
+
+const REAUTHENTICATION_REQUIRED = {
+    success: false as const,
+    message: "Discord로 다시 인증한 뒤 다시 눌러주세요.",
+    reauthenticationRequired: true,
+};
+
+async function hasRecentAdminVerification(adminId: number) {
+    const [session, admin] = await Promise.all([
+        getSession(),
+        db.user.findUnique({
+            where: { id: adminId },
+            select: { discordId: true },
+        }),
+    ]);
+    return hasRecentDeletionVerification(
+        session.adminVerification,
+        adminId,
+        admin?.discordId ?? null
+    );
 }
 
 function refreshAdminUsers() {
@@ -236,6 +266,9 @@ export async function updateAdminUserRole(
     }
 
     try {
+        if (!(await hasRecentAdminVerification(admin.id)))
+            return REAUTHENTICATION_REQUIRED;
+
         const user = await db.user.findUnique({
             where: { id: input.userId },
             select: { id: true },
@@ -247,6 +280,12 @@ export async function updateAdminUserRole(
         await db.user.update({
             where: { id: user.id },
             data: { role: input.role },
+        });
+        logSecurityEvent({
+            event: "admin.user.role-changed",
+            actorUserId: admin.id,
+            targetUserId: user.id,
+            role: input.role,
         });
     } catch (error) {
         logUserAdminError(error, "admin.user.role-update.failed");
@@ -270,7 +309,7 @@ export async function updateAdminUserRole(
 export async function resetAdminUserSyncToken(
     formData: FormData
 ): Promise<UserSyncTokenResetResult> {
-    await requireAdmin();
+    const admin = await requireAdmin();
     const result = userSyncTokenResetSchema.safeParse(
         userSyncTokenResetInputFromFormData(formData)
     );
@@ -284,6 +323,9 @@ export async function resetAdminUserSyncToken(
 
     let syncTokenVersion: number;
     try {
+        if (!(await hasRecentAdminVerification(admin.id)))
+            return REAUTHENTICATION_REQUIRED;
+
         const user = await db.user.findUnique({
             where: { id: result.data.userId },
             select: { id: true },
@@ -298,6 +340,11 @@ export async function resetAdminUserSyncToken(
             select: { syncTokenVersion: true },
         });
         syncTokenVersion = updated.syncTokenVersion;
+        logSecurityEvent({
+            event: "admin.user.sync-token-reset",
+            actorUserId: admin.id,
+            targetUserId: user.id,
+        });
     } catch (error) {
         logUserAdminError(error, "admin.user.sync-token-reset.failed");
         return {

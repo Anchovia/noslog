@@ -8,14 +8,20 @@ import { STATS_GRADE_SELECT, statsGrade } from "@/lib/player-stats";
 export async function getPublicProfileProgress(
     userId: number,
     query: ProfileProgressQuery,
-    now = new Date()
+    /** 본인이 자기 프로필을 볼 때 — 숨긴 플레이 활동도 본인에게는 보인다 */
+    { owner = false, now = new Date() }: { owner?: boolean; now?: Date } = {}
 ) {
     const user = await db.user.findUnique({
         where: { id: userId },
         // 지금 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4)
-        select: { stats: { select: STATS_GRADE_SELECT } },
+        select: {
+            hidePlayActivity: true,
+            stats: { select: STATS_GRADE_SELECT },
+        },
     });
     if (!user) return null;
+    // 플레이 활동 비공개 — 날짜별 이력은 언제 플레이했는지를 드러내므로 남에게는 지금 값만 준다
+    const activityHidden = user.hidePlayActivity && !owner;
     const currentGrade = statsGrade(user.stats, query.mode);
     const since = new Date(now);
     if (query.range === "year")
@@ -32,19 +38,21 @@ export async function getPublicProfileProgress(
                 where: { userId_mode: { userId: userId, mode: query.mode } },
                 select: { rating: true },
             }),
-            db.userRatingHistory.findMany({
-                where: {
-                    userId: userId,
-                    mode: query.mode,
-                    sync: { status: "completed" },
-                    observedAt: {
-                        ...(query.range === "all" ? {} : { gte: since }),
-                        lte: now,
-                    },
-                },
-                select: { observedAt: true, rating: true },
-                orderBy: [{ observedAt: "asc" }, { id: "asc" }],
-            }),
+            activityHidden
+                ? []
+                : db.userRatingHistory.findMany({
+                      where: {
+                          userId: userId,
+                          mode: query.mode,
+                          sync: { status: "completed" },
+                          observedAt: {
+                              ...(query.range === "all" ? {} : { gte: since }),
+                              lte: now,
+                          },
+                      },
+                      select: { observedAt: true, rating: true },
+                      orderBy: [{ observedAt: "asc" }, { id: "asc" }],
+                  }),
         ]);
         current = rating?.rating ?? null;
         points = history.map((row) => ({
@@ -61,16 +69,18 @@ export async function getPublicProfileProgress(
                 : new Date(since.getTime() + 9 * 60 * 60 * 1000 - 86400000)
                       .toISOString()
                       .slice(0, 10);
-        const history = await db.userBestGrade.findMany({
-            where: {
-                userId: userId,
-                ...(lowerDay
-                    ? { day: { gte: new Date(`${lowerDay}T00:00:00Z`) } }
-                    : {}),
-            },
-            select: { day: true, gradeBasic: true, gradeRecital: true },
-            orderBy: [{ day: "asc" }, { id: "asc" }],
-        });
+        const history = activityHidden
+            ? []
+            : await db.userBestGrade.findMany({
+                  where: {
+                      userId: userId,
+                      ...(lowerDay
+                          ? { day: { gte: new Date(`${lowerDay}T00:00:00Z`) } }
+                          : {}),
+                  },
+                  select: { day: true, gradeBasic: true, gradeRecital: true },
+                  orderBy: [{ day: "asc" }, { id: "asc" }],
+              });
         current = currentGrade && currentGrade > 0 ? currentGrade / 100 : null;
         points = history.flatMap((row) => {
             // Existing history uses the Korean sync calendar, not the reader's timezone.

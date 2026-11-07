@@ -269,6 +269,30 @@
         (var(--nl-icon-medium) - var(--nl-control-height)) / 2
     );
 }
+/* 채보 정보 — 라벨 열은 가장 긴 라벨 폭 하나, 값은 그 옆 같은 시작선, ⋯ · 「추가」 는 줄 오른쪽 끝 */
+.noslog-ui .nl-facts--chart {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-facts--chart > div {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    justify-content: normal;
+}
+.noslog-ui .nl-facts--chart dd {
+    text-align: start;
+}
+.noslog-ui .nl-facts--chart .nl-facts__value {
+    justify-content: flex-start;
+}
+.noslog-ui
+    .nl-facts--chart
+    .nl-facts__value
+    > :is(.nl-facts__action, .nl-link) {
+    margin-inline-start: auto;
+}
 .noslog-ui .nl-detail-columns {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

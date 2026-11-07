@@ -326,3 +326,33 @@ describe("채보 타이밍 계산", () => {
         expect(formatBpm(120.125)).toBe("120.125");
     });
 });
+
+describe("시간 변환 기준 포인트", () => {
+    it("순서가 뒤섞이고 같은 틱 · 시각이 있어도 정렬한 마지막 포인트를 쓴다", () => {
+        const point = (
+            id: string,
+            tick: number,
+            timeMs: number,
+            bpm: number
+        ): ChartTimingPoint => ({
+            id,
+            tick,
+            timeMs,
+            bpm,
+            numerator: 4,
+            denominator: 4,
+        });
+        const points = [
+            point("c", 960, 500, 60),
+            point("a", 0, 0, 120),
+            point("b1", 960, 500, 240),
+            point("b2", 960, 400, 90),
+        ];
+        // 틱이 같으면 시각이 큰 쪽, 틱 · 시각이 모두 같으면 뒤에 온 쪽
+        expect(tickToMilliseconds(1_440, points, 480)).toBe(750);
+        expect(millisecondsToTick(600, points, 480)).toBe(1_152);
+        // 조건을 만족하는 포인트가 없으면 맨 앞 포인트
+        expect(tickToMilliseconds(-480, points, 480)).toBe(-500);
+        expect(millisecondsToTick(-500, points, 480)).toBe(-480);
+    });
+});

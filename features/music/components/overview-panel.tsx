@@ -345,7 +345,7 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                         {t("detail.chartInfo")}
                     </h2>
                     {/* 면 없는 구분선 줄 목록(2026-09-28 인상 점검 A6 — 구역 제목이 이미 묶음, 줄 글자가 제목과 같은 선) */}
-                    <dl className="nl-facts nl-body-secondary">
+                    <dl className="nl-facts nl-facts--chart nl-body-secondary">
                         {shownFacts.map((fact) => (
                             <div key={fact.label}>
                                 <dt>{fact.label}</dt>

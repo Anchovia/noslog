@@ -82,7 +82,11 @@ describe("의견 번역 — 올릴 때 한 번 번역해 저장(2026-09-22)", ()
         });
         expect(mocks.generate).toHaveBeenCalledTimes(1);
         expect(mocks.opinionUpdate).toHaveBeenCalledWith({
-            where: { id: 1, opinion: "後半のトリルが重い" },
+            where: {
+                id: 1,
+                opinion: "後半のトリルが重い",
+                user: { translationConsentAt: { not: null } },
+            },
             data: {
                 opinionTranslations: {
                     ko: "후반 트릴이 무겁다",

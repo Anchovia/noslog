@@ -39,6 +39,7 @@ export function getDiscordLinkingUser(userId: number) {
             discordId: true,
             avatar: true,
             avatarUserManaged: true,
+            role: true,
         },
     });
 }
@@ -56,6 +57,7 @@ export function findUserByDiscordId(discordId: string) {
             profileCompletedAt: true,
             locale: true,
             role: true,
+            sessionVersion: true,
         },
     });
 }
@@ -71,7 +73,7 @@ export function updateDiscordIdentity(
     return db.user.update({
         where: { id: userId },
         data,
-        select: { id: true, locale: true, role: true },
+        select: { id: true, locale: true, role: true, sessionVersion: true },
     });
 }
 
@@ -84,6 +86,6 @@ export function createDiscordUser(data: {
 }) {
     return db.user.create({
         data,
-        select: { id: true, locale: true, role: true },
+        select: { id: true, locale: true, role: true, sessionVersion: true },
     });
 }

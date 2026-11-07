@@ -347,6 +347,11 @@ async function executeMutation(
         const opinion = input.input.opinion || null;
         if (!opinion && previous?.opinion)
             await detachDeletedOpinion(transaction, previous.id);
+        // 좋아요는 그 글에 준 것이다 — 글이 바뀌면 새 글에 옮겨 붙지 않는다
+        else if (previous?.opinion && previous.opinion !== opinion)
+            await transaction.communityOpinionHelpful.deleteMany({
+                where: { evaluationId: previous.id },
+            });
         const now = new Date();
         const opinionCreatedAt = opinion
             ? (previous?.opinionCreatedAt ?? now)

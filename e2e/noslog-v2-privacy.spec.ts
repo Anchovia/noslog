@@ -128,7 +128,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const period = privacyVersionPeriod(previous, locale);
         await page.getByRole("link", { name: period, exact: true }).click();
-        await expect(page.locator(".nl-privacy-section")).toHaveCount(12);
+        await expect(page.locator(".nl-privacy-section")).toHaveCount(15);
         await expect(
             page.getByText(privacyHistoryCopy[locale].period(period), {
                 exact: true,

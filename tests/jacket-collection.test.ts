@@ -103,6 +103,7 @@ describe("POST /api/receiveJacket", () => {
                 userId: 1,
                 version: 0,
                 iat: Math.floor(Date.now() / 1000),
+                adminMfa: true,
             },
         });
         mocks.userFindUnique.mockResolvedValue({
@@ -140,6 +141,22 @@ describe("POST /api/receiveJacket", () => {
         mocks.userFindUnique.mockResolvedValue({
             syncTokenVersion: 0,
             role: "user",
+        });
+
+        const response = await POST(createRequest(jacketBody()));
+
+        expect(response.status).toBe(403);
+        expect(mocks.put).not.toHaveBeenCalled();
+    });
+
+    it("2단계 표시가 없는 관리자 토큰은 저장하지 않는다", async () => {
+        mocks.verifySyncToken.mockReturnValue({
+            status: "valid",
+            payload: {
+                userId: 1,
+                version: 0,
+                iat: Math.floor(Date.now() / 1000),
+            },
         });
 
         const response = await POST(createRequest(jacketBody()));

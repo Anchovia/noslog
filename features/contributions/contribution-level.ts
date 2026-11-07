@@ -33,6 +33,9 @@ type ContributionKindName =
     | "cabinet_check";
 export type ContributionKind = (typeof CONTRIBUTION_KINDS)[number];
 
+/** 기체 확인은 검토 없이 쌓이므로 이것만으로 이름 옆 라벨(Lv.3, 30점)에 닿지 않게 한다 */
+export const CABINET_CHECK_MAX_POINTS = 29;
+
 /** 한 사람의 기여 점수 합과 종류별 반영 수 */
 export type ContributionTotals = Record<ContributionKind, number> & {
     points: number;

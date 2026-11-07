@@ -4,10 +4,12 @@ async function loadServerEnv(env: {
     VERCEL_ENV: string;
     MUSECAT_MODE: string;
     VERCEL_URL?: string;
+    APP_URL?: string;
 }) {
     vi.stubEnv("VERCEL_ENV", env.VERCEL_ENV);
     vi.stubEnv("MUSECAT_MODE", env.MUSECAT_MODE);
     vi.stubEnv("VERCEL_URL", env.VERCEL_URL ?? "noslog-abc123.vercel.app");
+    vi.stubEnv("APP_URL", env.APP_URL ?? "https://noslog.test");
     vi.resetModules();
     return import("@/lib/env/server");
 }
@@ -45,6 +47,31 @@ describe("서버 환경 변수 확인", () => {
         ]) {
             const { serverEnv } = await loadServerEnv(env);
             expect(serverEnv.MUSECAT_MODE).toBe(env.MUSECAT_MODE || undefined);
+        }
+    });
+
+    it("운영 배포에 APP_URL 이 없으면 시작하지 않는다", async () => {
+        await expect(
+            loadServerEnv({
+                VERCEL_ENV: "production",
+                MUSECAT_MODE: "",
+                APP_URL: "",
+            })
+        ).rejects.toThrow("APP_URL is required when VERCEL_ENV is production");
+    });
+
+    it("프리뷰 배포와 로컬 빌드는 APP_URL 없이도 시작한다", async () => {
+        for (const env of [
+            { VERCEL_ENV: "preview", MUSECAT_MODE: "", APP_URL: "" },
+            {
+                VERCEL_ENV: "production",
+                MUSECAT_MODE: "",
+                APP_URL: "",
+                VERCEL_URL: "",
+            },
+        ]) {
+            const { serverEnv } = await loadServerEnv(env);
+            expect(serverEnv.APP_URL).toBeUndefined();
         }
     });
 });

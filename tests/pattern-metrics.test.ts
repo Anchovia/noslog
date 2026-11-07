@@ -8,7 +8,6 @@ import musicCatalog from "@/prisma/data/music-catalog.json";
 import { songMeterLevel } from "@/lib/chart-pattern/meterRecord";
 import {
     computePatternMetrics,
-    isMeterKnown,
     patternReference,
     patternStrength,
 } from "@/lib/chart-pattern/patternMetrics";
@@ -53,7 +52,7 @@ const chart = (
     notes,
 });
 
-const known = { meterKnown: true, songMeter: null };
+const known = { songMeter: null };
 const range = (count: number) => Array.from({ length: count }, (_, i) => i);
 
 describe("pattern metrics", () => {
@@ -179,36 +178,28 @@ describe("pattern metrics", () => {
         ).toBe(3);
     });
 
-    it("uses the song record when the chart has one time signature", () => {
+    it("uses the song record over the chart", () => {
         const single = chart(range(16).map((i) => note(i * 480, 12)));
-        expect(computePatternMetrics(single, known).chords).toBeNull();
-        expect(
-            computePatternMetrics(single, { meterKnown: true, songMeter: 2 })
-                .chords
-        ).toBe(2);
-        expect(
-            computePatternMetrics(single, { meterKnown: true, songMeter: 0 })
-                .chords
-        ).toBe(0);
+        expect(computePatternMetrics(single, known).chords).toBe(0);
+        expect(computePatternMetrics(single, { songMeter: 2 }).chords).toBe(2);
     });
 
-    it("ignores time signatures of charts straight from video", () => {
-        expect(isMeterKnown("vid2bmap")).toBe(false);
-        expect(isMeterKnown("manual")).toBe(true);
-        expect(isMeterKnown(undefined)).toBe(true);
-        const threeFour: ChartTimingPoint = {
+    it("grades BPM changes as meter changes", () => {
+        const notes = range(40).map((i) => note(i * 480, 12));
+        const at = (tick: number, bpm: number): ChartTimingPoint => ({
             ...four,
-            id: "t1",
-            tick: 1920 * 3,
-            numerator: 3,
-        };
-        const notes = range(16).map((i) => note(i * 480, 12));
-        expect(
-            computePatternMetrics(chart(notes, [four, threeFour]), {
-                meterKnown: false,
-                songMeter: null,
-            }).chords
-        ).toBeNull();
+            id: `t${tick}`,
+            tick,
+            bpm,
+        });
+        const level = (points: ChartTimingPoint[]) =>
+            computePatternMetrics(chart(notes, points), known).chords;
+        expect(level([four, at(1920 * 8, 180)])).toBe(2);
+        expect(level([four, at(1920 * 5, 180)])).toBe(3);
+        // 2% 안의 흔들림, 한 박이 안 되는 구간, 2배 · 절반은 변박이 아니다
+        expect(level([four, at(1920, 152)])).toBe(0);
+        expect(level([four, at(1920, 180), at(2000, 150)])).toBe(0);
+        expect(level([four, at(1920, 300), at(3840, 150)])).toBe(0);
     });
 
     it("counts tempo changes between sections of a beat or longer", () => {

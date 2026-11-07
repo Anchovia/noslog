@@ -41,7 +41,7 @@ vi.mock("@/lib/blob", () => ({
     isValidImageBlob: vi.fn(),
 }));
 vi.mock("@/lib/upload-rate-limit", () => ({
-    claimUploadTokenQuota: vi.fn(),
+    claimUploadTokenQuota: vi.fn(async () => ({ allowed: true, grantId: 1 })),
     getUploadLimitMessage: vi.fn(),
     releaseUploadTokenQuota: vi.fn(),
 }));

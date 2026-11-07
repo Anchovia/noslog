@@ -7,7 +7,10 @@ const mocks = vi.hoisted(() => ({
     recordApiCall: vi.fn(),
 }));
 
-vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
+vi.mock("@/lib/session", () => ({
+    default: mocks.getSession,
+    getUncheckedSession: mocks.getSession,
+}));
 vi.mock("@/lib/db", () => ({
     default: { user: { findUnique: mocks.userFindUnique } },
 }));

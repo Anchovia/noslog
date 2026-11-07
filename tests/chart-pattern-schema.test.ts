@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
     CHART_LANE_GROUP_BOUNDARIES,
+    CHART_MAX_NOTE_DURATION_TICKS,
     chartDocumentSchema,
     chartExportSchema,
     createDefaultChartDocument,
@@ -44,6 +45,35 @@ describe("채보 문서 스키마", () => {
             notes: [],
         });
         expect(chartDocumentSchema.safeParse(document).success).toBe(true);
+    });
+
+    it("노트 길이 한도까지만 받는다", () => {
+        const withDuration = (durationTicks: number) => ({
+            ...createDefaultChartDocument(),
+            notes: [
+                {
+                    id: "long",
+                    type: "tenuto",
+                    hand: "left",
+                    tick: 0,
+                    durationTicks,
+                    lane: 0,
+                    width: 1,
+                    points: [],
+                },
+            ],
+        });
+
+        expect(
+            chartDocumentSchema.safeParse(
+                withDuration(CHART_MAX_NOTE_DURATION_TICKS)
+            ).success
+        ).toBe(true);
+        expect(
+            chartDocumentSchema.safeParse(
+                withDuration(CHART_MAX_NOTE_DURATION_TICKS + 1)
+            ).success
+        ).toBe(false);
     });
 
     it("노트 폭이 28칸을 벗어나면 거부한다", () => {

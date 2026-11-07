@@ -31,6 +31,7 @@ test("P6 actual stored history honors the selected range and empty users have on
     const user = await db!.user.create({
         data: {
             username: `p6-history-${Date.now()}`,
+            hidePlayActivity: false,
             stats: { create: { gradeBasic: 10000 } },
         },
     });

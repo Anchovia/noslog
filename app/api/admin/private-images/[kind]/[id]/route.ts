@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { getPrivateImageUrl } from "@/features/admin/server/private-image-data";
-import { getUserRole } from "@/features/users/server/user-data";
 import { getPrivateImageBlob } from "@/lib/blob";
-import getSession from "@/lib/session";
+import { getSessionUser } from "@/lib/user";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +14,7 @@ export async function GET(
         params: Promise<{ kind: string; id: string }>;
     }
 ) {
-    const session = await getSession();
+    const { session, user: admin } = await getSessionUser();
     if (!session.id) {
         return NextResponse.json(
             { message: "로그인이 필요합니다." },
@@ -23,7 +22,6 @@ export async function GET(
         );
     }
 
-    const admin = await getUserRole(session.id);
     if (admin?.role !== "admin") {
         return NextResponse.json(
             { message: "접근할 수 없습니다." },

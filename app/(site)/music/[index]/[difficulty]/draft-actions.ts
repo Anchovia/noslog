@@ -6,6 +6,7 @@ import {
     getMyChartDraftStatus as getMyChartDraftStatusService,
     hideChartComment as hideChartCommentService,
     listChartComments as listChartCommentsService,
+    openMyChartDraft as openMyChartDraftService,
     resolveChartComment as resolveChartCommentService,
     saveMyChartDraft as saveMyChartDraftService,
     submitMyChartDraft as submitMyChartDraftService,
@@ -14,6 +15,10 @@ import {
 
 export async function getMyChartDraftStatus(chartId: number) {
     return getMyChartDraftStatusService(chartId);
+}
+
+export async function openMyChartDraft(chartId: number) {
+    return openMyChartDraftService(chartId);
 }
 
 export async function saveMyChartDraft(input: unknown, locale: string) {
@@ -28,10 +33,7 @@ export async function withdrawMyChartDraft(chartId: number, locale: string) {
     return withdrawMyChartDraftService(chartId, locale);
 }
 
-export async function listChartComments(query: {
-    chartId: number;
-    draftId?: number;
-}) {
+export async function listChartComments(query: unknown) {
     return listChartCommentsService(query);
 }
 

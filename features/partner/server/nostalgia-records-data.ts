@@ -94,7 +94,10 @@ export async function loadNostalgiaRecords(input: {
             input.sharedItems.length > 0 && !user.hide_play_scores
                 ? `${input.origin}/profile/${input.userId}`
                 : input.origin,
-        updatedAt: lastSync?.completedAt ?? new Date(user.created_at),
+        // 활동 비공개면 마지막 동기화 시각을 넘기지 않는다
+        updatedAt:
+            (!user.hide_play_activity && lastSync?.completedAt) ||
+            new Date(user.created_at),
         scoresPublic: !user.hide_play_scores,
         activityPublic: !user.hide_play_activity,
         share: {

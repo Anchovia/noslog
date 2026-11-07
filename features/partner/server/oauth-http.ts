@@ -40,11 +40,22 @@ export function bearerError(error: "invalid_token" | "insufficient_scope") {
     });
 }
 
+const MAX_OAUTH_FORM_BYTES = 8 * 1024;
+
 /** token · revoke 는 application/x-www-form-urlencoded 본문만 받는다 */
 export async function readOAuthForm(request: Request) {
     const type = request.headers.get("content-type") ?? "";
     if (!type.toLowerCase().startsWith("application/x-www-form-urlencoded")) {
         return null;
     }
-    return new URLSearchParams(await request.text());
+    const declared = Number(request.headers.get("content-length"));
+    if (Number.isFinite(declared) && declared > MAX_OAUTH_FORM_BYTES) {
+        return null;
+    }
+    const text = await request.text();
+    if (Buffer.byteLength(text) > MAX_OAUTH_FORM_BYTES) return null;
+    const form = new URLSearchParams(text);
+    // RFC 6749 §3.2 — 같은 파라미터를 두 번 보내면 거절
+    const names = [...form.keys()];
+    return new Set(names).size === names.length ? form : null;
 }

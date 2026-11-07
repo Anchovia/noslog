@@ -6,6 +6,8 @@ export const CHART_LANE_GROUP_BOUNDARIES = [
     0, 3, 6, 9, 12, 16, 19, 22, 25, 28,
 ] as const;
 export const CHART_TICKS_PER_QUARTER = 480;
+/** 노트 하나의 길이 한도 — 트릴 · 글리산도의 구간 수가 길이에 비례해 서버와 검토 화면을 멈추지 않게 한다 */
+export const CHART_MAX_NOTE_DURATION_TICKS = 1_000_000;
 
 export function isChartLaneGroupBoundary(lane: number) {
     return CHART_LANE_GROUP_BOUNDARIES.some((boundary) => boundary === lane);
@@ -61,7 +63,11 @@ export const chartNoteSchema = z
         type: chartNoteTypeSchema,
         hand: chartHandSchema,
         tick: z.number().int().min(-10_000_000).max(1_000_000_000),
-        durationTicks: z.number().int().min(0).max(1_000_000_000),
+        durationTicks: z
+            .number()
+            .int()
+            .min(0)
+            .max(CHART_MAX_NOTE_DURATION_TICKS),
         lane: z
             .number()
             .int()

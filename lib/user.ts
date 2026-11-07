@@ -31,6 +31,10 @@ export const getSessionUser = cache(async () => {
           })
         : null;
 
+    if (user?.role === "admin" && session.discordMfaEnabled !== true) {
+        return { session, user: { ...user, role: "user" as const } };
+    }
+
     return { session, user };
 });
 

@@ -363,8 +363,8 @@ export async function getTierBrowserBand(
 
 /** 옛 서열표 주소(/tiers/{slug})를 모드 · 목표 주소로 넘길 때 쓰는 표의 범위(2026-10-16 D8 — 화면에서 옮김) */
 export function getTierListScope(slug: string) {
-    return db.tierList.findUnique({
-        where: { slug },
+    return db.tierList.findFirst({
+        where: { slug, status: "published" },
         select: { mode: true, goal: true },
     });
 }

@@ -260,6 +260,14 @@ describe("점수 비공개(남이 볼 때)", () => {
         ).toBe(true);
     });
 
+    it("활동 비공개면 달성일을 빼고 달성 순서도 드러내지 않는다", () => {
+        const visible = achievementRecordsForViewer(records, false, true);
+        expect(visible.earned.every((item) => !item.achievedAt)).toBe(true);
+        expect(visible.earned.map((item) => item.tier)).toEqual(
+            [...records.earned.map((item) => item.tier)].sort((a, b) => b - a)
+        );
+    });
+
     it("공개면 자료를 그대로 넘긴다", () => {
         expect(achievementRecordsForViewer(records, false)).toBe(records);
     });

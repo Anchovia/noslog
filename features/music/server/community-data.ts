@@ -180,7 +180,9 @@ export async function getCommunityOpinions(
             replyCount: row._count.replies,
             language: row.opinion ? detectTextLanguage(row.opinion) : null,
             translations: communityTranslationsSchema.parse(
-                row.opinionTranslations ?? {}
+                (row.user.translationConsentAt
+                    ? row.opinionTranslations
+                    : null) ?? {}
             ),
             translatable: row.user.translationConsentAt !== null,
         })),
@@ -447,7 +449,7 @@ export async function getOpinionReplies(
             canReact: Boolean(record && row.user.id !== userId),
             language: detectTextLanguage(row.body),
             translations: communityTranslationsSchema.parse(
-                row.translations ?? {}
+                (row.user.translationConsentAt ? row.translations : null) ?? {}
             ),
             translatable: row.user.translationConsentAt !== null,
         })),

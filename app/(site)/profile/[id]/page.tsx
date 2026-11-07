@@ -9,7 +9,10 @@ import { getProfilePinnedRecords } from "@/features/profile/server/profile-pinne
 import { getPublicProfilePlays } from "@/features/profile/server/profile-plays-service";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { getProfileStats } from "@/features/profile/server/profile-stats-service";
-import { hideProfileScores } from "@/features/profile/server/score-visibility";
+import {
+    hideProfileActivity,
+    hideProfileScores,
+} from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
 
@@ -103,18 +106,26 @@ export default async function ProfilePage({
             },
             { owner: isOwner }
         ),
-        getPublicProfileProgress(id, {
-            mode,
-            metric: "grade",
-            range: "90",
-        }),
+        getPublicProfileProgress(
+            id,
+            {
+                mode,
+                metric: "grade",
+                range: "90",
+            },
+            { owner: isOwner }
+        ),
         getProfileStats(id),
         getProfilePinnedRecords(id, { owner: isOwner }),
     ]);
 
     return (
         <PublicProfilePage
-            user={profileData.user}
+            user={
+                isOwner
+                    ? profileData.user
+                    : hideProfileActivity(profileData.user)
+            }
             initialProgress={initialProgress}
             isOwner={isOwner}
             overview={overview}

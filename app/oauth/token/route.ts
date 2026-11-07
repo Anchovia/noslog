@@ -7,6 +7,7 @@ import {
 import {
     authenticateOAuthClient,
     exchangeAuthorizationCode,
+    isOAuthTokenLimitReached,
     refreshAccessToken,
 } from "@/features/partner/server/oauth-service";
 
@@ -18,6 +19,10 @@ export async function POST(request: Request) {
         request.headers.get("authorization")
     );
     if (!client) return invalidClient();
+    if (await isOAuthTokenLimitReached(client.id))
+        return oauthError("temporarily_unavailable", 429, {
+            "Retry-After": "3600",
+        });
     const form = await readOAuthForm(request);
     if (!form) return oauthError("invalid_request");
 

@@ -44,7 +44,12 @@ export default async function BookmarkletPage() {
     ]);
     const bookmarklet = createBookmarkletHref(
         origin,
-        createSyncToken({ userId: user.id, version: user.syncTokenVersion }),
+        createSyncToken({
+            userId: user.id,
+            version: user.syncTokenVersion,
+            // getUser 가 2단계 없는 관리자를 user 로 낮추므로 admin 이면 2단계가 켜진 세션이다
+            adminMfa: user.role === "admin" ? true : undefined,
+        }),
         locale
     );
     return (

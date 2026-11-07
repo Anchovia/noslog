@@ -175,7 +175,7 @@ export function parseMusicTranslationCsv(source: string): {
     return { rows, errors };
 }
 
-const FORMULA_PREFIX_PATTERN = /^[=+\-@]/;
+const FORMULA_PREFIX_PATTERN = /^[=+\-@\t\r]/;
 
 function escapeCsvField(value: string) {
     const safeValue = FORMULA_PREFIX_PATTERN.test(value) ? "'" + value : value;

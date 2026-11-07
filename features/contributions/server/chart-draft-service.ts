@@ -8,10 +8,14 @@ import { CONTRIBUTION_POINTS } from "@/features/contributions/contribution-level
 import {
     CHART_COMMENT_DAILY_LIMIT,
     chartCommentInputSchema,
+    chartCommentListQuerySchema,
     type ChartDraftStatus,
+    chartRowIdSchema,
     draftReviewSchema,
     EDITABLE_DRAFT_STATUSES,
     saveUserDraftSchema,
+    USER_DRAFT_MAX_OPEN,
+    userDraftDocumentSchema,
 } from "@/features/contributions/schemas/chart-draft-schema";
 import {
     awardContribution,
@@ -23,7 +27,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import { contributionRevisionMessage } from "@/lib/chart-pattern/chartSource";
-import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
+import { hasChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     type ChartDocument,
     chartDocumentSchema,
@@ -34,6 +38,8 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
+import { getSessionUser } from "@/lib/user";
 
 function translatorFor(requestedLocale: string) {
     const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
@@ -55,11 +61,8 @@ function logDraftError(error: unknown, event: string, routePath: string) {
     logServerError(error, { event, routePath, routeType: "action" });
 }
 
-async function isAdminUser(userId: number) {
-    const user = await db.user.findUnique({
-        where: { id: userId },
-        select: { role: true },
-    });
+async function isAdminUser() {
+    const { user } = await getSessionUser();
     return user?.role === "admin";
 }
 
@@ -84,7 +87,7 @@ function toMyDraft(row: {
     submittedAt: Date | null;
     updatedAt: Date;
 }): MyChartDraft | null {
-    const document = chartDocumentSchema.safeParse(row.content);
+    const document = userDraftDocumentSchema.safeParse(row.content);
     if (!document.success) return null;
     return {
         id: row.id,
@@ -97,6 +100,8 @@ function toMyDraft(row: {
         updatedAt: row.updatedAt.toISOString(),
     };
 }
+
+const DRAFT_SAVE_MIN_INTERVAL_MS = 1_000;
 
 const draftSelect = {
     id: true,
@@ -125,15 +130,30 @@ export async function getMyChartDraftStatus(
         : null;
 }
 
+/** 지금 고칠 수 있는 내 초안 — 쓰지 않으므로 GET 화면이 부른다. 없거나 공개까지 끝났으면 null(openMyChartDraft 로 연다) */
+export async function findMyOpenChartDraft(
+    chartId: number
+): Promise<MyChartDraft | null> {
+    const session = await getSession();
+    if (!session.id || !chartRowIdSchema.safeParse(chartId).success)
+        return null;
+    const draft = await db.chartDraft.findUnique({
+        where: { userId_chartId: { userId: session.id, chartId } },
+        select: draftSelect,
+    });
+    return draft && draft.status !== "approved" ? toMyDraft(draft) : null;
+}
+
 /**
  * 내 초안을 열거나 새로 만든다. 공개 채보가 있으면 그것을 복사해 시작하고, 없으면 빈 채보.
  * 공개까지 끝난 초안을 다시 열면 지금 공개본으로 새로 시작한다.
  */
 export async function openMyChartDraft(
     chartId: number
-): Promise<MyChartDraft | null> {
+): Promise<MyChartDraft | "limit" | null> {
     const session = await getSession();
-    if (!session.id) return null;
+    if (!session.id || !chartRowIdSchema.safeParse(chartId).success)
+        return null;
     const chart = await db.musicChart.findUnique({
         where: { id: chartId },
         select: {
@@ -165,29 +185,45 @@ export async function openMyChartDraft(
         select: draftSelect,
     });
     if (existing && existing.status !== "approved") return toMyDraft(existing);
-    const row = existing
-        ? await db.chartDraft.update({
-              where: { id: existing.id },
-              data: {
-                  content: inputJson(start),
-                  version: { increment: 1 },
-                  status: "draft",
-                  baseRevision,
-                  submittedAt: null,
-                  reviewedAt: null,
-                  reviewedById: null,
-              },
-              select: draftSelect,
-          })
-        : await db.chartDraft.create({
-              data: {
-                  userId: session.id,
-                  chartId,
-                  content: inputJson(start),
-                  baseRevision,
-              },
-              select: draftSelect,
-          });
+    const userId = session.id;
+    // 세기와 쓰기 사이를 사람마다 잠가 동시에 연 요청이 한도를 넘지 않게 한다
+    const row = await db.$transaction(async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-draft-open:${userId}`}))`;
+        // 잠금을 기다리는 동안 같은 채보를 연 다른 요청이 만들었을 수 있다
+        const current = await tx.chartDraft.findUnique({
+            where: { userId_chartId: { userId, chartId } },
+            select: draftSelect,
+        });
+        if (current && current.status !== "approved") return current;
+        const open = await tx.chartDraft.count({
+            where: { userId, status: { not: "approved" } },
+        });
+        if (open >= USER_DRAFT_MAX_OPEN) return null;
+        return current
+            ? tx.chartDraft.update({
+                  where: { id: current.id },
+                  data: {
+                      content: inputJson(start),
+                      version: { increment: 1 },
+                      status: "draft",
+                      baseRevision,
+                      submittedAt: null,
+                      reviewedAt: null,
+                      reviewedById: null,
+                  },
+                  select: draftSelect,
+              })
+            : tx.chartDraft.create({
+                  data: {
+                      userId,
+                      chartId,
+                      content: inputJson(start),
+                      baseRevision,
+                  },
+                  select: draftSelect,
+              });
+    });
+    if (!row) return "limit";
     return toMyDraft(row);
 }
 
@@ -215,12 +251,26 @@ export async function saveMyChartDraft(
     try {
         const draft = await db.chartDraft.findUnique({
             where: { userId_chartId: { userId: session.id, chartId } },
-            select: { id: true, status: true },
+            select: { id: true, status: true, updatedAt: true },
         });
         if (!draft || !isEditable(draft.status))
             return { success: false, message: t("contribution.draft.locked") };
+        const quota = await claimUploadTokenQuota(session.id, "draft-save");
+        if (!quota.allowed)
+            return { success: false, message: t("common.tooManyRequests") };
+        // 초당 1번으로 막되 거절하지 않고 기다린다 — 검토 요청 직전 저장은 자동 저장 바로 뒤에 올 수 있다. 수를 세지 않으니 행도 늘지 않고, 동시 요청은 아래 버전 조건이 막는다
+        const wait = Math.min(
+            draft.updatedAt.getTime() + DRAFT_SAVE_MIN_INTERVAL_MS - Date.now(),
+            DRAFT_SAVE_MIN_INTERVAL_MS
+        );
+        if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
         const updated = await db.chartDraft.updateMany({
-            where: { id: draft.id, version: baseVersion },
+            // 기다리는 동안 검토 요청 · 삭제가 끝났을 수 있어 상태도 다시 본다
+            where: {
+                id: draft.id,
+                version: baseVersion,
+                status: { in: [...EDITABLE_DRAFT_STATUSES] },
+            },
             data: { content: inputJson(document), version: { increment: 1 } },
         });
         if (updated.count !== 1)
@@ -253,6 +303,8 @@ export async function submitMyChartDraft(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(chartId).success)
+        return { success: false, message: t("contribution.draft.locked") };
     try {
         const draft = await db.chartDraft.findUnique({
             where: { userId_chartId: { userId: session.id, chartId } },
@@ -260,23 +312,43 @@ export async function submitMyChartDraft(
         });
         if (!draft || !isEditable(draft.status))
             return { success: false, message: t("contribution.draft.locked") };
-        const document = chartDocumentSchema.safeParse(draft.content);
+        const document = userDraftDocumentSchema.safeParse(draft.content);
         if (!document.success)
             return { success: false, message: t("contribution.draft.invalid") };
         if (
-            findChartNoteConflicts(
+            hasChartNoteConflicts(
                 document.data.notes,
                 document.data.ticksPerQuarter
-            ).length
+            )
         )
             return {
                 success: false,
                 message: t("contribution.draft.overlap"),
             };
-        await db.chartDraft.update({
-            where: { id: draft.id },
+        const pattern = await db.chartPattern.findUnique({
+            where: { chartId },
+            select: { publishedContent: true },
+        });
+        const published = chartDocumentSchema.safeParse(
+            pattern?.publishedContent
+        );
+        if (
+            published.success &&
+            JSON.stringify(published.data) === JSON.stringify(document.data)
+        )
+            return {
+                success: false,
+                message: t("contribution.draft.unchanged"),
+            };
+        const submitted = await db.chartDraft.updateMany({
+            where: {
+                id: draft.id,
+                status: { in: [...EDITABLE_DRAFT_STATUSES] },
+            },
             data: { status: "pending", submittedAt: new Date() },
         });
+        if (!submitted.count)
+            return { success: false, message: t("contribution.draft.locked") };
         revalidatePath("/admin");
         revalidatePath("/admin/contributions");
         return { success: true, message: t("contribution.draft.submitted") };
@@ -299,6 +371,8 @@ export async function withdrawMyChartDraft(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(chartId).success)
+        return { success: false, message: t("contribution.draft.locked") };
     const updated = await db.chartDraft.updateMany({
         where: { userId: session.id, chartId, status: "pending" },
         data: { status: "draft", submittedAt: null },
@@ -307,6 +381,30 @@ export async function withdrawMyChartDraft(
         return { success: false, message: t("contribution.draft.locked") };
     revalidatePath("/admin/contributions");
     return { success: true, message: t("contribution.draft.withdrawn") };
+}
+
+/** 초안 삭제 — 고칠 수 있는 내 초안만. 검토 댓글은 함께 지워진다 */
+export async function deleteMyChartDraft(
+    draftId: number,
+    requestedLocale: string
+): Promise<ActionResult> {
+    const t = translatorFor(requestedLocale);
+    const session = await getSession();
+    if (!session.id)
+        return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(draftId).success)
+        return { success: false, message: t("contribution.draft.locked") };
+    const deleted = await db.chartDraft.deleteMany({
+        where: {
+            id: draftId,
+            userId: session.id,
+            status: { in: [...EDITABLE_DRAFT_STATUSES] },
+        },
+    });
+    if (!deleted.count)
+        return { success: false, message: t("contribution.draft.locked") };
+    revalidatePath("/admin/contributions");
+    return { success: true, message: t("contribution.draft.deleted") };
 }
 
 export interface ChartCommentItem {
@@ -325,10 +423,12 @@ export interface ChartCommentItem {
  * 시각 댓글 목록 — draftId 가 있으면 그 초안의 작성자와 운영자만, 없으면 공개 채보 댓글(누구나).
  * 운영자가 가린 댓글은 빠진다. 시각 순.
  */
-export async function listChartComments(query: {
-    chartId: number;
-    draftId?: number;
-}): Promise<ChartCommentItem[] | null> {
+export async function listChartComments(
+    input: unknown
+): Promise<ChartCommentItem[] | null> {
+    const parsed = chartCommentListQuerySchema.safeParse(input);
+    if (!parsed.success) return null;
+    const query = parsed.data;
     const session = await getSession();
     if (query.draftId) {
         if (!session.id) return null;
@@ -339,7 +439,7 @@ export async function listChartComments(query: {
         if (
             !draft ||
             draft.chartId !== query.chartId ||
-            (draft.userId !== session.id && !(await isAdminUser(session.id)))
+            (draft.userId !== session.id && !(await isAdminUser()))
         )
             return null;
     }
@@ -396,13 +496,18 @@ export async function addChartComment(
             if (
                 !draft ||
                 draft.chartId !== chartId ||
-                (draft.userId !== session.id &&
-                    !(await isAdminUser(session.id)))
+                (draft.userId !== session.id && !(await isAdminUser()))
             )
                 return {
                     success: false,
                     message: t("contribution.comment.invalid"),
                 };
+            const quota = await claimUploadTokenQuota(
+                session.id,
+                "draft-comment"
+            );
+            if (!quota.allowed)
+                return { success: false, message: t("common.tooManyRequests") };
         } else {
             const pattern = await db.chartPattern.findUnique({
                 where: { chartId },
@@ -466,6 +571,8 @@ export async function deleteMyChartComment(
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: t("contribution.submitError") };
     const deleted = await db.chartComment.deleteMany({
         where: { id: commentId, userId: session.id, resolved: false },
     });
@@ -554,7 +661,7 @@ export async function listChartDraftsForReview(
     });
     const labels = await getNameLabels(rows.map((row) => row.user.id));
     return rows.flatMap((row) => {
-        const document = chartDocumentSchema.safeParse(row.content);
+        const document = userDraftDocumentSchema.safeParse(row.content);
         if (!document.success) return [];
         const published = chartDocumentSchema.safeParse(
             row.chart.pattern?.publishedContent
@@ -659,14 +766,14 @@ export async function reviewChartDraft(
         return { success: true, message: "수정을 요청했습니다." };
     }
 
-    const document = chartDocumentSchema.safeParse(draft.content);
+    const document = userDraftDocumentSchema.safeParse(draft.content);
     if (!document.success)
         return { success: false, message: "초안 형식이 올바르지 않습니다." };
     if (
-        findChartNoteConflicts(
+        hasChartNoteConflicts(
             document.data.notes,
             document.data.ticksPerQuarter
-        ).length
+        )
     )
         return {
             success: false,
@@ -809,6 +916,8 @@ export async function resolveChartComment(
     commentId: number
 ): Promise<ActionResult> {
     const admin = await requireAdmin();
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: "댓글을 찾을 수 없습니다." };
     const comment = await db.chartComment.findUnique({
         where: { id: commentId },
         select: {
@@ -845,6 +954,8 @@ export async function hideChartComment(
     commentId: number
 ): Promise<ActionResult> {
     await requireAdmin();
+    if (!chartRowIdSchema.safeParse(commentId).success)
+        return { success: false, message: "댓글을 찾을 수 없습니다." };
     const updated = await db.chartComment.updateMany({
         where: { id: commentId },
         data: { hidden: true },

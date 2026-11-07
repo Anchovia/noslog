@@ -1,4 +1,4 @@
-import type { ChartTimingPoint } from "./schema";
+import type { ChartDocument, ChartTimingPoint } from "./schema";
 
 const MINUTES_TO_MILLISECONDS = 60_000;
 
@@ -11,14 +11,43 @@ export function sortTimingPoints(points: ChartTimingPoint[]) {
     return [...points].sort((a, b) => a.tick - b.tick || a.timeMs - b.timeMs);
 }
 
+const pointsByTick = new WeakMap<ChartTimingPoint[], ChartTimingPoint[]>();
+const pointsByTime = new WeakMap<ChartTimingPoint[], ChartTimingPoint[]>();
+
+/** 정렬했을 때 조건을 만족하는 마지막 포인트(없으면 맨 앞). 노트 · 트릴 조각 · 패널마다 불려서 정렬은 배열마다 한 번만 한다 */
+function findAnchor(
+    points: ChartTimingPoint[],
+    cache: WeakMap<ChartTimingPoint[], ChartTimingPoint[]>,
+    compare: (a: ChartTimingPoint, b: ChartTimingPoint) => number,
+    reached: (point: ChartTimingPoint) => boolean
+) {
+    if (points.length === 1) return points[0];
+    let sorted = cache.get(points);
+    if (!sorted) {
+        sorted = [...points].sort(compare);
+        cache.set(points, sorted);
+    }
+    let low = 0;
+    let high = sorted.length;
+    while (low < high) {
+        const middle = (low + high) >> 1;
+        if (reached(sorted[middle])) low = middle + 1;
+        else high = middle;
+    }
+    return sorted[Math.max(0, low - 1)];
+}
+
 export function tickToMilliseconds(
     tick: number,
     points: ChartTimingPoint[],
     ticksPerQuarter: number
 ) {
-    const sorted = sortTimingPoints(points);
-    const anchor =
-        [...sorted].reverse().find((point) => point.tick <= tick) ?? sorted[0];
+    const anchor = findAnchor(
+        points,
+        pointsByTick,
+        (a, b) => a.tick - b.tick || a.timeMs - b.timeMs,
+        (point) => point.tick <= tick
+    );
     return stableFloat(
         anchor.timeMs +
             ((tick - anchor.tick) * MINUTES_TO_MILLISECONDS) /
@@ -32,12 +61,12 @@ export function millisecondsToTick(
     points: ChartTimingPoint[],
     ticksPerQuarter: number
 ) {
-    const sorted = [...points].sort(
-        (a, b) => a.timeMs - b.timeMs || a.tick - b.tick
+    const anchor = findAnchor(
+        points,
+        pointsByTime,
+        (a, b) => a.timeMs - b.timeMs || a.tick - b.tick,
+        (point) => point.timeMs <= timeMs
     );
-    const anchor =
-        [...sorted].reverse().find((point) => point.timeMs <= timeMs) ??
-        sorted[0];
     return stableFloat(
         anchor.tick +
             ((timeMs - anchor.timeMs) * anchor.bpm * ticksPerQuarter) /
@@ -274,6 +303,56 @@ export function getMeasureMarkers(
                     activePoint.denominator !== previousPoint.denominator),
         };
     });
+}
+
+const VIEWER_LAST_PANEL_MEASURES = 4;
+
+function getMeasureDurationMs(point: ChartTimingPoint) {
+    return (
+        (MINUTES_TO_MILLISECONDS / point.bpm) *
+        ((4 * point.numerator) / point.denominator)
+    );
+}
+
+/** 뷰어가 만드는 마디 표시 수 — 표시를 만들지 않고 타이밍 구간마다 나눗셈으로 센다 */
+export function countChartMeasures(document: ChartDocument) {
+    const sorted = sortTimingPoints(document.timingPoints);
+    const endTicks = document.notes
+        .map((note) => note.tick + note.durationTicks)
+        .sort((first, second) => first - second);
+    let contentEndMs = 0;
+    let anchorIndex = 0;
+    for (const tick of endTicks) {
+        while (sorted[anchorIndex + 1]?.tick <= tick) anchorIndex += 1;
+        const anchor = sorted[anchorIndex];
+        contentEndMs = Math.max(
+            contentEndMs,
+            anchor.timeMs +
+                ((tick - anchor.tick) * MINUTES_TO_MILLISECONDS) /
+                    anchor.bpm /
+                    document.ticksPerQuarter
+        );
+    }
+    // 뷰어는 마지막 패널을 채우려고 내용 끝의 박자로 4마디 뒤까지 표시를 만들고, 그 구간의 다음 포인트 박자도 쓴다
+    const active =
+        sorted.findLast((point) => point.timeMs <= contentEndMs + 0.001) ??
+        sorted[0];
+    const endMs = Math.max(
+        document.durationMs,
+        Math.max(contentEndMs, active.timeMs, sorted[0].timeMs) +
+            getMeasureDurationMs(active) * VIEWER_LAST_PANEL_MEASURES +
+            1
+    );
+    return sorted.reduce((count, point, index) => {
+        const segmentEndMs = Math.min(
+            endMs,
+            sorted[index + 1]?.timeMs ?? endMs
+        );
+        if (segmentEndMs <= point.timeMs) return count;
+        return (
+            count + (segmentEndMs - point.timeMs) / getMeasureDurationMs(point)
+        );
+    }, 0);
 }
 
 export function getMeasurePanels(

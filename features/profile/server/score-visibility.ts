@@ -17,6 +17,19 @@ export async function scoresHiddenFrom(
     return Boolean(user?.hidePlayScores);
 }
 
+/** 플레이 활동 비공개 — 본인이 아니면 업적 달성일을 넘기지 않는다 */
+export function hideProfileActivity(user: ProfileUser): ProfileUser {
+    if (!user.hide_play_activity || !user.achievements) return user;
+    return {
+        ...user,
+        achievements: achievementRecordsForViewer(
+            user.achievements,
+            false,
+            true
+        ),
+    };
+}
+
 /** 점수 비공개(2026-09-18 S3) — 본인이 아니면 점수 · 순위 · 점수에서 나온 업적을 넘기지 않는다 */
 export function hideProfileScores(user: ProfileUser): ProfileUser {
     return {
@@ -37,7 +50,11 @@ export function hideProfileScores(user: ProfileUser): ProfileUser {
         score_c: null,
         score_d: null,
         achievements: user.achievements
-            ? achievementRecordsForViewer(user.achievements, true)
+            ? achievementRecordsForViewer(
+                  user.achievements,
+                  true,
+                  user.hide_play_activity
+              )
             : undefined,
     };
 }

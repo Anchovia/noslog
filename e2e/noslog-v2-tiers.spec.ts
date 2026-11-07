@@ -708,6 +708,10 @@ for (const width of [800, 1280]) {
         const header = dialog.locator(".nl-dialog__header");
         const body = dialog.locator(".nl-dialog__body");
         const close = dialog.getByRole("button", { name: "닫기" });
+        // 1055 이하는 아래에서 올라오는 동안 상자 크기에 소수 오차가 생긴다
+        await dialog.evaluate((element) =>
+            Promise.all(element.getAnimations().map((item) => item.finished))
+        );
         await expect(body).toHaveCSS("padding-left", "0px");
         await expect(body).toHaveCSS("padding-top", "0px");
         await expect(close).toHaveCSS("border-top-left-radius", "8px");

@@ -5,7 +5,10 @@ const mocks = vi.hoisted(() => ({
     getSession: vi.fn(),
 }));
 
-vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
+vi.mock("@/lib/session", () => ({
+    default: mocks.getSession,
+    getUncheckedSession: mocks.getSession,
+}));
 
 import {
     getPathLocale,

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
+import {
+    countChartMeasures,
+    sortTimingPoints,
+} from "@/lib/chart-pattern/timing";
 
 /** 유저 초안 상태(2026-09-24 3단계) */
 export const CHART_DRAFT_STATUSES = [
@@ -21,6 +25,16 @@ export const EDITABLE_DRAFT_STATUSES: readonly ChartDraftStatus[] = [
 export const USER_DRAFT_MAX_NOTES = 20_000;
 export const USER_DRAFT_MAX_TIMING_POINTS = 1_000;
 export const USER_DRAFT_MAX_DURATION_MS = 30 * 60 * 1000;
+/** 노트 끝 틱 한도 — 악보 길이가 이 틱에 비례한다 */
+export const USER_DRAFT_MAX_END_TICK = 10_000_000;
+/** 트릴 · 글리산도 길이 합 한도 — 뷰어 · 에디터가 그리는 구간 수가 이 합에 비례한다 */
+export const USER_DRAFT_MAX_PATTERN_TICKS = 2_000_000;
+/** 경로 제어점 합 한도 — 겹침 검사는 같은 틱에 몰린 제어점을 쌍으로 비교한다 */
+export const USER_DRAFT_MAX_PATH_POINTS = 2_000;
+/** 마디 수 합 한도 — 타이밍 값만으로 뷰어가 만드는 표시가 수천만 개로 늘어나 탭이 멈추지 않게 한다 */
+export const USER_DRAFT_MAX_MEASURES = 5_000;
+/** 공개 전 초안 수 한도 — 계정 하나가 채보마다 초안을 채워 저장 공간을 쓰지 못하게 한다 */
+export const USER_DRAFT_MAX_OPEN = 50;
 
 export const CHART_COMMENT_MAX_LENGTH = 500;
 /** 한 사람이 24시간에 남길 수 있는 공개 채보 댓글 수 — 장난 방지 */
@@ -45,6 +59,44 @@ export const userDraftDocumentSchema = chartDocumentSchema.superRefine(
                 code: "custom",
                 path: ["durationMs"],
                 message: "too long",
+            });
+        let patternTicks = 0;
+        let pathPoints = 0;
+        for (const note of document.notes) {
+            if (note.type === "trill" || note.type === "glissando")
+                patternTicks += note.durationTicks;
+            pathPoints += note.points.length;
+        }
+        if (
+            document.notes.some(
+                (note) =>
+                    note.tick + note.durationTicks > USER_DRAFT_MAX_END_TICK
+            ) ||
+            patternTicks > USER_DRAFT_MAX_PATTERN_TICKS ||
+            pathPoints > USER_DRAFT_MAX_PATH_POINTS
+        )
+            ctx.addIssue({
+                code: "custom",
+                path: ["notes"],
+                message: "notes too long",
+            });
+        if (countChartMeasures(document) > USER_DRAFT_MAX_MEASURES)
+            ctx.addIssue({
+                code: "custom",
+                path: ["timingPoints"],
+                message: "too many measures",
+            });
+        // 틱과 시각의 일치는 보지 않는다 — 에디터가 시각만 옮기고, 공개 채보에도 어긋난 값이 있다
+        if (
+            sortTimingPoints(document.timingPoints).some(
+                (point, index, sorted) =>
+                    index > 0 && point.timeMs < sorted[index - 1].timeMs
+            )
+        )
+            ctx.addIssue({
+                code: "custom",
+                path: ["timingPoints"],
+                message: "time goes backward",
             });
     }
 );
@@ -72,6 +124,14 @@ export const chartCommentInputSchema = z.object({
     kind: z.enum(CHART_COMMENT_KINDS).default("problem"),
 });
 export type ChartCommentInput = z.infer<typeof chartCommentInputSchema>;
+
+/** 서버 액션 인자는 타입 표시와 달리 아무 값이나 올 수 있다 */
+export const chartRowIdSchema = z.number().int().positive();
+
+export const chartCommentListQuerySchema = z.object({
+    chartId: z.number().int().positive(),
+    draftId: z.number().int().positive().optional(),
+});
 
 export const draftReviewSchema = z.object({
     draftId: z.number().int().positive(),

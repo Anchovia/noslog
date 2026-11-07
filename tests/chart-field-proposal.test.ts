@@ -157,13 +157,16 @@ describe("chartFieldProposalReviewSchema", () => {
         expect(
             chartFieldProposalReviewSchema.safeParse({
                 decision: "apply",
-                ids: [1, 2],
+                versions: [
+                    { id: 1, updatedAt: "2026-11-01T00:00:00.000Z" },
+                    { id: 2, updatedAt: "2026-11-01T00:00:00.000Z" },
+                ],
             }).success
         ).toBe(true);
         expect(
             chartFieldProposalReviewSchema.safeParse({
                 decision: "apply",
-                ids: [],
+                versions: [],
             }).success
         ).toBe(false);
     });
@@ -208,7 +211,7 @@ describe("반려 사유 · 고쳐서 반영(2026-10-01)", () => {
     it("반영은 고친 값을 함께 받을 수 있다", () => {
         const result = chartFieldProposalReviewSchema.safeParse({
             decision: "apply",
-            ids: [1],
+            versions: [{ id: 1, updatedAt: "2026-11-01T00:00:00.000Z" }],
             value: "130-180",
         });
         expect(result.success && result.data).toMatchObject({

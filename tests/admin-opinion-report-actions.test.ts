@@ -4,6 +4,10 @@ const mocks = vi.hoisted(() => ({
     requireAdmin: vi.fn(),
     reportFindMany: vi.fn(),
     reportUpdateMany: vi.fn(),
+    reportFindUnique: vi.fn(),
+    replyUpdate: vi.fn(),
+    evaluationUpdate: vi.fn(),
+    updateTag: vi.fn(),
     revalidatePath: vi.fn(),
     logServerError: vi.fn(),
 }));
@@ -14,19 +18,28 @@ vi.mock("@/lib/db", () => ({
         communityOpinionReport: {
             findMany: mocks.reportFindMany,
             updateMany: mocks.reportUpdateMany,
+            findUnique: mocks.reportFindUnique,
         },
+        communityOpinionReply: { update: mocks.replyUpdate },
+        communityChartEvaluation: { update: mocks.evaluationUpdate },
     },
 }));
 vi.mock("next/cache", () => ({
     revalidatePath: mocks.revalidatePath,
-    updateTag: vi.fn(),
+    updateTag: mocks.updateTag,
 }));
 vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
 }));
 
-import { updateOpinionReportStatus } from "@/app/admin/feedback/actions";
-import { createOpinionReportStatusUpdateFormData } from "@/features/feedback/schemas/opinion-report-admin-schema";
+import {
+    setOpinionReportTargetHidden,
+    updateOpinionReportStatus,
+} from "@/app/admin/feedback/actions";
+import {
+    createOpinionReportHiddenUpdateFormData,
+    createOpinionReportStatusUpdateFormData,
+} from "@/features/feedback/schemas/opinion-report-admin-schema";
 import { listOpinionReports } from "@/features/feedback/server/opinion-report-admin-service";
 
 const chart = {
@@ -55,7 +68,7 @@ describe("관리자 의견 신고 처리", () => {
                 createdAt,
                 user: { id: 2, username: "reporter", nostalgiaName: null },
                 author: { id: 4, username: null, nostalgiaName: null },
-                evaluation: { chart },
+                evaluation: { chart, opinionHidden: true },
                 reply: null,
             },
             {
@@ -82,6 +95,7 @@ describe("관리자 의견 신고 처리", () => {
             snapshot: "의견 본문",
             createdAt: createdAt.toISOString(),
             status: "pending",
+            hidden: true,
             reporter: { id: 2, name: "reporter" },
             author: { id: 4, name: "유저 4" },
             chart: {
@@ -135,5 +149,55 @@ describe("관리자 의견 신고 처리", () => {
             updateOpinionReportStatus(formData)
         ).resolves.toMatchObject({ success: false });
         expect(mocks.reportUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("답글 신고는 답글을, 의견 신고는 의견을 가리고 채보 캐시를 비운다", async () => {
+        mocks.reportFindUnique.mockResolvedValueOnce({
+            replyId: 9,
+            evaluationId: null,
+            evaluation: null,
+            reply: { evaluation: { chartId: 7 } },
+        });
+        await expect(
+            setOpinionReportTargetHidden(
+                createOpinionReportHiddenUpdateFormData(5, true)
+            )
+        ).resolves.toMatchObject({ success: true });
+        expect(mocks.replyUpdate).toHaveBeenCalledWith({
+            where: { id: 9 },
+            data: { hidden: true },
+        });
+        expect(mocks.updateTag).toHaveBeenCalledTimes(1);
+
+        mocks.reportFindUnique.mockResolvedValueOnce({
+            replyId: null,
+            evaluationId: 3,
+            evaluation: { chartId: 7 },
+            reply: null,
+        });
+        await setOpinionReportTargetHidden(
+            createOpinionReportHiddenUpdateFormData(3, false)
+        );
+        expect(mocks.evaluationUpdate).toHaveBeenCalledWith({
+            where: { id: 3 },
+            data: { opinionHidden: false },
+        });
+        expect(mocks.requireAdmin).toHaveBeenCalledTimes(2);
+    });
+
+    it("지워진 글의 신고는 아무것도 바꾸지 않는다", async () => {
+        mocks.reportFindUnique.mockResolvedValue({
+            replyId: null,
+            evaluationId: null,
+            evaluation: null,
+            reply: null,
+        });
+        await expect(
+            setOpinionReportTargetHidden(
+                createOpinionReportHiddenUpdateFormData(3, true)
+            )
+        ).resolves.toMatchObject({ success: false });
+        expect(mocks.replyUpdate).not.toHaveBeenCalled();
+        expect(mocks.evaluationUpdate).not.toHaveBeenCalled();
     });
 });

@@ -2,10 +2,14 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, mocked, userEvent, waitFor, within } from "storybook/test";
 
 import { votePoll } from "@/features/polls/server/poll-actions";
+import type {
+    PollVoteResult,
+    PublicPoll,
+} from "@/features/polls/server/poll-service";
 
 import PollWidget from "./poll-widget";
 
-const poll = {
+const poll: PublicPoll = {
     id: 1,
     question: "다음 서열표 갱신 때 먼저 볼 구간은?",
     multiple: false,
@@ -17,10 +21,26 @@ const poll = {
     voterCount: 27,
     myOptionIds: [],
     options: [
-        { id: 1, text: "Basic 레벨 13 이상", votes: 12 },
-        { id: 2, text: "Recital 전 구간", votes: 9 },
-        { id: 3, text: "Pianist 서열표", votes: 6 },
+        { id: 1, text: "Basic 레벨 13 이상" },
+        { id: 2, text: "Recital 전 구간" },
+        { id: 3, text: "Pianist 서열표" },
     ],
+};
+
+// 표를 낸 뒤 서버가 돌려주는 값
+const voted: PollVoteResult = {
+    success: true,
+    poll: {
+        ...poll,
+        showResults: true,
+        voterCount: 28,
+        myOptionIds: [2],
+        options: [
+            { id: 1, text: "Basic 레벨 13 이상", votes: 12 },
+            { id: 2, text: "Recital 전 구간", votes: 10 },
+            { id: 3, text: "Pianist 서열표", votes: 6 },
+        ],
+    },
 };
 
 const meta = {
@@ -37,14 +57,14 @@ export const Default: Story = {};
 // 저장하는 동안은 목록 아래 흐린 「저장 중」, 고른 줄은 고른 채로 둔다
 export const SingleSaving: Story = {
     beforeEach: () => {
-        let finish: (value: { success: boolean }) => void = () => {};
+        let finish: (value: PollVoteResult) => void = () => {};
         mocked(votePoll).mockReturnValue(
             new Promise((resolve) => {
                 finish = resolve;
             })
         );
         // 끝나지 않은 전환이 남으면 다음 스토리의 전환까지 바쁜 채로 묶인다
-        return () => finish({ success: true });
+        return () => finish(voted);
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -60,7 +80,7 @@ export const SingleSaving: Story = {
 // 한 개 투표는 누르면 바로 저장하고, 저장 상태는 목록 아래 한 곳에 흐린 글자로 보인다
 export const SingleSaved: Story = {
     beforeEach: () => {
-        mocked(votePoll).mockResolvedValue({ success: true });
+        mocked(votePoll).mockResolvedValue(voted);
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -162,7 +182,7 @@ export const SingleFailedRetry: Story = {
                 message: "표를 저장하지 못했습니다.",
                 retryable: true,
             })
-            .mockResolvedValueOnce({ success: true });
+            .mockResolvedValueOnce(voted);
     },
     play: async (context) => {
         await failOnce(context);

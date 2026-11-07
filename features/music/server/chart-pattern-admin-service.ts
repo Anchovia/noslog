@@ -7,7 +7,7 @@ import { z } from "zod";
 import { savePatternMetrics } from "@/features/music/server/pattern-metrics";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
+import { hasChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     type ChartDocument,
     chartDocumentSchema,
@@ -166,10 +166,7 @@ async function saveRevision(
     if (!parsed.success) return invalidInputResult();
 
     const { chartId, baseVersion, document, message } = parsed.data;
-    if (
-        findChartNoteConflicts(document.notes, document.ticksPerQuarter)
-            .length > 0
-    ) {
+    if (hasChartNoteConflicts(document.notes, document.ticksPerQuarter)) {
         return {
             success: false,
             message: "겹치는 노트를 수정한 뒤 버전을 저장해주세요.",
