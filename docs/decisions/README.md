@@ -163,7 +163,7 @@
 | 2026-11-02 | [마디 수를 뷰어 끝까지 세기 · 초안 경합 정리](./2026-11-02-measure-count-viewer-end.md)                                                                                        | 기능                |
 | 2026-11-02 | [쓰기 한도는 사람 · 목적별 잠금으로 세기](./2026-11-02-upload-quota-lock.md) (일부 대체됨)                                                                                     | 기능                |
 | 2026-11-02 | [조사 결과를 기록으로 남겨 다시 조사하지 않음](./2026-11-02-research-records.md)                                                                                               | 구조                |
-| 2026-11-02 | [Vercel Web Analytics 추가 · 처리방침 2026-11-11 판](./2026-11-02-vercel-web-analytics.md)                                                                                     | 기능                |
+| 2026-11-02 | [Vercel Web Analytics 추가 · 처리방침 2026-11-07 판](./2026-11-02-vercel-web-analytics.md)                                                                                     | 기능                |
 
 ## 대체됨
 
