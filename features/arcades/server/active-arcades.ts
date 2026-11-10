@@ -2,8 +2,8 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import { CACHE_TAGS } from "./cache-tags";
-import db from "./db";
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import db from "@/lib/db";
 
 async function queryActiveArcades() {
     // 지역은 공개 정보가 정본(2026-10-16 DB 재설계 D6)

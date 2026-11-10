@@ -1,3 +1,5 @@
+import "server-only";
+
 export type BemaniJudgeCounts = [number, number, number, number, number];
 
 export type BemaniNoteSuccessRates = [number, number, number, number];

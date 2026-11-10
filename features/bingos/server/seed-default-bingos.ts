@@ -1,4 +1,6 @@
-import db from "../db";
+import "server-only";
+
+import db from "@/lib/db";
 
 // 빙고가 있다고 한 번 확인되면 이 서버 인스턴스에서는 다시 묻지 않는다(2026-10-15 S9 — 전체 동기화마다 1쿼리)
 let bingoSeeded = false;

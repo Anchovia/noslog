@@ -16,7 +16,7 @@ vi.mock("@/lib/db", () => ({
             }),
     },
 }));
-import { updateGrade } from "@/lib/services/user/update-grade";
+import { updateGrade } from "@/features/sync/server/update-grade";
 
 describe("profile Grd history retention", () => {
     beforeEach(() => {

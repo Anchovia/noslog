@@ -5,13 +5,13 @@ import { createHash } from "node:crypto";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
+import { updateMusic } from "@/features/music/server/update-music";
+import type {
+    BemaniMusicCatalogInput,
+    SyncMusicInput,
+} from "@/features/sync/schemas/sync-request-schema";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import {
-    type BemaniMusicCatalogInput,
-    type SyncMusicInput,
-    updateMusic,
-} from "@/lib/services/music/update-music";
 
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
 // 일반 사용자 동기화가 새로 만드는 곡 후보 상한 — 동기화 한 번 · 사람별 24시간

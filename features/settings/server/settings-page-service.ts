@@ -1,9 +1,9 @@
 import "server-only";
 
 import { getAchievementRecords } from "@/features/achievements/server/achievement-service";
+import { getActiveArcades } from "@/features/arcades/server/active-arcades";
 import { profileCountrySchema } from "@/features/profile/schemas/profile-settings-schema";
 import { getPinnableRecords } from "@/features/profile/server/profile-pinned-service";
-import { getActiveArcades } from "@/lib/arcades";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 

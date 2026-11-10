@@ -13,8 +13,6 @@ const mocks = vi.hoisted(() => ({
     updateMusic: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
-
 vi.mock("@/lib/db", () => ({
     default: {
         $transaction: mocks.transaction,
@@ -31,15 +29,15 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-vi.mock("@/lib/services/music/update-music", () => ({
+vi.mock("@/features/music/server/update-music", () => ({
     updateMusic: mocks.updateMusic,
 }));
 
 import {
     describeMusicCatalogChanges,
     processBemaniCatalogUpdates,
-} from "@/lib/services/music/catalog-sync";
-import type { SyncMusicInput } from "@/lib/services/music/update-music";
+} from "@/features/music/server/catalog-sync";
+import type { SyncMusicInput } from "@/features/sync/schemas/sync-request-schema";
 
 function chart(
     difficulty: "Normal" | "Hard" | "Expert" | "Real",

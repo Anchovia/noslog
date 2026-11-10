@@ -1,5 +1,7 @@
+import "server-only";
+
+import { writePlayerStats } from "@/features/sync/server/write-player-stats";
 import db from "@/lib/db";
-import { writePlayerStats } from "@/lib/services/user/player-stats";
 
 function getKoreanDate() {
     return new Intl.DateTimeFormat("en-CA", {

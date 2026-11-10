@@ -11,7 +11,6 @@ const mocks = vi.hoisted(() => ({
     session: vi.fn(),
     achievements: vi.fn(),
 }));
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         dataSync: { findMany: mocks.attempts, findFirst: mocks.previous },

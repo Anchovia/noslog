@@ -26,7 +26,7 @@ vi.mock("@/lib/music-jackets", () => ({
         Boolean(url?.includes("/jackets/manual/")),
 }));
 
-import { updateMusic } from "@/lib/services/music/update-music";
+import { updateMusic } from "@/features/music/server/update-music";
 
 describe("BEMANI 악곡 카탈로그 반영", () => {
     beforeEach(() => {

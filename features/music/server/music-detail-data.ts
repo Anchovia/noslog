@@ -3,9 +3,11 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
+import { recentPlayTimestamp } from "@/features/sync/server/recent-record-merge";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS, getChartRankingTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 import {
     buildPeerScoreComparison,
     PEER_STORED_GRADE_RANGE,
@@ -17,8 +19,6 @@ import {
     STATS_GRADE_SELECT,
     withStatsGrades,
 } from "@/lib/player-stats";
-import { recentPlayTimestamp } from "@/lib/services/user/recent-record-merge";
-import { parseChartDifficulty } from "@/lib/tiers";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
 export const getCachedMusicDetail = unstable_cache(

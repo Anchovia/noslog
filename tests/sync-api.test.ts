@@ -44,7 +44,7 @@ vi.mock("@/lib/db", () => ({
         playData: { findMany: mocks.playDataFindMany },
     },
 }));
-vi.mock("@/lib/services/user/update-grade", () => ({
+vi.mock("@/features/sync/server/update-grade", () => ({
     updateGrade: mocks.updateGrade,
     keepTodayGrade: mocks.keepTodayGrade,
 }));
@@ -54,22 +54,22 @@ vi.mock("@/features/profile/server/profile-rating-history-service", () => ({
 vi.mock("@/features/rankings/server/player-rating-service", () => ({
     refreshUserPlayerRatings: mocks.refreshUserPlayerRatings,
 }));
-vi.mock("@/lib/services/music/catalog-sync", () => ({
+vi.mock("@/features/music/server/catalog-sync", () => ({
     processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,
 }));
-vi.mock("@/lib/services/user/update-player-profile", () => ({
+vi.mock("@/features/sync/server/update-player-profile", () => ({
     updatePlayerProfile: mocks.updatePlayerProfile,
 }));
-vi.mock("@/lib/services/user/update-play-data", () => ({
+vi.mock("@/features/sync/server/update-play-data", () => ({
     updatePlayData: mocks.updatePlayData,
 }));
-vi.mock("@/lib/services/user/update-recent-best-records", () => ({
+vi.mock("@/features/sync/server/update-recent-best-records", () => ({
     updateRecentBestRecords: mocks.updateRecentBestRecords,
 }));
-vi.mock("@/lib/services/user/update-recent-play", () => ({
+vi.mock("@/features/sync/server/update-recent-play", () => ({
     updateRecentPlay: mocks.updateRecentPlay,
 }));
-vi.mock("@/lib/dummy/bingo", () => ({
+vi.mock("@/features/bingos/server/seed-default-bingos", () => ({
     updateDummy: mocks.updateDummy,
 }));
 vi.mock("next/cache", () => ({

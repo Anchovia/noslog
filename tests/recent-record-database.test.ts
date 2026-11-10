@@ -2,32 +2,23 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    const url = new URL(value);
-    if (!["localhost", "127.0.0.1"].includes(url.hostname))
-        throw new Error(
-            "Recent-record integration tests require a local database."
-        );
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Recent-record integration tests require a local database."
+        ),
     };
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 import db from "@/lib/db";
-import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
-import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
-import { updatePlayData } from "@/lib/services/user/update-play-data";
-import { updateGrade } from "@/lib/services/user/update-grade";
+import { updateRecentPlay } from "@/features/sync/server/update-recent-play";
+import { updateRecentBestRecords } from "@/features/sync/server/update-recent-best-records";
+import { updatePlayData } from "@/features/sync/server/update-play-data";
+import { updateGrade } from "@/features/sync/server/update-grade";
 import { getUserChartScoreTrend } from "@/features/music/server/music-detail-data";
 import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
-import type { SyncMusicInput } from "@/lib/services/music/update-music";
+import type { SyncMusicInput } from "@/features/sync/schemas/sync-request-schema";
 import { legacyBesttime } from "@/lib/player-stats";
 
 describe.skipIf(!process.env.TEST_DATABASE_URL)(

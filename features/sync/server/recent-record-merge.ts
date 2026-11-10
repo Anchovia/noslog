@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { ChartPlayHistory, PlayData } from "@prisma/client";
 
 import {

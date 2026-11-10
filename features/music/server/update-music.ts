@@ -1,47 +1,11 @@
+import "server-only";
+
 import type { Prisma } from "@prisma/client";
 
+import type { BemaniMusicCatalogInput } from "@/features/sync/schemas/sync-request-schema";
+import db from "@/lib/db";
 import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
-import type { TierDifficulty } from "@/lib/tiers";
-
-import db from "../../db";
-import { getLocalJacketUrl, isManualJacketUrl } from "../../music-jackets";
-
-interface SyncMusicSheet {
-    // 동기화 입력 검사가 네 난이도만 받는다 — DB 는 enum(2026-10-16 D4-C 2차)
-    difficulty: TierDifficulty;
-    level: number;
-    score: number;
-    rank: string;
-    fc_type: number;
-    play_count: number;
-    clear_count: number;
-    clear_flag: [number];
-    fullcombo_count: number;
-    pianistic_count: number;
-    max_combo: number;
-    grade_basic: number;
-    grade_recital: number;
-    judge: [number, number, number, number, number];
-    note_success_rate: [number, number, number, number];
-    besttime: string;
-}
-
-export interface BemaniMusicCatalogInput {
-    "@index": string;
-    artist: string | null;
-    category: string;
-    category_short: string;
-    description: string | null;
-    license: string;
-    title: string;
-    title_kana: string;
-    unlock_type: number;
-    sheet: Pick<SyncMusicSheet, "difficulty" | "level">[];
-}
-
-export interface SyncMusicInput extends Omit<BemaniMusicCatalogInput, "sheet"> {
-    sheet: SyncMusicSheet[];
-}
+import { getLocalJacketUrl, isManualJacketUrl } from "@/lib/music-jackets";
 
 function bemaniMetadata(data: BemaniMusicCatalogInput) {
     return {

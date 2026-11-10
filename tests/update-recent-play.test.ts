@@ -20,7 +20,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
+import { updateRecentPlay } from "@/features/sync/server/update-recent-play";
 
 // 2026/07/14 14:19 KST — 같은 플레이는 played_at 으로 가른다(2026-10-16 P5-1)
 const playedAt = new Date("2026-07-14T05:19:00Z");

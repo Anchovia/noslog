@@ -5,11 +5,11 @@ import {
     planRecentRecordMerge,
     recentPlayTimestamp,
     recordBestAt,
-} from "@/lib/services/user/recent-record-merge";
+} from "@/features/sync/server/recent-record-merge";
 import type {
     PendingRecordPlay,
     RecordValues,
-} from "@/lib/services/user/recent-record-merge";
+} from "@/features/sync/server/recent-record-merge";
 
 const chart = { level: 12, noteCount: 1000 };
 // 최근 플레이 시각은 played_at(timestamptz) — 공식 KST 글자를 그대로 읽어 만든다(2026-10-16 P5-1)

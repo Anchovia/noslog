@@ -1,15 +1,9 @@
-import db from "@/lib/db";
-import { writePlayerStats } from "@/lib/services/user/player-stats";
-import { recordBestAt } from "@/lib/services/user/recent-record-merge";
+import "server-only";
 
-// 공식 플레이어 정보 중 쓰는 것만 — 브로치 · NOS 는 읽는 곳이 없어 받지 않는다(2026-10-16 DB 재설계 K5)
-export interface SyncPlayerProfile {
-    name: string;
-    play_count: number;
-    last: {
-        playtime: string;
-    };
-}
+import type { SyncPlayerProfile } from "@/features/sync/schemas/sync-request-schema";
+import { recordBestAt } from "@/features/sync/server/recent-record-merge";
+import { writePlayerStats } from "@/features/sync/server/write-player-stats";
+import db from "@/lib/db";
 
 export async function updatePlayerProfile(
     userId: number,

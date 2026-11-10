@@ -1,3 +1,5 @@
+import "server-only";
+
 import { revalidatePath, updateTag } from "next/cache";
 
 import {
@@ -5,6 +7,12 @@ import {
     musicCatalogReviewSchema,
     type MusicCatalogStatus,
 } from "@/features/music/schemas/music-catalog-admin-schema";
+import {
+    applyMusicCatalogSnapshot,
+    describeMusicCatalogChanges,
+    musicCatalogSnapshotSchema,
+    parseMusicCatalogSnapshot,
+} from "@/features/music/server/catalog-sync";
 import type { AdminMusicCatalogCandidate } from "@/features/music/types/music-catalog-admin";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
@@ -12,12 +20,6 @@ import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import {
-    applyMusicCatalogSnapshot,
-    describeMusicCatalogChanges,
-    musicCatalogSnapshotSchema,
-    parseMusicCatalogSnapshot,
-} from "@/lib/services/music/catalog-sync";
 
 type MusicCatalogReviewResult = ActionResult;
 

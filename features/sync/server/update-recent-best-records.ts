@@ -1,8 +1,10 @@
+import "server-only";
+
 import db from "@/lib/db";
 
-import { writePlayerStats } from "./player-stats";
 import type { RecordValues } from "./recent-record-merge";
 import { planRecentRecordMerge } from "./recent-record-merge";
+import { writePlayerStats } from "./write-player-stats";
 
 // History ingestion is separate. The projection and its receipt commit together,
 // so a failure/retry cannot increment a play twice or lose a stored attempt.

@@ -1,3 +1,5 @@
+import "server-only";
+
 import { del, list } from "@vercel/blob";
 import { subDays, subHours, subMonths } from "date-fns";
 

@@ -6,7 +6,6 @@ const mocks = vi.hoisted(() => ({
     chartPlayHistoryGroupBy: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         dataSync: {

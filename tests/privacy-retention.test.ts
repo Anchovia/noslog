@@ -54,7 +54,7 @@ vi.mock("@vercel/blob", () => ({
     del: mocks.blobDel,
 }));
 
-import { runPrivacyRetention } from "@/lib/privacy-retention";
+import { runPrivacyRetention } from "@/features/privacy/server/privacy-retention";
 
 describe("개인정보 6개월 보관 정리", () => {
     beforeEach(() => {

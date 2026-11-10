@@ -1,16 +1,21 @@
+import "server-only";
+
 import { Prisma } from "@prisma/client";
 
-import db from "@/lib/db";
-import type { SyncMusicInput } from "@/lib/services/music/update-music";
+import type { SyncMusicInput } from "@/features/sync/schemas/sync-request-schema";
 import {
     getBemaniClearFlag,
     mapBemaniJudgeCounts,
     mapBemaniNoteSuccessRates,
     normalizeBemaniRank,
-} from "@/lib/services/user/bemani-record-mapping";
-import { type ChartIdMap, loadChartIds } from "@/lib/services/user/chart-ids";
-import { writePlayerStats } from "@/lib/services/user/player-stats";
-import { recordBestAt } from "@/lib/services/user/recent-record-merge";
+} from "@/features/sync/server/bemani-record-mapping";
+import {
+    type ChartIdMap,
+    loadChartIds,
+} from "@/features/sync/server/chart-ids";
+import { recordBestAt } from "@/features/sync/server/recent-record-merge";
+import { writePlayerStats } from "@/features/sync/server/write-player-stats";
+import db from "@/lib/db";
 
 // 한 문장에 넣는 줄 수 — 줄마다 값 27개라 Postgres 인자 한도(65535) 안에 넉넉히 든다
 const UPSERT_CHUNK = 500;
