@@ -7,9 +7,8 @@ import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import { overlayPosition } from "@/components/ui/overlay-position";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { useSelectOpen } from "@/components/ui/use-select-open";
+import { SelectFrame } from "@/components/ui/select-frame";
 import type {
     ExamDashboardItem,
     ExamMode,
@@ -34,7 +33,6 @@ export default function ExamNavigation({
     getState: (exam: ExamDashboardItem) => ReactNode;
 }) {
     const t = useTranslations();
-    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
         <div className="nl-exam-navigation">
             <SegmentedControl
@@ -61,8 +59,7 @@ export default function ExamNavigation({
                     >
                         {t("exams.select")}
                     </label>
-                    <Select.Root
-                        {...openState}
+                    <SelectFrame
                         value={selected.slug}
                         onValueChange={(slug) => {
                             const exam = exams.find(
@@ -70,45 +67,38 @@ export default function ExamNavigation({
                             );
                             if (exam) onSelect(exam);
                         }}
-                    >
-                        <Select.Trigger
-                            className="nl-input nl-select nl-exam-select__trigger"
-                            id="exam-select"
-                        >
-                            {/* 고른 급의 상태는 급 머리 태그에 있어 트리거에는 두지 않는다(2026-09-22 사용자) */}
-                            <Select.Value />
-                            <Select.Icon>
-                                <ChevronDown className="nl-icon" aria-hidden />
-                            </Select.Icon>
-                        </Select.Trigger>
-                        <Select.Portal>
-                            <Select.Content
-                                className="noslog-ui nl-exam-select__popup"
-                                onEscapeKeyDown={onEscapeKeyDown}
-                                position="popper"
-                                sideOffset={overlayPosition.sideOffset}
-                                collisionPadding={
-                                    overlayPosition.collisionPadding
-                                }
+                        menuClassName="noslog-ui nl-exam-select__popup"
+                        unwrapped
+                        trigger={
+                            <Select.Trigger
+                                className="nl-input nl-select nl-exam-select__trigger"
+                                id="exam-select"
                             >
-                                <Select.Viewport>
-                                    {exams.map((exam) => (
-                                        <Select.Item
-                                            className="nl-exam-select__option nl-control"
-                                            value={exam.slug}
-                                            key={exam.id}
-                                            textValue={getLabel(exam)}
-                                        >
-                                            <Select.ItemText>
-                                                {getLabel(exam)}
-                                            </Select.ItemText>
-                                            {getState(exam)}
-                                        </Select.Item>
-                                    ))}
-                                </Select.Viewport>
-                            </Select.Content>
-                        </Select.Portal>
-                    </Select.Root>
+                                {/* 고른 급의 상태는 급 머리 태그에 있어 트리거에는 두지 않는다(2026-09-22 사용자) */}
+                                <Select.Value />
+                                <Select.Icon>
+                                    <ChevronDown
+                                        className="nl-icon"
+                                        aria-hidden
+                                    />
+                                </Select.Icon>
+                            </Select.Trigger>
+                        }
+                    >
+                        {exams.map((exam) => (
+                            <Select.Item
+                                className="nl-exam-select__option nl-control nl-focus-inset nl-forced-press"
+                                value={exam.slug}
+                                key={exam.id}
+                                textValue={getLabel(exam)}
+                            >
+                                <Select.ItemText>
+                                    {getLabel(exam)}
+                                </Select.ItemText>
+                                {getState(exam)}
+                            </Select.Item>
+                        ))}
+                    </SelectFrame>
                 </div>
             ) : null}
             <nav className="nl-exam-rail" aria-label={t("exams.select")}>

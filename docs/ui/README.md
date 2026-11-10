@@ -47,9 +47,9 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 | `IconRow`          | 아이콘 정보 줄(아이콘 · 본문 + 보조 줄 · 끝 동작), `IconRows` 안에서 구분선 |
 | `Stepper`          | 작은 정수 − · 값 · + 한 줄(대수)                                            |
 
-`components/ui`의 실제 부품 파일 57개 중 56개에 스토리가 있고(`IntentLink`는 없음), 토큰 예제 1개를 더 제공한다.
+`components/ui`의 실제 부품 파일 56개 중 54개에 스토리가 있고(`IntentLink`와 내부 부품 `SelectFrame`은 없음), 토큰 예제 1개를 더 제공한다.
 폼 입력·스켈레톤·수치 목록의 이름 있는 부품은 해당 파일의 스토리에서 함께 다룬다.
-`use-select-open.ts` 같은 내부 훅은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
+`use-select-open.ts` 같은 내부 훅과 `SelectFrame`은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
 
 | 묶음        | 나머지 부품과 주요 검증                                                                                                                                                                                |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -59,7 +59,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 | 조합·레이어 | `AppliedTokens` 개별/전체 해제 · `FilterGroup` 제목/보조 정보 · `FilterSurface` 팝오버/전체 화면 · `FullScreenDialog`·`ResponsiveDialog` 닫기/포커스 복귀 · `Disclosure` 펼침 · `TermHelp` 포커스/닫기 |
 | 편집·미디어 | `MarkdownEditor` 서식/미리보기/읽기 전용 · `FileRow` 임시 파일/삭제/긴 이름 · `PhotoViewer` 넘김/순환/한 장/빈 목록                                                                                    |
 | 데이터 표시 | `LineChart` 한 점/빈 상태/두 계열/정확한 표/키보드 · `BarList`·`StackedBar`·`StatStrip` 값 없음/로딩/수치 텍스트                                                                                       |
-| 이름·표식   | `Avatar` 사진/대체 표시/장식 · `CountryMarker` 국가/크기 · `ExamBadge`·`ExamBadgeGroup` 급수/표시 폭 · `JudgementMarker` 판정 · 관리자용 `Badge`(= 공용 태그) · `DiscordIcon` 장식 심볼                |
+| 이름·표식   | `Avatar` 사진/대체 표시/장식 · `CountryMarker` 국가/크기 · `JudgementMarker` 판정 · 관리자용 `Badge`(= 공용 태그) · `DiscordIcon` 장식 심볼                                                            |
 | 안내·로딩   | `LoginPrompt` · `ResultState` 상태/오류 · `StatusMessage` 지원 형태 · `SkeletonText`·`LoadingStatus` · `AppToaster` 로컬 알림                                                                          |
 
 공용 부품을 추가하거나 바꾸면 스토리도 함께 유지한다. 사용하지 않는 부품을 미리

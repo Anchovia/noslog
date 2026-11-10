@@ -5,8 +5,7 @@ import "@/lib/input-modality";
 import * as Select from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 
-import { overlayPosition } from "@/components/ui/overlay-position";
-import { useSelectOpen } from "@/components/ui/use-select-open";
+import { SelectFrame } from "@/components/ui/select-frame";
 import { cn } from "@/lib/cn";
 
 export default function CompactSelect<Value extends string>({
@@ -40,64 +39,46 @@ export default function CompactSelect<Value extends string>({
     container?: HTMLElement | null;
 }) {
     const selected = options.find((option) => option.value === value);
-    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
-        <Select.Root
-            {...openState}
+        <SelectFrame
             value={value}
             onValueChange={(next) => onValueChange(next as Value)}
             disabled={disabled}
+            menuClassName="nl-select-menu"
+            container={container}
+            trigger={
+                <Select.Trigger
+                    id={id}
+                    className={cn(
+                        "nl-compact-select nl-control",
+                        outlined && "nl-compact-select--outlined",
+                        size === "sm" && "nl-compact-select--compact",
+                        className
+                    )}
+                    aria-label={label}
+                >
+                    <Select.Value>
+                        {selected?.shortLabel ?? selected?.label}
+                    </Select.Value>
+                    <Select.Icon>
+                        <ChevronDown aria-hidden />
+                    </Select.Icon>
+                </Select.Trigger>
+            }
         >
-            <Select.Trigger
-                id={id}
-                className={cn(
-                    "nl-compact-select nl-control",
-                    outlined && "nl-compact-select--outlined",
-                    size === "sm" && "nl-compact-select--compact",
-                    className
-                )}
-                aria-label={label}
-            >
-                <Select.Value>
-                    {selected?.shortLabel ?? selected?.label}
-                </Select.Value>
-                <Select.Icon>
-                    <ChevronDown aria-hidden />
-                </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal container={container ?? undefined}>
-                <div className="noslog-ui">
-                    <Select.Content
-                        className="nl-select-menu"
-                        onEscapeKeyDown={onEscapeKeyDown}
-                        position="popper"
-                        sideOffset={overlayPosition.sideOffset}
-                        align="start"
-                        collisionPadding={overlayPosition.collisionPadding}
-                    >
-                        <Select.Viewport>
-                            {options.map((option) => (
-                                <Select.Item
-                                    key={option.value}
-                                    value={option.value}
-                                    disabled={option.disabled}
-                                    className="nl-select-option"
-                                >
-                                    <Select.ItemText>
-                                        {option.label}
-                                    </Select.ItemText>
-                                    <Select.ItemIndicator>
-                                        <Check
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                    </Select.ItemIndicator>
-                                </Select.Item>
-                            ))}
-                        </Select.Viewport>
-                    </Select.Content>
-                </div>
-            </Select.Portal>
-        </Select.Root>
+            {options.map((option) => (
+                <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.disabled}
+                    className="nl-select-option"
+                >
+                    <Select.ItemText>{option.label}</Select.ItemText>
+                    <Select.ItemIndicator>
+                        <Check className="nl-icon-small" aria-hidden />
+                    </Select.ItemIndicator>
+                </Select.Item>
+            ))}
+        </SelectFrame>
     );
 }

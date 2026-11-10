@@ -6,8 +6,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
 
-import { overlayPosition } from "@/components/ui/overlay-position";
-import { useSelectOpen } from "@/components/ui/use-select-open";
+import { SelectFrame } from "@/components/ui/select-frame";
 import { cn } from "@/lib/cn";
 
 // Radix 항목은 빈 문자열 값을 쓸 수 없어서 "" 선택지(전국 · — 등)는 안에서만 이 값으로 바꿔 쓴다
@@ -58,62 +57,45 @@ export function Select({
     "aria-describedby"?: string;
 }) {
     const hasEmpty = options.some((option) => option.value === "");
-    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
-        <SelectPrimitive.Root
-            {...openState}
+        <SelectFrame
             value={value === "" && !hasEmpty ? "" : toItem(value)}
             onValueChange={(next) => onValueChange(fromItem(next))}
             disabled={disabled}
+            menuClassName="nl-select-menu nl-select-menu--field"
+            trigger={
+                <SelectPrimitive.Trigger
+                    ref={triggerRef}
+                    id={id}
+                    className={cn("nl-input nl-select", className)}
+                    aria-label={ariaLabel}
+                    aria-labelledby={ariaLabelledBy}
+                    aria-describedby={ariaDescribedBy}
+                    aria-invalid={invalid || undefined}
+                    onBlur={onBlur}
+                >
+                    <SelectPrimitive.Value placeholder={placeholder} />
+                    <SelectPrimitive.Icon asChild>
+                        <ChevronDown className="nl-icon" aria-hidden />
+                    </SelectPrimitive.Icon>
+                </SelectPrimitive.Trigger>
+            }
         >
-            <SelectPrimitive.Trigger
-                ref={triggerRef}
-                id={id}
-                className={cn("nl-input nl-select", className)}
-                aria-label={ariaLabel}
-                aria-labelledby={ariaLabelledBy}
-                aria-describedby={ariaDescribedBy}
-                aria-invalid={invalid || undefined}
-                onBlur={onBlur}
-            >
-                <SelectPrimitive.Value placeholder={placeholder} />
-                <SelectPrimitive.Icon asChild>
-                    <ChevronDown className="nl-icon" aria-hidden />
-                </SelectPrimitive.Icon>
-            </SelectPrimitive.Trigger>
-            <SelectPrimitive.Portal>
-                <div className="noslog-ui">
-                    <SelectPrimitive.Content
-                        className="nl-select-menu nl-select-menu--field"
-                        onEscapeKeyDown={onEscapeKeyDown}
-                        position="popper"
-                        sideOffset={overlayPosition.sideOffset}
-                        align="start"
-                        collisionPadding={overlayPosition.collisionPadding}
-                    >
-                        <SelectPrimitive.Viewport>
-                            {options.map((option) => (
-                                <SelectPrimitive.Item
-                                    key={toItem(option.value)}
-                                    value={toItem(option.value)}
-                                    disabled={option.disabled}
-                                    className="nl-select-option"
-                                >
-                                    <SelectPrimitive.ItemText>
-                                        {option.label}
-                                    </SelectPrimitive.ItemText>
-                                    <SelectPrimitive.ItemIndicator>
-                                        <Check
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                    </SelectPrimitive.ItemIndicator>
-                                </SelectPrimitive.Item>
-                            ))}
-                        </SelectPrimitive.Viewport>
-                    </SelectPrimitive.Content>
-                </div>
-            </SelectPrimitive.Portal>
-        </SelectPrimitive.Root>
+            {options.map((option) => (
+                <SelectPrimitive.Item
+                    key={toItem(option.value)}
+                    value={toItem(option.value)}
+                    disabled={option.disabled}
+                    className="nl-select-option"
+                >
+                    <SelectPrimitive.ItemText>
+                        {option.label}
+                    </SelectPrimitive.ItemText>
+                    <SelectPrimitive.ItemIndicator>
+                        <Check className="nl-icon-small" aria-hidden />
+                    </SelectPrimitive.ItemIndicator>
+                </SelectPrimitive.Item>
+            ))}
+        </SelectFrame>
     );
 }

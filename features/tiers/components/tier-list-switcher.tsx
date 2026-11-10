@@ -4,8 +4,7 @@ import * as Select from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import { overlayPosition } from "@/components/ui/overlay-position";
-import { useSelectOpen } from "@/components/ui/use-select-open";
+import { SelectFrame } from "@/components/ui/select-frame";
 import type { TierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import {
     normalizeTierModeGoal,
@@ -33,10 +32,8 @@ export default function TierListSwitcher({
     const t = useTranslations();
     const name = (list: TierList) =>
         t("tiers.goalOption", { goal: tierListLabel(list.mode, list.goal) });
-    const { root: openState, onEscapeKeyDown } = useSelectOpen();
     return (
-        <Select.Root
-            {...openState}
+        <SelectFrame
             value={encode(value)}
             onValueChange={(next) => {
                 const [mode, goal] = next.split(":") as [
@@ -48,58 +45,40 @@ export default function TierListSwitcher({
                     goal: normalizeTierModeGoal(mode, goal),
                 });
             }}
+            menuClassName="nl-select-menu"
+            trigger={
+                <Select.Trigger
+                    className="nl-tier-switch nl-page-title nl-focus-inset"
+                    aria-label={t("tiers.listLabel")}
+                >
+                    <Select.Value>{name(value)}</Select.Value>
+                    <Select.Icon asChild>
+                        <ChevronDown aria-hidden />
+                    </Select.Icon>
+                </Select.Trigger>
+            }
         >
-            <Select.Trigger
-                className="nl-tier-switch nl-page-title"
-                aria-label={t("tiers.listLabel")}
-            >
-                <Select.Value>{name(value)}</Select.Value>
-                <Select.Icon asChild>
-                    <ChevronDown aria-hidden />
-                </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-                <div className="noslog-ui">
-                    <Select.Content
-                        className="nl-select-menu"
-                        onEscapeKeyDown={onEscapeKeyDown}
-                        position="popper"
-                        sideOffset={overlayPosition.sideOffset}
-                        align="start"
-                        collisionPadding={overlayPosition.collisionPadding}
-                    >
-                        <Select.Viewport>
-                            {TIER_MODES.map((mode) => (
-                                <Select.Group
-                                    key={mode}
-                                    className="nl-tier-switch__group"
-                                >
-                                    <Select.Label className="nl-tier-switch__heading nl-metadata">
-                                        {mode === "basic" ? "Basic" : "Recital"}
-                                    </Select.Label>
-                                    {TIER_MODE_GOALS[mode].map((goal) => (
-                                        <Select.Item
-                                            key={goal}
-                                            value={encode({ mode, goal })}
-                                            className="nl-select-option"
-                                        >
-                                            <Select.ItemText>
-                                                {name({ mode, goal })}
-                                            </Select.ItemText>
-                                            <Select.ItemIndicator>
-                                                <Check
-                                                    className="nl-icon-small"
-                                                    aria-hidden
-                                                />
-                                            </Select.ItemIndicator>
-                                        </Select.Item>
-                                    ))}
-                                </Select.Group>
-                            ))}
-                        </Select.Viewport>
-                    </Select.Content>
-                </div>
-            </Select.Portal>
-        </Select.Root>
+            {TIER_MODES.map((mode) => (
+                <Select.Group key={mode} className="nl-tier-switch__group">
+                    <Select.Label className="nl-tier-switch__heading nl-metadata">
+                        {mode === "basic" ? "Basic" : "Recital"}
+                    </Select.Label>
+                    {TIER_MODE_GOALS[mode].map((goal) => (
+                        <Select.Item
+                            key={goal}
+                            value={encode({ mode, goal })}
+                            className="nl-select-option"
+                        >
+                            <Select.ItemText>
+                                {name({ mode, goal })}
+                            </Select.ItemText>
+                            <Select.ItemIndicator>
+                                <Check className="nl-icon-small" aria-hidden />
+                            </Select.ItemIndicator>
+                        </Select.Item>
+                    ))}
+                </Select.Group>
+            ))}
+        </SelectFrame>
     );
 }
