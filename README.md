@@ -71,7 +71,7 @@ npm install
 cp .env.example .env
 ```
 
-`npm install`이 Prisma Client를 생성합니다(`postinstall`). `.env`에는 개발용 값만 입력하세요. 운영 DB 주소와 운영 Secret을 로컬 검증에 복사하지 않습니다. `DATABASE_EXPECTED_HOST`를 넣어 두면 다른 DB 주소로 잘못 연결됐을 때 앱이 시작하지 않습니다. DB에 붙는 스크립트(`prisma/*.mjs` · `scripts/backfill-pattern-metrics.ts` · `scripts/simulate-basic-tier-rating.ts`)는 로컬이 아닌 DB라면 이 값이 `DATABASE_URL`의 호스트와 같아야 실행됩니다. 배포 빌드(`vercel-build`)도 패턴 경향 채우기에서 이 확인을 거치므로 Vercel 환경 변수에 이 값이 있어야 합니다.
+`npm install`이 Prisma Client를 생성합니다(`postinstall`). `.env`에는 개발용 값만 입력하세요. 운영 DB 주소와 운영 Secret을 로컬 검증에 복사하지 않습니다. `DATABASE_EXPECTED_HOST`를 넣어 두면 다른 DB 주소로 잘못 연결됐을 때 앱이 시작하지 않습니다. DB에 붙는 스크립트(`prisma/*.mjs` · `scripts/backfill-pattern-metrics.ts`)는 로컬이 아닌 DB라면 이 값이 `DATABASE_URL`의 호스트와 같아야 실행됩니다. 배포 빌드(`vercel-build`)도 패턴 경향 채우기에서 이 확인을 거치므로 Vercel 환경 변수에 이 값이 있어야 합니다.
 
 ### 환경변수
 
