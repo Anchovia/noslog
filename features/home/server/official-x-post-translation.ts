@@ -65,7 +65,7 @@ export function parseOfficialXPostTranslations(
 // 그리고 시간 초과 · 네트워크 오류(ApiError 가 아니다). 2026-09-23 에는 첫 모델에서 막히면 나머지를
 // 시도조차 하지 않아 번역이 통째로 멈췄다(무료 등급은 과부하가 날마다 모델을 옮겨 다닌다 — 09-24 실측 3.8 0/3 · 3.5 3/3).
 // 잘못된 요청(400)처럼 모델을 바꿔도 같은 결과인 오류만 즉시 포기한다
-function isRetryable(error: unknown) {
+export function shouldTryNextTranslationModel(error: unknown) {
     if (!(error instanceof ApiError)) return true;
     return (
         error.status === 403 ||
@@ -120,7 +120,7 @@ export async function translateOfficialXPost(
                 `[official-x] ${model} failed to translate the latest post (status ${status})`,
                 error
             );
-            if (!isRetryable(error)) return null;
+            if (!shouldTryNextTranslationModel(error)) return null;
         }
     }
     return null;

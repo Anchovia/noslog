@@ -35,7 +35,10 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
+import { ApiError as GeminiApiError } from "@google/genai";
+
 import { detectTextLanguage } from "@/lib/i18n/text-language";
+import { OFFICIAL_X_TRANSLATION_MODELS } from "@/features/home/server/official-x-post-translation";
 import {
     fillCommunityTranslations,
     getCommunityTranslation,
@@ -214,6 +217,118 @@ describe("번역 생성 — 손님은 저장된 번역만, 로그인 사용자�
             fillCommunityTranslations("opinion", 1, 7)
         ).rejects.toMatchObject({ code: "dailyLimit" });
         expect(mocks.generate).not.toHaveBeenCalled();
+        expect(mocks.opinionUpdate).not.toHaveBeenCalled();
+    });
+});
+
+describe("번역 생성 — 막힌 모델은 홈과 같은 판정으로 다음 모델에 넘긴다", () => {
+    const translated = {
+        ko: "후반 트릴이 무겁다",
+        en: "The late trills are heavy",
+    };
+    const geminiError = (status: number) =>
+        Object.assign(new GeminiApiError({ status, message: "blocked" }), {
+            status,
+        });
+    const calledModels = () =>
+        mocks.generate.mock.calls.map((call) => call[0].model);
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        mocks.env.GEMINI_API_KEY = "key";
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+        mocks.opinionFind.mockResolvedValue({
+            opinion: "後半のトリルが重い",
+            opinionTranslations: null,
+        });
+        mocks.generate.mockReset();
+    });
+
+    it.each([403, 404, 429, 500, 503])(
+        "moves to the next model on HTTP %i and saves its translation",
+        async (status) => {
+            mocks.generate
+                .mockRejectedValueOnce(geminiError(status))
+                .mockResolvedValueOnce({ text: JSON.stringify(translated) });
+            await expect(
+                fillCommunityTranslations("opinion", 1, 7)
+            ).resolves.toEqual(translated);
+            expect(calledModels()).toEqual(
+                OFFICIAL_X_TRANSLATION_MODELS.slice(0, 2)
+            );
+            expect(mocks.opinionUpdate).toHaveBeenCalledTimes(1);
+            expect(mocks.claim).toHaveBeenCalledTimes(1);
+        }
+    );
+
+    it("moves to the next model on a timeout", async () => {
+        mocks.generate
+            .mockRejectedValueOnce(
+                Object.assign(
+                    new Error("The operation was aborted due to timeout"),
+                    { name: "TimeoutError" }
+                )
+            )
+            .mockResolvedValueOnce({ text: JSON.stringify(translated) });
+        await expect(
+            getCommunityTranslation({
+                kind: "opinion",
+                id: 1,
+                locale: "en",
+                userId: 7,
+            })
+        ).resolves.toBe("The late trills are heavy");
+        expect(calledModels()).toEqual(
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 2)
+        );
+    });
+
+    it.each([400, 401])(
+        "stops at the first model on HTTP %i",
+        async (status) => {
+            mocks.generate
+                .mockRejectedValueOnce(geminiError(status))
+                .mockResolvedValueOnce({ text: JSON.stringify(translated) });
+            await expect(
+                getCommunityTranslation({
+                    kind: "opinion",
+                    id: 1,
+                    locale: "en",
+                    userId: 7,
+                })
+            ).rejects.toMatchObject({ code: "failed" });
+            expect(mocks.generate).toHaveBeenCalledTimes(1);
+            expect(mocks.opinionUpdate).not.toHaveBeenCalled();
+        }
+    );
+
+    it.each([
+        ["malformed JSON", "not json"],
+        ["missing field", JSON.stringify({ ko: "만" })],
+        ["no text", undefined],
+    ])("stops at the first model on %s", async (_, raw) => {
+        mocks.generate
+            .mockResolvedValueOnce({ text: raw })
+            .mockResolvedValueOnce({ text: JSON.stringify(translated) });
+        await expect(
+            fillCommunityTranslations("opinion", 1, 7)
+        ).resolves.toEqual({});
+        expect(mocks.generate).toHaveBeenCalledTimes(1);
+        expect(mocks.opinionUpdate).not.toHaveBeenCalled();
+    });
+
+    it("fails the same way once every model is blocked", async () => {
+        mocks.generate.mockRejectedValue(geminiError(404));
+        await expect(
+            getCommunityTranslation({
+                kind: "opinion",
+                id: 1,
+                locale: "en",
+                userId: 7,
+            })
+        ).rejects.toMatchObject({ code: "failed" });
+        expect(calledModels()).toEqual([...OFFICIAL_X_TRANSLATION_MODELS]);
         expect(mocks.opinionUpdate).not.toHaveBeenCalled();
     });
 });

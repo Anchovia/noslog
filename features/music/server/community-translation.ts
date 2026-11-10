@@ -1,9 +1,12 @@
 import "server-only";
 
-import { ApiError as GeminiApiError, GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 
-import { OFFICIAL_X_TRANSLATION_MODELS } from "@/features/home/server/official-x-post-translation";
+import {
+    OFFICIAL_X_TRANSLATION_MODELS,
+    shouldTryNextTranslationModel,
+} from "@/features/home/server/official-x-post-translation";
 import { ApiError } from "@/lib/api/response";
 import db from "@/lib/db";
 import { serverEnv } from "@/lib/env/server";
@@ -44,13 +47,6 @@ Rules:
 - Rhythm game terms: 譜面 → 채보 / chart. 縦連 → 세로 연타 / jacks. トリル → 트릴 / trill. 餡蜜 stays as is.
 - Return only the JSON object.`;
 
-function isRetryable(error: unknown) {
-    return (
-        error instanceof GeminiApiError &&
-        (error.status === 429 || error.status >= 500)
-    );
-}
-
 /** 글 하나를 targets 언어들로 한 번에. 설정이 없거나 모든 모델이 실패하면 null */
 async function translateCommunityText(text: string, targets: Locale[]) {
     const apiKey = serverEnv.GEMINI_API_KEY;
@@ -68,8 +64,9 @@ async function translateCommunityText(text: string, targets: Locale[]) {
         },
     });
     for (const model of OFFICIAL_X_TRANSLATION_MODELS) {
+        let response;
         try {
-            const response = await ai.models.generateContent({
+            response = await ai.models.generateContent({
                 model,
                 contents: text,
                 config: {
@@ -89,6 +86,13 @@ async function translateCommunityText(text: string, targets: Locale[]) {
                     },
                 },
             });
+        } catch (error) {
+            console.error(`[community-translation] ${model} failed`, error);
+            if (!shouldTryNextTranslationModel(error)) return null;
+            continue;
+        }
+        // 응답을 읽지 못한 것은 모델을 바꿔도 같으니 홈처럼 여기서 끝낸다
+        try {
             const parsed = schema.safeParse(
                 JSON.parse(response.text ?? "null")
             );
@@ -97,7 +101,7 @@ async function translateCommunityText(text: string, targets: Locale[]) {
                 : null;
         } catch (error) {
             console.error(`[community-translation] ${model} failed`, error);
-            if (!isRetryable(error)) return null;
+            return null;
         }
     }
     return null;
