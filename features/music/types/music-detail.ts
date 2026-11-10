@@ -1,13 +1,12 @@
-import type { UnlockStep } from "@/lib/music/unlock-condition";
-import type { CommunityData } from "@/features/music/schemas/community-schema";
 import type { PatternTendency } from "@/features/music/lib/pattern-tendency";
-import type { PeerScoreComparison } from "@/lib/music/peer-score-comparison";
 import type {
     ChartRankingRow,
     ChartScorePlayer,
 } from "@/features/music/schemas/chart-ranking-schema";
-
-export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
+import type { CommunityData } from "@/features/music/schemas/community-schema";
+import type { Difficulty } from "@/lib/music/difficulty";
+import type { PeerScoreComparison } from "@/lib/music/peer-score-comparison";
+import type { UnlockStep } from "@/lib/music/unlock-condition";
 
 export type DetailTab = "record" | "detail" | "ranking" | "tier";
 

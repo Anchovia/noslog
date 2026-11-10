@@ -10,5 +10,3 @@ export interface BingoCellItem {
     position: number;
     categoryShort: string | null;
 }
-
-export type MissionFilter = "incomplete" | "completed" | "rich";

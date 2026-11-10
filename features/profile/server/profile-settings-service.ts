@@ -3,7 +3,7 @@ import "server-only";
 import type { ActionResult } from "@/lib/actions/result";
 import { createImageUploadToken, isImageContentType } from "@/lib/blob";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, type Locale } from "@/lib/i18n/routing";
+import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 import {
@@ -22,7 +22,7 @@ export async function requestProfileAvatarUpload(
     contentType: string,
     requestedLocale?: Locale
 ): Promise<AvatarUploadActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {

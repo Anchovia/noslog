@@ -6,7 +6,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
 import ButtonLink from "@/components/ui/button-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { summarizeAchievements } from "@/features/achievements/achievement-definitions";
@@ -20,6 +19,7 @@ import type {
 } from "@/features/profile/schemas/public-profile-schema";
 import type { ProfileOverviewContext } from "@/features/profile/server/profile-overview-service";
 import type { ProfilePinnedRecords } from "@/features/profile/server/profile-pinned-service";
+import type { ProfileUser } from "@/features/profile/types/profile";
 
 import ProfileLevels from "./profile-levels";
 import ProfilePinned from "./profile-pinned";

@@ -10,7 +10,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
 import BarList from "@/components/ui/bar-list";
 import IntentLink from "@/components/ui/intent-link";
@@ -23,6 +22,7 @@ import {
     chartFieldValue,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
 import type { PatternStrengths } from "@/features/music/lib/pattern-tendency";
+import type { MusicDetailProps } from "@/features/music/types/music-detail";
 import { PATTERN_STRENGTH_AXES } from "@/lib/chart-pattern/patternMetrics";
 import { rankTone, scoreTone } from "@/lib/music/score-tone";
 

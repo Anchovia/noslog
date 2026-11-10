@@ -1,7 +1,7 @@
 import "server-only";
 
-import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
 import { achievementRecordsForViewer } from "@/features/achievements/achievement-definitions";
+import type { ProfileUser } from "@/features/profile/types/profile";
 import db from "@/lib/db";
 
 // 점수 비공개(2026-09-18 S3) — 본인이 아니면 그 사람의 점수 · 기록 API 가 값을 돌려주지 않는다

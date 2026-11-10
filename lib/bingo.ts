@@ -62,22 +62,6 @@ export function getBingoLineProgress(completedPositions: ReadonlySet<number>) {
     }));
 }
 
-/** 행(A~E) 단위 진행 — 목록 묶음 헤더용 */
-export function getBingoRowProgress(completedPositions: ReadonlySet<number>) {
-    return BINGO_LINES.slice(0, 5).map((line: readonly number[], index) => {
-        const done = line.filter((position) =>
-            completedPositions.has(position)
-        ).length;
-        return {
-            label: String.fromCharCode(65 + index),
-            positions: [...line],
-            done,
-            chance: done === 4,
-            complete: done === 5,
-        };
-    });
-}
-
 // 빙고판의 완료 칸, 완성 줄, 빙고 찬스 칸을 한곳에서 계산함
 export function getBingoProgress(cells: BingoProgressCell[]) {
     const completedPositions = new Set(

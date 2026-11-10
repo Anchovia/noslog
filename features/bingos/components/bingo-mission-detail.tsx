@@ -2,8 +2,6 @@
 
 import { Check, ChevronLeft, ChevronRight, Undo2, X } from "lucide-react";
 
-import BingoTermHelp from "@/components/bingo/bingo-term-help";
-import { getBingoMissionLink } from "@/components/bingo/plate/bingo-plate-utils";
 import {
     useLocale,
     useLocalizedHref,
@@ -12,8 +10,10 @@ import {
 import ActionButton from "@/components/ui/action-button";
 import IconButton from "@/components/ui/icon-button";
 import IntentLink from "@/components/ui/intent-link";
+import { getBingoMissionLink } from "@/features/bingos/bingo-plate-utils";
 import { useBingoPosition } from "@/features/bingos/components/bingo-coordinate-board";
 import BingoPosition from "@/features/bingos/components/bingo-position";
+import BingoTermHelp from "@/features/bingos/components/bingo-term-help";
 import type { BingoMission } from "@/features/bingos/schemas/public-bingo-schema";
 import type { BingoLineKind } from "@/lib/bingo";
 import { getBingoLinesCompletedBy } from "@/lib/bingo";

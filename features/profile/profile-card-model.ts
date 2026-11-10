@@ -1,7 +1,7 @@
 import type {
     ProfileMode,
     ProfileUser,
-} from "@/components/profile/dashboard/profile-types";
+} from "@/features/profile/types/profile";
 import { normalizeStoredGrade } from "@/lib/music/stored-grade";
 
 export function getProfileCardMode(user: ProfileUser, mode: ProfileMode) {

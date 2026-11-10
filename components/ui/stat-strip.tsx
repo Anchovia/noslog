@@ -2,21 +2,7 @@ import type { ReactNode } from "react";
 
 import { SkeletonText } from "@/components/ui/skeleton";
 import { cn } from "@/lib/cn";
-
-export type StatTone =
-    | "rank-1"
-    | "rank-2"
-    | "rank-3"
-    | "rank"
-    | "s"
-    | "990k"
-    | "pianist"
-    | "fc"
-    | "grade-1"
-    | "grade-2"
-    | "grade-3"
-    | "grade-4"
-    | "grade-5";
+import type { StatTone } from "@/lib/music/score-tone";
 
 export interface StatStripItem {
     key: string;

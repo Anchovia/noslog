@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getExamPractice } from "@/features/exams/exam-practice";
-import type { ExamStageItem } from "@/components/exams/dashboard/exam-dashboard-types";
+import type { ExamStageItem } from "@/features/exams/types/exam-dashboard";
 
 const stage: ExamStageItem = {
     id: 1,

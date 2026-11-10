@@ -133,7 +133,6 @@ describe("TSX design token checks", () => {
             "components/music/",
             "components/i18n/",
             "components/providers/",
-            "components/bingo/",
             "components/chart-pattern/",
         ])
             expect(files.some((path) => path.startsWith(folder))).toBe(true);

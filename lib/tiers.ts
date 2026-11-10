@@ -1,4 +1,5 @@
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
+import { DIFFICULTIES, type Difficulty } from "@/lib/music/difficulty";
 export { getJacketUrl } from "@/lib/music-jackets";
 
 export type TierRecord = {
@@ -29,7 +30,7 @@ export type TierRecord = {
 
 export const TIER_MODES = ["basic", "recital"] as const;
 export const TIER_GOALS = ["s", "990k", "pianist"] as const;
-export const TIER_DIFFICULTIES = ["Normal", "Hard", "Expert", "Real"] as const;
+export const TIER_DIFFICULTIES = DIFFICULTIES;
 export const TIER_REGULAR_LEVELS = Array.from({ length: 12 }, (_, index) =>
     String(index + 1)
 );
@@ -37,7 +38,7 @@ export const TIER_REAL_LEVELS = ["real-1", "real-2", "real-3"] as const;
 
 export type TierMode = (typeof TIER_MODES)[number];
 export type TierGoal = (typeof TIER_GOALS)[number];
-export type TierDifficulty = (typeof TIER_DIFFICULTIES)[number];
+export type TierDifficulty = Difficulty;
 
 // 모드별 서열표 — Basic 은 S·990k·Pianist 세 개, Recital 은 하나(내부 목표는 Pianist 기준)
 export const TIER_MODE_GOALS: Record<TierMode, readonly TierGoal[]> = {
@@ -88,16 +89,6 @@ export function tierListLabel(mode: TierMode, goal: TierGoal) {
 
 export function isTierDifficulty(value: string): value is TierDifficulty {
     return TIER_DIFFICULTIES.includes(value as TierDifficulty);
-}
-
-// 주소의 난이도(소문자 등)를 채보 난이도 값으로 — 난이도는 enum 이라 대소문자 무시 조회를 못 한다(2026-10-16 D4-C 2차)
-export function parseChartDifficulty(
-    value: string
-): TierDifficulty | undefined {
-    const lower = value.toLowerCase();
-    return TIER_DIFFICULTIES.find(
-        (difficulty) => difficulty.toLowerCase() === lower
-    );
 }
 
 export function isTierLevelFilter(value: string) {

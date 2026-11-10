@@ -6,8 +6,8 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { getProfileCountryCode } from "@/components/profile/dashboard/profile-utils";
 import ProfileCardImage from "@/features/profile/components/profile-card-image";
+import { getProfileCountryCode } from "@/features/profile/profile-utils";
 import { toCardAvatar } from "@/features/profile/server/profile-card-avatar";
 import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
 import { getUserProfileTag } from "@/lib/cache-tags";
@@ -15,6 +15,7 @@ import {
     isLocale,
     LOCALE_REQUEST_HEADER,
     localizePath,
+    resolveLocale,
 } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
@@ -151,7 +152,7 @@ async function renderProfileCard(
     headers: Record<string, string>
 ) {
     const requestedLocale = request.headers.get(LOCALE_REQUEST_HEADER);
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const [fontData, avatar, flag] = await Promise.all([
         getFonts(),
         getAvatar(id, profile.user.avatar),

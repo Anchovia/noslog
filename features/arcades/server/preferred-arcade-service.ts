@@ -7,7 +7,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
+import { type Locale, localizePath, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -27,7 +27,7 @@ export async function setPreferredArcade(
     arcadeId: number,
     requestedLocale = "ko"
 ): Promise<PreferredArcadeActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
@@ -83,7 +83,7 @@ export async function clearPreferredArcade(
     arcadeId: number,
     requestedLocale = "ko"
 ): Promise<PreferredArcadeActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {

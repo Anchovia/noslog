@@ -8,7 +8,7 @@ import {
     TIER_MODES,
 } from "@/lib/tiers";
 
-export const tierChangeImageRowSchema = z
+const tierChangeImageRowSchema = z
     .object({
         musicIndex: z.string().min(1, "곡을 선택해주세요."),
         title: z.string().trim().min(1, "곡 제목이 필요합니다."),
@@ -51,6 +51,5 @@ export const tierChangeImageSchema = z
             seen.add(key);
         });
     });
-export type TierChangeImageInput = z.input<typeof tierChangeImageSchema>;
 export type TierChangeImageData = z.output<typeof tierChangeImageSchema>;
 export type TierChangeImageRow = z.output<typeof tierChangeImageRowSchema>;

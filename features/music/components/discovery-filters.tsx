@@ -8,10 +8,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type {
-    ChoiceTone,
-    FilterChipOption,
-} from "@/components/ui/filter-chips";
+import type { ChoiceTone } from "@/components/ui/filter-chips";
 import FilterChips from "@/components/ui/filter-chips";
 import FilterGroup from "@/components/ui/filter-group";
 import { FormField, Input } from "@/components/ui/form-field";
@@ -30,13 +27,10 @@ import {
     getDiscoveryOrder,
     getDiscoverySort,
 } from "@/features/music/schemas/discovery-schema";
+import { difficultyKey } from "@/lib/music/difficulty";
 import { MUSIC_CATEGORY_VALUES } from "@/lib/music-categories";
 
 type Difficulty = (typeof discoveryDifficulties)[number];
-const difficultyTone = (
-    difficulty: Difficulty
-): FilterChipOption<Difficulty>["tone"] =>
-    difficulty.toLowerCase() as FilterChipOption<Difficulty>["tone"];
 // 카테고리 → 글자 색(자켓 카테고리 레이블과 같은 색)
 export const categoryTone = {
     pops: "pops",
@@ -204,7 +198,7 @@ export function DiscoverySortMenu({
                         options={discoveryDifficulties.map((difficulty) => ({
                             value: difficulty,
                             label: difficulty,
-                            tone: difficultyTone(difficulty),
+                            tone: difficultyKey(difficulty),
                         }))}
                     />
                 </SortMenuSection>
@@ -313,7 +307,7 @@ export default function DiscoveryFilters({
     const difficultyOptions = discoveryDifficulties.map((difficulty) => ({
         value: difficulty,
         label: difficulty,
-        tone: difficultyTone(difficulty),
+        tone: difficultyKey(difficulty),
     }));
     const recordOptions = [
         { value: "unplayed" as const, label: t("music.filter.unplayed") },

@@ -1,4 +1,4 @@
-import type { Difficulty } from "@/components/music/music-detail-types";
+import { type Difficulty, DIFFICULTY_ORDER } from "@/lib/music/difficulty";
 
 /**
  * 해금 조건 원문(BEMANIWiki 「Op.3での解禁方法」 · 일본어) 해석 (2026-09-18).
@@ -24,13 +24,6 @@ interface ParsedLine {
     moved: boolean;
     requires: UnlockStep["requires"];
 }
-
-const DIFFICULTY_INDEX: Record<Difficulty, number> = {
-    Normal: 0,
-    Hard: 1,
-    Expert: 2,
-    Real: 3,
-};
 
 function parseLine(line: string): ParsedLine | null {
     let text = line.trim();
@@ -70,7 +63,7 @@ export function unlockStepsFor(
         .split("\n")
         .map(parseLine)
         .filter((line): line is ParsedLine => line !== null);
-    const index = DIFFICULTY_INDEX[difficulty];
+    const index = DIFFICULTY_ORDER[difficulty];
     const splitReal =
         lines.some((line) => line.counts?.length === 3) &&
         lines.some((line) => line.counts?.length === 1);

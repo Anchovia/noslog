@@ -3,16 +3,16 @@
 import { CircleCheck, CircleX } from "lucide-react";
 import { Fragment, useRef, useState } from "react";
 
-import type {
-    ExamDashboardItem,
-    ExamStageItem,
-} from "@/components/exams/dashboard/exam-dashboard-types";
-import { getStageLabel } from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { getStageLabel } from "@/features/exams/exam-dashboard-utils";
 import { getExamPractice } from "@/features/exams/exam-practice";
+import type {
+    ExamDashboardItem,
+    ExamStageItem,
+} from "@/features/exams/types/exam-dashboard";
 import { cn } from "@/lib/cn";
 import { localizePath } from "@/lib/i18n/routing";
 

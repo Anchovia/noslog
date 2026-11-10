@@ -7,7 +7,7 @@ import {
     expectFormContract,
 } from "@/.storybook/responsive-contract";
 import { getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { resolveLocale } from "@/lib/i18n/routing";
 
 import type { OnboardingFormViewProps } from "./onboarding-form-view";
 import OnboardingFormView from "./onboarding-form-view";
@@ -48,11 +48,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 function messages(globals: Record<string, unknown>) {
-    return getMessages(
-        typeof globals.locale === "string" && isLocale(globals.locale)
-            ? globals.locale
-            : "ko"
-    );
+    return getMessages(resolveLocale(globals.locale));
 }
 function termsName(t: ReturnType<typeof messages>) {
     return t["onboarding.termsConsent"].replace("{terms}", t["auth.terms"]);

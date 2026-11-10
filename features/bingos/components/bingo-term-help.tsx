@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
+
 import { useTranslations } from "@/components/i18n/locale-provider";
 import TermHelp from "@/components/ui/term-help";
 import type { MessageKey } from "@/lib/i18n/messages";

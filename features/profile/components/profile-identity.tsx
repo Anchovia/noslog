@@ -9,11 +9,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type {
-    ProfileMode,
-    ProfileUser,
-} from "@/components/profile/dashboard/profile-types";
-import { formatProfileDate } from "@/components/profile/dashboard/profile-utils";
 import Avatar from "@/components/ui/avatar";
 import { foundationButtonClass } from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
@@ -28,8 +23,13 @@ import type { AchievementSummary } from "@/features/achievements/achievement-def
 import AchievementShowcase from "@/features/achievements/components/achievement-showcase";
 import { contributionLevel } from "@/features/contributions/contribution-level";
 import ProfileShareDialog from "@/features/profile/components/profile-share-dialog";
+import { formatProfileDate } from "@/features/profile/profile-utils";
 import type { OwnerPrivateFields } from "@/features/profile/server/owner-private-service";
 import type { ProfileHeaderContext } from "@/features/profile/server/profile-overview-service";
+import type {
+    ProfileMode,
+    ProfileUser,
+} from "@/features/profile/types/profile";
 import { gradeBandTone, rankTone } from "@/lib/music/score-tone";
 
 /** 본인용 공유 · 설정 = 공용 보조 아이콘 버튼 작게(2026-09-26 D4) */

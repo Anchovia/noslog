@@ -4,12 +4,12 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { judgementLabels } from "@/components/ui/judgement-marker";
 import {
     rankAssetNames,
     rankDisplayName,
-} from "@/components/music/music-detail-config";
-import type { RecentChartPlay } from "@/components/music/music-detail-types";
-import { judgementLabels } from "@/components/ui/judgement-marker";
+} from "@/features/music/music-detail-config";
+import type { RecentChartPlay } from "@/features/music/types/music-detail";
 import { getBestScoreDifference } from "@/lib/music/recent-play-stats";
 
 export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {

@@ -1,17 +1,13 @@
 import z from "zod";
 
 import { musicResultSchema } from "@/features/music/schemas/music-result-schema";
+import { DIFFICULTIES } from "@/lib/music/difficulty";
 import {
     MUSIC_CATEGORY_VALUES,
     normalizeMusicCategories,
 } from "@/lib/music-categories";
 
-export const discoveryDifficulties = [
-    "Normal",
-    "Hard",
-    "Expert",
-    "Real",
-] as const;
+export const discoveryDifficulties = DIFFICULTIES;
 export const discoveryLevelBounds = {
     Normal: 8,
     Hard: 11,

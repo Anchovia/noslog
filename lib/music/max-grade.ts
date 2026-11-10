@@ -1,4 +1,4 @@
-import type { Difficulty } from "@/components/music/music-detail-types";
+import type { Difficulty } from "@/lib/music/difficulty";
 
 // Basic 그레이드 난이도 계수 — Real 은 Expert 와 같음
 const difficultyCoefficient: Record<Difficulty, number> = {

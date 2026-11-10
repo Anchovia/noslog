@@ -1,16 +1,18 @@
+import "server-only";
+
 import { unstable_cache } from "next/cache";
 
 import type {
     DetailTab,
-    Difficulty,
     MusicDetailProps,
-} from "@/components/music/music-detail-types";
+} from "@/features/music/types/music-detail";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
 import { isPianist } from "@/lib/music/clear-mark";
+import type { Difficulty } from "@/lib/music/difficulty";
 import { unlockStepsFor } from "@/lib/music/unlock-condition";
 import { logServerError } from "@/lib/observability/server";
 import {
@@ -41,7 +43,6 @@ import {
 } from "./music-detail-data";
 import { getPatternTendency } from "./pattern-metrics";
 
-const MUSIC_DIFFICULTIES: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
 const MUSIC_DETAIL_TABS: DetailTab[] = ["record", "detail", "ranking", "tier"];
 const EMPTY_UNLOCK_NAMES: Record<string, string> = {};
 
@@ -76,12 +77,6 @@ const emptyDistribution = [
     { key: "990", label: "990k", count: 0 },
     { key: "pianist", label: "Pianist", count: 0 },
 ];
-
-export function normalizeMusicDifficulty(value: string) {
-    return MUSIC_DIFFICULTIES.find(
-        (difficulty) => difficulty.toLowerCase() === value.toLowerCase()
-    );
-}
 
 export function normalizeMusicDetailTab(value?: string): DetailTab {
     return MUSIC_DETAIL_TABS.includes(value as DetailTab)

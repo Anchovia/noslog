@@ -17,8 +17,12 @@ import {
     isValidPrivateImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, type Locale } from "@/lib/i18n/routing";
+import {
+    createTranslator,
+    getMessages,
+    translatorFor,
+} from "@/lib/i18n/messages";
+import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
 import getSession from "@/lib/session";
@@ -99,7 +103,7 @@ export async function requestExamProofUpload(
     contentType: string,
     requestedLocale?: Locale
 ): Promise<ExamProofUploadActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
 
@@ -195,8 +199,7 @@ export async function submitExamProof(
     formData: FormData
 ): Promise<ExamProofActionResult> {
     const requestedLocale = String(formData.get("locale") ?? "");
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const session = await getSession();
 
     if (!session.id) {

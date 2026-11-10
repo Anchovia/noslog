@@ -2,10 +2,10 @@
 
 import type { MessageKey } from "@/components/i18n/locale-provider";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import Disclosure from "@/components/ui/disclosure";
 import { judgementLabels as marks } from "@/components/ui/judgement-marker";
 import StackedBar from "@/components/ui/stacked-bar";
+import type { MusicDetailProps } from "@/features/music/types/music-detail";
 import {
     peerJudgementKeys,
     peerNoteRateKeys,

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { requireAdmin } from "@/lib/admin";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
-import { parseChartDifficulty } from "@/lib/tiers";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 
 export default async function AdminChartPatternPreviewPage({
     params,

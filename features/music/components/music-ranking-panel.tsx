@@ -8,10 +8,10 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import IntentLink from "@/components/ui/intent-link";
 import Pagination from "@/components/ui/pagination";
 import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
+import type { MusicDetailProps } from "@/features/music/types/music-detail";
 
 import ChartLeaderboard from "./chart-leaderboard";
 import ScoreScatter from "./score-scatter";

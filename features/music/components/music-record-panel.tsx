@@ -5,11 +5,11 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import { rankDisplayName } from "@/components/music/music-detail-config";
-import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import StatStrip from "@/components/ui/stat-strip";
+import { rankDisplayName } from "@/features/music/music-detail-config";
+import type { MusicDetailProps } from "@/features/music/types/music-detail";
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { gradeTone, scoreTone } from "@/lib/music/score-tone";
 

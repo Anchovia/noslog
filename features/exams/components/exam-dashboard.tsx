@@ -7,14 +7,6 @@ import {
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(site)/exams/actions";
-import type {
-    ExamDashboardItem,
-    ExamMode,
-} from "@/components/exams/dashboard/exam-dashboard-types";
-import {
-    canEnterExam,
-    getDefaultExam,
-} from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import ExamBadge, { isExamGrade } from "@/components/ui/exam-badge";
 import StatStrip from "@/components/ui/stat-strip";
@@ -25,12 +17,20 @@ import ExamStages from "@/features/exams/components/exam-stages";
 import ExamStatus, {
     getExamStatus,
 } from "@/features/exams/components/exam-status";
+import {
+    canEnterExam,
+    getDefaultExam,
+} from "@/features/exams/exam-dashboard-utils";
 import { getExamIdentity } from "@/features/exams/exam-identity";
 import { createExamProofSubmissionFormData } from "@/features/exams/schemas/exam-proof-schema";
+import type {
+    ExamDashboardItem,
+    ExamMode,
+} from "@/features/exams/types/exam-dashboard";
 import { localizePath } from "@/lib/i18n/routing";
 import { uploadGrantedImage } from "@/lib/uploads/client-image-upload";
 
-export type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
+export type { ExamDashboardItem } from "@/features/exams/types/exam-dashboard";
 
 export default function ExamDashboard({
     exams,

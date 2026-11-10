@@ -4,18 +4,7 @@ import {
     getBingoEditorCellLabel,
     getBingoEditorCellPrefix,
 } from "@/features/bingos/components/bingo-editor-utils";
-import {
-    filterBingoMissions,
-    getBingoCellLabel,
-    getBingoLineCoordinates,
-    getBingoMissionLink,
-} from "@/components/bingo/plate/bingo-plate-utils";
-import type { BingoListItem } from "@/components/bingo/list/bingo-list-types";
-import {
-    getBingoStatusCounts,
-    getContinueBingo,
-    getVisibleBingos,
-} from "@/components/bingo/list/bingo-list-utils";
+import { getBingoMissionLink } from "@/features/bingos/bingo-plate-utils";
 import { getBingoProgress } from "@/lib/bingo";
 
 function board(completedPositions: number[]) {
@@ -83,123 +72,12 @@ describe("빙고판 UI 계산", () => {
         },
     ];
 
-    it("빙고 위치를 A1부터 E5까지 표시한다", () => {
-        expect(getBingoCellLabel(1)).toBe("A1");
-        expect(getBingoCellLabel(13)).toBe("C3");
-        expect(getBingoCellLabel(25)).toBe("E5");
-    });
-
-    it("완성 줄의 시작점과 끝점 좌표를 계산한다", () => {
-        expect(getBingoLineCoordinates([1, 2, 3, 4, 5])).toEqual({
-            x1: 0.5,
-            y1: 0.5,
-            x2: 4.5,
-            y2: 0.5,
-        });
-        expect(getBingoLineCoordinates([1, 7, 13, 19, 25])).toEqual({
-            x1: 0.5,
-            y1: 0.5,
-            x2: 4.5,
-            y2: 4.5,
-        });
-    });
-
     it("악곡과 카테고리 미션 링크를 현재 검색 규격으로 만든다", () => {
         expect(getBingoMissionLink(cells[0])).toBe("/music/music-index/expert");
         expect(
             getBingoMissionLink({ ...cells[0], musicDifficulty: "real" })
         ).toBe("/music/music-index/real");
         expect(getBingoMissionLink(cells[1])).toBe("/music?categories=Var");
-    });
-
-    it("선택한 상태에 맞는 미션만 반환한다", () => {
-        expect(
-            filterBingoMissions(cells, new Set([10]), new Set([2]), "completed")
-        ).toEqual([cells[0]]);
-        expect(
-            filterBingoMissions(cells, new Set([10]), new Set([2]), "rich")
-        ).toEqual([cells[1]]);
-    });
-});
-
-describe("빙고 목록 계산", () => {
-    const bingos: BingoListItem[] = [
-        {
-            id: 1,
-            title: "미진행",
-            musicIndex: "music-1",
-            background: null,
-            reward: 1000,
-            requiredLines: 5,
-            completedCells: 0,
-            completedLines: 0,
-            richLines: 0,
-            richPositions: [],
-            completedPositions: [],
-            progressPercent: 0,
-            isCompleted: false,
-            lastModifiedAt: null,
-        },
-        {
-            id: 2,
-            title: "진행 중",
-            musicIndex: "music-2",
-            background: null,
-            reward: 2000,
-            requiredLines: 5,
-            completedCells: 10,
-            completedLines: 1,
-            richLines: 2,
-            richPositions: [5, 10],
-            completedPositions: [1, 2, 3, 4],
-            progressPercent: 40,
-            isCompleted: false,
-            lastModifiedAt: "2026-07-18T10:00:00.000Z",
-        },
-        {
-            id: 3,
-            title: "완료",
-            musicIndex: "music-3",
-            background: null,
-            reward: 3000,
-            requiredLines: 1,
-            completedCells: 15,
-            completedLines: 2,
-            richLines: 0,
-            richPositions: [],
-            completedPositions: [1, 2, 3, 4, 5],
-            progressPercent: 60,
-            isCompleted: true,
-            lastModifiedAt: "2026-07-19T10:00:00.000Z",
-        },
-    ];
-
-    it("사용자가 가장 최근에 변경한 빙고판을 선택한다", () => {
-        expect(getContinueBingo(bingos)?.id).toBe(3);
-    });
-
-    it("한 번도 변경하지 않은 경우 이어서 진행할 빙고가 없다", () => {
-        expect(getContinueBingo([bingos[0]])).toBeUndefined();
-    });
-
-    it("진행 중, 빙고 찬스와 완료 상태별 개수를 계산한다", () => {
-        expect(getBingoStatusCounts(bingos)).toEqual({
-            progress: 1,
-            rich: 1,
-            completed: 1,
-        });
-    });
-
-    it("상태 필터와 진행률 정렬 방향을 함께 적용한다", () => {
-        expect(getVisibleBingos(bingos, "progress", "desc")).toEqual([
-            bingos[1],
-        ]);
-        expect(
-            getVisibleBingos(bingos, "all", "asc").map((bingo) => bingo.id)
-        ).toEqual([1, 2, 3]);
-        expect(
-            getVisibleBingos(bingos, "all", "desc").map((bingo) => bingo.id)
-        ).toEqual([3, 2, 1]);
     });
 });
 

@@ -23,6 +23,7 @@ import type { MusicResult } from "@/features/music/schemas/music-result-schema";
 import type { SearchPreview } from "@/features/music/schemas/search-preview-schema";
 import useDebouncedValue from "@/lib/hooks/use-debounced-value";
 import type { Locale } from "@/lib/i18n/routing";
+import { difficultyKey } from "@/lib/music/difficulty";
 import {
     MAX_TIER_VALUE,
     MIN_TIER_VALUE,
@@ -46,11 +47,7 @@ type DraftRow = {
 };
 function chartChoices(music: MusicResult) {
     return TIER_DIFFICULTIES.flatMap((difficulty) => {
-        const level =
-            music[
-                difficulty.toLowerCase() as
-                    "normal" | "hard" | "expert" | "real"
-            ];
+        const level = music[difficultyKey(difficulty)];
         return level && level > 0
             ? [{ value: difficulty, label: `${difficulty} Lv.${level}`, level }]
             : [];

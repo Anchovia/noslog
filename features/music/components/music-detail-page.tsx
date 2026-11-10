@@ -13,11 +13,6 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
-import type {
-    DetailTab,
-    Difficulty,
-    MusicDetailProps,
-} from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
 import AreaTabs from "@/components/ui/area-tabs";
 import BackLink from "@/components/ui/back-link";
@@ -27,6 +22,11 @@ import {
     musicDetailQueryOptions,
     musicDetailQueryRootKey,
 } from "@/features/music/api/music-detail";
+import type {
+    DetailTab,
+    MusicDetailProps,
+} from "@/features/music/types/music-detail";
+import { DIFFICULTIES, type Difficulty } from "@/lib/music/difficulty";
 
 import DifficultySelector from "./difficulty-selector";
 import MusicCommunityPanel from "./music-community-panel";
@@ -37,7 +37,6 @@ import MusicRecordPanel from "./music-record-panel";
 import OverviewPanel from "./overview-panel";
 
 const areas: DetailTab[] = ["detail", "record", "ranking", "tier"];
-const difficultyValues: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
 const labels = {
     detail: "detail.info",
     record: "detail.record",
@@ -122,7 +121,7 @@ export default function MusicDetailPage({
     }, [data, selection.tab]);
     useEffect(() => {
         const pop = () => {
-            const difficulty = difficultyValues.find(
+            const difficulty = DIFFICULTIES.find(
                 (item) =>
                     item.toLowerCase() ===
                     window.location.pathname.split("/").at(-1)

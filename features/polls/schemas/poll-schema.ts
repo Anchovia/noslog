@@ -13,7 +13,6 @@ export const POLL_RESULT_VISIBILITIES = [
     "AFTER_VOTE",
     "AFTER_CLOSE",
 ] as const;
-export type PollResultVisibility = (typeof POLL_RESULT_VISIBILITIES)[number];
 
 const text = (max: number) =>
     z
@@ -32,13 +31,13 @@ export const pollVoteSchema = z.object({
     optionIds: z.array(pollRowId).max(POLL_MAX_OPTIONS),
 });
 
-export const pollOptionInputSchema = z.object({
+const pollOptionInputSchema = z.object({
     /** 이미 있는 선택지면 그 번호 — 표를 지키며 글만 고칠 때 쓴다 */
     id: z.number().int().positive().optional(),
     text: localeText(POLL_OPTION_MAX_LENGTH),
 });
 
-export const pollInputSchema = z.object({
+const pollInputSchema = z.object({
     question: localeText(POLL_QUESTION_MAX_LENGTH),
     options: z.array(pollOptionInputSchema),
     multiple: z.boolean().default(false),
@@ -71,7 +70,6 @@ export function createPollFormValueSchema(saveFailedMessage: string) {
 }
 
 export type PollInput = z.infer<typeof pollInputSchema>;
-export type PollOptionInput = z.infer<typeof pollOptionInputSchema>;
 
 /** 글 언어 한 벌만 쓰는 화면(이벤트)에서 쓰는 빈 값 */
 export function emptyPollInput(locale: Locale): PollInput {

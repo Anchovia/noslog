@@ -1,9 +1,14 @@
+import "server-only";
+
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
-import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
+import {
+    approvedMusicTranslationsSelect,
+    getLocalizedMusicTitle,
+} from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
 import { legacyBesttime } from "@/lib/player-stats";
 import type { PublicTierBandPayload, TierDifficulty } from "@/lib/tiers";
@@ -74,17 +79,8 @@ export const getCachedTierBand = unstable_cache(
                                         title: true,
                                         titleKana: true,
                                         background: true,
-                                        translations: {
-                                            where: {
-                                                status: "approved",
-                                                locale: { in: ["ko", "en"] },
-                                            },
-                                            select: {
-                                                locale: true,
-                                                title: true,
-                                                status: true,
-                                            },
-                                        },
+                                        translations:
+                                            approvedMusicTranslationsSelect,
                                     },
                                 },
                             },

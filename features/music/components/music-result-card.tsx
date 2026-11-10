@@ -12,8 +12,7 @@ import { SkeletonText } from "@/components/ui/skeleton";
 import { entryDifficulty } from "@/features/music/lib/entry-difficulty";
 import type { MusicResult } from "@/features/music/schemas/music-result-schema";
 import { cn } from "@/lib/cn";
-
-const difficulties = ["normal", "hard", "expert", "real"] as const;
+import { DIFFICULTY_KEYS } from "@/lib/music/difficulty";
 
 /**
  * 난이도 판 4칸 — 고정 순서(Normal · Hard · Expert · Real), 없는 난이도는 자리만 비워 열을 지킨다.
@@ -22,7 +21,7 @@ const difficulties = ["normal", "hard", "expert", "real"] as const;
 function DifficultyLevels({ music }: { music: MusicResult }) {
     return (
         <span className="nl-difficulty-levels nl-metric-value" lang="en">
-            {difficulties.map((difficulty) => (
+            {DIFFICULTY_KEYS.map((difficulty) => (
                 <span
                     key={difficulty}
                     className={cn(
@@ -177,7 +176,7 @@ export function MusicResultCardSkeleton({
                 </span>
                 {showLevels ? (
                     <span className="nl-difficulty-levels">
-                        {difficulties.map((difficulty) => (
+                        {DIFFICULTY_KEYS.map((difficulty) => (
                             <span
                                 key={difficulty}
                                 className="nl-level nl-skeleton"

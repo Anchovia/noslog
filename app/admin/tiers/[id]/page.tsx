@@ -17,6 +17,7 @@ import {
     normalizeMusicCategory,
 } from "@/lib/music-categories";
 import {
+    TIER_DIFFICULTIES,
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
     isCurrentTierScope,
@@ -206,14 +207,7 @@ export default async function EditTierListPage({
                                 className="nl-input"
                             >
                                 <option value="">전체 난이도</option>
-                                {(
-                                    [
-                                        "Normal",
-                                        "Hard",
-                                        "Expert",
-                                        "Real",
-                                    ] as const
-                                ).map((item) => (
+                                {TIER_DIFFICULTIES.map((item) => (
                                     <option key={item} value={item}>
                                         {item}
                                     </option>

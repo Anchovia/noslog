@@ -12,8 +12,7 @@ import {
 import type { ActionResult } from "@/lib/actions/result";
 import { ApiError } from "@/lib/api/response";
 import { getChartEvaluationTag } from "@/lib/cache-tags";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { translatorFor } from "@/lib/i18n/messages";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -37,9 +36,7 @@ export async function saveChartContribution(
         likeCount?: number;
     }>
 > {
-    const t = createTranslator(
-        getMessages(isLocale(requestedLocale) ? requestedLocale : "ko")
-    );
+    const t = translatorFor(requestedLocale);
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("community.action.login") };
@@ -104,9 +101,7 @@ export async function translateChartContribution(
     input: unknown,
     requestedLocale: string
 ): Promise<ActionResult<{ text: string }>> {
-    const t = createTranslator(
-        getMessages(isLocale(requestedLocale) ? requestedLocale : "ko")
-    );
+    const t = translatorFor(requestedLocale);
     const parsed = communityTranslateInputSchema.safeParse(input);
     if (!parsed.success)
         return { success: false, message: t("community.translateFailed") };

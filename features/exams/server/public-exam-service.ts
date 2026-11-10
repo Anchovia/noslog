@@ -1,11 +1,11 @@
 import "server-only";
 
-import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
 import { getExamEligibility } from "@/features/exams/exam-eligibility";
 import {
     getCachedPublishedExams,
     getUserExamState,
 } from "@/features/exams/server/exam-data";
+import type { ExamDashboardItem } from "@/features/exams/types/exam-dashboard";
 import {
     getLocalizedMusicTitle,
     getMusicTitleDisplayPreference,

@@ -7,14 +7,14 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import {
-    rankAssetNames,
-    rankDisplayName,
-} from "@/components/music/music-detail-config";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/country-marker";
 import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
+import {
+    rankAssetNames,
+    rankDisplayName,
+} from "@/features/music/music-detail-config";
 import type { ChartRankingRow } from "@/features/music/schemas/chart-ranking-schema";
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { scoreTone } from "@/lib/music/score-tone";
@@ -50,7 +50,7 @@ export function ScoreGrade({
     );
 }
 
-export function FullComboMark({ fcType }: { fcType: number }) {
+function FullComboMark({ fcType }: { fcType: number }) {
     return (
         <span className="nl-full-combo-slot">
             {hasFullComboLamp(fcType) ? (

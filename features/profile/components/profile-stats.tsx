@@ -3,10 +3,10 @@
 import { useSearchParams } from "next/navigation";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
 import { StatusMessage } from "@/components/ui/status-message";
 import type { ProfileStats as ProfileStatsData } from "@/features/profile/schemas/profile-stats-schema";
 import type { ProfileProgressPayload } from "@/features/profile/schemas/public-profile-schema";
+import type { ProfileUser } from "@/features/profile/types/profile";
 
 import ProfileLevels from "./profile-levels";
 import ProfileProgress from "./profile-progress";

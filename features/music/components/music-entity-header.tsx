@@ -10,19 +10,19 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import { rankAssetNames } from "@/components/music/music-detail-config";
-import type {
-    ChartDetail,
-    Difficulty,
-    MusicInfo,
-    UserPlayData,
-} from "@/components/music/music-detail-types";
 import MusicJacket from "@/components/music/music-jacket";
 import IntentLink from "@/components/ui/intent-link";
 import StatStrip from "@/components/ui/stat-strip";
 import ChartDraftEntry from "@/features/contributions/components/chart-draft-entry";
+import { rankAssetNames } from "@/features/music/music-detail-config";
+import type {
+    ChartDetail,
+    MusicInfo,
+    UserPlayData,
+} from "@/features/music/types/music-detail";
 import { cn } from "@/lib/cn";
 import { isPianist } from "@/lib/music/clear-mark";
+import type { Difficulty } from "@/lib/music/difficulty";
 import {
     GRADE_PROGRESS_STOPS,
     gradeProgressColor,

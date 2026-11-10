@@ -4,6 +4,7 @@ import type { ChartDifficulty } from "@prisma/client";
 
 import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
+import { approvedMusicTranslationsSelect } from "@/lib/i18n/music-title";
 
 /** 운영자 채보 에디터 — 채보 정보 · 초안 · 최근 버전 20개(2026-10-16 D8 — 화면에서 옮김) */
 export async function getAdminChartPatternEditor(
@@ -113,17 +114,7 @@ export function getPublicChartPattern(
                     titleKana: true,
                     artist: true,
                     background: true,
-                    translations: {
-                        where: {
-                            status: "approved",
-                            locale: { in: ["ko", "en"] },
-                        },
-                        select: {
-                            locale: true,
-                            title: true,
-                            status: true,
-                        },
-                    },
+                    translations: approvedMusicTranslationsSelect,
                 },
             },
             pattern: {

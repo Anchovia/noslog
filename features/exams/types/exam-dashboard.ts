@@ -56,23 +56,3 @@ export interface ExamDashboardItem {
     hasSyncedIdentity?: boolean;
     stages: ExamStageItem[];
 }
-
-interface ExamStageResult extends ExamStageItem {
-    comparisonValue: number;
-    isPassed: boolean | null;
-    individualTargetValue: number;
-    individualGapValue: number;
-    weakestNote: {
-        label: string;
-        rate: number;
-    } | null;
-}
-
-export interface ExamSimulationResult {
-    stages: ExamStageResult[];
-    totalValue: number;
-    targetValue: number;
-    progress: number;
-    firstFailedStage: ExamStageResult | undefined;
-    priorityStage: ExamStageResult | undefined;
-}

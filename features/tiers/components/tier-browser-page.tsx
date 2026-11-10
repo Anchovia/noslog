@@ -36,6 +36,7 @@ import {
     TIER_BROWSER_STRIPS,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
+import { difficultyKey } from "@/lib/music/difficulty";
 import { formatTierValue, tierListLabel } from "@/lib/tiers";
 
 import TierBrowserBands from "./tier-browser-bands";
@@ -564,9 +565,7 @@ export default function TierBrowserPage({
                             ...query.difficulties.map((value) => ({
                                 key: `difficulty-${value}`,
                                 label: value,
-                                tone: value.toLowerCase() as Lowercase<
-                                    typeof value
-                                >,
+                                tone: difficultyKey(value),
                                 removeLabel: t("tiers.removeCondition", {
                                     condition: value,
                                 }),

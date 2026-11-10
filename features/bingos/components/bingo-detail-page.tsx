@@ -8,8 +8,6 @@ import type {
     resetBingoProgress,
     setBingoCellCompletion,
 } from "@/app/(site)/bingo/[id]/actions";
-import BingoTermHelp from "@/components/bingo/bingo-term-help";
-import { getBingoMissionLink } from "@/components/bingo/plate/bingo-plate-utils";
 import {
     useLocale,
     useLocalizedHref,
@@ -26,11 +24,13 @@ import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
+import { getBingoMissionLink } from "@/features/bingos/bingo-plate-utils";
 import BingoCoordinateBoard, {
     useBingoPosition,
 } from "@/features/bingos/components/bingo-coordinate-board";
 import BingoMissionDetail from "@/features/bingos/components/bingo-mission-detail";
 import BingoPosition from "@/features/bingos/components/bingo-position";
+import BingoTermHelp from "@/features/bingos/components/bingo-term-help";
 import { useBingoProgress } from "@/features/bingos/hooks/use-bingo-progress";
 import type { BingoDetail } from "@/features/bingos/schemas/public-bingo-schema";
 import useMediaQuery from "@/lib/hooks/use-media-query";

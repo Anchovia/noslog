@@ -9,7 +9,7 @@ import {
 } from "@/.storybook/responsive-contract";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { resolveLocale } from "@/lib/i18n/routing";
 
 import type { FeedbackDialogViewProps } from "./feedback-dialog-view";
 import FeedbackDialogView from "./feedback-dialog-view";
@@ -60,11 +60,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 function messages(globals: Record<string, unknown>) {
-    return getMessages(
-        typeof globals.locale === "string" && isLocale(globals.locale)
-            ? globals.locale
-            : "ko"
-    );
+    return getMessages(resolveLocale(globals.locale));
 }
 export const Open: Story = {};
 export const LoggedOut: Story = { args: { isAuthenticated: false } };

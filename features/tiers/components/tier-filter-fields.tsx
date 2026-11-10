@@ -10,15 +10,13 @@ import type {
     TierBrowserBandSummary,
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tier-browser-schema";
+import { difficultyKey } from "@/lib/music/difficulty";
 import {
     formatTierValue,
     TIER_DIFFICULTIES,
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
 } from "@/lib/tiers";
-
-const difficultyTone = (value: string) =>
-    value.toLowerCase() as "normal" | "hard" | "expert" | "real";
 
 export default function TierFilterFields({
     query,
@@ -157,7 +155,7 @@ export default function TierFilterFields({
                     options={TIER_DIFFICULTIES.map((value) => ({
                         value,
                         label: value,
-                        tone: difficultyTone(value),
+                        tone: difficultyKey(value),
                     }))}
                     value={query.difficulties}
                     onValueChange={(values) =>

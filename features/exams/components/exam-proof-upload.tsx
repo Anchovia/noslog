@@ -5,7 +5,6 @@ import { Camera, ChevronRight } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
-import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
@@ -17,6 +16,7 @@ import {
     type ExamProofFileFormValues,
     type ExamProofFileValues,
 } from "@/features/exams/schemas/exam-proof-schema";
+import type { ExamDashboardItem } from "@/features/exams/types/exam-dashboard";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
 import { localizePath } from "@/lib/i18n/routing";
 

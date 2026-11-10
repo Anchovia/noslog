@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
 import { describe, expect, it } from "vitest";
-import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
+import type { ProfileUser } from "@/features/profile/types/profile";
 import ProfileCardImage from "@/features/profile/components/profile-card-image";
 import {
     getProfileCardFullComboCount,

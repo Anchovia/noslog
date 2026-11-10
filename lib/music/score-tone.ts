@@ -1,4 +1,17 @@
-import type { StatTone } from "@/components/ui/stat-strip";
+export type StatTone =
+    | "rank-1"
+    | "rank-2"
+    | "rank-3"
+    | "rank"
+    | "s"
+    | "990k"
+    | "pianist"
+    | "fc"
+    | "grade-1"
+    | "grade-2"
+    | "grade-3"
+    | "grade-4"
+    | "grade-5";
 
 /** 점수 → 목표 색 구간(S 950k · 990k · Pianist). FC 여부는 보지 않는다 (2026-09-17) */
 export function scoreTone(score: number): StatTone | undefined {

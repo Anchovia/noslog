@@ -1,4 +1,4 @@
-import type { ExamStageItem } from "@/components/exams/dashboard/exam-dashboard-types";
+import type { ExamStageItem } from "@/features/exams/types/exam-dashboard";
 
 // 미플레이는 0점이 아니며 누적 비교에는 앞선 모든 단계의 기록이 필요함
 export function getExamPractice(stages: ExamStageItem[]) {

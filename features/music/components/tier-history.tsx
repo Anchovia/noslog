@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { ChartDetail } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
 import Disclosure from "@/components/ui/disclosure";
+import type { ChartDetail } from "@/features/music/types/music-detail";
 
 /** 서열 변경 이력 — 개요 탭 맨 아래 구역 펼침(요약 줄 48 · 구역 제목).
  * 날짜 묶음 하나 = 카드 하나(기본 접힘) — 구역 · 날짜 · 항목 세 단계를 상자로 가른다 (2026-09-16 개요로 이동 · 09-18 C1) */

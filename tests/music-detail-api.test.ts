@@ -26,13 +26,6 @@ vi.mock("@/features/music/server/load-music-detail", () => ({
         ["record", "detail", "ranking", "tier"].includes(value ?? "")
             ? value
             : "record",
-    normalizeMusicDifficulty: (value: string) => {
-        const normalized = value.toLowerCase();
-        if (!["normal", "hard", "expert", "real"].includes(normalized)) {
-            return undefined;
-        }
-        return `${normalized[0].toUpperCase()}${normalized.slice(1)}`;
-    },
 }));
 
 vi.mock("@/lib/observability/server", () => ({

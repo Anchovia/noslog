@@ -3,8 +3,8 @@
 import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { ChartDetail } from "@/components/music/music-detail-types";
 import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
+import type { ChartDetail } from "@/features/music/types/music-detail";
 import { readTokenPixels } from "@/lib/design-tokens";
 import useElementWidth from "@/lib/hooks/use-element-width";
 import { scoreTone } from "@/lib/music/score-tone";

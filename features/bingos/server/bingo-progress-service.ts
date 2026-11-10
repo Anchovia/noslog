@@ -8,8 +8,7 @@ import {
 } from "@/features/bingos/schemas/bingo-progress-schema";
 import type { ActionResult } from "@/lib/actions/result";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { translatorFor } from "@/lib/i18n/messages";
 import { logServerError } from "@/lib/observability/server";
 import { getSessionUser } from "@/lib/user";
 
@@ -21,8 +20,7 @@ export async function setBingoCellCompletion(
     isCompleted: boolean,
     requestedLocale = "ko"
 ): Promise<ToggleBingoCellResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const { session, user } = await getSessionUser();
 
     if (!user) {
@@ -102,8 +100,7 @@ export async function resetBingoProgress(
     bingoId: number,
     requestedLocale = "ko"
 ): Promise<ActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const { session, user } = await getSessionUser();
     if (!user) {
         if (session.id) session.destroy();

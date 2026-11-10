@@ -46,7 +46,7 @@ export const ACHIEVEMENT_SONG_SET_KEYS = Object.keys(
     ACHIEVEMENT_SONG_SETS
 ) as AchievementSongSetKey[];
 export type AchievementSongSetMetric = `songSet:${AchievementSongSetKey}`;
-export function songSetMetric(key: AchievementSongSetKey) {
+function songSetMetric(key: AchievementSongSetKey) {
     return `songSet:${key}` as const;
 }
 export type AchievementMetric =
@@ -93,7 +93,7 @@ export function examGradeFromScore(score: number): number {
 }
 
 /** 한 곡 업적의 램프 — 1 S 이상 · 2 풀콤보 · 3 Pianist */
-export const ACHIEVEMENT_LAMPS = { s: 1, fullCombo: 2, pianist: 3 } as const;
+const ACHIEVEMENT_LAMPS = { s: 1, fullCombo: 2, pianist: 3 } as const;
 
 /**
  * 곡 묶음 업적의 등급 — 곡 수로 단계. 10곡 이상은 I–V(20 · 40 · 60 · 80 · 100%),
@@ -286,7 +286,7 @@ export function getAchievementDefinition(key: string) {
 }
 
 /** 비교할 값 — 비율 업적은 value / total, 곡이 없으면 0 */
-export function achievementScore(
+function achievementScore(
     definition: AchievementDefinition,
     metric: AchievementMetricValue
 ) {
@@ -482,8 +482,12 @@ export const ACHIEVEMENT_TIER_TOTAL = achievementStepTotal(
  * 점수 비공개(2026-09-18 S3) 프로필을 남이 볼 때는 점수에서 나온 업적(실력 · 수집 · 곡 묶음 · 계절)을 보이지 않는다 —
  * 단계만으로도 기록 범위가 드러나서. 도전 · 커뮤니티는 기여처럼 그대로 보인다.
  */
-export const SCORE_BASED_ACHIEVEMENT_CATEGORIES: readonly AchievementCategory[] =
-    ["skill", "collection", "songSet", "season"];
+const SCORE_BASED_ACHIEVEMENT_CATEGORIES: readonly AchievementCategory[] = [
+    "skill",
+    "collection",
+    "songSet",
+    "season",
+];
 
 export function visibleAchievementDefinitions(scoresHidden: boolean) {
     return scoresHidden
@@ -576,14 +580,14 @@ export interface AchievementSummary {
     earnedRecords: AchievementRecord[];
 }
 
-export interface AchievementShowcaseItem {
+interface AchievementShowcaseItem {
     key: string;
     tier: number;
     achievedAt?: string;
     recipients?: number;
 }
 
-export const ACHIEVEMENT_RECENT_COUNT = 3;
+const ACHIEVEMENT_RECENT_COUNT = 3;
 
 export function summarizeAchievements(
     records: AchievementRecords,

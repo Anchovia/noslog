@@ -389,16 +389,3 @@ export function arcadeDirectionLinks(arcade: PublicArcade) {
     }
     return global;
 }
-
-/** 오락실 현지 지금 시각(분) — 영업시간 3단 줄의 「지금」 */
-export function arcadeLocalMinutes(arcade: PublicArcade, now: Date) {
-    const parts = new Intl.DateTimeFormat("en-GB", {
-        timeZone: arcade.timeZone,
-        hour: "2-digit",
-        minute: "2-digit",
-        hourCycle: "h23",
-    }).formatToParts(now);
-    const value = (type: string) =>
-        Number(parts.find((part) => part.type === type)?.value ?? 0);
-    return value("hour") * 60 + value("minute");
-}

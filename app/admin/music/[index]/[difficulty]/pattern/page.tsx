@@ -6,7 +6,7 @@ import {
     chartDocumentSchema,
     createDefaultChartDocument,
 } from "@/lib/chart-pattern/schema";
-import { parseChartDifficulty } from "@/lib/tiers";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminChartPatternEditorPage({

@@ -1,13 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import type {
-    ProfileMode,
-    ProfileUser,
-} from "@/components/profile/dashboard/profile-types";
-import {
-    formatProfileDate,
-    getProfileCountryCode,
-} from "@/components/profile/dashboard/profile-utils";
-import type { StatTone } from "@/components/ui/stat-strip";
 import {
     type ExamGradeMode,
     type ExamTier,
@@ -24,11 +15,20 @@ import {
     getProfileCardInitial,
     getProfileCardMode,
 } from "@/features/profile/profile-card-model";
+import {
+    formatProfileDate,
+    getProfileCountryCode,
+} from "@/features/profile/profile-utils";
+import type {
+    ProfileMode,
+    ProfileUser,
+} from "@/features/profile/types/profile";
 import { TOKEN_VALUES } from "@/lib/design-token-values";
 import { formatToComma } from "@/lib/format-number";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 import { BrandMarkImage } from "@/lib/metadata/brand-image";
+import type { StatTone } from "@/lib/music/score-tone";
 import {
     EXAM_TIER_DARK_HEX,
     gradeBandTone,

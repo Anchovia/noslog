@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import { approvedMusicTranslationsSelect } from "@/lib/i18n/music-title";
 
 // 공개 빙고 목록과 셀 위치는 모든 사용자에게 동일하므로 캐시함
 export const getCachedPublishedBingos = unstable_cache(
@@ -27,17 +28,7 @@ export const getCachedPublishedBingos = unstable_cache(
                         titleKana: true,
                         artist: true,
                         background: true,
-                        translations: {
-                            where: {
-                                status: "approved",
-                                locale: { in: ["ko", "en"] },
-                            },
-                            select: {
-                                locale: true,
-                                title: true,
-                                status: true,
-                            },
-                        },
+                        translations: approvedMusicTranslationsSelect,
                     },
                 },
                 cells: {
@@ -85,17 +76,7 @@ export const getCachedBingoDetail = unstable_cache(
                         titleKana: true,
                         background: true,
                         description: true,
-                        translations: {
-                            where: {
-                                status: "approved",
-                                locale: { in: ["ko", "en"] },
-                            },
-                            select: {
-                                locale: true,
-                                title: true,
-                                status: true,
-                            },
-                        },
+                        translations: approvedMusicTranslationsSelect,
                     },
                 },
                 cells: {
@@ -111,17 +92,7 @@ export const getCachedBingoDetail = unstable_cache(
                                 title: true,
                                 titleKana: true,
                                 charts: { select: { difficulty: true } },
-                                translations: {
-                                    where: {
-                                        status: "approved",
-                                        locale: { in: ["ko", "en"] },
-                                    },
-                                    select: {
-                                        locale: true,
-                                        title: true,
-                                        status: true,
-                                    },
-                                },
+                                translations: approvedMusicTranslationsSelect,
                             },
                         },
                     },

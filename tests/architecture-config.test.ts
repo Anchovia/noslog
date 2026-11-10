@@ -91,20 +91,6 @@ describe("architecture boundaries", () => {
             )
         ).toEqual([]);
     });
-    it("keeps retained infrastructure contracts type-only", async () => {
-        expect(
-            await violations(
-                'import type { Difficulty } from "@/components/music/music-detail-types"; export type Example = Difficulty;',
-                "lib/music/max-grade.ts"
-            )
-        ).toEqual([]);
-        expect(
-            await violations(
-                'export { Difficulty } from "@/components/music/music-detail-types";',
-                "lib/music/max-grade.ts"
-            )
-        ).toHaveLength(1);
-    });
     it("does not impose shared-UI import sorting on preserved editors", async () => {
         const config = await eslint.calculateConfigForFile(
             "components/admin/chart-pattern/chartEditor.tsx"

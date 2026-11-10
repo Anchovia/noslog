@@ -2,11 +2,11 @@ import { queryOptions } from "@tanstack/react-query";
 
 import type {
     DetailTab,
-    Difficulty,
     MusicDetailProps,
-} from "@/components/music/music-detail-types";
+} from "@/features/music/types/music-detail";
 import { ApiError, readApiResponse } from "@/lib/api/response";
 import type { Locale } from "@/lib/i18n/routing";
+import type { Difficulty } from "@/lib/music/difficulty";
 
 export type MusicDetailQuery = {
     index: string;

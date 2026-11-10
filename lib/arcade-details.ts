@@ -136,8 +136,6 @@ export const ARCADE_CABINET_FEATURES = [
     },
 ] as const;
 
-export type ArcadeCabinetTag = (typeof ARCADE_CABINET_TAGS)[number]["value"];
-export type ArcadeFacility = (typeof ARCADE_FACILITIES)[number]["value"];
 export type ArcadeCabinetFeatureKey =
     (typeof ARCADE_CABINET_FEATURES)[number]["key"];
 

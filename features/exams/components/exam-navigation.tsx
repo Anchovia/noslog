@@ -6,14 +6,14 @@ import * as Select from "@radix-ui/react-select";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
-import type {
-    ExamDashboardItem,
-    ExamMode,
-} from "@/components/exams/dashboard/exam-dashboard-types";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useSelectOpen } from "@/components/ui/use-select-open";
+import type {
+    ExamDashboardItem,
+    ExamMode,
+} from "@/features/exams/types/exam-dashboard";
 
 export default function ExamNavigation({
     mode,

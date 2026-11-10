@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 import ChartDraftEditor from "@/features/contributions/components/chart-draft-editor";
 import { findMyOpenChartDraft } from "@/features/contributions/server/chart-draft-service";
-import { parseChartDifficulty } from "@/lib/tiers";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";

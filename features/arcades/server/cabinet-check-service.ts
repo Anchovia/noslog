@@ -8,7 +8,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, localizePath } from "@/lib/i18n/routing";
+import { localizePath, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -26,7 +26,7 @@ export async function confirmCabinetRunning(
     cabinetId: number,
     requestedLocale = "ko"
 ): Promise<CabinetCheckActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id)

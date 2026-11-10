@@ -1,11 +1,9 @@
 "use client";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import type {
-    Difficulty,
-    MusicInfo,
-} from "@/components/music/music-detail-types";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import type { MusicInfo } from "@/features/music/types/music-detail";
+import { type Difficulty, difficultyKey } from "@/lib/music/difficulty";
 
 const short: Record<Difficulty, string> = {
     Normal: "N",
@@ -54,12 +52,7 @@ export default function DifficultySelector({
                         <span
                             className={`nl-metric-value nl-level--${difficulty.toLowerCase()}`}
                         >
-                            {
-                                music[
-                                    difficulty.toLowerCase() as
-                                        "normal" | "hard" | "expert" | "real"
-                                ]
-                            }
+                            {music[difficultyKey(difficulty)]}
                         </span>
                     </>
                 ),

@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import { approvedMusicTranslationsSelect } from "@/lib/i18n/music-title";
 import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
 
 // 검정 정의, 과제곡과 보상은 모든 사용자에게 동일하므로 캐시함
@@ -32,17 +33,7 @@ export const getCachedPublishedExams = unstable_cache(
                                 index: true,
                                 title: true,
                                 titleKana: true,
-                                translations: {
-                                    where: {
-                                        status: "approved",
-                                        locale: { in: ["ko", "en"] },
-                                    },
-                                    select: {
-                                        locale: true,
-                                        title: true,
-                                        status: true,
-                                    },
-                                },
+                                translations: approvedMusicTranslationsSelect,
                             },
                         },
                     },
@@ -61,17 +52,7 @@ export const getCachedPublishedExams = unstable_cache(
                                 title: true,
                                 titleKana: true,
                                 artist: true,
-                                translations: {
-                                    where: {
-                                        status: "approved",
-                                        locale: { in: ["ko", "en"] },
-                                    },
-                                    select: {
-                                        locale: true,
-                                        title: true,
-                                        status: true,
-                                    },
-                                },
+                                translations: approvedMusicTranslationsSelect,
                             },
                         },
                         allowedCharts: {

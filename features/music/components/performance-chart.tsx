@@ -3,11 +3,11 @@
 import { useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { PerformanceTrendPoint } from "@/components/music/music-detail-types";
 import { judgementLabels } from "@/components/ui/judgement-marker";
 import type { LineChartPoint } from "@/components/ui/line-chart";
 import LineChart from "@/components/ui/line-chart";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import type { PerformanceTrendPoint } from "@/features/music/types/music-detail";
 import {
     formatDaysAgo,
     getMissCount,

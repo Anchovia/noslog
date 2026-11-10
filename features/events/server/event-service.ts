@@ -30,8 +30,12 @@ import {
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, type Locale } from "@/lib/i18n/routing";
+import {
+    createTranslator,
+    getMessages,
+    translatorFor,
+} from "@/lib/i18n/messages";
+import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 import {
@@ -183,7 +187,7 @@ export async function getOwnEvent(userId: number, id: number) {
 
 function localeFrom(formData: FormData): Locale {
     const value = String(formData.get("locale") ?? "");
-    return isLocale(value) ? value : "ko";
+    return resolveLocale(value);
 }
 
 // 임시저장 · 게시 요청 — 한 액션. 게시 요청이면 검토 대기로, 아니면 임시저장.
@@ -336,7 +340,7 @@ async function requestEventUpload(
     contentType: string,
     requestedLocale?: string
 ): Promise<ActionResult<{ pathname: string; token: string }>> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const writer = await getEventWriter();
     if (!writer.userId)
@@ -407,8 +411,7 @@ export async function deleteOwnEvent(
     id: number,
     requestedLocale?: string
 ): Promise<ActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("events.loginRequired") };

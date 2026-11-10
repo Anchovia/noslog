@@ -58,6 +58,7 @@ import useDebouncedValue from "@/lib/hooks/use-debounced-value";
 import useDelayedFlag from "@/lib/hooks/use-delayed-flag";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
+import { difficultyKey } from "@/lib/music/difficulty";
 
 // 스크롤 자동 로딩은 첫 묶음 뒤 세 번까지 — 그다음은 버튼이라 푸터에 닿을 수 있다
 const AUTO_LOAD_BATCHES = 3;
@@ -592,9 +593,7 @@ export default function DiscoveryPage({
                                 return {
                                     key: `difficulty-${range.difficulty}`,
                                     label,
-                                    tone: range.difficulty.toLowerCase() as Lowercase<
-                                        typeof range.difficulty
-                                    >,
+                                    tone: difficultyKey(range.difficulty),
                                     removeLabel: t(
                                         "discovery.removeCondition",
                                         { condition: label }

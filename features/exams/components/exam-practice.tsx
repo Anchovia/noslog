@@ -1,9 +1,9 @@
 "use client";
 
-import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
-import { getStageLabel } from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { getStageLabel } from "@/features/exams/exam-dashboard-utils";
 import { getExamPractice } from "@/features/exams/exam-practice";
+import type { ExamDashboardItem } from "@/features/exams/types/exam-dashboard";
 
 /**
  * 합격까지 — 내 베스트를 곡별 조각(차트 범주 색, 곡 순서대로)으로 쌓은 막대 위에

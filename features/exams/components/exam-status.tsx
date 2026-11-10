@@ -2,9 +2,9 @@
 
 import { Check, Lock } from "lucide-react";
 
-import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
-import { canEnterExam } from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { canEnterExam } from "@/features/exams/exam-dashboard-utils";
+import type { ExamDashboardItem } from "@/features/exams/types/exam-dashboard";
 
 export type ExamStatusKind =
     "passed" | "pending" | "rejected" | "available" | "insufficient" | "sync";

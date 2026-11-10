@@ -4,13 +4,13 @@ import { ChevronDown, Lock } from "lucide-react";
 import { useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
 import JudgementMarker, {
     judgementLabels,
 } from "@/components/ui/judgement-marker";
 import StackedBar from "@/components/ui/stacked-bar";
 import { ScoreGrade } from "@/features/music/components/chart-leaderboard";
 import type { ProfileStats } from "@/features/profile/schemas/profile-stats-schema";
+import type { ProfileUser } from "@/features/profile/types/profile";
 
 const judgementColors: Record<keyof typeof judgementLabels, string> = {
     sjust: "var(--nl-judgement-s-just)",

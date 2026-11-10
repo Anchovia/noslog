@@ -9,11 +9,11 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { communityOptions } from "@/features/music/api/community";
+import type { MusicDetailProps } from "@/features/music/types/music-detail";
 
 import CommunityOpinions from "./community-opinions";
 import CommunityTierVotes from "./community-tier-votes";

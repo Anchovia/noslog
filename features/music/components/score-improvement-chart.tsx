@@ -1,8 +1,8 @@
 "use client";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import type { ScoreTrendPoint } from "@/components/music/music-detail-types";
 import LineChart from "@/components/ui/line-chart";
+import type { ScoreTrendPoint } from "@/features/music/types/music-detail";
 import { formatDaysAgo } from "@/lib/music/score-trend";
 
 export default function ScoreImprovementChart({
