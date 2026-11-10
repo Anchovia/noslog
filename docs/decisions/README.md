@@ -167,6 +167,7 @@
 | 2026-11-08 | [뮤즈캣 오락실 상세 캐시](./2026-11-08-musecat-arcade-cache.md)                                                                                                                | 기능                |
 | 2026-11-10 | [코드 구조 정리 30항목](./2026-11-10-code-structure-cleanup.md)                                                                                                                | 구조                |
 | 2026-11-10 | [코드 구조 정리 둘째 묶음](./2026-11-10-code-structure-cleanup-second.md)                                                                                                      | 구조                |
+| 2026-11-11 | [코드 구조 정리 셋째 묶음](./2026-11-11-code-structure-cleanup-third.md)                                                                                                       | 구조                |
 
 ## 대체됨
 
