@@ -42,7 +42,7 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 
 Home-only UI belongs in `features/home/components`; `components/ui` remains
 shared UI. Import utilities by purpose: `@/lib/cn`, `@/lib/format-number`,
-`@/lib/format-date`, and `@/lib/music/stored-grade`. Jacket fallback URLs live in
+`@/lib/format-date`, `@/lib/music/stored-grade`, and `@/lib/music/difficulty`. Jacket fallback URLs live in
 `@/lib/music/jacket-fallback-urls` as `musicJacketFallbackUrls`. Do not collect unrelated
 helpers in a generic `utils.ts` barrel.
 
@@ -82,7 +82,8 @@ output because it is their operator-facing interface.
 ## Dependency boundaries
 
 ESLint's `noslog/boundaries` rule checks imports, re-exports, and literal dynamic
-imports, resolving both `@/` aliases and relative paths.
+imports, resolving both `@/` aliases and relative paths. It applies to `app`,
+`features`, `components` (except the preserved chart viewer/editor folders) and `lib`.
 
 - `app` composes features, UI, and infrastructure. Private route folders remain
   within their owning route. Features cannot import route pages or data helpers.
@@ -97,8 +98,8 @@ imports, resolving both `@/` aliases and relative paths.
   badge's grade helper and AppToaster's account notice adapter are explicit,
   file-and-target-specific exceptions in the rule. They do not create permission
   for more domain imports in new UI primitives.
-- The existing `lib/music/max-grade`, `unlock-condition`, and `score-tone` imports of
-  UI types remain type-only exceptions. Runtime imports on those paths fail lint.
+- `lib/music` owns the `Difficulty` and `StatTone` types (`lib/music/difficulty`,
+  `lib/music/score-tone`); UI components import them from there.
 - Client Components cannot directly import feature server services or modules
   marked `server-only`; type-only imports and Server Actions remain valid.
   Next.js build-time server/client checks also protect indirect imports.
@@ -187,7 +188,10 @@ type ApiResponse<T> =
       };
 ```
 
-- Create envelopes with `createApiSuccess` and `createApiFailure`.
+- Create envelopes with `createApiSuccess` and `createApiFailure`. Route Handlers
+  build the response with `apiSuccessResponse` / `apiFailureResponse` and wrap the
+  handler in `withRouteErrorLog` (`lib/api/route-response`); cron routes use
+  `runCronRoute` (`lib/api/cron-route`).
 - Browser request functions call `readApiResponse`; components receive `T` or a
   typed `ApiError`.
 - Server Components call server services directly instead of fetching their own
@@ -208,6 +212,10 @@ before `redirect()`.
 
 Keep database access and authorization on the server. Never trust values merely
 because React Hook Form already validated them in the browser.
+
+Resolve the request locale with `resolveLocale` (`lib/i18n/routing`) and build the
+translator with `translatorFor` (`lib/i18n/messages`). A client button that calls an
+action and toasts its result uses `useActionToast` (`lib/hooks/use-action-toast`).
 
 ## Zod
 
@@ -318,6 +326,8 @@ verification. Report the actual checks and any unverified runtime conditions.
   or by passing the record you already loaded, instead of querying it again.
 - Clear marks use `lib/music/clear-mark.ts` (`isPianist`, `hasFullComboLamp`).
   SQL that counts them writes the same rule.
+- A per-person daily limit locks and counts with `isWithinDailyLimit`
+  (`lib/daily-limit.ts`) inside the same transaction as the write.
 - Review writes (approve, reject, request changes) claim the row with
   `updateMany({ where: { id, status: pending } })` and stop when the count is
   0, inside the same transaction as their side effects.
