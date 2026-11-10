@@ -29,8 +29,11 @@ import CompactSelect from "@/components/ui/compact-select";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
 import { loadPixi } from "@/lib/chart-pattern/loadPixi";
-import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
-import { chartPianoColors } from "@/lib/chart-pattern/piano";
+import {
+    METRONOME_SCHEDULE_INTERVAL_MS,
+    scheduleMetronomeClicks,
+} from "@/lib/chart-pattern/metronome";
+import { chartPianoColors, hasBlackKeyAfter } from "@/lib/chart-pattern/piano";
 import {
     FALLING_COLORS,
     HAND_COLORS,
@@ -599,9 +602,8 @@ function drawPiano(
             .stroke({ color: colors.pianoKeyLine, width: 0.65, alpha: 0.7 });
     }
 
-    const blackAfter = new Set([0, 1, 3, 4, 5]);
     for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
-        if (!blackAfter.has(lane % 7)) continue;
+        if (!hasBlackKeyAfter(lane)) continue;
         const x = left + (lane + 1) * laneWidth;
         graphics
             .rect(
@@ -1122,47 +1124,16 @@ export default function FallingChartViewer({
                     (performance.now() - clockAnchorRef.current.startedAt);
             }
 
-            const startMs = Math.max(
-                playbackTimeMs,
-                scheduledThroughMsRef.current
-            );
-            const endMs = playbackTimeMs + 180;
-            const beats = getBeatMarkers(
-                document.timingPoints,
-                document.ticksPerQuarter,
-                startMs,
-                endMs
-            );
-
-            for (const beat of beats) {
-                const peakGain = getMetronomePeakGain(
-                    metronomeVolume,
-                    beat.accent
-                );
-                if (peakGain <= 0) continue;
-                const scheduledTime = Math.max(
-                    context.currentTime,
-                    context.currentTime + (beat.timeMs - playbackTimeMs) / 1_000
-                );
-                const oscillator = context.createOscillator();
-                const gain = context.createGain();
-                oscillator.frequency.value = beat.accent ? 1_320 : 880;
-                gain.gain.setValueAtTime(0.0001, scheduledTime);
-                gain.gain.exponentialRampToValueAtTime(
-                    peakGain,
-                    scheduledTime + 0.002
-                );
-                gain.gain.exponentialRampToValueAtTime(
-                    0.0001,
-                    scheduledTime + 0.045
-                );
-                oscillator.connect(gain);
-                gain.connect(context.destination);
-                oscillator.start(scheduledTime);
-                oscillator.stop(scheduledTime + 0.05);
-            }
-            scheduledThroughMsRef.current = endMs + 0.001;
-        }, 40);
+            scheduledThroughMsRef.current = scheduleMetronomeClicks({
+                context,
+                timingPoints: document.timingPoints,
+                ticksPerQuarter: document.ticksPerQuarter,
+                currentMs: playbackTimeMs,
+                scheduledThroughMs: scheduledThroughMsRef.current,
+                rate: 1,
+                volume: metronomeVolume,
+            });
+        }, METRONOME_SCHEDULE_INTERVAL_MS);
 
         return () => window.clearInterval(interval);
     }, [

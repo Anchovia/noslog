@@ -281,7 +281,7 @@ export function parseNpy(bytes: Uint8Array): NpyArray {
 }
 
 /** 2차원 배열을 줄 목록으로. np.empty((0, n)) 이 (0,) 으로 저장된 경우도 빈 목록. columns 는 받을 수 있는 열 수 */
-export function npyRows(array: NpyArray, columns: number[]): number[][] {
+function npyRows(array: NpyArray, columns: number[]): number[][] {
     if (array.values.length === 0) return [];
     const width = array.shape[1];
     if (array.shape.length !== 2 || !columns.includes(width)) {

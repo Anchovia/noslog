@@ -13,6 +13,7 @@ import { type KeyboardEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
+    CHART_EDITOR_SNAP_DIVISORS,
     countChartJudgments,
     findChartNoteConflicts,
     hasNewChartNoteConflicts,
@@ -23,35 +24,43 @@ import {
     DEFAULT_CHART_OFFSET_MS,
 } from "@/lib/chart-pattern/schema";
 import {
+    activeTimingPoint,
+    beatTicksOf,
     sortTimingPoints,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
 import {
-    alignVid2bmapFirstBarTick,
-    applyVid2bmapMerge,
-    applyVid2bmapStartTiming,
-    applyVid2bmapTempoChanges,
-    beatLengthLabel,
-    chartPositionLabel,
     collectVid2bmapNotes,
     convertVid2bmap,
-    defaultVid2bmapChoice,
     defaultVid2bmapFirstBarTick,
-    detectVid2bmapTempoChanges,
-    diffChartNotes,
-    estimateVid2bmapBpm,
-    estimateVid2bmapMeter,
-    planVid2bmapMerge,
     suggestVid2bmapSnap,
-    vid2bmapBarRestore,
-    vid2bmapMeterFirstBarTick,
-    vid2bmapTimingDrift,
+    type Vid2bmapWarning,
+} from "@/lib/chart-pattern/vid2bmapConvert";
+import { diffChartNotes } from "@/lib/chart-pattern/vid2bmapDiff";
+import {
+    applyVid2bmapMerge,
+    beatLengthLabel,
+    chartPositionLabel,
+    defaultVid2bmapChoice,
+    planVid2bmapMerge,
     type Vid2bmapChoice,
     type Vid2bmapMergeItem,
+} from "@/lib/chart-pattern/vid2bmapMerge";
+import {
+    applyVid2bmapTempoChanges,
+    estimateVid2bmapMeter,
+    vid2bmapBarRestore,
+    vid2bmapMeterFirstBarTick,
     type Vid2bmapMeter,
+} from "@/lib/chart-pattern/vid2bmapMeter";
+import {
+    alignVid2bmapFirstBarTick,
+    applyVid2bmapStartTiming,
+    detectVid2bmapTempoChanges,
+    estimateVid2bmapBpm,
+    vid2bmapTimingDrift,
     type Vid2bmapTempoChange,
-    type Vid2bmapWarning,
-} from "@/lib/chart-pattern/vid2bmap";
+} from "@/lib/chart-pattern/vid2bmapTempo";
 import {
     readVid2bmapZip,
     type Vid2bmapResult,
@@ -69,7 +78,6 @@ import { cn } from "@/lib/cn";
 /** 패널에 보여 줄 격자(한 박 나누기). 추천 격자가 여기 없으면 끝에 더한다 */
 const GRID_OPTIONS = [4, 6, 8, 12];
 /** 에디터 스냅은 온음표 나누기라 「한 박 나누기 × 4」(4분의 박자) — 목록에 있을 때만 맞춘다 */
-const EDITOR_SNAP_DIVISORS = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 /** 목록에서 고른 곳이 판정선 위에 보이도록 조금 앞으로 되감는다 */
 const FOCUS_LEAD_MS = 600;
 
@@ -114,11 +122,7 @@ const TYPE_LABEL: Record<ChartNote["type"], string> = {
 };
 
 function beatTicksAt(tick: number, timingPoints: ChartTimingPoint[]) {
-    let point = sortTimingPoints(timingPoints)[0];
-    for (const candidate of sortTimingPoints(timingPoints)) {
-        if (candidate.tick <= tick) point = candidate;
-    }
-    return (480 * 4) / point.denominator;
+    return beatTicksOf(activeTimingPoint(sortTimingPoints(timingPoints), tick));
 }
 
 function describeItem(
@@ -787,7 +791,7 @@ export default function Vid2bmapImportPanel({
             const origin = sortTimingPoints(timingPoints)[0];
             const editorSnap =
                 (loaded?.snapDivisor ?? 4) * (origin.denominator === 4 ? 4 : 8);
-            if (EDITOR_SNAP_DIVISORS.includes(editorSnap)) {
+            if (CHART_EDITOR_SNAP_DIVISORS.includes(editorSnap)) {
                 store.getState().setSnapDivisor(editorSnap);
             }
             // 출처 기록 — 이 버전 이하가 공개되면 뷰어에 「노트 배치 · 영상에서 추출(vid2bmap)」

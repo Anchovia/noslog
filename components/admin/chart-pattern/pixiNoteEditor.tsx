@@ -11,7 +11,7 @@ import {
 import type { Application, Graphics } from "pixi.js";
 
 import { loadPixi } from "@/lib/chart-pattern/loadPixi";
-import { chartPianoColors } from "@/lib/chart-pattern/piano";
+import { chartPianoColors, hasBlackKeyAfter } from "@/lib/chart-pattern/piano";
 import {
     EDITOR_COLORS,
     HAND_COLORS,
@@ -19,6 +19,8 @@ import {
     STAGE_CANVAS,
 } from "@/lib/chart-pattern/stageColors";
 import {
+    CHART_EDITOR_SNAP_DIVISORS,
+    clampChartLane,
     chartNoteContainsPoint,
     chartNoteIntersectsRect,
     chartNoteRangeAtTick,
@@ -158,7 +160,6 @@ interface PixiRuntime {
     Graphics: typeof import("pixi.js").Graphics;
 }
 
-const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const DURATION_RESIZE_HIT_RADIUS_PX = 7;
 const MOVE_DRAG_THRESHOLD_PX = 4;
 
@@ -308,9 +309,8 @@ function drawEditorPiano(
             .stroke({ color: colors.pianoKeyLine, width: 0.65, alpha: 0.72 });
     }
 
-    const blackAfter = new Set([0, 1, 3, 4, 5]);
     for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
-        if (!blackAfter.has(lane % 7)) continue;
+        if (!hasBlackKeyAfter(lane)) continue;
         const x = (lane + 1) * laneWidth;
         graphics
             .rect(
@@ -330,10 +330,6 @@ function drawEditorPiano(
         .moveTo(5, judgmentY - 1.5)
         .lineTo(width - 5, judgmentY - 1.5)
         .stroke({ color: colors.judgment, width: 1.5, alpha: 0.96 });
-}
-
-function clampLane(lane: number, width = 1) {
-    return Math.min(CHART_LANE_COUNT - width, Math.max(0, Math.round(lane)));
 }
 
 function buildPreviewNote({
@@ -357,7 +353,10 @@ function buildPreviewNote({
             Math.abs(gesture.currentLane - gesture.startLane) >= 1;
         const lane = movedAtLeastOneLane
             ? Math.min(gesture.startLane, gesture.currentLane)
-            : clampLane(gesture.startLane, gesture.forceOneLane ? 1 : width);
+            : clampChartLane(
+                  gesture.startLane,
+                  gesture.forceOneLane ? 1 : width
+              );
         const noteWidth = movedAtLeastOneLane
             ? Math.abs(gesture.currentLane - gesture.startLane) + 1
             : Math.min(
@@ -388,8 +387,8 @@ function buildPreviewNote({
     );
     const firstLane = earlierIsStart ? gesture.startLane : gesture.currentLane;
     const lastLane = earlierIsStart ? gesture.currentLane : gesture.startLane;
-    const lane = clampLane(firstLane, width);
-    const endLane = clampLane(lastLane, width);
+    const lane = clampChartLane(firstLane, width);
+    const endLane = clampChartLane(lastLane, width);
 
     if (tool === "trill") {
         return {
@@ -401,7 +400,9 @@ function buildPreviewNote({
             lane,
             width,
             pairLane:
-                endLane === lane ? clampLane(lane + width, width) : endLane,
+                endLane === lane
+                    ? clampChartLane(lane + width, width)
+                    : endLane,
             pairWidth: width,
             trillSnapDivisor: snapDivisor,
             points: [],
@@ -506,7 +507,7 @@ function buildPointEditedNote(gesture: PointGesture): ChartNote {
     const width = Math.min(point.width, CHART_LANE_COUNT);
     const nextPoint = {
         ...point,
-        lane: clampLane(gesture.currentLane, width),
+        lane: clampChartLane(gesture.currentLane, width),
         tickOffset: Math.min(
             note.durationTicks - 1,
             Math.max(1, gesture.currentTick - note.tick)
@@ -1026,7 +1027,7 @@ export default function PixiNoteEditor({
             }
             if (!modifier && event.shiftKey && /^[1-9]$/.test(event.key)) {
                 const divisor = Number(event.key);
-                if (snapDivisors.includes(divisor)) {
+                if (CHART_EDITOR_SNAP_DIVISORS.includes(divisor)) {
                     event.preventDefault();
                     setSnapDivisor(divisor);
                 }
@@ -1178,13 +1179,14 @@ export default function PixiNoteEditor({
             if (event.deltaY === 0) return;
 
             if (event.ctrlKey) {
-                const currentIndex = snapDivisors.indexOf(snapDivisor);
+                const currentIndex =
+                    CHART_EDITOR_SNAP_DIVISORS.indexOf(snapDivisor);
                 const direction = event.deltaY > 0 ? 1 : -1;
                 const nextIndex = Math.min(
-                    snapDivisors.length - 1,
+                    CHART_EDITOR_SNAP_DIVISORS.length - 1,
                     Math.max(0, currentIndex + direction)
                 );
-                setSnapDivisor(snapDivisors[nextIndex]);
+                setSnapDivisor(CHART_EDITOR_SNAP_DIVISORS[nextIndex]);
                 return;
             }
 
@@ -1495,7 +1497,7 @@ export default function PixiNoteEditor({
         }
         const range = chartNoteRangeAtTick(note, position.tick);
         const width = Math.max(1, Math.round(range.width));
-        const lane = clampLane(Math.round(range.lane), width);
+        const lane = clampChartLane(Math.round(range.lane), width);
         replaceNotes(
             document.notes.map((value) =>
                 value.id === note.id

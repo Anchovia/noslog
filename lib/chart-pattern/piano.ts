@@ -12,3 +12,9 @@ export const chartPianoColors = {
     pressedLeft: PRESSED_HAND_COLORS.left,
     pressedRight: PRESSED_HAND_COLORS.right,
 } as const;
+
+const BLACK_KEY_AFTER = new Set([0, 1, 3, 4, 5]);
+
+export function hasBlackKeyAfter(lane: number) {
+    return BLACK_KEY_AFTER.has(lane % 7);
+}

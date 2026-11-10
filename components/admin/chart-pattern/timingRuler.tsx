@@ -18,7 +18,7 @@ import {
 } from "@/lib/chart-pattern/timing";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import { chartPianoColors } from "@/lib/chart-pattern/piano";
+import { chartPianoColors, hasBlackKeyAfter } from "@/lib/chart-pattern/piano";
 import {
     EDITOR_COLORS,
     numberToHex,
@@ -47,10 +47,9 @@ function drawTimingPiano(
         context.strokeRect(lane * laneWidth, pianoTop, laneWidth, pianoHeight);
     }
 
-    const blackAfter = new Set([0, 1, 3, 4, 5]);
     context.fillStyle = numberToHex(chartPianoColors.black);
     for (let lane = 0; lane < CHART_LANE_COUNT - 1; lane += 1) {
-        if (!blackAfter.has(lane % 7)) continue;
+        if (!hasBlackKeyAfter(lane)) continue;
         const x = (lane + 1) * laneWidth;
         context.fillRect(
             x - laneWidth * 0.22,

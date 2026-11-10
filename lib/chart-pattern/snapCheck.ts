@@ -5,12 +5,15 @@
  * 노트 시작만 본다(길이는 가져올 때 격자 단위로 맞춘다).
  */
 import type { ChartDocument, ChartNote, ChartTimingPoint } from "./schema";
-import { sortTimingPoints, tickToMilliseconds } from "./timing";
+import {
+    activeTimingPoint,
+    beatTicksOf,
+    sortTimingPoints,
+    tickToMilliseconds,
+} from "./timing";
 
 /** 에디터 스냅 선택지와 같은 격자 */
-export const CHART_SNAP_CHECK_DIVISORS = [
-    1, 2, 3, 4, 6, 8, 12, 16, 24, 32,
-] as const;
+const CHART_SNAP_CHECK_DIVISORS = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32] as const;
 
 export interface OffGridNote {
     id: string;
@@ -22,22 +25,13 @@ export interface OffGridNote {
     offsetMs: number;
 }
 
-function activePoint(sorted: ChartTimingPoint[], tick: number) {
-    let point = sorted[0];
-    for (const candidate of sorted) {
-        if (candidate.tick <= tick) point = candidate;
-        else break;
-    }
-    return point;
-}
-
 function nearestGrid(
     tick: number,
     sorted: ChartTimingPoint[],
     ticksPerQuarter: number
 ) {
-    const point = activePoint(sorted, tick);
-    const beatTicks = (ticksPerQuarter * 4) / point.denominator;
+    const point = activeTimingPoint(sorted, tick);
+    const beatTicks = beatTicksOf(point, ticksPerQuarter);
     const offset = tick - point.tick;
     let best = { tick, divisor: 1, distance: Number.POSITIVE_INFINITY };
     for (const divisor of CHART_SNAP_CHECK_DIVISORS) {

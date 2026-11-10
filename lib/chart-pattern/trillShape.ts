@@ -5,7 +5,7 @@
  */
 import type { ChartNote } from "./schema";
 
-export const TRILL_HEX_PER_QUARTER = 12;
+const TRILL_HEX_PER_QUARTER = 12;
 
 export interface TrillRange {
     lane: number;

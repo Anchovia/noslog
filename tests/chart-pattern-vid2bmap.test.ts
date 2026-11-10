@@ -9,31 +9,37 @@ import {
 import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import { getBeatMarkers, tickToMilliseconds } from "@/lib/chart-pattern/timing";
 import {
-    alignVid2bmapFirstBarTick,
-    applyVid2bmapTempoChanges,
-    vid2bmapBarRestore,
-    vid2bmapTimingDrift,
-    detectVid2bmapTempoChanges,
-    applyVid2bmapMerge,
-    applyVid2bmapStartTiming,
-    beatLengthLabel,
-    estimateVid2bmapBpm,
-    estimateVid2bmapMeter,
-    chartPositionLabel,
     collectVid2bmapNotes,
-    defaultVid2bmapChoice,
-    planVid2bmapMerge,
-    chooseVid2bmapBpm,
     convertVid2bmap,
     defaultVid2bmapFirstBarTick,
-    diffChartNotes,
     groupVid2bmapGlissando,
     snapVid2bmapTick,
     suggestVid2bmapSnap,
     vid2bmapBeatPosition,
-    vid2bmapMeterFirstBarTick,
     vid2bmapTickAt,
-} from "@/lib/chart-pattern/vid2bmap";
+} from "@/lib/chart-pattern/vid2bmapConvert";
+import { diffChartNotes } from "@/lib/chart-pattern/vid2bmapDiff";
+import {
+    applyVid2bmapMerge,
+    beatLengthLabel,
+    chartPositionLabel,
+    defaultVid2bmapChoice,
+    planVid2bmapMerge,
+} from "@/lib/chart-pattern/vid2bmapMerge";
+import {
+    applyVid2bmapTempoChanges,
+    vid2bmapBarRestore,
+    estimateVid2bmapMeter,
+    vid2bmapMeterFirstBarTick,
+} from "@/lib/chart-pattern/vid2bmapMeter";
+import {
+    alignVid2bmapFirstBarTick,
+    vid2bmapTimingDrift,
+    detectVid2bmapTempoChanges,
+    applyVid2bmapStartTiming,
+    estimateVid2bmapBpm,
+    chooseVid2bmapBpm,
+} from "@/lib/chart-pattern/vid2bmapTempo";
 import {
     barRowsFromMask,
     matchBeatFrames,

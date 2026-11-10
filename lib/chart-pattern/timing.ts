@@ -1,3 +1,4 @@
+import { CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartDocument, ChartTimingPoint } from "./schema";
 
 const MINUTES_TO_MILLISECONDS = 60_000;
@@ -10,6 +11,20 @@ function stableFloat(value: number) {
 export function sortTimingPoints(points: ChartTimingPoint[]) {
     return [...points].sort((a, b) => a.tick - b.tick || a.timeMs - b.timeMs);
 }
+
+export function activeTimingPoint(sorted: ChartTimingPoint[], tick: number) {
+    let point = sorted[0];
+    for (const candidate of sorted) {
+        if (candidate.tick <= tick) point = candidate;
+        else break;
+    }
+    return point;
+}
+
+export const beatTicksOf = (
+    point: ChartTimingPoint,
+    ticksPerQuarter: number = CHART_TICKS_PER_QUARTER
+) => (ticksPerQuarter * 4) / point.denominator;
 
 const pointsByTick = new WeakMap<ChartTimingPoint[], ChartTimingPoint[]>();
 const pointsByTime = new WeakMap<ChartTimingPoint[], ChartTimingPoint[]>();
@@ -127,7 +142,7 @@ export interface MeasureMarker extends BeatMarker {
     showTimeSignature: boolean;
 }
 
-function greatestCommonDivisor(first: number, second: number) {
+export function greatestCommonDivisor(first: number, second: number) {
     let left = Math.abs(Math.round(first));
     let right = Math.abs(Math.round(second));
     while (right !== 0) {
@@ -221,7 +236,7 @@ export function getBeatMarkers(
         const segmentEndMs = Math.min(endMs, nextPoint?.timeMs ?? endMs);
         if (segmentEndMs < segmentStartMs) continue;
 
-        const beatTicks = (ticksPerQuarter * 4) / point.denominator;
+        const beatTicks = beatTicksOf(point, ticksPerQuarter);
         const firstBeatIndex = Math.ceil(
             (millisecondsToTick(segmentStartMs, [point], ticksPerQuarter) -
                 point.tick) /
@@ -411,7 +426,7 @@ export function getMeasurePanels(
         );
         if (segmentEndMs < segmentStartMs) continue;
 
-        const beatTicks = (ticksPerQuarter * 4) / point.denominator;
+        const beatTicks = beatTicksOf(point, ticksPerQuarter);
         const measureTicks = beatTicks * point.numerator;
         const firstVisibleTick = millisecondsToTick(
             segmentStartMs,

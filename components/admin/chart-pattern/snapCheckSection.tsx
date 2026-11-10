@@ -8,7 +8,7 @@ import {
     snapNotesToNearestGrid,
 } from "@/lib/chart-pattern/snapCheck";
 import { tickToMilliseconds } from "@/lib/chart-pattern/timing";
-import { chartPositionLabel } from "@/lib/chart-pattern/vid2bmap";
+import { chartPositionLabel } from "@/lib/chart-pattern/vid2bmapMerge";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";

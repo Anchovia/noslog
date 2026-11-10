@@ -5,8 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
-import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
-import { getBeatMarkers } from "@/lib/chart-pattern/timing";
+import {
+    METRONOME_SCHEDULE_INTERVAL_MS,
+    scheduleMetronomeClicks,
+} from "@/lib/chart-pattern/metronome";
 
 import {
     useChartEditorStore,
@@ -258,49 +260,17 @@ export function useChartAudio(metronomeVolume: number) {
             const anchor = anchorRef.current;
             if (!context || !anchor) return;
 
-            const currentMs = readPlaybackTime();
-            const lookAheadMs = 180 * anchor.rate;
-            const startMs = Math.max(currentMs, scheduledThroughMsRef.current);
-            const endMs = currentMs + lookAheadMs;
             const state = store.getState();
-            const beats = getBeatMarkers(
-                state.document.timingPoints,
-                state.document.ticksPerQuarter,
-                startMs,
-                endMs
-            );
-
-            for (const beat of beats) {
-                const peakGain = getMetronomePeakGain(
-                    metronomeVolume,
-                    beat.accent
-                );
-                if (peakGain <= 0) continue;
-                const delaySeconds =
-                    (beat.timeMs - currentMs) / 1_000 / anchor.rate;
-                const scheduledTime = Math.max(
-                    context.currentTime,
-                    context.currentTime + delaySeconds
-                );
-                const oscillator = context.createOscillator();
-                const gain = context.createGain();
-                oscillator.frequency.value = beat.accent ? 1_320 : 880;
-                gain.gain.setValueAtTime(0.0001, scheduledTime);
-                gain.gain.exponentialRampToValueAtTime(
-                    peakGain,
-                    scheduledTime + 0.002
-                );
-                gain.gain.exponentialRampToValueAtTime(
-                    0.0001,
-                    scheduledTime + 0.045
-                );
-                oscillator.connect(gain);
-                gain.connect(context.destination);
-                oscillator.start(scheduledTime);
-                oscillator.stop(scheduledTime + 0.05);
-            }
-            scheduledThroughMsRef.current = endMs + 0.001;
-        }, 40);
+            scheduledThroughMsRef.current = scheduleMetronomeClicks({
+                context,
+                timingPoints: state.document.timingPoints,
+                ticksPerQuarter: state.document.ticksPerQuarter,
+                currentMs: readPlaybackTime(),
+                scheduledThroughMs: scheduledThroughMsRef.current,
+                rate: anchor.rate,
+                volume: metronomeVolume,
+            });
+        }, METRONOME_SCHEDULE_INTERVAL_MS);
 
         return () => window.clearInterval(interval);
     }, [

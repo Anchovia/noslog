@@ -5,12 +5,15 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 
 import {
+    CHART_EDITOR_SNAP_DIVISORS,
     changeChartNoteHand,
+    clampChartLane,
     getMinimumChartNoteDurationTicks,
     resizeChartNoteHorizontally,
 } from "@/lib/chart-pattern/editor";
 import {
     CHART_LANE_COUNT,
+    CHART_NOTE_TYPES,
     type ChartHand,
     type ChartNote,
     type ChartNoteType,
@@ -25,14 +28,6 @@ import Button, { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 const inputClass = "nl-input";
-
-const noteTypes: ChartNoteType[] = ["standard", "tenuto", "glissando", "trill"];
-
-const pathSnapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
-
-function clampLane(lane: number, width: number) {
-    return Math.min(CHART_LANE_COUNT - width, Math.max(0, Math.round(lane)));
-}
 
 function clampWidth(width: number, lane: number) {
     return Math.min(CHART_LANE_COUNT - lane, Math.max(1, Math.round(width)));
@@ -117,7 +112,7 @@ export default function NoteInspector() {
                 type,
                 durationTicks,
                 points: [],
-                pairLane: clampLane(preferredLane, pairWidth),
+                pairLane: clampChartLane(preferredLane, pairWidth),
                 pairWidth,
                 trillSnapDivisor: selected.trillSnapDivisor ?? snapDivisor,
                 glissandoSnapDivisor: undefined,
@@ -141,7 +136,7 @@ export default function NoteInspector() {
     function changeLane(value: number) {
         if (!selected) return;
         updateSelected({
-            lane: clampLane(value - 1, selected.width),
+            lane: clampChartLane(value - 1, selected.width),
         });
     }
 
@@ -192,7 +187,7 @@ export default function NoteInspector() {
             if (pointIndex !== index) return point;
             const next = { ...point, ...changes };
             next.width = clampWidth(next.width, next.lane);
-            next.lane = clampLane(next.lane, next.width);
+            next.lane = clampChartLane(next.lane, next.width);
             next.tickOffset = Math.min(
                 selected.durationTicks,
                 Math.max(0, Math.round(next.tickOffset))
@@ -316,7 +311,7 @@ export default function NoteInspector() {
                                     }
                                     className={inputClass}
                                 >
-                                    {noteTypes.map((value) => (
+                                    {CHART_NOTE_TYPES.map((value) => (
                                         <option key={value} value={value}>
                                             {t(`editor.noteType.${value}`)}
                                         </option>
@@ -438,7 +433,7 @@ export default function NoteInspector() {
                                                     selected.pairWidth ??
                                                     selected.width;
                                                 updateSelected({
-                                                    pairLane: clampLane(
+                                                    pairLane: clampChartLane(
                                                         Number(
                                                             event.target.value
                                                         ) - 1,
@@ -526,7 +521,7 @@ export default function NoteInspector() {
                                         {/* 영상 추출 글리산도는 게임 가로대 간격 그대로라 목록 밖 값(1/36 등)일 수 있다 — 지금 값도 보이게 */}
                                         {[
                                             ...new Set([
-                                                ...pathSnapDivisors,
+                                                ...CHART_EDITOR_SNAP_DIVISORS,
                                                 selected.glissandoSnapDivisor ??
                                                     4,
                                             ]),
