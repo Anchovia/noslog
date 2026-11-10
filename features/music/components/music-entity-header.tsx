@@ -29,7 +29,7 @@ import {
 } from "@/lib/music/grade-progress-color";
 import { getGradeProgress, getMaxBasicGrade } from "@/lib/music/max-grade";
 import { tierValueColor } from "@/lib/music/tier-value-color";
-import { tierGoalLabels } from "@/lib/tiers";
+import { tierGoalLabels } from "@/lib/tiers/tier-scope";
 
 interface TitleFit {
     titleCut: boolean;

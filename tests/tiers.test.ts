@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
 
+import { getJacketUrl } from "@/lib/music/jackets";
 import {
     MAX_TIER_VALUE,
     MIN_TIER_VALUE,
     TIER_BAND_VALUES,
     formatTierValue,
-    getJacketUrl,
     getTierRecommendation,
     getTierRecordStatus,
     isTierGoalAchieved,
     formatOfficialChartLevel,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 describe("TIER_BAND_VALUES", () => {
     it("14.5부터 1.0까지 0.1 간격의 136개 서열 상수를 제공한다", () => {

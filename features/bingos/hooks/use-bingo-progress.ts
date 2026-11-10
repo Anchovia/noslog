@@ -7,11 +7,11 @@ import {
     setBingoCellCompletion,
 } from "@/app/(site)/bingo/[id]/actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { getBingoProgress } from "@/features/bingos/bingo";
 import type {
     BingoDetail,
     BingoMission,
 } from "@/features/bingos/schemas/public-bingo-schema";
-import { getBingoProgress } from "@/lib/bingo";
 
 export function useBingoProgress(
     bingo: BingoDetail,

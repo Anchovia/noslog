@@ -5,7 +5,7 @@ import {
     MIN_TIER_VALUE,
     TIER_GOALS,
     TIER_MODES,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 const tierModeSchema = z.enum(TIER_MODES, {
     error: "서열표 모드를 확인해주세요.",

@@ -12,7 +12,7 @@ import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { parseChartDifficulty } from "@/lib/music/difficulty";
-import { getJacketCandidates } from "@/lib/music-jackets";
+import { getJacketCandidates } from "@/lib/music/jackets";
 import getSession from "@/lib/session";
 
 export async function generateMetadata({

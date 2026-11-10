@@ -5,7 +5,7 @@ import type { Prisma } from "@prisma/client";
 import type { BemaniMusicCatalogInput } from "@/features/sync/schemas/sync-request-schema";
 import db from "@/lib/db";
 import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
-import { getLocalJacketUrl, isManualJacketUrl } from "@/lib/music-jackets";
+import { getLocalJacketUrl, isManualJacketUrl } from "@/lib/music/jackets";
 
 function bemaniMetadata(data: BemaniMusicCatalogInput) {
     return {

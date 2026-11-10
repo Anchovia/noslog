@@ -9,7 +9,7 @@ import {
     tierListLabel,
     type TierGoal,
     type TierMode,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 import { requireAdmin } from "@/lib/admin";
 
 const statusLabel: Record<string, string> = {

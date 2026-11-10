@@ -24,7 +24,10 @@ import {
 } from "@/lib/i18n/messages";
 import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
-import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
+import {
+    STATS_GRADE_SELECT,
+    withStatsGrades,
+} from "@/lib/profile/player-stats";
 import getSession from "@/lib/session";
 import {
     claimUploadTokenQuota,

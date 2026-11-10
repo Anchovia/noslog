@@ -14,11 +14,11 @@ import {
 } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { ARCADE_CABINET_FEATURES } from "@/features/arcades/arcade-details";
 import type {
     ArcadeCabinet,
     PublicArcade,
 } from "@/features/arcades/schemas/public-arcade-schema";
-import { ARCADE_CABINET_FEATURES } from "@/lib/arcade-details";
 import type { MessageKey } from "@/lib/i18n/messages";
 
 /**

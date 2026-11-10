@@ -11,7 +11,7 @@ import { actionValidationFailure } from "@/lib/actions/validation";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import { isCurrentTierScope } from "@/lib/tiers";
+import { isCurrentTierScope } from "@/lib/tiers/tier-scope";
 
 export type TierMutationActionResult = ActionResult;
 

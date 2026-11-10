@@ -1,6 +1,5 @@
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { DIFFICULTIES, type Difficulty } from "@/lib/music/difficulty";
-export { getJacketUrl } from "@/lib/music-jackets";
 
 export type TierRecord = {
     score: number;

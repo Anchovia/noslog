@@ -24,7 +24,7 @@ import type {
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { cn } from "@/lib/cn";
 import useImageShare from "@/lib/hooks/use-image-share";
-import { formatTierValue } from "@/lib/tiers";
+import { formatTierValue } from "@/lib/tiers/tier-scope";
 
 import { sortTierBrowserEntries } from "./tier-browser-bands";
 import { tierStripValue } from "./tier-browser-card";

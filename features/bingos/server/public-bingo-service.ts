@@ -1,5 +1,6 @@
 import "server-only";
 
+import { getBingoProgress } from "@/features/bingos/bingo";
 import {
     bingoCatalogItemSchema,
     bingoDetailSchema,
@@ -10,7 +11,6 @@ import {
     getUserBingoCellProgress,
 } from "@/features/bingos/server/bingo-data";
 import { entryDifficulty } from "@/features/music/lib/entry-difficulty";
-import { getBingoProgress } from "@/lib/bingo";
 import { getUser } from "@/lib/user";
 
 export async function getPublicBingoCatalog() {

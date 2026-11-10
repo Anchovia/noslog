@@ -2,7 +2,10 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { readApiResponse } from "@/lib/api/response";
 import type { Locale } from "@/lib/i18n/routing";
-import type { PublicTierBandPayload, TierDifficulty } from "@/lib/tiers";
+import type {
+    PublicTierBandPayload,
+    TierDifficulty,
+} from "@/lib/tiers/tier-scope";
 
 export type TierBandQuery = {
     slug: string;

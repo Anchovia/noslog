@@ -14,7 +14,7 @@ import {
 } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
-import { isManualJacketUrl, MANUAL_JACKET_PREFIX } from "@/lib/music-jackets";
+import { isManualJacketUrl, MANUAL_JACKET_PREFIX } from "@/lib/music/jackets";
 import { logServerError } from "@/lib/observability/server";
 import {
     claimUploadTokenQuota,

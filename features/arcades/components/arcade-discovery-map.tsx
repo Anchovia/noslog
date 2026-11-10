@@ -13,14 +13,14 @@ import { useTranslations } from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
-import { sendAnalytics } from "@/lib/analytics-client";
-import { readTokenPixels } from "@/lib/design-tokens";
 import type {
     KakaoCustomOverlay,
     KakaoMapInstance,
     KakaoOverlay,
-} from "@/lib/kakao-maps";
-import { loadKakaoMaps } from "@/lib/kakao-maps";
+} from "@/features/arcades/kakao-maps";
+import { loadKakaoMaps } from "@/features/arcades/kakao-maps";
+import { sendAnalytics } from "@/lib/analytics-client";
+import { readTokenPixels } from "@/lib/design-tokens";
 
 type KakaoApi = Awaited<ReturnType<typeof loadKakaoMaps>>;
 

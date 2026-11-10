@@ -20,7 +20,7 @@ vi.mock("@/lib/db", () => ({
         $transaction: mocks.transaction,
     },
 }));
-vi.mock("@/lib/music-jackets", () => ({
+vi.mock("@/lib/music/jackets", () => ({
     getLocalJacketUrl: mocks.getLocalJacketUrl,
     isManualJacketUrl: (url: string | null | undefined) =>
         Boolean(url?.includes("/jackets/manual/")),

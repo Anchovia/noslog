@@ -15,7 +15,7 @@ import {
 import { calculateUserRating } from "@/features/rankings/server/player-rating-service";
 import db from "@/lib/db";
 import { hasFullComboLamp } from "@/lib/music/clear-mark";
-import { formatKstPlayTime } from "@/lib/player-stats";
+import { formatKstPlayTime } from "@/lib/profile/player-stats";
 import { BASIC_RATING_MAX } from "@/lib/tiers/basic-rating";
 
 const musicFields = { title: true, background: true } as const;

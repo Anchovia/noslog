@@ -7,7 +7,7 @@ import {
     TIER_DIFFICULTIES,
     TIER_GOALS,
     TIER_MODES,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 const TIER_BROWSER_VIEWS = ["grid", "list"] as const;
 // 구간 안 곡 순서(2026-09-22 ②) — 서열표 순(기본) · 레벨 순 · 일본어 읽기 순 · 점수 낮은 순(로그인)

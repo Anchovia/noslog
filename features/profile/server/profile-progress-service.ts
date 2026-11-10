@@ -3,7 +3,7 @@ import "server-only";
 import type { ProfileProgressQuery } from "@/features/profile/schemas/public-profile-schema";
 import { profileProgressPayloadSchema } from "@/features/profile/schemas/public-profile-schema";
 import db from "@/lib/db";
-import { STATS_GRADE_SELECT, statsGrade } from "@/lib/player-stats";
+import { STATS_GRADE_SELECT, statsGrade } from "@/lib/profile/player-stats";
 
 export async function getPublicProfileProgress(
     userId: number,

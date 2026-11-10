@@ -28,6 +28,7 @@ import BackLink from "@/components/ui/back-link";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import IconRow, { IconRows } from "@/components/ui/icon-row";
+import { normalizeArcadeBusinessHours } from "@/features/arcades/arcade-details";
 import {
     arcadeOpenState,
     arcadeScheduleHint,
@@ -41,7 +42,6 @@ import ArcadePhotos from "@/features/arcades/components/arcade-photos";
 import LazyLocationMap from "@/features/arcades/components/lazy-location-map";
 import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { MusecatArcade } from "@/features/musecat/musecat-arcade";
-import { normalizeArcadeBusinessHours } from "@/lib/arcade-details";
 
 import {
     type MusecatAction,

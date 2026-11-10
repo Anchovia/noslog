@@ -27,7 +27,7 @@ import {
     STATS_GRADE_SELECT,
     statsGrade,
     statsGradeField,
-} from "@/lib/player-stats";
+} from "@/lib/profile/player-stats";
 
 const playerFields = {
     id: true,

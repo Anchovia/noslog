@@ -3,8 +3,8 @@
 import { Fragment } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { getBingoLineProgress } from "@/features/bingos/bingo";
 import type { BingoMission } from "@/features/bingos/schemas/public-bingo-schema";
-import { getBingoLineProgress } from "@/lib/bingo";
 
 /** 칸 위치 글 — 보이는 좌표 없이 화면 읽기에만 「5행 1열」 */
 export function useBingoPosition() {

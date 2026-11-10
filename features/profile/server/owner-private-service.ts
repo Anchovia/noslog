@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 
 import db from "@/lib/db";
-import { formatKstPlayTime } from "@/lib/player-stats";
+import { formatKstPlayTime } from "@/lib/profile/player-stats";
 
 /**
  * 본인에게만 보이는 비공개 항목(2026-09-26 P1) — 공개 설정으로 숨긴 값만 돌려준다(공개된 값은 공개 캐시가 이미 가짐).

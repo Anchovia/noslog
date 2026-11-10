@@ -7,7 +7,7 @@ import { deleteBlobIfOwned } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
-import { getLocalJacketUrl } from "@/lib/music-jackets";
+import { getLocalJacketUrl } from "@/lib/music/jackets";
 
 // 공식 자켓(약 100px)은 수 KB 라 넉넉히 잡아도 1MB 를 넘지 않는다
 export const MAX_COLLECTED_JACKET_BYTES = 1024 * 1024;

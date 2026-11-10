@@ -15,7 +15,7 @@ import TierPlacementEditor from "@/features/tiers/components/tier-placement-edit
 import {
     MUSIC_CATEGORY_VALUES,
     normalizeMusicCategory,
-} from "@/lib/music-categories";
+} from "@/lib/music/categories";
 import {
     TIER_DIFFICULTIES,
     TIER_REAL_LEVELS,
@@ -24,7 +24,7 @@ import {
     isTierDifficulty,
     isTierLevelFilter,
     type TierDifficulty,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 import type { Prisma } from "@prisma/client";
 import { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";

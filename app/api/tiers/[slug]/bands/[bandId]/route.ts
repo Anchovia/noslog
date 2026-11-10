@@ -12,7 +12,7 @@ import {
     isTierDifficulty,
     isTierLevelFilter,
     type TierDifficulty,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 import { getUser } from "@/lib/user";
 
 const headers = { "Cache-Control": "private, no-store" };

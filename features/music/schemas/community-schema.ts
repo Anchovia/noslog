@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 import { nameLabelSchema } from "@/features/contributions/schemas/contribution-label-schema";
-import { TIER_GOALS, TIER_MODE_GOALS, TIER_MODES } from "@/lib/tiers";
+import {
+    TIER_GOALS,
+    TIER_MODE_GOALS,
+    TIER_MODES,
+} from "@/lib/tiers/tier-scope";
 
 // 모드별 서열표 수의 합 — Basic 3 + Recital 1
 const TIER_SCOPE_COUNT = TIER_MODES.reduce(

@@ -23,7 +23,7 @@ import type {
     TierBrowserSort,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { tierValueColor } from "@/lib/music/tier-value-color";
-import { formatTierValue } from "@/lib/tiers";
+import { formatTierValue } from "@/lib/tiers/tier-scope";
 
 import TierBrowserCard, {
     TierBrowserCardSkeleton,

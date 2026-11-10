@@ -10,7 +10,10 @@ import MusicJacket from "@/components/music/music-jacket";
 import { foundationButtonClass } from "@/components/ui/button";
 import { createTierEntryMoveFormData } from "@/features/tiers/schemas/tier-admin-schema";
 import { cn } from "@/lib/cn";
-import { formatOfficialChartLevel, formatTierValue } from "@/lib/tiers";
+import {
+    formatOfficialChartLevel,
+    formatTierValue,
+} from "@/lib/tiers/tier-scope";
 
 // 관리자 악곡 관리(musicMetadataForms)와 같은 난이도 색
 const difficultyColor: Record<string, string> = {

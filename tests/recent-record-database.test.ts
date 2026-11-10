@@ -19,7 +19,7 @@ import { updateGrade } from "@/features/sync/server/update-grade";
 import { getUserChartScoreTrend } from "@/features/music/server/music-detail-data";
 import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import type { SyncMusicInput } from "@/features/sync/schemas/sync-request-schema";
-import { legacyBesttime } from "@/lib/player-stats";
+import { legacyBesttime } from "@/lib/profile/player-stats";
 
 describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "recent record pipeline on isolated PostgreSQL",

@@ -5,7 +5,7 @@ import {
     getBingoEditorCellPrefix,
 } from "@/features/bingos/components/bingo-editor-utils";
 import { getBingoMissionLink } from "@/features/bingos/bingo-plate-utils";
-import { getBingoProgress } from "@/lib/bingo";
+import { getBingoProgress } from "@/features/bingos/bingo";
 
 function board(completedPositions: number[]) {
     const completed = new Set(completedPositions);

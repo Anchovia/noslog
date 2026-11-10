@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryObserver } from "@tanstack/react-query";
-import type { PublicTierBandPayload } from "@/lib/tiers";
+import type { PublicTierBandPayload } from "@/lib/tiers/tier-scope";
 
 const mocks = vi.hoisted(() => ({
     band: vi.fn(),

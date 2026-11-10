@@ -6,7 +6,7 @@ import {
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 import { MAX_IMAGE_SIZE } from "@/lib/image-upload-rules";
-import { tierGoalLabels } from "@/lib/tiers";
+import { tierGoalLabels } from "@/lib/tiers/tier-scope";
 
 /** 사용자 지정 원본(2026-09 공지, 1200×706)의 고정 이미지 규격. 브라우저 UI 토큰을 새로 정의하지 않는다. */
 const TIER_CHANGE_IMAGE_WIDTH = 1200;

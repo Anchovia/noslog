@@ -9,7 +9,6 @@ import type {
     TierBrowserOverview,
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tier-browser-schema";
-import { TIER_BAND_VALUES, tierListLabel } from "@/lib/tiers";
 import {
     BASIC_RATING_ACTIVE_CURVE,
     BASIC_RATING_CURVES,
@@ -17,6 +16,7 @@ import {
     BASIC_RATING_TOP_COUNT,
     getBasicRatingMaxContribution,
 } from "@/lib/tiers/basic-rating";
+import { TIER_BAND_VALUES, tierListLabel } from "@/lib/tiers/tier-scope";
 
 /**
  * 서열표 안내 — 제목 아래 메타 글줄 끝 「안내」 글자 링크가 여는 설명 창(2026-09-22 A). 제목 뒤에는 스위처 꺾쇠만 둔다.

@@ -30,6 +30,7 @@ import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
+import { normalizeArcadeBusinessHours } from "@/features/arcades/arcade-details";
 import {
     arcadeCabinetSummary,
     arcadeDirections,
@@ -41,7 +42,6 @@ import {
 import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
 import type { RecentCabinetCheck } from "@/features/arcades/server/cabinet-check-service";
-import { normalizeArcadeBusinessHours } from "@/lib/arcade-details";
 
 import ArcadeCabinetRow from "./arcade-cabinet-row";
 import ArcadeDiscoveryMap from "./arcade-discovery-map";

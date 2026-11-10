@@ -16,7 +16,7 @@ import {
     TIER_DIFFICULTIES,
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 export default function TierFilterFields({
     query,

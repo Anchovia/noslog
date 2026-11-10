@@ -1,4 +1,7 @@
-import { type KakaoMapsApi, loadKakaoMaps } from "@/lib/kakao-maps";
+import {
+    type KakaoMapsApi,
+    loadKakaoMaps,
+} from "@/features/arcades/kakao-maps";
 
 export function createArcadeAddressQueries(address: string) {
     const roadAddress = address.match(

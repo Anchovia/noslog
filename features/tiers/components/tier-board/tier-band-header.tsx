@@ -11,7 +11,7 @@ import {
     createTierIdFormData,
 } from "@/features/tiers/schemas/tier-admin-schema";
 import useActionToast from "@/lib/hooks/use-action-toast";
-import { formatTierValue, MAX_TIER_VALUE } from "@/lib/tiers";
+import { formatTierValue, MAX_TIER_VALUE } from "@/lib/tiers/tier-scope";
 
 import type { TierBandData } from "./tier-board-types";
 

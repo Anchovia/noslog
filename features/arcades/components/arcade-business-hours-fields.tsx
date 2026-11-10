@@ -4,8 +4,8 @@ import {
     adminCompactInputClass as inputClass,
     AdminFieldError,
 } from "@/components/admin/admin-form";
+import { ARCADE_WEEKDAYS } from "@/features/arcades/arcade-details";
 import type { ArcadeFormValues } from "@/features/arcades/schemas/arcade-schema";
-import { ARCADE_WEEKDAYS } from "@/lib/arcade-details";
 
 interface ArcadeBusinessHoursFieldsProps {
     formKey: string;

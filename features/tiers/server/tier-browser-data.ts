@@ -16,8 +16,6 @@ import {
     getMusicTitleDisplayPreference,
 } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
-import type { TierMode } from "@/lib/tiers";
-import { isTierGoalAchieved } from "@/lib/tiers";
 import {
     BASIC_RATING_ACTIVE_CURVE,
     BASIC_RATING_TOP_COUNT,
@@ -25,6 +23,8 @@ import {
     getBasicRatingCoefficient,
     getBasicRatingMaxContribution,
 } from "@/lib/tiers/basic-rating";
+import type { TierMode } from "@/lib/tiers/tier-scope";
+import { isTierGoalAchieved } from "@/lib/tiers/tier-scope";
 
 import { getCachedTierBand } from "./public-tier-data";
 

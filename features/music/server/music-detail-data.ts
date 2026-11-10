@@ -18,7 +18,7 @@ import {
     legacyBesttime,
     STATS_GRADE_SELECT,
     withStatsGrades,
-} from "@/lib/player-stats";
+} from "@/lib/profile/player-stats";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
 export const getCachedMusicDetail = unstable_cache(

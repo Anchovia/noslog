@@ -37,7 +37,7 @@ import {
 } from "@/features/tiers/schemas/tier-browser-schema";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
 import { difficultyKey } from "@/lib/music/difficulty";
-import { formatTierValue, tierListLabel } from "@/lib/tiers";
+import { formatTierValue, tierListLabel } from "@/lib/tiers/tier-scope";
 
 import TierBrowserBands from "./tier-browser-bands";
 import {

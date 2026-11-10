@@ -4,7 +4,7 @@ import type { Prisma } from "@prisma/client";
 
 import type { GlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
 import db from "@/lib/db";
-import { statsGradeField } from "@/lib/player-stats";
+import { statsGradeField } from "@/lib/profile/player-stats";
 
 interface RankingPositionOptions {
     userId: number;

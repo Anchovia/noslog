@@ -3,7 +3,7 @@ import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
 import { cn } from "@/lib/cn";
-import { formatTierValue } from "@/lib/tiers";
+import { formatTierValue } from "@/lib/tiers/tier-scope";
 
 import SortableTierChart from "./sortable-tier-chart";
 import type { TierBandData } from "./tier-board-types";

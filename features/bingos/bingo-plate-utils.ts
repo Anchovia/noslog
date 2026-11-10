@@ -1,5 +1,5 @@
 import type { BingoCellItem } from "@/features/bingos/types/bingo-plate";
-import { normalizeMusicCategory } from "@/lib/music-categories";
+import { normalizeMusicCategory } from "@/lib/music/categories";
 
 export function getBingoMissionLink(cell: BingoCellItem) {
     if (cell.missionType === "music" && cell.musicIndex) {

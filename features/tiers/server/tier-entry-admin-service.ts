@@ -24,7 +24,7 @@ import {
 } from "@/features/tiers/server/tier-admin-shared";
 import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
-import { getJacketUrl } from "@/lib/tiers";
+import { getJacketUrl } from "@/lib/music/jackets";
 
 export async function searchTierCharts(query: string, tierListId: number) {
     await requireAdmin();

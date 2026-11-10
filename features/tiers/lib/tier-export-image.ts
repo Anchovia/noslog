@@ -3,10 +3,10 @@ import type {
     TierBrowserStrip,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
+import { getJacketCandidates } from "@/lib/music/jackets";
 import { tierValueColor } from "@/lib/music/tier-value-color";
-import { getJacketCandidates } from "@/lib/music-jackets";
-import type { TierGoal } from "@/lib/tiers";
-import { formatTierValue, isTierGoalAchieved } from "@/lib/tiers";
+import type { TierGoal } from "@/lib/tiers/tier-scope";
+import { formatTierValue, isTierGoalAchieved } from "@/lib/tiers/tier-scope";
 
 /**
  * 서열표 이미지 내보내기(2026-09-22 E3 · D1 · I1 · W1 · JPEG) — 브라우저 캔버스로 그린다.

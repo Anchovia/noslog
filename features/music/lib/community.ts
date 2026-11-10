@@ -3,8 +3,8 @@ import type {
     PatternSummary,
 } from "@/features/music/schemas/community-schema";
 import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
-import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers";
-import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers";
+import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers/tier-scope";
+import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers/tier-scope";
 
 // 지금 기록(Prisma 이름, 2026-10-16 D1-B) — 달성 판정은 서열표 응답과 같은 TierRecord 모양으로 본다
 export function canContributeGoalVote(

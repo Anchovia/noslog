@@ -16,12 +16,12 @@ import {
     readPublicArcadeExceptions,
     readPublicArcadeWeekly,
     toPublicArcadeInterval,
-} from "@/lib/arcade-details";
+} from "@/features/arcades/arcade-details";
 import {
     ARCADE_REGIONS,
     inferLegacyArcadeRegion,
     isArcadeRegion,
-} from "@/lib/arcade-regions";
+} from "@/features/arcades/arcade-regions";
 
 export const ARCADE_NAME_MAX_LENGTH = 80;
 export const ARCADE_ADDRESS_MAX_LENGTH = 160;

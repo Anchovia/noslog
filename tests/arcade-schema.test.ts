@@ -13,7 +13,7 @@ import {
 import {
     fromPublicArcadeWeekly,
     toPublicArcadeWeekly,
-} from "@/lib/arcade-details";
+} from "@/features/arcades/arcade-details";
 
 const offDay = { enabled: false, open: "", close: "" };
 

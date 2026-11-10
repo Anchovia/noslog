@@ -1,12 +1,12 @@
 "use client";
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { normalizeArcadeBusinessHours } from "@/features/arcades/arcade-details";
 import {
     arcadeWeekHours,
     formatArcadeClose,
     formatArcadeTime,
 } from "@/features/arcades/arcade-discovery";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
-import { normalizeArcadeBusinessHours } from "@/lib/arcade-details";
 
 const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 

@@ -12,7 +12,7 @@ import {
     TIER_MODE_GOALS,
     TIER_MODES,
     tierListLabel,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 type TierList = Pick<TierBrowserQuery, "mode" | "goal">;
 

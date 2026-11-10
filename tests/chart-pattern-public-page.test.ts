@@ -25,7 +25,7 @@ vi.mock("@/features/contributions/server/chart-comment-service", () => ({
 vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getNameLabels: mocks.getNameLabels,
 }));
-vi.mock("@/lib/music-jackets", () => ({
+vi.mock("@/lib/music/jackets", () => ({
     getJacketUrl: mocks.getJacketUrl,
 }));
 vi.mock("@/lib/session", () => ({

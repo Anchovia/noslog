@@ -15,7 +15,7 @@ import type {
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
-import { isTierGoalAchieved } from "@/lib/tiers";
+import { isTierGoalAchieved } from "@/lib/tiers/tier-scope";
 
 // 375 미만 4열 카드(66)는 「Expert 10」 판을 못 담아 약칭 — 악곡 상세 난이도 선택과 같은 N · H · EX · R (2026-09-22)
 const shortDifficulty: Record<string, string> = {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { MAX_TIER_VALUE, MIN_TIER_VALUE } from "@/lib/tiers";
+import { MAX_TIER_VALUE, MIN_TIER_VALUE } from "@/lib/tiers/tier-scope";
 
 export const TIER_REBALANCE_BAND_COUNT =
     Math.round((MAX_TIER_VALUE - MIN_TIER_VALUE) * 10) + 1;

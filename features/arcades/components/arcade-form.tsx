@@ -16,6 +16,16 @@ import {
 import { foundationButtonClass } from "@/components/ui/button";
 import { geocodeArcadeAddress } from "@/features/arcades/api/geocode-arcade-address";
 import {
+    ARCADE_CABINET_AVAILABILITIES,
+    ARCADE_CABINET_CONDITIONS,
+    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
+    ARCADE_CABINET_FEATURES,
+    ARCADE_CABINET_TAGS,
+    ARCADE_FACILITIES,
+    normalizeArcadeBusinessHours,
+} from "@/features/arcades/arcade-details";
+import { ARCADE_REGIONS } from "@/features/arcades/arcade-regions";
+import {
     ARCADE_ADDRESS_MAX_LENGTH,
     ARCADE_CABINET_LABEL_MAX_LENGTH,
     ARCADE_CABINET_MAX,
@@ -31,16 +41,6 @@ import {
     createArcadeFormData,
     createArcadeFormDefaultValues,
 } from "@/features/arcades/schemas/arcade-schema";
-import {
-    ARCADE_CABINET_AVAILABILITIES,
-    ARCADE_CABINET_CONDITIONS,
-    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
-    ARCADE_CABINET_FEATURES,
-    ARCADE_CABINET_TAGS,
-    ARCADE_FACILITIES,
-    normalizeArcadeBusinessHours,
-} from "@/lib/arcade-details";
-import { ARCADE_REGIONS } from "@/lib/arcade-regions";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import ArcadeBusinessHoursFields from "./arcade-business-hours-fields";

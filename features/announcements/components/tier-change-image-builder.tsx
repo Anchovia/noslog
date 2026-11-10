@@ -33,7 +33,7 @@ import {
     type TierGoal,
     tierGoalLabels,
     type TierMode,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 type DraftRow = {
     id: number;

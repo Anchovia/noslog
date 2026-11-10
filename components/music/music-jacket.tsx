@@ -5,7 +5,7 @@
 import { Music, Music2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
-import { getJacketCandidates, getLocalJacketSrcSet } from "@/lib/music-jackets";
+import { getJacketCandidates, getLocalJacketSrcSet } from "@/lib/music/jackets";
 import { cn } from "@/lib/cn";
 import { useTranslations } from "@/components/i18n/locale-provider";
 

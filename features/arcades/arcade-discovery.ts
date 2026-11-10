@@ -1,3 +1,7 @@
+import {
+    ARCADE_WEEKDAYS,
+    normalizeArcadeBusinessHours,
+} from "@/features/arcades/arcade-details";
 import type {
     ArcadeDiscoveryValues,
     PublicArcade,
@@ -6,10 +10,6 @@ import type {
     ArcadeBounds,
     ArcadeOrigin,
 } from "@/features/arcades/types/arcade-geography";
-import {
-    ARCADE_WEEKDAYS,
-    normalizeArcadeBusinessHours,
-} from "@/lib/arcade-details";
 
 export function arcadeOpenState(
     arcade: PublicArcade,

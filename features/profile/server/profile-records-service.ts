@@ -9,7 +9,7 @@ import {
 } from "@/features/profile/schemas/public-profile-schema";
 import db from "@/lib/db";
 import { hasFullComboLamp } from "@/lib/music/clear-mark";
-import { formatKstMinute } from "@/lib/player-stats";
+import { formatKstMinute } from "@/lib/profile/player-stats";
 
 const BEST_LIMIT = 50;
 /** 가져온 기록의 「달성 시각」 — 한 번도 안 한 채보의 자리 값(1970 년)은 날짜가 없는 것으로 */

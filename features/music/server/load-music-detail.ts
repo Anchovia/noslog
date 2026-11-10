@@ -22,7 +22,7 @@ import {
     TIER_GOALS,
     TIER_MODE_GOALS,
     TIER_MODES,
-} from "@/lib/tiers";
+} from "@/lib/tiers/tier-scope";
 
 import {
     getChartRanking,

@@ -10,8 +10,11 @@ import {
     getLocalizedMusicTitle,
 } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
-import { legacyBesttime } from "@/lib/player-stats";
-import type { PublicTierBandPayload, TierDifficulty } from "@/lib/tiers";
+import { legacyBesttime } from "@/lib/profile/player-stats";
+import type {
+    PublicTierBandPayload,
+    TierDifficulty,
+} from "@/lib/tiers/tier-scope";
 
 function getTierChartWhere(
     difficulties: TierDifficulty[],

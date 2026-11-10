@@ -23,6 +23,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatusMessage } from "@/components/ui/status-message";
 import Stepper from "@/components/ui/stepper";
 import UnitInput from "@/components/ui/unit-input";
+import { ARCADE_CABINET_FEATURES } from "@/features/arcades/arcade-details";
 import { FEATURE_VALUE_KEYS } from "@/features/arcades/components/arcade-traits";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
 import {
@@ -39,7 +40,6 @@ import {
     MUSECAT_GAME_QUANTITY_MAX,
     MUSECAT_GAME_QUANTITY_MIN,
 } from "@/features/musecat/schemas/musecat-action-schema";
-import { ARCADE_CABINET_FEATURES } from "@/lib/arcade-details";
 import {
     IMAGE_ACCEPT,
     imageFileValidationError,

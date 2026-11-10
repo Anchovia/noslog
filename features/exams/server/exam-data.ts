@@ -5,7 +5,10 @@ import { unstable_cache } from "next/cache";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { approvedMusicTranslationsSelect } from "@/lib/i18n/music-title";
-import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
+import {
+    STATS_GRADE_SELECT,
+    withStatsGrades,
+} from "@/lib/profile/player-stats";
 
 // 검정 정의, 과제곡과 보상은 모든 사용자에게 동일하므로 캐시함
 export const getCachedPublishedExams = unstable_cache(

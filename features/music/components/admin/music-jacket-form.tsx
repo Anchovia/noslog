@@ -26,7 +26,7 @@ import {
     getJacketUrl,
     getLocalJacketUrl,
     isManualJacketUrl,
-} from "@/lib/music-jackets";
+} from "@/lib/music/jackets";
 import { uploadGrantedImage } from "@/lib/uploads/client-image-upload";
 
 // 지금 화면에 보이는 자켓이 어디서 왔는지 — 잘못된 자켓을 고칠 때 원인을 알 수 있게

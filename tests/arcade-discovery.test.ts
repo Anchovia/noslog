@@ -17,7 +17,7 @@ import {
     publicArcadeSchema,
 } from "@/features/arcades/schemas/public-arcade-schema";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
-import { legacyToPublicArcadeHours } from "@/lib/arcade-details";
+import { legacyToPublicArcadeHours } from "@/features/arcades/arcade-details";
 
 const now = new Date("2026-09-07T15:30:00Z"); // Tuesday 00:30 in Tokyo/Seoul.
 const base: PublicArcade = {

@@ -17,7 +17,7 @@ import {
     formatKstPlayTime,
     STATS_GRADE_SELECT,
     STATS_RANK_COUNT_SELECT,
-} from "@/lib/player-stats";
+} from "@/lib/profile/player-stats";
 
 async function queryProfileData(id: number) {
     const [user, recentPlays] = await Promise.all([

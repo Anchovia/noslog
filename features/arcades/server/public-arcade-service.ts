@@ -5,17 +5,17 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import {
-    arcadeCabinetSchema,
-    arcadeHoursSchema,
-    publicArcadeSchema,
-} from "@/features/arcades/schemas/public-arcade-schema";
-import {
     ARCADE_CABINET_TAGS,
     ARCADE_FACILITIES,
     knownArcadeValues,
     knownFeatureValue,
     legacyToPublicArcadeHours,
-} from "@/lib/arcade-details";
+} from "@/features/arcades/arcade-details";
+import {
+    arcadeCabinetSchema,
+    arcadeHoursSchema,
+    publicArcadeSchema,
+} from "@/features/arcades/schemas/public-arcade-schema";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";

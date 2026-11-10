@@ -6,8 +6,6 @@ import type { Prisma } from "@prisma/client";
 
 import { getModePianistRatingBasis } from "@/features/tiers/server/tier-browser-data";
 import db from "@/lib/db";
-import type { TierMode } from "@/lib/tiers";
-import { TIER_MODES } from "@/lib/tiers";
 import type { BasicRatingRecord } from "@/lib/tiers/basic-rating";
 import {
     BASIC_RATING_ACTIVE_CURVE,
@@ -15,6 +13,8 @@ import {
     BASIC_RATING_SCORE_FLOOR,
     calculateBasicRating,
 } from "@/lib/tiers/basic-rating";
+import type { TierMode } from "@/lib/tiers/tier-scope";
+import { TIER_MODES } from "@/lib/tiers/tier-scope";
 
 /**
  * 레이팅 랭킹용 저장 값(2026-10-15 L2-A2) — 사람 · 모드마다 계산해 둔 레이팅.

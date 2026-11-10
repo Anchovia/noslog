@@ -10,13 +10,13 @@ import {
 import ActionButton from "@/components/ui/action-button";
 import IconButton from "@/components/ui/icon-button";
 import IntentLink from "@/components/ui/intent-link";
+import type { BingoLineKind } from "@/features/bingos/bingo";
+import { getBingoLinesCompletedBy } from "@/features/bingos/bingo";
 import { getBingoMissionLink } from "@/features/bingos/bingo-plate-utils";
 import { useBingoPosition } from "@/features/bingos/components/bingo-coordinate-board";
 import BingoPosition from "@/features/bingos/components/bingo-position";
 import BingoTermHelp from "@/features/bingos/components/bingo-term-help";
 import type { BingoMission } from "@/features/bingos/schemas/public-bingo-schema";
-import type { BingoLineKind } from "@/lib/bingo";
-import { getBingoLinesCompletedBy } from "@/lib/bingo";
 
 /**
  * 칸 상세 — 누른 칸에 붙는 팝오버(DestinationPanel 계약) 안에 그린다.
