@@ -9,10 +9,9 @@ import {
 } from "@/features/achievements/server/achievement-service";
 import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
 import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
+import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
-
-import { getCachedProfileData } from "../data";
 
 export async function generateMetadata({
     params,

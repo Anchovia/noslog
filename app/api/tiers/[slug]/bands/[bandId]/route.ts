@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
-
-import { getTierBandForUser } from "@/app/(site)/tiers/data";
-import { createApiSuccess } from "@/lib/api/response";
+import { getTierBandForUser } from "@/features/tiers/server/public-tier-data";
 import {
     apiFailureResponse,
+    apiSuccessResponse,
     withRouteErrorLog,
 } from "@/lib/api/route-response";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
@@ -75,11 +73,7 @@ export async function GET(request: Request, { params }: TierBandRouteProps) {
                 );
             }
 
-            return NextResponse.json(
-                // Retain the top-level band for already-open clients during rollout.
-                { ...createApiSuccess({ band }), band },
-                { headers }
-            );
+            return apiSuccessResponse({ band }, headers);
         },
         () =>
             apiFailureResponse(

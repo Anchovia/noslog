@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
     preference: vi.fn(),
     log: vi.fn(),
 }));
-vi.mock("@/app/(site)/tiers/data", () => ({
+vi.mock("@/features/tiers/server/public-tier-data", () => ({
     getTierBandForUser: mocks.band,
 }));
 vi.mock("@/lib/user", () => ({ getUser: mocks.user }));
@@ -109,10 +109,7 @@ describe("tier-band paired API contract", () => {
             expect(response.headers.get("cache-control")).toBe(
                 "private, no-store"
             );
-            expect(await response.json()).toEqual({
-                ...createApiSuccess({ band }),
-                band,
-            });
+            expect(await response.json()).toEqual(createApiSuccess({ band }));
             expect(mocks.band).toHaveBeenCalledWith(
                 "pianist",
                 4,

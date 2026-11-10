@@ -9,14 +9,13 @@ import { getProfilePinnedRecords } from "@/features/profile/server/profile-pinne
 import { getPublicProfilePlays } from "@/features/profile/server/profile-plays-service";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { getProfileStats } from "@/features/profile/server/profile-stats-service";
+import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
 import {
     hideProfileActivity,
     hideProfileScores,
 } from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
-
-import { getCachedProfileData } from "./data";
 
 export async function generateMetadata({
     params,

@@ -10,11 +10,10 @@ import {
     countRecordsWithGrade,
 } from "@/features/profile/server/profile-records-service";
 import { getPublicProfileRecords } from "@/features/profile/server/profile-records-service";
+import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
 import { hideProfileScores } from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
-
-import { getCachedProfileData } from "../data";
 
 export async function generateMetadata({
     params,

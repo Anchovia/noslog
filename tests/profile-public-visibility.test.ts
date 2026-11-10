@@ -33,7 +33,7 @@ vi.mock("@/features/achievements/server/achievement-service", () => ({
         .mockResolvedValue({ earned: [], pins: [], recipients: {} }),
 }));
 
-import { getCachedProfileData } from "@/app/(site)/profile/[id]/data";
+import { getCachedProfileData } from "@/features/profile/server/public-profile-data";
 
 const sourceUser = {
     id: 7,
