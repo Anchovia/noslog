@@ -2,7 +2,6 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 
-import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
 import {
     type UserAdminFilters,
     type UserRole,
@@ -21,7 +20,8 @@ import { requireAdmin } from "@/lib/admin";
 import { getUserSyncHealth } from "@/lib/admin/sync-health";
 import db from "@/lib/db";
 import { logSecurityEvent, logServerError } from "@/lib/observability/server";
-import { formatKstMinute } from "@/lib/player-stats";
+import { formatKstMinute } from "@/lib/profile/player-stats";
+import { hasRecentDiscordVerification } from "@/lib/recent-discord-verification";
 import getSession from "@/lib/session";
 
 type ReauthenticationRequired = {
@@ -60,7 +60,7 @@ async function hasRecentAdminVerification(adminId: number) {
             select: { discordId: true },
         }),
     ]);
-    return hasRecentDeletionVerification(
+    return hasRecentDiscordVerification(
         session.adminVerification,
         adminId,
         admin?.discordId ?? null

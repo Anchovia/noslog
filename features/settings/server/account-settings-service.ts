@@ -1,11 +1,11 @@
 import "server-only";
 
 import { accountDeletionSummarySchema } from "@/features/settings/schemas/account-deletion-schema";
-import {
-    DELETION_VERIFICATION_WINDOW_MS,
-    hasRecentDeletionVerification,
-} from "@/features/settings/schemas/deletion-verification";
 import db from "@/lib/db";
+import {
+    DISCORD_VERIFICATION_WINDOW_MS,
+    hasRecentDiscordVerification,
+} from "@/lib/recent-discord-verification";
 import getSession from "@/lib/session";
 
 export async function getAccountSettingsData() {
@@ -49,7 +49,7 @@ export async function getAccountSettingsData() {
             ...user.examSubmissions.map((row) => row.proofImageUrl),
         ].filter(Boolean)
     );
-    const verified = hasRecentDeletionVerification(
+    const verified = hasRecentDiscordVerification(
         session.deletionVerification,
         session.id,
         user.discordId
@@ -57,7 +57,7 @@ export async function getAccountSettingsData() {
     return {
         expiresAt: verified
             ? session.deletionVerification!.verifiedAt +
-              DELETION_VERIFICATION_WINDOW_MS
+              DISCORD_VERIFICATION_WINDOW_MS
             : null,
         summary: accountDeletionSummarySchema.parse({
             plays:

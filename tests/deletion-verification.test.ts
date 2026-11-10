@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
+import { hasRecentDiscordVerification } from "@/lib/recent-discord-verification";
 
 describe("fixed deletion-specific verification window", () => {
     const verifiedAt = 1_000_000;
     const grant = { userId: 7, discordId: "identity", verifiedAt };
     it("expires exactly at ten minutes without depending on ordinary activity", () => {
         expect(
-            hasRecentDeletionVerification(
+            hasRecentDiscordVerification(
                 grant,
                 7,
                 "identity",
@@ -14,7 +14,7 @@ describe("fixed deletion-specific verification window", () => {
             )
         ).toBe(true);
         expect(
-            hasRecentDeletionVerification(
+            hasRecentDiscordVerification(
                 grant,
                 7,
                 "identity",
@@ -22,21 +22,21 @@ describe("fixed deletion-specific verification window", () => {
             )
         ).toBe(false);
         expect(
-            hasRecentDeletionVerification(grant, 7, "identity", verifiedAt - 1)
+            hasRecentDiscordVerification(grant, 7, "identity", verifiedAt - 1)
         ).toBe(false);
     });
     it("requires the current account and Discord identity", () => {
         expect(
-            hasRecentDeletionVerification(grant, 8, "identity", verifiedAt)
+            hasRecentDiscordVerification(grant, 8, "identity", verifiedAt)
         ).toBe(false);
         expect(
-            hasRecentDeletionVerification(grant, 7, "other", verifiedAt)
+            hasRecentDiscordVerification(grant, 7, "other", verifiedAt)
         ).toBe(false);
-        expect(hasRecentDeletionVerification(grant, 7, null, verifiedAt)).toBe(
+        expect(hasRecentDiscordVerification(grant, 7, null, verifiedAt)).toBe(
             false
         );
         expect(
-            hasRecentDeletionVerification(undefined, 7, "identity", verifiedAt)
+            hasRecentDiscordVerification(undefined, 7, "identity", verifiedAt)
         ).toBe(false);
     });
 });

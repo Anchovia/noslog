@@ -2,7 +2,7 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 
-import { syncTokenRequestSchema } from "@/features/profile/schemas/sync-token-schema";
+import { syncTokenRequestSchema } from "@/features/settings/schemas/sync-token-schema";
 import type { ActionResult } from "@/lib/actions/result";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";

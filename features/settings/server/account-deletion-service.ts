@@ -7,13 +7,13 @@ import { disconnectMusecat } from "@/features/musecat/server/musecat-connection-
 import { revokeGrantByUser } from "@/features/partner/server/oauth-grant-service";
 import { dispatchPartnerOutbox } from "@/features/partner/server/partner-outbox";
 import { MUSECAT_OAUTH_CLIENT_ID } from "@/features/partner/server/partner-settings-data";
-import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
 import { deleteBlobStrict } from "@/lib/blob";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale } from "@/lib/i18n/routing";
 import { logSecurityEvent, logServerError } from "@/lib/observability/server";
+import { hasRecentDiscordVerification } from "@/lib/recent-discord-verification";
 import getSession from "@/lib/session";
 
 function invalidateDeletedAccount(userId: number) {
@@ -69,7 +69,7 @@ export async function deleteAccount(
     }
 
     if (
-        !hasRecentDeletionVerification(
+        !hasRecentDiscordVerification(
             session.deletionVerification,
             session.id,
             user.discordId
