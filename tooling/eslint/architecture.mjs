@@ -3,15 +3,6 @@ import path from "node:path";
 
 import ts from "typescript";
 
-// Existing type contracts and application adapters; no general upward-import exemption.
-const retainedImports = new Map([
-    ["components/ui/exam-badge.tsx", "features/exams/exam-grades"],
-    [
-        "components/ui/app-toaster.tsx",
-        "features/settings/hooks/use-account-result-notice",
-    ],
-]);
-
 function resolveImport(source, filename, root) {
     const absolute = source.startsWith("@/")
         ? path.resolve(root, source.slice(2))
@@ -98,9 +89,6 @@ const boundaries = {
                     node.specifiers.every(
                         (specifier) => specifier.importKind === "type"
                     ));
-            const retained = retainedImports.get(owner) === target;
-            if (retained && (!owner.startsWith("lib/") || typeOnly)) return;
-
             const privateIndex = target
                 .split("/")
                 .findIndex((part, index) => index > 0 && part.startsWith("_"));

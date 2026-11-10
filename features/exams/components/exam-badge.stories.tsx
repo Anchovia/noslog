@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import ExamBadge from "./exam-badge";
 const meta = {
-    title: "UI/ExamBadge",
+    title: "Features/Exams/ExamBadge",
     component: ExamBadge,
     args: { mode: "basic", exam: 1 },
     parameters: {

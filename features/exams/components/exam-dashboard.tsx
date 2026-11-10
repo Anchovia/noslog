@@ -8,8 +8,8 @@ import {
     submitExamProof,
 } from "@/app/(site)/exams/actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
-import ExamBadge, { isExamGrade } from "@/components/ui/exam-badge";
 import StatStrip from "@/components/ui/stat-strip";
+import ExamBadge from "@/features/exams/components/exam-badge";
 import ExamNavigation from "@/features/exams/components/exam-navigation";
 import ExamPractice from "@/features/exams/components/exam-practice";
 import ExamProofUpload from "@/features/exams/components/exam-proof-upload";
@@ -21,6 +21,7 @@ import {
     canEnterExam,
     getDefaultExam,
 } from "@/features/exams/exam-dashboard-utils";
+import { isExamGrade } from "@/features/exams/exam-grades";
 import { getExamIdentity } from "@/features/exams/exam-identity";
 import { createExamProofSubmissionFormData } from "@/features/exams/schemas/exam-proof-schema";
 import type {

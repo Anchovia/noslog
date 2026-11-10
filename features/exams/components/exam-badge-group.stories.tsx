@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import ExamBadge from "./exam-badge";
 import ExamBadgeGroup from "./exam-badge-group";
 const meta = {
-    title: "UI/ExamBadgeGroup",
+    title: "Features/Exams/ExamBadgeGroup",
     component: ExamBadgeGroup,
     args: {
         className: "flex gap-nl-8",

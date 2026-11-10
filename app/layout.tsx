@@ -16,6 +16,8 @@ import {
 } from "@/lib/i18n/routing";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 
+import AccountResultNotice from "./account-result-notice";
+
 const themeScript =
     process.env.NEXT_PUBLIC_ENABLE_THEME_SWITCHING === "true"
         ? `
@@ -100,7 +102,9 @@ export default async function RootLayout({
                 <LocaleProvider locale={locale} messages={getMessages(locale)}>
                     <AppProviders>
                         {children}
-                        <AppToaster />
+                        <AccountResultNotice>
+                            <AppToaster />
+                        </AccountResultNotice>
                     </AppProviders>
                 </LocaleProvider>
             </body>

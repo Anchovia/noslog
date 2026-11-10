@@ -94,10 +94,8 @@ imports, resolving both `@/` aliases and relative paths. It applies to `app`,
 - Features may import real module-level `"use server"` Server Actions from `app`.
   This Next.js entry-point exception does not allow importing route UI or queries.
 - `lib` must not import runtime behavior from `app`, `features`, or `components`.
-- `components/ui` must not import `app` or feature behavior. The existing exam
-  badge's grade helper and AppToaster's account notice adapter are explicit,
-  file-and-target-specific exceptions in the rule. They do not create permission
-  for more domain imports in new UI primitives.
+- `components/ui` must not import `app` or feature behavior. The rule has no
+  file-specific exceptions.
 - `lib/music` owns the `Difficulty` and `StatTone` types (`lib/music/difficulty`,
   `lib/music/score-tone`); UI components import them from there.
 - Client Components cannot directly import feature server services or modules
@@ -106,9 +104,8 @@ imports, resolving both `@/` aliases and relative paths. It applies to `app`,
 - Keep deliberate public APIs small. Separate server entry points when needed;
   do not add a barrel solely to hide a dependency or collect every UI export.
 
-The profile public cache is owned by `features/profile/server/public-profile-data`.
-The existing route data module re-exports it for compatibility; its cache keys,
-visibility policy, and query behavior remain unchanged.
+The profile public cache is owned by `features/profile/server/public-profile-data`;
+routes import it from there.
 
 ## Cache changes
 
@@ -302,8 +299,7 @@ verification. Report the actual checks and any unverified runtime conditions.
   with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
   file with `--log`. Send logged-in cookies only through
   `NOSLOG_MEASURE_COOKIE`.
-- Import scripts in `prisma/` and the database scripts in `scripts/`
-  (`backfill-pattern-metrics.ts`, `simulate-basic-tier-rating.ts`) load their
+- Import scripts in `prisma/` and `scripts/backfill-pattern-metrics.ts` load their
   environment through `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
   `DATABASE_EXPECTED_HOST` names the same host.
 - Database names are snake_case (2026-10-16 P7): tables are plural

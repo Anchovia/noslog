@@ -3,10 +3,11 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/country-marker";
-import ExamBadge, { isExamGrade } from "@/components/ui/exam-badge";
 import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
+import ExamBadge from "@/features/exams/components/exam-badge";
+import { isExamGrade } from "@/features/exams/exam-grades";
 import type {
     GlobalRankingQuery,
     GlobalRankingRow,

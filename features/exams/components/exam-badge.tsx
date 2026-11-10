@@ -1,8 +1,6 @@
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { getExamTier, isExamGrade } from "@/features/exams/exam-grades";
 
-export { isExamGrade };
-
 export default function ExamBadge({
     mode,
     exam,
