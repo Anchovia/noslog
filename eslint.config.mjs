@@ -46,9 +46,10 @@ export default defineConfig([
         files: [
             "app/**/*.{ts,tsx}",
             "features/**/*.{ts,tsx}",
-            "components/ui/**/*.{ts,tsx}",
+            "components/**/*.{ts,tsx}",
             "lib/**/*.{ts,tsx}",
         ],
+        ignores: ["components/**/chart-pattern/**"],
         rules: { "noslog/boundaries": "error" },
     },
     {
@@ -93,7 +94,8 @@ export default defineConfig([
     },
     {
         files: [
-            "lib/services/**/*.{js,ts}",
+            "features/music/server/update-music.ts",
+            "features/sync/server/update-*.ts",
             "prisma/**/*.{js,mjs,ts}",
             "scripts/**/*.{js,mjs,ts}",
         ],

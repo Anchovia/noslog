@@ -5,9 +5,6 @@ import ts from "typescript";
 
 // Existing type contracts and application adapters; no general upward-import exemption.
 const retainedImports = new Map([
-    ["lib/music/max-grade.ts", "components/music/music-detail-types"],
-    ["lib/music/unlock-condition.ts", "components/music/music-detail-types"],
-    ["lib/music/score-tone.ts", "components/ui/stat-strip"],
     ["components/ui/exam-badge.tsx", "features/exams/exam-grades"],
     [
         "components/ui/app-toaster.tsx",
