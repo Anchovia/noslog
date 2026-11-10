@@ -2,39 +2,33 @@ import { createHash } from "node:crypto";
 
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => ({ serverEnv: {} }));
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    const url = new URL(value);
-    if (!["localhost", "127.0.0.1"].includes(url.hostname))
-        throw new Error("Partner OAuth tests require a local database.");
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Partner OAuth tests require a local database."
+        ),
     };
 });
 
+import { authenticateOAuthClient } from "@/features/partner/server/oauth-client-service";
 import {
     approveAuthorization,
-    authenticateBearer,
-    authenticateOAuthClient,
     enqueueRecordsInvalidationForUser,
-    exchangeAuthorizationCode,
     findActiveGrant,
-    refreshAccessToken,
     revokeGrantByUser,
-    revokeOAuthToken,
     updateSharedItems,
-} from "@/features/partner/server/oauth-service";
+} from "@/features/partner/server/oauth-grant-service";
+import {
+    authenticateBearer,
+    exchangeAuthorizationCode,
+    refreshAccessToken,
+    revokeOAuthToken,
+} from "@/features/partner/server/oauth-token-service";
 import { hashOAuthSecret } from "@/features/partner/server/oauth-tokens";
 import { dispatchPartnerOutbox } from "@/features/partner/server/partner-outbox";
 import db from "@/lib/db";

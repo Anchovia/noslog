@@ -9,7 +9,6 @@ const mocks = vi.hoisted(() => ({
     mode: vi.fn(() => "live"),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({
     unstable_cache: (fn: unknown) => fn,
     updateTag: vi.fn(),

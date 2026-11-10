@@ -30,6 +30,15 @@ import {
     type MusecatDisruption,
     type MusecatGame,
 } from "@/features/musecat/musecat-arcade";
+import {
+    MUSECAT_FAULT_MESSAGE_MAX,
+    MUSECAT_FAULT_PHOTO_LIMIT,
+    MUSECAT_GAME_LOCATION_MAX,
+    MUSECAT_GAME_PRICE_LABEL_MAX,
+    MUSECAT_GAME_PRICE_LIMIT,
+    MUSECAT_GAME_QUANTITY_MAX,
+    MUSECAT_GAME_QUANTITY_MIN,
+} from "@/features/musecat/schemas/musecat-action-schema";
 import { ARCADE_CABINET_FEATURES } from "@/lib/arcade-details";
 import {
     IMAGE_ACCEPT,
@@ -284,7 +293,7 @@ export function MusecatFaultDialog({
                             id={messageId}
                             value={message}
                             disabled={busy}
-                            maxLength={2000}
+                            maxLength={MUSECAT_FAULT_MESSAGE_MAX}
                             rows={3}
                             placeholder={t("musecat.fault.placeholder")}
                             onChange={(event) => setMessage(event.target.value)}
@@ -314,7 +323,10 @@ export function MusecatFaultDialog({
                             }
                             setError(null);
                             setPhotos((current) =>
-                                [...current, next].slice(0, 3)
+                                [...current, next].slice(
+                                    0,
+                                    MUSECAT_FAULT_PHOTO_LIMIT
+                                )
                             );
                         }}
                     />
@@ -331,7 +343,7 @@ export function MusecatFaultDialog({
                             }
                         />
                     ))}
-                    {photos.length < 3 ? (
+                    {photos.length < MUSECAT_FAULT_PHOTO_LIMIT ? (
                         <ActionButton
                             variant="secondary"
                             disabled={busy}
@@ -581,8 +593,8 @@ export function MusecatGameEditDialog({
                         aria-labelledby={quantityId}
                         value={quantity}
                         onValueChange={setQuantity}
-                        min={0}
-                        max={50}
+                        min={MUSECAT_GAME_QUANTITY_MIN}
+                        max={MUSECAT_GAME_QUANTITY_MAX}
                         unit={t("musecat.edit.unitCount")}
                         decrementLabel={t("musecat.edit.decrease")}
                         incrementLabel={t("musecat.edit.increase")}
@@ -613,7 +625,7 @@ export function MusecatGameEditDialog({
                                     count: index + 1,
                                 })}
                                 placeholder={t("musecat.edit.pricePlaceholder")}
-                                maxLength={20}
+                                maxLength={MUSECAT_GAME_PRICE_LABEL_MAX}
                                 value={row.label}
                                 disabled={busy}
                                 onChange={(event) => {
@@ -668,7 +680,7 @@ export function MusecatGameEditDialog({
                             </IconButton>
                         </div>
                     ))}
-                    {prices.length < 4 ? (
+                    {prices.length < MUSECAT_GAME_PRICE_LIMIT ? (
                         <ActionButton
                             variant="secondary"
                             disabled={busy}
@@ -691,7 +703,7 @@ export function MusecatGameEditDialog({
                 <FormField id={locationId} label={t("musecat.edit.location")}>
                     <Input
                         id={locationId}
-                        maxLength={100}
+                        maxLength={MUSECAT_GAME_LOCATION_MAX}
                         value={location}
                         disabled={busy}
                         placeholder={t("musecat.edit.locationPlaceholder")}

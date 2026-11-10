@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
     MUSECAT_NOSTALGIA_GAME_SCHEMA,
     MUSECAT_RECORDS_MAX_BYTES,
@@ -9,7 +11,7 @@ import {
 } from "@/features/partner/schemas/musecat-records-schema";
 
 /** 동의 화면에서 사용자가 고른 항목(2026-10-20 결정 — 기본 프로필은 필수라 항목이 아니다) */
-export interface NostalgiaRecordsShare {
+interface NostalgiaRecordsShare {
     summary: boolean;
     ranks: boolean;
     /** 뮤즈캣과 형식을 맞추기 전까지는 골라도 `unsupported` 로 보낸다 */

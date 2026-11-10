@@ -5,7 +5,7 @@ import type { Locale } from "@/lib/i18n/routing";
  * 셀프 개발자 센터는 두지 않는다. 클라이언트 등록은 협약 뒤 운영자가 한다.
  * 긴 문서라 메시지 카탈로그 대신 개인정보처리방침처럼 언어별 본문을 둔다.
  */
-export interface DeveloperDocs {
+interface DeveloperDocs {
     title: string;
     description: string;
     body: string;

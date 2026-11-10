@@ -6,7 +6,7 @@ import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
  * 파트너 OAuth(뮤즈캣 연동 B 방향, 2026-10-20 결정)의 비밀값.
  * 값은 256비트 무작위 + 종류 접두(유출 검사에 걸리게 — GitHub · Gitea · Lichess 방식)이고, DB 에는 SHA-256 해시만 둔다.
  */
-export const OAUTH_TOKEN_PREFIXES = {
+const OAUTH_TOKEN_PREFIXES = {
     code: "nlc_",
     access: "nla_",
     refresh: "nlr_",

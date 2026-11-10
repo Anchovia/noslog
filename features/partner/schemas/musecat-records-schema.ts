@@ -12,7 +12,7 @@ const httpsUrlSchema = z
     .url()
     .refine((value) => value.startsWith("https://"), "HTTPS only");
 
-export const musecatLabelSchema = z.object({
+const musecatLabelSchema = z.object({
     en: z.string().min(1),
     ko: z.string().min(1).optional(),
     ja: z.string().min(1).optional(),
@@ -28,7 +28,7 @@ const fieldTypeSchema = z.enum([
     "rank",
 ]);
 
-export const musecatFieldSchema = z.object({
+const musecatFieldSchema = z.object({
     key: z.string().min(1).max(128),
     label: musecatLabelSchema,
     type: fieldTypeSchema,
@@ -76,7 +76,7 @@ const selectionKeySchema = z
     .string()
     .regex(/^(player|fields|sections|recent_plays|(fields|sections)\..+)$/);
 
-export const musecatSelectionSchema = z.object({
+const musecatSelectionSchema = z.object({
     key: selectionKeySchema,
     status: z.enum(["denied", "no_data", "unsupported"]),
 });

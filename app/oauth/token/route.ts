@@ -1,3 +1,4 @@
+import { authenticateOAuthClient } from "@/features/partner/server/oauth-client-service";
 import {
     invalidClient,
     oauthError,
@@ -5,11 +6,10 @@ import {
     readOAuthForm,
 } from "@/features/partner/server/oauth-http";
 import {
-    authenticateOAuthClient,
     exchangeAuthorizationCode,
     isOAuthTokenLimitReached,
     refreshAccessToken,
-} from "@/features/partner/server/oauth-service";
+} from "@/features/partner/server/oauth-token-service";
 
 export const dynamic = "force-dynamic";
 

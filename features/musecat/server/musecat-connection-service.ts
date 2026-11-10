@@ -2,6 +2,10 @@ import "server-only";
 
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 
+import {
+    musecatOAuthPost,
+    musecatOrigin,
+} from "@/features/musecat/server/musecat-http";
 import { getMusecatMode } from "@/features/musecat/server/musecat-mode";
 import {
     decryptMusecatToken,
@@ -27,21 +31,6 @@ export type MusecatConnectionView =
           connectedAt: string;
           familyExpiresAt: string | null;
       };
-
-function musecatOrigin() {
-    const value = serverEnv.MUSECAT_API_ORIGIN;
-    if (!value) throw new Error("MUSECAT_API_ORIGIN is not configured");
-    return value.replace(/\/$/, "");
-}
-
-function clientBasic() {
-    const id = serverEnv.MUSECAT_CLIENT_ID;
-    const secret = serverEnv.MUSECAT_CLIENT_SECRET;
-    if (!id || !secret) throw new Error("Musecat client is not configured");
-    const encode = (value: string) =>
-        encodeURIComponent(value).replace(/%20/g, "+");
-    return `Basic ${Buffer.from(`${encode(id)}:${encode(secret)}`).toString("base64")}`;
-}
 
 const aad = (userId: number, column: string, generation: number) =>
     `${userId}|${column}|${generation}`;
@@ -128,16 +117,7 @@ export async function beginMusecatConnect(returnTo: string) {
 }
 
 async function tokenRequest(body: URLSearchParams) {
-    const response = await fetch(`${musecatOrigin()}/oauth/token`, {
-        method: "POST",
-        headers: {
-            Authorization: clientBasic(),
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body,
-        cache: "no-store",
-        signal: AbortSignal.timeout(10_000),
-    });
+    const response = await musecatOAuthPost("/oauth/token", body);
     const json = (await response.json().catch(() => null)) as {
         access_token?: string;
         refresh_token?: string;
@@ -415,21 +395,15 @@ export async function disconnectMusecat(userId: number) {
         },
     });
     if (row?.refreshTokenEnc) {
-        await fetch(`${musecatOrigin()}/oauth/revoke`, {
-            method: "POST",
-            headers: {
-                Authorization: clientBasic(),
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
+        await musecatOAuthPost(
+            "/oauth/revoke",
+            new URLSearchParams({
                 token: decryptMusecatToken(
                     row.refreshTokenEnc,
                     aad(userId, "refresh", row.generation)
                 ),
                 token_type_hint: "refresh_token",
-            }),
-            cache: "no-store",
-            signal: AbortSignal.timeout(10_000),
-        }).catch(() => null);
+            })
+        ).catch(() => null);
     }
 }

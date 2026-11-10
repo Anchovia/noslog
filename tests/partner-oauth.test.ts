@@ -1,8 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("server-only", () => ({}));
+import { describe, expect, it } from "vitest";
 
 import {
     buildAuthorizationResponseUrl,

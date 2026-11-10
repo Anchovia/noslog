@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
     dispatchPartnerOutbox: vi.fn(),
 }));
 vi.mock("next/server", () => ({ after: (task: () => unknown) => task() }));
-vi.mock("@/features/partner/server/oauth-service", () => ({
+vi.mock("@/features/partner/server/oauth-grant-service", () => ({
     revokeGrantByUser: mocks.revokeGrantByUser,
 }));
 vi.mock("@/features/musecat/server/musecat-connection-service", () => ({

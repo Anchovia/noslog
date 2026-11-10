@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache";
 import { after } from "next/server";
 
 import { disconnectMusecat } from "@/features/musecat/server/musecat-connection-service";
-import { revokeGrantByUser } from "@/features/partner/server/oauth-service";
+import { revokeGrantByUser } from "@/features/partner/server/oauth-grant-service";
 import { dispatchPartnerOutbox } from "@/features/partner/server/partner-outbox";
 import { MUSECAT_OAUTH_CLIENT_ID } from "@/features/partner/server/partner-settings-data";
 import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";

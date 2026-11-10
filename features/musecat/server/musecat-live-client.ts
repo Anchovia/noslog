@@ -1,7 +1,5 @@
 import "server-only";
 
-import { randomUUID } from "node:crypto";
-
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
 import {
     fromMusecatHours,
@@ -12,6 +10,11 @@ import {
     type MusecatGame,
     type MusecatNotice,
 } from "@/features/musecat/musecat-arcade";
+import { MUSECAT_FAULT_PHOTO_LIMIT } from "@/features/musecat/schemas/musecat-action-schema";
+import {
+    type Json,
+    musecatFetch,
+} from "@/features/musecat/server/musecat-http";
 import { serverEnv } from "@/lib/env/server";
 
 /**
@@ -19,71 +22,6 @@ import { serverEnv } from "@/lib/env/server";
  * 응답은 모르는 필드를 무시하고(Tolerant Reader) 한 곳에서 NosLog 모양으로 바꾼다.
  * 문서가 비어 있는 동작(신고 철회 본문 · 게임 편집 델타)은 추측하지 않고 unsupported 로 둔다.
  */
-export type MusecatCallResult<T> =
-    | { ok: true; data: T }
-    | {
-          ok: false;
-          status: number | null;
-          error: string;
-          retryAfter: number | null;
-      };
-
-type Json = Record<string, unknown>;
-
-function origin() {
-    const value = serverEnv.MUSECAT_API_ORIGIN;
-    if (!value) throw new Error("MUSECAT_API_ORIGIN is not configured");
-    return value.replace(/\/$/, "");
-}
-
-export async function musecatFetch<T = Json>(
-    path: string,
-    {
-        token,
-        method = "GET",
-        body,
-    }: { token: string; method?: string; body?: Json | FormData }
-): Promise<MusecatCallResult<T>> {
-    try {
-        const isForm = body instanceof FormData;
-        const response = await fetch(`${origin()}${path}`, {
-            method,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-                ...(body && !isForm
-                    ? { "Content-Type": "application/json" }
-                    : {}),
-                ...(method === "GET" ? {} : { "X-Request-Id": randomUUID() }),
-            },
-            body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
-            cache: "no-store",
-            signal: AbortSignal.timeout(10_000),
-        });
-        const text = await response.text();
-        const json = text ? (JSON.parse(text) as unknown) : null;
-        if (!response.ok) {
-            const retry = Number(response.headers.get("retry-after"));
-            return {
-                ok: false,
-                status: response.status,
-                error:
-                    json && typeof json === "object" && "error" in json
-                        ? String((json as Json).error)
-                        : `http_${response.status}`,
-                retryAfter: Number.isFinite(retry) && retry > 0 ? retry : null,
-            };
-        }
-        return { ok: true, data: json as T };
-    } catch (error) {
-        return {
-            ok: false,
-            status: null,
-            error: error instanceof Error ? error.name : "network_error",
-            retryAfter: null,
-        };
-    }
-}
 
 const record = (value: unknown): Json =>
     value && typeof value === "object" && !Array.isArray(value)
@@ -218,7 +156,7 @@ function tiptapText(value: unknown): string {
 }
 
 /** 뮤즈캣 id 를 지도 부품용 양의 정수로(같은 id 는 늘 같은 수) */
-export function musecatNumericId(id: string) {
+function musecatNumericId(id: string) {
     let hash = 0;
     for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) | 0;
     return (Math.abs(hash) % 2_000_000_000) + 1;
@@ -373,7 +311,9 @@ export function reportMusecatFault(
     form.set("game_id", input.gameId);
     form.set("disruption", input.disruption);
     form.set("message", input.message);
-    input.photos.slice(0, 3).forEach((photo) => form.append("photos", photo));
+    input.photos
+        .slice(0, MUSECAT_FAULT_PHOTO_LIMIT)
+        .forEach((photo) => form.append("photos", photo));
     return musecatFetch<{ xp_feedback?: { xp?: number } }>(
         "/developer/v1/account/arcade/flag",
         { token, method: "POST", body: form }

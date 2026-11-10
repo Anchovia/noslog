@@ -3,13 +3,13 @@ import "server-only";
 import { timingSafeEqual } from "node:crypto";
 
 import type { OAuthScope } from "@/features/partner/server/oauth-authorize";
-import { getClientName } from "@/features/partner/server/oauth-service";
+import { getClientName } from "@/features/partner/server/oauth-client-service";
 import type { PartnerShareItemName } from "@/features/partner/server/partner-outbox";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
 /** /oauth/authorize 가 세션에 남긴 동의 대기 요청의 수명 */
-export const CONSENT_REQUEST_TTL_MS = 10 * 60 * 1000;
+const CONSENT_REQUEST_TTL_MS = 10 * 60 * 1000;
 
 export type ConsentPageData =
     | {

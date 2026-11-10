@@ -21,8 +21,10 @@ vi.mock("next/server", () => ({ after: mocks.after }));
 vi.mock("@/lib/i18n/server", () => ({
     getServerI18n: async () => ({ locale: "ko", t: (key: string) => key }),
 }));
-vi.mock("@/features/partner/server/oauth-service", () => ({
+vi.mock("@/features/partner/server/oauth-grant-service", () => ({
     approveAuthorization: mocks.approve,
+}));
+vi.mock("@/features/partner/server/oauth-client-service", () => ({
     getClientName: vi.fn(),
 }));
 vi.mock("@/features/partner/server/oauth-issuer", () => ({

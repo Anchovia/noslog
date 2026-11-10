@@ -28,7 +28,7 @@ vi.mock("@/lib/db", () => {
     };
     return { default: db };
 });
-vi.mock("@/features/partner/server/oauth-service", () => ({
+vi.mock("@/features/partner/server/oauth-grant-service", () => ({
     enqueueRecordsInvalidationForUser: mocks.invalidateRecords,
 }));
 vi.mock("next/cache", () => ({ updateTag: mocks.updateTag }));

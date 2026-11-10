@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 import { updateTag } from "next/cache";
 
 import { setAchievementShowcase } from "@/features/achievements/server/achievement-service";
-import { enqueueRecordsInvalidationForUser } from "@/features/partner/server/oauth-service";
+import { enqueueRecordsInvalidationForUser } from "@/features/partner/server/oauth-grant-service";
 import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinned-record-schema";
 import { setPinnedRecords } from "@/features/profile/server/profile-pinned-service";
 import type {

@@ -2,7 +2,7 @@ import "server-only";
 
 import { getMusecatConnection } from "@/features/musecat/server/musecat-connection-service";
 import { getMusecatMode } from "@/features/musecat/server/musecat-mode";
-import { findActiveGrant } from "@/features/partner/server/oauth-service";
+import { findActiveGrant } from "@/features/partner/server/oauth-grant-service";
 import { getPendingPartnerKinds } from "@/features/partner/server/partner-outbox";
 
 /** NosLog 가 뮤즈캣에 발급한 OAuth 클라이언트 id(B 방향) — 운영자가 등록한다 */

@@ -11,8 +11,8 @@ import {
     buildAuthorizationResponseUrl,
     type OAuthScope,
 } from "@/features/partner/server/oauth-authorize";
+import { approveAuthorization } from "@/features/partner/server/oauth-grant-service";
 import { getRequestOAuthIssuer } from "@/features/partner/server/oauth-issuer";
-import { approveAuthorization } from "@/features/partner/server/oauth-service";
 import {
     dispatchPartnerOutbox,
     PARTNER_SHARE_ITEMS,

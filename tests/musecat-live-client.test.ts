@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => ({ serverEnv: {} }));
 
 import { fromMusecatArcade } from "@/features/musecat/server/musecat-live-client";

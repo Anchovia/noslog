@@ -7,7 +7,7 @@ import { disconnectMusecat } from "@/features/musecat/server/musecat-connection-
 import {
     revokeGrantByUser,
     updateSharedItems,
-} from "@/features/partner/server/oauth-service";
+} from "@/features/partner/server/oauth-grant-service";
 import {
     dispatchPartnerOutbox,
     PARTNER_SHARE_ITEMS,

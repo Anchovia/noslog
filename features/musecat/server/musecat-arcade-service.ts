@@ -40,7 +40,7 @@ import { getMusecatArcadeTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 
-export const MUSECAT_PAGE_SIZE = 15;
+const MUSECAT_PAGE_SIZE = 15;
 
 export interface MusecatViewer {
     userId: number | null;
@@ -49,7 +49,7 @@ export interface MusecatViewer {
     username: string | null;
 }
 
-export async function getMusecatViewer(): Promise<MusecatViewer> {
+async function getMusecatViewer(): Promise<MusecatViewer> {
     const session = await getSession();
     if (!session.id) {
         return {

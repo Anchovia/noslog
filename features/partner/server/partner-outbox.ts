@@ -45,21 +45,18 @@ export async function enqueuePartnerMessage(
 }
 
 /** AWS Full Jitter — 0 부터 min(상한, 기본 × 2^시도) 사이 무작위 */
-export function nextPartnerAttemptDelay(
-    attempts: number,
-    random = Math.random
-) {
+function nextPartnerAttemptDelay(attempts: number, random = Math.random) {
     const ceiling = Math.min(BACKOFF_CAP_MS, BACKOFF_BASE_MS * 2 ** attempts);
     return Math.round(random() * ceiling);
 }
 
-export type PartnerDeliveryResult =
+type PartnerDeliveryResult =
     | { kind: "delivered"; status: number }
     | { kind: "retry"; status: number | null; error: string }
     /** 아직 받을 곳이 정해지지 않음(뮤즈캣 공동 연결 문서 대기) — 실패로 세지 않고 미룬다 */
     | { kind: "unsupported"; error: string };
 
-export interface PartnerOutboxMessageView {
+interface PartnerOutboxMessageView {
     id: string;
     kind: PartnerOutboxKind;
     payload: Prisma.JsonValue;

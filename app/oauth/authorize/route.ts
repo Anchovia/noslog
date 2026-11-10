@@ -6,12 +6,12 @@ import {
     buildAuthorizationResponseUrl,
     validateAuthorizeRequest,
 } from "@/features/partner/server/oauth-authorize";
-import { getOAuthIssuer } from "@/features/partner/server/oauth-issuer";
+import { getAuthorizeClient } from "@/features/partner/server/oauth-client-service";
 import {
     approveAuthorization,
     findActiveGrant,
-    getAuthorizeClient,
-} from "@/features/partner/server/oauth-service";
+} from "@/features/partner/server/oauth-grant-service";
+import { getOAuthIssuer } from "@/features/partner/server/oauth-issuer";
 import {
     isLocale,
     LOCALE_COOKIE_NAME,

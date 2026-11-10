@@ -24,7 +24,7 @@ const store = {
     >(),
 };
 
-export function mockGameId(arcade: PublicArcade) {
+function mockGameId(arcade: PublicArcade) {
     return `mock-${arcade.slug}-nostalgia`;
 }
 
@@ -240,10 +240,6 @@ export function mockSetFavorite(arcadeId: string, favorited: boolean) {
 
 export function mockIsFavorite(arcadeId: string) {
     return store.favorites.has(arcadeId);
-}
-
-export function mockFavoriteIds() {
-    return [...store.favorites];
 }
 
 export function mockCampaignCheck(gameId: string) {

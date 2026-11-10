@@ -4,7 +4,6 @@ const env = vi.hoisted(() => ({
     serverEnv: {} as Record<string, string | undefined>,
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => env);
 vi.mock("@/lib/db", () => ({ default: {} }));
 

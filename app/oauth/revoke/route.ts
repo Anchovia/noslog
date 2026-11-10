@@ -1,13 +1,11 @@
+import { authenticateOAuthClient } from "@/features/partner/server/oauth-client-service";
 import {
     invalidClient,
     oauthError,
     oauthJson,
     readOAuthForm,
 } from "@/features/partner/server/oauth-http";
-import {
-    authenticateOAuthClient,
-    revokeOAuthToken,
-} from "@/features/partner/server/oauth-service";
+import { revokeOAuthToken } from "@/features/partner/server/oauth-token-service";
 
 export const dynamic = "force-dynamic";
 

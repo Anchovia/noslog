@@ -1,3 +1,5 @@
+import "server-only";
+
 import { isPkceS256Challenge } from "@/features/partner/server/oauth-tokens";
 
 /** 뮤즈캣 spec: `profile` 은 모든 연결에 필수, 기록은 `<service>:read` */

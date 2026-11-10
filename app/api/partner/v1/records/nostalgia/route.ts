@@ -5,7 +5,7 @@ import {
     oauthJson,
 } from "@/features/partner/server/oauth-http";
 import { getOAuthIssuer } from "@/features/partner/server/oauth-issuer";
-import { authenticateBearer } from "@/features/partner/server/oauth-service";
+import { authenticateBearer } from "@/features/partner/server/oauth-token-service";
 
 export const dynamic = "force-dynamic";
 

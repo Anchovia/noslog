@@ -1,3 +1,5 @@
+import "server-only";
+
 import { OAUTH_SCOPES } from "@/features/partner/server/oauth-authorize";
 
 /**

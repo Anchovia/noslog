@@ -53,7 +53,7 @@ export interface MusecatGame {
     stateId: string | null;
 }
 
-export type MusecatFacilityState = "yes" | "no" | "unknown";
+type MusecatFacilityState = "yes" | "no" | "unknown";
 
 export interface MusecatFacility {
     key: string;
@@ -71,7 +71,7 @@ export interface MusecatNotice {
     link: string | null;
 }
 
-export interface MusecatSocial {
+interface MusecatSocial {
     type: string;
     name: string;
     link: string | null;
