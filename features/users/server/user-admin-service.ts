@@ -1,3 +1,5 @@
+import "server-only";
+
 import { revalidatePath } from "next/cache";
 
 import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
