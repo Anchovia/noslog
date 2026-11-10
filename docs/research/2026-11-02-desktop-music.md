@@ -1167,6 +1167,132 @@ Figma 에 옮겼다: 파일 NosLog-Design 의 쪽 「화면 · 악곡 상세」 
 
 프로필 구역 상자를 다섯 구역에 입힌 지금 화면과 함께, 맨 위 「최고 기록 · 누적 요약」 을 세 안으로 올린다. 아래 세 구역은 지금 그대로 둔다. 안 1 은 TETR.IO 40 LINES(큰 기록 · 달성 시점 · 오른쪽 전역 순위 · 2열 점선 목록, 누적을 한 상자에), 안 2 는 Chess.com 통계(제목 줄 오른쪽 큰 값 + 변화 · 추이 그래프 · 순위 줄 · 세로선 칸), 안 3 은 osu! 점수 쪽(큰 랭크 글자 · 큰 점수 · 세로 메타 · 판정 줄)이다. 값은 Chrome 로그인 상태에서 읽은 Altale Real 내 기록이고, 내 순위는 랭킹 탭의 7 / 11 이다. 안 2 의 그래프 점과 변화 값은 예시다(이 곡 최고 점수 이력이 1건). CSS 와 사진은 `v2/rec/css` · `v2/rec/shots`, 찍은 코드는 `v2/rec/shot-rec.mjs` · `build.mjs` 다.
 
+### 내 기록 판정 분석(2026-11-10)
+
+판정 분석 상자(나 · 평균 누적 막대 두 줄 + 판정 목록 | 최근 판정 추이)를 다시 그리려고, 한 사람의 판정 · 정확도 · 분류 구성과 평균 대비 · 추이를 보여 주는 곳을 더 쟀다. 위 「다크 서비스 채보별 내 기록」 에서 잰 곳은 다시 찍지 않았다. headless Playwright(1440×900, colorScheme dark)로 60곳을 시도해 30쪽(서비스 29곳, osu! 두 쪽)을 셌고 다크는 24쪽이다. 원본은 `~/noslog-research/desktop-music-detail/v2/rec/research/j/summary.tsv` · `ds.tsv` 와 곳마다 `-top` · `-part` 캡처다. 세지 않은 30곳은 Cloudflare · 캡차 7, 로그인 벽 6, 404 · 빈 화면 9, 판정 구역 없음 5, 동의 창 가림 2(Monkeytype 프로필 포함), 캡처 실패 1 이다.
+
+| 구분 | 모양                            | 곳 수 | 서비스                                                                                                                                  |
+| ---- | ------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 구성 | 표 · 목록                       | 12    | FFR · osu!stats · VLR · BeatSaver · jstris · Codewars · U.GG · Chess.com 대국 목록 · Leetify · Akatsuki · osu! 프로필 · Monkeytype 결과 |
+|      | 누적 막대                       | 5     | GitHub · GitLab · PageSpeed · ballchasing · osu! 비트맵                                                                                 |
+|      | 개별 막대                       | 4     | Baseball Savant · FotMob · WakaTime · Backloggd                                                                                         |
+|      | 도넛 · 원호                     | 3     | OP.GG · LeetCode · OGS                                                                                                                  |
+|      | 수치 칸 · 레이더                | 5     | keybr · Cytoid · Rhythia · Speedtest · Mobalytics                                                                                       |
+| 비교 | 나란히 열(나 · 평균, 나 · 상대) | 3     | Leetify · Chess.com · ballchasing(근거 약함)                                                                                            |
+|      | 분포 위 내 위치선               | 3     | Leetify · keybr · OGS(근거 약함)                                                                                                        |
+|      | 퍼센타일 막대                   | 2     | Baseball Savant · FotMob(근거 약함)                                                                                                     |
+|      | 기준 구간 위 내 값 핀           | 1     | PageSpeed(근거 약함)                                                                                                                    |
+|      | 없음                            | 약 20 | 나머지                                                                                                                                  |
+| 추이 | 그래프 위 보기 전환             | 3     | Cytoid · Akatsuki · AccSaber                                                                                                            |
+|      | 선 그래프                       | 6     | Monkeytype · Cytoid · Akatsuki · AccSaber · osu! · keybr                                                                                |
+
+FAST/SLOW · 오프셋 같은 타이밍 표시는 이번 표본에 없어 미확인이다. 「나 · 평균」 을 누적 막대 두 줄로 겹쳐 보여 준 곳은 이번에도 없다. 나와 평균을 지표마다 나란히 둔 곳은 Leetify(Last 30 Matches 표: 지표 · 내 값 · RANK AVG 열, 내 값은 칠한 상자 · 평균은 점선 상자, Aim Stats 칸은 「이름 · 내 값 28% · 평균 26% RANK AVG」)다. 다른 세션이 정한 화면 가운데는 프로필 통계 탭 「판정 요약」(전폭 누적 막대 8 + 판정 줄, 사진 `~/noslog-research/desktop-profile/decided/images/q-p9.jpg`)과 「패턴 실력」(Mania Tracker, 막대 8 채움 = 나 · 평균은 주황 세로 눈금 2, 사진 `s11g28.jpg`)이 같은 뜻을 보여 준다.
+
+디자인 시스템은 6곳(GOV.UK Analysis Function · Carbon · Cloudscape · Primer · Atlassian · PatternFly)에서 원문 8개를 모았다. GOV.UK 는 구성 비교에 누적 막대를 쓰되 한 막대에 네 개까지로 두라고 하고, Primer 는 여러 조각 막대에 범례를 꼭 두라고 한다. Carbon 은 같은 자리의 보기 전환에 content switcher, 다른 영역 이동에 탭을 쓰라고 한다. PatternFly bullet chart 는 목표 · 비교 값을 막대 위 눈금으로 그린다(v5 보관 문서, 지금 주소는 404). 원문 인용 · URL 은 `ds.tsv` 다.
+
+## 다크 서비스 채보별 순위표(2026-11-10)
+
+악곡 상세 「랭킹」 탭(지금: 점수 분포 산점도 → 순위표 → 쪽 넘기기)을 다시 그리려고, 한 채보 · 맵 · 레벨 · 구간의 순위표 쪽을 쟀다. 전체 플레이어 랭킹 조사(`2026-11-02-desktop-rankings.md`)와 같은 서비스라도 채보 · 맵 주소로 새로 찍었다. headless Playwright(1440×900, colorScheme dark)로 48곳 55주소를 시도해 31곳을 셌고 다크는 22곳이다. 원본은 `~/noslog-research/desktop-music-detail/v2/rank/research/summary.tsv` · `ds.tsv` 와 캡처다. 세지 않은 17곳은 Cloudflare 2(ScoreSaber · Lichess), 로그인 벽 2(Strava · GeoGuessr), 접속 안 됨 1(Kamaitachi), 한 항목 순위 주소 없음 7(KovaaK's · ITL · Bokutachi 등), 순위표 없음 3(V-ARCHIVE · chunirec · ADOFAI.gg), 기록 없음 2 다.
+
+| 순위표 위 구성(한 곳이 여러 줄) | 곳 수 | 서비스                                                                                                           |
+| ------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
+| 범위 · 모드 필터 툴바           | 20    | osu! · Quaver · Akatsuki · Gatari · jstris · TETR.IO · BeatLeader · speedrun · Chess.com · AccSaber · Etterna 등 |
+| 통계 수치 줄                    | 8     | AccSaber · TypeRacer · FFR · StatManiaX · Aim Lab · speedrun · Trackmania.io · osu!                              |
+| 1위 큰 카드                     | 3     | osu! · Gatari · Rhythia(근거 약함)                                                                               |
+| 제목 · 탭만                     | 8     | Steam · Showdown · AoC · GD · Hitbloq · BeatSaver · keybr · Codeforces                                           |
+
+점수 분포 그래프를 순위표 위에 둔 곳은 31곳 중 0곳이다. 점수 산점도는 BeatLeader 하나로, 표 위 보기 버튼(Global · Clan Ranking · Graph · Bots)에서 Graph 를 고르면 표 자리에 산점도(968×350)가 들어간다. AccSaber 는 채보 머리 상자 안에 큰 수치 4개(최고 · 최저 · 평균 AP · 기록 수, 라벨 12 위 · 값 22) 줄을 두고, 그래프는 순위표와 나란한 Statistics 탭에 둔다. osu! 는 범위 탭(Global · Country · Friend) · mods 필터 아래 1위 카드(높이 109)를 두고, 실패 지점 그래프는 채보 머리에 둔다.
+
+칸은 순위 30 · 이름과 주 기록 31 · 날짜 22 · 정확도 16 · 아바타 15 · 국기 15 · 성능 점수 10 · 모드 9 · 콤보 7 · 판정 수 7 · 리플레이 7 · 등급 그림 6 · FC 표시 3(근거 약함) 곳이다. 줄 높이 가운데값은 45, 줄 구분은 줄무늬 15 · 구분선 8 · 줄마다 면 6 · 격자 3, 1–3위 표시는 6곳(Chess.com 메달 · AccSaber · Rhythia 숫자 색 등)이다. 쪽 넘기기는 표 아래 9 · 표 위 3 · 한 쪽에 모두 보임이 많다. 내 행은 로그아웃이라 대부분 미확인이다.
+
+디자인 시스템 7곳(Carbon · PatternFly · GOV.UK · Primer · Ant Design · Cloudscape · Atlassian)을 봤다. 분포 · 산점도 지침 원문은 Carbon 산점도 한 문장뿐이고 히스토그램 지침은 미확인이다. 원문 · URL 은 `ds.tsv` 다.
+
+## 다크 서비스 항목 평가 · 투표 · 의견(2026-11-10)
+
+악곡 상세 「평가」 탭(지금: 왼쪽 패턴 투표 · 서열 투표 | 오른쪽 의견 2열)을 다시 그리려고, 한 항목(게임 · 곡 · 맵 · 책 · 앨범 등)의 사용자 투표 · 태그 투표 · 평점 분포 · 리뷰/댓글을 같은 쪽에 어떻게 두는지 쟀다. headless Playwright(1440×900, colorScheme dark)로 53곳을 시도해 33곳을 셌고 다크는 22곳이다. 원본은 `~/noslog-research/desktop-music-detail/v2/tier/research/summary.tsv` · `ds.tsv` 와 캡처다. 세지 않은 20곳은 Cloudflare 6(BGG · RYM · AOTY 등), 봇 확인 4(IMDb · Letterboxd 등), 429 · 522 · 403 · 404 각 1, 동의 창 가림 3(HLTB · IGDB · Trustpilot), 댓글 안 불러와짐 1(Genius), 평가 영역 없음 2(DXRating · Quaver)다.
+
+| 구분      | 모양                                | 곳 수 | 서비스                                                                                     |
+| --------- | ----------------------------------- | ----- | ------------------------------------------------------------------------------------------ |
+| 배치      | 한 열에서 요약 · 투표 위, 목록 아래 | 19    | GOG · Goodreads · Backloggd · Hardcover · osu! · Steam · Google Play · App Store · 豆瓣 등 |
+|           | 리뷰는 따로 탭                      | 7     | VNDB · AniList · MAL · MusicBrainz · 창작마당 · TMDB · Nexus                               |
+|           | 왼쪽 좁은 요약 · 오른쪽 넓은 목록   | 3     | AMO 리뷰 쪽 · BeatSaver · Cytoid(근거 약함)                                                |
+|           | 넓은 본문 · 오른쪽 좁은 요약        | 3     | Discogs · Simkl · Serializd(근거 약함)                                                     |
+| 투표 모양 | 별 평균 + 분포                      | 16    | Goodreads · GOG · AMO · Play · App Store · 豆瓣 · Backloggd 등                             |
+|           | 결과 칩(태그 · 분위기)              | 9     | Steam · Nexus · Hardcover · Cytoid 등                                                      |
+|           | 찬반 두 값                          | 7     | Steam 리뷰 · ProtonDB · BeatSaver · Cytoid · osu! 등                                       |
+|           | 태그 줄 + 수치                      | 3     | AniList · VNDB · MusicBrainz(근거 약함)                                                    |
+| 리뷰 줄   | 구분선 줄                           | 9     | Backloggd · Goodreads · GOG · Hardcover · 豆瓣 · osu! · Kitsu · Discogs · GameBanana       |
+|           | 줄마다 카드                         | 7     | Steam · CWS · Metacritic · ProtonDB · Nexus · Simkl · OpenCritic                           |
+| 로그아웃  | 입력을 숨기고 결과만                | 16    | VNDB · MAL · ProtonDB · BeatSaver 등                                                       |
+|           | 입력을 보이고 누르면 로그인         | 11    | Goodreads · GOG · Metacritic · AniList · Kitsu 등                                          |
+|           | 입력 자리를 로그인 버튼으로 덮음    | 3     | AMO · osu! · Cytoid(근거 약함)                                                             |
+
+속성마다 0–4 다섯 칸을 고르는 입력은 로그아웃 화면에서 한 곳도 보지 못했다(미확인). 빈 상태 문구는 실측한 곳이 없다(미확인). osu! 비트맵 쪽은 위 정보 · 순위표 아래 댓글 980 폭 상자(흐린 입력칸 「Please sign in to proceed.」 + 「Sign in to comment」, 줄마다 +1 투표 알약 · 이름 14/600 · 본문 13 · 구분선), GOG 는 1096 한 열에 요약 줄(평균 · 별 · 「+ Add your review」 | 분포 막대 5줄 | 다른 평점) 아래 쓰기 상자 · 목록 877 + 필터 219 다.
+
+디자인 시스템 10곳(Ant Design Rate · Fluent 2 Rating · Atlassian Comment · Empty state · Salesforce Feeds · Carbon · PatternFly · Cloudscape · Primer 빈 상태 · GOV.UK Radios · Material 3 Segmented buttons)을 봤다. Fluent 2 는 입력용 평점과 표시용 평점을 다른 모양으로 나누고, M3 는 단일 선택을 다섯 개까지로 둔다. 로그인 유도만 다룬 지침은 미확인이다. 원문 · URL 은 `ds.tsv` 다.
+
+## 체감 투표 · 결과 그래프(2026-11-10)
+
+사용자가 평가 탭 전체를 다시 짜자고 했다(「패턴은 채보로 자동 계산하니 패턴 투표를 유저 체감을 투표하는 쪽으로 바꿔도 된다」). 그래서 공식 값(레벨 · 등급 · 사이즈 · 맛)에 대해 사람들이 느낀 정도를 투표받고 보여 주는 곳을 쟀다. headless Playwright(1440×900, colorScheme dark)로 세 갈래 132곳을 시도해 41곳을 셌고(겹친 GameFAQs · theCrag · Mountain Project · Vivino 는 한 번씩), 다크는 14곳이다. 원본은 `~/noslog-research/desktop-music-detail/v2/tier/research2/{a,b,c}/notes.tsv` 와 캡처다. 세지 않은 곳은 Cloudflare · 캡차 23(BGG · StoryGraph · RYM · ScoreSaber 등), 404 · 다른 쪽 13, 연결 실패 · 시간 초과 7(Fragrantica · Untappd 등), 그 쪽에 체감 평가가 없음 24(Quaver · Etterna · BeatLeader · 무신사 등) 같은 이유다.
+
+| 구분           | 모양                                       | 곳 수 | 서비스                                                                                  |
+| -------------- | ------------------------------------------ | ----- | --------------------------------------------------------------------------------------- |
+| 입력           | 별 · 점수 하나                             | 7     | osu! · Zenius · Quaddicted · Rotten Tomatoes · 왓챠 · Vivino · Mountain Project         |
+|                | 낱말 단계 · 라디오 목록                    | 5     | GameFAQs · StrawPoll · Discord · Telegram · IIDX DP 비공식 난이도표(−/＝/＋)            |
+|                | 공식 값 옆 「Rate」 로 등급 하나 고르기    | 4     | Mountain Project · Trailforks · Common Sense Media · GD Demon Ladder                    |
+|                | 리뷰를 쓸 때 항목별로 함께                 | 8     | Zappos · 29CM · 올리브영 · 지그재그 · Everlane · TheTopo · Quaddicted · ADOFAI TUF      |
+| 결과           | 단계 · 값별 가로 막대                      | 7     | theCrag · UKC · GD Demon Ladder · TheTopo · RateMyProfessors · Vivino(별) · ANN         |
+|                | 세로 히스토그램                            | 6     | osu! · Quaddicted · 왓챠 · Musicboard · Slido · Mentimeter                              |
+|                | 선택지 줄 + 퍼센트 막대                    | 4     | Telegram · StrawPoll · Discord · Reddit                                                 |
+|                | 양끝 라벨 트랙 위 평균 위치                | 2     | Vivino · Everlane(근거 약함)                                                            |
+|                | 1위 답 + 퍼센트만                          | 2     | 올리브영 · Zappos(근거 약함)                                                            |
+|                | 태그 + 표수 알약                           | 4     | GD Demon Ladder · Amazon · Glowpick · 지그재그(표수 없음)                               |
+|                | 원그래프 + 범례 + 평균 낱말 · 분류 안 순위 | 1     | GameFAQs(근거 약함)                                                                     |
+| 공식 값과 함께 | 공식 값 옆에 체감 결과를 나란히            | 15    | UKC · theCrag · Mountain Project · Trailforks · osu! · IIDX DP · V-Archive · TheTopo 등 |
+| 배치           | 본문 한 열, 리뷰 바로 위 요약              | 19    | GD Demon Ladder · GameFAQs · 올리브영 · Zappos · Parfumo · Vivino · V-Archive 등        |
+|                | 오른쪽 좁은 열                             | 9     | UKC · osu! · Quaddicted · TMX · theCrag · TheTopo · Musicboard · 왓챠 · Roblox          |
+|                | 따로 통계 쪽 · 탭                          | 4     | Mountain Project · SpinShare · Synthriderz · CSM                                        |
+| 의견과         | 리뷰 줄마다 그 사람의 체감 값              | 14    | RateMyProfessors · Parfumo · Zappos · 29CM · TMX · SpinShare · Quaddicted · IIDX DP 등  |
+
+캡처로 확인한 원본: UKC 는 다크 오른쪽 「Voting」 상자(약 393 폭)에 공식 HVS 를 가운데 굵게 두고 위로 High · Mid · Low E1, 아래로 VS 까지 9줄 막대와 「Votes cast 34」 를 둔다. theCrag 는 218 폭 가운데 열에 「DIFFICULTY - 7-」 제목 아래 Soft Touch · Easy · Average · Hard · Sandbag 다섯 줄 막대와 「Based on 2 ratings.」, 이어 「SUGGESTED GRADE」 막대 · 「COMMENT KEYWORDS」 를 쌓는다. GD Demon Ladder 는 다크로 맨 위 Tier 24(23.97) · Enjoyment 6(6.24) 두 칸, 태그 알약 「Ship 274」 처럼 표수를 붙이고, 아래 개별 제출 2열 표와 Rating spread · Enjoyment spread 가로 막대 두 개를 나란히 둔다. IIDX DP 비공식 난이도표는 공식 ☆12 · 비공식 12.2 두 줄 아래 「＊ 의견만 · − 下げる(12.1) · ＝ 現状維持(12.2) · ＋ 上げる(12.3)」 라디오와 10–100자 의견을 한 번에 받는다. osu! 는 오른쪽 지표 상자에서 Star Rating 바로 아래 User Rating(9.57) 비율 막대(190 · 5,380)와 Rating Spread 를 붙인다. GameFAQs 는 Simple · Easy · Just Right · Tough · Unforgiving 결과를 원그래프로 그리고 「28 users … (average: Easy)」 「#6 easiest PS4 racing game」 을 붙인다. Parfumo 는 Scent · Longevity · Sillage · Bottle · Value 다섯 축을 2열 격자로, 축마다 평균 · 표수 · 0–10 분포 곡선을 둔다. RateMyProfessors 는 리뷰마다 QUALITY · DIFFICULTY 값 상자를 붙인다.
+
+디자인 시스템 7곳(Material 3 Slider · Carbon Slider · Simple charts · USWDS Range slider · Ant Design Slider · Progress · Cloudscape Bar chart · Spectrum Rating · Primer ProgressBar)을 봤다. M3 는 「zero, or the default value, is in the middle」 이면 가운데 시작 슬라이더를, Carbon 은 1–3 처럼 좁은 범위의 슬라이더를 피하라고 하고, Primer 는 여러 조각 막대에 범례를 두라고 한다. Cloudscape 에는 Rating 부품이 없다. 원문은 `research2/c/ds.tsv` 다.
+
+### 서열 투표 입력 재조사(2026-11-11)
+
+판 2 첫 안을 보고 사용자가 「아직 확 와닿는게 없네 · 투표하는 부분도 비직관적 · 실 서비스에 이용할 완벽한 디자인」 이라고 해서, 값 하나를 고르는 입력과 분포 위 내 값 표시를 다시 쟀다. 범용 서비스 37곳 시도 · 21곳(다크 7), 게임 · 등반 40곳 시도 · 15곳(앞 절과 겹치는 8곳은 입력만 다시 봄), 디자인 시스템 9곳이다. 원본은 `~/noslog-research/desktop-music-detail/v2/tier/research3/{d,e}/notes.tsv` · `d/ds.tsv` 와 캡처다. 세지 않은 곳은 Cloudflare · 봇 확인 11, 앱스토어 그림에 등급 입력이 없음 14, 사용자 난이도 투표가 아님 5(osu! 위키 · Stōkt · ScoreSaber 등), 로그인 벽 4 등이다.
+
+| 입력 모양                               | 곳 수 | 서비스                                                       |
+| --------------------------------------- | ----- | ------------------------------------------------------------ |
+| 공식 값을 가운데 두고 위 · 아래 고르기  | 4     | theCrag(칩 다섯 + ← →) · 12climb · IIDX DP 비공식 · wikiwiki |
+| 히스토그램이 붙은 슬라이더              | 3     | Airbnb · Booking · Metaculus(분포 겹침 + 저장 버튼)          |
+| 슬라이더만(분포는 아래 따로 또는 없음)  | 7     | TopLogger(핀 말풍선 · ‹ ›) · Steam · SurveyMonkey · Agoda 등 |
+| 막대 · 칸을 눌러 고르기(분포가 곧 입력) | 2     | Google Flights 가격 그래프 · Kiwi(근거 약함)                 |
+| 스테퍼(− 값 +)                          | 5     | Rankd · GD Demon Ladder · Booking 침실 · Kiwi · Pew          |
+| 절대값 칩 격자 · 라디오 목록            | 3     | Geometry Dash · Rankd · Trailforks(근거 약함)                |
+
+분포 위에 내 값을 보이는 화면은 Metaculus(커뮤니티 분포와 내 분포를 한 축에 겹침) · Google Flights(고른 막대 진하게 + 세로선 + 말풍선) · Airbnb · Booking(고른 범위만 색칠) 넷이고, 게임 · 등반 쪽은 로그아웃이라 미확인이다. 캡처로 확인한 원본: TopLogger 는 다크 시트에 「My grade opinion」 슬라이더(처음엔 핀에 「?」, 양옆 ‹ ›) 아래 「Grade votes」 세로 막대 9칸(막대 위 표수, 0 도 적음, 공식 6a 가 축 가운데). theCrag 도움말은 「Difficulty feedback」 칩 다섯(가운데 빨간 칩이 공식 등급) + 양옆 ← → 와 맨 아래 「Log ascent」. Airbnb 는 가격 히스토그램 바닥이 곧 범위 슬라이더 트랙. Google Flights 는 막대를 고르면 진해지고 세로선 위 말풍선 카드, 아래 Cancel · OK. Metaculus 는 다크 모달에 분포 두 겹 · 슬라이더 · 「Save your forecast」 · 사분위 표. 디자인 시스템은 Material 3(가운데 시작 슬라이더) · Fluent 2 · Atlassian(정확한 값이면 입력 칸) · HIG · Carbon(슬라이더에 숫자 칸 · 스테퍼 짝) 등을 봤다.
+
+### 의견 · 댓글 구역(2026-11-11)
+
+평가 탭 판 3(의견)을 그리려고 댓글 · 리뷰 구역을 다시 쟀다. 48곳 시도 · 35곳(다크 24), 디자인 시스템 6곳이다. 원본은 `~/noslog-research/desktop-music-detail/v2/tier/research4/notes.tsv` · `ds.tsv` 와 캡처다. 세지 않은 곳은 봇 확인 2(Product Hunt · CodePen), 로그인 벽 2(왓챠피디아 · X), 목록 없음 2, 기능 없음 · 지역 제한 2, 오류 · 삭제 4, 공식 그림에 쓰기 말풍선만 1이다.
+
+| 구분    | 모양                                | 곳 수 | 서비스                                                                   |
+| ------- | ----------------------------------- | ----- | ------------------------------------------------------------------------ |
+| 쓰기 칸 | 목록 위에 없음(따로 버튼 · 쪽)      | 17    | Steam · Letterboxd · Backloggd · AniList · Trakt · V-Archive 등          |
+|         | 늘 펼친 상자 + 버튼                 | 7     | osu! · dev.to · Lobsters · velog · 네이버웹툰 · 멜론 · Linear            |
+|         | 접힌 한 줄 → 눌러 펼침              | 5     | YouTube · Reddit · 니코니코 · Notion · Discord                           |
+| 줄      | 카드                                | 12    | GitHub · Steam · AniList · Trakt · Musicboard · giscus · V-Archive 등    |
+|         | 구분선                              | 11    | osu! · Letterboxd · Backloggd · MAL · 네이버웹툰 · 멜론 · Mastodon 등    |
+|         | 선 · 카드 없이 여백                 | 11    | YouTube · Reddit · HN · BeatSaver · Bluesky · Discord 등                 |
+| 답글    | 세로 스레드 선 + 들여쓰기           | 5     | YouTube · Reddit · GitHub · giscus · dev.to                              |
+|         | 평평하게 이어 붙임                  | 5     | Discord · Notion · Linear · Bluesky · Mastodon                           |
+|         | 선 없는 들여쓰기                    | 3     | osu!(「↩ 대상이름」) · HN · Lobsters                                     |
+| 평가 값 | 줄마다 그 사람의 점수 · 추천을 붙임 | 10    | Steam · Letterboxd · Backloggd · MAL · Trakt · Musicboard · BeatSaver 등 |
+| 정렬    | 탭 · 세그먼트 / 드롭다운            | 7 / 7 | osu! · GitHub · V-Archive 등 / YouTube · Reddit · Steam 등               |
+
+캡처로 확인한 원본: osu! 는 다크 상자에 아바타 + 쓰기 상자(로그아웃이면 「Please sign in to proceed.」 + 「Sign in to comment」), 「Sort by Recent · Old · Top」 띠, 줄 왼쪽 「+N」 알약, 답글 이름 옆 「↩ 대상이름」, 스레드 사이 구분선. YouTube 는 「Add a comment...」 밑줄 한 줄, 줄 아래 👍 수 · Reply, 「N replies ⌄」 토글. GitHub 디스커션은 테두리 카드 · 역할 배지 · ⋯, 카드 아래 세로 선 답글 묶음 · 「Show 1 previous reply」. Trakt 는 리뷰 카드 가로 배열에 오른쪽 위 「👁 100% · 5★」 값 알약. 번역 토글은 실측한 곳이 없고(미확인), 지운 글을 자리에 남기는 모양은 루리웹 1곳(근거 약함)이다. 디자인 시스템은 Atlassian Comment(넓은 토론은 중첩 · 짧은 대화는 평평) · Ant Design Comment · Salesforce Feeds · Primer Timeline · Carbon Text area(글자 수 카운터) · Primer Empty states 를 봤다.
+
 ## 채보 뷰어(다시 시작)
 
 폭 1440, 로그인하지 않은 화면이다. 캡처는 `~/noslog-research/desktop-viewer/ref/` · `ref2/` · `ds/`, 실제 화면 사진은 `real/` 에 있다. 모두 직접 열어 보고 재생 구조가 보인 곳만 셌다. 실제 서비스 30곳 · 디자인 시스템 5곳이다.
