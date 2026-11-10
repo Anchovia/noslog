@@ -77,7 +77,7 @@ export const publicAnnouncementSchema = announcementMetadataSchema
     })
     .refine(validSchedule);
 // 목록은 본문 대신 DB에서 계산한 검증 결과만 받는다. 공개 조건은 상세와 동일하다.
-export const publicAnnouncementSummarySchema = announcementMetadataSchema
+const publicAnnouncementSummarySchema = announcementMetadataSchema
     .extend({
         translations: z
             .array(

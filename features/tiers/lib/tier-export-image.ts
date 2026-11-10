@@ -14,8 +14,8 @@ import { formatTierValue, isTierGoalAchieved } from "@/lib/tiers";
  * (화면 카드와 같은 규칙: 달성 테두리 · 미달성 흑백 · 자켓 위 띠 · 오른쪽 아래 난이도 판)
  */
 export const TIER_EXPORT_MAX = 500;
-export const TIER_EXPORT_WIDTH = 1200;
-export const TIER_EXPORT_COLUMNS = 12;
+const TIER_EXPORT_WIDTH = 1200;
+const TIER_EXPORT_COLUMNS = 12;
 
 /**
  * 창의 기본 구간 — 지금 조건의 구간이 한 장(500곡)에 들면 전부, 넘으면 위(높은 구간)부터 이어서 500곡 안까지(2026-09-22 R2).

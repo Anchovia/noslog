@@ -7,7 +7,7 @@ import { formatProfilePlayTime } from "@/lib/profile/profile-play-time";
 const DAY = 86_400_000;
 const KST = 9 * 60 * 60 * 1000;
 /** 달력 53주(1년) — 첫 열은 일요일부터 */
-export const PROFILE_ACTIVITY_WEEKS = 53;
+const PROFILE_ACTIVITY_WEEKS = 53;
 
 /** 플레이 시각(가져온 문자열, 한국 시각) → 한국 날짜 「YYYY-MM-DD」 */
 export function playDay(source: string) {

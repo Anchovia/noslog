@@ -9,7 +9,7 @@ import { MAX_IMAGE_SIZE } from "@/lib/image-upload-rules";
 import { tierGoalLabels } from "@/lib/tiers";
 
 /** 사용자 지정 원본(2026-09 공지, 1200×706)의 고정 이미지 규격. 브라우저 UI 토큰을 새로 정의하지 않는다. */
-export const TIER_CHANGE_IMAGE_WIDTH = 1200;
+const TIER_CHANGE_IMAGE_WIDTH = 1200;
 export const TIER_CHANGE_IMAGE_PALETTE = {
     background: "#111111",
     text: "#f2f2f2",

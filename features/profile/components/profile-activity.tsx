@@ -12,7 +12,7 @@ import ProfilePlaysList from "./profile-plays-list";
 const LEVELS = [0, 1, 2, 3, 4, 5, 6] as const;
 
 /** 달력 칸 단계 — 0 = 플레이 없음, 1–6 = 그 사람의 가장 많이 한 날에 대한 비율(차트 단계 색 6) */
-export function activityLevel(count: number, max: number) {
+function activityLevel(count: number, max: number) {
     return count > 0 && max > 0 ? Math.min(6, Math.ceil((count / max) * 6)) : 0;
 }
 

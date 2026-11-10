@@ -73,7 +73,7 @@ import {
 import { cn } from "@/lib/cn";
 
 /** 업적 그림(2026-09-24 A1) — 사이트가 쓰는 Lucide 아이콘에서 고른다. 새 그림을 그리지 않는다 */
-export const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
+const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
     "s-rank": Star,
     "score-990k": Gem,
     "full-combo": Link2,

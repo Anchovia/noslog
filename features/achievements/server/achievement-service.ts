@@ -205,7 +205,7 @@ export interface AchievementJudgement {
  * 빼는 것: 없어진 업적(예: 빙고) · 그 업적이 갖지 않은 등급 · 지금 값이 그 등급 기준에 못 미치는 단계.
  * 평소(동기화 · prune 꺼짐)는 얻은 단계를 빼지 않는다.
  */
-export async function judgeUserAchievements(
+async function judgeUserAchievements(
     userId: number,
     prune: boolean
 ): Promise<AchievementJudgement> {
@@ -360,7 +360,7 @@ export async function setAchievementShowcase(
     return { status: "ok", keys: unique };
 }
 
-export const ACHIEVEMENT_REJUDGE_BATCH = 50;
+const ACHIEVEMENT_REJUDGE_BATCH = 50;
 
 export interface AchievementRejudgeBatch {
     /** 이번에 판정한 사용자 수 */

@@ -3,7 +3,7 @@ import { z } from "zod";
 // 채보 커뮤니티 의견 · 답글 신고 상태(2026-10-17) — 신고가 쌓이기만 하고 보는 곳이 없어 관리자 피드백 화면에서 처리한다
 const OPINION_REPORT_STATUSES = ["pending", "resolved"] as const;
 
-export const opinionReportStatusSchema = z.enum(OPINION_REPORT_STATUSES, {
+const opinionReportStatusSchema = z.enum(OPINION_REPORT_STATUSES, {
     error: "신고 상태를 확인해주세요.",
 });
 

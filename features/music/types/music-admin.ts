@@ -9,7 +9,7 @@ interface AdminMusicTranslation {
     title: string;
 }
 
-export interface AdminMusicListItem {
+interface AdminMusicListItem {
     artist: string | null;
     categoryShort: string;
     chartCount: number;

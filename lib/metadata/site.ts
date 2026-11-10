@@ -30,7 +30,7 @@ const SOCIAL_IMAGE_ALTS: Record<Locale, string> = {
     en: "NosLog — NOSTALGIA records, rankings and tier lists",
 };
 
-export interface SocialImage {
+interface SocialImage {
     url: string;
     width?: number;
     height?: number;
@@ -38,7 +38,7 @@ export interface SocialImage {
 }
 
 /** 사이트 기본 공유 이미지(app/opengraph-image) — 페이지가 openGraph 를 쓰면 상위 이미지가 통째로 지워지므로 늘 직접 넣는다(Next.js 메타데이터 병합) */
-export function defaultSocialImage(locale: Locale): SocialImage {
+function defaultSocialImage(locale: Locale): SocialImage {
     return {
         url: "/opengraph-image",
         width: 1200,
