@@ -5,18 +5,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    if (!["localhost", "127.0.0.1"].includes(new URL(value).hostname))
-        throw new Error("Achievement metric tests require a local database.");
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Achievement metric tests require a local database."
+        ),
     };
 });
 

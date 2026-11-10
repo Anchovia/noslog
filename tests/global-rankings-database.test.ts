@@ -5,18 +5,12 @@ vi.mock("next/cache", () => ({
 vi.mock("@/lib/db", async () => {
     const url = process.env.TEST_DATABASE_URL;
     if (!url) return { default: {} };
-    if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
-        throw new Error("Ranking integration tests require a local database.");
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: url,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            url,
+            "Ranking integration tests require a local database."
+        ),
     };
 });
 import db from "@/lib/db";

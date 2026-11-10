@@ -1,23 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 // 프로필 통계 탭의 원시 SQL 집계(2026-10-16 D8 · R1)가 실제 Postgres 의 지금 표 · 열에서 돌고, 예전 JS 집계와 같은 칸 규칙인지 본다
-vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    if (!["localhost", "127.0.0.1"].includes(new URL(value).hostname))
-        throw new Error("Profile stats tests require a local database.");
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Profile stats tests require a local database."
+        ),
     };
 });
 

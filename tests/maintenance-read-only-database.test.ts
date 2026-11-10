@@ -7,17 +7,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "maintenance read-only connection on isolated PostgreSQL",
     () => {
         async function client(maintenance: boolean) {
-            const value = process.env.TEST_DATABASE_URL!;
-            if (!["localhost", "127.0.0.1"].includes(new URL(value).hostname))
-                throw new Error("Maintenance tests require a local database.");
-            const { PrismaClient } = await import("@prisma/client");
-            const { PrismaPg } = await import("@prisma/adapter-pg");
-            return new PrismaClient({
-                adapter: new PrismaPg({
-                    connectionString: value,
-                    options: prismaPgSessionOptions(maintenance),
-                }),
-            });
+            const { createLocalTestClient } =
+                await import("./helpers/local-database");
+            return createLocalTestClient(
+                process.env.TEST_DATABASE_URL!,
+                "Maintenance tests require a local database.",
+                prismaPgSessionOptions(maintenance)
+            );
         }
 
         it("rejects writes and keeps reads while in maintenance", async () => {

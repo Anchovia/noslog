@@ -1,7 +1,6 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
 import { afterAll, describe, expect, it } from "vitest";
+
+import { createLocalTestClient } from "./helpers/local-database";
 
 // Prisma 6 스키마가 표현하지 못해 마이그레이션 SQL 에만 있는 DB 객체(2026-10-16 DB 재설계 C1).
 // `prisma migrate diff` 는 이것들을 보지 못하므로, 마이그레이션을 올린 DB 에 실제로 있는지 여기서 확인한다.
@@ -30,14 +29,10 @@ const INDEXES: Record<string, string[]> = {
 };
 
 describe.skipIf(!url)("스키마 밖 DB 객체", () => {
-    if (url && !["localhost", "127.0.0.1"].includes(new URL(url).hostname))
-        throw new Error("Schema object tests require a local database.");
-    const db = new PrismaClient({
-        adapter: new PrismaPg({
-            connectionString: url,
-            options: PRISMA_PG_SESSION_OPTIONS,
-        }),
-    });
+    const db = createLocalTestClient(
+        url,
+        "Schema object tests require a local database."
+    );
 
     afterAll(async () => {
         await db.$disconnect();

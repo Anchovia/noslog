@@ -10,21 +10,12 @@ import {
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    const url = new URL(value);
-    if (!["localhost", "127.0.0.1"].includes(url.hostname))
-        throw new Error(
-            "Player rating integration tests require a local database."
-        );
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Player rating integration tests require a local database."
+        ),
     };
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));

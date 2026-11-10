@@ -1,25 +1,17 @@
 import { randomUUID } from "node:crypto";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
 import { describe, expect, it } from "vitest";
+
+import { createLocalTestClient } from "./helpers/local-database";
 
 const databaseUrl = process.env.TEST_DATABASE_URL;
 describe.skipIf(!databaseUrl)(
     "nickname normalization database invariant",
     () => {
         it("retains display spelling and rejects case/width collisions atomically", async () => {
-            const target = new URL(databaseUrl!);
-            if (!["localhost", "127.0.0.1"].includes(target.hostname))
-                throw new Error(
-                    "Nickname integration tests require a local database."
-                );
-            const db = new PrismaClient({
-                adapter: new PrismaPg({
-                    connectionString: databaseUrl,
-                    options: PRISMA_PG_SESSION_OPTIONS,
-                }),
-            });
+            const db = createLocalTestClient(
+                databaseUrl!,
+                "Nickname integration tests require a local database."
+            );
             const prefix = randomUUID().replaceAll("-", "").slice(0, 8);
             const ids: number[] = [];
             try {
