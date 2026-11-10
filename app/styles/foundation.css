@@ -150,9 +150,6 @@ html[data-theme="light"] .noslog-ui,
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
 }
-.noslog-ui .nl-error-text {
-    color: var(--nl-feedback-destructive);
-}
 .noslog-ui .nl-stack {
     display: flex;
     flex-direction: column;

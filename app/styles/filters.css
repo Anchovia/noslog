@@ -310,24 +310,6 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
 }
-/* Compact 툴바: 정렬 | 필터 1:1 전체 폭 (Amazon·Zalando·무신사 모바일 관례) · 아이콘·라벨 왼쪽, chevron 오른쪽 끝 */
-.noslog-ui .nl-filter-toolbar--split {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-filter-toolbar--split > * {
-    width: 100%;
-    min-width: 0;
-}
-.noslog-ui .nl-filter-toolbar--split .nl-filter-trigger {
-    width: 100%;
-    justify-content: flex-start;
-}
-.noslog-ui .nl-filter-toolbar--split .nl-filter-trigger > svg:last-child {
-    margin-left: auto;
-}
 /* 검색줄 옆 아이콘 필터 트리거(폰) — 컨트롤 높이 정사각, 적용 개수는 오른쪽 위 공용 배지 (오락실 · 악곡 · 서열표 공용) */
 .noslog-ui .nl-filter-icon-trigger {
     position: relative;

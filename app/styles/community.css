@@ -13,16 +13,6 @@
 .noslog-ui .nl-community-votes > .nl-disclosure__body > .nl-heading-row {
     margin-bottom: var(--nl-spacing-8);
 }
-/* 서열 투표 안 모드 묶음(Basic · Recital) — 제목 → 줄 8, 묶음 사이 24(구역 gap 12 + 12) */
-.noslog-ui .nl-tier-mode {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
-.noslog-ui .nl-tier-mode + .nl-tier-mode {
-    margin-top: var(--nl-spacing-12);
-}
 .noslog-ui .nl-tier-history {
     display: flex;
     flex-direction: column;
@@ -202,12 +192,6 @@
 .noslog-ui .nl-pattern-axis > .nl-control {
     min-width: 0;
 }
-.noslog-ui .nl-community-actions {
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-}
 .noslog-ui .nl-vote-contribution {
     display: flex;
     flex-direction: column;
@@ -216,9 +200,6 @@
 .noslog-ui .nl-vote-contribution__value {
     display: flex;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-vote-contribution > .nl-community-actions {
-    justify-content: flex-start;
 }
 .noslog-ui .nl-vote-form {
     display: flex;
