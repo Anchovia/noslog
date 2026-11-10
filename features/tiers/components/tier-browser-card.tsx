@@ -225,7 +225,7 @@ export function TierBrowserRow({
               : null;
     return (
         <IntentLink
-            className="nl-tier-row"
+            className="nl-tier-row nl-bleed-row"
             data-goal={query.goal}
             data-unachieved={(signedIn && !goalAchieved) || undefined}
             aria-disabled={pending || undefined}
@@ -301,7 +301,7 @@ export function TierBrowserCardSkeleton({ signedIn }: { signedIn: boolean }) {
 /** 목록 행 스켈레톤 — 같은 행 틀에 자켓 · 이름 · 난이도 · (로그인하면) 점수 · 기여 자리 */
 export function TierBrowserRowSkeleton({ signedIn }: { signedIn: boolean }) {
     return (
-        <div className="nl-tier-row" aria-hidden="true">
+        <div className="nl-tier-row nl-bleed-row" aria-hidden="true">
             <span className="nl-tier-row__jacket nl-skeleton" />
             <span className="nl-tier-row__name">
                 <SkeletonText className="nl-emphasis-label" width="l" />

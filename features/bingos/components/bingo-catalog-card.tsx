@@ -73,7 +73,7 @@ export default function BingoCatalogCard({
         return (
             <IntentLink
                 href={href(`/bingo/${item.id}`)}
-                className="nl-bingo-row-item"
+                className="nl-bingo-row-item nl-bleed-row"
             >
                 <MusicJacket
                     appearance="foundation"
@@ -151,7 +151,7 @@ export function BingoCatalogCardSkeleton({
 }) {
     if (view === "list")
         return (
-            <div className="nl-bingo-row-item" aria-hidden="true">
+            <div className="nl-bingo-row-item nl-bleed-row" aria-hidden="true">
                 <span className="nl-jacket nl-bingo-row-item__cover nl-skeleton" />
                 <span className="nl-bingo-row-item__body">
                     <SkeletonText className="nl-emphasis-label" width="l" />

@@ -47,7 +47,7 @@ export default function ProfilePlayRow({
     return (
         <li>
             <IntentLink
-                className="nl-profile-play-row"
+                className="nl-profile-play-row nl-bleed-row"
                 href={href(
                     `/music/${play.musicIndex}/${play.difficulty.toLowerCase()}`
                 )}
@@ -186,7 +186,7 @@ export function ProfilePlayListHead({
 function ProfilePlayRowSkeleton() {
     return (
         <li aria-hidden="true">
-            <span className="nl-profile-play-row">
+            <span className="nl-profile-play-row nl-bleed-row">
                 <span className="nl-jacket nl-profile-play-row__jacket nl-skeleton" />
                 <SkeletonText
                     className="nl-profile-play-row__title nl-entity-title"

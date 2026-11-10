@@ -273,7 +273,7 @@ export default function ProfileSettings({
             >
                 {/* 줄 목록(2026-10-01 C1) — Canva · Discord · 넥슨 식. 라벨 · 값 왼쪽, 버튼 오른쪽, 입력칸만 라벨 위 */}
                 <div className="nl-settings__rows">
-                    <div className="nl-settings__row nl-settings__row--stack">
+                    <div className="nl-settings__row nl-settings__row--stack nl-focus-inset nl-forced-press">
                         <div className="nl-settings__row-lead">
                             <Avatar
                                 src={avatar || null}
@@ -375,7 +375,7 @@ export default function ProfileSettings({
                             ) : null}
                         </div>
                     </FormField>
-                    <div className="nl-settings__row">
+                    <div className="nl-settings__row nl-focus-inset nl-forced-press">
                         <p className="nl-control">
                             {t("settings.nostalgiaName")}
                         </p>
@@ -387,7 +387,7 @@ export default function ProfileSettings({
                         control={control}
                         name="country"
                         render={({ field }) => (
-                            <div className="nl-settings__row">
+                            <div className="nl-settings__row nl-focus-inset nl-forced-press">
                                 <label
                                     htmlFor="settings-country"
                                     className="nl-control"

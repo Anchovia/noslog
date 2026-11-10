@@ -146,7 +146,7 @@ export default function ArcadeMapSheet({
                     {/* 손잡이 줄 전체가 누르는 자리 — 탭하면 올리고 내리고, 끌면 시트가 따라오고 놓으면 그 방향 단계로 */}
                     <button
                         type="button"
-                        className="nl-arcades__sheet-toggle"
+                        className="nl-arcades__sheet-toggle nl-focus-inset"
                         aria-label={toggleLabel}
                         aria-expanded={sheet === "expanded"}
                         aria-controls={bodyId}

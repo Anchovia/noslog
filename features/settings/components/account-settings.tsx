@@ -164,7 +164,7 @@ export default function AccountSettings({
                         trigger={
                             <button
                                 type="button"
-                                className="nl-settings__row"
+                                className="nl-settings__row nl-focus-inset nl-forced-press"
                                 disabled={loggingOut}
                             >
                                 <span className="nl-settings__row-copy">

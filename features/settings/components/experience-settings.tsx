@@ -91,7 +91,7 @@ export default function ExperienceSettings() {
     return (
         <div className="nl-settings__form" aria-busy={pending}>
             <div className="nl-settings__rows">
-                <div className="nl-settings__row">
+                <div className="nl-settings__row nl-focus-inset nl-forced-press">
                     <label htmlFor="settings-language" className="nl-control">
                         {t("header.language")}
                     </label>
@@ -109,7 +109,7 @@ export default function ExperienceSettings() {
                         ]}
                     />
                 </div>
-                <div className="nl-settings__row">
+                <div className="nl-settings__row nl-focus-inset nl-forced-press">
                     <div className="nl-settings__row-copy">
                         <label htmlFor="settings-theme" className="nl-control">
                             {t("settings.themeLabel")}

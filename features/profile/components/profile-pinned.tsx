@@ -41,7 +41,7 @@ export default function ProfilePinned({
                 {pinned.items.map((play) => (
                     <li key={play.id}>
                         <IntentLink
-                            className="nl-profile-pinned__row"
+                            className="nl-profile-pinned__row nl-bleed-row"
                             href={href(
                                 `/music/${play.musicIndex}/${play.difficulty.toLowerCase()}`
                             )}

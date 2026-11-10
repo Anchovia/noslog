@@ -77,7 +77,10 @@ export default function PrivacySettings({
                         settingsPrivacySchema.shape
                     ) as (keyof SettingsPrivacyValues)[]
                 ).map((key) => (
-                    <div key={key} className="nl-settings__row">
+                    <div
+                        key={key}
+                        className="nl-settings__row nl-focus-inset nl-forced-press"
+                    >
                         <div className="nl-settings__row-copy">
                             <label
                                 htmlFor={`settings-${key}`}

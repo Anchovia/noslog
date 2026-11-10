@@ -100,14 +100,14 @@ function StageRow({
         <li className="nl-exam-stage">
             {stage.charts.length === 1 ? (
                 <IntentLink
-                    className="nl-exam-stage__row"
+                    className="nl-exam-stage__row nl-focus-inset nl-forced-press"
                     href={chartHref(stage.charts[0].difficulty)}
                 >
                     {content}
                 </IntentLink>
             ) : stage.charts.length > 1 ? (
                 <button
-                    className="nl-exam-stage__row"
+                    className="nl-exam-stage__row nl-focus-inset nl-forced-press"
                     ref={trigger}
                     type="button"
                     onClick={() => setOpen(true)}
@@ -116,7 +116,9 @@ function StageRow({
                     {content}
                 </button>
             ) : (
-                <div className="nl-exam-stage__row">{content}</div>
+                <div className="nl-exam-stage__row nl-focus-inset nl-forced-press">
+                    {content}
+                </div>
             )}
             <ModalDialog
                 open={open}

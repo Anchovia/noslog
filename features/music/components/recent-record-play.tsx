@@ -87,7 +87,7 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
         <li>
             <details>
                 <summary
-                    className="nl-recent-play nl-body-secondary"
+                    className="nl-recent-play nl-body-secondary nl-focus-inset nl-forced-press"
                     aria-label={t("music.recent.detailLabel", {
                         date,
                         score: count(play.score),

@@ -103,7 +103,7 @@ export default async function AnnouncementDetail({
                                             `/announcements/${item.slug}`,
                                             locale
                                         )}
-                                        className="nl-announcements__adjacent-link"
+                                        className="nl-announcements__adjacent-link nl-focus-inset nl-forced-press"
                                         data-side={side}
                                     >
                                         <span className="nl-metadata nl-muted">

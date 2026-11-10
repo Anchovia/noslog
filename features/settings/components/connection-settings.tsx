@@ -34,7 +34,7 @@ export default function ConnectionSettings({
         <div className="nl-settings__form">
             <div className="nl-settings__rows">
                 <IntentLink
-                    className="nl-settings__row"
+                    className="nl-settings__row nl-focus-inset nl-forced-press"
                     href={`${href("/settings")}${DISCORD_DETAIL_QUERY}`}
                 >
                     <span className="nl-settings__row-lead">
@@ -150,7 +150,10 @@ export function DiscordConnectionDetail({
                 </h2>
                 <ul className="nl-settings__rows">
                     {DISCORD_SCOPES.map((scope) => (
-                        <li key={scope} className="nl-settings__row">
+                        <li
+                            key={scope}
+                            className="nl-settings__row nl-focus-inset nl-forced-press"
+                        >
                             <span className="nl-control">
                                 {t(`settings.discordScope.${scope}`)}
                             </span>

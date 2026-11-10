@@ -305,7 +305,7 @@ function TierExportPreview({
                         {available.map((band) => (
                             <Checkbox
                                 key={band.id}
-                                className="nl-tier-band-option"
+                                className="nl-tier-band-option nl-focus-inset"
                                 checked={picked.includes(band.value)}
                                 onChange={() =>
                                     setPicked((current) =>

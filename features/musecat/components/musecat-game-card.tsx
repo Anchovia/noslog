@@ -247,7 +247,7 @@ export default function MusecatGameCard({
             ) : null}
             <button
                 type="button"
-                className="nl-musecat-game__toggle nl-control"
+                className="nl-musecat-game__toggle nl-control nl-focus-inset"
                 aria-expanded={open}
                 aria-controls={detailsId}
                 onClick={() => setOpen((value) => !value)}

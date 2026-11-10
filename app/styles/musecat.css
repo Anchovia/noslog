@@ -91,28 +91,9 @@
     width: 100%;
     text-align: start;
 }
-/* 공지 줄 올림 = 좌우 12 를 넓혀 칠한 면 — 글자 선 · 구분선은 그대로(가이드 펼침 줄 규칙) */
-.noslog-ui .nl-musecat-lines > li > button.nl-musecat-line {
-    position: relative;
-    isolation: isolate;
-}
+/* 공지 줄 올림 = 좌우 12 를 넓혀 칠한 면(nl-bleed-row) — 글자 선 · 구분선은 그대로(가이드 펼침 줄 규칙) */
 .noslog-ui .nl-musecat-lines > li > button.nl-musecat-line::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline: calc(var(--nl-spacing-12) * -1);
-    z-index: calc(var(--nl-layer-above) * -1);
     border-radius: var(--nl-radius-control);
-    pointer-events: none;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-musecat-lines > li > button.nl-musecat-line:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
 }
 .noslog-ui .nl-musecat-notice-link {
     margin-bottom: var(--nl-spacing-8);

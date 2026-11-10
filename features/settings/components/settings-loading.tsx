@@ -30,7 +30,7 @@ function ButtonSkeleton({ label }: { label: string }) {
 function ProfileRows({ t }: { t: Translate }) {
     return (
         <div className="nl-settings__rows">
-            <div className="nl-settings__row nl-settings__row--stack">
+            <div className="nl-settings__row nl-settings__row--stack nl-focus-inset nl-forced-press">
                 <div className="nl-settings__row-lead">
                     <span className="nl-avatar nl-skeleton nl-settings__skeleton-avatar" />
                     <div className="nl-settings__row-copy">
@@ -62,7 +62,10 @@ function PrivacyRows({ t }: { t: Translate }) {
             {keys.map((key) => {
                 const help = PRIVACY_HELP[key];
                 return (
-                    <div key={key} className="nl-settings__row">
+                    <div
+                        key={key}
+                        className="nl-settings__row nl-focus-inset nl-forced-press"
+                    >
                         <div className="nl-settings__row-copy">
                             <p className="nl-control">{t(`settings.${key}`)}</p>
                             {help ? (
@@ -82,7 +85,7 @@ function PrivacyRows({ t }: { t: Translate }) {
 function ConnectionRows() {
     return (
         <div className="nl-settings__rows">
-            <div className="nl-settings__row">
+            <div className="nl-settings__row nl-focus-inset nl-forced-press">
                 <div className="nl-settings__row-lead">
                     <span className="nl-settings__logo">
                         <DiscordIcon />
@@ -109,7 +112,7 @@ function AccountRows({ t }: { t: Translate }) {
             </div>
             <div className="nl-settings__zone">
                 <div className="nl-settings__rows">
-                    <div className="nl-settings__row">
+                    <div className="nl-settings__row nl-focus-inset nl-forced-press">
                         <span className="nl-settings__row-copy">
                             <span className="nl-control">
                                 {t("settings.deleteTitle")}

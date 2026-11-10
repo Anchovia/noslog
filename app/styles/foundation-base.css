@@ -47,38 +47,23 @@ html[data-theme="light"] .noslog-ui,
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     outline-offset: var(--nl-stroke-strong);
 }
+/* 안쪽 목록 — 공용 부품은 여기에 이름을 두고, 화면이 만드는 줄 · 버튼은 그 요소에 nl-focus-inset 을 붙인다 */
 .noslog-ui
     :is(
+        .nl-focus-inset,
         .nl-tabs__item,
         .nl-chip,
         .nl-segments__item,
         .nl-applied__token,
         .nl-sort-menu__item,
         .nl-select-option,
-        .nl-exam-select__option,
         .nl-action-menu__item,
         .nl-action-group__item,
         .nl-pick-row,
-        .nl-recent-play,
-        .nl-destination,
-        .nl-settings__row,
-        .nl-privacy-contents a,
         .nl-disclosure > summary,
-        .nl-achievement-row__main,
-        .nl-announcements__adjacent-link,
-        .nl-tier-switch,
-        .nl-tier-band-option,
-        .nl-arcades__sheet-toggle,
-        .nl-musecat-game__toggle,
-        .nl-achievement-picker__choice,
         .nl-stepper__button,
-        .nl-exam-stage__row,
-        .nl-chart-strip__main,
         .nl-search > .nl-compact-select,
         .nl-search__clear,
-        .nl-arcade-map__legend,
-        .nl-musecat-result,
-        .nl-admin-nav__tab,
         [role="option"],
         [role="menuitem"],
         [role="menuitemradio"],
@@ -86,40 +71,42 @@ html[data-theme="light"] .noslog-ui,
     ):focus-visible {
     outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
-/* 좌우를 넓혀 칠하는 줄(서열표 · 빙고 목록 행, 프로필 기록 · 고정 기록 줄, 오락실 공지 줄) — 누름 · 키 포커스도
-   올림과 같은 면이고, 포커스 선은 그 면(::before)과 같은 사각형 · 모서리의 안쪽(−2)에 긋는다. 줄 상자에 그으면 넓힌 면과 어긋난다 */
-.noslog-ui
-    :is(
-        a.nl-tier-row,
-        a.nl-bingo-row-item,
-        a.nl-profile-play-row,
-        .nl-profile-pinned__row,
-        .nl-musecat-lines > li > button.nl-musecat-line
-    ):focus-visible {
+/* 좌우를 넓혀 칠하는 줄(nl-bleed-row — 서열표 · 빙고 목록 행, 프로필 기록 · 고정 기록 줄, 오락실 공지 줄) — 면(::before)은
+   좌우 12 를 넓히고 글자 선 · 구분선은 그대로 둔다. 링크 · 버튼인 줄은 올림 · 누름 · 키 포커스가 같은 면이고,
+   포커스 선은 그 면과 같은 사각형 · 모서리의 안쪽(−2)에 긋는다. 줄 상자에 그으면 넓힌 면과 어긋난다.
+   면의 모서리 · 위아래 끝이 다른 줄은 그 화면 CSS 가 ::before 에 준다 */
+.noslog-ui .nl-bleed-row {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui .nl-bleed-row::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    pointer-events: none;
+}
+@media (hover: hover) {
+    .noslog-ui :is(a, button).nl-bleed-row:hover::before {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui :is(a, button).nl-bleed-row:focus-visible {
     outline: none;
 }
-.noslog-ui
-    :is(
-        a.nl-tier-row,
-        a.nl-bingo-row-item,
-        a.nl-profile-play-row,
-        .nl-profile-pinned__row,
-        .nl-musecat-lines > li > button.nl-musecat-line
-    ):is(:active, :focus-visible)::before {
+.noslog-ui :is(a, button).nl-bleed-row:is(:active, :focus-visible)::before {
     --nl-state-layer: var(--nl-interaction-row);
     background-image: linear-gradient(
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
 }
-.noslog-ui
-    :is(
-        a.nl-tier-row,
-        a.nl-bingo-row-item,
-        a.nl-profile-play-row,
-        .nl-profile-pinned__row,
-        .nl-musecat-lines > li > button.nl-musecat-line
-    ):focus-visible::before {
+.noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     outline-offset: calc(var(--nl-stroke-strong) * -1);
 }

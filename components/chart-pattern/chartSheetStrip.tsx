@@ -338,7 +338,7 @@ export default function ChartSheetStrip({
                     tabIndex={0}
                     role="region"
                     aria-label={t("chart.sheetScroll")}
-                    className="nl-chart-strip__main"
+                    className="nl-chart-strip__main nl-focus-inset"
                     onScroll={(event) =>
                         setScrollTop(event.currentTarget.scrollTop)
                     }

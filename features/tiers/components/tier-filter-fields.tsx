@@ -112,7 +112,7 @@ export default function TierFilterFields({
                     {bands.map((band) => (
                         <Checkbox
                             key={band.id}
-                            className="nl-tier-band-option"
+                            className="nl-tier-band-option nl-focus-inset"
                             checked={query.bands.includes(band.value)}
                             data-range-start={
                                 rangeStart === band.value || undefined

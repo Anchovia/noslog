@@ -46,7 +46,7 @@ export default function MusecatListRow({
     const hint = state === "unknown" ? null : arcadeScheduleHint(arcade, now);
     return (
         <IntentLink
-            className="nl-musecat-result"
+            className="nl-musecat-result nl-focus-inset nl-forced-press"
             data-arcade-id={arcade.id}
             data-selected={selected || undefined}
             href={href}

@@ -614,7 +614,7 @@ export default function MusecatArcadeDetailPage({
                                                 <li key={notice.id}>
                                                     <button
                                                         type="button"
-                                                        className="nl-musecat-line"
+                                                        className="nl-musecat-line nl-bleed-row"
                                                         aria-expanded={expanded}
                                                         onClick={() =>
                                                             setNoticeOpen(

@@ -92,7 +92,7 @@ export default function PrivacyContents({
     const links = sections.map((section) => (
         <li key={section.id}>
             <a
-                className="nl-body-secondary nl-link"
+                className="nl-body-secondary nl-link nl-focus-inset"
                 href={`#${idPrefix}-${section.id}`}
                 aria-current={
                     active === `${idPrefix}-${section.id}`

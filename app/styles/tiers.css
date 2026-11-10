@@ -394,8 +394,6 @@
     flex-direction: column;
 }
 .noslog-ui .nl-tier-row {
-    position: relative;
-    isolation: isolate;
     display: grid;
     grid-template-columns: var(--nl-spacing-48) minmax(0, 1fr) auto;
     align-items: center;
@@ -403,24 +401,10 @@
     padding-block: var(--nl-spacing-8);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
 }
-/* 목록 줄 올림 = 줄 면 겹침, 좌우 12 를 넓혀 칠하고 자켓 · 글자 선 · 아래 줄 선은 그대로 */
+/* 목록 줄 올림 = 줄 면 겹침(nl-bleed-row), 좌우 12 를 넓혀 칠하고 자켓 · 글자 선 · 아래 줄 선은 그대로 */
 .noslog-ui .nl-tier-row::before {
-    content: "";
-    position: absolute;
     inset-block: 0 var(--nl-stroke-default);
-    inset-inline: calc(var(--nl-spacing-12) * -1);
-    z-index: calc(var(--nl-layer-above) * -1);
     border-radius: var(--nl-radius-control);
-    pointer-events: none;
-}
-@media (hover: hover) {
-    .noslog-ui a.nl-tier-row:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
 }
 .noslog-ui .nl-tier-row__jacket {
     position: relative;

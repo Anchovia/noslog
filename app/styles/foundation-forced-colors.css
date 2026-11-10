@@ -1,13 +1,6 @@
 @media (forced-colors: active) {
     .noslog-ui :focus-visible,
-    .noslog-ui
-        :is(
-            a.nl-tier-row,
-            a.nl-bingo-row-item,
-            a.nl-profile-play-row,
-            .nl-profile-pinned__row,
-            .nl-musecat-lines > li > button.nl-musecat-line
-        ):focus-visible::before {
+    .noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
         outline-color: Highlight;
     }
     .noslog-ui .nl-check__box {
@@ -115,24 +108,19 @@
     }
 }
 /* 고대비 모드에서도 버튼 · 메뉴 항목 · 누르는 줄의 올림 · 누름이 보이게 시스템 색 면(Spectrum 2 · Fluent 2 —
-   평소 면과 글자색을 맞바꾼다). 시스템 색이 덮지 않게 그 순간만 강제 색을 끄고, 안 글자도 같은 색으로 맞춘다 */
+   평소 면과 글자색을 맞바꾼다). 시스템 색이 덮지 않게 그 순간만 강제 색을 끄고, 안 글자도 같은 색으로 맞춘다.
+   제 올림 면을 가진 화면의 누르는 줄은 그 요소에 nl-forced-press 를 붙인다 */
 @media (forced-colors: active) and (hover: hover) {
     .noslog-ui
         :is(
             .nl-button,
             .nl-hover-layer,
+            .nl-forced-press,
             .nl-sort-menu__item,
             .nl-select-option,
-            .nl-exam-select__option,
             .nl-action-menu__item,
             .nl-action-group__item,
             .nl-pick-row,
-            .nl-recent-play,
-            .nl-destination,
-            .nl-settings__row,
-            .nl-announcements__adjacent-link,
-            .nl-exam-stage__row,
-            .nl-musecat-result,
             [role="option"],
             [role="menuitem"],
             [role="menuitemradio"]
@@ -150,18 +138,12 @@
         :is(
             .nl-button,
             .nl-hover-layer,
+            .nl-forced-press,
             .nl-sort-menu__item,
             .nl-select-option,
-            .nl-exam-select__option,
             .nl-action-menu__item,
             .nl-action-group__item,
             .nl-pick-row,
-            .nl-recent-play,
-            .nl-destination,
-            .nl-settings__row,
-            .nl-announcements__adjacent-link,
-            .nl-exam-stage__row,
-            .nl-musecat-result,
             [role="option"],
             [role="menuitem"],
             [role="menuitemradio"]
@@ -180,18 +162,12 @@
         :is(
             .nl-button,
             .nl-hover-layer,
+            .nl-forced-press,
             .nl-sort-menu__item,
             .nl-select-option,
-            .nl-exam-select__option,
             .nl-action-menu__item,
             .nl-action-group__item,
             .nl-pick-row,
-            .nl-recent-play,
-            .nl-destination,
-            .nl-settings__row,
-            .nl-announcements__adjacent-link,
-            .nl-exam-stage__row,
-            .nl-musecat-result,
             [role="option"],
             [role="menuitem"],
             [role="menuitemradio"]
@@ -209,18 +185,12 @@
         :is(
             .nl-button,
             .nl-hover-layer,
+            .nl-forced-press,
             .nl-sort-menu__item,
             .nl-select-option,
-            .nl-exam-select__option,
             .nl-action-menu__item,
             .nl-action-group__item,
             .nl-pick-row,
-            .nl-recent-play,
-            .nl-destination,
-            .nl-settings__row,
-            .nl-announcements__adjacent-link,
-            .nl-exam-stage__row,
-            .nl-musecat-result,
             [role="option"],
             [role="menuitem"],
             [role="menuitemradio"]

@@ -287,7 +287,7 @@ export default function AppHeader({
                                               <IntentLink
                                                   key={destination}
                                                   href={href(destination)}
-                                                  className="nl-destination nl-control"
+                                                  className="nl-destination nl-control nl-focus-inset nl-forced-press"
                                                   aria-current={
                                                       isDestinationActive(
                                                           pathname,
@@ -312,7 +312,7 @@ export default function AppHeader({
                                 )}
                                 <IntentLink
                                     href={href("/settings")}
-                                    className="nl-destination nl-control"
+                                    className="nl-destination nl-control nl-focus-inset nl-forced-press"
                                     aria-current={
                                         pathname === "/settings" ||
                                         pathname === "/profile/settings"
@@ -325,7 +325,7 @@ export default function AppHeader({
                                     <span>{t("shell.settings")}</span>
                                 </IntentLink>
                                 <button
-                                    className="nl-destination nl-control"
+                                    className="nl-destination nl-control nl-focus-inset nl-forced-press"
                                     onClick={() => {
                                         setOpen(false);
                                         setFeedbackOpen(true);
@@ -347,7 +347,7 @@ export default function AppHeader({
                                 {account?.role === "admin" ? (
                                     <IntentLink
                                         href="/admin"
-                                        className="nl-destination nl-control"
+                                        className="nl-destination nl-control nl-focus-inset nl-forced-press"
                                         onClick={() => setOpen(false)}
                                     >
                                         <ShieldUser

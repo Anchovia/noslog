@@ -547,7 +547,7 @@ export function ProfileAchievementsTabSkeleton() {
             <ul className="nl-achievement-list" aria-hidden="true">
                 {[0, 1, 2, 3, 4].map((index) => (
                     <li key={index} className="nl-achievement-row">
-                        <div className="nl-achievement-row__main">
+                        <div className="nl-achievement-row__main nl-focus-inset">
                             <span
                                 className="nl-achievement-hex nl-skeleton"
                                 data-size="row"

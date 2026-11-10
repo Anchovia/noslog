@@ -219,7 +219,7 @@ export default function AchievementShowcasePicker({
                                 <button
                                     key={definition.key}
                                     type="button"
-                                    className="nl-achievement-picker__choice"
+                                    className="nl-achievement-picker__choice nl-focus-inset"
                                     aria-pressed={picked}
                                     disabled={
                                         !picked &&

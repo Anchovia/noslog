@@ -94,7 +94,7 @@ export function MusecatConnectionRow({
     const meta = useMetaLine(settings);
     return (
         <IntentLink
-            className="nl-settings__row"
+            className="nl-settings__row nl-focus-inset nl-forced-press"
             href={`${href("/settings")}${DETAIL_QUERY}`}
         >
             <span className="nl-settings__row-lead">
@@ -248,7 +248,7 @@ export function MusecatConnectionDetail({
                                     return (
                                         <li
                                             key={item}
-                                            className="nl-settings__row"
+                                            className="nl-settings__row nl-focus-inset nl-forced-press"
                                         >
                                             <span className="nl-control">
                                                 {t(
@@ -316,7 +316,7 @@ export function MusecatConnectionDetail({
                                     ).map(([scope, mode]) => (
                                         <li
                                             key={scope}
-                                            className="nl-settings__row"
+                                            className="nl-settings__row nl-focus-inset nl-forced-press"
                                         >
                                             <span className="nl-control">
                                                 {t(

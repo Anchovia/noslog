@@ -83,7 +83,7 @@ function AchievementRow({
         <li className="nl-achievement-row" data-earned={tier > 0}>
             <button
                 type="button"
-                className="nl-achievement-row__main"
+                className="nl-achievement-row__main nl-focus-inset"
                 aria-expanded={open}
                 aria-controls={detailId}
                 onClick={() => setOpen((value) => !value)}

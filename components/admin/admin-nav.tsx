@@ -63,7 +63,7 @@ export default function AdminNav() {
                                 href={section.href}
                                 aria-current={active ? "page" : undefined}
                                 className={cn(
-                                    "nl-admin-nav__tab nl-control",
+                                    "nl-admin-nav__tab nl-control nl-focus-inset",
                                     active && "nl-admin-nav__tab--current"
                                 )}
                             >

@@ -629,7 +629,7 @@ export default function ArcadeDiscoveryMap({
                 {locate && !(inlineError && state === "error") ? (
                     <button
                         type="button"
-                        className="nl-arcade-map__legend nl-arcade-map__locate"
+                        className="nl-arcade-map__legend nl-arcade-map__locate nl-focus-inset"
                         data-state={locate.state}
                         aria-label={t(
                             locate.state === "busy"
@@ -661,7 +661,7 @@ export default function ArcadeDiscoveryMap({
                         <Popover.Trigger asChild>
                             <button
                                 type="button"
-                                className="nl-arcade-map__legend"
+                                className="nl-arcade-map__legend nl-focus-inset"
                                 aria-label={t("arcades.legend")}
                             >
                                 <QuestionMark className="nl-icon" aria-hidden />
