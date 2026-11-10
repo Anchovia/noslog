@@ -224,7 +224,7 @@ describe("dashboard range segments", () => {
             )
         ).toEqual(
             selected(
-                "foundation.css",
+                "foundation-navigation.css",
                 '.noslog-ui .nl-segments__item[aria-checked="true"]'
             )
         );

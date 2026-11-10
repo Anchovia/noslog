@@ -1,0 +1,119 @@
+/* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로.
+   상자 = 입력칸 경계 · 모서리 · 면 입력 면. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
+   입력 = 본문 글자 · 안쪽 8/12(입력칸 글자 자리) · 처음 8줄 · 글 따라 늘어남. 포커스는 상자 경계가 바뀐다 */
+.noslog-ui .nl-markdown-editor {
+    min-width: 0;
+    overflow: hidden;
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-input);
+}
+@media (hover: hover) {
+    .noslog-ui
+        .nl-markdown-editor:not([data-invalid], [data-readonly]):not(
+            :has(.nl-markdown-editor__input:focus)
+        ):hover {
+        border-color: var(--nl-border-input-hover);
+    }
+}
+.noslog-ui .nl-markdown-editor[data-invalid] {
+    border-color: var(--nl-feedback-destructive);
+}
+/* 읽기 전용(보내는 중) = 입력칸 읽기 전용과 같이 경계 투명 · surface/surface */
+.noslog-ui .nl-markdown-editor[data-readonly] {
+    border-color: transparent;
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-markdown-editor__head {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-width: 0;
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+}
+.noslog-ui .nl-markdown-editor__tools {
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-markdown-editor__tools::-webkit-scrollbar {
+    display: none;
+}
+/* 입력 높이(2026-09-23 C) — 8줄에서 시작해 35줄까지 늘고, 그 뒤로는 칸 안에서 스크롤 */
+.noslog-ui .nl-markdown-editor__input {
+    display: block;
+    width: 100%;
+    min-height: calc(
+        var(--nl-type-line-height-ui) * 8 + var(--nl-spacing-8) * 2
+    );
+    max-height: calc(
+        var(--nl-type-line-height-ui) * 35 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border: 0;
+    background: transparent;
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-input-size);
+    line-height: var(--nl-type-line-height-ui);
+    field-sizing: content;
+    resize: vertical;
+}
+.noslog-ui .nl-markdown-editor__input:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-markdown-editor__input[hidden] {
+    display: none;
+}
+/* 미리보기(2026-09-23 P2) = 전체 화면 창 안에서 공개 화면과 같은 폭(읽기 폭)으로 그린다 */
+.noslog-ui .nl-markdown-editor__preview {
+    /* width 없이 가운데 정렬만 두면 세로 flex 안에서 내용 크기로 커져 창을 넘는다 */
+    width: 100%;
+    min-width: 0;
+    max-width: var(--nl-container-reading);
+    margin-inline: auto;
+}
+
+/* 글쓰기 아래 고정 바(2026-09-23 L2) — 왼쪽 묶음(나가기 · 삭제) · 오른쪽 묶음(저장 상태 + 임시저장 + 게시).
+   긴 글을 써도 버튼이 화면 밖으로 사라지지 않게 화면 아래에 붙인다 */
+.noslog-ui .nl-form-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: var(--nl-layer-above);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-16);
+    margin-top: var(--nl-spacing-24);
+    padding-block: var(--nl-spacing-12);
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
+}
+.noslog-ui .nl-form-bar > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+/* 저장 상태 — 오른쪽 묶음 맨 앞. 「저장 안 한 변경 · 저장 중 · 저장됨 · 저장 실패」 */
+.noslog-ui .nl-form-bar__state {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-form-bar__state[data-state="failed"] {
+    color: var(--nl-feedback-destructive);
+}
+
+/* 새 소식 점(피드백 새 답변 등) — 원 8 · 위험 표시색(그래픽 3:1), 글자 뒤 8. 색만으로 알리지 않게 접근 이름을 함께 */
+.noslog-ui .nl-unread-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    margin-inline-start: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-destructive);
+    vertical-align: middle;
+}

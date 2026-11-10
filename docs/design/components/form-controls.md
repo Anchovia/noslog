@@ -11,7 +11,7 @@
 ## 라디오
 
 - 원 16 · 면 `surface/input` · 테두리 2 `content/default`(체크박스와 같음). 고르면 `primary/default` 테두리가 6 으로 굵어진다(Spectrum 2). 원 ↔ 라벨 10.
-- 올림 · 누름 · 키 포커스에 테두리가 `content/strong` 이다(고른 6 링도). 비활성은 테두리 · 라벨 글자가 `content/disabled` 다. 규칙은 `foundation.css` 에 있다.
+- 올림 · 누름 · 키 포커스에 테두리가 `content/strong` 이다(고른 6 링도). 비활성은 테두리 · 라벨 글자가 `content/disabled` 다. 규칙은 `foundation-form.css` 에 있다.
 - 라디오 줄 = 컨트롤 높이 · 줄 사이 0.
 - 선택지가 적고 늘지 않을 곳은 라디오(신고 사유 4개), 늘어날 곳은 셀렉트.
 - 묶음 오류는 묶음 아래 한 줄(`FormField` 오류와 같은 모양).

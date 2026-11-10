@@ -2,7 +2,16 @@
 @import "tailwindcss";
 @import "./styles/pretendard-jp.css";
 @import "./styles/tokens.css";
-@import "./styles/foundation.css";
+@import "./styles/foundation-base.css";
+@import "./styles/foundation-form.css";
+@import "./styles/foundation-navigation.css";
+@import "./styles/foundation-dialog.css";
+@import "./styles/foundation-data.css";
+@import "./styles/foundation-indicator.css";
+@import "./styles/foundation-forced-colors.css";
+@import "./styles/foundation-editor.css";
+@import "./styles/foundation-motion.css";
+@import "./styles/foundation-parts.css";
 @import "./styles/tailwind-theme.css";
 @import "./styles/layout.css";
 @import "./styles/search.css";

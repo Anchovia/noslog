@@ -77,7 +77,11 @@ type Allowed = { file: string; selector: string; reason: string };
 
 // 그라데이션 — 단색 겹침(같은 토큰 둘) · 마스크 칠(#000 0 0)은 장식이 아니라 칠하는 방법이라 따로 허용한다
 const allowedGradients: Allowed[] = [
-    { file: "foundation.css", selector: ".nl-fade-end", reason: "끝 페이드" },
+    {
+        file: "foundation-data.css",
+        selector: ".nl-fade-end",
+        reason: "끝 페이드",
+    },
     {
         file: "home.css",
         selector: ".nl-home-event__caption",
