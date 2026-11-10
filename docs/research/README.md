@@ -44,3 +44,5 @@
 | 2026-11-02 | [데스크톱 공통 층 — 헤더 · 폭 · 간격 · 글자 · 부품 크기 실측](../research/2026-11-02-desktop-foundation.md)         |
 | 2026-11-02 | [데스크톱 설정 · 약관 · 로그인 · 동기화 · 개발자 · 점검 뼈대 실측](../research/2026-11-02-desktop-settings-auth.md) |
 | 2026-11-02 | [임시 저장 초안 삭제](../research/2026-11-02-draft-delete.md)                                                       |
+| 2026-11-11 | [Figma 파일 · 페이지 · 섹션 정리 방식 31곳](../research/2026-11-11-figma-file-organization.md)                      |
+| 2026-11-11 | [파운데이션 구성 — 토큰 층 · 파일 나누기 · 공용 클래스](../research/2026-11-11-foundation-structure.md)             |
