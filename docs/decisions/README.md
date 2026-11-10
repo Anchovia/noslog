@@ -166,6 +166,7 @@
 | 2026-11-02 | [Vercel Web Analytics 추가 · 처리방침 2026-11-07 판](./2026-11-02-vercel-web-analytics.md)                                                                                     | 기능                |
 | 2026-11-08 | [뮤즈캣 오락실 상세 캐시](./2026-11-08-musecat-arcade-cache.md)                                                                                                                | 기능                |
 | 2026-11-10 | [코드 구조 정리 30항목](./2026-11-10-code-structure-cleanup.md)                                                                                                                | 구조                |
+| 2026-11-10 | [코드 구조 정리 둘째 묶음](./2026-11-10-code-structure-cleanup-second.md)                                                                                                      | 구조                |
 
 ## 대체됨
 

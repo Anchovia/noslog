@@ -52,8 +52,8 @@
   로그아웃 · 탈퇴하면 같은 브라우저의 다른 탭도 새로고침해 이전 사용자 화면을 남기지 않는다.
 - 계정 영구 삭제는 같은 계정으로 Discord 인증을 새로 받아야 하고, 그 인증은 10분 동안 유효하다. 그 뒤 삭제를
   따로 확인한다. 서버는 삭제 시점에 만료와 신원을 다시 검사한다.
-  [인증 유효 시간](../../features/settings/schemas/deletion-verification.ts)과
-  [삭제 서비스](../../features/profile/server/account-deletion-service.ts)를 본다.
+  [인증 유효 시간](../../lib/recent-discord-verification.ts)과
+  [삭제 서비스](../../features/settings/server/account-deletion-service.ts)를 본다.
 - 관리자 권한은 Discord 2단계 인증을 켠 계정이 로그인했을 때만 쓴다. 마지막 Discord 인증에서 받은 값을 세션에 두고,
   꺼져 있으면 일반 사용자로 다룬 뒤 연결 설정에 안내한다. 관리자 계정은 연결된 Discord 계정을 바꾸지 못한다.
   동기화 토큰의 관리자 권한(곡 정보 즉시 반영 · 자켓 저장)은 2단계가 켜진 세션에서 발급한 토큰에만 있고, 그 밖의 토큰은 자기 기록만 올린다.
@@ -185,7 +185,7 @@
   트랜잭션으로 바꾸므로, 끝날 때까지 옛 값이 보인다.
 - [탐색 서비스](../../features/music/server/discovery-service.ts),
   [악곡 상세 불러오기](../../features/music/server/load-music-detail.ts),
-  [서열 도메인](../../lib/tiers.ts), [랭킹](../../features/rankings)을 본다.
+  [서열 도메인](../../lib/tiers/tier-scope.ts), [랭킹](../../features/rankings)을 본다.
 
 바뀐 기록: [2026-09-16](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-16) ·
 [2026-09-17](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-17) ·
@@ -320,7 +320,7 @@
 - 새로 등록된 채보는 공식 레벨을 상수로 받는다. Real 은 예외다. 새 Real 채보는 운영자가 채울 때까지 상수를
   저장하지 않는다(◆ 레벨로 상수가 정해지지 않는다). 동기화는 기존 상수를 덮어쓰지 않는다.
 - [동기화 서비스](../../features/sync/server), [북마클릿](../../lib/bookmarklet.ts),
-  [토큰 서비스](../../features/profile/server/sync-token-service.ts)를 본다.
+  [토큰 서비스](../../features/settings/server/sync-token-service.ts)를 본다.
 
 바뀐 기록: [2026-09-20](../decisions/archive/2026-09-10_2026-10-23.md#2026-09-20) ·
 [2026-10-29 보안 점검 수정](../decisions/2026-10-29-security-hardening.md) ·

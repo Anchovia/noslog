@@ -302,8 +302,9 @@ verification. Report the actual checks and any unverified runtime conditions.
   with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
   file with `--log`. Send logged-in cookies only through
   `NOSLOG_MEASURE_COOKIE`.
-- Import scripts in `prisma/` load their environment through
-  `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
+- Import scripts in `prisma/` and the database scripts in `scripts/`
+  (`backfill-pattern-metrics.ts`, `simulate-basic-tier-rating.ts`) load their
+  environment through `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
   `DATABASE_EXPECTED_HOST` names the same host.
 - Database names are snake_case (2026-10-16 P7): tables are plural
   (`users`, `music_charts`; uncountable words stay: `play_data`,
