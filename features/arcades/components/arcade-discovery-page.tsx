@@ -35,6 +35,7 @@ import type {
 } from "@/features/arcades/schemas/public-arcade-schema";
 import { arcadeDiscoverySchema } from "@/features/arcades/schemas/public-arcade-schema";
 import useMediaQuery from "@/lib/hooks/use-media-query";
+import useUrlSearchField from "@/lib/hooks/use-url-search-field";
 
 import ArcadeDiscoveryMap from "./arcade-discovery-map";
 import ArcadeMapSheet from "./arcade-map-sheet";
@@ -72,15 +73,6 @@ export default function ArcadeDiscoveryPage({
         });
         return parsed.success ? parsed.data : arcadeDiscoverySchema.parse({});
     }, [params]);
-    // 검색어는 입력 칸이 직접 든다 — URL 을 거쳐 되받으면 한 박자 늦은 값이 덮여 한글 조합이 끊긴다(「ㅉ짜짱ㄱ구」).
-    // URL 반영은 조합이 끝났을 때만. 뒤로가기처럼 밖에서 바뀐 검색어만 입력 칸으로 받아 온다
-    const [search, setSearch] = useState(values.q);
-    const [committedQuery, setCommittedQuery] = useState(values.q);
-    const composing = useRef(false);
-    if (values.q !== committedQuery) {
-        setCommittedQuery(values.q);
-        setSearch(values.q);
-    }
     const {
         origin,
         bounds,
@@ -184,11 +176,10 @@ export default function ArcadeDiscoveryPage({
             `${window.location.pathname}${query.size ? `?${query}` : ""}`
         );
     }
-    function commitSearch(q: string) {
-        setSearch(q);
-        setCommittedQuery(q);
-        commit({ ...values, q });
-    }
+    const search = useUrlSearchField({
+        query: values.q,
+        onCommit: (q) => commit({ ...values, q }),
+    });
     function setFilterLayer(open: boolean) {
         if (open) form.reset(values);
         setFilterOpen(open);
@@ -332,24 +323,12 @@ export default function ArcadeDiscoveryPage({
             >
                 <PageHeading title={t("arcades.title")} />
                 <SearchField
-                    value={search}
+                    {...search.inputProps}
                     maxLength={200}
                     aria-label={t("arcades.search")}
                     placeholder={t("arcades.searchPlaceholder")}
                     clearLabel={t("discovery.clearQuery")}
-                    onClear={() => commitSearch("")}
-                    onChange={(event) => {
-                        setSearch(event.target.value);
-                        if (!composing.current)
-                            commitSearch(event.target.value);
-                    }}
-                    onCompositionStart={() => {
-                        composing.current = true;
-                    }}
-                    onCompositionEnd={(event) => {
-                        composing.current = false;
-                        commitSearch(event.currentTarget.value);
-                    }}
+                    onClear={search.clear}
                 />
                 {/* 672 미만: 필터는 검색줄 오른쪽 아이콘 버튼, 정렬은 시트 요약 줄 — 지도가 한 줄 더 보인다(2026-09-15).
                     672 이상은 다른 목록과 같은 정렬 · 필터 툴바 */}

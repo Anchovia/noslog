@@ -2,7 +2,6 @@
 
 import { LayoutGrid, List } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
 import FilterChips from "@/components/ui/filter-chips";
@@ -20,6 +19,7 @@ import {
     bingoCatalogQuerySchema,
 } from "@/features/bingos/schemas/public-bingo-schema";
 import useMediaQuery from "@/lib/hooks/use-media-query";
+import useUrlSearchField from "@/lib/hooks/use-url-search-field";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
 
 export default function BingoCatalogPage({
@@ -36,15 +36,6 @@ export default function BingoCatalogPage({
     const query = isAuthenticated
         ? parsed
         : { ...parsed, status: "all" as const, sort: "release" as const };
-    // 검색어는 입력 칸이 직접 든다 — URL 을 거쳐 되받으면 한 박자 늦은 값이 덮여 한글 조합이 끊긴다(오락실과 같은 방식).
-    // URL 반영은 조합이 끝났을 때만. 뒤로가기처럼 밖에서 바뀐 검색어만 입력 칸으로 받아 온다
-    const [search, setSearch] = useState(query.q);
-    const [committedQuery, setCommittedQuery] = useState(query.q);
-    const composing = useRef(false);
-    if (query.q !== committedQuery) {
-        setCommittedQuery(query.q);
-        setSearch(query.q);
-    }
     // 672 = 머리 개수 메타 글줄 경계, 정렬 · 보기 전환 크기는 셸 경계 1056(폰 M · 1056 이상 L — 같은 줄은 한 단계)
     const wide = useMediaQuery("(min-width: 672px)");
     const wideLayout = useWideLayout();
@@ -77,11 +68,10 @@ export default function BingoCatalogPage({
         if (replace) window.history.replaceState({}, "", url);
         else window.history.pushState({}, "", url);
     }
-    function commitSearch(q: string) {
-        setSearch(q);
-        setCommittedQuery(q);
-        commit({ ...query, q }, true);
-    }
+    const search = useUrlSearchField({
+        query: query.q,
+        onCommit: (q) => commit({ ...query, q }, true),
+    });
     // 보기 전환 — 악곡 목록과 같은 부품 · 문구(폰 M · 1056 이상 L)
     const viewSwitch = (
         <SegmentedControl
@@ -118,24 +108,12 @@ export default function BingoCatalogPage({
                 <h1 className="nl-page-title">{t("bingo.title")}</h1>
                 <div className="nl-bingo-catalog__search-row">
                     <SearchField
-                        value={search}
+                        {...search.inputProps}
                         maxLength={200}
                         aria-label={t("bingo.search")}
                         placeholder={t("bingo.searchPlaceholder")}
                         clearLabel={t("discovery.clearQuery")}
-                        onClear={() => commitSearch("")}
-                        onChange={(event) => {
-                            setSearch(event.target.value);
-                            if (!composing.current)
-                                commitSearch(event.target.value);
-                        }}
-                        onCompositionStart={() => {
-                            composing.current = true;
-                        }}
-                        onCompositionEnd={(event) => {
-                            composing.current = false;
-                            commitSearch(event.currentTarget.value);
-                        }}
+                        onClear={search.clear}
                     />
                 </div>
             </div>
