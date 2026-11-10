@@ -1,7 +1,14 @@
+import type { Prisma } from "@prisma/client";
+
 import db from "@/lib/db";
 import { getSessionUser } from "@/lib/user";
 
 import type { Locale } from "./routing";
+
+export const approvedMusicTranslationsSelect = {
+    where: { status: "approved", locale: { in: ["ko", "en"] } },
+    select: { locale: true, title: true, status: true },
+} satisfies Prisma.Music$translationsArgs;
 
 export async function getMusicTitleDisplayPreference(
     userId: number | null | undefined

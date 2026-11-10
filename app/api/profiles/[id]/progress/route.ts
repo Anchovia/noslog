@@ -1,68 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import {
-    profileIdSchema,
-    profileProgressQuerySchema,
-} from "@/features/profile/schemas/public-profile-schema";
+import { profileProgressQuerySchema } from "@/features/profile/schemas/public-profile-schema";
+import { createProfileListRoute } from "@/features/profile/server/profile-list-route";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
-import { scoresHiddenFrom } from "@/features/profile/server/score-visibility";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
-import getSession from "@/lib/session";
 
-export async function GET(
-    request: NextRequest,
-    context: { params: Promise<{ id: string }> }
-) {
-    const id = profileIdSchema.safeParse((await context.params).id);
-    const query = profileProgressQuerySchema.safeParse(
-        Object.fromEntries(request.nextUrl.searchParams)
-    );
-    const headers = { "Cache-Control": "private, no-store" };
-    if (!id.success || !query.success)
-        return NextResponse.json(
-            createApiFailure({
-                code: "INVALID_PROFILE_QUERY",
-                message: "Invalid profile request.",
-            }),
-            { status: 400, headers }
-        );
-    try {
-        const session = await getSession();
-        if (await scoresHiddenFrom(id.data, session.id))
-            return NextResponse.json(
-                createApiFailure({
-                    code: "PROFILE_SCORES_PRIVATE",
-                    message: "This player keeps their scores private.",
-                }),
-                { status: 403, headers }
-            );
-        const result = await getPublicProfileProgress(id.data, query.data, {
-            owner: session.id === id.data,
-        });
-        return result
-            ? NextResponse.json(createApiSuccess(result), { headers })
-            : NextResponse.json(
-                  createApiFailure({
-                      code: "PROFILE_NOT_FOUND",
-                      message: "Profile not found.",
-                  }),
-                  { status: 404, headers }
-              );
-    } catch (error) {
-        logServerError(error, {
-            event: "profile.progress.fetch.failed",
-            method: "GET",
-            path: request.nextUrl.pathname,
-            routePath: "/api/profiles/[id]/progress",
-            routeType: "route",
-        });
-        return NextResponse.json(
-            createApiFailure({
-                code: "PROFILE_PROGRESS_FAILED",
-                message: "Unable to load profile progress.",
-            }),
-            { status: 500, headers }
-        );
-    }
-}
+export const GET = createProfileListRoute({
+    querySchema: profileProgressQuerySchema,
+    load: getPublicProfileProgress,
+    event: "profile.progress.fetch.failed",
+    routePath: "/api/profiles/[id]/progress",
+    failureCode: "PROFILE_PROGRESS_FAILED",
+    failureMessage: "Unable to load profile progress.",
+});

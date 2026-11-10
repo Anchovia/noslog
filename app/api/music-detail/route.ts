@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
-
 import {
     loadMusicDetail,
     normalizeMusicDetailTab,
-    normalizeMusicDifficulty,
 } from "@/features/music/server/load-music-detail";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import {
+    apiFailureResponse,
+    apiSuccessResponse,
+    withRouteErrorLog,
+} from "@/lib/api/route-response";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
 import { isLocale } from "@/lib/i18n/routing";
 import { getRequestLocale } from "@/lib/i18n/server";
-import { logServerError } from "@/lib/observability/server";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 import getSession from "@/lib/session";
 
 const PRIVATE_NO_STORE_HEADERS = {
@@ -17,76 +18,76 @@ const PRIVATE_NO_STORE_HEADERS = {
 };
 
 export async function GET(request: Request) {
-    try {
-        const params = new URL(request.url).searchParams;
-        const index = params.get("index") ?? "";
-        const difficulty = normalizeMusicDifficulty(
-            params.get("difficulty") ?? ""
-        );
-        const tab = normalizeMusicDetailTab(params.get("tab") ?? undefined);
-        const requestedPage = Number(params.get("page") ?? "1");
-        const page =
-            Number.isSafeInteger(requestedPage) && requestedPage > 0
-                ? requestedPage
-                : 1;
-
-        if (!index || !difficulty) {
-            return NextResponse.json(
-                createApiFailure({
-                    code: "MUSIC_DETAIL_INVALID_REQUEST",
-                    message: "Invalid music detail request.",
-                }),
-                { status: 400, headers: PRIVATE_NO_STORE_HEADERS }
-            );
-        }
-
-        const [session, requestLocale] = await Promise.all([
-            getSession(),
-            getRequestLocale(),
-        ]);
-        const localeParam = params.get("locale");
-        const locale = isLocale(localeParam) ? localeParam : requestLocale;
-        const showLocalizedTitle = await getMusicTitleDisplayPreference(
-            session.id
-        );
-        const data = await loadMusicDetail(
-            index,
-            difficulty,
-            tab,
-            page,
-            session.id,
-            locale,
-            showLocalizedTitle
-        );
-        if (!data) {
-            return NextResponse.json(
-                createApiFailure({
-                    code: "MUSIC_DETAIL_NOT_FOUND",
-                    message: "Music detail was not found.",
-                }),
-                { status: 404, headers: PRIVATE_NO_STORE_HEADERS }
-            );
-        }
-
-        return NextResponse.json(createApiSuccess(data), {
-            headers: PRIVATE_NO_STORE_HEADERS,
-        });
-    } catch (error) {
-        const path = new URL(request.url).pathname;
-        logServerError(error, {
+    return withRouteErrorLog(
+        {
             event: "music-detail.fetch.failed",
             method: "GET",
-            path,
+            path: new URL(request.url).pathname,
             routePath: "/api/music-detail",
-            routeType: "route",
-        });
+        },
+        async () => {
+            const params = new URL(request.url).searchParams;
+            const index = params.get("index") ?? "";
+            const difficulty = parseChartDifficulty(
+                params.get("difficulty") ?? ""
+            );
+            const tab = normalizeMusicDetailTab(params.get("tab") ?? undefined);
+            const requestedPage = Number(params.get("page") ?? "1");
+            const page =
+                Number.isSafeInteger(requestedPage) && requestedPage > 0
+                    ? requestedPage
+                    : 1;
 
-        return NextResponse.json(
-            createApiFailure({
-                code: "MUSIC_DETAIL_FETCH_FAILED",
-                message: "Unable to load music detail.",
-            }),
-            { status: 500, headers: PRIVATE_NO_STORE_HEADERS }
-        );
-    }
+            if (!index || !difficulty) {
+                return apiFailureResponse(
+                    {
+                        code: "MUSIC_DETAIL_INVALID_REQUEST",
+                        message: "Invalid music detail request.",
+                        status: 400,
+                    },
+                    PRIVATE_NO_STORE_HEADERS
+                );
+            }
+
+            const [session, requestLocale] = await Promise.all([
+                getSession(),
+                getRequestLocale(),
+            ]);
+            const localeParam = params.get("locale");
+            const locale = isLocale(localeParam) ? localeParam : requestLocale;
+            const showLocalizedTitle = await getMusicTitleDisplayPreference(
+                session.id
+            );
+            const data = await loadMusicDetail(
+                index,
+                difficulty,
+                tab,
+                page,
+                session.id,
+                locale,
+                showLocalizedTitle
+            );
+            if (!data) {
+                return apiFailureResponse(
+                    {
+                        code: "MUSIC_DETAIL_NOT_FOUND",
+                        message: "Music detail was not found.",
+                        status: 404,
+                    },
+                    PRIVATE_NO_STORE_HEADERS
+                );
+            }
+
+            return apiSuccessResponse(data, PRIVATE_NO_STORE_HEADERS);
+        },
+        () =>
+            apiFailureResponse(
+                {
+                    code: "MUSIC_DETAIL_FETCH_FAILED",
+                    message: "Unable to load music detail.",
+                    status: 500,
+                },
+                PRIVATE_NO_STORE_HEADERS
+            )
+    );
 }

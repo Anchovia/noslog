@@ -1,12 +1,14 @@
 import { unstable_cache } from "next/cache";
-import { NextResponse } from "next/server";
 
 import { searchPreviewQuerySchema } from "@/features/music/schemas/search-preview-schema";
 import { getSearchPreview } from "@/features/music/server/search-preview-service";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import {
+    apiFailureResponse,
+    apiSuccessResponse,
+    withRouteErrorLog,
+} from "@/lib/api/route-response";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import { logServerError } from "@/lib/observability/server";
 
 /*
  * 검색 미리보기는 세션을 읽지 않아 모두에게 같다(2026-10-15 S7).
@@ -29,38 +31,28 @@ export async function GET(request: Request) {
         Object.fromEntries(params)
     );
     if (!parsed.success)
-        return NextResponse.json(
-            createApiFailure({
-                code: "SEARCH_INVALID_REQUEST",
-                message: "Invalid search request.",
-            }),
-            { status: 400 }
-        );
-    try {
-        return NextResponse.json(
-            createApiSuccess(
-                await getCachedSearchPreview(parsed.data.q, parsed.data.scope)
-            ),
-            {
-                headers: {
-                    "Cache-Control": "public, max-age=0, s-maxage=300",
-                },
-            }
-        );
-    } catch (error) {
-        logServerError(error, {
+        return apiFailureResponse({
+            code: "SEARCH_INVALID_REQUEST",
+            message: "Invalid search request.",
+            status: 400,
+        });
+    return withRouteErrorLog(
+        {
             event: "music-preview.fetch.failed",
             method: "GET",
             path: "/api/music-preview",
             routePath: "/api/music-preview",
-            routeType: "route",
-        });
-        return NextResponse.json(
-            createApiFailure({
+        },
+        async () =>
+            apiSuccessResponse(
+                await getCachedSearchPreview(parsed.data.q, parsed.data.scope),
+                { "Cache-Control": "public, max-age=0, s-maxage=300" }
+            ),
+        () =>
+            apiFailureResponse({
                 code: "SEARCH_UNAVAILABLE",
                 message: "Search is unavailable.",
-            }),
-            { status: 500 }
-        );
-    }
+                status: 500,
+            })
+    );
 }

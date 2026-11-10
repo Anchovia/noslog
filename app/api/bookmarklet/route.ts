@@ -1,14 +1,14 @@
 import { NextRequest } from "next/server";
 
 import { createBookmarkletScript } from "@/lib/bookmarklet";
-import { isLocale } from "@/lib/i18n/routing";
+import { resolveLocale } from "@/lib/i18n/routing";
 
 // 북마클릿 로더가 NOSTALGIA 페이지에 붙이는 동기화 본체. 토큰은 담지 않는다(로더의 data-token)
 export function GET(request: NextRequest) {
     const locale = request.nextUrl.searchParams.get("locale");
     const script = createBookmarkletScript(
         request.nextUrl.origin,
-        isLocale(locale) ? locale : "ko"
+        resolveLocale(locale)
     );
 
     return new Response(script, {

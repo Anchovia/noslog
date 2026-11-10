@@ -5,7 +5,7 @@ import { sb } from "storybook/test";
 
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { resolveLocale } from "@/lib/i18n/routing";
 
 import { contractViewports } from "./responsive-contract";
 
@@ -45,9 +45,7 @@ const preview: Preview = {
     },
     decorators: [
         (Story, context) => {
-            const locale = isLocale(context.globals.locale)
-                ? context.globals.locale
-                : "ko";
+            const locale = resolveLocale(context.globals.locale);
             // Portals inherit document language; styles still use their existing noslog-ui wrapper.
             document.documentElement.lang = locale;
             return (
