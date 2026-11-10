@@ -4,7 +4,6 @@ const mocks = vi.hoisted(() => ({
     generateClientTokenFromReadWriteToken: vi.fn(async () => "client-token"),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => ({
     serverEnv: { PRIVATE_BLOB_READ_WRITE_TOKEN: "private-token" },
 }));

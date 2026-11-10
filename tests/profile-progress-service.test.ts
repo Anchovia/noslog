@@ -6,7 +6,6 @@ const mocks = vi.hoisted(() => ({
     history: vi.fn(),
     rating: vi.fn(),
 }));
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         user: { findUnique: mocks.user },

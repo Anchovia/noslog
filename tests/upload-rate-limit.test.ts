@@ -17,8 +17,6 @@ const transactionClient = {
     },
 };
 
-vi.mock("server-only", () => ({}));
-
 vi.mock("@/lib/db", () => ({
     default: {
         $transaction: mocks.transaction,

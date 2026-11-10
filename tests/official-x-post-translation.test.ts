@@ -6,7 +6,6 @@ const { env, generateContent } = vi.hoisted(() => ({
     env: { GEMINI_API_KEY: undefined as string | undefined },
     generateContent: vi.fn(),
 }));
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => ({ serverEnv: env }));
 vi.mock("@google/genai", () => ({
     ApiError: class extends Error {

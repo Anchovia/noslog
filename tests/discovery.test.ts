@@ -11,7 +11,6 @@ import {
 } from "@/features/music/schemas/discovery-schema";
 
 const { queryRaw } = vi.hoisted(() => ({ queryRaw: vi.fn() }));
-vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("@/lib/db", () => ({ default: { $queryRaw: queryRaw } }));
 import {

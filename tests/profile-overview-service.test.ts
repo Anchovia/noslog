@@ -4,7 +4,6 @@ const mocks = vi.hoisted(() => ({
     sync: vi.fn(),
     standing: vi.fn(),
 }));
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         playData: { findFirst: mocks.record },

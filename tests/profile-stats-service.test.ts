@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
     history: vi.fn(),
 }));
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         chartPlayHistory: { findMany: mocks.history },

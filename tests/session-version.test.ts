@@ -6,7 +6,6 @@ const mocks = vi.hoisted(() => ({
     update: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("react", async (original) => ({
     ...(await original<typeof import("react")>()),
     cache: <T>(fn: T) => fn,
