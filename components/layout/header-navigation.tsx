@@ -17,7 +17,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import LocaleSwitcher from "@/components/i18n/locale-switcher";
 import { foundationButtonClass } from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
 import { cn } from "@/lib/cn";
@@ -98,13 +97,7 @@ export function HeaderPrimaryNavigation() {
     );
 }
 
-export default function HeaderMenu({
-    isAdmin = false,
-    showLocaleSwitcher = false,
-}: {
-    isAdmin?: boolean;
-    showLocaleSwitcher?: boolean;
-}) {
+export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
     const pathname = usePathname();
     const { localizedHref, t } = useNavigationI18n();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -197,11 +190,6 @@ export default function HeaderMenu({
                                 </IntentLink>
                             );
                         })}
-                        {showLocaleSwitcher ? (
-                            <LocaleSwitcher
-                                onNavigate={() => setOpenPathname(null)}
-                            />
-                        ) : null}
                     </nav>
                 </>
             ) : null}

@@ -1,7 +1,5 @@
 import ProfileAvatar from "@/components/profile/profile-avatar";
-import { foundationButtonClass } from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
-import { cn } from "@/lib/cn";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getUser } from "@/lib/user";
@@ -43,21 +41,8 @@ export default async function Header() {
                                 username={user.username}
                             />
                         </IntentLink>
-                    ) : (
-                        <IntentLink
-                            href={getLocalizedHref("/login", locale)}
-                            className={cn(
-                                foundationButtonClass({ variant: "secondary" }),
-                                "mx-nl-4 shrink-0"
-                            )}
-                        >
-                            {t("common.login")}
-                        </IntentLink>
-                    )}
-                    <HeaderMenu
-                        isAdmin={user?.role === "admin"}
-                        showLocaleSwitcher={!user}
-                    />
+                    ) : null}
+                    <HeaderMenu isAdmin={user?.role === "admin"} />
                 </div>
             </div>
         </ScrollAwareHeader>
