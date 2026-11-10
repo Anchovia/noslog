@@ -3,11 +3,13 @@
 import {
     addChartComment as addChartCommentService,
     deleteMyChartComment as deleteMyChartCommentService,
-    getMyChartDraftStatus as getMyChartDraftStatusService,
     hideChartComment as hideChartCommentService,
     listChartComments as listChartCommentsService,
-    openMyChartDraft as openMyChartDraftService,
     resolveChartComment as resolveChartCommentService,
+} from "@/features/contributions/server/chart-comment-service";
+import {
+    getMyChartDraftStatus as getMyChartDraftStatusService,
+    openMyChartDraft as openMyChartDraftService,
     saveMyChartDraft as saveMyChartDraftService,
     submitMyChartDraft as submitMyChartDraftService,
     withdrawMyChartDraft as withdrawMyChartDraftService,

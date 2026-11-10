@@ -11,9 +11,9 @@ import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { isValidPrivateImageBlob } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { translatorFor } from "@/lib/i18n/messages";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -24,11 +24,7 @@ export async function submitArcadeReport(
     formData: FormData
 ): Promise<ActionResult<Record<never, never>, keyof ArcadeReportFormValues>> {
     const requestedLocale = formData.get("locale");
-    const locale =
-        typeof requestedLocale === "string" && isLocale(requestedLocale)
-            ? requestedLocale
-            : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const session = await getSession();
     if (!session.id)
         return { success: false, message: t("feedback.loginError") };
@@ -84,15 +80,19 @@ export async function submitArcadeReport(
         const userId = session.id;
         // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
         const saved = await db.$transaction(async (tx) => {
-            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`feedback-report:${userId}`}))`;
-            const recent = await tx.feedbackReport.count({
-                where: {
-                    userId,
-                    arcadeReportType: { not: null },
-                    createdAt: { gte: new Date(Date.now() - 86_400_000) },
-                },
+            const within = await isWithinDailyLimit(tx, {
+                lockKey: `feedback-report:${userId}`,
+                limit: ARCADE_REPORT_DAILY_LIMIT,
+                countRecent: (since) =>
+                    tx.feedbackReport.count({
+                        where: {
+                            userId,
+                            arcadeReportType: { not: null },
+                            createdAt: { gte: since },
+                        },
+                    }),
             });
-            if (recent >= ARCADE_REPORT_DAILY_LIMIT) return false;
+            if (!within) return false;
             // Preserve context in the existing moderator view without changing /admin UI.
             await tx.feedbackReport.upsert({
                 where: { userId_submissionId: { userId, submissionId } },

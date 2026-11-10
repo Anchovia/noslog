@@ -20,6 +20,12 @@ export const chartNoteTypeSchema = z.enum([
     "glissando",
     "trill",
 ]);
+export const CHART_NOTE_TYPES: ChartNoteType[] = [
+    "standard",
+    "tenuto",
+    "glissando",
+    "trill",
+];
 
 export const timeSignatureDenominatorSchema = z.union([
     z.literal(1),

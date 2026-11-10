@@ -5,7 +5,7 @@ import type { MessageKey } from "@/lib/i18n/message-types";
 type Translate = (key: MessageKey) => string;
 
 /** 유저가 제안할 수 있는 채보 정보 칸(2026-09-23 1단계) — 레벨 상수는 운영자만 고친다 */
-export const CHART_FIELD_PROPOSAL_FIELDS = [
+const CHART_FIELD_PROPOSAL_FIELDS = [
     "bpm",
     "note_count",
     "duration",
@@ -259,13 +259,6 @@ export function createChartFieldProposalSchema(t: Translate) {
         }));
 }
 
-export type ChartFieldProposalFormValues = z.input<
-    ReturnType<typeof createChartFieldProposalSchema>
->;
-export type ChartFieldProposalInput = z.output<
-    ReturnType<typeof createChartFieldProposalSchema>
->;
-
 /**
  * 정해 둔 반려 사유(2026-10-01 D2) — 자유 글만 받으면 건마다 뜻이 달라지고 번역도 매번 새로 쓴다.
  * Stack Overflow(라디오 + 짧은 자유 글) · Wikipedia AfC 방식
@@ -278,12 +271,6 @@ export const PROPOSAL_REJECT_REASONS = [
     "other",
 ] as const;
 export type ProposalRejectReason = (typeof PROPOSAL_REJECT_REASONS)[number];
-
-export function isProposalRejectReason(
-    value: string
-): value is ProposalRejectReason {
-    return (PROPOSAL_REJECT_REASONS as readonly string[]).includes(value);
-}
 
 export const chartFieldProposalReviewSchema = z.discriminatedUnion("decision", [
     z.object({
@@ -319,6 +306,3 @@ export const chartFieldProposalReviewSchema = z.discriminatedUnion("decision", [
             { path: ["reason"], error: "reject_reason_required" }
         ),
 ]);
-export type ChartFieldProposalReview = z.infer<
-    typeof chartFieldProposalReviewSchema
->;

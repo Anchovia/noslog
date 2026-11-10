@@ -3,8 +3,7 @@
 import { Check, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 import { reviewChartFieldProposals } from "@/app/admin/contributions/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import {
     type ProposalRejectReason,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
 import type { AdminChartFieldProposal } from "@/features/contributions/server/chart-field-proposal-service";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 const FIELD_LABELS: Record<ChartFieldProposalField, string> = {
     bpm: "BPM",
@@ -61,7 +61,7 @@ export default function ChartFieldProposalReview({
     // 고쳐서 반영 — 지금 고치고 있는 제안과 그 값
     const [editing, setEditing] = useState<number | null>(null);
     const [editValue, setEditValue] = useState("");
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function toggle(id: number) {
         setSelected((current) => {
@@ -79,9 +79,9 @@ export default function ChartFieldProposalReview({
     ) {
         const ids = only === undefined ? [...selected] : [only];
         if (!ids.length) return;
-        startTransition(async () => {
-            try {
-                const result = await reviewChartFieldProposals(
+        run(
+            () =>
+                reviewChartFieldProposals(
                     decision === "apply"
                         ? {
                               decision,
@@ -94,22 +94,19 @@ export default function ChartFieldProposalReview({
                               value,
                           }
                         : { decision, ids, reasonCode, reason }
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-                toast.success(result.message);
-                setSelected(new Set());
-                setRejecting(false);
-                setReason("");
-                setEditing(null);
-                setEditValue("");
-                router.refresh();
-            } catch {
-                toast.error("제안을 처리하지 못했습니다.");
+                ),
+            {
+                errorMessage: "제안을 처리하지 못했습니다.",
+                onSuccess: () => {
+                    setSelected(new Set());
+                    setRejecting(false);
+                    setReason("");
+                    setEditing(null);
+                    setEditValue("");
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     const allSelected =

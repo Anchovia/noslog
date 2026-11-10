@@ -1,6 +1,6 @@
 "use server";
 
-import { reviewChartDraft as reviewChartDraftService } from "@/features/contributions/server/chart-draft-service";
+import { reviewChartDraft as reviewChartDraftService } from "@/features/contributions/server/chart-draft-review-service";
 import { reviewChartFieldProposals as reviewChartFieldProposalsService } from "@/features/contributions/server/chart-field-proposal-service";
 
 export async function reviewChartFieldProposals(input: unknown) {

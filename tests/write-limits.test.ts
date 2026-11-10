@@ -9,7 +9,6 @@ const mocks = vi.hoisted(() => ({
     tokenCount: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({
     revalidatePath: vi.fn(),
     revalidateTag: vi.fn(),
@@ -31,12 +30,12 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
+import { addChartComment } from "@/features/contributions/server/chart-comment-service";
 import {
-    addChartComment,
     saveMyChartDraft,
     submitMyChartDraft,
 } from "@/features/contributions/server/chart-draft-service";
-import { isOAuthTokenLimitReached } from "@/features/partner/server/oauth-service";
+import { isOAuthTokenLimitReached } from "@/features/partner/server/oauth-token-service";
 import { createDefaultChartDocument } from "@/lib/chart-pattern/schema";
 
 const saveInput = {

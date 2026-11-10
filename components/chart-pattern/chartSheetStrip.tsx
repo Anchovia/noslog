@@ -31,7 +31,7 @@ import {
     PANEL_WIDTH,
     drawPanel,
     type SheetPanel,
-} from "./chartSheetViewer";
+} from "./chartSheetDraw";
 import { useFullscreen } from "./useFullscreen";
 
 /**

@@ -8,6 +8,7 @@ import {
 import { snapTick, tickToMilliseconds } from "./timing";
 
 export const DEFAULT_CHART_EDITOR_DURATION_MS = 5 * 60 * 1_000;
+export const CHART_EDITOR_SNAP_DIVISORS = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const DEFAULT_JUDGMENT_LINE_RATIO = 0.76;
 const PIANO_HEIGHT_RATIO = 0.18;
 const MIN_PIANO_HEIGHT = 84;
@@ -36,6 +37,10 @@ export function getChartEditorVerticalLayout(
         judgmentY: Math.max(1, viewHeight - pianoHeight),
         pianoHeight,
     };
+}
+
+export function clampChartLane(lane: number, width = 1) {
+    return Math.min(CHART_LANE_COUNT - width, Math.max(0, Math.round(lane)));
 }
 
 export interface ChartNoteRenderPoint {

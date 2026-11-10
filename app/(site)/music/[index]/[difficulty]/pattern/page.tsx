@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { parseTimeParam } from "@/components/chart-pattern/playbackClock";
-import { listChartComments } from "@/features/contributions/server/chart-draft-service";
+import { listChartComments } from "@/features/contributions/server/chart-comment-service";
 import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
 import {
     contributionBaseRevision,
@@ -13,7 +13,7 @@ import {
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import { parseChartDifficulty } from "@/lib/tiers";
+import { parseChartDifficulty } from "@/lib/music/difficulty";
 import {
     getLocalizedMusicTitle,
     getMusicTitleDisplayPreference,

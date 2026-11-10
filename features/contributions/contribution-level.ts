@@ -2,12 +2,10 @@
  * 기여 등급(2026-09-23 N1) — 반영 · 처리된 기여의 점수 합으로 Lv.1–6. 권한은 열지 않는 보상 라벨.
  * 점수: 곡 정보 반영 · 오락실 제보 처리 · 기체 확인(하루) · 해결된 채보 댓글 각 1점, 채보 공개 20점.
  */
-export const CONTRIBUTION_LEVEL_THRESHOLDS = [
-    1, 10, 30, 100, 300, 1000,
-] as const;
+const CONTRIBUTION_LEVEL_THRESHOLDS = [1, 10, 30, 100, 300, 1000] as const;
 
 /** 이름 옆(랭킹 · 의견)에는 이 등급부터 — 막 시작한 사람까지 붙이면 소음(Google 지역 가이드 레벨 4 방식) */
-export const CONTRIBUTION_NAME_MIN_LEVEL = 3;
+const CONTRIBUTION_NAME_MIN_LEVEL = 3;
 
 export const CONTRIBUTION_KINDS = [
     "chart_field",

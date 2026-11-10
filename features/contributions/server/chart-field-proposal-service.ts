@@ -24,9 +24,9 @@ import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale } from "@/lib/i18n/routing";
+import { translatorFor } from "@/lib/i18n/messages";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -40,11 +40,6 @@ const chartValueSelect = {
     releasedAt: true,
     musicIdx: true,
 } as const;
-
-function translatorFor(requestedLocale: string) {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    return createTranslator(getMessages(locale));
-}
 
 function refreshChart(musicIndex: string, difficulty: string) {
     updateTag(CACHE_TAGS.musicCatalog);
@@ -104,10 +99,13 @@ export async function submitChartFieldProposal(
         const userId = session.id;
         // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
         const saved = await db.$transaction(async (tx) => {
-            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`chart-field-proposal-daily:${userId}`}))`;
-            const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-            const recent = await tx.chartFieldProposal.count({
-                where: { userId, createdAt: { gte: since } },
+            const within = await isWithinDailyLimit(tx, {
+                lockKey: `chart-field-proposal-daily:${userId}`,
+                limit: CHART_FIELD_PROPOSAL_DAILY_LIMIT,
+                countRecent: (since) =>
+                    tx.chartFieldProposal.count({
+                        where: { userId, createdAt: { gte: since } },
+                    }),
             });
             const existing = await tx.chartFieldProposal.findFirst({
                 where: {
@@ -125,7 +123,7 @@ export async function submitChartFieldProposal(
                 });
                 return true;
             }
-            if (recent >= CHART_FIELD_PROPOSAL_DAILY_LIMIT) return false;
+            if (!within) return false;
             await tx.chartFieldProposal.create({
                 data: {
                     ...values,
@@ -277,10 +275,6 @@ export async function listChartFieldProposals(
               ]
             : []
     );
-}
-
-export async function countPendingChartFieldProposals() {
-    return db.chartFieldProposal.count({ where: { status: "pending" } });
 }
 
 export interface ChartFieldQueueStatus {

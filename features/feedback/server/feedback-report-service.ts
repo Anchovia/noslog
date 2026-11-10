@@ -15,9 +15,14 @@ import {
     isImageContentType,
     isValidPrivateImageBlob,
 } from "@/lib/blob";
+import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
-import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { isLocale, type Locale } from "@/lib/i18n/routing";
+import {
+    createTranslator,
+    getMessages,
+    translatorFor,
+} from "@/lib/i18n/messages";
+import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 import {
@@ -49,7 +54,7 @@ export async function requestFeedbackImageUpload(
     contentType: string,
     requestedLocale?: Locale
 ): Promise<FeedbackUploadActionResult> {
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const locale = resolveLocale(requestedLocale);
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
@@ -102,8 +107,7 @@ export async function submitFeedbackReport(
     formData: FormData
 ): Promise<FeedbackActionResult> {
     const requestedLocale = String(formData.get("locale") ?? "");
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
-    const t = createTranslator(getMessages(locale));
+    const t = translatorFor(requestedLocale);
     const session = await getSession();
     if (!session.id) {
         return { success: false, message: t("feedback.loginError") };
@@ -140,15 +144,19 @@ export async function submitFeedbackReport(
         const userId = session.id;
         // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
         const saved = await db.$transaction(async (tx) => {
-            await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`feedback-report:${userId}`}))`;
-            const recent = await tx.feedbackReport.count({
-                where: {
-                    userId,
-                    arcadeReportType: null,
-                    createdAt: { gte: new Date(Date.now() - 86_400_000) },
-                },
+            const within = await isWithinDailyLimit(tx, {
+                lockKey: `feedback-report:${userId}`,
+                limit: FEEDBACK_DAILY_LIMIT,
+                countRecent: (since) =>
+                    tx.feedbackReport.count({
+                        where: {
+                            userId,
+                            arcadeReportType: null,
+                            createdAt: { gte: since },
+                        },
+                    }),
             });
-            if (recent >= FEEDBACK_DAILY_LIMIT) return false;
+            if (!within) return false;
             await tx.feedbackReport.create({
                 data: { category, content, imageUrl, userId },
             });

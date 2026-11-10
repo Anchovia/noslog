@@ -14,7 +14,7 @@ import ChartDraftCopyButton from "./chart-draft-copy-button";
 /** 에디터는 넓은 화면 도구 — 이 폭 아래에서는 들어가는 대신 안내(2026-09-24 F1) */
 const EDITOR_MIN_WIDTH = 1056;
 
-export function myChartDraftOptions(chartId: number, signedIn: boolean) {
+function myChartDraftOptions(chartId: number, signedIn: boolean) {
     return {
         queryKey: ["chart-draft", "mine", chartId],
         queryFn: () => getMyChartDraftStatus(chartId),

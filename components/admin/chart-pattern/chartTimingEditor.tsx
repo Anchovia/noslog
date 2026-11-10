@@ -57,8 +57,12 @@ import {
     getServerBrowserSupportSnapshot,
     subscribeBrowserSupport,
 } from "@/lib/browser-support";
-import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
+    CHART_EDITOR_SNAP_DIVISORS,
+    findChartNoteConflicts,
+} from "@/lib/chart-pattern/editor";
+import {
+    CHART_NOTE_TYPES,
     chartDocumentSchema,
     chartExportSchema,
     type ChartHand,
@@ -144,11 +148,9 @@ interface ChartTimingEditorProps {
 type EditorTab = "timing" | "notes" | "review";
 
 const playbackRates: ChartPlaybackRate[] = [0.25, 0.5, 0.75, 1, 1.5, 2];
-const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const PIANO_VISIBILITY_STORAGE_KEY = "noslog-chart-editor-piano-visible";
 const PIANO_VISIBILITY_CHANGE_EVENT =
     "noslog-chart-editor-piano-visibility-change";
-const noteTypes: ChartNoteType[] = ["standard", "tenuto", "glissando", "trill"];
 const noteToolShortcuts: Record<ChartNoteType, number> = {
     standard: 2,
     tenuto: 3,
@@ -1265,7 +1267,7 @@ function ChartTimingEditorWorkspace({
                                     </kbd>
                                 </button>
                                 <div className="mt-nl-4 grid grid-cols-2 gap-nl-4">
-                                    {noteTypes.map((value) => (
+                                    {CHART_NOTE_TYPES.map((value) => (
                                         <button
                                             key={value}
                                             type="button"
@@ -1589,7 +1591,7 @@ function ChartTimingEditorWorkspace({
                                 }
                                 className="nl-input"
                             >
-                                {snapDivisors.map((divisor) => (
+                                {CHART_EDITOR_SNAP_DIVISORS.map((divisor) => (
                                     <option key={divisor} value={divisor}>
                                         1/{divisor}
                                     </option>

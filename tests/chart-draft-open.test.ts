@@ -10,7 +10,6 @@ const mocks = vi.hoisted(() => ({
     deleteMany: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({
     revalidatePath: vi.fn(),
     revalidateTag: vi.fn(),

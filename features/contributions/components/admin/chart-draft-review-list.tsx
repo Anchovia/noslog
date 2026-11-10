@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { foundationButtonClass } from "@/components/ui/button";
-import type { AdminChartDraft } from "@/features/contributions/server/chart-draft-service";
+import type { AdminChartDraft } from "@/features/contributions/server/chart-draft-review-service";
 import { cn } from "@/lib/cn";
 
 const STATUS_LABELS: Record<string, string> = {

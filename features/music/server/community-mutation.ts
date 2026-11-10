@@ -6,6 +6,7 @@ import { canContributeGoalVote } from "@/features/music/lib/community";
 import type { CommunityMutation } from "@/features/music/schemas/community-schema";
 import { communityMutationSchema } from "@/features/music/schemas/community-schema";
 import { ApiError } from "@/lib/api/response";
+import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
 
 async function detachDeletedOpinion(
@@ -79,15 +80,15 @@ async function executeReplyMutation(
         if (opinion.opinion === null)
             throw new ApiError("opinion_unavailable", "unavailable");
         // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
-        await transaction.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`community-reply-daily:${userId}`}))`;
-        const recent = await transaction.communityOpinionReply.count({
-            where: {
-                userId,
-                createdAt: { gte: new Date(Date.now() - 86_400_000) },
-            },
+        const within = await isWithinDailyLimit(transaction, {
+            lockKey: `community-reply-daily:${userId}`,
+            limit: REPLY_DAILY_LIMIT,
+            countRecent: (since) =>
+                transaction.communityOpinionReply.count({
+                    where: { userId, createdAt: { gte: since } },
+                }),
         });
-        if (recent >= REPLY_DAILY_LIMIT)
-            throw new ApiError("reply_daily_limit", "dailyLimit");
+        if (!within) throw new ApiError("reply_daily_limit", "dailyLimit");
         const created = await transaction.communityOpinionReply.create({
             data: { evaluationId: opinion.id, userId, body: input.body },
             select: { id: true },

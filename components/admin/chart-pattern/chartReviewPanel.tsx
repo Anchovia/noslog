@@ -14,7 +14,7 @@ import { formatCommentTime } from "@/components/chart-pattern/playbackClock";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import type { ChartDraftStatus } from "@/features/contributions/schemas/chart-draft-schema";
 import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chart-draft-schema";
-import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-comment-service";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";

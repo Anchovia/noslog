@@ -76,7 +76,7 @@ function emptyTotals(): ContributionTotals {
 }
 
 /** 여러 사람의 점수 · 종류별 수를 한 번에 — 랭킹 · 의견 목록처럼 이름이 여럿 나오는 곳 */
-export async function getContributionTotals(
+async function getContributionTotals(
     userIds: readonly number[]
 ): Promise<Map<number, ContributionTotals>> {
     const ids = [...new Set(userIds)].filter(

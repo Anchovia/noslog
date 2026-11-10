@@ -6,7 +6,7 @@ import {
     CHART_FIELD_PROPOSAL_STATUSES,
     type ChartFieldProposalStatus,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
-import { listChartDraftsForReview } from "@/features/contributions/server/chart-draft-service";
+import { listChartDraftsForReview } from "@/features/contributions/server/chart-draft-review-service";
 import {
     getChartFieldQueueStatus,
     listChartFieldProposals,

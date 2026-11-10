@@ -19,7 +19,7 @@ vi.mock("@/lib/db", () => ({
         },
     },
 }));
-vi.mock("@/features/contributions/server/chart-draft-service", () => ({
+vi.mock("@/features/contributions/server/chart-comment-service", () => ({
     listChartComments: mocks.listChartComments,
 }));
 vi.mock("@/features/contributions/server/contribution-point-service", () => ({

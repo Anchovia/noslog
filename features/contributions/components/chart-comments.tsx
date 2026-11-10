@@ -33,9 +33,9 @@ import {
     type ChartCommentKind,
     isChartCommentKind,
 } from "@/features/contributions/schemas/chart-draft-schema";
-import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-comment-service";
 
-export function chartCommentsKey(chartId: number) {
+function chartCommentsKey(chartId: number) {
     return ["chart-comments", chartId] as const;
 }
 
@@ -246,7 +246,7 @@ export function ChartCommentStageEntry({
  * (2026-10-15 C2, 평가 의견 작성 칸과 같은 문법 · Esc 로 접힘).
  * 시각은 지금 재생 위치를 따라가다가 글을 쓰기 시작하면 멈춘다. 시각을 누르면 지금 재생 위치로 다시 맞춘다.
  */
-export function ChartCommentComposer({
+function ChartCommentComposer({
     draft,
     clock,
 }: {
