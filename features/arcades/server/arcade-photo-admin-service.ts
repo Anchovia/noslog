@@ -11,18 +11,14 @@ import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import {
-    createImageUploadToken,
     deleteBlobIfOwned,
     isImageContentType,
     isValidImageBlob,
 } from "@/lib/blob";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import {
-    claimUploadTokenQuota,
-    getUploadLimitMessage,
-    releaseUploadTokenQuota,
-} from "@/lib/upload-rate-limit";
+import { getUploadLimitMessage } from "@/lib/upload-rate-limit";
+import { requestImageUploadToken } from "@/lib/uploads/image-upload-token";
 
 const INVALID_IMAGE_MESSAGE = "JPG·PNG·WebP 이미지만 올릴 수 있습니다.";
 const PHOTO_LIMIT_MESSAGE = `사진은 ${ARCADE_PHOTO_MAX}장까지 올릴 수 있습니다.`;
@@ -99,37 +95,26 @@ export async function requestArcadePhotoUpload(
     if (!isImageContentType(contentType))
         return { success: false, message: INVALID_IMAGE_MESSAGE };
 
-    let grantId: number | null = null;
-    try {
-        const count = await db.arcadePublicPhoto.count({
-            where: { arcadeId: arcadeId.data },
-        });
-        if (count >= ARCADE_PHOTO_MAX)
-            return { success: false, message: PHOTO_LIMIT_MESSAGE };
-
-        const quota = await claimUploadTokenQuota(admin.id, "arcade-photo");
-        if (!quota.allowed)
-            return { success: false, message: getUploadLimitMessage() };
-        grantId = quota.grantId;
-
-        const upload = await createImageUploadToken(
-            photoPath(arcadeId.data),
-            contentType
-        );
-        if (!upload) {
-            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
-            return { success: false, message: INVALID_IMAGE_MESSAGE };
-        }
-        return { success: true, message: "", ...upload };
-    } catch (error) {
-        logPhotoError(error, "admin.arcade.photo-upload.request.failed");
-        if (grantId !== null)
-            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
-        return {
-            success: false,
-            message: "사진을 올릴 준비를 하지 못했습니다.",
-        };
-    }
+    return requestImageUploadToken({
+        userId: admin.id,
+        purpose: "arcade-photo",
+        access: "public",
+        pathnameWithoutExtension: photoPath(arcadeId.data),
+        contentType,
+        beforeClaim: async () => {
+            const count = await db.arcadePublicPhoto.count({
+                where: { arcadeId: arcadeId.data },
+            });
+            return count >= ARCADE_PHOTO_MAX
+                ? { success: false, message: PHOTO_LIMIT_MESSAGE }
+                : null;
+        },
+        limitMessage: getUploadLimitMessage(),
+        refusedTypeMessage: INVALID_IMAGE_MESSAGE,
+        errorMessage: "사진을 올릴 준비를 하지 못했습니다.",
+        logError: (error) =>
+            logPhotoError(error, "admin.arcade.photo-upload.request.failed"),
+    });
 }
 
 // 올린 파일을 확인하고 맨 뒤 자리에 붙인다. 저장하지 못하면 올린 파일도 지운다

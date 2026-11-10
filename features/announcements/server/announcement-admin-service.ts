@@ -21,15 +21,12 @@ import {
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
-import { createImageUploadToken, isImageContentType } from "@/lib/blob";
+import { isImageContentType } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import {
-    claimUploadTokenQuota,
-    getUploadLimitMessage,
-    releaseUploadTokenQuota,
-} from "@/lib/upload-rate-limit";
+import { getUploadLimitMessage } from "@/lib/upload-rate-limit";
+import { requestImageUploadToken } from "@/lib/uploads/image-upload-token";
 
 type AnnouncementLocale = (typeof ANNOUNCEMENT_LOCALES)[number];
 type AnnouncementFieldName =
@@ -335,29 +332,20 @@ export async function requestAnnouncementImageUpload(
             success: false,
             message: "JPG · PNG · WebP 이미지만 올릴 수 있습니다.",
         };
-    let grantId: number | null = null;
-    try {
-        const quota = await claimUploadTokenQuota(
-            admin.id,
-            "announcement-image"
-        );
-        if (!quota.allowed)
-            return { success: false, message: getUploadLimitMessage() };
-        grantId = quota.grantId;
-        const upload = await createImageUploadToken(
-            `announcements/${admin.id}/image`,
-            contentType
-        );
-        if (!upload) throw new Error("invalid image type");
-        return { success: true, message: "", ...upload };
-    } catch (error) {
-        logServerError(error, {
-            event: "announcements.image-upload.request.failed",
-            routePath: "/admin/announcements",
-            routeType: "action",
-        });
-        if (grantId !== null)
-            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
-        return { success: false, message: "이미지를 올리지 못했습니다." };
-    }
+    return requestImageUploadToken({
+        userId: admin.id,
+        purpose: "announcement-image",
+        access: "public",
+        pathnameWithoutExtension: `announcements/${admin.id}/image`,
+        contentType,
+        limitMessage: getUploadLimitMessage(),
+        refusedTypeMessage: null,
+        errorMessage: "이미지를 올리지 못했습니다.",
+        logError: (error) =>
+            logServerError(error, {
+                event: "announcements.image-upload.request.failed",
+                routePath: "/admin/announcements",
+                routeType: "action",
+            }),
+    });
 }

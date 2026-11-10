@@ -11,11 +11,7 @@ import {
 } from "@/features/exams/schemas/exam-proof-schema";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
-import {
-    createPrivateImageUploadToken,
-    deleteBlobIfOwned,
-    isValidPrivateImageBlob,
-} from "@/lib/blob";
+import { deleteBlobIfOwned, isValidPrivateImageBlob } from "@/lib/blob";
 import db from "@/lib/db";
 import {
     createTranslator,
@@ -29,11 +25,8 @@ import {
     withStatsGrades,
 } from "@/lib/profile/player-stats";
 import getSession from "@/lib/session";
-import {
-    claimUploadTokenQuota,
-    getUploadLimitMessage,
-    releaseUploadTokenQuota,
-} from "@/lib/upload-rate-limit";
+import { getUploadLimitMessage } from "@/lib/upload-rate-limit";
+import { requestImageUploadToken } from "@/lib/uploads/image-upload-token";
 
 type ExamProofFieldName = Extract<keyof ExamProofSubmissionFormValues, string>;
 type ExamProofActionResult = ActionResult<
@@ -133,69 +126,46 @@ export async function requestExamProofUpload(
         });
     const userId = session.id;
     const input = inputResult.data;
-    let grantId: number | null = null;
 
-    try {
-        const exam = await getAvailableExam(input.examId, userId);
-        if (!exam) {
-            return {
-                success: false,
-                message: t("exams.error.unavailable"),
-            };
-        }
-        if (exam.alreadyAchieved || exam.achievements.length > 0) {
-            return {
-                success: false,
-                message: t("exams.error.alreadyPassed"),
-            };
-        }
-        if (exam.submissions.length > 0) {
-            return { success: false, message: t("exams.error.pending") };
-        }
-
-        const quota = await claimUploadTokenQuota(userId, "exam-proof");
-        if (!quota.allowed) {
-            return {
-                success: false,
-                message:
-                    locale === "ko"
-                        ? getUploadLimitMessage()
-                        : t("exams.error.uploadLimit"),
-            };
-        }
-        grantId = quota.grantId;
-
-        const upload = await createPrivateImageUploadToken(
-            `exam-proofs/${userId}/${input.examId}/proof`,
-            input.contentType
-        );
-        if (!upload) {
-            await releaseUploadTokenQuota(userId, grantId).catch(
-                logQuotaReleaseError
-            );
-            return {
-                success: false,
-                message: t("exams.proof.invalidImage"),
-            };
-        }
-
-        return { success: true, message: "", ...upload };
-    } catch (error) {
-        logServerError(error, {
-            event: "exam.proof-upload.request.failed",
-            routePath: "/exams",
-            routeType: "action",
-        });
-        if (grantId !== null) {
-            await releaseUploadTokenQuota(userId, grantId).catch(
-                logQuotaReleaseError
-            );
-        }
-        return {
-            success: false,
-            message: t("exams.error.uploadRequest"),
-        };
-    }
+    return requestImageUploadToken({
+        userId,
+        purpose: "exam-proof",
+        access: "private",
+        pathnameWithoutExtension: `exam-proofs/${userId}/${input.examId}/proof`,
+        contentType: input.contentType,
+        beforeClaim: async () => {
+            const exam = await getAvailableExam(input.examId, userId);
+            if (!exam) {
+                return {
+                    success: false,
+                    message: t("exams.error.unavailable"),
+                };
+            }
+            if (exam.alreadyAchieved || exam.achievements.length > 0) {
+                return {
+                    success: false,
+                    message: t("exams.error.alreadyPassed"),
+                };
+            }
+            if (exam.submissions.length > 0) {
+                return { success: false, message: t("exams.error.pending") };
+            }
+            return null;
+        },
+        limitMessage:
+            locale === "ko"
+                ? getUploadLimitMessage()
+                : t("exams.error.uploadLimit"),
+        refusedTypeMessage: t("exams.proof.invalidImage"),
+        errorMessage: t("exams.error.uploadRequest"),
+        logError: (error) =>
+            logServerError(error, {
+                event: "exam.proof-upload.request.failed",
+                routePath: "/exams",
+                routeType: "action",
+            }),
+        onReleaseError: logQuotaReleaseError,
+    });
 }
 
 export async function submitExamProof(

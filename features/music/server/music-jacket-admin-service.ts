@@ -7,7 +7,6 @@ import { JACKET_INDEX_PATTERN } from "@/features/music/server/jacket-collection-
 import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import {
-    createImageUploadToken,
     deleteBlobIfOwned,
     isImageContentType,
     isValidImageBlob,
@@ -16,11 +15,8 @@ import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { isManualJacketUrl, MANUAL_JACKET_PREFIX } from "@/lib/music/jackets";
 import { logServerError } from "@/lib/observability/server";
-import {
-    claimUploadTokenQuota,
-    getUploadLimitMessage,
-    releaseUploadTokenQuota,
-} from "@/lib/upload-rate-limit";
+import { getUploadLimitMessage } from "@/lib/upload-rate-limit";
+import { requestImageUploadToken } from "@/lib/uploads/image-upload-token";
 
 const INVALID_IMAGE_MESSAGE = "JPG·PNG·WebP 이미지만 올릴 수 있습니다.";
 const NOT_FOUND_MESSAGE = "악곡을 찾을 수 없습니다.";
@@ -66,41 +62,31 @@ export async function requestMusicJacketUpload(
     if (!isImageContentType(contentType))
         return { success: false, message: INVALID_IMAGE_MESSAGE };
 
-    let grantId: number | null = null;
-    try {
-        const music = await db.music.findUnique({
-            where: { index: index.data },
-            select: { index: true },
-        });
-        if (!music) return { success: false, message: NOT_FOUND_MESSAGE };
-
-        const quota = await claimUploadTokenQuota(admin.id, "music-jacket");
-        if (!quota.allowed)
-            return { success: false, message: getUploadLimitMessage() };
-        grantId = quota.grantId;
-
-        const upload = await createImageUploadToken(
-            `${jacketFolder(index.data)}jacket`,
-            contentType
-        );
-        if (!upload) {
-            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
-            return { success: false, message: INVALID_IMAGE_MESSAGE };
-        }
-        return { success: true, message: "", ...upload };
-    } catch (error) {
-        logJacketError(
-            error,
-            "admin.music.jacket-upload.request.failed",
-            index.data
-        );
-        if (grantId !== null)
-            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
-        return {
-            success: false,
-            message: "자켓을 올릴 준비를 하지 못했습니다.",
-        };
-    }
+    return requestImageUploadToken({
+        userId: admin.id,
+        purpose: "music-jacket",
+        access: "public",
+        pathnameWithoutExtension: `${jacketFolder(index.data)}jacket`,
+        contentType,
+        beforeClaim: async () => {
+            const music = await db.music.findUnique({
+                where: { index: index.data },
+                select: { index: true },
+            });
+            return music
+                ? null
+                : { success: false, message: NOT_FOUND_MESSAGE };
+        },
+        limitMessage: getUploadLimitMessage(),
+        refusedTypeMessage: INVALID_IMAGE_MESSAGE,
+        errorMessage: "자켓을 올릴 준비를 하지 못했습니다.",
+        logError: (error) =>
+            logJacketError(
+                error,
+                "admin.music.jacket-upload.request.failed",
+                index.data
+            ),
+    });
 }
 
 // 올린 파일을 확인하고 자켓으로 기록한다. 이전에 올리거나 수집한 파일은 지우고, 저장하지 못하면 올린 파일을 지운다

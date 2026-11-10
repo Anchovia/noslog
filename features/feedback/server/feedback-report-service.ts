@@ -10,7 +10,6 @@ import {
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import {
-    createPrivateImageUploadToken,
     deleteBlobIfOwned,
     isImageContentType,
     isValidPrivateImageBlob,
@@ -25,11 +24,8 @@ import {
 import { type Locale, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
-import {
-    claimUploadTokenQuota,
-    getUploadLimitMessage,
-    releaseUploadTokenQuota,
-} from "@/lib/upload-rate-limit";
+import { getUploadLimitMessage } from "@/lib/upload-rate-limit";
+import { requestImageUploadToken } from "@/lib/uploads/image-upload-token";
 
 /** 오락실이 아닌 일반 피드백은 사람마다 24시간에 이만큼 — 오락실 제보와 따로 센다 */
 const FEEDBACK_DAILY_LIMIT = 10;
@@ -67,40 +63,22 @@ export async function requestFeedbackImageUpload(
         };
     }
 
-    let grantId: number | null = null;
-    try {
-        const quota = await claimUploadTokenQuota(session.id, "feedback-image");
-        if (!quota.allowed) {
-            return {
-                success: false,
-                message: getUploadLimitMessage(locale),
-            };
-        }
-        grantId = quota.grantId;
-
-        const upload = await createPrivateImageUploadToken(
-            `feedback/${session.id}/report`,
-            contentType
-        );
-        if (!upload) throw new Error("invalid image type");
-
-        return { success: true, message: "", ...upload };
-    } catch (error) {
-        logServerError(error, {
-            event: "feedback.image-upload.request.failed",
-            routePath: "/",
-            routeType: "action",
-        });
-        if (grantId !== null) {
-            await releaseUploadTokenQuota(session.id, grantId).catch(
-                () => null
-            );
-        }
-        return {
-            success: false,
-            message: t("feedback.uploadError"),
-        };
-    }
+    return requestImageUploadToken({
+        userId: session.id,
+        purpose: "feedback-image",
+        access: "private",
+        pathnameWithoutExtension: `feedback/${session.id}/report`,
+        contentType,
+        limitMessage: getUploadLimitMessage(locale),
+        refusedTypeMessage: null,
+        errorMessage: t("feedback.uploadError"),
+        logError: (error) =>
+            logServerError(error, {
+                event: "feedback.image-upload.request.failed",
+                routePath: "/",
+                routeType: "action",
+            }),
+    });
 }
 
 export async function submitFeedbackReport(
