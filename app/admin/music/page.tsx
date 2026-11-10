@@ -1,7 +1,7 @@
 import AdminMusicList from "@/features/music/components/admin/admin-music-list";
 import MusicTranslationCoverage from "@/features/music/components/admin/music-translation-coverage";
 import MusicTranslationCsvImport from "@/features/music/components/admin/music-translation-csv-import";
-import { getAdminMusicList } from "@/features/music/server/music-translation-admin-service";
+import { getAdminMusicList } from "@/features/music/server/admin-music-list-service";
 import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminMusicPage({

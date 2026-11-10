@@ -5,18 +5,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/db", async () => {
     const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
-    if (!["localhost", "127.0.0.1"].includes(new URL(value).hostname))
-        throw new Error("Tier position tests require a local database.");
-    const { PrismaClient } = await import("@prisma/client");
-    const { PrismaPg } = await import("@prisma/adapter-pg");
-    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    const { createLocalTestClient } = await import("./helpers/local-database");
     return {
-        default: new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: value,
-                options: PRISMA_PG_SESSION_OPTIONS,
-            }),
-        }),
+        default: createLocalTestClient(
+            value,
+            "Tier position tests require a local database."
+        ),
     };
 });
 vi.mock("@/lib/admin", () => ({ requireAdmin: async () => ({ id: 1 }) }));
@@ -29,11 +23,13 @@ vi.mock("@/features/rankings/server/player-rating-service", () => ({
 import db from "@/lib/db";
 import {
     addTierBand,
-    applyTierBoardLayout,
     deleteTierBand,
+} from "@/features/tiers/server/tier-band-admin-service";
+import { applyTierBoardLayout } from "@/features/tiers/server/tier-board-admin-service";
+import {
     deleteTierEntry,
     moveTierEntryToBand,
-} from "@/features/tiers/server/tier-admin-service";
+} from "@/features/tiers/server/tier-entry-admin-service";
 
 const form = (values: Record<string, string | number>) => {
     const data = new FormData();

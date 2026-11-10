@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { listAdminMusic } from "@/app/admin/music/actions";
 import SearchField from "@/components/ui/search-field";
 import MusicTranslationApproveButton from "@/features/music/components/admin/music-translation-approve-button";
-import type { AdminMusicListParams } from "@/features/music/server/music-translation-admin-service";
+import type { AdminMusicListParams } from "@/features/music/server/admin-music-list-service";
 import type {
     AdminMusicListData,
     AdminMusicPage,

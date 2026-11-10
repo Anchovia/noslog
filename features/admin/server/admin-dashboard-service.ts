@@ -81,6 +81,287 @@ function addUser(sets: Map<string, Set<number>>, key: string, userId: number) {
     set.add(userId);
 }
 
+function summarizeVisits(
+    counts: { date: string; kind: string; key: string; count: number }[],
+    {
+        current,
+        days,
+        hourNow,
+    }: { current: string[]; days: number; hourNow: string }
+) {
+    const inRange = new Set(current);
+    const visitorsByDay = new Map<string, number>();
+    const pageviewsByDay = new Map<string, number>();
+    const hours = new Map<string, number>();
+    let previousTodayPageviews = 0;
+    const audience = {
+        member: { visitors: 0, pageviews: 0 },
+        guest: { visitors: 0, pageviews: 0 },
+    };
+    const pages = new Map<string, number>();
+    const apis = new Map<string, number>();
+    const externals = new Map<string, number>();
+    for (const row of counts) {
+        const count = Number(row.count);
+        if (row.kind === "visitors") addCount(visitorsByDay, row.date, count);
+        else if (row.kind === "pageviews")
+            addCount(pageviewsByDay, row.date, count);
+        else if (row.kind === "hour") {
+            if (days !== 1) continue;
+            if (inRange.has(row.date)) addCount(hours, row.key, count);
+            else if (row.key <= hourNow) previousTodayPageviews += count;
+        } else if (!inRange.has(row.date)) continue;
+        else if (row.kind === "audience" || row.kind === "audienceVisitor") {
+            const side =
+                row.key === "member" ? audience.member : audience.guest;
+            if (row.kind === "audience") side.pageviews += count;
+            else side.visitors += count;
+        } else {
+            const target =
+                row.kind === "page"
+                    ? pages
+                    : row.kind === "api"
+                      ? apis
+                      : row.kind === "external"
+                        ? externals
+                        : null;
+            if (target) addCount(target, row.key, count);
+        }
+    }
+    return {
+        visitorsByDay,
+        pageviewsByDay,
+        hours,
+        previousTodayPageviews,
+        audience,
+        pages,
+        apis,
+        externals,
+    };
+}
+
+// 가입 — 하루별 · 오늘 시각별, 직전 기간은 previousEnd 앞까지
+function summarizeSignups(
+    users: { createdAt: Date }[],
+    {
+        currentStart,
+        previousEnd,
+        days,
+    }: { currentStart: Date; previousEnd: Date; days: number }
+) {
+    const signupsByDay = new Map<string, number>();
+    const hourlySignups = new Map<string, number>();
+    let currentSignups = 0;
+    let previousSignups = 0;
+    for (const user of users) {
+        const key = analyticsDateKey(user.createdAt);
+        addCount(signupsByDay, key, 1);
+        if (user.createdAt >= currentStart) {
+            currentSignups += 1;
+            if (days === 1)
+                addCount(hourlySignups, analyticsHourKey(user.createdAt));
+        } else if (user.createdAt < previousEnd) previousSignups += 1;
+    }
+    return { signupsByDay, hourlySignups, currentSignups, previousSignups };
+}
+
+// 동기화 — 큰 숫자는 동기화를 끝낸 사람 수(여러 번 해도 1, 2026-10-17 Y2), 시도 · 실패 · 처리 중은 따로
+function summarizeSyncs(
+    syncs: {
+        userId: number;
+        startedAt: Date;
+        status: string;
+        errorMessage: string | null;
+    }[],
+    {
+        currentStart,
+        previousEnd,
+        days,
+    }: { currentStart: Date; previousEnd: Date; days: number }
+) {
+    const syncersByDay = new Map<string, Set<number>>();
+    const hourlySyncers = new Map<string, Set<number>>();
+    const currentSyncers = new Set<number>();
+    const previousSyncers = new Set<number>();
+    const syncStatus = { completed: 0, failed: 0, processing: 0 };
+    const failureReasons = new Map<string, number>();
+    for (const sync of syncs) {
+        const isCurrent = sync.startedAt >= currentStart;
+        if (isCurrent) {
+            if (sync.status === "completed") syncStatus.completed += 1;
+            else if (sync.status === "failed") {
+                syncStatus.failed += 1;
+                addCount(failureReasons, failureReason(sync.errorMessage));
+            } else syncStatus.processing += 1;
+        }
+        if (sync.status !== "completed") continue;
+        addUser(syncersByDay, analyticsDateKey(sync.startedAt), sync.userId);
+        if (isCurrent) {
+            currentSyncers.add(sync.userId);
+            if (days === 1)
+                addUser(
+                    hourlySyncers,
+                    analyticsHourKey(sync.startedAt),
+                    sync.userId
+                );
+        } else if (sync.startedAt < previousEnd)
+            previousSyncers.add(sync.userId);
+    }
+    return {
+        syncersByDay,
+        hourlySyncers,
+        currentSyncers,
+        previousSyncers,
+        syncStatus,
+        failureReasons,
+    };
+}
+
+function buildKpis({
+    days,
+    current,
+    previous,
+    visitsComparable,
+    visitorsByDay,
+    pageviewsByDay,
+    previousTodayPageviews,
+    currentSignups,
+    previousSignups,
+    currentSyncers,
+    previousSyncers,
+    syncStatus,
+}: {
+    days: number;
+    current: string[];
+    previous: string[];
+    visitsComparable: boolean;
+    visitorsByDay: Map<string, number>;
+    pageviewsByDay: Map<string, number>;
+    previousTodayPageviews: number;
+    currentSignups: number;
+    previousSignups: number;
+    currentSyncers: Set<number>;
+    previousSyncers: Set<number>;
+    syncStatus: { completed: number; failed: number; processing: number };
+}) {
+    const sumDays = (map: Map<string, number>, keys: string[]) =>
+        keys.reduce((total, key) => total + (map.get(key) ?? 0), 0);
+    const visitPrevious = (map: Map<string, number>) =>
+        visitsComparable ? sumDays(map, previous) : null;
+    const syncAttempts =
+        syncStatus.completed + syncStatus.failed + syncStatus.processing;
+    const kpiValues: Record<
+        DashboardMetric,
+        { value: number; previous: number | null }
+    > = {
+        visitors: {
+            value: sumDays(visitorsByDay, current),
+            // 방문자는 시각별로 세지 않아 오늘은 어제 같은 시각까지를 낼 수 없다
+            previous: days === 1 ? null : visitPrevious(visitorsByDay),
+        },
+        pageviews: {
+            value: sumDays(pageviewsByDay, current),
+            previous:
+                days === 1
+                    ? visitsComparable
+                        ? previousTodayPageviews
+                        : null
+                    : visitPrevious(pageviewsByDay),
+        },
+        signups: { value: currentSignups, previous: previousSignups },
+        syncs: { value: currentSyncers.size, previous: previousSyncers.size },
+    };
+    return (Object.keys(DASHBOARD_METRICS) as DashboardMetric[]).map((key) => ({
+        metric: key,
+        label: DASHBOARD_METRICS[key],
+        ...kpiValues[key],
+        attempts: key === "syncs" ? syncAttempts : null,
+        failed: key === "syncs" ? syncStatus.failed : null,
+    }));
+}
+
+// 활성 사용자 · 새 기여자 — 동기화를 끝냈거나 무언가 새로 쓴 사람. 방문 기록은 쓰지 않는다
+function summarizeActivity({
+    evaluationAuthors,
+    goalVoters,
+    eventAuthors,
+    arcadeReporters,
+    activeSyncers,
+    active7Start,
+    active28Start,
+    currentStart,
+}: {
+    evaluationAuthors: {
+        userId: number;
+        _min: { createdAt: Date | null };
+        _max: { createdAt: Date | null; opinionCreatedAt: Date | null };
+    }[];
+    goalVoters: {
+        userId: number;
+        _min: { createdAt: Date | null };
+        _max: { createdAt: Date | null };
+    }[];
+    eventAuthors: {
+        authorId: number;
+        _min: { submittedAt: Date | null };
+        _max: { submittedAt: Date | null };
+    }[];
+    arcadeReporters: {
+        userId: number;
+        _min: { createdAt: Date | null };
+        _max: { createdAt: Date | null };
+    }[];
+    activeSyncers: { userId: number; _max: { startedAt: Date | null } }[];
+    active7Start: Date;
+    active28Start: Date;
+    currentStart: Date;
+}) {
+    const firstContribution = new Map<number, number>();
+    const lastActive = new Map<number, number>();
+    const noteActivity = (
+        userId: number,
+        first: Date | null | undefined,
+        ...lasts: (Date | null | undefined)[]
+    ) => {
+        if (first) {
+            const time = first.getTime();
+            const known = firstContribution.get(userId);
+            if (known === undefined || time < known)
+                firstContribution.set(userId, time);
+        }
+        for (const last of lasts) {
+            if (!last) continue;
+            const time = last.getTime();
+            if (time > (lastActive.get(userId) ?? -Infinity))
+                lastActive.set(userId, time);
+        }
+    };
+    for (const row of evaluationAuthors)
+        noteActivity(
+            row.userId,
+            row._min.createdAt,
+            row._max.createdAt,
+            row._max.opinionCreatedAt
+        );
+    for (const row of goalVoters)
+        noteActivity(row.userId, row._min.createdAt, row._max.createdAt);
+    for (const row of eventAuthors)
+        noteActivity(row.authorId, row._min.submittedAt, row._max.submittedAt);
+    for (const row of arcadeReporters)
+        noteActivity(row.userId, row._min.createdAt, row._max.createdAt);
+    for (const row of activeSyncers)
+        noteActivity(row.userId, null, row._max.startedAt);
+    const activeSince = (start: Date) =>
+        [...lastActive.values()].filter((time) => time >= start.getTime())
+            .length;
+    const active7 = activeSince(active7Start);
+    const active28 = activeSince(active28Start);
+    const newContributors = [...firstContribution.values()].filter(
+        (time) => time >= currentStart.getTime()
+    ).length;
+    return { active7, active28, newContributors };
+}
+
 /**
  * 대시보드 한 화면 — 기간의 하루별 합계와 바로 앞 같은 길이 기간(증감 비교),
  * 자주 보는 페이지·API·외부 호출(기간 합계), 처리할 일(지금 개수), 활성 사용자 · 동기화 상태(2026-10-17)
@@ -261,173 +542,50 @@ export async function getAdminDashboard(
             _max: { createdAt: true },
         }),
     ]);
-
-    const inRange = new Set(current);
-    const visitorsByDay = new Map<string, number>();
-    const pageviewsByDay = new Map<string, number>();
-    const hours = new Map<string, number>();
-    let previousTodayPageviews = 0;
-    const audience = {
-        member: { visitors: 0, pageviews: 0 },
-        guest: { visitors: 0, pageviews: 0 },
-    };
-    const pages = new Map<string, number>();
-    const apis = new Map<string, number>();
-    const externals = new Map<string, number>();
-    for (const row of counts) {
-        const count = Number(row.count);
-        if (row.kind === "visitors") addCount(visitorsByDay, row.date, count);
-        else if (row.kind === "pageviews")
-            addCount(pageviewsByDay, row.date, count);
-        else if (row.kind === "hour") {
-            if (days !== 1) continue;
-            if (inRange.has(row.date)) addCount(hours, row.key, count);
-            else if (row.key <= hourNow) previousTodayPageviews += count;
-        } else if (!inRange.has(row.date)) continue;
-        else if (row.kind === "audience" || row.kind === "audienceVisitor") {
-            const side =
-                row.key === "member" ? audience.member : audience.guest;
-            if (row.kind === "audience") side.pageviews += count;
-            else side.visitors += count;
-        } else {
-            const target =
-                row.kind === "page"
-                    ? pages
-                    : row.kind === "api"
-                      ? apis
-                      : row.kind === "external"
-                        ? externals
-                        : null;
-            if (target) addCount(target, row.key, count);
-        }
-    }
-
-    // 가입 — 하루별 · 오늘 시각별, 직전 기간은 previousEnd 앞까지
-    const signupsByDay = new Map<string, number>();
-    const hourlySignups = new Map<string, number>();
-    let currentSignups = 0;
-    let previousSignups = 0;
-    for (const user of users) {
-        const key = analyticsDateKey(user.createdAt);
-        addCount(signupsByDay, key, 1);
-        if (user.createdAt >= currentStart) {
-            currentSignups += 1;
-            if (days === 1)
-                addCount(hourlySignups, analyticsHourKey(user.createdAt));
-        } else if (user.createdAt < previousEnd) previousSignups += 1;
-    }
-
-    // 동기화 — 큰 숫자는 동기화를 끝낸 사람 수(여러 번 해도 1, 2026-10-17 Y2), 시도 · 실패 · 처리 중은 따로
-    const syncersByDay = new Map<string, Set<number>>();
-    const hourlySyncers = new Map<string, Set<number>>();
-    const currentSyncers = new Set<number>();
-    const previousSyncers = new Set<number>();
-    const syncStatus = { completed: 0, failed: 0, processing: 0 };
-    const failureReasons = new Map<string, number>();
-    for (const sync of syncs) {
-        const isCurrent = sync.startedAt >= currentStart;
-        if (isCurrent) {
-            if (sync.status === "completed") syncStatus.completed += 1;
-            else if (sync.status === "failed") {
-                syncStatus.failed += 1;
-                addCount(failureReasons, failureReason(sync.errorMessage));
-            } else syncStatus.processing += 1;
-        }
-        if (sync.status !== "completed") continue;
-        addUser(syncersByDay, analyticsDateKey(sync.startedAt), sync.userId);
-        if (isCurrent) {
-            currentSyncers.add(sync.userId);
-            if (days === 1)
-                addUser(
-                    hourlySyncers,
-                    analyticsHourKey(sync.startedAt),
-                    sync.userId
-                );
-        } else if (sync.startedAt < previousEnd)
-            previousSyncers.add(sync.userId);
-    }
-
-    const sumDays = (map: Map<string, number>, keys: string[]) =>
-        keys.reduce((total, key) => total + (map.get(key) ?? 0), 0);
-    const visitPrevious = (map: Map<string, number>) =>
-        visitsComparable ? sumDays(map, previous) : null;
-    const syncAttempts =
-        syncStatus.completed + syncStatus.failed + syncStatus.processing;
-    const kpiValues: Record<
-        DashboardMetric,
-        { value: number; previous: number | null }
-    > = {
-        visitors: {
-            value: sumDays(visitorsByDay, current),
-            // 방문자는 시각별로 세지 않아 오늘은 어제 같은 시각까지를 낼 수 없다
-            previous: days === 1 ? null : visitPrevious(visitorsByDay),
-        },
-        pageviews: {
-            value: sumDays(pageviewsByDay, current),
-            previous:
-                days === 1
-                    ? visitsComparable
-                        ? previousTodayPageviews
-                        : null
-                    : visitPrevious(pageviewsByDay),
-        },
-        signups: { value: currentSignups, previous: previousSignups },
-        syncs: { value: currentSyncers.size, previous: previousSyncers.size },
-    };
-    const kpis = (Object.keys(DASHBOARD_METRICS) as DashboardMetric[]).map(
-        (key) => ({
-            metric: key,
-            label: DASHBOARD_METRICS[key],
-            ...kpiValues[key],
-            attempts: key === "syncs" ? syncAttempts : null,
-            failed: key === "syncs" ? syncStatus.failed : null,
-        })
-    );
-
-    // 활성 사용자 · 새 기여자 — 동기화를 끝냈거나 무언가 새로 쓴 사람. 방문 기록은 쓰지 않는다
-    const firstContribution = new Map<number, number>();
-    const lastActive = new Map<number, number>();
-    const noteActivity = (
-        userId: number,
-        first: Date | null | undefined,
-        ...lasts: (Date | null | undefined)[]
-    ) => {
-        if (first) {
-            const time = first.getTime();
-            const known = firstContribution.get(userId);
-            if (known === undefined || time < known)
-                firstContribution.set(userId, time);
-        }
-        for (const last of lasts) {
-            if (!last) continue;
-            const time = last.getTime();
-            if (time > (lastActive.get(userId) ?? -Infinity))
-                lastActive.set(userId, time);
-        }
-    };
-    for (const row of evaluationAuthors)
-        noteActivity(
-            row.userId,
-            row._min.createdAt,
-            row._max.createdAt,
-            row._max.opinionCreatedAt
-        );
-    for (const row of goalVoters)
-        noteActivity(row.userId, row._min.createdAt, row._max.createdAt);
-    for (const row of eventAuthors)
-        noteActivity(row.authorId, row._min.submittedAt, row._max.submittedAt);
-    for (const row of arcadeReporters)
-        noteActivity(row.userId, row._min.createdAt, row._max.createdAt);
-    for (const row of activeSyncers)
-        noteActivity(row.userId, null, row._max.startedAt);
-    const activeSince = (start: Date) =>
-        [...lastActive.values()].filter((time) => time >= start.getTime())
-            .length;
-    const active7 = activeSince(active7Start);
-    const active28 = activeSince(active28Start);
-    const newContributors = [...firstContribution.values()].filter(
-        (time) => time >= currentStart.getTime()
-    ).length;
+    const {
+        visitorsByDay,
+        pageviewsByDay,
+        hours,
+        previousTodayPageviews,
+        audience,
+        pages,
+        apis,
+        externals,
+    } = summarizeVisits(counts, { current, days, hourNow });
+    const { signupsByDay, hourlySignups, currentSignups, previousSignups } =
+        summarizeSignups(users, { currentStart, previousEnd, days });
+    const {
+        syncersByDay,
+        hourlySyncers,
+        currentSyncers,
+        previousSyncers,
+        syncStatus,
+        failureReasons,
+    } = summarizeSyncs(syncs, { currentStart, previousEnd, days });
+    const kpis = buildKpis({
+        days,
+        current,
+        previous,
+        visitsComparable,
+        visitorsByDay,
+        pageviewsByDay,
+        previousTodayPageviews,
+        currentSignups,
+        previousSignups,
+        currentSyncers,
+        previousSyncers,
+        syncStatus,
+    });
+    const { active7, active28, newContributors } = summarizeActivity({
+        evaluationAuthors,
+        goalVoters,
+        eventAuthors,
+        arcadeReporters,
+        activeSyncers,
+        active7Start,
+        active28Start,
+        currentStart,
+    });
 
     return {
         range,

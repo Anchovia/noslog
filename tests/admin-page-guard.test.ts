@@ -8,7 +8,6 @@ const mocks = vi.hoisted(() => ({
     query: vi.fn(),
 }));
 
-vi.mock("server-only", () => ({}));
 vi.mock("@/lib/admin", () => ({ requireAdmin: mocks.requireAdmin }));
 // 어떤 표 · 메서드를 불러도 같은 가짜를 돌려준다 — 권한 확인 전에 DB 에 닿는지만 본다
 vi.mock("@/lib/db", () => ({

@@ -33,9 +33,9 @@ vi.mock("next/cache", () => ({
 import {
     createMusicTranslationCsvExport,
     importMusicTranslationsCsv,
-    saveMusicTranslation,
     validateMusicTranslationsCsv,
-} from "@/features/music/server/music-translation-admin-service";
+} from "@/features/music/server/music-translation-csv-service";
+import { saveMusicTranslation } from "@/features/music/server/music-translation-save-service";
 
 function translationForm(title: string, status = "draft") {
     const formData = new FormData();
