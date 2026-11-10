@@ -26,6 +26,7 @@ import ActionMenu from "@/components/ui/action-menu";
 import IntentLink from "@/components/ui/intent-link";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatusMessage } from "@/components/ui/status-message";
+import { contributionKeys } from "@/features/contributions/api/contribution-query-keys";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
 import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chart-draft-schema";
 import {
@@ -35,17 +36,13 @@ import {
 } from "@/features/contributions/schemas/chart-draft-schema";
 import type { ChartCommentItem } from "@/features/contributions/server/chart-comment-service";
 
-function chartCommentsKey(chartId: number) {
-    return ["chart-comments", chartId] as const;
-}
-
 /** 뷰어(진행 막대 눈금)와 의견 구역이 같은 목록을 나눠 쓴다 */
 export function chartCommentsOptions(
     chartId: number,
     initialComments: ChartCommentItem[]
 ) {
     return {
-        queryKey: chartCommentsKey(chartId),
+        queryKey: contributionKeys.chartComments(chartId),
         // 읽을 수 없으면(null) 빈 목록 — 공개 채보 댓글은 누구나 읽으므로 실제로는 오지 않는다
         queryFn: async () => (await listChartComments({ chartId })) ?? [],
         initialData: initialComments,
@@ -185,7 +182,7 @@ export function useChartCommentDraft(chartId: number) {
             reset();
             toast.success(result.message);
             void queryClient.invalidateQueries({
-                queryKey: chartCommentsKey(chartId),
+                queryKey: contributionKeys.chartComments(chartId),
             });
         },
         onError: (reason) => setError(reason.message),
@@ -387,7 +384,7 @@ function ChartCommentRow({
         onSuccess: (result) => {
             toast.success(result.message);
             void queryClient.invalidateQueries({
-                queryKey: chartCommentsKey(chartId),
+                queryKey: contributionKeys.chartComments(chartId),
             });
         },
         onError: (reason) => toast.error(reason.message),

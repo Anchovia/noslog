@@ -14,6 +14,7 @@ import Button from "@/components/ui/button";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { contributionKeys } from "@/features/contributions/api/contribution-query-keys";
 import {
     type ChartFieldProposalField,
     formatProposalValue,
@@ -33,7 +34,7 @@ function QueueStatus({ open }: { open: boolean }) {
     const t = useTranslations();
     const locale = useLocale();
     const status = useQuery({
-        queryKey: ["chart-field-proposal", "queue"],
+        queryKey: contributionKeys.chartFieldQueue(),
         queryFn: () => getChartFieldQueueStatus(),
         enabled: open,
         staleTime: 60_000,

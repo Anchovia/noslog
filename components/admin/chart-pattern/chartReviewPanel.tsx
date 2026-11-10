@@ -12,6 +12,7 @@ import {
 } from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { formatCommentTime } from "@/components/chart-pattern/playbackClock";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { contributionKeys } from "@/features/contributions/api/contribution-query-keys";
 import type { ChartDraftStatus } from "@/features/contributions/schemas/chart-draft-schema";
 import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chart-draft-schema";
 import type { ChartCommentItem } from "@/features/contributions/server/chart-comment-service";
@@ -35,7 +36,7 @@ export function useDraftComments(chartId: number, draftId: number | null) {
         (state) => state.setCommentTimes
     );
     const query = useQuery({
-        queryKey: ["chart-comments", chartId, draftId],
+        queryKey: contributionKeys.chartDraftComments(chartId, draftId),
         queryFn: async () =>
             draftId === null
                 ? []
@@ -82,7 +83,7 @@ export default function ChartReviewPanel({
     const [deleting, setDeleting] = useState<number | null>(null);
     const refresh = () =>
         queryClient.invalidateQueries({
-            queryKey: ["chart-comments", chartId, draftId],
+            queryKey: contributionKeys.chartDraftComments(chartId, draftId),
         });
     const add = useMutation({
         mutationFn: async () => {

@@ -22,6 +22,7 @@ import ModalDialog from "@/components/ui/modal-dialog";
 import { SkeletonText } from "@/components/ui/skeleton";
 import StatStrip from "@/components/ui/stat-strip";
 import { StatusMessage } from "@/components/ui/status-message";
+import { contributionKeys } from "@/features/contributions/api/contribution-query-keys";
 import {
     CONTRIBUTION_KINDS,
     contributionLevel,
@@ -136,7 +137,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                             }}
                             onDeleted={() =>
                                 void queryClient.invalidateQueries({
-                                    queryKey: ["contribution", "mine"],
+                                    queryKey: contributionKeys.mine(),
                                 })
                             }
                         />
@@ -291,7 +292,7 @@ function MyProposalCounts() {
     const t = useTranslations();
     const locale = useLocale();
     const counts = useQuery({
-        queryKey: ["contribution", "mine", "counts"],
+        queryKey: contributionKeys.mineCounts(),
         queryFn: () => countMyChartFieldProposals(),
         staleTime: 60_000,
         retry: false,
@@ -317,13 +318,13 @@ function MyProposals() {
     const t = useTranslations();
     const [open, setOpen] = useState(false);
     const recent = useQuery({
-        queryKey: ["contribution", "mine", "recent"],
+        queryKey: contributionKeys.mineRecent(),
         queryFn: () => loadMine(RECENT_COUNT + 1),
         staleTime: 60_000,
         retry: false,
     });
     const all = useQuery({
-        queryKey: ["contribution", "mine", "all"],
+        queryKey: contributionKeys.mineAll(),
         queryFn: () => loadMine(ALL_COUNT),
         enabled: open,
         staleTime: 60_000,
@@ -407,7 +408,7 @@ function MyProposals() {
 function UnseenResultDot() {
     const t = useTranslations();
     const unseen = useQuery({
-        queryKey: ["contribution", "mine", "unseen"],
+        queryKey: contributionKeys.mineUnseen(),
         queryFn: () => countUnseenContributionResults(),
         staleTime: Infinity,
         retry: false,

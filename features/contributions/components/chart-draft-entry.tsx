@@ -8,6 +8,7 @@ import { useTranslations } from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { contributionKeys } from "@/features/contributions/api/contribution-query-keys";
 
 import ChartDraftCopyButton from "./chart-draft-copy-button";
 
@@ -16,7 +17,7 @@ const EDITOR_MIN_WIDTH = 1056;
 
 function myChartDraftOptions(chartId: number, signedIn: boolean) {
     return {
-        queryKey: ["chart-draft", "mine", chartId],
+        queryKey: contributionKeys.myChartDraft(chartId),
         queryFn: () => getMyChartDraftStatus(chartId),
         enabled: signedIn,
         staleTime: 60_000,
