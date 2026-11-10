@@ -1,8 +1,9 @@
 import { enMessages } from "./message-catalogs/en";
 import { jaMessages } from "./message-catalogs/ja";
 import { koMessages } from "./message-catalogs/ko";
-import type { ClientMessages, MessageKey, Messages } from "./message-types";
-import type { Locale } from "./routing";
+import type { MessageKey, Messages } from "./message-types";
+import { type Locale, resolveLocale } from "./routing";
+import { createTranslator } from "./translator";
 
 const messagesByLocale: Record<Locale, Messages> = {
     ko: koMessages,
@@ -14,6 +15,10 @@ export function getMessages(locale: Locale): Messages {
     return messagesByLocale[locale];
 }
 
-export { createTranslator } from "./translator";
+export function translatorFor(requestedLocale: unknown) {
+    return createTranslator(getMessages(resolveLocale(requestedLocale)));
+}
 
-export type { ClientMessages, MessageKey, Messages };
+export { createTranslator };
+
+export type { MessageKey, Messages };

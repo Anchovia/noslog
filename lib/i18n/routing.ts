@@ -33,6 +33,12 @@ export function isLocale(value: string | null | undefined): value is Locale {
     return SUPPORTED_LOCALES.includes(value as Locale);
 }
 
+export function resolveLocale(value: unknown): Locale {
+    return typeof value === "string" && isLocale(value)
+        ? value
+        : DEFAULT_LOCALE;
+}
+
 export function localeFromCountry(country: string | null | undefined): Locale {
     if (country === "ja-JP") return "ja";
     if (country === "global") return "en";
