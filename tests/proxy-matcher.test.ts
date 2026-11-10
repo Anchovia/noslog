@@ -23,7 +23,6 @@ describe("proxy matcher", () => {
             "/images/loading.gif",
             "/favicon.ico",
             "/icon-192.png",
-            "/logo.png",
             "/main_signup.png",
         ])
             expect(matcher.test(path), path).toBe(false);

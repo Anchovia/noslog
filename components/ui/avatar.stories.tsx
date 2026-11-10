@@ -24,6 +24,6 @@ export const Default: Story = {
         ).toHaveTextContent("N");
     },
 };
-export const Photo: Story = { args: { src: "/logo.png" } };
+export const Photo: Story = { args: { src: "/brand/noslog-cat.png" } };
 export const IconFallback: Story = { args: { fallbackName: null } };
 export const Decorative: Story = { args: { alt: "" } };

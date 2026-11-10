@@ -9,7 +9,7 @@ const meta = {
     component: PhotoViewer,
     args: {
         photos: [
-            { id: 1, url: "/logo.png", alt: "NosLog 로고" },
+            { id: 1, url: "/brand/noslog-cat.png", alt: "NosLog 로고" },
             { id: 2, url: "/flags/kr.png", alt: "대한민국 국기" },
         ],
         index: 0,
@@ -76,7 +76,7 @@ export const Default: Story = {
 export const InitiallyOpen: Story = { args: { open: true } };
 export const Single: Story = {
     args: {
-        photos: [{ id: 1, url: "/logo.png", alt: "NosLog 로고" }],
+        photos: [{ id: 1, url: "/brand/noslog-cat.png", alt: "NosLog 로고" }],
         open: true,
     },
 };
