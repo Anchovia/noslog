@@ -1,8 +1,3 @@
-import { loadEnvFile } from "node:process";
-
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-
 import {
     BASIC_RATING_ACTIVE_CURVE,
     BASIC_RATING_CURVES,
@@ -16,18 +11,12 @@ import {
     type BasicRatingCurveId,
     type BasicRatingRecord,
 } from "../lib/tiers/basic-rating";
+import {
+    createScriptPrismaClient,
+    loadScriptDatabaseEnv,
+} from "../prisma/script-env.mjs";
 
-const envFile = process.argv
-    .find((argument) => argument.startsWith("--env-file="))
-    ?.split("=")
-    .slice(1)
-    .join("=");
-
-if (envFile) {
-    loadEnvFile(envFile);
-} else if (!process.env.DATABASE_URL) {
-    loadEnvFile(".env");
-}
+loadScriptDatabaseEnv();
 
 const jsonOutput = process.argv.includes("--json");
 const requestedCurve = process.argv
@@ -42,14 +31,7 @@ if (requestedCurve && !curveIds.includes(requestedCurve)) {
 }
 
 const selectedCurveIds = requestedCurve ? [requestedCurve] : curveIds;
-// Prisma 7 은 pg 어댑터로 연결하고 .env 를 스스로 읽지 않는다(2026-10-16)
-if (!process.env.DATABASE_URL) process.loadEnvFile(".env");
-const db = new PrismaClient({
-    adapter: new PrismaPg({
-        connectionString: process.env.DATABASE_URL,
-        options: "-c TimeZone=UTC",
-    }),
-});
+const db = createScriptPrismaClient();
 
 function round(value: number, digits = 2) {
     const scale = 10 ** digits;
