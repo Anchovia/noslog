@@ -8,6 +8,14 @@ import { readTokenPixels } from "@/lib/design-tokens";
 import useElementWidth from "@/lib/hooks/use-element-width";
 import { readMotion } from "@/lib/motion";
 
+import {
+    dimensionLabelIndices,
+    nearestPointIndex,
+    pointFraction,
+    valueHeights,
+    valueTicks,
+} from "./line-chart-geometry";
+
 export interface LineChartPoint {
     id: string | number;
     dimension: string;
@@ -19,8 +27,8 @@ export interface LineChartPoint {
     detail?: string;
 }
 
-/** 기본 플롯 높이 — 프로필 성장 추이와 같은 200(2026-10-01 C2, 가이드 「선 그래프」) */
-const DEFAULT_PLOT_HEIGHT = 200;
+/** 플롯 높이 — 프로필 성장 추이와 같은 200(2026-10-01 C2, 가이드 「선 그래프」) */
+const PLOT_HEIGHT = 200;
 
 export default function LineChart({
     points,
@@ -37,9 +45,7 @@ export default function LineChart({
     verticalInset = 0,
     showPoints = true,
     tableVisibility = "visible",
-    plotHeight: fixedPlotHeight = DEFAULT_PLOT_HEIGHT,
     showValueAxis = true,
-    showGrid = true,
     keepPlotGeometry = false,
     baselineOnly = false,
     tone,
@@ -59,10 +65,7 @@ export default function LineChart({
     verticalInset?: number;
     showPoints?: boolean;
     tableVisibility?: "visible" | "screen-reader";
-    /** 플롯 높이(px) — 기본 200(프로필 성장 추이와 같은 값, 2026-10-01 C2) */
-    plotHeight?: number;
     showValueAxis?: boolean;
-    showGrid?: boolean;
     /** 점이 없어도 플롯 틀(높이·격자)을 그대로 두고 그 가운데 빈 상태 문구를 둔다 */
     keepPlotGeometry?: boolean;
     /** 가로선을 맨 밑 바닥선 하나만 — 기록 추이 그래프(성장 추이 · 최근 판정 추이, 2026-09-19 G1) */
@@ -88,33 +91,14 @@ export default function LineChart({
     };
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
-    const range = domain[1] - domain[0] || 1;
-    const plotHeight = fixedPlotHeight;
+    const plotHeight = PLOT_HEIGHT;
     const frameHeight = plotHeight + verticalInset * 2;
     const frameStyle = { height: frameHeight };
-    const firstCoordinate = points[0]?.coordinate;
-    const coordinateRange =
-        (points.at(-1)?.coordinate ?? 0) - (firstCoordinate ?? 0);
-    // 점이 하나면 가운데 — AtCoder · Codeforces 처럼 틀 · 축 · 표는 그대로 두고 점만 찍는다 (2026-09-16)
-    const fraction = (index: number) =>
-        points.length === 1
-            ? 0.5
-            : firstCoordinate !== undefined && coordinateRange > 0
-              ? ((points[index].coordinate ?? firstCoordinate) -
-                    firstCoordinate) /
-                coordinateRange
-              : index / Math.max(1, points.length - 1);
-    // 값의 높이 비율(0 = 바닥 · 1 = 위). 움직임 중이면 이전 비율에서 이 비율로 옮겨 간다
-    const heights = (secondary: boolean) =>
-        points.map(
-            (point) =>
-                ((secondary ? (point.secondaryValue ?? 0) : point.value) -
-                    domain[0]) /
-                range
-        );
+    const fraction = (index: number) => pointFraction(points, index);
+    // 움직임 중이면 이전 높이 비율에서 이 비율로 옮겨 간다
     // 렌더마다 한 번만 계산해 점 위치마다 다시 만들지 않는다(2026-10-15 S14 — 예전에는 점 수의 제곱)
-    const primaryHeights = heights(false);
-    const secondaryHeights = heights(true);
+    const primaryHeights = valueHeights(points, domain, false);
+    const secondaryHeights = valueHeights(points, domain, true);
     const signature = points.map((point) => point.id).join("|");
     const heightKey = [...primaryHeights, ...secondaryHeights].join(",");
     const figure = useRef<HTMLElement>(null);
@@ -133,25 +117,12 @@ export default function LineChart({
     };
     const pointLabel = (point: LineChartPoint) =>
         `${point.dimension} · ${valueLabel} · ${formatValue(point.value)}${secondaryLabel && point.secondaryValue !== undefined ? ` · ${secondaryLabel} · ${formatValue(point.secondaryValue)}` : ""}`;
-    const ticks = Array.from(
-        { length: valueTickCount },
-        (_, index) =>
-            domain[1] - (index / Math.max(1, valueTickCount - 1)) * range
+    const ticks = valueTicks(domain, valueTickCount);
+    const labelIndices = dimensionLabelIndices(
+        points,
+        dimensionTickIndices,
+        (index) => position(index).x
     );
-    const labelIndices = dimensionTickIndices
-        ? dimensionTickIndices.filter((index, order, candidates) => {
-              if (order === 0 || order === candidates.length - 1) return true;
-              const next = candidates[order + 1];
-              const labelWidth = points[index].shortDimension.length * 8;
-              const nextWidth = points[next].shortDimension.length * 8;
-              return (
-                  position(next).x - position(index).x >=
-                  (labelWidth + nextWidth) / 2 + 8
-              );
-          })
-        : points.length < 3
-          ? points.map((_, index) => index)
-          : [0, Math.floor((points.length - 1) / 2), points.length - 1];
     function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
         const next =
             event.key === "Home"
@@ -204,39 +175,34 @@ export default function LineChart({
                                 height={frameHeight}
                                 aria-hidden="true"
                             >
-                                {showGrid
-                                    ? ticks.map((_, index) => {
-                                          if (
-                                              baselineOnly &&
-                                              index !== ticks.length - 1
-                                          )
-                                              return null;
-                                          // 비어 있으면 위 · 아래 선만 — 가운데 「기록 없음」 과 겹치지 않게
-                                          if (
-                                              index !== 0 &&
-                                              index !== ticks.length - 1
-                                          )
-                                              return null;
-                                          const y =
-                                              verticalInset +
-                                              (index /
-                                                  Math.max(
-                                                      1,
-                                                      ticks.length - 1
-                                                  )) *
-                                                  plotHeight;
-                                          return (
-                                              <line
-                                                  key={index}
-                                                  x1="0"
-                                                  x2={width}
-                                                  y1={y}
-                                                  y2={y}
-                                                  className="nl-line-chart__grid"
-                                              />
-                                          );
-                                      })
-                                    : null}
+                                {ticks.map((_, index) => {
+                                    if (
+                                        baselineOnly &&
+                                        index !== ticks.length - 1
+                                    )
+                                        return null;
+                                    // 비어 있으면 위 · 아래 선만 — 가운데 「기록 없음」 과 겹치지 않게
+                                    if (
+                                        index !== 0 &&
+                                        index !== ticks.length - 1
+                                    )
+                                        return null;
+                                    const y =
+                                        verticalInset +
+                                        (index /
+                                            Math.max(1, ticks.length - 1)) *
+                                            plotHeight;
+                                    return (
+                                        <line
+                                            key={index}
+                                            x1="0"
+                                            x2={width}
+                                            y1={y}
+                                            y2={y}
+                                            className="nl-line-chart__grid"
+                                        />
+                                    );
+                                })}
                             </svg>
                             <p
                                 className="nl-line-chart__state nl-body-secondary nl-muted"
@@ -272,33 +238,13 @@ export default function LineChart({
                                     event.clientX -
                                     event.currentTarget.getBoundingClientRect()
                                         .left;
-                                if (firstCoordinate !== undefined) {
-                                    let closest = 0;
-                                    for (
-                                        let index = 1;
-                                        index < points.length;
-                                        index++
-                                    ) {
-                                        if (
-                                            Math.abs(position(index).x - x) <
-                                            Math.abs(position(closest).x - x)
-                                        )
-                                            closest = index;
-                                    }
-                                    setActive(closest);
-                                    return;
-                                }
                                 setActive(
-                                    Math.max(
-                                        0,
-                                        Math.min(
-                                            points.length - 1,
-                                            Math.round(
-                                                ((x - 4) /
-                                                    Math.max(1, width - 8)) *
-                                                    (points.length - 1)
-                                            )
-                                        )
+                                    nearestPointIndex(
+                                        points.length,
+                                        x,
+                                        width,
+                                        points[0]?.coordinate !== undefined,
+                                        (index) => position(index).x
                                     )
                                 );
                             }}
@@ -316,37 +262,31 @@ export default function LineChart({
                                 height={frameHeight}
                                 aria-hidden="true"
                             >
-                                {showGrid
-                                    ? ticks
-                                          .map(
-                                              (_, index) =>
-                                                  verticalInset +
-                                                  (index /
-                                                      Math.max(
-                                                          1,
-                                                          ticks.length - 1
-                                                      )) *
-                                                      plotHeight -
-                                                  (!verticalInset &&
-                                                  index === ticks.length - 1
-                                                      ? 1
-                                                      : 0)
-                                          )
-                                          .map((y, index) =>
-                                              baselineOnly &&
-                                              index !==
-                                                  ticks.length - 1 ? null : (
-                                                  <line
-                                                      key={index}
-                                                      x1="0"
-                                                      x2={width}
-                                                      y1={y}
-                                                      y2={y}
-                                                      className="nl-line-chart__grid"
-                                                  />
-                                              )
-                                          )
-                                    : null}
+                                {ticks
+                                    .map(
+                                        (_, index) =>
+                                            verticalInset +
+                                            (index /
+                                                Math.max(1, ticks.length - 1)) *
+                                                plotHeight -
+                                            (!verticalInset &&
+                                            index === ticks.length - 1
+                                                ? 1
+                                                : 0)
+                                    )
+                                    .map((y, index) =>
+                                        baselineOnly &&
+                                        index !== ticks.length - 1 ? null : (
+                                            <line
+                                                key={index}
+                                                x1="0"
+                                                x2={width}
+                                                y1={y}
+                                                y2={y}
+                                                className="nl-line-chart__grid"
+                                            />
+                                        )
+                                    )}
                                 {/* 선 · 점 — 나타날 때 왼쪽부터 드러난다(점 구성이 바뀌면 다시) */}
                                 <g
                                     key={signature}

@@ -54,8 +54,6 @@ export default function FilterChips<Value extends string>({
     /** 늘 보이는 한 줄(빙고 목록 상태 칩) — 줄바꿈 대신 넘치면 가로 스크롤 */
     row?: boolean;
     className?: string;
-    /** SelectionList 와 같은 자리에서 쓰기 위한 호환 속성 — 칩은 항상 aria-label 만 쓰므로 무시한다 */
-    hideLabel?: boolean;
 }) {
     return (
         <div

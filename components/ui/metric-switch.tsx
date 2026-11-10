@@ -2,6 +2,8 @@
 
 import type { KeyboardEvent } from "react";
 
+import { rovingIndex } from "@/components/ui/roving-index";
+
 export default function MetricSwitch<Value extends string>({
     label,
     value,
@@ -20,18 +22,9 @@ export default function MetricSwitch<Value extends string>({
         const current = buttons.indexOf(event.target as HTMLButtonElement);
         const direction =
             event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-        if (
-            (!direction && event.key !== "Home" && event.key !== "End") ||
-            current < 0
-        )
-            return;
+        const next = rovingIndex(event.key, direction, current, buttons.length);
+        if (next === null || current < 0) return;
         event.preventDefault();
-        const next =
-            event.key === "Home"
-                ? 0
-                : event.key === "End"
-                  ? buttons.length - 1
-                  : (current + direction + buttons.length) % buttons.length;
         buttons[next]?.focus();
     }
     return (

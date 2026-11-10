@@ -2,6 +2,7 @@
 
 import type { KeyboardEvent, ReactNode } from "react";
 
+import { rovingIndex } from "@/components/ui/roving-index";
 import { cn } from "@/lib/cn";
 
 interface SegmentOption<Value extends string> {
@@ -42,18 +43,9 @@ export function SegmentedControl<Value extends string>({
                 : event.key === "ArrowLeft" || event.key === "ArrowUp"
                   ? -1
                   : 0;
-        if (
-            !enabled.length ||
-            (!direction && event.key !== "Home" && event.key !== "End")
-        )
-            return;
+        const next = rovingIndex(event.key, direction, index, enabled.length);
+        if (!enabled.length || next === null) return;
         event.preventDefault();
-        const next =
-            event.key === "Home"
-                ? 0
-                : event.key === "End"
-                  ? enabled.length - 1
-                  : (index + direction + enabled.length) % enabled.length;
         const nextOption = enabled[next];
         onValueChange(nextOption.value);
         const buttons = Array.from(

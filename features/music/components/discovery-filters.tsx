@@ -27,8 +27,8 @@ import {
     getDiscoveryOrder,
     getDiscoverySort,
 } from "@/features/music/schemas/discovery-schema";
+import { MUSIC_CATEGORY_VALUES } from "@/lib/music/categories";
 import { difficultyKey } from "@/lib/music/difficulty";
-import { MUSIC_CATEGORY_VALUES } from "@/lib/music-categories";
 
 type Difficulty = (typeof discoveryDifficulties)[number];
 // 카테고리 → 글자 색(자켓 카테고리 레이블과 같은 색)
@@ -322,7 +322,28 @@ export default function DiscoveryFilters({
     const selectedDifficulties = query.difficulties.map(
         (range) => range.difficulty
     );
-    const Choice = rail ? SelectionList : FilterChips;
+    const categoryChoice = {
+        label: t("music.category"),
+        options: categoryOptions,
+        multiple: true,
+        value: query.categories,
+        onValueChange: (categories: typeof query.categories) =>
+            onChange({ ...query, categories }),
+    };
+    const difficultyChoice = {
+        label: t("music.difficulty"),
+        options: difficultyOptions,
+        multiple: true,
+        value: selectedDifficulties,
+        onValueChange: changeDifficulties,
+    };
+    const recordChoice = {
+        label: t("music.filter.status"),
+        multiple: true,
+        value: query.records,
+        onValueChange: changeRecords,
+        options: recordOptions,
+    };
     return (
         <>
             <FilterGroup
@@ -331,16 +352,11 @@ export default function DiscoveryFilters({
                     onChange({ ...query, categories: [] })
                 )}
             >
-                <Choice
-                    hideLabel
-                    label={t("music.category")}
-                    options={categoryOptions}
-                    multiple
-                    value={query.categories}
-                    onValueChange={(categories) =>
-                        onChange({ ...query, categories })
-                    }
-                />
+                {rail ? (
+                    <SelectionList hideLabel {...categoryChoice} />
+                ) : (
+                    <FilterChips {...categoryChoice} />
+                )}
             </FilterGroup>
             <FilterGroup
                 label={t("music.difficulty")}
@@ -348,14 +364,11 @@ export default function DiscoveryFilters({
                     onChange({ ...query, difficulties: [] })
                 )}
             >
-                <Choice
-                    hideLabel
-                    label={t("music.difficulty")}
-                    options={difficultyOptions}
-                    multiple
-                    value={selectedDifficulties}
-                    onValueChange={changeDifficulties}
-                />
+                {rail ? (
+                    <SelectionList hideLabel {...difficultyChoice} />
+                ) : (
+                    <FilterChips {...difficultyChoice} />
+                )}
                 {query.difficulties.map((range) => (
                     <RangeSlider
                         key={range.difficulty}
@@ -415,14 +428,11 @@ export default function DiscoveryFilters({
                 }
             >
                 {signedIn ? (
-                    <Choice
-                        hideLabel
-                        label={t("music.filter.status")}
-                        multiple
-                        value={query.records}
-                        onValueChange={changeRecords}
-                        options={recordOptions}
-                    />
+                    rail ? (
+                        <SelectionList hideLabel {...recordChoice} />
+                    ) : (
+                        <FilterChips {...recordChoice} />
+                    )
                 ) : null}
             </FilterGroup>
             {/* MISS 수는 「내 기록」 과 다른 조건이라 제 구역으로(2026-10-01 사용자) — 카테고리 · 난이도와 같은 제목 · 간격 */}
