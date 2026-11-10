@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { approveMusicTranslation } from "@/app/admin/music/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -11,6 +9,7 @@ import {
     type MusicTranslationLocale,
 } from "@/features/music/schemas/music-translation-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 interface MusicTranslationApproveButtonProps {
     locale: MusicTranslationLocale;
@@ -25,26 +24,22 @@ export default function MusicTranslationApproveButton({
     onApproved,
 }: MusicTranslationApproveButtonProps) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function approve() {
-        startTransition(async () => {
-            try {
-                const result = await approveMusicTranslation(
+        run(
+            () =>
+                approveMusicTranslation(
                     createMusicTranslationApproveFormData(musicIndex, locale)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                onApproved?.();
-                router.refresh();
-            } catch {
-                toast.error("악곡 번역을 승인하지 못했습니다.");
+                ),
+            {
+                errorMessage: "악곡 번역을 승인하지 못했습니다.",
+                onSuccess: () => {
+                    onApproved?.();
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     return (

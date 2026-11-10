@@ -2,8 +2,6 @@
 
 import { Check, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { updateOpinionReportStatus } from "@/app/admin/feedback/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -12,6 +10,7 @@ import {
     type OpinionReportStatus,
 } from "@/features/feedback/schemas/opinion-report-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 export default function OpinionReportStatusButton({
     reportId,
@@ -21,28 +20,25 @@ export default function OpinionReportStatusButton({
     status: OpinionReportStatus;
 }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
     const nextStatus = status === "pending" ? "resolved" : "pending";
 
     function handleStatusUpdate() {
-        startTransition(async () => {
-            try {
-                const result = await updateOpinionReportStatus(
+        run(
+            () =>
+                updateOpinionReportStatus(
                     createOpinionReportStatusUpdateFormData(
                         reportId,
                         nextStatus
                     )
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("신고 상태를 변경하지 못했습니다.");
+                ),
+            {
+                errorMessage: "신고 상태를 변경하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     return (

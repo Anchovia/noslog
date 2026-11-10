@@ -2,13 +2,12 @@
 
 import { Save, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { deleteBingo } from "@/app/admin/bingos/actions";
 import Button, { foundationButtonClass } from "@/components/ui/button";
 import { createBingoDeleteFormData } from "@/features/bingos/schemas/bingo-editor-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 export function SaveBingoButton({ isSubmitting }: { isSubmitting: boolean }) {
     return (
@@ -28,25 +27,15 @@ export function SaveBingoButton({ isSubmitting }: { isSubmitting: boolean }) {
 
 export function DeleteBingoButton({ bingoId }: { bingoId: number }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteBingo(
-                    createBingoDeleteFormData(bingoId)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
+        run(() => deleteBingo(createBingoDeleteFormData(bingoId)), {
+            errorMessage: "빙고를 삭제하지 못했습니다.",
+            onSuccess: () => {
                 router.replace("/admin/bingos");
                 router.refresh();
-            } catch {
-                toast.error("빙고를 삭제하지 못했습니다.");
-            }
+            },
         });
     }
 

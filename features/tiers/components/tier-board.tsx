@@ -37,6 +37,7 @@ import {
 } from "@/features/tiers/components/tier-board/tier-board-utils";
 import { createTierEntryAddFormData } from "@/features/tiers/schemas/tier-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 import TierBandCard from "./tier-board/tier-band-card";
 import TierDragOverlay from "./tier-board/tier-drag-overlay";
@@ -60,7 +61,7 @@ export default function TierBoard({
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<TierChartSearchResult[]>([]);
     const [isSearching, startSearch] = useTransition();
-    const [isMutating, startMutation] = useTransition();
+    const { isPending: isMutating, run } = useActionToast();
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
         useSensor(TouchSensor, {
@@ -122,29 +123,25 @@ export default function TierBoard({
     }
 
     function addChart(chartId: number, bandId: number) {
-        startMutation(async () => {
-            try {
-                const result = await addTierEntry(
+        run(
+            () =>
+                addTierEntry(
                     createTierEntryAddFormData({
                         tierListId,
                         tierBandId: bandId,
                         chartId,
                     })
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                setResults((current) =>
-                    current.filter((chart) => chart.id !== chartId)
-                );
-                router.refresh();
-            } catch {
-                toast.error("채보를 추가하지 못했습니다.");
+                ),
+            {
+                errorMessage: "채보를 추가하지 못했습니다.",
+                onSuccess: () => {
+                    setResults((current) =>
+                        current.filter((chart) => chart.id !== chartId)
+                    );
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     function handleDragStart(event: DragStartEvent) {
@@ -175,23 +172,19 @@ export default function TierBoard({
     function applyLayout() {
         if (changeCount === 0) return;
 
-        startMutation(async () => {
-            try {
-                const result = await applyTierBoardLayout(
+        run(
+            () =>
+                applyTierBoardLayout(
                     tierListId,
                     getTierEntryPlacements(draftBands)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("서열표 배치를 적용하지 못했습니다.");
+                ),
+            {
+                errorMessage: "서열표 배치를 적용하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     if (bands.length === 0) {

@@ -10,11 +10,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import type {
-    ProfileMode,
-    ProfileUser,
-} from "@/components/profile/dashboard/profile-types";
-import { formatProfileDate } from "@/components/profile/dashboard/profile-utils";
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
 import ModalDialog from "@/components/ui/modal-dialog";
@@ -22,7 +17,13 @@ import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
 import { profileCardOptions } from "@/features/profile/api/profile-card";
 import { getProfileCardMode } from "@/features/profile/profile-card-model";
+import { formatProfileDate } from "@/features/profile/profile-utils";
+import type {
+    ProfileMode,
+    ProfileUser,
+} from "@/features/profile/types/profile";
 import { cn } from "@/lib/cn";
+import useImageShare from "@/lib/hooks/use-image-share";
 
 function ProfileCardPreview({
     user,
@@ -65,16 +66,7 @@ function ProfileCardPreview({
               ).href,
           }
         : null;
-    const canCopy =
-        typeof navigator !== "undefined" &&
-        typeof navigator.clipboard?.write === "function" &&
-        typeof ClipboardItem !== "undefined" &&
-        (typeof ClipboardItem.supports !== "function" ||
-            ClipboardItem.supports("image/png"));
-    const canShare =
-        payload !== null &&
-        typeof navigator.share === "function" &&
-        Boolean(navigator.canShare?.(payload));
+    const { canCopy, canShare, ...imageShare } = useImageShare(payload);
 
     useEffect(() => {
         if (!result.data) return;
@@ -92,42 +84,17 @@ function ProfileCardPreview({
     const disabled = preparing || result.isFetching;
     function download() {
         if (!preview) return;
-        const anchor = document.createElement("a");
-        anchor.href = preview;
-        anchor.download = fileName;
-        anchor.click();
+        imageShare.download(preview, fileName);
     }
     async function copy() {
-        if (!result.data || !canCopy) return;
+        const png = result.data;
+        if (!png || !canCopy) return;
         setStatus("copying");
-        try {
-            await navigator.clipboard.write([
-                new ClipboardItem({ "image/png": result.data }),
-            ]);
-            setStatus("copied");
-        } catch {
-            setStatus("error");
-        }
+        setStatus(await imageShare.copy(() => png));
     }
     async function share() {
-        if (!payload) return;
-        if (canShare) {
-            setStatus("sharing");
-            try {
-                await navigator.share(payload);
-                setStatus("idle");
-            } catch (error) {
-                setStatus(
-                    error instanceof Error && error.name === "AbortError"
-                        ? "idle"
-                        : "error"
-                );
-            }
-        } else {
-            const intent = new URL("https://x.com/intent/post");
-            intent.searchParams.set("text", `${payload.text}\n${payload.url}`);
-            window.open(intent.href, "_blank", "noopener,noreferrer");
-        }
+        const next = await imageShare.share(() => setStatus("sharing"));
+        if (next) setStatus(next);
     }
     return (
         <div className="nl-image-share__body">

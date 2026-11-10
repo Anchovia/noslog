@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 import { deleteAnnouncement } from "@/app/admin/announcements/actions";
 import ActionButton from "@/components/ui/action-button";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { createAnnouncementDeleteFormData } from "@/features/announcements/schemas/announcement-schema";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 // 삭제는 되돌릴 수 없으므로 확인 다이얼로그를 거친 뒤 목록으로 돌아감
 export default function AnnouncementDeleteButton({
@@ -19,25 +19,16 @@ export default function AnnouncementDeleteButton({
 }) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteAnnouncement(
-                    createAnnouncementDeleteFormData(id)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-                toast.success(result.message);
+        run(() => deleteAnnouncement(createAnnouncementDeleteFormData(id)), {
+            errorMessage: "공지사항을 삭제하지 못했습니다.",
+            onSuccess: () => {
                 setOpen(false);
                 router.replace("/admin/announcements");
                 router.refresh();
-            } catch {
-                toast.error("공지사항을 삭제하지 못했습니다.");
-            }
+            },
         });
     }
 

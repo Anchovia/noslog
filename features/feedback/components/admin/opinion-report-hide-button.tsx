@@ -2,13 +2,12 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { setOpinionReportTargetHidden } from "@/app/admin/feedback/actions";
 import { foundationButtonClass } from "@/components/ui/button";
 import { createOpinionReportHiddenUpdateFormData } from "@/features/feedback/schemas/opinion-report-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 export default function OpinionReportHideButton({
     reportId,
@@ -18,24 +17,21 @@ export default function OpinionReportHideButton({
     hidden: boolean;
 }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleToggle() {
-        startTransition(async () => {
-            try {
-                const result = await setOpinionReportTargetHidden(
+        run(
+            () =>
+                setOpinionReportTargetHidden(
                     createOpinionReportHiddenUpdateFormData(reportId, !hidden)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("글 상태를 변경하지 못했습니다.");
+                ),
+            {
+                errorMessage: "글 상태를 변경하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     return (

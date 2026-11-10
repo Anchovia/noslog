@@ -2,8 +2,7 @@
 
 import { Check, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useId, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useId, useState } from "react";
 
 import { updateFeedbackStatus } from "@/app/admin/feedback/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import {
     type FeedbackStatus,
 } from "@/features/feedback/schemas/feedback-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 interface FeedbackStatusButtonProps {
     feedbackId: number;
@@ -23,32 +23,28 @@ export default function FeedbackStatusButton({
     status,
 }: FeedbackStatusButtonProps) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
     const [reply, setReply] = useState("");
     const replyId = useId();
     const nextStatus = status === "open" ? "resolved" : "open";
 
     function handleStatusUpdate() {
-        startTransition(async () => {
-            try {
-                const result = await updateFeedbackStatus(
+        run(
+            () =>
+                updateFeedbackStatus(
                     createFeedbackStatusUpdateFormData(
                         feedbackId,
                         nextStatus,
                         nextStatus === "resolved" ? reply : ""
                     )
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("피드백 상태를 변경하지 못했습니다.");
+                ),
+            {
+                errorMessage: "피드백 상태를 변경하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     const button = (

@@ -2,8 +2,6 @@
 
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { reviewMusicCatalogCandidate } from "@/app/admin/catalog/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -11,6 +9,7 @@ import {
     createMusicCatalogReviewFormData,
     type MusicCatalogDecision,
 } from "@/features/music/schemas/music-catalog-admin-schema";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 export default function MusicCatalogReviewActions({
     candidateId,
@@ -18,25 +17,21 @@ export default function MusicCatalogReviewActions({
     candidateId: number;
 }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function review(decision: MusicCatalogDecision) {
-        startTransition(async () => {
-            try {
-                const result = await reviewMusicCatalogCandidate(
+        run(
+            () =>
+                reviewMusicCatalogCandidate(
                     createMusicCatalogReviewFormData(candidateId, decision)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("악곡 업데이트를 처리하지 못했습니다.");
+                ),
+            {
+                errorMessage: "악곡 업데이트를 처리하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     return (

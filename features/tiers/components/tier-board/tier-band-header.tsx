@@ -2,8 +2,7 @@
 
 import { Check, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useTransition } from "react";
-import { toast } from "sonner";
+import { type FormEvent } from "react";
 
 import { deleteTierBand, updateTierBand } from "@/app/admin/tiers/actions";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -11,52 +10,37 @@ import {
     createTierBandFormData,
     createTierIdFormData,
 } from "@/features/tiers/schemas/tier-admin-schema";
+import useActionToast from "@/lib/hooks/use-action-toast";
 import { formatTierValue, MAX_TIER_VALUE } from "@/lib/tiers";
 
 import type { TierBandData } from "./tier-board-types";
 
 export default function TierBandHeader({ band }: { band: TierBandData }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleUpdate(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const value = Number(new FormData(event.currentTarget).get("value"));
 
-        startTransition(async () => {
-            try {
-                const result = await updateTierBand(
-                    createTierBandFormData({ id: band.id, value })
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("서열 상수 구간을 저장하지 못했습니다.");
+        run(
+            () =>
+                updateTierBand(createTierBandFormData({ id: band.id, value })),
+            {
+                errorMessage: "서열 상수 구간을 저장하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteTierBand(
-                    createTierIdFormData(band.id)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
+        run(() => deleteTierBand(createTierIdFormData(band.id)), {
+            errorMessage: "서열 상수 구간을 삭제하지 못했습니다.",
+            onSuccess: () => {
                 router.refresh();
-            } catch {
-                toast.error("서열 상수 구간을 삭제하지 못했습니다.");
-            }
+            },
         });
     }
 

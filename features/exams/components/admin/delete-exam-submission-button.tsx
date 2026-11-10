@@ -2,12 +2,11 @@
 
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { deleteExamSubmission } from "@/app/admin/submissions/actions";
 import Button from "@/components/ui/button";
 import { createExamSubmissionDeleteFormData } from "@/features/exams/schemas/exam-submission-admin-schema";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 interface DeleteExamSubmissionButtonProps {
     isApproved: boolean;
@@ -19,25 +18,21 @@ export default function DeleteExamSubmissionButton({
     submissionId,
 }: DeleteExamSubmissionButtonProps) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteExamSubmission(
+        run(
+            () =>
+                deleteExamSubmission(
                     createExamSubmissionDeleteFormData(submissionId)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
-                router.refresh();
-            } catch {
-                toast.error("검정 인증을 삭제하지 못했습니다.");
+                ),
+            {
+                errorMessage: "검정 인증을 삭제하지 못했습니다.",
+                onSuccess: () => {
+                    router.refresh();
+                },
             }
-        });
+        );
     }
 
     return (

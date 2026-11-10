@@ -1,12 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { deleteTierList } from "@/app/admin/tiers/actions";
 import Button from "@/components/ui/button";
 import { createTierIdFormData } from "@/features/tiers/schemas/tier-admin-schema";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 export default function TierListDeleteButton({
     tierListId,
@@ -14,25 +13,15 @@ export default function TierListDeleteButton({
     tierListId: number;
 }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteTierList(
-                    createTierIdFormData(tierListId)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
+        run(() => deleteTierList(createTierIdFormData(tierListId)), {
+            errorMessage: "서열표를 삭제하지 못했습니다.",
+            onSuccess: () => {
                 router.replace("/admin/tiers");
                 router.refresh();
-            } catch {
-                toast.error("서열표를 삭제하지 못했습니다.");
-            }
+            },
         });
     }
 

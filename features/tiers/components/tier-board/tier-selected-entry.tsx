@@ -2,37 +2,26 @@
 
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { toast } from "sonner";
 
 import { deleteTierEntry } from "@/app/admin/tiers/actions";
 import { foundationButtonClass } from "@/components/ui/button";
 import { createTierIdFormData } from "@/features/tiers/schemas/tier-admin-schema";
 import { cn } from "@/lib/cn";
+import useActionToast from "@/lib/hooks/use-action-toast";
 
 import type { TierEntryData } from "./tier-board-types";
 import { getTierDifficultyColor } from "./tier-board-utils";
 
 export default function TierSelectedEntry({ entry }: { entry: TierEntryData }) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const { isPending, run } = useActionToast();
 
     function handleDelete() {
-        startTransition(async () => {
-            try {
-                const result = await deleteTierEntry(
-                    createTierIdFormData(entry.id)
-                );
-                if (!result.success) {
-                    toast.error(result.message);
-                    return;
-                }
-
-                toast.success(result.message);
+        run(() => deleteTierEntry(createTierIdFormData(entry.id)), {
+            errorMessage: "채보를 서열표에서 제거하지 못했습니다.",
+            onSuccess: () => {
                 router.refresh();
-            } catch {
-                toast.error("채보를 서열표에서 제거하지 못했습니다.");
-            }
+            },
         });
     }
 

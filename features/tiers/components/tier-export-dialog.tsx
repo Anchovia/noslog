@@ -23,6 +23,7 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { cn } from "@/lib/cn";
+import useImageShare from "@/lib/hooks/use-image-share";
 import { formatTierValue } from "@/lib/tiers";
 
 import { sortTierBrowserEntries } from "./tier-browser-bands";
@@ -248,60 +249,23 @@ function TierExportPreview({
               url: window.location.href,
           }
         : null;
-    const canCopy =
-        typeof navigator !== "undefined" &&
-        typeof navigator.clipboard?.write === "function" &&
-        typeof ClipboardItem !== "undefined" &&
-        (typeof ClipboardItem.supports !== "function" ||
-            ClipboardItem.supports("image/png"));
-    const canShare =
-        payload !== null &&
-        typeof navigator.share === "function" &&
-        Boolean(navigator.canShare?.(payload));
+    const { canCopy, canShare, ...imageShare } = useImageShare(payload);
     const preparing = !blocked && !failed && !rendered;
     const disabled = blocked || !rendered || status === "working";
 
     function download() {
         if (!rendered) return;
-        const anchor = document.createElement("a");
-        anchor.href = rendered.url;
-        anchor.download = fileName;
-        anchor.click();
+        imageShare.download(rendered.url, fileName);
     }
     async function copy() {
         if (!rendered || !canCopy) return;
         setStatus("working");
-        try {
-            // 클립보드는 PNG 만 받는 브라우저가 많아 복사만 PNG 로 만든다
-            const png = await rendered.png();
-            if (!png) throw new Error("png");
-            await navigator.clipboard.write([
-                new ClipboardItem({ "image/png": png }),
-            ]);
-            setStatus("copied");
-        } catch {
-            setStatus("error");
-        }
+        // 클립보드는 PNG 만 받는 브라우저가 많아 복사만 PNG 로 만든다
+        setStatus(await imageShare.copy(rendered.png));
     }
     async function share() {
-        if (!payload) return;
-        if (canShare) {
-            setStatus("working");
-            try {
-                await navigator.share(payload);
-                setStatus("idle");
-            } catch (error) {
-                setStatus(
-                    error instanceof Error && error.name === "AbortError"
-                        ? "idle"
-                        : "error"
-                );
-            }
-        } else {
-            const intent = new URL("https://x.com/intent/post");
-            intent.searchParams.set("text", `${payload.text}\n${payload.url}`);
-            window.open(intent.href, "_blank", "noopener,noreferrer");
-        }
+        const next = await imageShare.share(() => setStatus("working"));
+        if (next) setStatus(next);
     }
 
     return (
