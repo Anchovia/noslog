@@ -10,6 +10,7 @@ import type {
     BemaniMusicCatalogInput,
     SyncMusicInput,
 } from "@/features/sync/schemas/sync-request-schema";
+import { lockInTransaction } from "@/lib/daily-limit";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
@@ -281,86 +282,82 @@ async function recordPendingCatalogCandidates(
         .filter((item) => item.status !== "pending")
         .map((item) => item.id);
     const now = new Date();
-    const [submittedToday, pendingTotal, pendingMine] = unseen.length
-        ? await Promise.all([
-              db.musicCatalogCandidate.count({
-                  where: {
-                      submittedById,
-                      createdAt: {
-                          gte: new Date(now.getTime() - CANDIDATE_WINDOW_MS),
-                      },
-                  },
-              }),
-              db.musicCatalogCandidate.count({
-                  where: { status: "pending" },
-              }),
-              db.musicCatalogCandidate.count({
-                  where: { status: "pending", submittedById },
-              }),
-          ])
-        : [0, 0, 0];
-    if (unseen.length && pendingTotal >= MAX_PENDING_CANDIDATES)
-        logServerError(new Error("Pending catalog candidates are full"), {
-            event: "catalog.candidates.full",
-            routePath: "/api/receivePlayerData",
-            routeType: "route",
-        });
-    const created = unseen.slice(
-        0,
-        Math.max(
-            0,
-            Math.min(
-                NEW_CANDIDATES_PER_SYNC,
-                NEW_CANDIDATES_PER_DAY - submittedToday,
-                MAX_PENDING_CANDIDATES - pendingTotal,
-                MAX_PENDING_CANDIDATES_PER_SUBMITTER - pendingMine
-            )
-        )
-    );
-    await db.$transaction([
-        ...(created.length
-            ? [
-                  db.musicCatalogCandidate.createMany({
-                      data: created.map((update) => ({
-                          musicIndex: update.payload.musicIndex,
-                          fingerprint: update.fingerprint,
-                          payload: update.payload as Prisma.InputJsonValue,
-                          ...(update.beforeSnapshot
-                              ? {
-                                    beforeSnapshot:
-                                        update.beforeSnapshot as Prisma.InputJsonValue,
-                                }
-                              : {}),
-                          status: "pending" as const,
+    // 세기와 넣기를 한 잠금 안에서 해, 여러 사람이 동시에 동기화해도 전체 상한을 넘지 않게 한다
+    const createdCount = await db.$transaction(async (tx) => {
+        if (unseen.length) await lockInTransaction(tx, "catalog-candidates");
+        const [submittedToday, pendingTotal, pendingMine] = unseen.length
+            ? await Promise.all([
+                  tx.musicCatalogCandidate.count({
+                      where: {
                           submittedById,
-                      })),
-                      skipDuplicates: true,
-                  }),
-              ]
-            : []),
-        ...(pending.length
-            ? [
-                  db.musicCatalogCandidate.updateMany({
-                      // 읽은 뒤 운영자가 반려 · 반영했으면 대기로 되돌리지 않는다
-                      where: { id: { in: pending }, status: "pending" },
-                      data: {
-                          seenCount: { increment: 1 },
-                          lastSeenAt: now,
+                          createdAt: {
+                              gte: new Date(
+                                  now.getTime() - CANDIDATE_WINDOW_MS
+                              ),
+                          },
                       },
                   }),
-              ]
-            : []),
-        ...(settled.length
-            ? [
-                  db.musicCatalogCandidate.updateMany({
-                      where: { id: { in: settled } },
-                      data: { seenCount: { increment: 1 }, lastSeenAt: now },
+                  tx.musicCatalogCandidate.count({
+                      where: { status: "pending" },
                   }),
-              ]
-            : []),
-    ]);
+                  tx.musicCatalogCandidate.count({
+                      where: { status: "pending", submittedById },
+                  }),
+              ])
+            : [0, 0, 0];
+        if (unseen.length && pendingTotal >= MAX_PENDING_CANDIDATES)
+            logServerError(new Error("Pending catalog candidates are full"), {
+                event: "catalog.candidates.full",
+                routePath: "/api/receivePlayerData",
+                routeType: "route",
+            });
+        const created = unseen.slice(
+            0,
+            Math.max(
+                0,
+                Math.min(
+                    NEW_CANDIDATES_PER_SYNC,
+                    NEW_CANDIDATES_PER_DAY - submittedToday,
+                    MAX_PENDING_CANDIDATES - pendingTotal,
+                    MAX_PENDING_CANDIDATES_PER_SUBMITTER - pendingMine
+                )
+            )
+        );
+        if (created.length)
+            await tx.musicCatalogCandidate.createMany({
+                data: created.map((update) => ({
+                    musicIndex: update.payload.musicIndex,
+                    fingerprint: update.fingerprint,
+                    payload: update.payload as Prisma.InputJsonValue,
+                    ...(update.beforeSnapshot
+                        ? {
+                              beforeSnapshot:
+                                  update.beforeSnapshot as Prisma.InputJsonValue,
+                          }
+                        : {}),
+                    status: "pending" as const,
+                    submittedById,
+                })),
+                skipDuplicates: true,
+            });
+        if (pending.length)
+            await tx.musicCatalogCandidate.updateMany({
+                // 읽은 뒤 운영자가 반려 · 반영했으면 대기로 되돌리지 않는다
+                where: { id: { in: pending }, status: "pending" },
+                data: {
+                    seenCount: { increment: 1 },
+                    lastSeenAt: now,
+                },
+            });
+        if (settled.length)
+            await tx.musicCatalogCandidate.updateMany({
+                where: { id: { in: settled } },
+                data: { seenCount: { increment: 1 }, lastSeenAt: now },
+            });
+        return created.length;
+    });
 
-    return unseen.length - created.length;
+    return unseen.length - createdCount;
 }
 
 export async function processBemaniCatalogUpdates(

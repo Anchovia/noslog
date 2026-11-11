@@ -120,7 +120,16 @@ describe("BEMANI 악곡 카탈로그 자동 감지", () => {
         mocks.candidateCreateMany.mockResolvedValue({ count: 1 });
         mocks.candidateUpdateMany.mockResolvedValue({ count: 1 });
         mocks.candidateCount.mockResolvedValue(0);
-        mocks.transaction.mockImplementation((queries) => Promise.all(queries));
+        mocks.transaction.mockImplementation((run) =>
+            run({
+                $executeRaw: async () => 1,
+                musicCatalogCandidate: {
+                    count: mocks.candidateCount,
+                    createMany: mocks.candidateCreateMany,
+                    updateMany: mocks.candidateUpdateMany,
+                },
+            })
+        );
     });
 
     afterEach(() => {
