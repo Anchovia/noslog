@@ -6,6 +6,9 @@ import {
     sortTimingPoints,
 } from "@/lib/chart-pattern/timing";
 
+// DB 의 id 는 32비트 정수다 — 넘는 값은 쿼리까지 가지 않게 거절한다
+const MAX_ROW_ID = 2_147_483_647;
+
 /** 유저 초안 상태(2026-09-24 3단계) */
 export const CHART_DRAFT_STATUSES = [
     "draft",
@@ -102,7 +105,7 @@ export const userDraftDocumentSchema = chartDocumentSchema.superRefine(
 );
 
 export const saveUserDraftSchema = z.object({
-    chartId: z.number().int().positive(),
+    chartId: z.number().int().positive().max(MAX_ROW_ID),
     baseVersion: z.number().int().nonnegative(),
     document: userDraftDocumentSchema,
 });
@@ -116,24 +119,24 @@ export function isChartCommentKind(value: string): value is ChartCommentKind {
 }
 
 export const chartCommentInputSchema = z.object({
-    chartId: z.number().int().positive(),
+    chartId: z.number().int().positive().max(MAX_ROW_ID),
     /** 있으면 초안 검토 댓글(작성자 · 운영자만), 없으면 공개 채보 댓글 */
-    draftId: z.number().int().positive().optional(),
+    draftId: z.number().int().positive().max(MAX_ROW_ID).optional(),
     timeMs: z.number().int().min(0).max(USER_DRAFT_MAX_DURATION_MS),
     body: z.string().trim().min(1).max(CHART_COMMENT_MAX_LENGTH),
     kind: z.enum(CHART_COMMENT_KINDS).default("problem"),
 });
 
 /** 서버 액션 인자는 타입 표시와 달리 아무 값이나 올 수 있다 */
-export const chartRowIdSchema = z.number().int().positive();
+export const chartRowIdSchema = z.number().int().positive().max(MAX_ROW_ID);
 
 export const chartCommentListQuerySchema = z.object({
-    chartId: z.number().int().positive(),
-    draftId: z.number().int().positive().optional(),
+    chartId: z.number().int().positive().max(MAX_ROW_ID),
+    draftId: z.number().int().positive().max(MAX_ROW_ID).optional(),
 });
 
 export const draftReviewSchema = z.object({
-    draftId: z.number().int().positive(),
+    draftId: z.number().int().positive().max(MAX_ROW_ID),
     // 운영자가 본 판 — 그사이 작성자가 회수 · 수정 · 다시 요청했으면 처리하지 않는다
     version: z.number().int().nonnegative(),
     decision: z.enum(["request_changes", "publish"]),

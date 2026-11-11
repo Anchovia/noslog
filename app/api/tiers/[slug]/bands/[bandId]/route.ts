@@ -22,7 +22,11 @@ interface TierBandRouteProps {
 export async function GET(request: Request, { params }: TierBandRouteProps) {
     const { slug, bandId: requestedBandId } = await params;
     const bandId = Number(requestedBandId);
-    if (!Number.isSafeInteger(bandId) || bandId <= 0) {
+    if (
+        !Number.isSafeInteger(bandId) ||
+        bandId <= 0 ||
+        bandId > 2_147_483_647
+    ) {
         return apiFailureResponse(
             {
                 code: "INVALID_TIER_BAND",

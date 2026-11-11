@@ -7,6 +7,9 @@ import {
     TIER_MODES,
 } from "@/lib/tiers/tier-scope";
 
+// DB 의 id 는 32비트 정수다 — 넘는 값은 쿼리까지 가지 않게 거절한다
+const MAX_ROW_ID = 2_147_483_647;
+
 // 모드별 서열표 수의 합 — Basic 3 + Recital 1
 const TIER_SCOPE_COUNT = TIER_MODES.reduce(
     (sum, mode) => sum + TIER_MODE_GOALS[mode].length,
@@ -30,7 +33,7 @@ const patternRatingsSchema = z.object({
 });
 export const communityEvaluationInputSchema = patternRatingsSchema
     .extend({
-        chartId: z.number().int().positive(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
         opinion: z.string().trim().max(120),
     })
     .refine(
@@ -41,7 +44,7 @@ export const communityEvaluationInputSchema = patternRatingsSchema
     );
 
 const goalVoteScopeSchema = z.object({
-    chartId: z.number().int().positive(),
+    chartId: z.number().int().positive().max(MAX_ROW_ID),
     mode: z.enum(TIER_MODES),
     goal: z.enum(TIER_GOALS),
 });
@@ -56,15 +59,15 @@ export const goalVoteInputSchema = goalVoteScopeSchema.extend({
         ),
 });
 export const opinionQuerySchema = z.object({
-    chartId: z.coerce.number().int().positive(),
+    chartId: z.coerce.number().int().positive().max(MAX_ROW_ID),
     sort: z.enum(["helpful", "newest"]).default("newest"),
-    offset: z.coerce.number().int().min(0).default(0),
+    offset: z.coerce.number().int().min(0).max(100_000).default(0),
 });
 // 의견 신고 또는 답글 신고(2026-09-22) — 둘 중 하나만
 export const opinionReportSchema = z
     .object({
-        evaluationId: z.number().int().positive().optional(),
-        replyId: z.number().int().positive().optional(),
+        evaluationId: z.number().int().positive().max(MAX_ROW_ID).optional(),
+        replyId: z.number().int().positive().max(MAX_ROW_ID).optional(),
         reason: z.enum(["spam", "abuse", "sensitive", "other"]),
         explanation: z.string().trim().max(500).optional(),
     })
@@ -78,12 +81,12 @@ export const opinionReportSchema = z
 export const OPINION_REPLY_MAX_LENGTH = 120;
 export const communityTranslateInputSchema = z.object({
     kind: z.enum(["opinion", "reply"]),
-    id: z.number().int().positive(),
+    id: z.number().int().positive().max(MAX_ROW_ID),
     locale: z.enum(["ko", "ja", "en"]),
 });
 export const opinionReplyQuerySchema = z.object({
-    chartId: z.coerce.number().int().positive(),
-    evaluationId: z.coerce.number().int().positive(),
+    chartId: z.coerce.number().int().positive().max(MAX_ROW_ID),
+    evaluationId: z.coerce.number().int().positive().max(MAX_ROW_ID),
 });
 export const communityMutationSchema = z.discriminatedUnion("action", [
     z.object({
@@ -92,37 +95,37 @@ export const communityMutationSchema = z.discriminatedUnion("action", [
     }),
     z.object({
         action: z.literal("delete-evaluation"),
-        chartId: z.number().int().positive(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
     }),
     z.object({
         action: z.literal("delete-opinion"),
-        chartId: z.number().int().positive(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
     }),
     z.object({ action: z.literal("save-vote"), input: goalVoteInputSchema }),
     z.object({ action: z.literal("delete-vote"), input: goalVoteScopeSchema }),
     z.object({
         action: z.literal("helpful"),
-        evaluationId: z.number().int().positive(),
+        evaluationId: z.number().int().positive().max(MAX_ROW_ID),
         selected: z.boolean(),
     }),
     z.object({ action: z.literal("report"), input: opinionReportSchema }),
     // 답글(2026-09-22 R1) — 새로 쓰기는 replyId 없이, 고치기는 replyId 와 함께
     z.object({
         action: z.literal("reply-save"),
-        chartId: z.number().int().positive(),
-        evaluationId: z.number().int().positive(),
-        replyId: z.number().int().positive().optional(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
+        evaluationId: z.number().int().positive().max(MAX_ROW_ID),
+        replyId: z.number().int().positive().max(MAX_ROW_ID).optional(),
         body: z.string().trim().min(1).max(OPINION_REPLY_MAX_LENGTH),
     }),
     z.object({
         action: z.literal("reply-delete"),
-        chartId: z.number().int().positive(),
-        replyId: z.number().int().positive(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
+        replyId: z.number().int().positive().max(MAX_ROW_ID),
     }),
     z.object({
         action: z.literal("reply-like"),
-        chartId: z.number().int().positive(),
-        replyId: z.number().int().positive(),
+        chartId: z.number().int().positive().max(MAX_ROW_ID),
+        replyId: z.number().int().positive().max(MAX_ROW_ID),
         selected: z.boolean(),
     }),
 ]);
@@ -139,7 +142,10 @@ export const patternSummarySchema = z.object({
     chords: aggregateSchema,
 });
 const voteDistributionSchema = z.array(
-    z.object({ value: z.number(), count: z.number().int().positive() })
+    z.object({
+        value: z.number(),
+        count: z.number().int().positive().max(MAX_ROW_ID),
+    })
 );
 // 글 언어(글자 종류로 판별)와 저장된 번역 — 번역 버튼은 보는 사람 언어와 다른 글에만(2026-09-22 T1)
 const textLanguageSchema = z.enum(["ko", "ja", "en"]).nullable();
