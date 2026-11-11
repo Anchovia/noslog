@@ -1503,3 +1503,67 @@
 | 7 검사: 토큰 사용을 강제하는 직접 만든 lint 규칙                       | 2     | Discourse(`discourse/require-design-tokens`, sidebar 파일에만 켬) · Sentry(`useSemanticToken` · `noTokenImport`)                                                                                                                                                 |
 | 7 검사: knip(안 쓰는 파일 · 내보내기 · 의존성, CSS 선택자는 대상 아님) | 3     | Ghost · Supabase · Sentry                                                                                                                                                                                                                                        |
 | 7 검사: purgecss · uncss 설정                                          | 0     | 없음(20곳 트리에서 못 찾음. Tailwind 를 쓰는 5곳은 Tailwind 가 쓰인 클래스만 생성)                                                                                                                                                                               |
+
+## 파일 · 폴더 이름 (2026-11-11 구현 세션 추가)
+
+판 8 · 9 · 10 의 파일 이름을 정하려고 저장소 41곳의 파일 목록을 GitHub API(`git/trees/HEAD?recursive=1`)로 받아 토큰을 종류별 파일로 나눈 곳의 실제 이름을 폴더째 열어 확인했다. 종류별 파일이 확인된 곳은 디자인 시스템 16곳 · 공개 서비스 9곳이다. 나머지 16곳은 한 파일이거나 CSS-in-JS 라 세지 않았다. PostHog 는 목록이 잘려 `packages/quill` 만 봤다.
+
+### 곳마다 토큰 파일 한 벌
+
+| 곳                         | 토큰 폴더                            | 파일(확장자 뺌)                                                                                                           |
+| -------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| Primer primitives (GitHub) | `src/tokens/base` · `functional`     | color · typography · size(z-index 포함) · motion · border · shadow · spacing                                              |
+| Polaris (Shopify)          | `polaris-tokens/src/themes/base`     | color · font · text · space · border · shadow · motion · zIndex · height · width · breakpoints                            |
+| Carbon (IBM)               | `packages/styles/scss`               | colors · spacing · layout · layer · motion · border-radius · breakpoint                                                   |
+| Spectrum (Adobe)           | `packages/tokens/src`                | color-palette · semantic-color-palette · color-aliases · layout · typography · icons                                      |
+| Radix Themes               | `src/styles/tokens`                  | base · color · typography · space · radius · shadow · layout · cursor · scaling                                           |
+| EUI (Elastic)              | `src/global_styling/variables`       | colors · typography · size · borders · shadow · animations · levels · breakpoint · states                                 |
+| Chakra UI                  | `src/theme/tokens`                   | colors · fonts · font-sizes · line-heights · spacing · sizes · radius · z-indices · animations · durations · easings      |
+| Fluent (Microsoft)         | `packages/tokens/src/global`         | colors · colorPalette · fonts · typographyStyles · spacings · borderRadius · strokeWidths · durations · curves            |
+| Material Web               | `tokens`                             | md-sys-color · md-sys-typescale · md-sys-shape · md-sys-motion · md-sys-elevation · md-sys-state                          |
+| Open Props                 | `src`                                | props.colors · props.fonts · props.sizes · props.borders · props.shadows · props.animations · props.easing · props.zindex |
+| GOV.UK Frontend            | `src/govuk/settings`                 | colours-palette · colours-functional · typography-font · spacing · measurements · media-queries                           |
+| USWDS                      | `uswds-core/src/styles/tokens`       | color/ · font/ · units/ 폴더                                                                                              |
+| SLDS (Salesforce)          | 스타일링 훅 `src/props`              | colors · palettes · font · spacing · sizing · radius · shadow                                                             |
+| Orbit (Kiwi.com)           | `definitions/global`                 | typography · space · borderRadius · elevations · duration · z-indexes · breakpoints                                       |
+| SEED (당근)                | `packages/rootage`                   | color · dimension · radius · font-size · duration · shadow                                                                |
+| Bootstrap                  | `scss`                               | colors · transitions · theme · root                                                                                       |
+| PostHog                    | `packages/quill/packages/tokens/src` | colors · typography · spacing · border-radius · shadow                                                                    |
+| Supabase                   | `packages/config/css`                | colors · shadows · animations · base · utilities · theme                                                                  |
+| Penpot                     | `frontend/src/app/main/ui/ds`        | colors · typography · spacing · sizes · borders · elevations · z-index                                                    |
+| Mastodon                   | `styles/mastodon/tokens`             | type · border · shape                                                                                                     |
+| Discourse                  | `stylesheets/common/foundation`      | colors · variables · base · helpers · mixins                                                                              |
+| Forem                      | `stylesheets/config` · `base`        | colors · variables / typography · layout · reset · helpers                                                                |
+| osu!                       | `resources/css`                      | colors · variables · layout · base · utilities                                                                            |
+| Wikipedia Vector           | `resources/skins.vector.styles`      | variables · typography · normalize                                                                                        |
+| Sentry (옛 less)           | `static/less`                        | palette · fonts · layout                                                                                                  |
+
+### 이름 집계 (디자인 시스템 16 · 서비스 9, 따로 셈)
+
+| 종류          | 이름                          | 디자인 시스템 | 서비스 |
+| ------------- | ----------------------------- | ------------- | ------ |
+| 색            | `colors`                      | 7             | 6      |
+|               | `color`                       | 6             | 0      |
+|               | `palette` · `colours`         | 3             | 1      |
+| 글자          | `typography`                  | 6             | 3      |
+|               | `fonts` · `font`              | 6             | 1      |
+|               | `type` · `typescale`          | 1             | 1      |
+| 간격          | `spacing` · `space` 파일 따로 | 7             | 2      |
+| 크기          | `size` · `sizes` · `sizing`   | 5             | 1      |
+| 모서리 · 선   | 모서리 · 테두리 파일 따로     | 9             | 3      |
+| 층            | z-index 파일 따로             | 5             | 1      |
+| 움직임        | `motion`                      | 4             | 0      |
+|               | `animations`                  | 3             | 1      |
+|               | `duration(s)`                 | 4             | 0      |
+| 그림자        | `shadow(s)` 파일 따로         | 6             | 2      |
+|               | `elevation(s)`                | 2             | 1      |
+| 토큰 폴더     | `tokens`                      | 10            | 2      |
+|               | `variables`                   | 1             | 5      |
+| 기본값 파일   | `base`                        | 4             | 4      |
+|               | `reset`                       | 2             | 2      |
+| 도우미 클래스 | `utilities`                   | 7             | 3      |
+|               | `helpers`                     | 3             | 2      |
+
+- 간격 · 모서리 · 층 · 그림자를 한 파일에 모은 곳은 Spectrum(`layout`) · SEED(`dimension`) 둘이다. 나머지는 종류마다 파일을 따로 둔다.
+- 조사 세션 시안의 예시 이름 `color` · `type` · `size` · `motion` 가운데 `color` · `size` · `motion` 은 Primer primitives 의 `base` 폴더 이름과 같다. `type` 은 Mastodon 한 곳이다.
+- 부품 폴더 이름은 `components` 가 15곳 이상(Radix · Carbon · Spectrum CSS · SLDS · GOV.UK · Polaris · Mantine · Discourse · Forem · Mastodon · Vector · Penpot · Excalidraw · Element · Supabase), 단수 `component` 는 Lichess 한 곳이다.
