@@ -12,6 +12,7 @@ import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import { serverEnv } from "@/lib/env/server";
 import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
 import { logSecurityEvent } from "@/lib/observability/server";
+import { hasRecentDiscordVerification } from "@/lib/recent-discord-verification";
 import getSession from "@/lib/session";
 
 const DISCORD_TIMEOUT_MS = 10_000;
@@ -226,6 +227,30 @@ export async function GET(request: NextRequest) {
             ) {
                 return errorResponse("admin_discord_locked");
             }
+            // 훔친 쿠키만으로 로그인 계정을 가져가지 못하게, 다른 계정으로 바꾸려면 지금 연결된 계정의 재확인이 있어야 한다
+            let changeVerified = false;
+            if (
+                currentUser.discordId &&
+                currentUser.discordId !== discordUser.id
+            ) {
+                const verified = hasRecentDiscordVerification(
+                    session.discordChangeVerification,
+                    currentUser.id,
+                    currentUser.discordId
+                );
+                delete session.discordChangeVerification;
+                if (!verified) {
+                    await session.save();
+                    return errorResponse("change_verification_required");
+                }
+            } else if (mode === "change" && currentUser.role !== "admin") {
+                session.discordChangeVerification = {
+                    userId: currentUser.id,
+                    discordId: discordUser.id,
+                    verifiedAt: Date.now(),
+                };
+                changeVerified = true;
+            }
 
             await updateDiscordIdentity(currentUser.id, {
                 ...(mode === "refresh" ? {} : { discordId: discordUser.id }),
@@ -257,7 +282,11 @@ export async function GET(request: NextRequest) {
             if (currentUser.role === "admin" && !session.discordMfaEnabled)
                 return errorResponse("admin_mfa_required");
             const destination = new URL(returnTo, request.url);
-            if (mode) destination.searchParams.set("discordResult", mode);
+            if (mode)
+                destination.searchParams.set(
+                    "discordResult",
+                    changeVerified ? "change_verified" : mode
+                );
             return NextResponse.redirect(destination);
         }
 

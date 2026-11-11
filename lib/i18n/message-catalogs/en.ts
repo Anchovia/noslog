@@ -1550,6 +1550,10 @@ export const enMessages = {
         "Authenticate with your currently connected Discord account. To use another login account, choose Change login account.",
     "settings.discordRefreshComplete": "Discord information refreshed.",
     "settings.discordChangeComplete": "Login account changed.",
+    "settings.discordChangeVerified":
+        "Your currently connected Discord account is confirmed. Within 10 minutes, choose Change login account again and authenticate with the new account on Discord.",
+    "settings.discordChangeVerificationRequired":
+        "To change your login account, authenticate with your currently connected Discord account first. Choose Change login account again and authenticate with that account on Discord.",
     "settings.discordScopeTitle": "What NosLog uses on Discord",
     "settings.discordScope.id": "Account ID",
     "settings.discordScope.name": "Name · username",

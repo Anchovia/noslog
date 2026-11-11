@@ -16,6 +16,9 @@ const mocks = vi.hoisted(() => ({
         adminVerification: undefined as
             | { userId: number; discordId: string; verifiedAt: number }
             | undefined,
+        discordChangeVerification: undefined as
+            | { userId: number; discordId: string; verifiedAt: number }
+            | undefined,
         sessionVersion: undefined as number | undefined,
         discordMfaEnabled: undefined as boolean | undefined,
         discordOAuthUserId: undefined as number | undefined,
@@ -105,6 +108,7 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthMode = undefined;
         mocks.session.deletionVerification = undefined;
         mocks.session.adminVerification = undefined;
+        mocks.session.discordChangeVerification = undefined;
         mocks.session.sessionVersion = undefined;
         mocks.session.discordMfaEnabled = undefined;
         mocks.session.discordOAuthUserId = undefined;
@@ -657,6 +661,69 @@ describe("Discord OAuth", () => {
             request("/discord/complete?code=code&state=state")
         );
         expect(mocks.userUpdate).not.toHaveBeenCalled();
+    });
+
+    it("로그인 계정 변경은 지금 연결된 Discord 로 재확인한 뒤에만 된다", async () => {
+        const user = {
+            id: 1,
+            discordId: "discord-1",
+            avatar: null,
+            role: "user",
+            sessionVersion: 0,
+        };
+        const complete = async (discordId: string) => {
+            mocks.session.id = 1;
+            mocks.session.discordOAuthState = "state";
+            mocks.session.discordOAuthReturnTo = "/profile/settings";
+            mocks.session.discordOAuthMode = "change";
+            mocks.session.discordOAuthUserId = 1;
+            mockDiscordSuccess({ id: discordId });
+            mocks.userFindUnique
+                .mockResolvedValueOnce(user)
+                .mockResolvedValueOnce(
+                    discordId === user.discordId ? user : null
+                );
+            const response = await completeDiscordOAuth(
+                request("/discord/complete?code=code&state=state")
+            );
+            return new URL(response.headers.get("location")!).searchParams;
+        };
+
+        // 훔친 쿠키만으로는 다른 계정을 연결하지 못한다
+        expect((await complete("other")).get("discordError")).toBe(
+            "change_verification_required"
+        );
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+
+        expect((await complete("discord-1")).get("discordResult")).toBe(
+            "change_verified"
+        );
+        expect(mocks.session.discordChangeVerification).toMatchObject({
+            userId: 1,
+            discordId: "discord-1",
+        });
+
+        // 변경을 다시 시작해도 재확인은 남고, 다른 인증을 시작하면 지워진다
+        mocks.session.profileCompleted = true;
+        await startDiscordOAuth(request("/discord/start?mode=change"));
+        expect(mocks.session.discordChangeVerification).toBeDefined();
+
+        expect((await complete("other")).get("discordResult")).toBe("change");
+        expect(mocks.userUpdate).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                where: { id: 1 },
+                data: expect.objectContaining({ discordId: "other" }),
+            })
+        );
+        expect(mocks.session.discordChangeVerification).toBeUndefined();
+
+        mocks.session.discordChangeVerification = {
+            userId: 1,
+            discordId: "discord-1",
+            verifiedAt: Date.now(),
+        };
+        await startDiscordOAuth(request("/discord/start?mode=refresh"));
+        expect(mocks.session.discordChangeVerification).toBeUndefined();
     });
 
     it("실패를 사유와 함께 남기고 받은 code 는 남기지 않는다", async () => {

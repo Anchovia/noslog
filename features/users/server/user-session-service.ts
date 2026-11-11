@@ -12,3 +12,11 @@ export async function revokeUserSessions(userId: number) {
     });
     logSecurityEvent({ event: "auth.sessions-revoked", targetUserId: userId });
 }
+
+/** 로그아웃 — 쿠키만 지우면 복사된 쿠키가 만료까지 살아 있어, 버전을 올려 이 사용자의 모든 기기를 함께 끊는다 */
+export async function endUserSessions(userId: number) {
+    await db.user.updateMany({
+        where: { id: userId },
+        data: { sessionVersion: { increment: 1 } },
+    });
+}

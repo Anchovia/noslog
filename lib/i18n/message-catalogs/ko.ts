@@ -1535,6 +1535,10 @@ export const koMessages = {
         "현재 연결된 Discord 계정으로 다시 인증해주세요. 로그인 계정을 바꾸려면 로그인 계정 변경을 선택해주세요.",
     "settings.discordRefreshComplete": "Discord 정보를 새로고침했습니다.",
     "settings.discordChangeComplete": "로그인 계정을 변경했습니다.",
+    "settings.discordChangeVerified":
+        "지금 연결된 Discord 계정을 확인했습니다. 10분 안에 로그인 계정 변경을 다시 선택하고 Discord 에서 새 계정으로 인증해주세요.",
+    "settings.discordChangeVerificationRequired":
+        "로그인 계정을 바꾸려면 지금 연결된 Discord 계정으로 먼저 인증해야 합니다. 로그인 계정 변경을 다시 선택하고 Discord 에서 지금 연결된 계정으로 인증해주세요.",
     "settings.discordScopeTitle": "NosLog 가 Discord 에서 쓰는 것",
     "settings.discordScope.id": "계정 ID",
     "settings.discordScope.name": "이름 · 사용자명",

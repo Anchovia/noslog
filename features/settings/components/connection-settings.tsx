@@ -112,7 +112,9 @@ export function DiscordConnectionDetail({
                           ? "settings.adminMfaRequired"
                           : error === "admin_discord_locked"
                             ? "settings.adminDiscordLocked"
-                            : "settings.discordError"
+                            : error === "change_verification_required"
+                              ? "settings.discordChangeVerificationRequired"
+                              : "settings.discordError"
               )
             : "");
     return (
@@ -138,12 +140,17 @@ export function DiscordConnectionDetail({
                     title={errorMessage}
                 />
             ) : null}
-            {!error && (result === "refresh" || result === "change") ? (
+            {!error &&
+            (result === "refresh" ||
+                result === "change" ||
+                result === "change_verified") ? (
                 <p role="status" className="nl-body-secondary">
                     {t(
                         result === "refresh"
                             ? "settings.discordRefreshComplete"
-                            : "settings.discordChangeComplete"
+                            : result === "change"
+                              ? "settings.discordChangeComplete"
+                              : "settings.discordChangeVerified"
                     )}
                 </p>
             ) : null}

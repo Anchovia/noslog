@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
     session: {} as Record<string, unknown>,
     findUnique: vi.fn(),
     update: vi.fn(),
+    updateMany: vi.fn(),
 }));
 
 vi.mock("react", async (original) => ({
@@ -18,9 +19,16 @@ vi.mock("@/lib/env/server", () => ({
     serverEnv: { COOKIE_PASSWORD: "x" },
 }));
 vi.mock("@/lib/db", () => ({
-    default: { user: { findUnique: mocks.findUnique, update: mocks.update } },
+    default: {
+        user: {
+            findUnique: mocks.findUnique,
+            update: mocks.update,
+            updateMany: mocks.updateMany,
+        },
+    },
 }));
 
+import { logoutAccount } from "@/app/(site)/settings/account-actions";
 import { revokeUserSessions } from "@/features/users/server/user-session-service";
 import getSession, { getUncheckedSession } from "@/lib/session";
 import { getSessionUser } from "@/lib/user";
@@ -46,6 +54,24 @@ describe("세션 버전", () => {
         const session = await getSession();
         expect(session.id).toBeUndefined();
         expect(session.adminVerification).toBeUndefined();
+    });
+
+    it("탈퇴로 사용자가 없어진 쿠키도 로그아웃으로 돌려준다", async () => {
+        mocks.findUnique.mockResolvedValue(null);
+        expect((await getSession()).id).toBeUndefined();
+    });
+
+    it("로그아웃은 쿠키를 지우기 전에 버전을 올려 복사된 쿠키도 끊는다", async () => {
+        const destroy = vi.fn();
+        mocks.session.destroy = destroy;
+        await logoutAccount();
+        expect(mocks.updateMany).toHaveBeenCalledWith({
+            where: { id: 1 },
+            data: { sessionVersion: { increment: 1 } },
+        });
+        expect(mocks.updateMany.mock.invocationCallOrder[0]).toBeLessThan(
+            destroy.mock.invocationCallOrder[0]
+        );
     });
 
     it("버전이 같으면 통과시킨다", async () => {

@@ -66,6 +66,8 @@ export async function GET(request: NextRequest) {
     const state = randomBytes(32).toString("hex");
     delete session.deletionVerification;
     delete session.adminVerification;
+    // 계정 변경은 재확인 뒤 한 번 더 시작하므로 그 값만 남긴다
+    if (mode !== "change") delete session.discordChangeVerification;
     session.discordOAuthState = state;
     session.discordOAuthReturnTo = returnTo;
     session.discordOAuthMode = mode;

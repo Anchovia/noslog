@@ -29,6 +29,12 @@ interface SessionContent {
         discordId: string;
         verifiedAt: number;
     };
+    /** 로그인 Discord 계정을 바꾸기 앞의 재확인 — 지금 연결된 계정으로 먼저 인증해야 다른 계정으로 바꿀 수 있다 */
+    discordChangeVerification?: {
+        userId: number;
+        discordId: string;
+        verifiedAt: number;
+    };
     /** User.sessionVersion 과 다르면 로그아웃으로 친다. 이 칸이 생기기 전의 쿠키는 0 으로 본다 */
     sessionVersion?: number;
     /** 마지막 Discord 인증 때 받은 mfa_enabled. true 가 아니면 관리자 권한을 주지 않는다 */
@@ -87,13 +93,15 @@ export default async function getSession() {
 
     const user = await readSessionVersion(session.id);
     // 서버 컴포넌트에서는 쿠키를 지울 수 없어 이 요청에서만 로그아웃 상태로 돌려준다. 쿠키는 다음 저장이나 로그인이 덮어쓴다
-    if (user && (session.sessionVersion ?? 0) !== user.sessionVersion) {
+    // 탈퇴로 사용자가 없어진 쿠키도 같이 끊는다
+    if (!user || (session.sessionVersion ?? 0) !== user.sessionVersion) {
         delete session.id;
         delete session.profileCompleted;
         delete session.role;
         delete session.discordMfaEnabled;
         delete session.adminVerification;
         delete session.deletionVerification;
+        delete session.discordChangeVerification;
         delete session.oauthAuthorize;
         delete session.musecatConnect;
         delete session.musecatMock;
