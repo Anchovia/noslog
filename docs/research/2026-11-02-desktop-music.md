@@ -1308,6 +1308,113 @@ FAST/SLOW · 오프셋 같은 타이밍 표시는 이번 표본에 없어 미확
 
 막혀서 세지 않은 곳: Vimeo · Musescore · Masterclass · Shadertoy · CodePen · Chordify · Udemy · Arcaea 위키 · Pexels · Pixabay · Rumble · Crunchyroll · Flightradar24 · HLTV · Online Sequencer(캡차), Replit · OP.GG · Figma(접근 거부), Bilibili · 치지직 · Twitch · Odysee · Noteflight · Soundslice · Sketchfab · 네이버TV · Dailymotion · Tubi · BBC iPlayer · Viki · Apple TV(영상 없음 · 지역 · 로그인), Khan Academy · SoundCloud · Plex · TikTok · Wavve · ABEMA · Flowkey · Chess.com 분석 · Strava · NPR(팝업이 화면을 가림), chessgames.com(요청 제한). 찍었지만 재생 화면이 아니라 뺀 곳: Coursera · Loom · Linear · Descript · Spline · Bemuse · GeoGuessr · Laftel · TVING · TVer · NASA · Tudum · SOOP · Tenhou · sdvx.in · YouTube Music.
 
+### 화면 구조 재조사(2026-11-05)
+
+폭 1440, 로그인하지 않은 화면이다. 49곳을 시도해 재생 · 채보 화면이 보인 32곳(다크 21)을 셌다. 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/summary.tsv` 와 같은 폴더 캡처다.
+
+| 구조                               | 곳 수 | 어디                                                                                                                 |
+| ---------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------- |
+| 무대 꽉 참 · 전폭 + 겹친 조작      | 9     | ArcViewer · Signal · Song Maker · osu! 미리보기 · Vimeo 플레이어 · Online Pianist · Midiano · Soundslice · Songsterr |
+| 전체 악보 꽉 참(가로로 늘어선 단)  | 5     | sdvx.in · sdvx.in CHUNITHM · Textage · Sekai Viewer 채보 · Bestdori 채보                                             |
+| 무대 + 오른쪽 열                   | 6     | 니코니코 · YouTube · bilibili · Loom · HookTheory · SoundCloud                                                       |
+| 왼쪽 열 + 무대                     | 6     | Flat.io · PIU Center 채보 · Ultimate Guitar 탭 · Yousician · SMD · Bestdori 시뮬레이터                               |
+| 가운데 상자 쪽 · 위 제목           | 5     | osu! 비트맵 쪽 · BeatSaver · Quaver · Noteflight · Sekai Viewer                                                      |
+| 머리 띠 파형 + 아래 고정 재생 막대 | 1     | Mixcloud                                                                                                             |
+
+세지 않은 곳은 Cloudflare 확인 · 403 10(Vimeo · MuseScore 둘 · Chordify 둘 · Musicnotes 둘 · Pianu 둘 · Online Sequencer), 재생 막대 없음 · 로그인 2(Spotify 둘), 404 1(Flowkey), 뷰어 화면이 아님 4(ZIv · Audius · Bestdori 악곡 · PIU Center 홈)다.
+
+11-02 조사와 합쳐(겹치는 YouTube · 니코니코 · Flat.io · Ultimate Guitar · Signal · Song Maker · Songsterr · HookTheory 는 한 번만, Songsterr 는 전폭 · HookTheory 는 위 제목으로) 무대 전폭 계열 21(전체 악보 5 포함) · 무대 + 오른쪽 열 13 · 왼쪽 열 + 무대 11 · 위 제목 + 무대 8 이다.
+
+### 무대 위 제목 묶음(2026-11-11)
+
+구조를 「제목 · 작성자를 무대 위에」 로 정한 뒤 제목 묶음 모양을 쟀다. 폭 1440, 로그인하지 않은 화면이다. 38곳을 시도해 34곳(리듬게임 20 · 악보 · 탭 7 · 영상 7, 다크 21)을 셌다. 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/research2/notes.tsv` · `ds.tsv` 와 같은 폴더 캡처다.
+
+| 꼴                                 | 곳 수 | 어디                                                                                                     |
+| ---------------------------------- | ----- | -------------------------------------------------------------------------------------------------------- |
+| 자켓 왼쪽 + 오른쪽 글 쌓기         | 9     | BeatLeader · Synthriderz · chunirec · SpinShare · HookTheory · KSM · V-ARCHIVE · Bestdori 채보 · sdvx.in |
+| 자켓 없이 왼쪽 위 글 줄            | 6     | Ultimate Guitar 탭 · taiko.wiki · Wikimedia Commons · bilibili · 8notes · Arcaea 위키                    |
+| 무대 아래(제목 → 작성자 줄 · 동작) | 5     | YouTube · 니코니코 · Framatube · Internet Archive · TED                                                  |
+| 배경 그림 띠 위 왼쪽 묶음          | 4     | osu! · Quaver · Etterna · Cytoid                                                                         |
+| 카드 · 표 머리 막대 한 줄          | 3     | BeatSaver · ZIv · Textage                                                                                |
+| 제목 한 줄 → 아래 큰 자켓 가운데   | 2     | Sekai Viewer · Bestdori                                                                                  |
+| 무대 왼쪽 옆 열 맨 위              | 2     | Flat.io · PIU Center                                                                                     |
+| 무대 위 가운데                     | 2     | Songsterr · Noteflight                                                                                   |
+| 아래 고정 재생 막대 안             | 1     | Soundslice                                                                                               |
+
+무대 위 제목은 14–49px · 굵기 300–700 으로 퍼져 있고, 제목 묶음에서 무대까지는 1–54 다. 작성자(매퍼) 줄이 머리 안에 있는 곳은 12곳이다(「mapped by · Steps By · Charted by + 이름」 글줄 · 이름 칩 · 아바타 + 이름). 동작 버튼은 아이콘만(BeatSaver · BeatLeader 7개, taiko.wiki 3개, SpinShare 4칸) · 글 + 아이콘 알약(Ultimate Guitar · YouTube · 니코니코 · Framatube) · 더보기 ⋯(7곳)으로 갈린다. 세지 않은 곳은 Cloudflare 확인 3(ScoreSaber · MuseScore · Vimeo), 영상 없음 1(Dailymotion)이다.
+
+디자인 시스템은 Primer · Atlassian · Cloudscape · EUI · Salesforce · Material 3 · Apple HIG · PatternFly 8곳을 봤다. M3 는 동작 1개(꼭 필요하면 2개), Cloudscape 는 5개 이상이면 드롭다운, Primer 는 좁은 화면에서 뒤쪽 동작을 더보기로 옮긴다. Polaris · Carbon 쪽 머리는 주소 이동 · 404 로 미확인이다.
+
+### 그림 띠 머리(2026-11-11)
+
+제목 묶음을 자켓 그림 띠(Quaver 꼴)로 하기로 해서 띠 머리만 다시 쟀다. 폭 1440, 로그인하지 않은 화면이다. 74곳을 시도해 31곳(다크 26)을 셌다. 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/research3/notes.tsv` · `ds.tsv` 와 캡처다. 세지 않은 곳은 띠 없음 19, Cloudflare · 캡차 12, 팝업 2, 오류 5, 주소 없음 5다.
+
+| 무엇          | 꼴 · 곳 수                                                                                                                                                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 띠 그림 처리  | 원래 그림 그대로 10 · 그라데이션 덮개 10 · 흐림 6 · 단색 반투명 덮개 2 · 가장자리만 흐림 2 · 생성 배너 1                                                                                                                          |
+| 제목 자리     | 띠 안 그림 위 글 15 · 띠 아래 붙음 13 · 띠 아래쪽에 겹침 2(Mixcloud 불투명 상자 · Backloggd) · 띠 안 불투명 상자 1(IGN)                                                                                                           |
+| 자켓 · 아바타 | 띠 아래 끝에 걸침 13(osu! 유저 · AniList · Bluesky · Mastodon · Patreon 등) · 띠 안 7 · 띠 밖 5 · 없음 5 · 겹친 상자 안 1                                                                                                         |
+| 동작 버튼     | 띠 안 제목 아래 8 · 띠 바로 아래 단추 줄 5(Spotify · Bluesky · Mastodon · Patreon · Audius) · 띠 안 오른쪽 끝 4 · 띠 아래 이름 줄 오른쪽 끝 3(Twitch · Kick · Reddit) · 이름 묶음 안 3 · 표지 아래 3(AniList · Kitsu · Backloggd) |
+| 작성자        | 쪽 주인이 곧 제목 18 · 제목 아래 만든 이 글 줄 5 · 없음 8                                                                                                                                                                         |
+| 머리 안 메타  | 띠 아래 라벨 + 숫자 칸 8 · 띠 안 제목 아래 점 구분 한 줄 6 · 띠 아래 이름 아래 한 줄 5 · 칩 줄 4                                                                                                                                  |
+
+Quaver 처럼 반투명 상자를 띠 아래쪽에 겹친 곳과 제목 상자 오른쪽 끝에 만든 이 + 아바타를 둔 곳은 0곳이다. 반투명 · 그라데이션 덮개나 필터 없이 불투명 면만 쓰는 곳은 11곳이고, 모두 제목을 그림 위가 아니라 불투명 바탕 위에 둔다. 작은 그림을 늘린 6곳 중 5곳은 흐림으로 화질을 가렸다. 디자인 시스템은 Cloudscape Hero header(그림 배경이면 상자를 깔아 대비, 단추 3개 이하) · Carbon Lead space(그림 위 그라데이션 권장) · Apple HIG(가려지는 그림은 뒤집고 흐려 잇기) 3곳과 근거 약한 M3 · PatternFly 2곳을 봤다.
+
+### 정보 버튼 → 가운데 창(2026-11-11)
+
+채보 뷰어 무대 판 2 안 D(「출처 보기」 를 「정보」 로 바꾸고 누르면 「채보 정보」 창)의 근거로, 정보 · 더보기 버튼을 누르면 가운데 창이 열리는 곳을 쟀다. 폭 1440, 다크, 로그인하지 않은 화면이다. 15곳을 시도해 13곳을 셌고, YouTube Music(지역 제한) · Hugging Face(로그인 전 꺼짐)는 막혀 세지 않았다. 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/info-modal/` 캡처다.
+
+| 꼴           | 곳 수 · 서비스                                                                                                                                                                                                                                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 가운데 창    | 6 · Google Play(「About this app →」 720 창, 설명 → 2열 사실 표) · App Store(「Version History」) · Apple Music(설명 「MORE」, App Store 와 같은 부품) · YouTube 채널(「...more」 560 창, 설명 → 링크 → 사실 줄) · Spotify(「View credits」 440 창, 무리 제목 아래 이름 · 역할 → Sources) · Airbnb(「Show more」 780 창) |
+| 같은 쪽 펼침 | 6 · Microsoft Store · Steam · Epic · Vimeo · Figma Community · MuseScore                                                                                                                                                                                                                                                 |
+
+창은 모두 오른쪽 위나 왼쪽 위에 닫기 X 하나를 두고, 머리에 항목 이름을 다시 쓴다. Google Play 와 Airbnb 는 다크로 그려지지 않아 밝은 화면만 찍었다.
+
+### 보기 전환(2026-11-11)
+
+채보 뷰어의 「낙하형 · 전체 악보」 전환을 다시 그리려고, 같은 내용의 보기를 바꾸는 전환만 쟀다. 폭 1440, 다크, 로그인하지 않은 화면이다. 실제 서비스 30곳(다크 14)을 셌고, 아님 9 · 막힘 7 · 전환 못 찾음 12 는 세지 않았다. 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/view-switch/` 의 `notes.tsv` · `ds.tsv` 와 캡처다.
+
+| 무엇    | 곳 수                                                                                                                                                     |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 폭      | 글자 폭 30 · 전폭 0                                                                                                                                       |
+| 모양    | 아이콘 버튼 10 · 붙은 버튼 묶음 6 · 알약 세그먼트 6 · 드롭다운 4 · 밑줄 탭 3 · 글자 링크 1                                                                |
+| 자리    | 도구 줄 안 15(GitHub · HookTheory · CoinMarketCap 등) · 내용 위에 겹침 8(지도 7 · Songsterr) · 내용 위 왼쪽 4 · 가운데 1(Bestdori) · 오른쪽 1 · 머리 안 1 |
+| 고른 칸 | 고른 칸 면 11 · 드롭다운 지금 값 4 · 밑줄 3 · 아이콘 색 3 · 테두리 1 · 체크 1 · 단추 하나 7                                                               |
+
+디자인 시스템 10곳 가운데 7곳(Apple HIG · Material 3 Segmented · Primer · Carbon Content switcher · Cloudscape · PatternFly · Ant)이 보기 전환에 세그먼트를 권하고 3곳(Atlassian · Fluent 2 · GOV.UK)이 탭을 권한다. 전폭을 권한 곳은 Material 3 connected button group 하나이고, Material 3 Segmented 는 큰 화면 전폭으로 늘이지 말라고 한다.
+
+### 시각 의견 쓰기 자리(2026-11-11)
+
+채보 의견 쓰기 칸을 멈춘 시각에서 바로, 전체 화면에서도 쓸 수 있게 하려고 재생 시각에 붙는 의견을 쓰는 곳을 쟀다. 50곳을 시도해 30곳을 셌다. 실측 6(니코니코 · bilibili · YouTube · Loom · Wistia · Audius 목록만) · 공식 문서 24(그림 없이 글만 6 · 일러스트 2)다. 다크 13 · 라이트 9 · 섞임 2 · 미확인 6. 세지 않은 20곳(404 · 빈 본문 · 그림 깨짐 · 기능 없음 · 플레이어 오류)과 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/time-comment/` 의 `notes.tsv` · `ds.tsv` · `blocked.txt` 와 캡처다. 로그인 뒤 화면은 공식 도움말 그림으로 셌다.
+
+| 무엇           | 곳 수                                                                                                                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 쓰기 칸 자리   | 오른쪽 패널 10(Frame.io · SyncSketch · Kapwing · Loom 등) · 플레이어 바로 아래 8(니코니코 · bilibili · Dropbox Replay · Wistia · SoundCloud 등) · 플레이어 안 5(Frame.io 핀 · YuJa · Vimeo 등) · 아래 구역 2 · 트랙 1 · 미확인 4 |
+| 여는 방법      | 늘 보임이 가장 많다. 버튼 · 키 7(SyncSketch C 키 · Loom 등) · 영상 · 파형 누르기 6(Vimeo · SoundCloud 등). 멈추면 나타나는 곳은 못 찾았다                                                                                        |
+| 전체 화면 쓰기 | 됨 4(니코니코 · bilibili 실측, Frame.io 공식 그림, YouTube 실측 · 시각 고정 없음) · 안 됨 4 · 미확인 22                                                                                                                          |
+| 시각 끄기      | 체크 · 토글 9(Frame.io · Kapwing · SyncSketch · Dropbox Replay · Wistia · Kaltura 등)                                                                                                                                            |
+| 종류 고르기    | Sibme 1(Question · Idea · Bright Spot, 근거 약함)                                                                                                                                                                                |
+
+캡처로 확인한 원본: 니코니코는 플레이어 바로 아래 왼쪽에 [팔레트 아이콘 | 「コメントを入力」 | 보내기 ▶] 한 줄(높이 40, 양 끝만 둥글게)을 두고, 전체 화면에서는 조작 막대 아래 둘째 줄로 같은 줄이 남는다. bilibili 는 플레이어 틀 아래 붙은 보내기 줄(입력 둥글기 8 · Send)이 전체 화면에서 조작 막대 안(시각 오른쪽 · 화질 왼쪽)으로 들어간다. Frame.io 는 조작 막대의 핀 단추를 켜고 영상을 누르면 그 자리에 어두운 상자([노란 시각 칩 | 본문] · [도구 · 공개 범위 ▾ · Cancel · 보내기])가 뜬다. Dropbox Replay 는 플레이어 아래 가운데 테두리 상자([아바타 | 「Start leaving feedback here」] · [☑ 0:12:11 | 도구 · Post])다. YouTube 는 전체 화면에서 💬 를 누르면 오른쪽에 떠 있는 패널이 열리고 맨 아래가 쓰기 칸이다.
+
+디자인 시스템 7곳(Video.js · Media Chrome · Vidstack · Plyr · Atlassian Comment · Carbon · Primer)은 조작 막대에 사용자 단추를 넣는 방법(Video.js controlBar · Vidstack 슬롯)과 진행 막대 눈금(Plyr markers)을 둔다. 조작 막대 안 입력칸 · 전체 화면 쓰기 지침은 7곳 모두 없다(미확인).
+
+### 시각 의견 목록 모양(2026-11-11)
+
+채보 의견 목록을 다시 그리려고 재생 시각에 붙은 의견을 목록으로 보여 주는 곳을 쟀다. 51곳을 시도해 30곳을 셌다. 실측 4(osu! · 니코니코 · YouTube · Audius) · 공식 문서 26(일러스트 · 마케팅 그림 4)이고 다크 19 · 라이트 11 이다. 디자인 시스템은 5곳(Atlassian Comment · Primer Timeline · Ant 4 Comment · SLDS Feeds · M3 Lists)이다. 세지 않은 21곳(봇 확인 · 빈 화면 · 쓸 그림 없음 · 404)과 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/time-comment-list/` 의 `notes.tsv` · `ds.tsv` · `blocked.txt` 와 캡처다. 직접 잰 값은 osu! 뿐이고 나머지 크기는 미확인이다.
+
+| 무엇      | 곳 수                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 시각 자리 | 본문 맨 앞 9(채운 칩 6 · 링크색 2 · 굵게 1) · 메타 줄 안 6(Audius · Claap · Air 등) · 묶음 머리 5 · 본문 끝 3 · 줄 오른쪽 3 · 그 밖 3 |
+| 아바타    | 있음 28(리뷰 도구 20–32 · osu! · YouTube · Audius 40) · 없음 2(니코니코 · Kaltura)                                                    |
+| 줄 구분   | 카드 14(Frame.io · Kapwing · osu! 등) · 간격만 12(Audius · YouTube · Vimeo 등) · 구분선 3(MediaSilo · Streamlabs · ftrack)            |
+| 해결 표시 | 줄 오른쪽 위 ✓ 단추 9 · 해결 필터 11(해결 숨김 토글 6 · 세 갈래 2 · 남은 수 드롭다운 3)                                               |
+| 종류 태그 | osu! 1(Suggestion · Problem · Praise · Note, 근거 약함)                                                                               |
+| 동작      | 아래 동작 줄 늘 보임 14 · ⋯ 오른쪽 위 늘 보임 7 · 호버 때만 3                                                                         |
+
+캡처로 확인한 원본: Frame.io 는 다크 패널에 한 단 밝은 카드(둥글기 약 6)를 쌓고, 카드 안은 [아바타 · 이름 굵게 · 상대 시간] → [노란 시각 칩 · 본문] → [Reply ······ #N] 이다. Streamlabs 는 전폭 가로선으로 줄을 나누고 [아바타 · 이름 ······ 1h] → [파란 「00:18」 · 본문] → [Reply · Resolve · 👍] 이다. osu! 토론은 카드 왼쪽 상태색 테두리 · 종류 아이콘 · 「Marked as resolved by」 를 쓴다. Audius 는 선 없이 간격 약 24 로 [아바타 40 | 이름 · 「7d • 4:14」(시각 보라 링크색)] → 본문 → [♡ · Reply · ⋯] 이다.
+
 ### 첫 화면 판 실제 화면
 
 폭 1440 · 높이 900 이고 의견 네 줄은 표시용 값이다. 지금 무대는 1138×640(폭 1056 에서 1008)이다.
