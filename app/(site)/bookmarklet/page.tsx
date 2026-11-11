@@ -19,6 +19,8 @@ export async function generateMetadata() {
 }
 
 async function requestOrigin() {
+    // 주소에 동기화 토큰이 실리므로 요청 헤더보다 설정한 주소를 먼저 쓴다
+    if (serverEnv.APP_URL) return serverEnv.APP_URL.replace(/\/$/, "");
     const requestHeaders = await headers();
     const host =
         requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
@@ -29,7 +31,6 @@ async function requestOrigin() {
             : "https");
 
     if (host) return `${protocol}://${host}`;
-    if (serverEnv.APP_URL) return serverEnv.APP_URL.replace(/\/$/, "");
 
     throw new Error("Application origin could not be resolved");
 }
