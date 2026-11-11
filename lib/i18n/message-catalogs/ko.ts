@@ -493,6 +493,7 @@ export const koMessages = {
     "events.checkInput": "입력을 확인해 주세요.",
     "events.loginRequired": "로그인이 필요합니다.",
     "events.notFound": "글을 찾을 수 없습니다.",
+    "events.limit": "공개 전 글은 {count}개까지 만들 수 있습니다.",
     "events.invalidImage": "JPG · PNG · WebP 이미지만 올릴 수 있습니다.",
     "events.invalidBanner": "허용되지 않은 이미지입니다.",
     "events.uploadFailed": "이미지를 올리지 못했습니다.",

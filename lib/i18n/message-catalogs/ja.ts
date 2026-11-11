@@ -490,6 +490,7 @@ export const jaMessages = {
     "events.checkInput": "入力内容を確認してください。",
     "events.loginRequired": "ログインが必要です。",
     "events.notFound": "投稿が見つかりません。",
+    "events.limit": "公開前の投稿は{count}件まで作成できます。",
     "events.invalidImage": "JPG・PNG・WebPの画像のみアップロードできます。",
     "events.invalidBanner": "この画像は使用できません。",
     "events.uploadFailed": "画像をアップロードできませんでした。",

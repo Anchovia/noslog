@@ -48,6 +48,9 @@ type EventFieldName = Extract<keyof EventFormValues, string>;
 
 const bannerPrefix = (userId: number) => `events/${userId}/banner`;
 
+// 공개 전 글은 채보 초안과 같은 수까지 둔다
+const EVENT_OPEN_LIMIT = 50;
+
 export function invalidateEvents() {
     updateTag(CACHE_TAGS.events);
     revalidatePath("/events", "layout");
@@ -235,6 +238,20 @@ export async function saveEvent(
         return { success: false, message: t("events.notFound") };
     if (existing && !canAuthorEdit(existing.status as EventStatus))
         return { success: false, message: t("events.rejected.body") };
+    if (!existing) {
+        const open = await db.communityEvent.count({
+            where: {
+                authorId: writer.userId,
+                publishedAt: null,
+                status: { not: "rejected" },
+            },
+        });
+        if (open >= EVENT_OPEN_LIMIT)
+            return {
+                success: false,
+                message: t("events.limit", { count: EVENT_OPEN_LIMIT }),
+            };
+    }
 
     const bannerUrl = parsed.data.bannerUrl || null;
     if (

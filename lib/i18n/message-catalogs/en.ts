@@ -494,6 +494,7 @@ export const enMessages = {
     "events.checkInput": "Check your input.",
     "events.loginRequired": "Please log in.",
     "events.notFound": "Post not found.",
+    "events.limit": "You can keep up to {count} unpublished posts.",
     "events.invalidImage": "Only JPG, PNG and WebP images can be uploaded.",
     "events.invalidBanner": "This image is not allowed.",
     "events.uploadFailed": "Could not upload the image.",
