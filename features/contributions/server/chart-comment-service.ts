@@ -107,16 +107,18 @@ export async function addChartComment(
     if (!parsed.success)
         return { success: false, message: t("contribution.comment.invalid") };
     const { chartId, draftId, timeMs, body, kind } = parsed.data;
+    let ownDraft = false;
     try {
         if (draftId) {
             const draft = await db.chartDraft.findUnique({
                 where: { id: draftId },
                 select: { userId: true, chartId: true },
             });
+            ownDraft = draft?.userId === session.id;
             if (
                 !draft ||
                 draft.chartId !== chartId ||
-                (draft.userId !== session.id && !(await isAdminUser()))
+                (!ownDraft && !(await isAdminUser()))
             )
                 return {
                     success: false,
@@ -147,20 +149,21 @@ export async function addChartComment(
             kind,
             body,
         };
-        if (draftId) {
+        if (draftId && !ownDraft) {
+            // 운영자의 검토 댓글은 세지 않는다
             await db.chartComment.create({ data });
         } else {
-            // 하루 한도는 공개 채보 의견만 센다 — 초안 검토 댓글은 한도와 따로다.
+            // 하루 한도는 공개 채보 의견과 자기 초안 댓글을 따로 센다.
             // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 한도를 넘지 않게 한다
             const added = await db.$transaction(async (tx) => {
                 const within = await isWithinDailyLimit(tx, {
-                    lockKey: `chart-comment-daily:${data.userId}`,
+                    lockKey: `chart-comment-daily:${draftId ? "draft" : "public"}:${data.userId}`,
                     limit: CHART_COMMENT_DAILY_LIMIT,
                     countRecent: (since) =>
                         tx.chartComment.count({
                             where: {
                                 userId: data.userId,
-                                draftId: null,
+                                draftId: draftId ? { not: null } : null,
                                 createdAt: { gte: since },
                             },
                         }),

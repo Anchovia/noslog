@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     draftFindUnique: vi.fn(),
     draftUpdateMany: vi.fn(),
     commentCreate: vi.fn(),
+    commentCount: vi.fn(),
     claim: vi.fn(),
     tokenCount: vi.fn(),
 }));
@@ -27,6 +28,14 @@ vi.mock("@/lib/db", () => ({
         chartPattern: { findUnique: async () => null },
         chartComment: { create: mocks.commentCreate },
         oAuthAccessToken: { count: mocks.tokenCount },
+        $transaction: (run: (tx: unknown) => unknown) =>
+            run({
+                $executeRaw: async () => 1,
+                chartComment: {
+                    create: mocks.commentCreate,
+                    count: mocks.commentCount,
+                },
+            }),
     },
 }));
 
@@ -164,10 +173,23 @@ describe("자기 초안 댓글 한도", () => {
 
     it("한도 안이면 만든다", async () => {
         mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+        mocks.commentCount.mockResolvedValue(49);
         await expect(
             addChartComment(commentInput, "ko")
         ).resolves.toMatchObject({ success: true });
         expect(mocks.commentCreate).toHaveBeenCalledTimes(1);
+    });
+
+    it("자기 초안 댓글이 24시간에 50개면 더 만들지 않는다", async () => {
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+        mocks.commentCount.mockResolvedValue(50);
+        const result = await addChartComment(commentInput, "ko");
+        expect(result.success).toBe(false);
+        expect(mocks.commentCount.mock.calls[0][0].where).toMatchObject({
+            userId: 9,
+            draftId: { not: null },
+        });
+        expect(mocks.commentCreate).not.toHaveBeenCalled();
     });
 });
 
