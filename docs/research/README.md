@@ -47,3 +47,4 @@
 | 2026-11-11 | [Figma 파일 · 페이지 · 섹션 정리 방식 31곳](../research/2026-11-11-figma-file-organization.md)                      |
 | 2026-11-11 | [파운데이션 구성 — 토큰 층 · 파일 나누기 · 공용 클래스](../research/2026-11-11-foundation-structure.md)             |
 | 2026-11-11 | [커밋 제목 — 공개 저장소 43곳 실측 · 가이드 문서 16곳](../research/2026-11-11-commit-titles.md)                     |
+| 2026-11-11 | [토스트 자리 — 디자인 시스템 10곳](../research/2026-11-11-toast-position.md)                                        |
