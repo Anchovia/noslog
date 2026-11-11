@@ -7,6 +7,7 @@ import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
 import { serverEnv } from "@/lib/env/server";
 import {
+    detectImageContentType,
     type ImageContentType,
     isImageContentType,
     MAX_IMAGE_SIZE,
@@ -87,7 +88,35 @@ export async function createPrivateImageUploadToken(
     return { pathname, token };
 }
 
-// 저장 전에 현재 Blob Store의 파일과 경로, 형식, 크기를 다시 검증함
+const IMAGE_SIGNATURE_BYTES = 12;
+
+// 선언한 형식과 실제 파일 머리가 같은지 본다 — 이미지 형식만 붙여 올린 다른 파일을 걸러낸다
+async function hasDeclaredImageBytes(
+    url: string,
+    access: "public" | "private",
+    contentType: string
+) {
+    const result = await get(url, {
+        access,
+        useCache: false,
+        ...(access === "private" ? { token: privateBlobToken() } : {}),
+    });
+    if (!result?.stream) return false;
+    const reader = result.stream.getReader();
+    const bytes = new Uint8Array(IMAGE_SIGNATURE_BYTES);
+    let filled = 0;
+    while (filled < IMAGE_SIGNATURE_BYTES) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = value.subarray(0, IMAGE_SIGNATURE_BYTES - filled);
+        bytes.set(chunk, filled);
+        filled += chunk.length;
+    }
+    await reader.cancel();
+    return detectImageContentType(bytes.subarray(0, filled)) === contentType;
+}
+
+// 저장 전에 현재 Blob Store의 파일과 경로, 형식, 크기, 파일 머리를 다시 검증함
 export async function isValidImageBlob(url: string, pathnamePrefix: string) {
     if (!hasBlobHostname(url, "public")) return false;
 
@@ -97,7 +126,8 @@ export async function isValidImageBlob(url: string, pathnamePrefix: string) {
         return (
             blob.pathname.startsWith(pathnamePrefix) &&
             isImageContentType(blob.contentType) &&
-            blob.size <= MAX_IMAGE_SIZE
+            blob.size <= MAX_IMAGE_SIZE &&
+            (await hasDeclaredImageBytes(url, "public", blob.contentType))
         );
     } catch {
         return false;
@@ -116,7 +146,8 @@ export async function isValidPrivateImageBlob(
         return (
             blob.pathname.startsWith(pathnamePrefix) &&
             isImageContentType(blob.contentType) &&
-            blob.size <= MAX_IMAGE_SIZE
+            blob.size <= MAX_IMAGE_SIZE &&
+            (await hasDeclaredImageBytes(url, "private", blob.contentType))
         );
     } catch {
         return false;
