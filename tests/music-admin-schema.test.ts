@@ -112,6 +112,22 @@ describe("관리자 악곡 메타데이터 스키마", () => {
         });
     });
 
+    it("URL 칸은 http · https 주소만 받는다", () => {
+        const result = chartMetadataSchema.safeParse({
+            chartId: "10",
+            musicIndex: "test-music",
+            levelConstant: "",
+            noteCount: "",
+            releasedAt: "",
+            unlockCondition: "",
+            playVideoUrl: "javascript:alert(1)",
+            chartPreviewUrl: "",
+        });
+        expect(result.success).toBe(false);
+        if (result.success) return;
+        expect(result.error.flatten().fieldErrors.playVideoUrl).toBeDefined();
+    });
+
     it("공통 정보와 채보 FormData를 같은 스키마로 다시 검증한다", () => {
         const musicValues = musicMetadataSchema.parse({
             musicIndex: "test-music",

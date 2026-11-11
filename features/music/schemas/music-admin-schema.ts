@@ -70,8 +70,8 @@ function isOptionalUrl(value: string) {
     if (value === "") return true;
 
     try {
-        new URL(value);
-        return true;
+        const { protocol } = new URL(value);
+        return protocol === "http:" || protocol === "https:";
     } catch {
         return false;
     }
