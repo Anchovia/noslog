@@ -116,7 +116,12 @@ export async function getMusecatArcadePage(slug: string) {
     const token = await getMusecatAccessToken(viewer.userId);
     if (!token.ok) return null;
     const musecatId = await resolveMusecatId(slug);
-    const loaded = await loadMusecatArcadeLive(musecatId, slug, token.token);
+    const loaded = await loadMusecatArcadeLive(
+        musecatId,
+        slug,
+        viewer.userId,
+        token.token
+    );
     if (!loaded.ok) {
         if (loaded.status === 401) await markMusecatNeedsReconnect(token);
         return null;
@@ -139,10 +144,11 @@ class UncachedLiveArcade extends Error {
     }
 }
 
-/** 오락실 응답은 연결한 누구에게나 같다 — 토큰은 키에서 빼고 오락실 · 주소로만 나눠 담는다 */
+/** 응답에 「내 신고」 · 「내 투표」 가 들어 있어 사람마다 따로 담는다 — 토큰은 바뀌므로 키에는 사용자 id 를 쓴다 */
 async function loadMusecatArcadeLive(
     musecatId: string,
     slug: string,
+    userId: number,
     token: string
 ): Promise<LiveArcadeResult> {
     const cached = unstable_cache(
@@ -169,7 +175,7 @@ async function loadMusecatArcadeLive(
             if (!notices.ok) throw new UncachedLiveArcade(result);
             return result;
         },
-        ["musecat-arcade-live-v1", musecatId, slug],
+        ["musecat-arcade-live-v2", musecatId, slug, String(userId)],
         {
             revalidate: MUSECAT_ARCADE_REVALIDATE_SECONDS,
             tags: [getMusecatArcadeTag(musecatId)],
