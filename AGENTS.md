@@ -54,7 +54,10 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 답은 한국어. 중간 안내 · 표 · 마무리 정리 · 버튼 글까지.
 - git 은 사용자가 한다 — 커밋 · 푸시 · 스테이징 · 브랜치 · PR 모두. 상태 조회만 한다.
-  끝나면 커밋 제목(영어 type + 한국어 설명, 예 `fix: 악곡 상세 반응형 전환 기준 통일`)과 묶음별 `git add` 명령을 준다.
+  끝나면 커밋마다 제목(`type: 한국어 설명`, 제목 하나에 변경 하나, 50칸 권장 · 72칸 상한)과 필요한 본문을 정하고,
+  커밋 스크립트를 리포 밖 임시 폴더에 만들어 실행 명령 한 줄과 함께 준다. 스크립트는 커밋마다 파일 이름을 적은 `git add` 뒤에
+  `git commit -F <메시지 파일>` 을 하고, 이미 스테이징된 변경이 있거나 하나라도 실패하면 멈춘다. 스크립트는 사용자가 실행한다.
+  기준은 [컨벤션 — 커밋](docs/CONVENTION.md#커밋).
   커밋 · PR · 릴리스 글에 「Generated with Claude Code」 · `Co-Authored-By` 같은 서명 줄을 넣지 않는다.
 - 운영 DB 에 쓰지 않는다. 운영 = PlanetScale Postgres `noslog`(서울), 그리고 되돌리기용으로 남긴 Neon 운영 프로젝트(steep-hill-21603078)의 production 브랜치.
   운영을 고쳐야 하면 확인용 `SELECT` · 수정 `UPDATE` · 확인 쿼리를 사용자에게 준다(사용자가 운영 DB 에서 실행).
@@ -137,5 +140,5 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
     - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
     - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
     - 문서만(md): `npx prettier --check <파일>` · `npx vitest run tests/docs-links.test.ts`(링크 · 경로 · 결정 목록).
-- 끝내기 전 정리 — 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의 ko · en · ja 세 곳 모두 → [AI 티 확인](docs/ai-check.md) 다시 보기 → 커밋 제목 · 파일별 `git add`.
+- 끝내기 전 정리 — 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의 ko · en · ja 세 곳 모두 → [AI 티 확인](docs/ai-check.md) 다시 보기 → 커밋 스크립트.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 지켜져 필요 없어진 줄은 뺀다.
