@@ -69,7 +69,7 @@ export default function MusicRankingPanel({
         `/music/${data.music.index}/${data.difficulty.toLowerCase()}?tab=ranking${page > 1 ? `&page=${page}` : ""}`
     );
     return (
-        <div className="nl-ranking-panel">
+        <div className="nl-stack nl-stack--section">
             {empty ? null : (
                 <ScoreScatter
                     scores={data.chartDetail.scoreSeries}
@@ -80,7 +80,7 @@ export default function MusicRankingPanel({
                 />
             )}
             <section
-                className="nl-ranking-section"
+                className="nl-ranking-section nl-stack nl-stack--12"
                 aria-labelledby={`${sectionId}-title`}
             >
                 {/* 제목 · 내 순위 글자는 두지 않는다 — 순위표가 스스로 말한다 (2026-09-18 사용자 결정).

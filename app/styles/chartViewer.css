@@ -1,16 +1,3 @@
-.noslog-ui .nl-chart-viewer {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-24);
-    min-width: 0;
-}
-/* 머리 — 무대 아래. 제목 묶음 →12→ 채보 · 동작 줄 →12→ 정보 상자 */
-.noslog-ui .nl-chart-viewer__head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
 /* 제목 → 메타 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-chart-viewer__titles {
     display: flex;
@@ -132,12 +119,6 @@
     gap: 0;
 }
 /* 「더보기」 창 — 제목 묶음 →16→ 정보 상자 →16→ 출처 */
-.noslog-ui .nl-chart-viewer__info-sheet {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    min-width: 0;
-}
 .noslog-ui .nl-chart-viewer__info-sheet p {
     margin: 0;
 }
@@ -225,13 +206,6 @@
     margin: 0;
 }
 
-/* 보기 방식 세그먼트 →12→ 무대 */
-.noslog-ui .nl-chart-viewer__view {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
 /* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
    빼는 높이 = 헤더 높이 + 위 여백 24 + 돌아가기 높이 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
@@ -687,28 +661,10 @@
 /* 채보 의견 — 악곡 상세 의견 구역과 같은 문법: 제목 줄 →16→ 쓰기 칸 →8→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
    쓰기 칸 = 시각(링크색 · 고정폭 숫자) · 한 줄 입력, 사이 8 → 누르면 아래 8 에 종류 세그먼트(왼쪽) · 「취소 · 남기기」(오른쪽).
    자리 = 1056 이상은 무대 바로 아래(보기 묶음 안, 무대 →12→), 1055 이하는 의견 구역 제목 줄 아래 */
-.noslog-ui .nl-chart-comments {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    min-width: 0;
-}
-.noslog-ui .nl-chart-comments__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
 .noslog-ui .nl-chart-comments__composer {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-chart-comments__composer-row {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
 }
 .noslog-ui .nl-chart-comments__input {
     flex: 1;

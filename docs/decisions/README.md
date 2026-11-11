@@ -168,6 +168,7 @@
 | 2026-11-10 | [코드 구조 정리 30항목](./2026-11-10-code-structure-cleanup.md)                                                                                                                | 구조                |
 | 2026-11-10 | [코드 구조 정리 둘째 묶음](./2026-11-10-code-structure-cleanup-second.md)                                                                                                      | 구조                |
 | 2026-11-11 | [코드 구조 정리 셋째 묶음](./2026-11-11-code-structure-cleanup-third.md)                                                                                                       | 구조                |
+| 2026-11-11 | [파운데이션 구성 — 토큰 2층 · 종류별 토큰 파일 · 부품마다 CSS 파일](./2026-11-11-foundation-structure.md)                                                                      | 구조                |
 
 ## 대체됨
 

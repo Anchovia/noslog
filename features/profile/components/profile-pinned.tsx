@@ -53,7 +53,7 @@ export default function ProfilePinned({
                                 appearance="foundation"
                                 className="nl-profile-pinned__jacket"
                             />
-                            <span className="nl-profile-pinned__text">
+                            <span className="nl-stack nl-stack--4">
                                 <span
                                     className="nl-profile-pinned__title nl-entity-title"
                                     title={play.title}

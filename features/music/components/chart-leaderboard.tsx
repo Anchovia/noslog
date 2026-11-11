@@ -98,7 +98,7 @@ function ChartLeaderboardRow({
                 size="compact"
             />
             <div className="nl-player-row__identity">
-                <div className="nl-player-row__name">
+                <div className="nl-player-row__name nl-inline">
                     <CountryMarker country={row.user.country ?? ""} />
                     <IntentLink
                         href={href(`/profile/${row.user_id}`)}

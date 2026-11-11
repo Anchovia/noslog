@@ -475,7 +475,7 @@ export default function ProfileContribution({
                     {isOwner ? <UnseenResultDot /> : null}
                 </h2>
             </div>
-            <div className="nl-profile-contribution__card">
+            <div className="nl-stack nl-stack--12">
                 {value.level ? (
                     <>
                         <div className="nl-profile-contribution__level">

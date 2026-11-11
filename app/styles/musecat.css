@@ -1,6 +1,5 @@
 /* 뮤즈캣 오락실(연동 A · 2026-10-21 전면 대조 ①) — 값은 모두 토큰. 카드 = SurfaceCard · 점 = StatusDot · 정보 줄 = IconRow */
 /* 본문 = 한 줄로 쌓기 16(시안 화면 안 간격), 큰 구역 사이는 구분선 */
-.noslog-ui .nl-musecat-body,
 .noslog-ui .nl-musecat-head {
     display: flex;
     flex-direction: column;
@@ -259,12 +258,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-.noslog-ui .nl-musecat-result__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
 }
 .noslog-ui .nl-musecat-result__name {
     display: flex;

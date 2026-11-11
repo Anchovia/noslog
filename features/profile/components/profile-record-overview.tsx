@@ -76,7 +76,7 @@ export function ProfileRankDistribution({
             </h2>
             <dl
                 id="profile-rank-distribution"
-                className="nl-profile-distribution"
+                className="nl-profile-distribution nl-stack nl-stack--8"
             >
                 {shown.map((row) => (
                     <div key={row.rank}>

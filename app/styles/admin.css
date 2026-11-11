@@ -1,3 +1,15 @@
+@media (forced-colors: active) {
+    /* 단계 막대는 면 색으로 진행을 보여 체크박스처럼 시스템 색을 직접 준다 */
+    .noslog-ui .nl-step-bar {
+        forced-color-adjust: none;
+        border: var(--nl-stroke-default) solid ButtonText;
+        background: Canvas;
+    }
+    .noslog-ui .nl-step-bar[data-on="true"] {
+        background: Highlight;
+        border-color: Highlight;
+    }
+}
 /* 관리자 셸 — 헤더 아래 가로 탭 */
 .noslog-ui .nl-admin-nav {
     position: sticky;
@@ -60,7 +72,7 @@
     color: var(--nl-content-subdued);
     text-decoration: none;
 }
-/* 링크로 만든 세그먼트 — 고른 칸은 공용 [aria-checked="true"] 규칙(foundation.css)과 같은 값. 공용 값이 바뀌면 함께 맞춘다 */
+/* 링크로 만든 세그먼트 — 고른 칸은 공용 [aria-checked="true"] 규칙(components/segments.css)과 같은 값. 공용 값이 바뀌면 함께 맞춘다 */
 .noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"] {
     background: var(--nl-surface-control);
     color: var(--nl-content-strong);
@@ -584,18 +596,6 @@
 }
 
 /* 공지 관리 — 편집 폼 */
-.noslog-ui .nl-admin-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-32);
-    min-width: 0;
-}
-.noslog-ui .nl-admin-form__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    min-width: 0;
-}
 .noslog-ui .nl-admin-form__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

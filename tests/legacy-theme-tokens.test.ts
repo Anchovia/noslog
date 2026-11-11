@@ -3,9 +3,10 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { darkToken } from "./helpers/design-tokens";
+
 // 옛 Tailwind 이름(bg-bg · text-text-primary · text-title …)은 nl 별칭으로 옮기고 지웠다(2026-10-15 B5 2단계)
 const globals = readFileSync("app/globals.css", "utf8");
-const tokens = readFileSync("app/styles/tokens.css", "utf8");
 
 const legacyColors =
     "bg|surface|surface-muted|divider|border|text-primary|text-secondary|text-disabled|interactive|on-interactive|focus|switch-track|switch-active|switch-thumb|switch-thumb-active|success|danger|danger-surface|on-danger|chart|score|bronze|rank-p-start|rank-p-end|rank-fc|rank-s|rank-a-plus|rank-a|normal|hard|expert|real|basic|recital|genre-pops|genre-anime|genre-bm|genre-original|genre-classic-jazz|genre-variety|discord";
@@ -52,7 +53,7 @@ describe("옛 Tailwind 이름은 없다", () => {
         const base = globals.match(/html,\s*body\s*{([^}]*)}/)?.[1] ?? "";
         const background = base.match(/background:\s*(#[0-9a-f]+)/i)?.[1];
         const color = base.match(/[^-]color:\s*(#[0-9a-f]+)/i)?.[1];
-        expect(tokens).toContain(`--nl-surface-canvas: ${background};`);
-        expect(tokens).toContain(`--nl-content-default: ${color};`);
+        expect(darkToken("surface-canvas")).toBe(background);
+        expect(darkToken("content-default")).toBe(color);
     });
 });

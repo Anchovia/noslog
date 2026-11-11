@@ -1,0 +1,52 @@
+/* 동작 묶음 — 수치 상자 아래 칸의 이동 링크 줄. 같은 폭 칸 · 칸 사이 1px 세로선 · 칸 = 컨트롤 L 높이 · surface 면,
+   글자(emphasis-label 조합 · content/default) + 끝 › 16(subdued, 사이 4) — 누를 곳 표시. 없는 동작도 칸은 두고 글자 · › 를 비활성 색으로 */
+.noslog-ui .nl-action-group {
+    display: flex;
+    gap: var(--nl-stroke-default);
+}
+.noslog-ui .nl-action-group__item {
+    display: inline-flex;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-4);
+    padding-inline: var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-semibold);
+    text-align: center;
+    text-decoration: none;
+}
+.noslog-ui .nl-action-group__chevron {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex: none;
+    color: var(--nl-content-subdued);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-action-group__item:hover {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-action-group__item:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+.noslog-ui .nl-action-group__item[aria-disabled="true"],
+.noslog-ui
+    .nl-action-group__item[aria-disabled="true"]
+    .nl-action-group__chevron {
+    color: var(--nl-content-disabled);
+    cursor: default;
+}

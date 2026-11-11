@@ -1,0 +1,11 @@
+/* 새 소식 점(피드백 새 답변 등) — 원 8 · 위험 표시색(그래픽 3:1), 글자 뒤 8. 색만으로 알리지 않게 접근 이름을 함께 */
+.noslog-ui .nl-unread-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    margin-inline-start: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-destructive);
+    vertical-align: middle;
+}

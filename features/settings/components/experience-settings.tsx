@@ -89,7 +89,10 @@ export default function ExperienceSettings() {
     };
     // 줄 목록(2026-10-01 B1) — 라벨 왼쪽 · 드롭다운 오른쪽. 언어는 고르는 즉시 바뀐다
     return (
-        <div className="nl-settings__form" aria-busy={pending}>
+        <div
+            className="nl-settings__form nl-stack nl-stack--24"
+            aria-busy={pending}
+        >
             <div className="nl-settings__rows">
                 <div className="nl-settings__row nl-focus-inset nl-forced-press">
                     <label htmlFor="settings-language" className="nl-control">

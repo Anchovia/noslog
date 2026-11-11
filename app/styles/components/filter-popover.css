@@ -1,0 +1,26 @@
+/* 팝오버 그릇(672+) — 떠 있는 창 규격: elevated 면 + 다크 둘레(border/elevated) + 모서리 large + 그림자 */
+.noslog-ui .nl-filter-popover {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    width: min(334px, calc(100vw - var(--nl-spacing-32)));
+    max-height: var(--radix-popover-content-available-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--nl-spacing-16);
+    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+    box-shadow: var(--nl-overlay-shadow);
+    z-index: var(--nl-layer-popover);
+}
+/* 머리 줄 — 왼쪽 제목 · 오른쪽 초기화(전체 레이어 머리 줄과 같은 구성) */
+.noslog-ui .nl-filter-popover__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-filter-popover :is(form, div):has(> .nl-filter-group) {
+    gap: var(--nl-spacing-16);
+}

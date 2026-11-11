@@ -210,7 +210,7 @@ export function MusecatConnectionDetail({
     );
 
     return (
-        <div className="nl-settings__form">
+        <div className="nl-settings__form nl-stack nl-stack--24">
             <div className="nl-settings__row-lead">
                 <MusecatMark />
                 <div className="nl-settings__row-copy">

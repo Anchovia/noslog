@@ -133,7 +133,7 @@ export default function PlayerRankingRow({
                 data-exam-label={badgeLabel}
                 data-contribution={contribution}
             >
-                <div className="nl-player-row__name">
+                <div className="nl-player-row__name nl-inline">
                     <CountryMarker country={row.country} />
                     <IntentLink
                         href={`${localizePath(`/profile/${row.id}`, locale)}?mode=${query.mode}`}

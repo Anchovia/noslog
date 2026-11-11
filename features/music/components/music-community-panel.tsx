@@ -38,7 +38,10 @@ export default function MusicCommunityPanel({
         `/music/${music.music.index}/${music.difficulty.toLowerCase()}?${new URLSearchParams({ ...Object.fromEntries(params), tab: "tier" })}`
     );
     return (
-        <div className="nl-community-panel" aria-busy={query.isFetching}>
+        <div
+            className="nl-community-panel nl-stack nl-stack--section"
+            aria-busy={query.isFetching}
+        >
             {query.isError ? (
                 <StatusMessage
                     tone="quiet"
@@ -59,7 +62,7 @@ export default function MusicCommunityPanel({
             {data ? (
                 <div className="nl-community-columns">
                     {/* 평가 탭 = 패턴 투표 → 서열 투표 → 의견. 집계 결과(패턴 경향 · 서열 배치)는 개요 · 머리에 (2026-09-16) */}
-                    <div className="nl-community-contribute">
+                    <div className="nl-stack nl-stack--section">
                         <PatternEvaluationForm
                             chartId={music.chartDetail.id}
                             data={data}

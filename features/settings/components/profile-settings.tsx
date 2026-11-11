@@ -263,7 +263,7 @@ export default function ProfileSettings({
     return (
         <>
             <form
-                className="nl-settings__form"
+                className="nl-settings__form nl-stack nl-stack--24"
                 onSubmit={(event) => {
                     event.preventDefault();
                     if (usernameChanged && !busy) void saveUsername();

@@ -1,5 +1,5 @@
 /**
- * 채보 무대 색(2026-09-26) — `tokens.css` 의 `--nl-stage-canvas` · `--nl-hand-left` · `--nl-hand-right` 와 같은 값.
+ * 채보 무대 색(2026-09-26) — `tokens/colors.css` 의 `--nl-stage-canvas` · `--nl-hand-left` · `--nl-hand-right` 와 같은 값.
  * 캔버스(Pixi · 2D)는 CSS 변수를 바로 못 읽어 여기 같이 두고, 테스트가 두 곳 값이 같은지 본다.
  */
 export const STAGE_CANVAS = "#070910";
@@ -42,7 +42,7 @@ export const FALLING_COLORS = {
     guideStrong: "#727786",
 } as const;
 
-/** 알림 표시색 — `tokens.css` 의 `--nl-feedback-warning-marker` · `--nl-feedback-destructive` 와 같은 값 */
+/** 알림 표시색 — `tokens/colors.css` 의 `--nl-feedback-warning-marker` · `--nl-feedback-destructive` 와 같은 값 */
 export const FEEDBACK_COLORS = {
     warning: "#fbc828",
     destructive: "#fc432e",

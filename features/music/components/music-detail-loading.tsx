@@ -135,7 +135,7 @@ function RecordLoading() {
     const t = useTranslations();
     return (
         <div className="nl-record-panel" aria-hidden="true" inert>
-            <div className="nl-record-disclosures">
+            <div className="nl-record-disclosures nl-stack nl-stack--section">
                 <Disclosure heading="section" title={t("record.best")} open>
                     <StatStripSkeleton
                         labels={[
@@ -296,14 +296,14 @@ function RecordLoading() {
 function RankingLoading({ signedIn }: { signedIn: boolean }) {
     const t = useTranslations();
     return (
-        <div className="nl-ranking-panel" aria-hidden="true" inert>
+        <div className="nl-stack nl-stack--section" aria-hidden="true" inert>
             {/* 점수 자(높이 72 = 핀 줄 48 + 8 + 라벨 16) 자리 — 참가자 · 범위가 곡마다 달라 통째로 */}
             <div className="nl-score-scatter">
                 <div className="nl-score-scatter__plot">
                     <div className="nl-detail-loading__ruler nl-skeleton" />
                 </div>
             </div>
-            <section className="nl-ranking-section">
+            <section className="nl-ranking-section nl-stack nl-stack--12">
                 {signedIn ? null : (
                     <div className="nl-heading-row">
                         <span className="nl-heading-link nl-control">
@@ -327,9 +327,13 @@ function CommunityLoading({ signedIn }: { signedIn: boolean }) {
         count: " ",
     }).split(" ");
     return (
-        <div className="nl-community-panel" aria-hidden="true" inert>
+        <div
+            className="nl-community-panel nl-stack nl-stack--section"
+            aria-hidden="true"
+            inert
+        >
             <div className="nl-community-columns">
-                <div className="nl-community-contribute">
+                <div className="nl-stack nl-stack--section">
                     <Disclosure
                         className="nl-pattern-form"
                         heading="section"
@@ -444,7 +448,7 @@ function CommunityLoading({ signedIn }: { signedIn: boolean }) {
                             </span>
                         </div>
                     )}
-                    <div className="nl-opinions__body">
+                    <div className="nl-opinions__body nl-stack nl-stack--8">
                         <div className="nl-opinions__list">
                             {[0, 1].map((index) => (
                                 <CommunityOpinionRowSkeleton key={index} />

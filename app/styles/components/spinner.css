@@ -1,0 +1,20 @@
+.noslog-ui .nl-spinner {
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    background: currentColor;
+    mask: url("/icons/noslog/spinner.svg") center / contain no-repeat;
+    /* ⑩ 로딩 — 회전(동작 줄이기에서도 유지) */
+    animation: nl-spin var(--nl-motion-loop-spin) var(--nl-ease-spin) infinite;
+}
+/* 한 덩어리 영역 가운데(지도 등) — 아이콘 기본 20 */
+.noslog-ui .nl-spinner[data-size="medium"] {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+}
+@keyframes nl-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

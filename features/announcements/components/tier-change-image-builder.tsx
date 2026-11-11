@@ -202,15 +202,15 @@ export default function TierChangeImageBuilder({
         }
     }
     return (
-        <Disclosure title="서열 변경 이미지" className="nl-admin-form__section">
-            <div className="nl-admin-form__section">
+        <Disclosure title="서열 변경 이미지" className="nl-stack">
+            <div className="nl-stack">
                 <p className="nl-body-secondary nl-muted">
                     곡을 고르고 변경 전후 값을 입력하면 기존 공지 양식으로
                     만듭니다. 미리보기는 업로드하지 않습니다.
                 </p>
                 <fieldset
                     disabled={disabled || busy !== null}
-                    className="nl-admin-form__section m-0 min-w-0 border-0 p-0"
+                    className="nl-stack m-0 min-w-0 border-0 p-0"
                 >
                     <legend className="sr-only">서열 변경 이미지 입력</legend>
                     <div className="nl-admin-form__grid">
@@ -287,7 +287,7 @@ export default function TierChangeImageBuilder({
                     ) : null}
                     {currentSearch && query.data ? (
                         <div
-                            className="nl-admin-form__section"
+                            className="nl-stack"
                             role="group"
                             aria-label="곡 검색 결과"
                         >
@@ -343,7 +343,7 @@ export default function TierChangeImageBuilder({
                     ) : null}
                     {rows.map((row, index) => (
                         <section
-                            className="nl-admin-form__section"
+                            className="nl-stack"
                             key={row.id}
                             aria-labelledby={`${id}-row-${row.id}`}
                         >
@@ -439,7 +439,7 @@ export default function TierChangeImageBuilder({
                     이미지 미리보기
                 </ActionButton>
                 {preview ? (
-                    <div className="nl-admin-form__section">
+                    <div className="nl-stack">
                         {/* 생성 PNG의 원본 비율만 줄인다. 관리자 UI의 크기·색·간격은 바꾸지 않는다. */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img

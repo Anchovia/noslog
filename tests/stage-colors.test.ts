@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -8,7 +7,7 @@ import {
     STAGE_CANVAS,
 } from "@/lib/chart-pattern/stageColors";
 
-const tokens = readFileSync("app/styles/tokens.css", "utf8");
+import { tokenCss as tokens } from "./helpers/design-tokens";
 
 describe("채보 무대 색", () => {
     it("캔버스 값이 토큰과 같다", () => {

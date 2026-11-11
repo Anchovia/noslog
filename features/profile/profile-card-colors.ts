@@ -1,6 +1,6 @@
 /**
- * 공유 카드(이미지) 색 = tokens.css 다크 값(2026-10-01 D9). 카드는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
- * 값이 토큰과 같은지는 tests/profile-card-colors.test.ts 가 tokens.css 를 읽어 확인한다.
+ * 공유 카드(이미지) 색 = tokens/colors.css 다크 값(2026-10-01 D9). 카드는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
+ * 값이 토큰과 같은지는 tests/profile-card-colors.test.ts 가 tokens/colors.css 를 읽어 확인한다.
  * 값 색(Grd 구간 · 순위)과 검정 명판은 lib/music/score-tone.ts 의 STAT_TONE_DARK_HEX · EXAM_TIER_DARK_HEX
  */
 export const PROFILE_CARD_DARK_HEX = {

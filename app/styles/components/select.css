@@ -1,0 +1,17 @@
+.noslog-ui .nl-select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    text-align: left;
+    cursor: pointer;
+}
+.noslog-ui .nl-select > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-select[data-placeholder] {
+    color: var(--nl-content-tertiary);
+}

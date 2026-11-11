@@ -45,7 +45,7 @@ export default function ProfileActivity({
             day: "numeric",
         }).format(new Date(`${date}T00:00:00Z`));
     return (
-        <div className="nl-profile-activity">
+        <div className="nl-stack nl-stack--section">
             <section
                 className="nl-profile-section nl-profile-calendar"
                 aria-labelledby="profile-activity-title"

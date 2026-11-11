@@ -360,13 +360,13 @@ export default function ChartSheetViewer({
 
     return (
         <PageContainer
-            className="noslog-ui nl-chart-viewer"
+            className="noslog-ui nl-chart-viewer nl-stack nl-stack--24"
             data-comment-entry={contribution ? "" : undefined}
         >
             <BackLink href={backHref}>{t("chart.back")}</BackLink>
             {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래.
                 보기 방식 세그먼트는 무대 바로 위에 늘 보이게(2026-09-26 V1 — 조작 줄 아이콘은 안 보여 되돌림) */}
-            <div className="nl-chart-viewer__view">
+            <div className="nl-stack nl-stack--12">
                 <SegmentedControl
                     label={t("chart.viewMode")}
                     value={viewMode}
@@ -414,7 +414,7 @@ export default function ChartSheetViewer({
                 ) : null}
             </div>
             {/* 넓은 화면(1056+) 머리 — 제목 묶음 → 채보 줄(작성자 · 동작) → 정보 상자 */}
-            <header className="nl-chart-viewer__head nl-chart-viewer__head--wide">
+            <header className="nl-chart-viewer__head nl-stack nl-stack--12 nl-chart-viewer__head--wide">
                 <div className="nl-chart-viewer__titles">
                     <div className="nl-chart-viewer__title-row">
                         <h1 className="nl-page-title">{title}</h1>
@@ -455,7 +455,7 @@ export default function ChartSheetViewer({
                 </div>
             </header>
             {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 */}
-            <header className="nl-chart-viewer__head nl-chart-viewer__head--compact">
+            <header className="nl-chart-viewer__head nl-stack nl-stack--12 nl-chart-viewer__head--compact">
                 <div className="nl-chart-viewer__titles">
                     <h1 className="nl-page-title nl-chart-viewer__compact-title">
                         {title}
@@ -495,7 +495,7 @@ export default function ChartSheetViewer({
                 onOpenChange={setInfoOpen}
                 title={t("chart.info")}
             >
-                <div className="nl-chart-viewer__info-sheet">
+                <div className="nl-chart-viewer__info-sheet nl-stack">
                     <div className="nl-chart-viewer__titles">
                         <p className="nl-entity-title">{title}</p>
                         {localizedTitle ? (

@@ -48,7 +48,7 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
     return (
         <div className="nl-record-panel">
             {/* 다섯 구역 펼침 — 사이는 구분선 없이 구역 간격, 요약 줄 → 내용 16 은 공용 펼침 규칙 */}
-            <div className="nl-record-disclosures">
+            <div className="nl-record-disclosures nl-stack nl-stack--section">
                 {/* 핵심 수치 두 칸도 접을 수 있게 — 기본은 펼침 (2026-09-18 사용자 결정) */}
                 <Disclosure heading="section" title={t("record.best")} open>
                     <StatStrip

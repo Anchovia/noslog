@@ -1,11 +1,5 @@
 /* 피드백 · 제보 창 — 672 이상 공용 nl-dialog(Wide 768 · 안쪽 24), 672 미만 공용 전체 화면 창(nl-full-dialog).
    여기엔 본문 전용 규칙만 (2026-09-16 예외 7개 제거 · 2026-09-18 F2 다시 그림) */
-.noslog-ui .nl-feedback-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    min-width: 0;
-}
 /* 도움말 줄 = 왼쪽 안내 · 오른쪽 「쓴 수 / 1,000」 하나 (한도를 두 번 말하지 않는다) */
 .noslog-ui .nl-feedback-form .nl-field__help:not(.nl-field__error) {
     display: flex;

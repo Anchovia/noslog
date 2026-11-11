@@ -1,0 +1,31 @@
+/* 상태 메시지(2026-09-28 인상 점검 A1 — Carbon 「헷갈리면 약한 대비」 · GOV.UK 오류 글 · Primer 「동작 가까이」).
+   아이콘 · 색 면 없이 글자만(2026-10-01 N1). inline(기본) = 본문 보조 글자, 오류는 오류 글자색.
+   quiet = 흐린 한 줄 + 오른쪽 동작(구역 불러오기 실패). boxed = 면 없이 제목(component-title) + 설명 */
+.noslog-ui .nl-status {
+    display: flex;
+    color: var(--nl-content-default);
+}
+.noslog-ui
+    .nl-status--inline.nl-status--danger
+    > .nl-status__copy
+    > p:first-child {
+    color: var(--nl-feedback-destructive);
+}
+.noslog-ui .nl-status__copy {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-status__copy > .nl-body-secondary:not(:first-child) {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-status--quiet > .nl-status__copy {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: var(--nl-spacing-12);
+    color: var(--nl-content-subdued);
+}

@@ -249,7 +249,7 @@ export default function FeedbackDialogView({
                 id={formId}
                 onSubmit={submit}
                 noValidate
-                className="nl-feedback-form"
+                className="nl-feedback-form nl-stack"
                 aria-busy={isSubmitting}
             >
                 <FormField

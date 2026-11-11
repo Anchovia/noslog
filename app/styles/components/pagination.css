@@ -1,0 +1,55 @@
+/* 쪽 번호 — 칸 = 컨트롤 높이 정사각 */
+.noslog-ui .nl-pagination {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+.noslog-ui .nl-pagination__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-pagination__item {
+    display: flex;
+    flex-shrink: 0;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    /* 따로 누르는 상자 — 높이는 컨트롤 높이, 모서리는 누르는 칸(field) */
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-default);
+}
+/* 올림 · 누름 · 키 포커스 = Spectrum 2 ActionButton quiet — 면 gray-200 · 글자 gray-900 */
+@media (hover: hover) {
+    .noslog-ui
+        :is(a, button).nl-pagination__item:not(
+            :disabled,
+            [aria-disabled="true"],
+            [aria-current="page"]
+        ):hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui
+    :is(a, button).nl-pagination__item:not(
+        :disabled,
+        [aria-disabled="true"],
+        [aria-current="page"]
+    ):is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+/* 현재 쪽 = 고른 칩과 같은 gray-100 면(2026-10-26 사용자) */
+.noslog-ui .nl-pagination__item[aria-current="page"] {
+    background: var(--nl-surface-control);
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-pagination__item:disabled,
+.noslog-ui .nl-pagination__item[aria-disabled="true"] {
+    background: transparent;
+    color: var(--nl-content-disabled);
+}

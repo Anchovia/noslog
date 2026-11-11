@@ -1,3 +1,7 @@
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-achievement-card-popover[data-state="open"] {
+    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+}
 /* 업적(2026-09-24 T2 · I1 · L2 · K1 · P5 · D1 · B1 · C1 · E1) — 색은 검정 명판 금속 사다리 토큰(exam/tier-*)을 그대로 불러 쓴다 */
 
 /* 목록 육각 폭 44 — 육각 · 사다리 들여쓰기 · 격자 칸 · 프로필 한 줄 칸 수(JS)가 같은 값을 쓴다 */
@@ -171,12 +175,6 @@
     padding: 0 0 0
         calc(var(--nl-achievement-hex-row-width) + var(--nl-spacing-12));
     list-style: none;
-}
-.noslog-ui .nl-achievement-ladder__step {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
 }
 .noslog-ui .nl-achievement-ladder__step > div {
     display: flex;

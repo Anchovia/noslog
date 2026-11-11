@@ -26,7 +26,7 @@ export function PageHeading({
 }) {
     return (
         <div className="nl-page-heading">
-            <div className="nl-page-heading__copy">
+            <div className="nl-stack nl-stack--8">
                 <h1 className="nl-page-title">{title}</h1>
                 {description ? (
                     <p className="nl-metadata nl-muted">{description}</p>

@@ -35,7 +35,7 @@ export default function TierHistory({
         >
             <div className="nl-tier-history">
                 {/* 날짜 묶음 = 보조 펼침, 기본 접힘 — 이력이 길어져도 펼친 높이가 늘지 않게 (2026-09-16) */}
-                <div className="nl-tier-history__days">
+                <div className="nl-stack nl-stack--8">
                     {dates.map((day) => (
                         <Disclosure
                             key={day}

@@ -1,11 +1,13 @@
 /* 랭킹 페이지 — 2026-09-13 재설계. 정보가 적은 목록이라 폭을 채우지 않고 640 가운데에 둔다.
    상단(제목 · 모드 세그먼트 · 지표 탭과 지역)은 이전 그대로, 표는 모든 폭에서 한 규격이다. */
-.noslog-ui .nl-global-rankings {
-    /* 1~3위 순위 숫자는 검정 명판의 금속색(골드·실버·브론즈) */
+.noslog-ui :is(.nl-global-rankings, .nl-chart-leaderboard) {
+    /* 1~3위 순위 숫자는 검정 명판의 금속색(골드·실버·브론즈). 곡 상세 순위표(ranking.css)도 같은 목록 규격이라 함께 받는다 */
     --nl-rank-1: var(--nl-exam-tier-top);
     --nl-rank-2: var(--nl-exam-tier-high);
     --nl-rank-3: var(--nl-exam-tier-mid);
     --nl-ranking-inset: var(--nl-spacing-12);
+}
+.noslog-ui .nl-global-rankings {
     padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
 }
 .noslog-ui .nl-global-rankings__measure {
@@ -83,8 +85,7 @@
     flex-shrink: 0;
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
-.noslog-ui .nl-player-row__identity,
-.noslog-ui .nl-player-row__name {
+.noslog-ui .nl-player-row__identity {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);

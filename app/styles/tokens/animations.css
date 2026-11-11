@@ -1,0 +1,41 @@
+/* 움직임 토큰(2026-09-19) — 가이드 「움직임」 절이 원본. 값은 여기서만 정하고 부품은 이름으로만 쓴다(인라인 · 부품별 값 없음).
+   토스트(sonner)는 셸 밖에 그려지므로 같은 블록을 토스터에도 선언한다 */
+.noslog-ui,
+html:has(.noslog-ui) [data-sonner-toaster] {
+    /* 시간 */
+    --nl-motion-duration-state: 100ms; /* 올림 · 누름 색 */
+    --nl-motion-duration-popup: 150ms; /* 메뉴 · 셀렉트 · 팝오버 · ≡ 메뉴 열림(닫힘은 즉시) */
+    --nl-motion-duration-overlay-in: 200ms; /* 대화상자 · 토스트 나타남 */
+    --nl-motion-duration-overlay-out: 150ms; /* 대화상자 · 토스트 사라짐 */
+    --nl-motion-duration-move: 200ms; /* 헤더 숨김 · 오락실 시트 */
+    --nl-motion-duration-chart-in: 800ms; /* 그래프 나타남(막대 · 선이 왼쪽부터) */
+    --nl-motion-duration-chart-change: 300ms; /* 그래프 값 바뀜(새 값으로 옮겨 감) */
+    --nl-motion-loop-spin: 800ms; /* 스피너 한 바퀴 */
+    --nl-motion-loop-pulse: 1600ms; /* 스켈레톤 한 번 깜빡임 */
+    /* 로딩(2026-09-19 로딩 시안 결정 4) — 이 시간 안에 끝나면 로딩 표시를 띄우지 않는다 */
+    --nl-motion-delay-progress: 100ms; /* 사이트 안 이동 — 위쪽 진행 막대 */
+    --nl-motion-delay-skeleton: 300ms; /* 화면 안 다시 불러오기 — 스켈레톤 */
+    --nl-motion-duration-progress: 1500ms; /* 위쪽 진행 막대가 80% 까지 차오르는 시간(끝나면 채우고 사라짐) */
+    /* 곡선 — 들어올 때 감속 · 나갈 때 가속(Atlassian practical 과 같은 값) */
+    --nl-ease-enter: cubic-bezier(0.4, 1, 0.6, 1);
+    --nl-ease-exit: cubic-bezier(0.6, 0, 0.8, 0.6);
+    --nl-ease-spin: linear;
+    --nl-ease-pulse: ease-in-out;
+    /* 거리 — 대화상자 · 토스트가 떠오르는 만큼 */
+    --nl-motion-distance: 8px;
+}
+/* 동작 줄이기 — 시간을 모두 0 으로(한 곳). 스피너 한 바퀴와 위쪽 진행 막대 차오름은 남긴다: 멈추면 고장처럼 보인다 */
+@media (prefers-reduced-motion: reduce) {
+    .noslog-ui,
+    html:has(.noslog-ui) [data-sonner-toaster] {
+        --nl-motion-duration-state: 0ms;
+        --nl-motion-duration-popup: 0ms;
+        --nl-motion-duration-overlay-in: 0ms;
+        --nl-motion-duration-overlay-out: 0ms;
+        --nl-motion-duration-move: 0ms;
+        --nl-motion-duration-chart-in: 0ms;
+        --nl-motion-duration-chart-change: 0ms;
+        --nl-motion-loop-pulse: 0ms;
+        --nl-motion-distance: 0px;
+    }
+}

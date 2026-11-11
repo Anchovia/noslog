@@ -317,12 +317,6 @@
 }
 
 /* 글쓰기 화면의 투표 구역(2026-09-23 V2) — 본문 아래. 만들기 전에는 버튼 하나, 만든 뒤에는 요약 카드 */
-.noslog-ui .nl-poll-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
 .noslog-ui .nl-poll-section__head {
     display: flex;
     flex-wrap: wrap;
@@ -365,12 +359,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-poll-builder__option {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
 }
 .noslog-ui .nl-poll-builder__option > .nl-input {
     flex: 1;
@@ -439,12 +427,6 @@
 }
 .noslog-ui .nl-poll__option:disabled {
     color: var(--nl-content-disabled);
-}
-.noslog-ui .nl-poll__result {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
 }
 .noslog-ui .nl-poll__label {
     display: flex;

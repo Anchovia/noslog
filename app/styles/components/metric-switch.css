@@ -1,0 +1,11 @@
+.noslog-ui .nl-metric-switch__full {
+    display: none;
+}
+@container metric-controls (min-width: 396px) {
+    .noslog-ui .nl-metric-switch__full {
+        display: inline;
+    }
+    .noslog-ui .nl-metric-switch__short {
+        display: none;
+    }
+}

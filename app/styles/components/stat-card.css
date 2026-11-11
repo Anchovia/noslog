@@ -1,0 +1,12 @@
+/* 수치 상자 + 아래 칸 — 수치 띠와 동작 묶음을 한 상자(모서리 control)로. 사이 선은 gap 1 + divider 바탕(수치 띠와 같은 방식) */
+.noslog-ui .nl-stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-stroke-default);
+    overflow: hidden;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-stat-card > .nl-stat-strip {
+    border-radius: 0;
+}

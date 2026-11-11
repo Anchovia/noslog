@@ -144,7 +144,7 @@ export default async function SettingsLoading({
     const { t } = await getServerI18n();
     return (
         <div
-            className="nl-settings__form nl-settings__loading"
+            className="nl-settings__form nl-stack nl-stack--24 nl-settings__loading"
             aria-busy="true"
         >
             <LoadingStatus
@@ -154,7 +154,10 @@ export default async function SettingsLoading({
                         : "common.loading"
                 )}
             />
-            <div className="nl-settings__form" aria-hidden="true">
+            <div
+                className="nl-settings__form nl-stack nl-stack--24"
+                aria-hidden="true"
+            >
                 {category === "profile" ? (
                     <ProfileRows t={t} />
                 ) : category === "privacy" ? (

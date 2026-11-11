@@ -1,3 +1,10 @@
+.noslog-ui .nl-stat-card[data-pending] .nl-my-best__grd-value,
+.noslog-ui .nl-stat-card[data-pending] .nl-my-best__grd-max-value {
+    color: var(--nl-content-subdued) !important;
+}
+.noslog-ui .nl-stat-card[data-pending] .nl-grade-progress__fill {
+    background: var(--nl-content-subdued) !important;
+}
 .noslog-ui .nl-music-detail {
     padding-top: var(--nl-spacing-24);
     padding-bottom: var(--nl-spacing-48);
@@ -379,14 +386,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--nl-spacing-24);
-}
-/* 최근 플레이 · 판정 분석 펼침 묶음 — 사이 간격 없이 쌓고 구분선은 공용 펼침 규칙 */
-/* 접히는 구역 사이는 구분선 없이 「구역 사이」(구역 간격 토큰) — 구분선은 가이드에 없던 장식이라 뺀다 (2026-09-18 사용자 결정) */
-.noslog-ui .nl-record-disclosures {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-section-gap);
-    min-width: 0;
 }
 /* 최근 플레이 = 카드 안 선 목록(카드 안쪽 16, 줄 올림 면은 안쪽 4 까지) */
 .noslog-ui .nl-recent-plays {

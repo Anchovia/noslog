@@ -172,7 +172,7 @@ export default function ProfileIdentity({
                     className="nl-profile-identity__avatar"
                 />
                 <div className="nl-profile-identity__name-stack">
-                    <div className="nl-profile-identity__name">
+                    <div className="nl-profile-identity__name nl-inline">
                         <h1
                             id="profile-name"
                             className="nl-page-title"

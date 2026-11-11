@@ -1,3 +1,7 @@
+.noslog-ui .nl-destinations,
+.noslog-ui .nl-nav-scrim {
+    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+}
 .noslog-ui {
     /* 본문 최대 폭 1200 — 레이아웃 결정 2026-09-15 (사이트 16곳 중 9곳이 1200–1280) */
     --nl-layout-max: 1200px;
@@ -42,32 +46,6 @@
 .noslog-ui .nl-container--reading {
     max-width: var(--nl-container-reading);
 }
-/* 상위 페이지로 돌아가는 링크 — 폭은 내용만큼 (빈 공간 클릭이 이동으로 이어지지 않게) */
-.noslog-ui .nl-back-link {
-    display: flex;
-    width: fit-content;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: var(--nl-back-link-height);
-    /* 단독 링크 = Spectrum 2 secondary 링크(.nl-link 와 같은 값). TSX 의 nl-muted 보다 뒤에 읽혀 이 색이 이긴다 */
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-medium);
-    text-underline-offset: var(--nl-underline-offset);
-}
-.noslog-ui .nl-back-link:is(:active, :focus-visible) {
-    color: var(--nl-content-strong);
-    text-decoration: underline;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-back-link:hover {
-        color: var(--nl-content-strong);
-        text-decoration: underline;
-    }
-}
-.noslog-ui .nl-back-link svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 /* 페이지 제목(또는 제목 + 설명) → 첫 내용 16 — 컨테이너 기본 간격 24 를 제목 아래에서만 16 으로 (2026-09-15 역할값).
    페이지가 컨테이너 간격을 32 로 바꾼 곳(동기화 · 검정 · 개인정보)은 그 파일에서 같은 식으로 맞춘다 */
 .noslog-ui .nl-container > :is(.nl-page-title, .nl-page-heading) {
@@ -79,12 +57,6 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-page-heading__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
 }
 .noslog-ui .nl-skip-link {
     position: fixed;
@@ -343,7 +315,6 @@ html:has(.noslog-ui .nl-header) {
     min-width: 0;
     text-align: center;
 }
-
 @media (min-width: 672px) {
     .noslog-ui .nl-main,
     .noslog-ui .nl-header__interaction,

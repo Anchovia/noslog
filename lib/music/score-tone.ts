@@ -58,7 +58,7 @@ export function gradeBandTone(
 }
 
 /**
- * 이미지(공유 카드)용 검정 명판 다크 값(2026-09-26 E4) — 카드는 CSS 변수를 못 읽어 tokens.css 다크 값을 옮겨 둔다.
+ * 이미지(공유 카드)용 검정 명판 다크 값(2026-09-26 E4) — 카드는 CSS 변수를 못 읽어 tokens/colors.css 다크 값을 옮겨 둔다.
  * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 확인한다
  */
 export const EXAM_TIER_DARK_HEX = {
@@ -72,8 +72,8 @@ export const EXAM_TIER_DARK_HEX = {
 } as const;
 
 /**
- * 이미지(공유 카드)용 다크 값 — 카드는 CSS 변수를 못 읽어 tokens.css 다크 값을 그대로 옮겨 둔다.
- * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 tokens.css 를 읽어 확인한다
+ * 이미지(공유 카드)용 다크 값 — 카드는 CSS 변수를 못 읽어 tokens/colors.css 다크 값을 그대로 옮겨 둔다.
+ * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 tokens/colors.css 를 읽어 확인한다
  */
 export const STAT_TONE_DARK_HEX: Partial<Record<StatTone, string>> = {
     "rank-1": EXAM_TIER_DARK_HEX.top,

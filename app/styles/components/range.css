@@ -1,0 +1,47 @@
+/* 범위 슬라이더 RangeSlider — 높이 24 · 트랙 4 border/divider(양끝 12 안쪽) · 채운 점 20(누르는 자리 24) */
+.noslog-ui .nl-range {
+    --nl-range-accent: var(--nl-primary-default);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+}
+.noslog-ui .nl-range__label {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-range__slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: var(--nl-spacing-24);
+    width: 100%;
+    touch-action: none;
+    user-select: none;
+}
+/* 트랙은 손잡이 중심이 움직이는 구간(양끝에서 타겟 절반 12 안쪽)만 — 끝이 점 밑에 숨는다 */
+.noslog-ui .nl-range__track {
+    position: relative;
+    height: var(--nl-spacing-4);
+    width: calc(100% - var(--nl-spacing-24));
+    margin-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-range__selection {
+    position: absolute;
+    height: 100%;
+    background: var(--nl-range-accent, var(--nl-primary-default));
+    border-radius: inherit;
+}
+/* 채운 점 20 — 타겟 24 는 투명 테두리로 지킨다. 포커스는 공용 선 */
+.noslog-ui .nl-range__thumb {
+    display: block;
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
+    border: var(--nl-stroke-strong) solid transparent;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-primary-default);
+    background-clip: padding-box;
+}

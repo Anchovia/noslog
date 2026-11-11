@@ -91,7 +91,7 @@ export default function CommunityOpinions({
             {headerAction ? (
                 <div className="nl-heading-row">{headerAction}</div>
             ) : null}
-            <div className="nl-opinions__body">
+            <div className="nl-opinions__body nl-stack nl-stack--8">
                 {composer}
                 {/* 정렬은 의견이 둘 이상일 때만 — 목록 위 왼쪽 고스트(악곡 · 서열 결과 줄과 같은 자리) */}
                 {(query.data?.pages[0].total ?? initialData.total) > 1 ? (

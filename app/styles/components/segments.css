@@ -1,0 +1,129 @@
+/* 세그먼트 = MangaDex 보기 전환 — 판 surface 면 · 선 없음, 고른 칸 = 한 단계 밝은 면 + 강한 글자.
+   칸 = 컨트롤 높이 · 좌우 12 · 글자 regular(고름 · 안 고름 같은 굵기, 면과 색만 다르다) */
+.noslog-ui .nl-segments {
+    display: flex;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    padding: 0;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-segments__item {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--nl-spacing-12);
+    border-radius: var(--nl-radius-small);
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
+}
+/* 올림 · 누름 · 키 포커스 = 글자 한 단계 밝게(Spectrum 2 neutral-subdued → neutral, 고른 칸 neutral → gray-900) */
+@media (hover: hover) {
+    .noslog-ui .nl-segments__item:not([aria-checked="true"], :disabled):hover {
+        color: var(--nl-content-default);
+    }
+    .noslog-ui .nl-segments__item[aria-checked="true"]:not(:disabled):hover {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui
+    .nl-segments__item:not([aria-checked="true"], :disabled):is(
+        :active,
+        :focus-visible
+    ) {
+    color: var(--nl-content-default);
+}
+.noslog-ui
+    .nl-segments__item[aria-checked="true"]:not(:disabled):is(
+        :active,
+        :focus-visible
+    ) {
+    color: var(--nl-content-strong);
+}
+/* 고른 칸 = surface/control 면 · content/strong 글자 · 선 없음(MangaDex 방식), 칸과 같은 자리 · 크기 */
+.noslog-ui .nl-segments__item[aria-checked="true"] {
+    background: var(--nl-surface-control);
+    color: var(--nl-content-strong);
+}
+/* 고른 칸 안의 색 글자(난이도 레벨 숫자)는 기본 글자색으로 — 고른 칩과 같은 규칙. 고른 면 위에서는 색 글자 대비가 모자란다(2026-09-30 A) */
+.noslog-ui .nl-segments__item[aria-checked="true"] [class*="nl-level--"] {
+    color: inherit;
+}
+.noslog-ui .nl-segments__item:disabled {
+    color: var(--nl-content-disabled);
+}
+/* 촘촘한 세그먼트 — 좁은 자리(검정 레일 · 악곡 상세 판정 추이)에서 칸 이름이 줄바꿈되지 않게 칸 좌우 안쪽 4 */
+.noslog-ui .nl-segments--dense .nl-segments__item {
+    padding-inline: var(--nl-spacing-4);
+    white-space: nowrap;
+}
+/* 아이콘 전용 세그먼트 — 칸 = 컨트롤 높이 정사각 · 아이콘 20 · 폭은 내용만큼 */
+.noslog-ui .nl-segments--icons {
+    width: fit-content;
+}
+.noslog-ui .nl-segments--icons .nl-segments__item {
+    flex: none;
+    width: var(--nl-control-height);
+    padding-inline: 0;
+}
+.noslog-ui .nl-segments--icons .nl-segments__item > svg {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+}
+/* 1056 이상에서 세로로 쌓는 세그먼트 — 행 = 컨트롤 높이 · 이름 왼쪽 · 값 오른쪽 · 안쪽 12 (악곡 상세 난이도) */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-segments--wide-vertical {
+        flex-direction: column;
+        min-height: 0;
+    }
+    /* 잉크가 옆 칸(수치 띠 · 동작 칸)과 같은 12 에 선다 */
+    .noslog-ui .nl-segments--wide-vertical .nl-segments__item {
+        flex: none;
+        min-height: var(--nl-control-height);
+        justify-content: space-between;
+        padding-inline: var(--nl-spacing-12);
+    }
+}
+/* 작은 세그먼트(size="sm") — 판 · 칸 = 작은 컨트롤 높이 · 아이콘 칸 정사각 · 결과 줄 같은 인라인 자리 */
+.noslog-ui .nl-segments--compact,
+.noslog-ui .nl-segments--compact .nl-segments__item {
+    min-height: var(--nl-control-height-compact);
+}
+.noslog-ui .nl-segments--compact.nl-segments--icons .nl-segments__item {
+    width: var(--nl-control-height-compact);
+}
+@media (forced-colors: active) {
+    .noslog-ui .nl-segments__item[aria-checked="true"] {
+        forced-color-adjust: none;
+    }
+    .noslog-ui .nl-segments__item[aria-checked="true"],
+    .noslog-ui
+        .nl-segments__item[aria-checked="true"]:not(:disabled):is(
+            :active,
+            :focus-visible
+        ) {
+        border-color: Highlight;
+        background: Highlight;
+        color: HighlightText;
+    }
+    /* 고른 칸 면이 Highlight 라 그 안쪽 포커스 선은 글자와 같은 HighlightText 로 그어야 보인다 */
+    .noslog-ui .nl-segments__item[aria-checked="true"]:focus-visible {
+        outline-color: HighlightText;
+    }
+    .noslog-ui .nl-segments__item[aria-checked="true"]:disabled {
+        border-color: GrayText;
+        background: Canvas;
+        color: GrayText;
+    }
+}
+@media (forced-colors: active) and (hover: hover) {
+    .noslog-ui .nl-segments__item[aria-checked="true"]:not(:disabled):hover {
+        color: HighlightText;
+    }
+}

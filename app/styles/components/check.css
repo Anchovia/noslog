@@ -1,0 +1,93 @@
+/* 숨긴 입력이 포커스를 받는 부품은 보이는 상자에 같은 선을 그린다 */
+.noslog-ui .nl-check input:focus-visible + .nl-check__box {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: var(--nl-stroke-strong);
+}
+/* 상자 ↔ 라벨 = Spectrum 2 text-to-control 10 */
+.noslog-ui .nl-check {
+    display: flex;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    gap: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
+    position: relative;
+}
+.noslog-ui .nl-check input {
+    position: absolute;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    opacity: 0;
+}
+/* 체크박스 · 라디오 = Spectrum 2 — 2px 경계 gray-800 · 면 gray-25, 고른 면 gray-800.
+   올림 · 누름 · 키 포커스 = 경계 · 고른 면 gray-900, 비활성 gray-400 */
+.noslog-ui .nl-check__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-surface-input);
+}
+/* 체크는 Spectrum 2 처럼 상자보다 한 단계 작은 10. Lucide 모양 그대로 선만 3 */
+.noslog-ui .nl-check__box > svg {
+    width: calc(
+        var(--nl-icon-small) - var(--nl-spacing-4) - var(--nl-spacing-2)
+    );
+    height: calc(
+        var(--nl-icon-small) - var(--nl-spacing-4) - var(--nl-spacing-2)
+    );
+    stroke-width: 3;
+    visibility: hidden;
+}
+.noslog-ui .nl-check input:checked + .nl-check__box {
+    background: var(--nl-primary-default);
+    border-color: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+.noslog-ui .nl-check input:checked + .nl-check__box > svg {
+    visibility: visible;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-check:not(:has(input:disabled)):hover .nl-check__box {
+        border-color: var(--nl-content-strong);
+    }
+    .noslog-ui
+        .nl-check:not(:has(input:disabled)):hover
+        input:checked
+        + .nl-check__box {
+        background: var(--nl-primary-hover);
+    }
+}
+.noslog-ui .nl-check:not(:has(input:disabled)):active .nl-check__box,
+.noslog-ui .nl-check input:focus-visible + .nl-check__box {
+    border-color: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-check:not(:has(input:disabled)):active
+    input:checked
+    + .nl-check__box,
+.noslog-ui .nl-check input:checked:focus-visible + .nl-check__box {
+    background: var(--nl-primary-hover);
+}
+.noslog-ui .nl-check:has(input:disabled) {
+    color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-check input:disabled + .nl-check__box {
+    border-color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-check input:disabled:checked + .nl-check__box {
+    background: var(--nl-content-disabled);
+}
+@media (forced-colors: active) {
+    .noslog-ui .nl-check__box {
+        forced-color-adjust: none;
+        border-color: ButtonText;
+    }
+    .noslog-ui .nl-check input:checked + .nl-check__box {
+        background: Highlight;
+        color: HighlightText;
+        border-color: Highlight;
+    }
+}

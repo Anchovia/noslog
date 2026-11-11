@@ -1,0 +1,32 @@
+/* 붙인 파일 한 줄(공용 FileRow — 피드백 · 오락실 제보) — 썸네일 · 이름(말줄임) · 크기 · 지우기. 입력칸과 같은 면 · 2px 경계, 지우기는 잉크가 오른쪽 12 선에 서게 당김 */
+.noslog-ui .nl-file-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height);
+    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-input);
+}
+/* 썸네일 = 줄 높이(컨트롤 높이) − 8 → 위아래 4 · 모서리 4(상자 안 항목) · 비율 유지 채움 */
+.noslog-ui .nl-file-row__thumb {
+    flex: none;
+    width: calc(var(--nl-control-height) - var(--nl-spacing-8));
+    height: calc(var(--nl-control-height) - var(--nl-spacing-8));
+    border-radius: var(--nl-radius-small);
+    object-fit: cover;
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-file-row__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 지우기(아이콘 버튼 = 컨트롤 정사각)를 (컨트롤 − 20) / 2 만큼 당겨 잉크가 안쪽 12 선에, 위아래는 경계만큼 */
+.noslog-ui .nl-file-row > .nl-button--icon {
+    margin-right: calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2);
+    margin-block: calc(var(--nl-stroke-strong) * -1);
+}

@@ -1,0 +1,77 @@
+/* 입력 계열 포커스 = Spectrum 2 텍스트 필드 — 커서가 들어가면 테두리가 gray-900 으로 바뀌는 것 하나.
+   바깥 포커스 선은 겹쳐 그리지 않는다. 안의 입력이 포커스를 받는 상자도 같다. 오류 칸은 빨간 경계를 지킨다 */
+.noslog-ui .nl-input:not(.nl-select, [aria-invalid="true"]):focus {
+    border-color: var(--nl-content-strong);
+    outline: none;
+}
+/* 입력칸 = Spectrum 2 텍스트 필드 — 면 gray-25 · 2px 경계 gray-300, 올리면 경계 gray-400 */
+.noslog-ui .nl-input {
+    width: 100%;
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    /* 글줄이 컨트롤 높이 가운데 — 위아래 여백 = (높이 − 글줄) / 2 − 선 */
+    padding: calc(
+            (var(--nl-control-height) - var(--nl-type-line-height-ui)) / 2 -
+                var(--nl-stroke-strong)
+        )
+        calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-input);
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-input-size);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
+}
+@media (hover: hover) {
+    .noslog-ui
+        .nl-input:not(
+            :disabled,
+            [data-disabled],
+            [readonly],
+            :focus,
+            [aria-invalid="true"],
+            :has(.nl-unit-input__field[aria-invalid="true"])
+        ):hover {
+        border-color: var(--nl-border-input-hover);
+    }
+}
+/* 단위 입력은 aria-invalid 가 안 입력에 붙으므로 겉 상자가 그것을 보고 같은 빨간 경계를 그린다 */
+.noslog-ui .nl-input[aria-invalid="true"] {
+    border-color: var(--nl-feedback-destructive);
+}
+.noslog-ui .nl-input:disabled {
+    color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-input[readonly] {
+    border-color: transparent;
+    background: var(--nl-surface-surface);
+}
+.noslog-ui textarea.nl-input {
+    min-height: calc(var(--nl-spacing-48) * 2);
+    padding: calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
+    resize: vertical;
+}
+/* 셀렉트 트리거 = Spectrum 2 picker — 면 gray-100 · 경계 없음 · 올림 gray-200 + 오른쪽 꺾쇠 · 목록은 .nl-select-menu */
+.noslog-ui .nl-input.nl-select {
+    border-color: transparent;
+    background: var(--nl-surface-control);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-input.nl-select:not(:disabled):hover {
+        border-color: transparent;
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}
+/* 열림 · 누름 · 키 포커스도 올림과 같은 면 · 글자(Spectrum 2 picker) */
+.noslog-ui
+    .nl-input.nl-select:not(:disabled):is(
+        :active,
+        :focus-visible,
+        [aria-expanded="true"],
+        [data-state="open"]
+    ) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}

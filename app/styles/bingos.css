@@ -73,13 +73,6 @@
 .noslog-ui .nl-bingo-card {
     width: 100%;
 }
-.noslog-ui .nl-bingo-row-item__title,
-.noslog-ui .nl-bingo-card__status {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 /* 찬스는 상태 글자 중 기본 글자색으로 한 단계 드러낸다(상세 찬스 태그와 같은 중립) */
 .noslog-ui .nl-bingo-card__chance {
     color: var(--nl-content-default);

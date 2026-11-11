@@ -337,7 +337,7 @@ export default function MusecatArcadeDetailPage({
                         />
                     </div>
 
-                    <div className="nl-musecat-body">
+                    <div className="nl-stack">
                         {/* 정보 줄 — 주소(노선) · 오늘 영업시간(펼치면 요일별) · 소셜 · 전화. 구역 제목은 화면 읽기에만 */}
                         <section className="nl-musecat-section">
                             <h2 className="sr-only">

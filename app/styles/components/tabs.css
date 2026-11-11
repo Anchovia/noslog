@@ -1,0 +1,103 @@
+/* 밑줄 탭 — 한 모양 두 단계. 선택 = 밝은 글자 · semibold + 2px 밑줄, 안 선택 = 흐린 글자 · medium, 올림 = 글자만 밝게.
+   1단 `--primary`(페이지 안 큰 구역 · 악곡 상세 · 프로필): 높이 48 · 줄 폭을 똑같이 나눔 · 줄 아래 1px 선 · 넘치면 가로 스크롤.
+   2단(같은 목록의 기준 전환 · 랭킹/프로필 메트릭): 컨트롤 높이 — 같은 줄 셀렉트와 맞춘다 */
+.noslog-ui .nl-tabs {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex-shrink: 0;
+}
+/* 1단 탭 줄 = 운영 NosLog 방식 — 줄 아래 1px 구분선. 고른 표시선이 이 선 위에 겹친다 */
+.noslog-ui .nl-tabs--primary {
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) 0
+        var(--nl-border-divider);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-tabs--primary::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-tabs__item {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--nl-control-height);
+    padding-inline: var(--nl-spacing-16);
+    white-space: nowrap;
+    color: var(--nl-content-subdued);
+    font-weight: var(--nl-type-weight-medium);
+}
+/* 1단 탭 항목 — 줄 폭을 똑같이 나눠 채우고(표시선 = 항목 폭) 글자가 길면 글자 폭까지 늘어난다. 높이 48 · 좌우 안쪽 8 */
+.noslog-ui .nl-tabs--primary .nl-tabs__item {
+    flex: 1 0 0;
+    min-height: var(--nl-spacing-48);
+    padding-inline: var(--nl-spacing-8);
+}
+/* 지표 전환 MetricSwitch = 2단 밑줄 탭의 촘촘한 변형 — 좁은 칸 여백 12(랭킹 지표 줄이 396 이상이면 16) · 짧은 라벨 전환 */
+.noslog-ui .nl-tabs .nl-metric-switch__item {
+    padding-inline: var(--nl-spacing-12);
+}
+@container metric-controls (min-width: 396px) {
+    .noslog-ui .nl-tabs .nl-metric-switch__item {
+        padding-inline: var(--nl-spacing-16);
+    }
+}
+@media (hover: hover) {
+    .noslog-ui .nl-tabs__item:not(:disabled, [aria-disabled="true"]):hover {
+        color: var(--nl-content-default);
+    }
+}
+.noslog-ui
+    .nl-tabs__item:not(:disabled, [aria-disabled="true"]):is(
+        :active,
+        :focus-visible
+    ) {
+    color: var(--nl-content-default);
+}
+.noslog-ui
+    .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    ) {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+@media (hover: hover) {
+    .noslog-ui
+        .nl-tabs__item:is(
+            [data-state="active"],
+            [aria-pressed="true"],
+            [aria-current="page"]
+        ):hover {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui
+    .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    ):is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-tabs__item:is(:disabled, [aria-disabled="true"]) {
+    color: var(--nl-content-disabled);
+    cursor: default;
+}
+.noslog-ui
+    .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    )::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--nl-stroke-strong);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-content-default);
+}

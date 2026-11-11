@@ -1,0 +1,10 @@
+/* 필터 개수 배지 — 「필터」 버튼 안 적용 조건 묶음 수. 개수 전용이라 태그와 다른 모양: 원 20(태그 높이와 같은 값) · 글자 metadata · 면 surface/control */
+.noslog-ui .nl-filter-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--nl-icon-medium);
+    min-height: var(--nl-icon-medium);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-control);
+}

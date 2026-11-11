@@ -48,7 +48,7 @@ export default function BingoCatalogCard({
               ? t("bingo.unlocked")
               : t("bingo.cells", { count: completed.size });
     const meta = isAuthenticated ? (
-        <span className="nl-metadata nl-muted nl-bingo-card__status">
+        <span className="nl-metadata nl-muted nl-truncate">
             <span className="nl-bingo-card__state">{status}</span>
             {item.chanceLines > 0 ? (
                 <>
@@ -60,7 +60,7 @@ export default function BingoCatalogCard({
             ) : null}
         </span>
     ) : (
-        <span className="nl-metadata nl-muted nl-bingo-card__status">
+        <span className="nl-metadata nl-muted nl-truncate">
             {[item.sourceVersion, reward].filter(Boolean).join(" · ")}
         </span>
     );
@@ -83,11 +83,11 @@ export default function BingoCatalogCard({
                     className="nl-bingo-row-item__cover"
                 />
                 <span className="nl-bingo-row-item__body">
-                    <span className="nl-emphasis-label nl-bingo-row-item__title">
+                    <span className="nl-emphasis-label nl-truncate">
                         {item.title}
                     </span>
                     {isAuthenticated ? (
-                        <span className="nl-metadata nl-muted nl-bingo-card__status">
+                        <span className="nl-metadata nl-muted nl-truncate">
                             {[item.sourceVersion, status]
                                 .filter(Boolean)
                                 .join(" · ")}

@@ -1,0 +1,25 @@
+/* 정렬 · 필터 트리거 = 셀렉트와 같은 잉크 자리(왼쪽 12 · 꺾쇠 쪽 8). 버튼 경계 1 을 뺀다. 높이는 버튼 크기(size)가 정한다 */
+.noslog-ui .nl-filter-trigger {
+    padding-left: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    padding-right: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
+}
+/* 검색줄 옆 아이콘 필터 트리거(폰) — 컨트롤 높이 정사각, 적용 개수는 오른쪽 위 공용 배지 (오락실 · 악곡 · 서열표 공용) */
+.noslog-ui .nl-filter-icon-trigger {
+    position: relative;
+}
+.noslog-ui .nl-filter-icon-trigger .nl-filter-count {
+    position: absolute;
+    top: calc(var(--nl-spacing-4) * -1);
+    right: calc(var(--nl-spacing-4) * -1);
+}
+/* 트리거 안 개수 배지는 반전 면(primary) — 트리거 면(surface/control)과 같은 색이면 원이 안 보인다. 둘레 링은 바탕색으로 단추 경계와 떼어 낸다 */
+.noslog-ui .nl-filter-trigger .nl-filter-count,
+.noslog-ui .nl-filter-icon-trigger .nl-filter-count {
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+    font-weight: var(--nl-type-weight-semibold);
+    box-shadow: 0 0 0 var(--nl-stroke-strong) var(--nl-surface-canvas);
+}
+.noslog-ui .nl-filter-trigger .nl-filter-count {
+    box-shadow: none;
+}

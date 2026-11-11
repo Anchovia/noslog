@@ -94,7 +94,7 @@ export default function TierVoteContribution({
             {/* 로그아웃 · 기록 없음 · 목표 미달성은 입력을 두지 않는다(이유 문장도 없음 — 2026-09-16 A). 이미 한 투표만 보여 주고 지울 수 있게 */}
             {!accountId ? null : !hasRecord || !scope.eligible ? (
                 scope.ownVote !== null ? (
-                    <div className="nl-vote-form__row">
+                    <div className="nl-vote-form__row nl-inline">
                         <p className="nl-vote-contribution__value">
                             <span className="nl-control">
                                 {t("community.myVote")}
@@ -113,7 +113,7 @@ export default function TierVoteContribution({
                     noValidate
                     onSubmit={form.handleSubmit(handleSubmit)}
                 >
-                    <div className="nl-vote-form__row">
+                    <div className="nl-vote-form__row nl-inline">
                         <Controller
                             control={form.control}
                             name="value"

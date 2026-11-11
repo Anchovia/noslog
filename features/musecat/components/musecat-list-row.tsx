@@ -65,7 +65,7 @@ export default function MusecatListRow({
                     <MapPin className="nl-icon nl-icon--large" />
                 )}
             </span>
-            <span className="nl-musecat-result__copy">
+            <span className="nl-stack nl-stack--4">
                 <span className="nl-musecat-result__name">
                     <span className="nl-entity-title">{arcade.name}</span>
                     <span

@@ -70,7 +70,10 @@ export default function PrivacySettings({
         setSaving(false);
     }
     return (
-        <div className="nl-settings__form" aria-busy={saving}>
+        <div
+            className="nl-settings__form nl-stack nl-stack--24"
+            aria-busy={saving}
+        >
             <div className="nl-settings__rows">
                 {(
                     Object.keys(

@@ -1,0 +1,10 @@
+/* 로그인 안내(2026-09-26 F1 · 2026-09-28 A5) — 제목 →4→ 설명. 원 면 · 아이콘 없음(2026-10-01 — 안내 · 상태 글은 글자만) */
+.noslog-ui .nl-login-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-login-prompt p {
+    margin: 0;
+}

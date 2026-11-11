@@ -1,0 +1,132 @@
+/* .noslog-ui 범위의 기본값 · 포커스 · 공용 부품. 관리자 화면(admin.css)도 이 범위 안이다 */
+.noslog-ui {
+    color: var(--nl-content-default);
+    font-family: var(--nl-font-family);
+    font-size: var(--nl-type-size-14);
+    font-weight: var(--nl-type-weight-regular);
+    line-height: var(--nl-type-line-height-ui);
+    font-synthesis: none;
+    font-kerning: normal;
+    font-feature-settings: normal;
+    letter-spacing: normal;
+    overflow-wrap: anywhere;
+    color-scheme: dark;
+    /* 글자 다듬기(2026-10-21 전면 대조 ⑦) — 맥 데스크톱에서만 차이 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+html[lang="ko"] .noslog-ui,
+.noslog-ui :lang(ko) {
+    font-feature-settings: "ss05";
+    word-break: keep-all;
+}
+.noslog-ui :lang(ja),
+.noslog-ui :lang(en) {
+    font-feature-settings: normal;
+}
+html[data-theme="light"] .noslog-ui,
+.noslog-ui[data-theme="light"] {
+    color-scheme: light;
+}
+.noslog-ui ::selection {
+    /* ::selection 은 배경 그림을 받지 않아 겹침 층 대신 색으로 */
+    background-color: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+.noslog-ui :is(input, textarea) {
+    caret-color: var(--nl-content-default);
+}
+.noslog-ui :is(input, textarea)::placeholder {
+    color: var(--nl-content-tertiary);
+    opacity: 1;
+}
+/* 포커스 = 한 겹 2px 흰 선 하나(2026-10-24 토큰 정리 판 2 B — Atlassian focusable 의 바깥형 +2 · 안쪽형 −2).
+   떨어진 요소는 바깥 간격 2, 폭이 꽉 찬 줄 · 탭 · 메뉴 항목 · 칩은 안쪽 −2. 부품마다 따로 그리지 않는다 */
+.noslog-ui :focus-visible {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: var(--nl-stroke-strong);
+}
+/* 안쪽 목록 — 공용 부품은 여기에 이름을 두고, 화면이 만드는 줄 · 버튼은 그 요소에 nl-focus-inset 을 붙인다 */
+.noslog-ui
+    :is(
+        .nl-focus-inset,
+        .nl-tabs__item,
+        .nl-chip,
+        .nl-segments__item,
+        .nl-applied__token,
+        .nl-sort-menu__item,
+        .nl-select-option,
+        .nl-action-menu__item,
+        .nl-action-group__item,
+        .nl-pick-row,
+        .nl-disclosure > summary,
+        .nl-stepper__button,
+        .nl-search > .nl-compact-select,
+        .nl-search__clear,
+        [role="option"],
+        [role="menuitem"],
+        [role="menuitemradio"],
+        [role="tab"]
+    ):focus-visible {
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
+}
+/* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens/animations.css 의 움직임 토큰만 쓴다.
+   목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
+/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
+   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과 · 순위표 줄),
+   올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
+.noslog-ui
+    :is(
+        a,
+        button,
+        summary,
+        label,
+        details,
+        [role="button"],
+        [role="option"],
+        [role="menuitem"],
+        [role="tab"],
+        .nl-arcade-result,
+        .nl-player-row
+    ),
+.noslog-ui :is(a, button)::before {
+    transition:
+        background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
+        color var(--nl-motion-duration-state) var(--nl-ease-enter),
+        --nl-state-layer var(--nl-motion-duration-state) var(--nl-ease-enter);
+}
+/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드만, 닫을 때 즉시.
+   용어 도움말은 툴팁이라 즉시(⑧). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */
+.noslog-ui
+    [data-radix-popper-content-wrapper]
+    > [data-state="open"]:not(.nl-term__popover),
+[data-radix-popper-content-wrapper]
+    > .noslog-ui[data-state="open"]:not(.nl-term__popover) {
+    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+}
+@keyframes nl-sheet-in {
+    from {
+        translate: 0 100%;
+    }
+}
+@keyframes nl-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes nl-fade-out {
+    to {
+        opacity: 0;
+    }
+}
+@keyframes nl-hold {
+    to {
+        visibility: visible;
+    }
+}
+@keyframes nl-rise-in {
+    from {
+        opacity: 0;
+        translate: 0 var(--nl-motion-distance);
+    }
+}

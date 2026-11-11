@@ -1,0 +1,71 @@
+/* 글자 토큰 — 크기 · 줄 높이 · 굵기 · 글꼴 · 글자 역할. 글자 클래스는 ../typography.css */
+.noslog-ui {
+    --nl-type-size-12: 12px;
+    --nl-type-size-14: 14px;
+    --nl-type-size-16: 16px;
+    --nl-type-size-20: 20px;
+    --nl-type-size-22: 22px;
+    --nl-type-size-24: 24px;
+    --nl-type-size-32: 32px;
+    --nl-type-size-40: 40px;
+    --nl-type-line-height-16: 16px;
+    --nl-type-line-height-18: 18px;
+    --nl-type-line-height-20: 20px;
+    --nl-type-line-height-21: 21px;
+    --nl-type-line-height-24: 24px;
+    --nl-type-line-height-26: 26px;
+    --nl-type-line-height-27: 27px;
+    --nl-type-line-height-28: 28px;
+    --nl-type-line-height-32: 32px;
+    --nl-type-line-height-33: 33px;
+    --nl-type-line-height-40: 40px;
+    --nl-type-line-height-48: 48px;
+    --nl-type-weight-regular: 400;
+    --nl-type-weight-medium: 500;
+    --nl-type-weight-semibold: 600;
+    --nl-type-weight-bold: 700;
+    --nl-type-weight-extrabold: 800;
+    /* 밑줄 링크의 글자 ~ 밑줄 간격(2026-10-01) */
+    --nl-underline-offset: 3px;
+    /* 큰 제목 · 큰 숫자 자간 — Spectrum 2 letter-spacing 0 */
+    --nl-type-tracking-title: 0;
+    --nl-font-family:
+        "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+        "Hiragino Sans", "Apple SD Gothic Neo", Meiryo, "Noto Sans JP",
+        "Noto Sans KR", "Malgun Gothic", Osaka, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    /* 고정폭(2026-09-23 M1) — 기기에 있는 글자만 쓰고 글꼴 파일을 더 싣지 않는다. 한글은 위 본문 글꼴로 떨어진다 */
+    --nl-font-family-mono:
+        ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+        "Liberation Mono", "Roboto Mono", monospace;
+}
+/* 글자 단계 = 본문 16 계열(Spectrum 2 Body M · 당근 · velog · note 실측). 쪽 제목 24/32(1056 이상 32/40) · 절 제목 20/28 bold ·
+   부품 제목 16/24 semibold · 본문 16/24 · 메타 12/16 regular · 컨트롤 14. 한국어 · 일본어는 줄 높이 · 굵기 강조만 CJK 값 */
+.noslog-ui {
+    --nl-type-page-title-size: var(--nl-type-size-24);
+    --nl-type-page-title-line-height: var(--nl-type-line-height-32);
+    --nl-type-section-title-size: var(--nl-type-size-20);
+    --nl-type-section-title-line-height: var(--nl-type-line-height-28);
+    --nl-type-line-height-ui: var(--nl-type-line-height-18);
+    --nl-type-line-height-body: var(--nl-type-line-height-24);
+    --nl-type-dialog-title-line-height: var(--nl-type-line-height-26);
+    /* 입력칸 · 검색칸 · 글 쓰는 칸 글자. iOS Safari 는 16 보다 작으면 포커스 때 화면을 확대한다 */
+    --nl-type-input-size: var(--nl-type-size-16);
+    --nl-type-tracking-detail: 0;
+    --nl-type-weight-strong: var(--nl-type-weight-bold);
+    --nl-type-weight-heading: var(--nl-type-weight-extrabold);
+}
+.noslog-ui:is(:lang(ko), :lang(ja)) {
+    --nl-type-line-height-ui: var(--nl-type-line-height-21);
+    --nl-type-line-height-body: var(--nl-type-line-height-27);
+    --nl-type-dialog-title-line-height: var(--nl-type-line-height-33);
+    --nl-type-weight-strong: var(--nl-type-weight-medium);
+    --nl-type-weight-heading: var(--nl-type-weight-bold);
+}
+@media (min-width: 1056px) {
+    .noslog-ui {
+        --nl-type-page-title-size: var(--nl-type-size-32);
+        --nl-type-page-title-line-height: var(--nl-type-line-height-40);
+    }
+}

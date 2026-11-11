@@ -1,0 +1,171 @@
+/* 스위치 = Spectrum 2 — 트랙 26 × 16 · 2px 경계(고대비 모드에서도 보이게 실제 선), 손잡이 꺼짐 8 · 켜짐 10.
+   꺼짐 면 gray-25 + 경계 gray-800 · 손잡이 gray-800, 켜짐 면 gray-800 · 손잡이 gray-25. 움직임 목록에 없어 손잡이는 즉시 옮긴다 */
+.noslog-ui .nl-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: calc(
+        var(--nl-icon-small) + var(--nl-spacing-8) + var(--nl-spacing-2)
+    );
+    height: var(--nl-icon-small);
+    padding: 0;
+    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-input);
+}
+/* 손잡이는 선 안쪽 상자 가운데 — 꺼짐은 안쪽 2, 켜짐은 안쪽 1 */
+.noslog-ui .nl-switch::after {
+    content: "";
+    position: absolute;
+    top: calc(
+        (
+                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                    var(--nl-spacing-8)
+            ) /
+            2
+    );
+    left: calc(
+        (
+                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                    var(--nl-spacing-8)
+            ) /
+            2
+    );
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-switch-thumb);
+}
+.noslog-ui .nl-switch[aria-checked="true"] {
+    border-color: transparent;
+    background: var(--nl-primary-default);
+}
+.noslog-ui .nl-switch[aria-checked="true"]::after {
+    top: calc(
+        (
+                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                    var(--nl-spacing-8) - var(--nl-spacing-2)
+            ) /
+            2
+    );
+    left: calc(
+        100% - var(--nl-spacing-8) - var(--nl-spacing-2) -
+            (
+                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                    var(--nl-spacing-8) - var(--nl-spacing-2)
+            ) /
+            2
+    );
+    width: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
+    height: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
+    background: var(--nl-primary-on-primary);
+}
+/* 올림 · 누름 · 키 포커스 = 꺼짐 경계 · 손잡이 gray-900, 켜짐 면 gray-900 */
+@media (hover: hover) {
+    .noslog-ui .nl-switch:not(:disabled):hover {
+        border-color: var(--nl-content-strong);
+    }
+    .noslog-ui .nl-switch:not(:disabled):hover::after {
+        background: var(--nl-content-strong);
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover {
+        border-color: transparent;
+        background: var(--nl-primary-hover);
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover::after {
+        background: var(--nl-primary-on-primary);
+    }
+}
+.noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible) {
+    border-color: var(--nl-content-strong);
+}
+.noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible)::after {
+    background: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-switch[aria-checked="true"]:not(:disabled):is(:active, :focus-visible) {
+    border-color: transparent;
+    background: var(--nl-primary-hover);
+}
+.noslog-ui
+    .nl-switch[aria-checked="true"]:not(:disabled):is(
+        :active,
+        :focus-visible
+    )::after {
+    background: var(--nl-primary-on-primary);
+}
+.noslog-ui .nl-switch:disabled {
+    border-color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-switch:disabled::after {
+    background: var(--nl-content-disabled);
+}
+.noslog-ui .nl-switch[aria-checked="true"]:disabled {
+    border-color: transparent;
+    background: var(--nl-content-disabled);
+}
+.noslog-ui .nl-switch[aria-checked="true"]:disabled::after {
+    background: var(--nl-primary-on-primary);
+}
+@media (forced-colors: active) {
+    /* 스위치 · 고른 세그먼트 칸은 면 색으로 상태를 보여 시스템 색을 직접 준다(누름 · 포커스 색보다 앞서게) */
+    .noslog-ui .nl-switch,
+    .noslog-ui .nl-switch::after {
+        forced-color-adjust: none;
+    }
+    .noslog-ui .nl-switch,
+    .noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible) {
+        border-color: ButtonText;
+        background: Canvas;
+    }
+    .noslog-ui .nl-switch::after,
+    .noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible)::after {
+        background: ButtonText;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"],
+    .noslog-ui
+        .nl-switch[aria-checked="true"]:not(:disabled):is(
+            :active,
+            :focus-visible
+        ) {
+        border-color: Highlight;
+        background: Highlight;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]::after,
+    .noslog-ui
+        .nl-switch[aria-checked="true"]:not(:disabled):is(
+            :active,
+            :focus-visible
+        )::after {
+        background: HighlightText;
+    }
+    .noslog-ui .nl-switch:disabled,
+    .noslog-ui .nl-switch[aria-checked="true"]:disabled {
+        border-color: GrayText;
+    }
+    .noslog-ui .nl-switch:disabled::after {
+        background: GrayText;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:disabled {
+        background: GrayText;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:disabled::after {
+        background: Canvas;
+    }
+}
+/* 고대비 모드의 올림 — 위 시스템 색을 올림 색보다 앞세운다 */
+@media (forced-colors: active) and (hover: hover) {
+    .noslog-ui .nl-switch:not(:disabled):hover {
+        border-color: ButtonText;
+        background: Canvas;
+    }
+    .noslog-ui .nl-switch:not(:disabled):hover::after {
+        background: ButtonText;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover {
+        border-color: Highlight;
+        background: Highlight;
+    }
+    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover::after {
+        background: HighlightText;
+    }
+}

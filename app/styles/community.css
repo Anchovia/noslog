@@ -1,6 +1,4 @@
-.noslog-ui .nl-community-panel,
-.noslog-ui .nl-community-columns,
-.noslog-ui .nl-community-contribute {
+.noslog-ui .nl-community-columns {
     display: flex;
     flex-direction: column;
     gap: var(--nl-section-gap);
@@ -20,12 +18,6 @@
 }
 /* 날짜 묶음 하나 = 카드 하나(공용 펼침 card · 요약 줄 컨트롤 높이 · 안쪽 16), 카드 사이 8.
    구역 제목 → 날짜 → 항목이 상자로 갈린다 — 들여쓰기 대신 컨테이너 (2026-09-18 사용자 결정 C1) */
-.noslog-ui .nl-tier-history__days {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
 .noslog-ui .nl-tier-history__day > .nl-disclosure__body {
     padding: var(--nl-spacing-8) var(--nl-spacing-16) var(--nl-spacing-16);
 }
@@ -207,12 +199,6 @@
     gap: var(--nl-spacing-12);
 }
 /* 투표 입력 한 줄 = 셀렉트 · 저장 · 삭제 모두 공용 기본 L 한 단계(2026-10-01 D3 — 페이지에서 크기를 덮어쓰지 않는다) */
-.noslog-ui .nl-vote-form__row {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
 .noslog-ui .nl-vote-form__row > :first-child {
     flex: 1;
     min-width: 0;
@@ -225,13 +211,6 @@
 }
 .noslog-ui .nl-opinions > .nl-disclosure__body > .nl-heading-row {
     margin-bottom: var(--nl-spacing-8);
-}
-/* 의견 제목 줄(공용 제목 줄) → 16 → 작성 칸 → 8 → 목록 · 빈 안내 (의견이 둘 이상이면 목록 위 왼쪽에 정렬 — 최신순 · 좋아요순) */
-.noslog-ui .nl-opinions__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
 }
 /* 의견 목록 — 상자도 구분선도 없이 간격 16 으로만 가른다(2026-09-16 L2 · 09-18 O1).
    형식이 반복되는 목록에는 구분선을 쓰지 않는다(Material 3) · 실측한 YouTube 댓글도 배경 · 테두리 없이 간격 16 */
@@ -249,12 +228,6 @@
 }
 .noslog-ui .nl-opinion-row > .nl-avatar:has(> svg) {
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
-}
-.noslog-ui .nl-opinion-row__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
 }
 /* 첫 줄 = 이름 · 날짜 · ⋯ — ⋯(아이콘 버튼)은 이름 줄 높이(ui)에 맞춰 위아래로 (컨트롤 − 줄 높이) / 2, 오른쪽으로 (컨트롤 − 아이콘 20) / 2 당긴다 */
 /* 이름 줄은 글자 줄 높이(ui) 그대로 — 이름과 본문이 한 덩어리로 붙는다 (2026-09-18 O1) */

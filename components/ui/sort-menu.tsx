@@ -82,9 +82,7 @@ export default function SortMenu<Value extends string>({
                     aria-label={`${label}: ${current?.label ?? ""}`}
                 >
                     <ArrowUpDown className="nl-icon-small" aria-hidden />
-                    <span className="nl-filter-trigger__label">
-                        {current?.label}
-                    </span>
+                    <span className="nl-truncate">{current?.label}</span>
                     <ChevronDown className="nl-icon-small" aria-hidden />
                 </ActionButton>
             </Popover.Trigger>

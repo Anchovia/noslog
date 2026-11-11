@@ -74,7 +74,7 @@ export default function CommunityOpinionRow({
             aria-labelledby={`${id}-name`}
         >
             <Avatar src={item.user.avatar} size="compact" />
-            <div className="nl-opinion-row__content">
+            <div className="nl-stack nl-stack--4">
                 <div className="nl-opinion-row__header">
                     <IntentLink
                         id={`${id}-name`}
@@ -225,7 +225,7 @@ export function CommunityOpinionRowSkeleton() {
     return (
         <div className="nl-opinion-row" aria-hidden="true">
             <span className="nl-avatar nl-avatar--compact nl-skeleton" />
-            <div className="nl-opinion-row__content">
+            <div className="nl-stack nl-stack--4">
                 <div className="nl-opinion-row__header">
                     <SkeletonText className="nl-emphasis-label" width="s" />
                 </div>

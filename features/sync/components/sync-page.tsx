@@ -264,12 +264,13 @@ export default function SyncPage({
                                         key={`${item.musicId}-${item.difficulty}-${index}`}
                                     >
                                         <IntentLink
+                                            className="nl-bleed-row"
                                             href={href(
                                                 `/music/${item.musicId}/${item.difficulty.toLowerCase()}`
                                             )}
                                         >
                                             <span className="nl-sync-pair">
-                                                <span className="nl-body nl-sync-song">
+                                                <span className="nl-body nl-truncate">
                                                     {item.title}
                                                 </span>
                                                 <span className="nl-metric-value">

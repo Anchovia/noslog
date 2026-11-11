@@ -1,0 +1,73 @@
+/* 적용 조건 행: 토큰(작은 컨트롤 높이) + × 16 · 끝에 전체 지우기. 토큰 = 칩과 같은 알약(바탕 면 + 입력 경계 선),
+   난이도 · 분류 · 기록(S · FC · Pianist) 조건은 글자만 필터 칩과 같은 색(× 는 기본색, 올리면 기본 글자색 — 칩과 같은 규칙) */
+.noslog-ui .nl-applied {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-applied__token {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-applied__token[data-tone="normal"] {
+    --nl-tone: var(--nl-difficulty-text-normal);
+}
+.noslog-ui .nl-applied__token[data-tone="hard"] {
+    --nl-tone: var(--nl-difficulty-text-hard);
+}
+.noslog-ui .nl-applied__token[data-tone="expert"] {
+    --nl-tone: var(--nl-difficulty-text-expert);
+}
+.noslog-ui .nl-applied__token[data-tone="real"] {
+    --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui .nl-applied__token[data-tone="pops"] {
+    --nl-tone: var(--nl-category-pops);
+}
+.noslog-ui .nl-applied__token[data-tone="anime"] {
+    --nl-tone: var(--nl-category-anime);
+}
+.noslog-ui .nl-applied__token[data-tone="bm"] {
+    --nl-tone: var(--nl-category-bm);
+}
+.noslog-ui .nl-applied__token[data-tone="org"] {
+    --nl-tone: var(--nl-category-org);
+}
+.noslog-ui .nl-applied__token[data-tone="var"] {
+    --nl-tone: var(--nl-category-var);
+}
+.noslog-ui .nl-applied__token[data-tone="cljz"] {
+    --nl-tone: var(--nl-category-cljz);
+}
+.noslog-ui .nl-applied__token[data-tone="s"] {
+    --nl-tone: var(--nl-score-goal-s);
+}
+.noslog-ui .nl-applied__token[data-tone="fc"] {
+    --nl-tone: var(--nl-achievement-full-combo);
+}
+.noslog-ui .nl-applied__token[data-tone="pianist"] {
+    --nl-tone: var(--nl-achievement-pianist);
+}
+.noslog-ui
+    .nl-applied__token[data-tone]:not(:hover):not(:focus-visible):not(:active)
+    > .nl-applied__label {
+    color: var(--nl-tone);
+}
+.noslog-ui .nl-applied__token:is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-applied__token:hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+}

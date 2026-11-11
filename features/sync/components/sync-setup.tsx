@@ -120,14 +120,14 @@ export default function SyncSetup({
         }
     }
     return (
-        <div className="nl-sync-guide">
+        <div className="nl-stack">
             {showHeading ? (
                 <header className="nl-sync-guide-intro">
                     <h2 className="nl-section-title">{t("sync.guideTitle")}</h2>
                     <p className="nl-body nl-muted">{t("sync.guideIntro")}</p>
                 </header>
             ) : null}
-            <ol className="nl-sync-guide-steps">
+            <ol className="nl-stack">
                 <li className="nl-sync-guide-step">
                     <span
                         className="nl-sync-step__number nl-emphasis-label"

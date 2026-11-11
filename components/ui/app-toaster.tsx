@@ -7,7 +7,7 @@ import { useTranslations } from "@/components/i18n/locale-provider";
 export default function AppToaster() {
     const t = useTranslations();
 
-    // 알림 = 떠 있는 창 규격 · 글자만(상태 메시지와 같이 색 아이콘 없음) — foundation.css `nl-toast`.
+    // 알림 = 떠 있는 창 규격 · 글자만(상태 메시지와 같이 색 아이콘 없음) — app/styles/components/toast.css `nl-toast`.
     // 토큰이 걸리게 noslog-ui 안에 둔다(포털과 같은 방식). 가장자리 거리도 그래서 토큰 이름으로 준다
     return (
         <div className="noslog-ui">

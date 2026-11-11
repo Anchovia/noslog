@@ -1,0 +1,42 @@
+/* 기준 설명 ⓘ — 보이는 아이콘 16, 누르는 영역만 컨트롤 높이 정사각(보이지 않고 자리도 차지하지 않는다) */
+.noslog-ui .nl-info-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+    border-radius: var(--nl-radius-full);
+    cursor: pointer;
+}
+.noslog-ui .nl-info-trigger::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--nl-icon-small) - var(--nl-control-height)) / 2);
+}
+/* 올림 · 누름 · 키 포커스 — 아이콘 둘레 원 24 면(Spectrum 2 ContextualHelp). 면은 자리를 차지하지 않는다 */
+.noslog-ui .nl-info-trigger {
+    isolation: isolate;
+}
+.noslog-ui .nl-info-trigger::after {
+    content: "";
+    position: absolute;
+    z-index: calc(var(--nl-layer-above) * -1);
+    inset: calc((var(--nl-icon-small) - var(--nl-spacing-24)) / 2);
+    border-radius: var(--nl-radius-full);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-info-trigger:hover {
+        color: var(--nl-content-strong);
+    }
+    .noslog-ui .nl-info-trigger:hover::after {
+        background: var(--nl-surface-control-hover);
+    }
+}
+.noslog-ui .nl-info-trigger:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-info-trigger:is(:active, :focus-visible)::after {
+    background: var(--nl-surface-control-hover);
+}

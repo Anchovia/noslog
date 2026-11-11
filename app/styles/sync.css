@@ -121,41 +121,6 @@
     gap: var(--nl-spacing-4);
     padding-block: var(--nl-spacing-12);
 }
-/* 면 없는 구분선 목록 줄 — 올림은 좌우 12 를 넓혀 칠하고 글자 선 · 구분선은 그대로 */
-.noslog-ui .nl-sync-previews a {
-    position: relative;
-    isolation: isolate;
-}
-.noslog-ui .nl-sync-previews a::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline: calc(var(--nl-spacing-12) * -1);
-    z-index: calc(var(--nl-layer-above) * -1);
-    pointer-events: none;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-sync-previews a:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
-.noslog-ui .nl-sync-previews a:is(:active, :focus-visible)::before {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
-}
-.noslog-ui .nl-sync-song {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-}
 .noslog-ui .nl-sync-history-facts {
     display: flex;
     flex-wrap: wrap;
@@ -193,13 +158,6 @@
     height: auto;
     max-height: 70dvh;
     object-fit: contain;
-}
-.noslog-ui .nl-sync-guide,
-.noslog-ui .nl-sync-guide-steps {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    min-width: 0;
 }
 .noslog-ui .nl-sync-guide-intro {
     display: grid;

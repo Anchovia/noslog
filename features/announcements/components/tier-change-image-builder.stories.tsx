@@ -56,7 +56,9 @@ function Isolated({ children }: { children: ReactNode }) {
     );
     return (
         <QueryClientProvider client={client}>
-            <div className="nl-admin-form">{children}</div>
+            <div className="nl-admin-form nl-stack nl-stack--32">
+                {children}
+            </div>
         </QueryClientProvider>
     );
 }

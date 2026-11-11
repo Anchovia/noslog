@@ -1,0 +1,56 @@
+@media (hover: hover) {
+    .noslog-ui .nl-radio-group__option:not(:has(input:disabled)):hover input {
+        border-color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-radio-group__option:not(:has(input:disabled)):active input,
+.noslog-ui
+    .nl-radio-group__option:not(:has(input:disabled))
+    input:focus-visible {
+    border-color: var(--nl-content-strong);
+}
+/* 라디오 묶음 RadioGroup */
+.noslog-ui .nl-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-radio-group legend {
+    margin-bottom: var(--nl-spacing-12);
+}
+/* 창 안 폼의 라디오 묶음 = 제목이 칸 라벨 모양 · 라벨 → 선택지 4(FormField 와 같음) */
+.noslog-ui .nl-radio-group--field legend {
+    margin-bottom: var(--nl-spacing-4);
+}
+.noslog-ui .nl-radio-group__option {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
+    min-height: var(--nl-control-height);
+    cursor: pointer;
+}
+/* 원 16(icon-small) · 2px 경계 gray-800(체크박스와 같음) · 줄 = 컨트롤 높이. 올림 색은 위 체크박스 규칙과 함께 */
+.noslog-ui .nl-radio-group__option input {
+    appearance: none;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-input);
+}
+/* 고르면 경계가 (높이 − 4) ÷ 2 = 6 으로 굵어진다 */
+.noslog-ui .nl-radio-group__option input:checked {
+    border-width: calc((var(--nl-icon-small) - var(--nl-spacing-4)) / 2);
+    border-color: var(--nl-primary-default);
+}
+.noslog-ui .nl-radio-group:disabled,
+.noslog-ui .nl-radio-group__option:has(input:disabled) {
+    color: var(--nl-content-disabled);
+    cursor: default;
+}
+.noslog-ui .nl-radio-group:disabled .nl-radio-group__option input,
+.noslog-ui .nl-radio-group__option input:disabled {
+    border-color: var(--nl-content-disabled);
+}

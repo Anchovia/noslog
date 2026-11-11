@@ -64,8 +64,11 @@ export default function EventReviewForm({
     }
 
     return (
-        <section className="nl-admin-form" aria-labelledby="event-review-title">
-            <div className="nl-admin-form__section">
+        <section
+            className="nl-admin-form nl-stack nl-stack--32"
+            aria-labelledby="event-review-title"
+        >
+            <div className="nl-stack">
                 <h2 id="event-review-title" className="nl-component-title">
                     검토 결과
                 </h2>

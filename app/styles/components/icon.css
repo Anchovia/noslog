@@ -1,0 +1,14 @@
+.noslog-ui .nl-icon.nl-icon--large {
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+}
+.noslog-ui .nl-icon {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+    flex-shrink: 0;
+}
+.noslog-ui .nl-icon-small {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+}

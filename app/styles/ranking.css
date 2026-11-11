@@ -1,9 +1,3 @@
-.noslog-ui .nl-ranking-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-section-gap);
-    min-width: 0;
-}
 /* 점수 자 — 제목도 면도 없이 svg(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued */
 .noslog-ui .nl-score-scatter {
     display: flex;
@@ -109,10 +103,6 @@
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
 .noslog-ui .nl-chart-leaderboard {
-    --nl-rank-1: var(--nl-exam-tier-top);
-    --nl-rank-2: var(--nl-exam-tier-high);
-    --nl-rank-3: var(--nl-exam-tier-mid);
-    --nl-ranking-inset: var(--nl-spacing-12);
     min-width: 0;
 }
 .noslog-ui .nl-chart-leaderboard__result {
@@ -179,13 +169,6 @@
     box-shadow: inset 0 0 0 var(--nl-stroke-default)
         var(--nl-achievement-full-combo);
     border-radius: var(--nl-radius-small);
-}
-/* 순위 구역 — 제목 줄 없음. 로그아웃일 때만 로그인 링크 한 줄 → 12 → 목록 */
-.noslog-ui .nl-ranking-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
 }
 /* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
 .noslog-ui .nl-chart-leaderboard__empty {

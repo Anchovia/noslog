@@ -268,7 +268,7 @@ export default function PollBuilderDialog({
                             const saved = option.id !== undefined;
                             return (
                                 <div
-                                    className="nl-poll-builder__option"
+                                    className="nl-poll-builder__option nl-inline"
                                     key={option.id ?? `new-${index}`}
                                 >
                                     <Input

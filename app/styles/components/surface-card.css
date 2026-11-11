@@ -1,0 +1,19 @@
+/* 면 카드 SurfaceCard — 안쪽 16 · 안 사이 8 */
+.noslog-ui .nl-surface-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: calc(var(--nl-spacing-16) - var(--nl-stroke-default));
+    /* Spectrum 2 primary 카드 = elevated 면 · emphasized 그림자 · 모서리 large. 선 자리는 크기를 지키려 투명 */
+    border: var(--nl-stroke-default) solid transparent;
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+    box-shadow: var(--nl-card-shadow);
+}
+/* 카드 제목 = title S(14 · bold · title-color) */
+.noslog-ui .nl-surface-card .nl-entity-title {
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-strong);
+}

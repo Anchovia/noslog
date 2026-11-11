@@ -1,0 +1,38 @@
+/* 아이콘 정보 줄 IconRow(2026-10-21 전면 대조 ① — Google 지도 · 카카오맵 · 네이버 장소 화면) — 아이콘 20 흐림 →12→ 본문 16/24 · 보조 16,
+   끝 동작은 첫 줄 가운데에 맞춘다. 줄 높이 최소 컨트롤 높이 · 위아래 12 · 줄 사이 구분선 */
+.noslog-ui .nl-icon-rows {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-icon-rows > li + li {
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-row);
+}
+.noslog-ui .nl-icon-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--nl-spacing-12);
+    align-items: start;
+    min-height: var(--nl-control-height);
+    padding-block: var(--nl-spacing-12);
+}
+.noslog-ui .nl-icon-row__icon {
+    margin-top: calc(
+        (var(--nl-type-line-height-24) - var(--nl-icon-medium)) / 2
+    );
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-icon-row__copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-icon-row__action {
+    display: flex;
+    align-items: center;
+    margin-block: calc(
+        (var(--nl-type-line-height-24) - var(--nl-control-height-compact)) / 2
+    );
+}

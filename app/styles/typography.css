@@ -1,0 +1,123 @@
+/* 글자 클래스 — 크기 · 줄 높이 · 굵기 조합은 여기에서만 정한다. 값은 tokens/typography.css */
+.noslog-ui .nl-display {
+    font-size: var(--nl-type-size-40);
+    line-height: var(--nl-type-line-height-48);
+    font-weight: var(--nl-type-weight-bold);
+    letter-spacing: var(--nl-type-tracking-title);
+    font-variant-numeric: normal;
+}
+/* 페이지 제목 = heading XL · 구역 제목 = heading L(모든 폭). 제목 글자는 heading-color gray-900 */
+.noslog-ui .nl-page-title {
+    font-size: var(--nl-type-page-title-size);
+    line-height: var(--nl-type-page-title-line-height);
+    font-weight: var(--nl-type-weight-bold);
+    letter-spacing: var(--nl-type-tracking-title);
+    font-variant-numeric: normal;
+    color: var(--nl-content-strong);
+}
+/* 쪽 제목 바로 아래 설명 한 줄은 본문 크기 — 메타 글줄이어도 쪽 제목 다음 단계로 읽힌다 */
+.noslog-ui .nl-page-title + :is(p, .nl-metadata) {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-section-title {
+    font-size: var(--nl-type-section-title-size);
+    line-height: var(--nl-type-section-title-line-height);
+    font-weight: var(--nl-type-weight-bold);
+    letter-spacing: var(--nl-type-tracking-title);
+    font-variant-numeric: normal;
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-component-title {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-semibold);
+    letter-spacing: var(--nl-type-tracking-title);
+    font-variant-numeric: normal;
+}
+/* 색만 레이어 안에 둔다 — 레이어 밖이면 함께 붙인 Tailwind 색(동기화 요약 상태색 · 관리자 난이도 이름)을 덮는다 */
+@layer components {
+    .noslog-ui .nl-component-title {
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-entity-title {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-semibold);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-body,
+.noslog-ui .nl-body-secondary {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+/* 읽기 본문 = body M — 공지 · 이벤트 글 본문 · 대화상자 본문 */
+.noslog-ui .nl-body-reading {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-body);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+.noslog-ui .nl-control {
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+/* 3차 정보 = 메타 12/16 — 자간 0 은 영어 좁은 칸(빙고 판 · FC 태그)이 낱말 중간에서 꺾이지 않게 */
+.noslog-ui .nl-metadata {
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: var(--nl-type-tracking-detail);
+    font-variant-numeric: normal;
+}
+/* 여러 줄로 읽는 12 설명(칸 도움말 · 창 안 설명 문단)은 줄 높이만 18 — 한 줄 라벨 · 표 · 목록 줄 안 12 는 16 그대로(2026-10-01 D4) */
+.noslog-ui .nl-metadata--long {
+    line-height: var(--nl-type-line-height-18);
+}
+.noslog-ui .nl-metric-display {
+    font-size: var(--nl-type-size-32);
+    line-height: var(--nl-type-line-height-40);
+    font-weight: var(--nl-type-weight-bold);
+    letter-spacing: var(--nl-type-tracking-title);
+    font-variant-numeric: tabular-nums;
+}
+.noslog-ui .nl-metric-value {
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-medium);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+}
+.noslog-ui .nl-emphasis-label {
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-semibold);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+/* 태그 글자(2026-10-15 B1 — 2026-09-23 사용자 결정 600 을 표에 올림) — 태그 · 배지 안에서만. 12 굵게는 이 조합 하나뿐이다.
+   공용 태그 nl-tag 가 이 조합을 그대로 쓴다 */
+.noslog-ui .nl-tag-label,
+.noslog-ui .nl-tag {
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+    font-weight: var(--nl-type-weight-semibold);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+/* 좁은 열 안 페이지 제목 `nl-page-title--fixed`(악곡 상세 머리 열 272 — 32 면 576곡 중 44% 가 잘림)은 모든 폭 24/32(2026-10-01 D5) */
+.noslog-ui .nl-page-title--fixed {
+    font-size: var(--nl-type-size-24);
+    line-height: var(--nl-type-line-height-32);
+}

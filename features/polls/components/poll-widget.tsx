@@ -145,7 +145,10 @@ export default function PollWidget({
                             : 0;
                         const mine = state.myOptionIds.includes(option.id);
                         return (
-                            <li key={option.id} className="nl-poll__result">
+                            <li
+                                key={option.id}
+                                className="nl-stack nl-stack--4"
+                            >
                                 <p className="nl-body-secondary nl-poll__label">
                                     <span>
                                         {option.text}

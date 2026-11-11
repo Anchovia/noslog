@@ -95,7 +95,7 @@ function Divider() {
 
 // 검정 명판 — UI ExamBadge 의 카드 배율(×2) 원시값 판. 카드 면이 그라디언트라
 // Recital 의 파인 모서리는 원판으로 덮지 않고 면을 조각으로 나눠 모서리를 비워 둔다.
-// 금속 · 속 색 = 토큰 다크 값(EXAM_TIER_DARK_HEX, 테스트가 tokens.css 와 대조 — 2026-09-26 E4)
+// 금속 · 속 색 = 토큰 다크 값(EXAM_TIER_DARK_HEX, 테스트가 tokens/colors.css 와 대조 — 2026-09-26 E4)
 const examPlates: Record<ExamTier, { metal: string; fill: string | null }> = {
     low: { metal: EXAM_TIER_DARK_HEX.low, fill: null },
     mid: { metal: EXAM_TIER_DARK_HEX.mid, fill: null },
@@ -539,7 +539,7 @@ export default function ProfileCardImage({
                     <BrandMarkImage size={54} />
                     <span
                         style={{
-                            fontSize: typeSize[28],
+                            fontSize: typeSize[24],
                             fontWeight: weight.bold,
                         }}
                     >

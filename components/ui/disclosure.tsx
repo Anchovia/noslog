@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/cn";
 
-/** 펼침 — 구역(요약 줄 48) · 보조(`compact`, 컨트롤 높이) 두 단계. 화살표는 줄 끝. 규칙은 foundation.css */
+/** 펼침 — 구역(요약 줄 48) · 보조(`compact`, 컨트롤 높이) 두 단계. 화살표는 줄 끝. 규칙은 app/styles/components/disclosure.css */
 export default function Disclosure({
     title,
     children,

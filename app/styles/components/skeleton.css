@@ -1,0 +1,68 @@
+/* 모서리는 가장 낮은 우선순위(:where) — 실제 부품 클래스(자켓 · 사진 · 난이도 판)와 함께 붙이면 그 부품 모서리가 이긴다.
+   채움은 shadcn skeleton 과 같은 accent(surface/control) 하나로 — 실제 부품의 면보다 앞서도록
+   같은 클래스를 두 번 적어 우선순위를 올린다(2026-09-19) */
+.noslog-ui :where(.nl-skeleton) {
+    border-radius: var(--nl-radius-small);
+}
+.noslog-ui .nl-skeleton.nl-skeleton {
+    background: var(--nl-surface-control);
+}
+.noslog-ui .nl-skeleton {
+    /* ⑪ 로딩 — 은은한 깜빡임(동작 줄이기에서 멈춤) */
+    animation: nl-pulse var(--nl-motion-loop-pulse) var(--nl-ease-pulse)
+        infinite;
+}
+@keyframes nl-pulse {
+    50% {
+        opacity: 0.5;
+    }
+}
+/* 스켈레톤(2026-09-19 로딩 시안 S1 · M1) — 실제 부품의 틀 · 클래스를 그대로 쓰고 글자 · 사진 자리만 채운다.
+   글자 자리 = 그 글자 스타일 클래스를 함께 붙여 줄 높이(1lh)를 차지하고, 막대는 글자 크기(1em) 높이로 가운데.
+   폭은 네 단계(짧게 · 보통 · 길게 · 끝까지)만 — 글자 길이를 흉내 낼 뿐이라 따로 숫자를 만들지 않는다 */
+/* 막대를 줄 높이 가운데에 — 위 여백 대신 안쪽 채움으로(여백은 바깥으로 빠져 줄이 늘어날 수 있다) */
+.noslog-ui .nl-skeleton-text {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1lh;
+    min-width: 0;
+    padding-top: calc((1lh - 1em) / 2);
+}
+.noslog-ui .nl-skeleton-text > .nl-skeleton {
+    display: block;
+    width: 100%;
+    height: 1em;
+}
+/* 폭은 글자 자리 자체에 — 가로 줄(flex) 안에서도 줄 폭 기준으로 잡힌다 */
+.noslog-ui .nl-skeleton-text[data-width="s"] {
+    width: 25%;
+}
+.noslog-ui .nl-skeleton-text[data-width="m"] {
+    width: 50%;
+}
+.noslog-ui .nl-skeleton-text[data-width="l"] {
+    width: 75%;
+}
+/* 짧은 값 자리 — 보이지 않는 표본 글자 폭만큼 */
+.noslog-ui .nl-skeleton-text[data-sample] {
+    display: inline-block;
+    width: auto;
+    /* 글자 기준선에 맞추면 아래 여백이 생겨 줄이 늘어난다 */
+    vertical-align: top;
+}
+.noslog-ui .nl-skeleton-text[data-sample] > .nl-skeleton {
+    width: auto;
+    /* 기준선(baseline) 정렬 줄에서도 실제 글자와 같은 선에 — hidden 은 기준선을 상자 밑변으로 옮기고,
+       줄 높이를 글자 크기로 두어야 표본 글자의 기준선이 위 여백(padding-top)만큼만 내려간다 */
+    overflow: clip;
+    line-height: 1;
+    color: transparent;
+}
+/* 입력칸 · 셀렉트 · 버튼 자리 — 컨트롤 높이 · 모서리 control */
+.noslog-ui .nl-skeleton-control {
+    display: block;
+    width: 100%;
+    height: var(--nl-control-height);
+    border-radius: var(--nl-radius-control);
+}

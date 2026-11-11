@@ -1,0 +1,84 @@
+.noslog-ui .nl-muted {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+/* 세로 쌓기 간격 — nl-stack(16)에 함께 붙인다 */
+.noslog-ui .nl-stack--4 {
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-stack--8 {
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-stack--12 {
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-stack--24 {
+    gap: var(--nl-spacing-24);
+}
+.noslog-ui .nl-stack--32 {
+    gap: var(--nl-spacing-32);
+}
+.noslog-ui .nl-stack--section {
+    gap: var(--nl-section-gap);
+}
+.noslog-ui .nl-inline {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+/* 한 줄 말줄임 — 넘치면 … */
+.noslog-ui .nl-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+/* 공용 올림 면 — 전용 부품 클래스가 없는 줄 · 버튼(관리자 · 에디터의 Tailwind 줄)에 쓴다.
+   Spectrum 2 ActionButton quiet 처럼 올림 · 누름 · 키 포커스에 면 gray-200 · 글자 gray-900(모서리는 요소 것 그대로) */
+@media (hover: hover) {
+    .noslog-ui .nl-hover-layer:not(:disabled):hover {
+        --nl-state-layer: var(--nl-surface-control-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+        color: var(--nl-content-strong);
+    }
+}
+.noslog-ui .nl-hover-layer:not(:disabled):is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-surface-control-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+    color: var(--nl-content-strong);
+}
+/* 끝 페이드 — 한 줄로 자른 글자의 오른쪽 32 를 흐리게(말줄임표 대신). 누르면 펼치는 곳에서만 쓴다 (2026-09-17) */
+.noslog-ui .nl-fade-end {
+    -webkit-mask-image: linear-gradient(
+        to right,
+        #000 calc(100% - var(--nl-spacing-32)),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to right,
+        #000 calc(100% - var(--nl-spacing-32)),
+        transparent
+    );
+}
+/* 화면 안 다시 불러오기 — 짧게 끝나면 스켈레톤이 번쩍이지 않게 잠깐 숨겨 둔다(자리는 차지) */
+.noslog-ui .nl-loading-delay {
+    animation: nl-hold-hidden var(--nl-motion-delay-skeleton);
+}
+@keyframes nl-hold-hidden {
+    from,
+    to {
+        visibility: hidden;
+    }
+}

@@ -69,16 +69,16 @@ describe("메시지 카탈로그의 AI 티", () => {
 });
 
 const styleDirectory = resolve("app/styles");
-const styleFiles = readdirSync(styleDirectory).filter(
-    (name) => name.endsWith(".css") && name !== "pretendard-jp.css"
-);
+const styleFiles = readdirSync(styleDirectory, { recursive: true })
+    .map(String)
+    .filter((name) => name.endsWith(".css") && name !== "pretendard-jp.css");
 
 type Allowed = { file: string; selector: string; reason: string };
 
 // 그라데이션 — 단색 겹침(같은 토큰 둘) · 마스크 칠(#000 0 0)은 장식이 아니라 칠하는 방법이라 따로 허용한다
 const allowedGradients: Allowed[] = [
     {
-        file: "foundation-data.css",
+        file: "utilities.css",
         selector: ".nl-fade-end",
         reason: "끝 페이드",
     },

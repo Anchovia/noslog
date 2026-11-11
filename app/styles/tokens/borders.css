@@ -1,0 +1,14 @@
+/* 모서리 · 선 두께 토큰 */
+.noslog-ui {
+    /* 모서리 = Spectrum 2 corner-radius — 작은 칸(체크박스) small 4, 컨트롤 · 메뉴 항목 · 작은 카드 medium 8,
+       카드 · 메뉴 판 · 팝오버 · 토스트 large 10, 대화상자 extra-large 16, 버튼 · 배지 · 칩 원(높이 ÷ 2) */
+    --nl-radius-small: 4px;
+    --nl-radius-control: 8px;
+    --nl-radius-large: 10px;
+    --nl-radius-overlay: 16px;
+    --nl-radius-full: 9999px;
+    /* 선 두께 두 단계 — 기본 1: 구분선 · 칸 사이 선 · 떠 있는 창 둘레 · 태그 · 칩 둘레
+       강조 2: 입력 경계 · 체크박스 · 라디오 · 스위치 · 고른 세그먼트 칸 · 선택 밑줄 · 진행 막대 · 포커스 선. 테두리를 빼는 여백 보정도 이 값으로 */
+    --nl-stroke-default: 1px;
+    --nl-stroke-strong: 2px;
+}

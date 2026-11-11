@@ -1,26 +1,92 @@
 /* Shared UI foundations and feature layouts, including settings, profiles and data sync, are isolated from preserved routes. */
 @import "tailwindcss";
 @import "./styles/pretendard-jp.css";
-@import "./styles/tokens.css";
-@import "./styles/foundation-base.css";
-@import "./styles/foundation-form.css";
-@import "./styles/foundation-navigation.css";
-@import "./styles/foundation-dialog.css";
-@import "./styles/foundation-data.css";
-@import "./styles/foundation-indicator.css";
-@import "./styles/foundation-forced-colors.css";
-@import "./styles/foundation-editor.css";
-@import "./styles/foundation-motion.css";
-@import "./styles/foundation-parts.css";
+@import "./styles/tokens/colors.css";
+@import "./styles/tokens/typography.css";
+@import "./styles/tokens/size.css";
+@import "./styles/tokens/borders.css";
+@import "./styles/tokens/shadow.css";
+@import "./styles/tokens/animations.css";
+@import "./styles/tokens/levels.css";
+@import "./styles/typography.css";
+@import "./styles/base.css";
+@import "./styles/utilities.css";
+@import "./styles/components/bleed-row.css";
+@import "./styles/components/check.css";
+@import "./styles/components/input.css";
+@import "./styles/components/markdown-editor.css";
+@import "./styles/components/icon.css";
+@import "./styles/components/link.css";
+@import "./styles/components/avatar.css";
+@import "./styles/components/button.css";
+@import "./styles/components/spinner.css";
+@import "./styles/components/field.css";
+@import "./styles/components/select.css";
+@import "./styles/components/radio-group.css";
+@import "./styles/components/switch.css";
+@import "./styles/components/selection-list.css";
+@import "./styles/components/range.css";
+@import "./styles/components/segments.css";
+@import "./styles/components/tabs.css";
+@import "./styles/components/metric-switch.css";
+@import "./styles/components/area.css";
+@import "./styles/components/disclosure.css";
+@import "./styles/components/status.css";
+@import "./styles/components/select-menu.css";
+@import "./styles/components/action-menu.css";
+@import "./styles/components/pagination.css";
+@import "./styles/components/toast.css";
+@import "./styles/components/photo-viewer.css";
+@import "./styles/components/dialog.css";
+@import "./styles/components/pick-list.css";
+@import "./styles/components/info-rows.css";
+@import "./styles/components/login-prompt.css";
+@import "./styles/components/heading-row.css";
+@import "./styles/components/scale-picker.css";
+@import "./styles/components/stat-card.css";
+@import "./styles/components/action-group.css";
+@import "./styles/components/stacked-bar.css";
+@import "./styles/components/stat-strip.css";
+@import "./styles/components/bar-list.css";
+@import "./styles/components/skeleton.css";
+@import "./styles/components/progress.css";
+@import "./styles/components/tag.css";
+@import "./styles/components/filter-count.css";
+@import "./styles/components/term.css";
+@import "./styles/components/info-trigger.css";
+@import "./styles/forced-colors.css";
+@import "./styles/components/form-bar.css";
+@import "./styles/components/unread-dot.css";
+@import "./styles/components/image-share.css";
+@import "./styles/components/chart-reveal.css";
+@import "./styles/components/file-row.css";
+@import "./styles/components/surface-card.css";
+@import "./styles/components/stepper.css";
+@import "./styles/components/icon-row.css";
+@import "./styles/components/unit-input.css";
+@import "./styles/components/status-dot.css";
+@import "./styles/components/button-row.css";
+@import "./styles/components/back-link.css";
+@import "./styles/components/search.css";
+@import "./styles/components/compact-select.css";
+@import "./styles/components/full-dialog.css";
+@import "./styles/components/filter-group.css";
+@import "./styles/components/chip.css";
+@import "./styles/components/sort-menu.css";
+@import "./styles/components/filter-trigger.css";
+@import "./styles/components/filter-control-block.css";
+@import "./styles/components/applied.css";
+@import "./styles/components/filter-popover.css";
+@import "./styles/components/line-chart.css";
+@import "./styles/components/chart-table.css";
+@import "./styles/components/country-marker.css";
 @import "./styles/tailwind-theme.css";
 @import "./styles/layout.css";
-@import "./styles/search.css";
 @import "./styles/entity.css";
 @import "./styles/home.css";
 @import "./styles/discovery.css";
 @import "./styles/filters.css";
 @import "./styles/music-detail.css";
-@import "./styles/data-charts.css";
 @import "./styles/ranking.css";
 @import "./styles/community.css";
 @import "./styles/tiers.css";
@@ -73,7 +139,7 @@ html[data-theme="light"] {
     html,
     body {
         min-height: 100vh;
-        /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens.css 와 대조) */
+        /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens/colors.css 와 대조) */
         background: #111111;
         color: #dbdbdb;
         font-family: var(--font-sans);
@@ -100,7 +166,7 @@ html[data-theme="light"] {
     }
 
     /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤.
-       셸 바깥(관리자 · 에디터)은 토큰을 못 읽어 content/tertiary · weight-regular 값을 쓴다. 셸 안은 foundation.css 가 토큰으로 덮는다 */
+       셸 바깥(관리자 · 에디터)은 토큰을 못 읽어 content/tertiary · weight-regular 값을 쓴다. 셸 안은 base.css 가 토큰으로 덮는다 */
     input::placeholder,
     textarea::placeholder {
         color: #8a8a8a;

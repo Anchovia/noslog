@@ -31,7 +31,7 @@ export default function ConnectionSettings({
     const t = useTranslations();
     const href = useLocalizedHref();
     return (
-        <div className="nl-settings__form">
+        <div className="nl-settings__form nl-stack nl-stack--24">
             <div className="nl-settings__rows">
                 <IntentLink
                     className="nl-settings__row nl-focus-inset nl-forced-press"
@@ -116,7 +116,10 @@ export function DiscordConnectionDetail({
               )
             : "");
     return (
-        <div className="nl-settings__form" aria-busy={pending !== null}>
+        <div
+            className="nl-settings__form nl-stack nl-stack--24"
+            aria-busy={pending !== null}
+        >
             <div className="nl-settings__row-lead">
                 <span className="nl-settings__logo" aria-hidden>
                     <DiscordIcon />

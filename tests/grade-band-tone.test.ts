@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,6 +5,8 @@ import {
     gradeBandTone,
     STAT_TONE_DARK_HEX,
 } from "@/lib/music/score-tone";
+
+import { darkToken } from "./helpers/design-tokens";
 
 describe("Grd · 레이팅 구간 색", () => {
     it("6,000 · 6,500 · 7,000 · 7,500 · 8,000 에서 한 단계씩 오른다", () => {
@@ -19,12 +19,9 @@ describe("Grd · 레이팅 구간 색", () => {
         expect(gradeBandTone(null)).toBeUndefined();
     });
 
-    it("공유 카드용 다크 값이 tokens.css 의 다크 토큰과 같다", () => {
-        const css = readFileSync(resolve("app/styles/tokens.css"), "utf8");
-        // 첫 블록(.noslog-ui) = 다크 값
-        const dark = css.slice(0, css.indexOf("}"));
+    it("공유 카드용 다크 값이 tokens/colors.css 의 다크 토큰과 같다", () => {
         const token = (name: string) =>
-            dark.match(new RegExp(`--nl-${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
+            darkToken(name)?.match(/^#[0-9a-f]{6}$/i)?.[0];
         const mix = (a: string, b: string) =>
             "#" +
             [1, 3, 5]

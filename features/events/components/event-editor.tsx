@@ -213,7 +213,7 @@ export default function EventEditor({
     };
 
     const settings = (
-        <div className="nl-events__form">
+        <div className="nl-events__form nl-stack">
             {/* 시작일 · 종료일은 한 줄에 두지 않는다 — 좁은 창(334)에서 날짜가 잘린다 */}
             <FormField
                 id="event-start"
@@ -320,7 +320,7 @@ export default function EventEditor({
 
     return (
         <form
-            className="nl-events__form"
+            className="nl-events__form nl-stack"
             noValidate
             onSubmit={(formEvent) => formEvent.preventDefault()}
         >

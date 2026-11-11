@@ -6,9 +6,13 @@ import { describe, expect, it } from "vitest";
 
 describe("NosLog design foundation", () => {
     const directory = resolve("app/styles");
-    const files = readdirSync(directory).filter(
-        (name) => name.endsWith(".css") && name !== "pretendard-jp.css"
-    );
+    const files = readdirSync(directory, { recursive: true })
+        .map(String)
+        .filter((name) => name.endsWith(".css") && name !== "pretendard-jp.css")
+        .sort();
+    // 토큰 파일과 글자 클래스 파일은 값을 정하는 곳이라 「토큰으로만」 검사에서 뺀다
+    const definesValues = (name: string) =>
+        name.startsWith("tokens/") || name === "typography.css";
     const styles = files.map((name) =>
         readFileSync(resolve(directory, name), "utf8")
     );
@@ -42,11 +46,61 @@ describe("NosLog design foundation", () => {
         expect(unscoped).toEqual([]);
     });
 
-    // 움직임은 tokens.css 의 움직임 토큰만 쓴다 — 시간 · 곡선을 직접 쓰지 않는다(2026-09-19, 가이드 「움직임」 절)
+    // 회색 단계는 역할 토큰만 가리킨다 — 화면 · 부품 CSS 는 역할 토큰으로만 쓴다
+    it("keeps gray steps behind the role tokens", () => {
+        const direct = files.filter(
+            (name, index) =>
+                !name.startsWith("tokens/") &&
+                /var\(--nl-gray-\d+/.test(styles[index])
+        );
+        expect(direct).toEqual([]);
+    });
+
+    // 선언만 있고 쓰는 곳이 없는 토큰을 막는다. 이름을 조합해 쓰는 토큰만 이유와 함께 아래에 적는다
+    it("declares no token that nothing references", () => {
+        const composed = new Set([
+            // 악곡 탐색 레벨 슬라이더가 `--nl-difficulty-${난이도}` 로 부른다(discovery-filters.tsx)
+            "--nl-difficulty-normal",
+            "--nl-difficulty-real",
+            // 서열표 내보내기 이미지가 weight("heading") 으로 읽는다(tier-export-image.ts)
+            "--nl-type-weight-heading",
+        ]);
+        const sources = ["app", "features", "components", "lib"]
+            .flatMap((root) =>
+                readdirSync(root, { recursive: true })
+                    .map(String)
+                    .filter(
+                        (name) =>
+                            /\.(css|tsx?|mjs)$/.test(name) &&
+                            !name.endsWith("pretendard-jp.css")
+                    )
+                    .map((name) => readFileSync(resolve(root, name), "utf8"))
+            )
+            .join("\n");
+        const declared = new Set(
+            files
+                .flatMap((name, index) =>
+                    name.startsWith("tokens/")
+                        ? [...styles[index].matchAll(/(--nl-[\w-]+)\s*:/g)]
+                        : []
+                )
+                .map((match) => match[1])
+        );
+        const unused = [...declared].filter(
+            (name) =>
+                !composed.has(name) &&
+                !new RegExp(`${name}(?![\\w-])(?!\\s*:)`).test(sources)
+        );
+        expect(unused).toEqual([]);
+        // 예외 목록에 쓰지 않는 이름이 남지 않게 한다
+        expect([...composed].filter((name) => !declared.has(name))).toEqual([]);
+    });
+
+    // 움직임은 tokens/animations.css 의 움직임 토큰만 쓴다 — 시간 · 곡선을 직접 쓰지 않는다(2026-09-19, 가이드 「움직임」 절)
     it("takes every transition and animation timing from the motion tokens", () => {
         const raw: string[] = [];
         files.forEach((name, index) => {
-            if (name === "tokens.css") return;
+            if (definesValues(name)) return;
             postcss.parse(styles[index]).walkDecls((decl) => {
                 if (!/^(transition|animation)/.test(decl.prop)) return;
                 const value = decl.value
@@ -82,7 +136,7 @@ describe("NosLog design foundation", () => {
         function literals(check: (prop: string, bare: string) => boolean) {
             const raw: string[] = [];
             files.forEach((name, index) => {
-                if (name === "tokens.css") return;
+                if (definesValues(name)) return;
                 postcss.parse(styles[index]).walkDecls((decl) => {
                     if (decl.prop.startsWith("--")) return;
                     let bare = decl.value;

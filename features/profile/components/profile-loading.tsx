@@ -44,7 +44,7 @@ function SortTriggerSkeleton({ label, size }: { label: string; size?: "sm" }) {
             )}
         >
             <ArrowUpDown className="nl-icon-small" aria-hidden />
-            <span className="nl-filter-trigger__label">{label}</span>
+            <span className="nl-truncate">{label}</span>
             <ChevronDown className="nl-icon-small" aria-hidden />
         </span>
     );
@@ -63,7 +63,7 @@ export function ProfileHeaderSkeleton() {
                 <div className="nl-profile-identity__row">
                     <span className="nl-avatar nl-profile-identity__avatar nl-skeleton" />
                     <div className="nl-profile-identity__name-stack">
-                        <div className="nl-profile-identity__name">
+                        <div className="nl-profile-identity__name nl-inline">
                             <SkeletonText className="nl-page-title" width="m" />
                         </div>
                         {/* 명판 줄 = 검정 명판 24 틀(실제는 늘 명판 또는 「검정 기록 없음」) */}
@@ -385,7 +385,7 @@ export function ProfileStatsTabSkeleton() {
                 <h2 className="nl-section-title">
                     {t("profile.rankDistribution")}
                 </h2>
-                <dl className="nl-profile-distribution">
+                <dl className="nl-profile-distribution nl-stack nl-stack--8">
                     {[0, 1, 2, 3, 4].map((index) => (
                         <div key={index}>
                             <dt className="nl-full-combo-slot">
@@ -420,7 +420,7 @@ export function ProfileStatsTabSkeleton() {
 export function ProfileActivityTabSkeleton() {
     const t = useTranslations();
     return (
-        <div className="nl-profile-activity" aria-busy="true">
+        <div className="nl-stack nl-stack--section" aria-busy="true">
             <LoadingStatus label={t("profile.loading")} />
             <section
                 className="nl-profile-section nl-profile-calendar"

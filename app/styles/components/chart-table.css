@@ -1,0 +1,21 @@
+.noslog-ui .nl-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.noslog-ui .nl-chart-table th,
+.noslog-ui .nl-chart-table td {
+    padding-block: var(--nl-spacing-8);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
+    text-align: start;
+}
+/* 표 머리 = 보조 글자(Spectrum 2 gray-700) */
+.noslog-ui .nl-chart-table thead th {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-chart-table tbody th {
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-chart-table th:last-child,
+.noslog-ui .nl-chart-table td:last-child {
+    text-align: end;
+}

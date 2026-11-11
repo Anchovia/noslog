@@ -127,7 +127,7 @@ export default function AccountSettings({
         busyRef.current = false;
     }
     return (
-        <div className="nl-settings__form">
+        <div className="nl-settings__form nl-stack nl-stack--24">
             <div className="nl-settings__zone">
                 <ActionButton
                     variant="secondary"

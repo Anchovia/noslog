@@ -1,0 +1,104 @@
+/* 여러 부품에 걸친 고대비 규칙 — 포커스 선 색과 누르는 것의 올림 · 누름. 같은 우선순위의 부품 규칙을 이겨야 해서
+   globals.css 에서 그 부품 파일들 뒤에 불러온다. 부품 하나에만 해당하는 고대비 규칙은 그 부품 파일에 둔다 */
+@media (forced-colors: active) {
+    .noslog-ui :focus-visible {
+        outline-color: Highlight;
+    }
+}
+/* 고대비 모드에서도 버튼 · 메뉴 항목 · 누르는 줄의 올림 · 누름이 보이게 시스템 색 면(Spectrum 2 · Fluent 2 —
+   평소 면과 글자색을 맞바꾼다). 시스템 색이 덮지 않게 그 순간만 강제 색을 끄고, 안 글자도 같은 색으로 맞춘다.
+   제 올림 면을 가진 화면의 누르는 줄은 그 요소에 nl-forced-press 를 붙인다 */
+@media (forced-colors: active) and (hover: hover) {
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-forced-press,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):hover {
+        forced-color-adjust: none;
+        background: Highlight;
+        color: HighlightText;
+    }
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-forced-press,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):hover
+        * {
+        color: HighlightText;
+    }
+}
+@media (forced-colors: active) {
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-forced-press,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):active {
+        forced-color-adjust: none;
+        background: Highlight;
+        color: HighlightText;
+    }
+    .noslog-ui
+        :is(
+            .nl-button,
+            .nl-hover-layer,
+            .nl-forced-press,
+            .nl-sort-menu__item,
+            .nl-select-option,
+            .nl-action-menu__item,
+            .nl-action-group__item,
+            .nl-pick-row,
+            [role="option"],
+            [role="menuitem"],
+            [role="menuitemradio"]
+        ):is(a, button, label, [role]):not(
+            :disabled,
+            [aria-disabled="true"],
+            [data-disabled],
+            [aria-busy="true"]
+        ):active
+        * {
+        color: HighlightText;
+    }
+}

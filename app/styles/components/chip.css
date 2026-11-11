@@ -1,0 +1,127 @@
+/* 칩: 높이 = 작은 컨트롤 · 모서리 control */
+.noslog-ui .nl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+/* 늘 보이는 한 줄(빙고 목록 상태 칩) — 좁아져도 줄이 늘지 않고 넘치면 가로로 넘긴다(밑줄 탭과 같은 문법, 2026-09-23) */
+.noslog-ui .nl-chips--row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-chips--row::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-chips--row > .nl-chip {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    /* 칩 = 컨트롤 면 · 둘레 없음(GitHub 필터 창). 글자 14/18 regular(야놀자 필터 시트 칩) */
+    background: var(--nl-surface-control);
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-18);
+    font-weight: var(--nl-type-weight-regular);
+}
+/* 올림 · 키 포커스 · 누름 = 보조 버튼과 같은 면 gray-200 · 글자 gray-900 */
+.noslog-ui .nl-chip:not(:disabled):is(:focus-visible, :active) {
+    background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-chip:not(:disabled):hover {
+        background: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+    }
+    .noslog-ui
+        .nl-chip:is([aria-pressed="true"], [aria-current="page"]):not(
+            :disabled
+        ):hover {
+        background: var(--nl-surface-tag);
+        color: var(--nl-content-strong);
+    }
+}
+/* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
+   고른 칩 = 컨트롤 면보다 한 단계 밝은 면 · 강한 글자. 굵기는 그대로 — 고를 때 폭이 늘어 줄이 다시 흐르지 않게 */
+.noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
+    background: var(--nl-surface-tag);
+    color: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-chip:is([aria-pressed="true"], [aria-current="page"]):not(:disabled):is(
+        :focus-visible,
+        :active
+    ) {
+    background: var(--nl-surface-tag);
+    color: var(--nl-content-strong);
+}
+/* 비활성 = 투명도 대신 글자색 gray-400 */
+.noslog-ui .nl-chip:disabled {
+    color: var(--nl-content-disabled);
+}
+/* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
+   칩은 선택되면 중립으로 돌아가고(면·경계·체크가 선택을 말한다), 레일 목록은 체크 상자가 선택을 말해 글자 색을 유지한다 */
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="normal"] {
+    --nl-tone: var(--nl-difficulty-text-normal);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="hard"] {
+    --nl-tone: var(--nl-difficulty-text-hard);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="expert"] {
+    --nl-tone: var(--nl-difficulty-text-expert);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="real"] {
+    --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pops"] {
+    --nl-tone: var(--nl-category-pops);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="anime"] {
+    --nl-tone: var(--nl-category-anime);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="bm"] {
+    --nl-tone: var(--nl-category-bm);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="org"] {
+    --nl-tone: var(--nl-category-org);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="var"] {
+    --nl-tone: var(--nl-category-var);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="cljz"] {
+    --nl-tone: var(--nl-category-cljz);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="s"] {
+    --nl-tone: var(--nl-score-goal-s);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="fc"] {
+    --nl-tone: var(--nl-achievement-full-combo);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pianist"] {
+    --nl-tone: var(--nl-achievement-pianist);
+}
+/* 마우스를 올리면 기본 글자색 — hover 면 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정).
+   키 포커스 · 누름도 같은 올림 면이라 같이 뺀다 */
+.noslog-ui
+    .nl-chip[data-tone]:not([aria-pressed="true"], [aria-current]):not(
+        :disabled
+    ):not(:hover):not(:focus-visible):not(:active) {
+    color: var(--nl-tone);
+}
+.noslog-ui .nl-chip__count {
+    color: var(--nl-content-subdued);
+    font-weight: var(--nl-type-weight-regular);
+}
+/* 고른 칩 안 개수는 칩 글자색 그대로 — 고른 면(surface/tag) 위에서 흐린 글자는 대비가 모자란다 */
+.noslog-ui
+    .nl-chip:is([aria-pressed="true"], [aria-current="page"])
+    .nl-chip__count {
+    color: inherit;
+}

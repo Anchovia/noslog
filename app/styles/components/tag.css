@@ -1,0 +1,53 @@
+/* 태그 · 배지 — 다크에서 무채색 테두리만 쓰면 형태 단서가 3 : 1 에 못 미쳐 덩어리로 안 보인다.
+   그래서 면을 깔고 테두리를 없앤다 — 면 surface/tag · 글자 content/on-tag · 12/600 · 알약 모서리 */
+.noslog-ui .nl-tag {
+    display: inline-flex;
+    align-items: center;
+    height: var(--nl-icon-medium);
+    padding-inline: var(--nl-spacing-8);
+    /* 배지 = gray-400 면 · 흰 글자 · 테두리 없음(투명 선은 상태 태그와 크기를 맞춘다) */
+    border: var(--nl-stroke-default) solid transparent;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-tag);
+    color: var(--nl-content-on-tag);
+    /* 글자 = 태그 글자 12/16 · 600(typography.css nl-tag-label, 2026-10-15 B1) — 부모 글자 크기를 물려받지 않는다(2026-10-01 V1) */
+    white-space: nowrap;
+}
+/* 하나만 세게 — 반전(주 버튼과 같은 면 · 글자). 한 줄에 하나까지만 쓴다 */
+.noslog-ui .nl-tag--strong {
+    border-color: var(--nl-primary-default);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+/* 링크인 태그(프로필 기여) — 올리면 반전 태그(GitHub 토픽) */
+@media (hover: hover) {
+    .noslog-ui a.nl-tag:hover {
+        border-color: var(--nl-primary-default);
+        background: var(--nl-primary-default);
+        color: var(--nl-primary-on-primary);
+    }
+}
+.noslog-ui a.nl-tag:is(:active, :focus-visible) {
+    border-color: var(--nl-primary-default);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+/* 상태 태그(이벤트 진행 · 글 승인, 2026-09-23 S-c) = 글자만 알림 표시색. 기본 배지 면(gray-400 #444) 위에서는 초록 3.93 · 빨강 3.26 : 1 로
+   4.5 에 못 미쳐(2026-10-26 axe) 상태 태그만 카드 면 + 둘레 선으로 둔다. 색 단독으로 뜻을 전하지 않는다 — 글자가 늘 상태 이름을 말한다(WCAG 1.4.1) */
+.noslog-ui .nl-tag--status {
+    background: var(--nl-surface-surface);
+    border-color: var(--nl-border-default);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-tag--status[data-tone="success"] {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="info"] {
+    color: var(--nl-feedback-info-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="warning"] {
+    color: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="danger"] {
+    color: var(--nl-feedback-destructive);
+}

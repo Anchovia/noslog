@@ -65,7 +65,7 @@ export default function PollFormSection({
         : null;
 
     return (
-        <section className="nl-poll-section">
+        <section className="nl-poll-section nl-stack nl-stack--12">
             <div className="nl-poll-section__head">
                 <h2 className="nl-component-title">{labels.section}</h2>
                 <span className="nl-metadata nl-muted">{labels.optional}</span>

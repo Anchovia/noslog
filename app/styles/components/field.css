@@ -1,0 +1,29 @@
+.noslog-ui .nl-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+/* 폼 칸 사이 24(2026-10-25 체계 묶음) — 칸이 둘 이상 이어진 묶음은 화면 CSS 와 상관없이 세로 간격 24 */
+.noslog-ui :has(> .nl-field + .nl-field) {
+    row-gap: var(--nl-spacing-24);
+}
+.noslog-ui .nl-field__label {
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-regular);
+}
+/* 칸 도움말은 두 줄로 넘어가는 설명이라 12/18(2026-10-01 D4) */
+.noslog-ui .nl-field__help {
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-18);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-field__error {
+    color: var(--nl-feedback-destructive);
+}
+/* 확인 성공 한 줄(2026-10-01 온보딩 ② — 쓸 수 있는 닉네임) = 합격 체크와 같은 초록 */
+.noslog-ui .nl-field__success {
+    color: var(--nl-feedback-success-marker);
+}

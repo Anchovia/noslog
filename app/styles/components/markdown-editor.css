@@ -1,0 +1,91 @@
+.noslog-ui
+    .nl-markdown-editor:not([data-invalid]):has(
+        .nl-markdown-editor__input:focus
+    ) {
+    border-color: var(--nl-content-strong);
+    outline: none;
+}
+.noslog-ui
+    .nl-markdown-editor[data-invalid]:has(
+        .nl-markdown-editor__input:focus-visible
+    ) {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: var(--nl-stroke-strong);
+}
+/* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로.
+   상자 = 입력칸 경계 · 모서리 · 면 입력 면. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
+   입력 = 본문 글자 · 안쪽 8/12(입력칸 글자 자리) · 처음 8줄 · 글 따라 늘어남. 포커스는 상자 경계가 바뀐다 */
+.noslog-ui .nl-markdown-editor {
+    min-width: 0;
+    overflow: hidden;
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-input);
+}
+@media (hover: hover) {
+    .noslog-ui
+        .nl-markdown-editor:not([data-invalid], [data-readonly]):not(
+            :has(.nl-markdown-editor__input:focus)
+        ):hover {
+        border-color: var(--nl-border-input-hover);
+    }
+}
+.noslog-ui .nl-markdown-editor[data-invalid] {
+    border-color: var(--nl-feedback-destructive);
+}
+/* 읽기 전용(보내는 중) = 입력칸 읽기 전용과 같이 경계 투명 · surface/surface */
+.noslog-ui .nl-markdown-editor[data-readonly] {
+    border-color: transparent;
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-markdown-editor__head {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-width: 0;
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+}
+.noslog-ui .nl-markdown-editor__tools {
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-markdown-editor__tools::-webkit-scrollbar {
+    display: none;
+}
+/* 입력 높이(2026-09-23 C) — 8줄에서 시작해 35줄까지 늘고, 그 뒤로는 칸 안에서 스크롤 */
+.noslog-ui .nl-markdown-editor__input {
+    display: block;
+    width: 100%;
+    min-height: calc(
+        var(--nl-type-line-height-ui) * 8 + var(--nl-spacing-8) * 2
+    );
+    max-height: calc(
+        var(--nl-type-line-height-ui) * 35 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border: 0;
+    background: transparent;
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-input-size);
+    line-height: var(--nl-type-line-height-ui);
+    field-sizing: content;
+    resize: vertical;
+}
+.noslog-ui .nl-markdown-editor__input:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-markdown-editor__input[hidden] {
+    display: none;
+}
+/* 미리보기(2026-09-23 P2) = 전체 화면 창 안에서 공개 화면과 같은 폭(읽기 폭)으로 그린다 */
+.noslog-ui .nl-markdown-editor__preview {
+    /* width 없이 가운데 정렬만 두면 세로 flex 안에서 내용 크기로 커져 창을 넘는다 */
+    width: 100%;
+    min-width: 0;
+    max-width: var(--nl-container-reading);
+    margin-inline: auto;
+}

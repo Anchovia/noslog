@@ -1,6 +1,6 @@
 # 공용 UI 사용과 검증
 
-디자인 값의 원본은 `app/styles/tokens.css`, 부품 모양 · 상태는 [디자인 가이드의 부품 문서](../design/README.md#부품)다.
+디자인 값의 원본은 `app/styles/tokens/`, 부품 모양 · 상태는 [디자인 가이드의 부품 문서](../design/README.md#부품)다.
 이 문서는 공용 부품 사용법과 Storybook 검증 방법만 관리한다.
 
 ## 실행
@@ -98,7 +98,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다.
 
 - 별칭은 `.noslog-ui` 안에서만 사용한다. 포털에도 기존 래퍼를 유지한다.
 - `gap-nl-16`은 16px 토큰을 참조한다. 기존 `gap-16`의 Tailwind 스케일은 바꾸지 않는다.
-- 구역 간격은 `gap-nl-section`, 컨트롤 높이는 `h-nl-control`처럼 역할 별칭을 쓴다.
+- 구역 제목 간격은 `gap-nl-section-title`, 컨트롤 높이는 `h-nl-control`처럼 역할 별칭을 쓴다.
 - 글자 조합은 기존 `nl-body`·`nl-control` 등의 클래스를 쓴다. 크기·줄 높이·굵기를 임의로 조합하지 않는다.
 - 부품 규격을 호출부 유틸리티로 덮어쓰지 않는다. 공통 변경은 공용 소스에서 한다.
 - 관리자·채보 화면을 별칭으로 일괄 전환하지 않는다.

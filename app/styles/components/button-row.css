@@ -1,0 +1,11 @@
+/* 버튼 줄(2026-10-21) — 버튼이 하나면 폭 가득, 둘이면 같은 폭 둘(사이 8). 카드 안 「고장 내용 보기 · 고장 신고」 등 */
+.noslog-ui .nl-button-row {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-button-row > * {
+    width: 100%;
+    min-width: 0;
+}

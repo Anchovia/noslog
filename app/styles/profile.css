@@ -236,12 +236,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-profile-identity__name {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
 .noslog-ui .nl-profile-identity__name h1 {
     min-width: 0;
     overflow: hidden;
@@ -379,7 +373,6 @@
     gap: var(--nl-spacing-12);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-profile-distribution,
 .noslog-ui .nl-profile-judgements {
     display: flex;
     flex-direction: column;
@@ -789,7 +782,7 @@
 .noslog-ui .nl-profile-progress__content[aria-busy="true"] {
     color: var(--nl-content-subdued);
 }
-/* 프로필 카드 미리보기 = 카드 비율(1200×630) 자리를 먼저 잡는다. 창 규격은 공용 nl-image-share(foundation.css) */
+/* 프로필 카드 미리보기 = 카드 비율(1200×630) 자리를 먼저 잡는다. 창 규격은 공용 nl-image-share(components/image-share.css) */
 .noslog-ui .nl-profile-card-preview {
     aspect-ratio: 1200 / 630;
 }
@@ -869,12 +862,6 @@
 }
 /* 기여 구역(2026-09-24 P1) — 등급 줄(태그 · 점수 · 다음 등급까지) →8→ 진행 막대 →12→ 종류별 수치 띠,
    본인에게만 그 아래 「내 제안」 선 목록(반려 사유는 오류 글자색) */
-.noslog-ui .nl-profile-contribution__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
 .noslog-ui .nl-profile-contribution__level {
     display: flex;
     flex-wrap: wrap;
@@ -1068,12 +1055,6 @@
 }
 
 /* 「활동」 탭 — 제목 →구역 제목 간격→ 요약 띠 →16→ 달력 →8→ 안내 · 범례 →구역 사이→ 최근 플레이 */
-.noslog-ui .nl-profile-activity {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-section-gap);
-    min-width: 0;
-}
 /* 칸 16 · 사이 4 · 모서리 4(small). 한 주 20 = 폰 약 17주 · 태블릿 약 36주 · 넓은 화면 53주 */
 .noslog-ui .nl-profile-calendar {
     --nl-profile-calendar-cell: var(--nl-spacing-16);
@@ -1166,12 +1147,6 @@
     width: var(--nl-spacing-48);
     height: var(--nl-spacing-48);
     border-radius: var(--nl-radius-small);
-}
-.noslog-ui .nl-profile-pinned__text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
 }
 .noslog-ui .nl-profile-pinned__title {
     overflow: hidden;

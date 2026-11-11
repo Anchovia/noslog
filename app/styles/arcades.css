@@ -707,12 +707,6 @@
     min-width: 0;
     gap: var(--nl-spacing-16);
 }
-.noslog-ui .nl-arcade-detail__head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
-}
 /* 액션 한 줄 — 길찾기가 남는 폭, 선호(인원이 있으면 하트 + 숫자로 폭이 내용만큼)·제보는 그 옆.
    같은 줄은 컨트롤 높이 하나 */
 .noslog-ui .nl-arcade-detail__actions {
@@ -805,7 +799,6 @@
     justify-content: space-between;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-arcade-cabinet__name,
 .noslog-ui .nl-arcade-cabinet__status {
     display: flex;
     flex-direction: column;

@@ -1,0 +1,45 @@
+/* 액션 메뉴(의견 · 답글 「⋯」) — 최소 폭 160(menu.md) · 화면 끝 여백 · 행 사이 0(셀렉트 · 정렬 메뉴와 같게) */
+.noslog-ui .nl-action-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 160px;
+    max-width: calc(100vw - var(--nl-spacing-32));
+}
+/* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
+.noslog-ui .nl-action-menu__item[data-destructive] {
+    color: var(--nl-feedback-destructive);
+}
+.noslog-ui .nl-action-menu__item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: start;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-action-menu__item:hover {
+        --nl-state-layer: var(--nl-surface-control-hover);
+        color: var(--nl-content-strong);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-action-menu__item:is(:active, :focus-visible) {
+    --nl-state-layer: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+/* 위험 항목은 올려도 글자 빨강 그대로 — 면만 바뀐다 */
+@media (hover: hover) {
+    .noslog-ui .nl-action-menu__item[data-destructive]:hover {
+        color: var(--nl-feedback-destructive);
+    }
+}
+.noslog-ui .nl-action-menu__item[data-destructive]:is(:active, :focus-visible) {
+    color: var(--nl-feedback-destructive);
+}

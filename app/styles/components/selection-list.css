@@ -1,0 +1,114 @@
+/* 체크 목록 SelectionList — 줄 = 컨트롤 높이, 줄 사이 0(체크 · 라디오 줄과 같다). 올림 = 목록 줄 겹침 */
+.noslog-ui .nl-selection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+/* 보이는 제목만 줄을 채운다 — sr-only 제목에 폭 100% 가 걸리면 절대배치 기준(뷰포트) 폭으로 늘어나 가로 스크롤이 생긴다 */
+.noslog-ui .nl-selection-list legend:not(.sr-only) {
+    float: left;
+    width: 100%;
+    margin-bottom: var(--nl-spacing-8);
+    padding: 0;
+}
+.noslog-ui .nl-selection-list__option {
+    display: flex;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    cursor: pointer;
+    border-radius: var(--nl-radius-control);
+}
+/* 줄 면 없이 체크 상자 · 글자만 반응한다(Spectrum 2 CheckboxGroup) — 체크 상자는 그룹 제목 선에 그대로 */
+@media (hover: hover) {
+    .noslog-ui .nl-selection-list__option:not([data-disabled="true"]):hover {
+        color: var(--nl-content-strong);
+    }
+    .noslog-ui
+        .nl-selection-list__option:not([data-disabled="true"]):hover
+        .nl-check__box {
+        border-color: var(--nl-content-strong);
+    }
+    .noslog-ui
+        .nl-selection-list__option:not([data-disabled="true"]):hover
+        input:checked
+        ~ .nl-check__box {
+        background: var(--nl-primary-hover);
+    }
+}
+.noslog-ui
+    .nl-selection-list__option:not([data-disabled="true"]):is(
+        :active,
+        :has(:focus-visible)
+    ) {
+    color: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-selection-list__option:not([data-disabled="true"]):is(
+        :active,
+        :has(:focus-visible)
+    )
+    .nl-check__box {
+    border-color: var(--nl-content-strong);
+}
+.noslog-ui .nl-selection-list__option:has(:focus-visible) {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
+}
+.noslog-ui .nl-selection-list__option[data-selected="true"] {
+    font-weight: var(--nl-type-weight-semibold);
+}
+/* 비활성 = 글자 · 상자 gray-400(투명도 대신 색). 칸 색(난이도 · 분류) 규칙보다 앞서게 목록 안으로 좁힌다 */
+.noslog-ui .nl-selection-list .nl-selection-list__option[data-disabled="true"],
+.noslog-ui
+    .nl-selection-list
+    .nl-selection-list__option[data-disabled="true"]
+    .nl-muted {
+    color: var(--nl-content-disabled);
+    cursor: default;
+}
+.noslog-ui
+    .nl-selection-list
+    .nl-selection-list__option[data-disabled="true"]
+    .nl-check__box {
+    border-color: var(--nl-content-disabled);
+}
+.noslog-ui
+    .nl-selection-list
+    .nl-selection-list__option[data-disabled="true"]
+    input:checked
+    ~ .nl-check__box {
+    border-color: var(--nl-content-disabled);
+    background: var(--nl-content-disabled);
+}
+.noslog-ui .nl-selection-list__description {
+    display: block;
+}
+.noslog-ui
+    .nl-selection-list__option[data-tone]:not([data-disabled="true"]):not(
+        :hover
+    )
+    .nl-selection-list__label {
+    color: var(--nl-tone);
+}
+/* 레일(Wide)의 세로 목록 — 체크박스 16 상시 노출, 행 = 컨트롤 높이, 우측 개수 */
+.noslog-ui .nl-selection-list__option .nl-check__box {
+    margin-right: var(--nl-spacing-4);
+}
+.noslog-ui .nl-selection-list__label {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-selection-list__option input:checked ~ .nl-check__box {
+    background: var(--nl-primary-default);
+    border-color: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+.noslog-ui .nl-selection-list__option input:checked ~ .nl-check__box > svg {
+    visibility: visible;
+}

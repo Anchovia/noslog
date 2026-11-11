@@ -143,8 +143,8 @@ export default function AnnouncementBannerBuilder({
     }
 
     return (
-        <Disclosure title="공지 배너" className="nl-admin-form__section">
-            <div className="nl-admin-form__section">
+        <Disclosure title="공지 배너" className="nl-stack">
+            <div className="nl-stack">
                 {hasBanner
                     ? ANNOUNCEMENT_LOCALES.map((locale) => (
                           <AnnouncementBanner
@@ -156,7 +156,7 @@ export default function AnnouncementBannerBuilder({
                     : null}
                 <fieldset
                     disabled={disabled || busy !== null}
-                    className="nl-admin-form__section m-0 min-w-0 border-0 p-0"
+                    className="nl-stack m-0 min-w-0 border-0 p-0"
                 >
                     <legend className="sr-only">공지 배너 입력</legend>
                     {ANNOUNCEMENT_LOCALES.map((locale) => (
@@ -222,7 +222,7 @@ export default function AnnouncementBannerBuilder({
                     ) : null}
                 </div>
                 {previews.length > 0 ? (
-                    <div className="nl-admin-form__section">
+                    <div className="nl-stack">
                         {previews.map((item) => (
                             // eslint-disable-next-line @next/next/no-img-element -- 아직 올리지 않은 브라우저 안 미리보기
                             <img

@@ -62,7 +62,7 @@ describe("NosLog Tailwind aliases", () => {
 describe("부품 제목 색과 Tailwind 색 유틸리티", () => {
     it("제목 색은 utilities 보다 앞선 components 레이어 안에서 content/strong 이다", () => {
         const tokens = postcss.parse(
-            readFileSync(resolve("app/styles/tokens.css"), "utf8")
+            readFileSync(resolve("app/styles/typography.css"), "utf8")
         );
         const colors: { layer: string | null; value: string }[] = [];
         tokens.walkRules(".noslog-ui .nl-component-title", (rule) => {

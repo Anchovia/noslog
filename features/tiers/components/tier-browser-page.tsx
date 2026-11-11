@@ -398,7 +398,7 @@ export default function TierBrowserPage({
             data-layout={wide ? "wide" : "compact"}
         >
             <div className="nl-page-heading">
-                <div className="nl-page-heading__copy">
+                <div className="nl-stack nl-stack--8">
                     {/* 제목 = 서열표 스위처(2026-09-22 ④) — 네 서열표를 여기서 고른다.
                         h1 은 화면 읽기용 「S 서열표」, 고르기 버튼은 h1 밖(2026-10-01 접근성 — 제목 안 버튼은 h1 이 「서열표 서열표 선택」 으로 읽혔다) */}
                     <div className="nl-tier-heading">

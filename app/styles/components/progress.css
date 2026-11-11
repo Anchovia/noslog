@@ -1,0 +1,31 @@
+/* 사이트 안 이동 — 위쪽 진행 막대(2026-09-19 로딩 시안 N1). 맨 위 2px · primary/default · 이전 화면은 그대로.
+   80% 까지 차오르다(--nl-motion-duration-progress) 새 화면이 오면 끝까지 채우고 사라진다.
+   동작 줄이기에서도 막대는 남는다(차오름 시간은 줄이지 않음 — 멈추면 멈춘 것처럼 보인다) */
+.noslog-ui .nl-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--nl-layer-progress);
+    height: var(--nl-stroke-strong);
+    pointer-events: none;
+}
+.noslog-ui .nl-progress__bar {
+    width: 0;
+    height: 100%;
+    background: var(--nl-primary-default);
+    opacity: 0;
+}
+.noslog-ui .nl-progress[data-phase="running"] .nl-progress__bar {
+    opacity: 1;
+    animation: nl-progress-run var(--nl-motion-duration-progress)
+        var(--nl-ease-enter) forwards;
+}
+.noslog-ui .nl-progress[data-phase="done"] .nl-progress__bar {
+    width: 100%;
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+@keyframes nl-progress-run {
+    to {
+        width: 80%;
+    }
+}

@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 /**
  * 정보 줄 목록(2026-10-21 전면 대조 ① — Google 지도 · 카카오맵 · 네이버 장소 화면).
- * 줄 사이 구분선. 줄 = 아이콘 20(흐림) →12→ 본문 16(+ 보조 14 줄) → 끝 동작(고스트 M 등). 값은 모두 토큰(foundation.css)
+ * 줄 사이 구분선. 줄 = 아이콘 20(흐림) →12→ 본문 16(+ 보조 14 줄) → 끝 동작(고스트 M 등). 값은 모두 토큰(app/styles/components/icon-row.css)
  */
 export function IconRows({ className, ...props }: ComponentProps<"ul">) {
     return <ul className={cn("nl-icon-rows", className)} {...props} />;

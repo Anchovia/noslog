@@ -1,8 +1,8 @@
 # 기초값
 
 색 · 글자 · 간격 · 모서리 · 높이 · 선 · 층 · 포커스 · 상태 · 움직임 · 로딩 · 셸 · 레이아웃 규칙이다.
-값의 정본은 [`app/styles/tokens.css`](../../app/styles/tokens.css) 하나다. 이 문서는 토큰 이름과 쓰는 곳만 적고, 값은 이해를 돕는 데 필요할 때만 괄호로 붙인다.
-값이 이 문서와 `tokens.css` 에서 다르면 `tokens.css` 가 맞다. 이 문서를 고친다.
+값의 정본은 [`app/styles/tokens/`](../../app/styles/tokens) 폴더다. 종류마다 파일이 하나다(`colors.css` · `typography.css` · `size.css` · `borders.css` · `shadow.css` · `animations.css` · `levels.css`). 이 문서는 토큰 이름과 쓰는 곳만 적고, 값은 이해를 돕는 데 필요할 때만 괄호로 붙인다.
+값이 이 문서와 토큰 파일에서 다르면 토큰 파일이 맞다. 이 문서를 고친다.
 
 ## 테마 · 글꼴
 
@@ -14,7 +14,7 @@
 
 ## 색
 
-역할 이름으로만 쓴다. 색과 부품 · 자리마다 쓰는 토큰은 Adobe Spectrum 2 다크(`@adobe/spectrum-tokens` · React Spectrum S2 부품 소스)를 따른다. 새 값이 필요하면 Spectrum 2 에서 고르고, 다른 체계의 값을 섞지 않는다. 예외는 셋이다. Spectrum 의 파랑(accent 버튼 · 링크 · 메뉴 체크 · 포커스)은 쓰지 않고 무채색 판을 쓴다. 툴팁 면은 Spotify 값이고, 포커스는 흰 선 한 줄이다. 표의 `분류/이름` 은 `tokens.css` 의 `--nl-분류-이름` 토큰이다. 값은 다크 값이다.
+역할 이름으로만 쓴다. 색과 부품 · 자리마다 쓰는 토큰은 Adobe Spectrum 2 다크(`@adobe/spectrum-tokens` · React Spectrum S2 부품 소스)를 따른다. 새 값이 필요하면 Spectrum 2 에서 고르고, 다른 체계의 값을 섞지 않는다. 예외는 셋이다. Spectrum 의 파랑(accent 버튼 · 링크 · 메뉴 체크 · 포커스)은 쓰지 않고 무채색 판을 쓴다. 툴팁 면은 Spotify 값이고, 포커스는 흰 선 한 줄이다. 표의 `분류/이름` 은 `tokens/colors.css` 의 `--nl-분류-이름` 토큰이다. 값은 다크 값이다. 무채색 역할 토큰은 회색 단계 토큰 `--nl-gray-25` … `--nl-gray-1000`(Spectrum 2 다크 13단계)을 가리킨다. 화면 · 부품 CSS 는 단계 토큰을 직접 쓰지 않고 역할 토큰만 쓴다(테스트가 막는다).
 
 | 역할                                           | 값                          | 쓰는 곳                                                                                                                                                                                   |
 | ---------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -37,7 +37,6 @@
 | `border/elevated`                              | #323232                     | 떠 있는 창 다크 둘레([떠 있는 창](#떠-있는-창)) · 토스트 둘레                                                                                                                             |
 | `border/input` · `border/input-hover`          | #393939 · #444              | 입력 계열 경계(2) · 적용 조건 알약 · 고르기 알약 · 업적 고르기 칸 · 프로필 레벨별 달성의 고른 칸 밖 조각 / 입력 계열 올림                                                                 |
 | `border/ring`                                  | #6d6d6d                     | 고른 경계(사진 썸네일 · 목록 · 투표 고른 줄), 강조 테두리, 빈 자리 경계(북마클릿 설치 카드 점선)                                                                                          |
-| `interaction/hover`                            | 흰 6%                       | 관리자 수치 칸 올림에만 남아 있다. 새로 쓰지 않는다                                                                                                                                       |
 | `interaction/row`                              | #f2f2f2 7%                  | 폭이 꽉 찬 목록 · 표 줄 · 펼침 줄 · 판 칸의 올림                                                                                                                                          |
 | `primary/default` · `hover` · `on-primary`     | #dbdbdb · #f2f2f2 · #111111 | 주 버튼 · 반전 태그 · 켜진 스위치 · 체크한 체크박스 · 라디오 · 슬라이더 점 · 진행 막대 · 텍스트 선택 / 올림 · 누름 · 키 포커스 / 그 위 글자                                               |
 | `switch-thumb`                                 | #dbdbdb                     | 꺼진 스위치 손잡이                                                                                                                                                                        |
@@ -72,11 +71,11 @@
 - 배경 그림을 이미 쓰는 요소(투표 줄의 구분선)와 `::selection` 만 `background-color` 로 칠한다.
 - 대비는 글자 4.5 : 1, 글자 아닌 단서 3 : 1 이다. 색만으로 상태를 알리지 않는다 — 상태 색은 늘 상태 글자와 함께 쓴다.
 - 상태는 글자색으로 써도 된다. `feedback/*-marker` · `feedback/destructive` 처럼 다크 바탕에서 4.5 : 1 을 넘는 표시색만 쓴다.
-- 고대비 모드(`forced-colors: active`)에서는 시스템 색을 쓴다(포커스 선 `Highlight`, 체크박스 상자 `ButtonText` · 체크하면 `Highlight`). 스위치 트랙과 채보 검토 단계 막대는 면 색으로 상태를 보이므로 실제 선으로 그리고 시스템 색을 직접 준다(단계 막대는 선 · 채움을 체크박스와 같게, 빈 칸 `Canvas` 면 + `ButtonText` 선 · 채운 칸 `Highlight`). 고른 세그먼트 칸은 시스템 색 바꿈을 꺼(`forced-color-adjust: none`) 제 면을 남기고, 그 칸의 포커스 선은 면과 겹치지 않게 `HighlightText` 다. 메뉴 판 둘레는 실제 `border`, 토스트 둘레는 `outline` 이라 저절로 남는다. ≡ 창은 투명 `outline` 둘레를 두어 고대비에서만 선이 보인다. 규칙은 `foundation-forced-colors.css` 한 곳에 있다. 버튼 · 메뉴 항목 · 누르는 줄은 올림 · 누름에 면 `Highlight` · 글자 `HighlightText` 로 평소 면과 글자색을 맞바꾼다(Spectrum 2 · Fluent 2). 제 올림 면을 그리는 화면의 누르는 줄은 그 요소에 `nl-forced-press` 를 붙여 이 규칙을 받는다.
+- 고대비 모드(`forced-colors: active`)에서는 시스템 색을 쓴다(포커스 선 `Highlight`, 체크박스 상자 `ButtonText` · 체크하면 `Highlight`). 스위치 트랙과 채보 검토 단계 막대는 면 색으로 상태를 보이므로 실제 선으로 그리고 시스템 색을 직접 준다(단계 막대는 선 · 채움을 체크박스와 같게, 빈 칸 `Canvas` 면 + `ButtonText` 선 · 채운 칸 `Highlight`). 고른 세그먼트 칸은 시스템 색 바꿈을 꺼(`forced-color-adjust: none`) 제 면을 남기고, 그 칸의 포커스 선은 면과 겹치지 않게 `HighlightText` 다. 메뉴 판 둘레는 실제 `border`, 토스트 둘레는 `outline` 이라 저절로 남는다. ≡ 창은 투명 `outline` 둘레를 두어 고대비에서만 선이 보인다. 여러 부품에 걸친 규칙(포커스 선 · 누르는 것의 올림 · 누름)은 `app/styles/forced-colors.css` 에, 부품 하나의 규칙은 그 부품 파일에 있다. 버튼 · 메뉴 항목 · 누르는 줄은 올림 · 누름에 면 `Highlight` · 글자 `HighlightText` 로 평소 면과 글자색을 맞바꾼다(Spectrum 2 · Fluent 2). 제 올림 면을 그리는 화면의 누르는 줄은 그 요소에 `nl-forced-press` 를 붙여 이 규칙을 받는다.
 
 ## 글자
 
-`tokens.css` 의 글자 클래스 13종과 태그 글자 하나만 쓴다. 이 밖의 크기 · 줄 높이 · 굵기 조합은 쓰지 않는다. 다른 문서가 조합을 따로 정하지 않는다.
+`app/styles/typography.css` 의 글자 클래스 13종과 태그 글자 하나만 쓴다. 이 밖의 크기 · 줄 높이 · 굵기 조합은 쓰지 않는다. 다른 문서가 조합을 따로 정하지 않는다.
 단계는 본문 16 계열이다(Spectrum 2 Body M · 당근 · velog · note 실측). 쪽 제목 · 절 제목 · 부품 제목 · 본문 · 메타는 한국어 · 일본어도 같은 값이다. 컨트롤 · 읽기 본문 · 강조 라벨 · 수치 값의 줄 높이와 부품 글자의 bold 만 한국어 · 일본어(`:lang(ko)` · `:lang(ja)`)에서 CJK 값(줄 높이 1.5 · 읽기 본문 1.7 · bold 500)을 쓴다. 표의 「라틴 / CJK」 가 그 둘이다. 메타 자간은 모든 언어 0 이다.
 
 | 클래스                                   | 크기/줄 · 굵기               | 쓰는 곳                                                         |
@@ -135,8 +134,11 @@
 ## 토큰 · 공용 부품으로만
 
 - 모든 시각 수치(간격 · 안쪽/바깥 여백 · 모서리 · 선 두께 · 색 · 글자 크기 · 굵기 · 줄 높이 · 높이 · 층 · 시간)는 CSS · TSX · Tailwind · JS 계산 어디서든 토큰이나 토큰으로 만든 식으로 쓴다. 토큰에 없는 값은 쓰지 않는다.
-- Tailwind 는 `app/styles/tailwind-theme.css` 의 `nl` 별칭만 쓴다. 기본 스케일(`p-3` · `rounded-md` · `text-sm` · `font-bold` · `z-10`), 임의값(`w-[13px]`), 기본 색 팔레트(`bg-red-400/10` · `text-white`), 중단점 변형(`md:` · `min-[672px]:`)은 쓰지 않는다. 폭 단계는 CSS media query 로 둔다. 별칭은 `.noslog-ui` 안에서만 쓴다. 떠 있는 판은 `bg-nl-elevated` · `border-nl-elevated-border` · `rounded-nl-large`, 카드 그림자는 `shadow-nl-card`, 떠 있는 창 그림자는 `shadow-nl-overlay` 다. 글자 조합(크기 · 줄 높이 · 굵기)은 별칭이 없고 글자 클래스로만 쓴다.
-- 인라인 `style` 은 데이터로 계산한 값(비율 · 좌표 · 데이터 색)만. JS 가 크기를 계산해야 하면 숫자를 다시 쓰지 말고 토큰을 읽거나(`readTokenPixels`) 실제 요소를 잰다. CSS 변수를 읽지 못하는 캔버스 · 공유 이미지는 크기 · 굵기를 `lib/design-token-values.ts` 한 파일에서 읽고, 색은 그림마다 다크 값을 옮긴 상수(아이콘 · 공유 미리보기 `lib/metadata/brand-image.tsx`, 프로필 카드 `features/profile/profile-card-colors.ts`, 값 색 `lib/music/score-tone.ts`, 채보 무대 `lib/chart-pattern/stageColors.ts`)에서 읽는다. 각 상수는 테스트가 `tokens.css` 와 대조한다. 서열 변경 공지 이미지는 사용자가 정한 원본 규격의 색(`TIER_CHANGE_IMAGE_PALETTE`)을 쓴다.
+- 공용 CSS 는 `app/styles` 에 종류마다 나눠 둔다. 토큰은 `tokens/`, 글자 클래스는 `typography.css`, 셸 기본값 · 포커스 · 여러 부품에 걸친 규칙은 `base.css`, 도우미 클래스는 `utilities.css`, 공용 부품은 `components/` 에 부품마다 파일 하나다. 부품의 고대비 · 움직임 규칙도 그 부품 파일에 둔다. 여러 부품에 걸친 고대비 규칙만 `forced-colors.css` 에 두고, 같은 우선순위의 부품 규칙을 이기도록 그 부품 파일들 뒤에 불러온다. 기능 한 곳만 쓰는 규칙은 화면 CSS 에 둔다. 우선순위는 `@layer` 없이 `app/globals.css` 의 import 순서로 정한다.
+- 레이아웃만 하는 규칙은 화면 클래스를 만들지 않고 도우미 클래스를 붙인다. 세로 쌓기는 `nl-stack`(간격 16)에 `nl-stack--4` · `--8` · `--12` · `--24` · `--32` · `--section` 을 함께 붙이고, 가로 줄(가운데 맞춤 · 간격 8)은 `nl-inline`, 한 줄 말줄임은 `nl-truncate` 다. 다른 규칙이 있거나 폭에 따라 바뀌는 묶음은 화면 클래스에 둔다.
+- 토큰은 쓰는 곳이 있어야 한다. 선언만 있고 참조가 없으면 테스트가 실패한다. 이름을 조합해 쓰는 토큰만 테스트의 예외 목록에 이유와 함께 적는다.
+- Tailwind 는 `app/styles/tailwind-theme.css` 의 `nl` 별칭만 쓴다. 기본 스케일(`p-3` · `rounded-md` · `text-sm` · `font-bold` · `z-10`), 임의값(`w-[13px]`), 기본 색 팔레트(`bg-red-400/10` · `text-white`), 중단점 변형(`md:` · `min-[672px]:`)은 쓰지 않는다. 폭 단계는 CSS media query 로 둔다. 별칭은 `.noslog-ui` 안에서만 쓴다. 떠 있는 판은 `bg-nl-elevated` · `border-nl-elevated-border` · `rounded-nl-large`, 떠 있는 창 그림자는 `shadow-nl-overlay` 다. 카드 그림자는 별칭이 없고 CSS 가 `--nl-card-shadow` 를 읽는다. 글자 조합(크기 · 줄 높이 · 굵기)은 별칭이 없고 글자 클래스로만 쓴다.
+- 인라인 `style` 은 데이터로 계산한 값(비율 · 좌표 · 데이터 색)만. JS 가 크기를 계산해야 하면 숫자를 다시 쓰지 말고 토큰을 읽거나(`readTokenPixels`) 실제 요소를 잰다. CSS 변수를 읽지 못하는 캔버스 · 공유 이미지는 크기 · 굵기를 `lib/design-token-values.ts` 한 파일에서 읽고, 색은 그림마다 다크 값을 옮긴 상수(아이콘 · 공유 미리보기 `lib/metadata/brand-image.tsx`, 프로필 카드 `features/profile/profile-card-colors.ts`, 값 색 `lib/music/score-tone.ts`, 채보 무대 `lib/chart-pattern/stageColors.ts`)에서 읽는다. 각 상수는 테스트가 `tokens/colors.css` 와 대조한다. 서열 변경 공지 이미지는 사용자가 정한 원본 규격의 색(`TIER_CHANGE_IMAGE_PALETTE`)을 쓴다.
 - 반복되는 요소는 공용 부품(`components/ui`)으로 만들고, 크기 단계는 숫자 prop 대신 부품의 클래스 · 변형으로 둔다.
 - 필요한 값이 토큰에 없으면 만들지 말고 시안으로 묻는다.
 - 검사는 CSS(관리자 `admin.css` 포함)와 라우트가 닿는 TSX · TS(관리자 · 에디터 포함)를 모두 본다. 토큰으로 옮기면 모양이 바뀌는 값만 각 검사(`tests/design-foundation.test.ts` · `tests/design-tsx-tokens.test.ts` · `tests/admin-tsx-tokens.test.ts`)의 예외 목록에 이유와 함께 둔다. 계산식 안 크기 · 폭 · 높이는 검사 밖이다.
@@ -208,7 +210,7 @@ Lucide 실제 모양을 쓴다.
 
 ## 포커스
 
-- 포커스는 `foundation-base.css` 의 공용 규칙이다. 모든 요소가 `--nl-stroke-strong`(2) `focus/ring` 흰 outline 한 줄이고 후광 · 두 줄은 없다. 부품 CSS 에 포커스 모양을 따로 쓰지 않는다.
+- 포커스는 `app/styles/base.css` 의 공용 규칙이다. 모든 요소가 `--nl-stroke-strong`(2) `focus/ring` 흰 outline 한 줄이고 후광 · 두 줄은 없다. 부품 CSS 에 포커스 모양을 따로 쓰지 않는다.
 - 떨어진 요소(링크 · 카드 · 체크박스 상자)는 바깥 간격 `--nl-stroke-strong`(2), 버튼(셀렉트 · 쪽 번호 · 숫자 척도 · 헤더 로그인 · ≡ 포함)은 간격 0 이다. 폭이 꽉 찬 줄 · 탭 · 세그먼트 칸 · 메뉴 항목 · 칩은 안쪽(−2)이다. 공용 부품은 공용 규칙의 안쪽 목록에 이름이 있고, 화면이 만드는 줄 · 버튼은 그 요소에 `nl-focus-inset` 을 붙인다. 공용 규칙에 화면 클래스 이름을 더하지 않는다. 좌우를 넓혀 칠하는 줄(아래 올림 표)은 선도 그 넓힌 면과 같은 사각형 · 모서리의 안쪽(−2)에 긋고, 줄 상자에는 긋지 않는다(Spotify 트랙 줄 · Spectrum 2 ListView). 고대비 모드에서도 같은 자리에 시스템 색으로 남는다.
 - 입력 계열(입력 · 검색칸 · 마크다운 입력 · 단위 입력)은 Spectrum 2 텍스트 필드처럼 커서가 들어가면 테두리가 `content/strong` 으로 바뀌는 것 하나로 그린다. 바깥 포커스 선 · 파랑 링을 겹쳐 그리지 않는다. 잘못된 칸은 포커스 때도 `feedback/destructive` 경계를 지킨다. 셀렉트는 버튼처럼 간격 0 흰 선이다.
 - 숨긴 입력이 포커스를 받는 부품(검색칸 · 마크다운 입력 · 단위 입력 · 체크박스)은 보이는 상자에 포커스를 그린다. 상자 안 다른 버튼에 포커스가 있을 때는 그리지 않는다.
@@ -241,7 +243,7 @@ Lucide 실제 모양을 쓴다.
 
 - 위 표의 올림 모양은 누름(`:active`) · 키 포커스(`:focus-visible`)에도 같다(Spectrum 2 hover · down · key-focus 같은 단계). `:hover` 만 미디어 쿼리 안에 두고 둘은 밖에 둔다.
 - 전용 부품 클래스가 없는 줄 · 버튼은 공용 `.nl-hover-layer`(면 없는 누르는 것과 같은 면 · 글자)를 쓴다. 면 색을 바꾸는 `hover:bg-*` 는 쓰지 않는다.
-- 면 없는 구분선 목록 줄은 줄 요소에 `nl-bleed-row` 를 붙인다. 이 클래스가 좌우 12 를 넓힌 면(`::before`)을 만들고, 줄이 링크나 버튼이면 올림 · 누름 · 키 포커스의 `interaction/row` 겹침과 그 면 안쪽의 포커스 선도 준다. 화면 CSS 에 넓힌 면을 다시 쓰지 않는다. 면의 모서리나 위아래 끝이 다른 줄만 그 화면 CSS 에서 `::before` 의 `border-radius` · `inset-block` 을 준다.
+- 면 없는 구분선 목록 줄은 줄 요소에 `nl-bleed-row` 를 붙인다. 이 클래스가 좌우 12 를 넓힌 면(`::before`)을 만들고, 줄이 링크나 버튼이면 올림 · 누름 · 키 포커스의 `interaction/row` 겹침과 그 면 안쪽의 포커스 선도 준다. 화면 CSS 에 같은 넓힌 면을 다시 쓰지 않는다. 좌우 값 · 포커스 선이 다른 프로필 기록 줄(`profile.css`)과 관리자 목록 3곳(`admin.css`)만 제 규칙을 둔다. 면의 모서리나 위아래 끝이 다른 줄만 그 화면 CSS 에서 `::before` 의 `border-radius` · `inset-block` 을 준다.
 - 누름 전용 색은 없다(올림과 같은 색). 누를 때 모양 · 크기 · 위치는 바뀌지 않는다(`transform` 없음).
 - 바쁨(busy)은 비활성이 아니다. 버튼은 스피너 16 + 진행형 라벨, 화면 · 영역 로딩은 아래 「로딩」.
 
@@ -252,7 +254,7 @@ Lucide 실제 모양을 쓴다.
 - 면 `surface/elevated`(layer-2) · 모서리 `radius/large` · 그림자 `--nl-overlay-shadow` · 다크 둘레 1px `border/elevated` 다(메뉴 · 헤더 메뉴 패널 · 팝오버 · 토스트 · 차트 툴팁 · 빙고 칸 팝오버 · 홈 검색 미리보기 · 시트 · 지도 위 버튼 · 핀 이름 판 · 뮤즈캣 패널). 고대비 모드에서도 남게 메뉴 판 둘레는 실제 `border`(Radix 가 판에 `outline: none` 을 인라인으로 넣는다), 토스트 둘레는 `outline` 으로 그린다. 폰 헤더 메뉴 패널은 헤더에 붙어 위 모서리 · 위 선이 없다.
 - 지도 위 검색칸은 검색칸 모양(입력 계열 경계 · 원 끝) 그대로이고 그림자 `--nl-overlay-shadow` 만 더한다.
 - 대화상자는 면 `surface/elevated` · 모서리 `radius/overlay` · 그림자 없음 · 머리 · 발 구분선 없음이다(가림막이 높이를 보여 준다). 고대비 모드용 투명 둘레만 둔다. 전체 화면 창 · 이미지 내보내기 창은 [대화상자](./components/dialog.md)를 따른다.
-- 메뉴(셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록)는 판 안쪽 8 · 항목 높이 = 컨트롤 높이 · 항목 좌우 12 · 항목 모서리 `radius/control` · 항목 글자 medium · 쌓임 층 `--nl-layer-select` 다. 규칙은 `foundation-navigation.css` 「메뉴 한 모양」 한 곳에 있다([목록 · 메뉴](./components/menu.md)).
+- 메뉴(셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록)는 판 안쪽 8 · 항목 높이 = 컨트롤 높이 · 항목 좌우 12 · 항목 모서리 `radius/control` · 항목 글자 medium · 쌓임 층 `--nl-layer-select` 다. 규칙은 `app/styles/components/select-menu.css` 「메뉴 한 모양」 한 곳에 있다([목록 · 메뉴](./components/menu.md)).
 - 용어 도움말 창(`TermHelp`)은 면 `surface/inverse` · 글자 `content/on-inverse` · 모서리 `radius/small` · 안쪽 4 8 · 그림자 `--nl-tooltip-shadow` 다.
 - 미디어 위 판(자켓 카테고리 · 서열 카드 난이도)은 떠 있는 창이 아니다.
 
@@ -260,7 +262,7 @@ Lucide 실제 모양을 쓴다.
 
 움직임은 상태 · 위치 · 로딩에만 쓰고 장식은 없다. 아래 표에 없는 곳은 즉시 바뀐다. 새 움직임이 필요하면 이 표와 토큰을 먼저 고친다(사용자 허락).
 
-값은 `tokens.css` 의 움직임 토큰만 쓴다. CSS 에 숫자 시간 · `cubic-bezier` · `ease` · `linear` 를 직접 쓰지 않는다(테스트가 막는다).
+값은 `tokens/animations.css` 의 움직임 토큰만 쓴다. CSS 에 숫자 시간 · `cubic-bezier` · `ease` · `linear` 를 직접 쓰지 않는다(테스트가 막는다).
 
 | 토큰                                                        | 값                                                    | 쓰는 곳                                           |
 | ----------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------- |
@@ -285,7 +287,7 @@ Lucide 실제 모양을 쓴다.
 - ⑮ 지도 — 카드를 누르면 핀으로 미끄러진다(카카오맵 `panTo`). 목록 스크롤은 즉시.
 - ⑯ 그래프(막대 목록 · 누적 막대 · 선 그래프 · 값이 바뀌는 진행 막대) — 나타날 때 막대 · 선이 왼쪽부터 드러나고(바닥선 · 틀은 그대로), 같은 막대 · 같은 점의 값이 바뀌면 새 값으로 옮겨 간다. 선 그래프는 점 구성(날짜)이 바뀌면 다시 드러난다. 공용 클래스 `nl-chart-reveal`(드러남) · `nl-chart-bar`(막대 길이 옮겨 감) 두 개만 붙인다. SVG 선의 옮겨 감은 `lib/motion` 이 같은 토큰을 읽는다. 값이 바뀌지 않고 여러 장이 한꺼번에 움직이는 막대(빙고 목록 카드 완료 막대)는 장식이라 움직이지 않는다.
 - 즉시(움직임 없음) — ⑥ 탭 밑줄 · ⑦ 구역 펼침 · ⑧ 툴팁(그래프 · 용어 도움말) · ⑨ 체크박스 · 라디오 · 토글 · ⑬ 스크롤 연출 · ⑭ 페이지 이동.
-- 동작 줄이기 — 기기 설정이 켜지면 `tokens.css` 한 곳에서 시간 토큰을 모두 0 으로 한다. 스피너 한 바퀴와 위쪽 진행 막대는 남긴다(멈추면 고장처럼 보인다). JS 가 같은 설정을 읽는 곳은 둘이다. 지도는 곧바로 옮기고, 동기화 안내의 움직이는 그림은 그림 대신 라벨 글자를 둔다(누르면 여는 큰 그림은 그대로).
+- 동작 줄이기 — 기기 설정이 켜지면 `tokens/animations.css` 한 곳에서 시간 토큰을 모두 0 으로 한다. 스피너 한 바퀴와 위쪽 진행 막대는 남긴다(멈추면 고장처럼 보인다). JS 가 같은 설정을 읽는 곳은 둘이다. 지도는 곧바로 옮기고, 동기화 안내의 움직이는 그림은 그림 대신 라벨 글자를 둔다(누르면 여는 큰 그림은 그대로).
 - 손대지 않는 것 — 채보 캔버스, 카카오맵 안 타일 페이드(라이브러리), 공식 사이트 위 북마클릿 창.
 
 ## 로딩
@@ -341,6 +343,7 @@ viewport media query 로만 정하고, CSS 와 JS 가 같은 기준을 쓴다.
 
 ## 바뀐 기록
 
+- [2026-11-11 토큰 층 · 종류별 토큰 파일 · 부품마다 CSS 파일 · 도우미 클래스](../decisions/2026-11-11-foundation-structure.md)
 - [2026-10-29 필터 목록 · 고르기 창 · 고대비 · 악곡 카드 · 관리자 올림](../decisions/2026-10-29-hover-remaining.md)
 - [2026-10-29 공지 이전 · 다음 칸의 올림](../decisions/2026-10-29-adjacent-notice-hover.md)
 - [2026-10-29 영상 버튼의 올림](../decisions/2026-10-29-video-button-hover.md)

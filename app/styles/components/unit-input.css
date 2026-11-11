@@ -1,0 +1,51 @@
+.noslog-ui
+    .nl-unit-input:not(:has(.nl-unit-input__field[aria-invalid="true"])):has(
+        .nl-unit-input__field:focus
+    ) {
+    border-color: var(--nl-content-strong);
+    outline: none;
+}
+.noslog-ui .nl-unit-input:has(.nl-unit-input__field[aria-invalid="true"]) {
+    border-color: var(--nl-feedback-destructive);
+}
+/* 잘못된 칸은 빨간 경계를 지키므로 포커스는 일반 입력의 잘못된 칸처럼 바깥 흰 선 — 안 입력은 선을 그리지 않는다 */
+.noslog-ui
+    .nl-unit-input:has(
+        .nl-unit-input__field[aria-invalid="true"]:focus-visible
+    ) {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: var(--nl-stroke-strong);
+}
+/* 단위 붙은 입력칸 UnitInput — 겉 상자 = nl-input, 포커스는 안 입력이 잡고 겉 상자 테두리가 바뀐다(잘못된 칸은 바깥 흰 선) */
+.noslog-ui .nl-unit-input {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-unit-input[data-disabled],
+.noslog-ui .nl-unit-input[data-disabled] .nl-unit-input__unit {
+    color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-unit-input__field {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+/* 숫자 칸의 브라우저 기본 ▲▼ 는 두지 않는다 — 단위 입력은 값 칸과 단위 글자뿐이다 */
+.noslog-ui .nl-unit-input__field {
+    appearance: textfield;
+}
+.noslog-ui .nl-unit-input__field::-webkit-inner-spin-button,
+.noslog-ui .nl-unit-input__field::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+.noslog-ui .nl-unit-input__unit {
+    flex-shrink: 0;
+    color: var(--nl-content-subdued);
+}

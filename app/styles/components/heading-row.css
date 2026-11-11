@@ -1,0 +1,67 @@
+/* 구역 제목 줄 HeadingRow — 제목 · 도움말 · 메타 · 오른쪽 끝 제목 링크. 좁으면 줄바꿈(열 8 · 행 4) */
+.noslog-ui .nl-heading-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--nl-spacing-8);
+    row-gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-heading-row > .nl-metadata {
+    white-space: nowrap;
+}
+/* 제목 줄 오른쪽 끝 메타(기준 인원 등) */
+.noslog-ui .nl-heading-row > .nl-heading-row__end {
+    margin-left: auto;
+}
+/* 제목 줄 끝 동작(고스트 M — 「선택 해제」 · 「다시 시도」) — 제목 줄 높이(구역 제목 줄 높이)를 늘리지 않게 위아래로,
+   잉크가 오른쪽 선에 서게 버튼 좌우 안쪽 12 만큼 오른쪽으로 당긴다. 이동은 제목 링크 */
+.noslog-ui .nl-heading-row .nl-button--ghost.nl-button--compact:last-child {
+    margin-block: calc(
+        (
+                var(--nl-control-height-compact) -
+                    var(--nl-type-section-title-line-height)
+            ) /
+            -2
+    );
+    margin-inline-end: calc(var(--nl-spacing-12) * -1);
+}
+/* 제목 줄 오른쪽 링크 「평가하기 ›」 · 「로그인하고 투표하기 ›」 — 홈 「전체 공지 ›」 와 같은 구역 제목 링크
+   (글자 control + 꺾쇠 16 · 간격 4 · 광학 −4). 누르는 영역은 위아래 12 넓힌다(글줄 + 24).
+   Spectrum 2 단독 링크 — medium, 올림 · 누름 · 키 포커스에 밑줄 · gray-900 */
+.noslog-ui .nl-heading-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin-left: auto;
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-medium);
+    white-space: nowrap;
+    /* 꺾쇠 광학 −4 로 링크 밖에 나간 빈 칸이 레일 같은 스크롤 영역을 가로로 넘치게 하지 않게 */
+    overflow-x: clip;
+}
+.noslog-ui .nl-heading-link::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--nl-spacing-12) * -1) 0;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-heading-link:hover {
+        color: var(--nl-content-strong);
+        text-decoration: underline;
+        text-underline-offset: var(--nl-underline-offset);
+    }
+}
+.noslog-ui .nl-heading-link:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
+    text-underline-offset: var(--nl-underline-offset);
+}
+.noslog-ui .nl-heading-link svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
+/* 꺾쇠 ›만 잉크 여백을 당긴다 — ↗(바깥 링크)는 잉크가 칸을 채워 당기지 않는다 */
+.noslog-ui .nl-heading-link svg.lucide-chevron-right {
+    margin-inline: calc(var(--nl-spacing-4) * -1);
+}

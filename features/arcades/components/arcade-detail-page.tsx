@@ -240,7 +240,7 @@ export default function ArcadeDetailPage({
             <div className="nl-arcade-detail__layout">
                 <div className="nl-arcade-detail__main">
                     <ArcadePhotos photos={arcade.photos} />
-                    <div className="nl-arcade-detail__head">
+                    <div className="nl-arcade-detail__head nl-stack nl-stack--4">
                         <h1
                             className="nl-page-title"
                             lang={arcade.nativeLanguage ?? undefined}

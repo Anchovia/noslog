@@ -10,7 +10,7 @@ export interface StatStripItem {
     value: ReactNode;
     /** 값 옆 보조(예: 「/ 7」) — body-secondary muted */
     unit?: ReactNode;
-    /** 값 색 — rank-1 · rank-2 · rank-3 · rank · s · 990k · pianist · fc (foundation.css) */
+    /** 값 색 — rank-1 · rank-2 · rank-3 · rank · s · 990k · pianist · fc (app/styles/components/stat-strip.css) */
     tone?: StatTone;
     /** 값 글자 색을 직접 줄 때(서열 값 그라데이션처럼 단계가 연속인 값) */
     color?: string;

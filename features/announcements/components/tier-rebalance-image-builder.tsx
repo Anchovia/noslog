@@ -127,18 +127,15 @@ export default function TierRebalanceImageBuilder({
         }
     }
     return (
-        <Disclosure
-            title="서열 전체 재배치 요약 이미지"
-            className="nl-admin-form__section"
-        >
-            <div className="nl-admin-form__section">
+        <Disclosure title="서열 전체 재배치 요약 이미지" className="nl-stack">
+            <div className="nl-stack">
                 <p className="nl-body-secondary nl-muted">
                     네 서열표의 전체 재배치를 한글 요약 이미지 한 장으로
                     만듭니다. 곡별 전체 변경 내역은 CSV 링크로 함께 안내하세요.
                 </p>
                 <fieldset
                     disabled={disabled || busy !== null}
-                    className="nl-admin-form__section m-0 min-w-0 border-0 p-0"
+                    className="nl-stack m-0 min-w-0 border-0 p-0"
                 >
                     <legend className="sr-only">전체 재배치 요약 입력</legend>
                     <ActionButton
@@ -189,7 +186,7 @@ export default function TierRebalanceImageBuilder({
                     {TIER_REBALANCE_LABELS.map((label, index) => (
                         <section
                             key={label}
-                            className="nl-admin-form__section"
+                            className="nl-stack"
                             aria-labelledby={`${id}-row-${index}`}
                         >
                             <h3
@@ -262,7 +259,7 @@ export default function TierRebalanceImageBuilder({
                     요약 이미지 미리보기
                 </ActionButton>
                 {preview ? (
-                    <div className="nl-admin-form__section">
+                    <div className="nl-stack">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={preview.url}

@@ -148,7 +148,10 @@ function AchievementRow({
                               )
                             : null;
                     return (
-                        <li key={step} className="nl-achievement-ladder__step">
+                        <li
+                            key={step}
+                            className="nl-achievement-ladder__step nl-inline"
+                        >
                             <AchievementHex
                                 achievementKey={key}
                                 tier={date ? step : 0}

@@ -1,0 +1,44 @@
+/* 좌우를 넓혀 칠하는 줄(nl-bleed-row — 서열표 · 빙고 목록 행, 프로필 기록 · 고정 기록 줄, 오락실 공지 줄) — 면(::before)은
+   좌우 12 를 넓히고 글자 선 · 구분선은 그대로 둔다. 링크 · 버튼인 줄은 올림 · 누름 · 키 포커스가 같은 면이고,
+   포커스 선은 그 면과 같은 사각형 · 모서리의 안쪽(−2)에 긋는다. 줄 상자에 그으면 넓힌 면과 어긋난다.
+   면의 모서리 · 위아래 끝이 다른 줄은 그 화면 CSS 가 ::before 에 준다 */
+.noslog-ui .nl-bleed-row {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui .nl-bleed-row::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    pointer-events: none;
+}
+@media (hover: hover) {
+    .noslog-ui :is(a, button).nl-bleed-row:hover::before {
+        --nl-state-layer: var(--nl-interaction-row);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui :is(a, button).nl-bleed-row:focus-visible {
+    outline: none;
+}
+.noslog-ui :is(a, button).nl-bleed-row:is(:active, :focus-visible)::before {
+    --nl-state-layer: var(--nl-interaction-row);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+.noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
+}
+@media (forced-colors: active) {
+    .noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
+        outline-color: Highlight;
+    }
+}

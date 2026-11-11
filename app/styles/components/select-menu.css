@@ -1,0 +1,94 @@
+/* 메뉴 한 모양(Spectrum 2 popover · menu) — 셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록.
+   판 = layer-2 면 · 안쪽 8 · 모서리 large · 다크 둘레 선 · elevated 그림자,
+   항목 = 행 높이 = 컨트롤 높이 · 글자 컨트롤(14) · 모서리 medium · 좌우 12 · 글자 medium, 올림 · 누름 · 키 포커스 = 면 gray-200 · 글자 gray-900.
+   둘레는 고대비 모드에서도 남게 그림자가 아닌 실제 border 로 */
+.noslog-ui :is(.nl-select-menu, .nl-sort-menu, .nl-action-menu),
+.noslog-ui.nl-exam-select__popup {
+    /* 둘레 선 두께만큼 안쪽을 줄여 판 크기는 안쪽 8 일 때와 같다.
+       outline 이 아닌 border 인 까닭 — Radix 가 판에 outline: none 을 인라인으로 넣어 outline 은 지워진다 */
+    padding: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+    box-shadow: var(--nl-overlay-shadow);
+    z-index: var(--nl-layer-select);
+}
+.noslog-ui
+    :is(
+        .nl-select-option,
+        .nl-sort-menu__item,
+        .nl-action-menu__item,
+        .nl-exam-select__option
+    ) {
+    display: flex;
+    align-items: center;
+    min-height: var(--nl-control-height);
+    padding: calc(
+            (var(--nl-control-height) - var(--nl-type-line-height-ui)) / 2
+        )
+        var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
+    font-weight: var(--nl-type-weight-medium);
+}
+/* 고른 줄 = 한 단계 면 + semibold(Apple Music 사이드바). 체크 표시는 그대로, 올림 겹침은 이 면 위에 그린다 */
+.noslog-ui
+    :is(
+        .nl-select-option[data-state="checked"],
+        .nl-sort-menu__item[aria-checked="true"],
+        .nl-exam-select__option[data-state="checked"]
+    ) {
+    background-color: var(--nl-surface-control);
+    font-weight: var(--nl-type-weight-semibold);
+}
+/* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양(판 · 항목 값은 위 「메뉴 한 모양」) · 행 사이 4
+   선택 = 600 + 오른쪽 체크 16(면은 바꾸지 않는다) · 마우스 위치 = 올림 면 · 키보드 위치 = 포커스 선 */
+.noslog-ui .nl-select-menu {
+    width: 240px;
+    max-height: var(--radix-select-content-available-height);
+    max-width: calc(100vw - var(--nl-spacing-32));
+}
+/* 폼 셀렉트 목록은 트리거 폭이 최소 폭 */
+.noslog-ui .nl-select-menu--field {
+    width: auto;
+    min-width: var(--radix-select-trigger-width);
+}
+.noslog-ui .nl-select-menu [data-radix-select-viewport] {
+    display: flex;
+    flex-direction: column;
+}
+.noslog-ui .nl-select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    cursor: default;
+}
+.noslog-ui .nl-select-option svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+}
+.noslog-ui .nl-select-option[data-highlighted] {
+    --nl-state-layer: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+/* 마우스로 연 목록은 Radix 가 고른 항목을 가리킨 것으로 둔다 — 마우스가 올라가기 전에는 면 · 글자를 칠하지 않는다 */
+:root[data-input="pointer"]
+    .noslog-ui
+    .nl-select-option[data-highlighted]:not(:hover) {
+    color: inherit;
+    background-image: none;
+}
+/* 마우스로 연 목록은 선택 항목에 포커스 선을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(lib/input-modality) */
+:root[data-input="pointer"] .noslog-ui .nl-select-option:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-select-option[data-disabled] {
+    color: var(--nl-content-disabled);
+}

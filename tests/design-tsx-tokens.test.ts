@@ -136,7 +136,8 @@ describe("TSX design token checks", () => {
             "components/chart-pattern/",
         ])
             expect(files.some((path) => path.startsWith(folder))).toBe(true);
-        const styles = readdirSync("app/styles")
+        const styles = readdirSync("app/styles", { recursive: true })
+            .map(String)
             .filter((file) => file.endsWith(".css"))
             .map((file) => readFileSync(join("app/styles", file), "utf8"))
             .join("\n");

@@ -1,0 +1,25 @@
+/* 글자 링크 = Spectrum 2 secondary 링크 — 단독 링크는 medium, 올림 · 누름 · 키 포커스에 밑줄 · gray-900.
+   본문 안 링크(--underlined)는 늘 밑줄이고 굵기는 둘레 글자를 따른다 */
+.noslog-ui .nl-link {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-medium);
+    text-underline-offset: var(--nl-underline-offset);
+}
+/* 글자 역할이 굵기를 정한 링크(순위표 이름 · 기여 줄 제목 · 의견 줄 시각)는 medium 으로 누르지 않고 그 역할 굵기 */
+.noslog-ui .nl-link:is(.nl-emphasis-label, .nl-entity-title) {
+    font-weight: var(--nl-type-weight-semibold);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-link:hover {
+        color: var(--nl-content-strong);
+        text-decoration: underline;
+    }
+}
+.noslog-ui .nl-link:is(:active, :focus-visible) {
+    color: var(--nl-content-strong);
+    text-decoration: underline;
+}
+.noslog-ui .nl-text-link--underlined {
+    font-weight: inherit;
+    text-decoration: underline;
+}

@@ -1,0 +1,46 @@
+/* 알림 토스트 = 떠 있는 창 — 면 surface/elevated · 둘레 border/elevated · 모서리 large · elevated 그림자 · 안쪽 12 16 · 글자 emphasis-label.
+   상태 메시지와 같이 색 아이콘 없이 글자만. 둘레는 고대비 모드에서도 남게 outline 으로(상자 안쪽에 그려 크기 그대로) */
+.noslog-ui .nl-toast {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-large);
+    outline: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    outline-offset: calc(var(--nl-stroke-default) * -1);
+    background: var(--nl-surface-elevated);
+    color: var(--nl-content-default);
+    box-shadow: var(--nl-overlay-shadow);
+}
+.noslog-ui .nl-toast__content {
+    min-width: 0;
+}
+/* ⑤ 토스트(sonner) — 나타날 때 페이드 + 조금 올라옴, 사라질 때 페이드만. 라이브러리 기본(400 · 전체 높이만큼 이동)을 토큰으로 덮는다 */
+html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] {
+    transition:
+        transform var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
+        opacity var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
+        height var(--nl-motion-duration-overlay-in) var(--nl-ease-enter);
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-mounted="false"] {
+    --y: translateY(var(--nl-motion-distance));
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-removed="true"][data-swipe-out="false"] {
+    --y: translateY(0);
+    transition: opacity var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit);
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-swipe-out="true"] {
+    animation-duration: var(--nl-motion-duration-overlay-out);
+    animation-timing-function: var(--nl-ease-exit);
+}
+html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
+    transition: opacity var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}

@@ -383,7 +383,7 @@ export function inspectTsxTokens(
 
 /**
  * CSS 변수를 못 읽는 그림의 정본 색 상수 파일(기초값 「토큰 · 공용 부품으로만」) — 색 리터럴을 여기에만 둔다.
- * 각 파일의 다크 값은 따로 테스트가 tokens.css 와 대조하고, 서열 변경 공지 이미지는 사용자가 정한 원본 규격 색이다.
+ * 각 파일의 다크 값은 따로 테스트가 tokens/colors.css 와 대조하고, 서열 변경 공지 이미지는 사용자가 정한 원본 규격 색이다.
  */
 export const colorConstantFiles = new Set([
     "lib/chart-pattern/stageColors.ts",

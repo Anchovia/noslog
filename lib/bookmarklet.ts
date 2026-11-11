@@ -202,7 +202,7 @@ export function createBookmarkletHref(
 }
 
 // 로더가 불러오는 동기화 본체 — 토큰은 담지 않고, 자기를 불러온 스크립트 태그에서 읽는다
-// 창 모양은 공용 규칙 값을 그대로 옮긴다(공식 사이트 위라 CSS 변수를 못 읽음). 크기 · 굵기는 TOKEN_VALUES, 색은 tokens.css 다크 값을
+// 창 모양은 공용 규칙 값을 그대로 옮긴다(공식 사이트 위라 CSS 변수를 못 읽음). 크기 · 굵기는 TOKEN_VALUES, 색은 tokens/colors.css 다크 값을
 // 글자로 적었다 — 떠 있는 창(elevated · border/elevated · overlay-shadow · radius/large), 결과 링크 = 주 버튼 · 닫기 = 보조 버튼,
 // 상태는 글자만(실패만 위험 글자색, 바쁠 때만 공용 스피너와 같은 270° 호)
 export function createBookmarkletScript(

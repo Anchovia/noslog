@@ -298,7 +298,7 @@ export default function AnnouncementEditor({
     const confirmLabel = dialog === "draft" ? draftLabel : publishLabel;
 
     const settings = (
-        <div className="nl-admin-form__section">
+        <div className="nl-stack">
             <FormField
                 id="announcement-category"
                 label="분류"
@@ -476,7 +476,7 @@ export default function AnnouncementEditor({
 
     return (
         <form
-            className="nl-admin-form"
+            className="nl-admin-form nl-stack nl-stack--32"
             noValidate
             onSubmit={(event) => event.preventDefault()}
         >
@@ -513,7 +513,7 @@ export default function AnnouncementEditor({
                         <div
                             key={item}
                             hidden={locale !== item}
-                            className="nl-admin-form__section"
+                            className="nl-stack"
                         >
                             <FormField
                                 id={titleId}

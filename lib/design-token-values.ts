@@ -1,5 +1,5 @@
 /**
- * CSS 변수를 읽지 못하는 그림(공유 카드 이미지 · 캔버스)이 쓰는 토큰 값 — `app/styles/tokens.css` 의 값을 옮긴 것.
+ * CSS 변수를 읽지 못하는 그림(공유 카드 이미지 · 캔버스)이 쓰는 토큰 값 — `app/styles/tokens/` 의 값을 옮긴 것.
  * 토큰을 바꾸면 여기도 같이 바꾼다. DOM 이 있는 곳은 `readTokenPixels` 로 토큰을 직접 읽는다.
  */
 export const TOKEN_VALUES = {
@@ -22,10 +22,7 @@ export const TOKEN_VALUES = {
         20: 20,
         22: 22,
         24: 24,
-        25: 25,
-        28: 28,
         32: 32,
-        36: 36,
         40: 40,
     },
     lineHeight: {
@@ -39,10 +36,7 @@ export const TOKEN_VALUES = {
         28: 28,
         32: 32,
         33: 33,
-        36: 36,
-        38: 38,
         40: 40,
-        42: 42,
         48: 48,
     },
     weight: {
@@ -63,7 +57,7 @@ export const TOKEN_VALUES = {
         default: 1,
         strong: 2,
     },
-    /** 글자 역할 값 — tokens.css 의 `.noslog-ui`(라틴 · en) 와 `:lang(ko), :lang(ja)`(CJK) 두 블록 */
+    /** 글자 역할 값 — tokens/typography.css 의 `.noslog-ui`(라틴 · en) 와 `:lang(ko), :lang(ja)`(CJK) 두 블록 */
     typeRole: {
         latin: {
             pageTitleSize: 24,
@@ -72,7 +66,6 @@ export const TOKEN_VALUES = {
             sectionTitleLineHeight: 28,
             lineHeightUi: 18,
             lineHeightBody: 24,
-            lineHeightDetail: 16,
             dialogTitleLineHeight: 26,
             trackingDetailEm: 0,
             weightStrong: 700,
@@ -85,7 +78,6 @@ export const TOKEN_VALUES = {
             sectionTitleLineHeight: 28,
             lineHeightUi: 21,
             lineHeightBody: 27,
-            lineHeightDetail: 18,
             dialogTitleLineHeight: 33,
             trackingDetailEm: 0,
             weightStrong: 500,

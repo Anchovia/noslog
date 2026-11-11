@@ -89,7 +89,10 @@ export default function ChartComments({
               : comment.resolved
     );
     return (
-        <section className="nl-chart-comments" aria-labelledby={`${id}-title`}>
+        <section
+            className="nl-chart-comments nl-stack"
+            aria-labelledby={`${id}-title`}
+        >
             <div className="nl-heading-row">
                 <h2 id={`${id}-title`} className="nl-section-title">
                     {t("contribution.comment.title", {
@@ -125,7 +128,7 @@ export default function ChartComments({
                     </IntentLink>
                 )}
             </div>
-            <div className="nl-chart-comments__body">
+            <div className="nl-stack nl-stack--8">
                 {signedIn ? (
                     <div className="nl-chart-comments__composer-slot">
                         <ChartCommentComposer draft={draft} clock={clock} />
@@ -277,7 +280,7 @@ function ChartCommentComposer({
                     setFocused(false);
             }}
         >
-            <div className="nl-chart-comments__composer-row">
+            <div className="nl-chart-comments__composer-row nl-inline">
                 {/* 고정폭 숫자(2026-10-15 T1) — 재생 중 글자 폭이 바뀌어 입력칸이 흔들리지 않게. 무대 재생 시간과 같은 글자 */}
                 <button
                     type="button"
@@ -421,7 +424,7 @@ function ChartCommentRow({
     ];
     return (
         <article
-            className="nl-opinion-row__content"
+            className="nl-stack nl-stack--4"
             aria-labelledby={`${id}-name`}
             aria-busy={mutation.isPending || undefined}
         >

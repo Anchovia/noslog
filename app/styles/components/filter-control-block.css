@@ -1,0 +1,6 @@
+/* 컨트롤 묶음(툴바 + 결과 수 행) 안쪽 12 · 목록까지는 컨테이너 24 */
+.noslog-ui .nl-filter-control-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}

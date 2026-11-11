@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 
 import { BRAND_IMAGE_DARK_HEX } from "@/lib/metadata/brand-image";
 
+import { darkToken } from "./helpers/design-tokens";
+
 /** favicon.ico 의 가장 큰 PNG 판을 RGBA 줄로 푼다(8비트 RGBA 만 — 만든 파일 형식) */
 function decodeLargestIcoFrame(file: string) {
     const ico = readFileSync(resolve(file));
@@ -60,23 +62,20 @@ function decodeLargestIcoFrame(file: string) {
 }
 
 describe("아이콘 · 공유 이미지 색", () => {
-    const css = readFileSync(resolve("app/styles/tokens.css"), "utf8");
-    // 첫 블록(.noslog-ui) = 다크 값
-    const dark = css.slice(0, css.indexOf("}"));
     const token = (name: string) =>
-        dark.match(new RegExp(`--nl-${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
+        darkToken(name)?.match(/^#[0-9a-f]{6}$/i)?.[0];
     // 반투명 토큰(rgb(255 255 255 / 10%))은 이미지가 읽는 rgba(255, 255, 255, 0.1) 꼴로 맞춰 비교한다. 불투명 hex 토큰은 그대로
     const rgba = (name: string) => {
         const solid = token(name);
         if (solid) return solid;
         const [r, g, b, a] =
-            dark
-                .match(new RegExp(`--nl-${name}:\\s*rgb\\(([^)]+)\\)`))?.[1]
+            darkToken(name)
+                ?.match(/^rgb\(([^)]+)\)/)?.[1]
                 .split(/[\s/]+/) ?? [];
         return `rgba(${r}, ${g}, ${b}, ${parseFloat(a) / 100})`;
     };
 
-    it("tokens.css 의 다크 토큰과 같다(2026-10-01 D13)", () => {
+    it("tokens/colors.css 의 다크 토큰과 같다(2026-10-01 D13)", () => {
         expect(BRAND_IMAGE_DARK_HEX).toEqual({
             background: token("surface-canvas"),
             surface: token("surface-surface"),

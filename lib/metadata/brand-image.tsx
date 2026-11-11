@@ -11,8 +11,8 @@ import {
 } from "@/lib/metadata/brand-mark";
 
 /**
- * 아이콘 · 공유 이미지 색 = tokens.css 다크 값. 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
- * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens.css 를 읽어 확인한다
+ * 아이콘 · 공유 이미지 색 = tokens/colors.css 다크 값. 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
+ * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens/colors.css 를 읽어 확인한다
  */
 export const BRAND_IMAGE_DARK_HEX = {
     background: "#111111", // surface-canvas

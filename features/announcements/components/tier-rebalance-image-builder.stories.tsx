@@ -15,7 +15,7 @@ const meta = {
     },
     decorators: [
         (Story) => (
-            <div className="nl-admin-form">
+            <div className="nl-admin-form nl-stack nl-stack--32">
                 <Story />
             </div>
         ),

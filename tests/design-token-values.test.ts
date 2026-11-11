@@ -1,19 +1,16 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { describe, expect, it } from "vitest";
 
 import { TOKEN_VALUES } from "@/lib/design-token-values";
 
-// 그림(공유 이미지 · 캔버스)용 상수가 tokens.css 다크 값과 어긋나지 않게 막는다
-const css = readFileSync(join(process.cwd(), "app/styles/tokens.css"), "utf8");
-const root = css.slice(0, css.indexOf("}"));
+import { darkToken, tokenBlock } from "./helpers/design-tokens";
+
+// 그림(공유 이미지 · 캔버스)용 상수가 토큰 다크 값과 어긋나지 않게 막는다
 const token = (name: string) => {
-    const match = root.match(new RegExp(`--${name}:\\s*([0-9.]+)px;`));
+    const match = darkToken(name.slice(3))?.match(/^([0-9.]+)px$/);
     return match ? Number(match[1]) : undefined;
 };
 const weight = (name: string) => {
-    const match = root.match(new RegExp(`--${name}:\\s*([0-9]+);`));
+    const match = darkToken(name.slice(3))?.match(/^([0-9]+)$/);
     return match ? Number(match[1]) : undefined;
 };
 
@@ -42,12 +39,8 @@ describe("design token values for drawings", () => {
 });
 
 // 글자 역할 블록(라틴 · CJK)의 크기 · 줄 높이 — CJK 블록에 없는 값은 라틴 블록 값을 물려받는다
-const roleBlock = (selector: string) => {
-    const start = css.indexOf(`${selector} {\n    --nl-type-`);
-    return start < 0 ? "" : css.slice(start, css.indexOf("}", start));
-};
-const latinRole = roleBlock(".noslog-ui");
-const cjkRole = roleBlock(".noslog-ui:is(:lang(ko), :lang(ja))");
+const latinRole = tokenBlock(".noslog-ui");
+const cjkRole = tokenBlock(".noslog-ui:is(:lang(ko), :lang(ja))");
 const roleScale = (block: string, name: string) => {
     const match = block.match(
         new RegExp(
@@ -63,7 +56,6 @@ const roleTokens = {
     sectionTitleLineHeight: "nl-type-section-title-line-height",
     lineHeightUi: "nl-type-line-height-ui",
     lineHeightBody: "nl-type-line-height-body",
-    lineHeightDetail: "nl-type-line-height-detail",
     dialogTitleLineHeight: "nl-type-dialog-title-line-height",
 } as const;
 
