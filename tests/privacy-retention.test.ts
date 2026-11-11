@@ -19,6 +19,7 @@ const mocks = vi.hoisted(() => ({
     codeDeleteMany: vi.fn(),
     accessDeleteMany: vi.fn(),
     refreshDeleteMany: vi.fn(),
+    env: { PRIVATE_BLOB_READ_WRITE_TOKEN: undefined as string | undefined },
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -44,6 +45,8 @@ vi.mock("@/lib/db", () => ({
         $executeRaw: mocks.executeRaw,
     },
 }));
+
+vi.mock("@/lib/env/server", () => ({ serverEnv: mocks.env }));
 
 vi.mock("@/lib/blob", () => ({
     deleteBlobStrict: mocks.deleteBlobStrict,
@@ -211,6 +214,65 @@ describe("저장하지 않은 공개 업로드 정리", () => {
     });
     afterEach(() => {
         vi.unstubAllEnvs();
+        mocks.env.PRIVATE_BLOB_READ_WRITE_TOKEN = undefined;
+    });
+
+    it("제출하지 않은 비공개 업로드도 24시간 뒤 비공개 저장소 토큰으로 지운다", async () => {
+        mocks.env.PRIVATE_BLOB_READ_WRITE_TOKEN = "private-token";
+        const privateHost = "https://abc.private.blob.vercel-storage.com";
+        const file = (pathname: string, uploadedAt: string) => ({
+            url: `${privateHost}/${pathname}`,
+            pathname,
+            uploadedAt: new Date(uploadedAt),
+        });
+        mocks.blobList.mockImplementation(
+            async ({ prefix }: { prefix: string }) => ({
+                hasMore: false,
+                blobs:
+                    prefix === "feedback/"
+                        ? [
+                              file("feedback/1/report-used.webp", old),
+                              file("feedback/1/report-orphan.webp", old),
+                              file("feedback/1/report-new.webp", recent),
+                          ]
+                        : prefix === "exam-proofs/"
+                          ? [
+                                file("exam-proofs/1/2/proof-used.webp", old),
+                                file("exam-proofs/1/2/proof-orphan.webp", old),
+                            ]
+                          : [],
+            })
+        );
+        mocks.feedbackFindMany.mockResolvedValue([
+            { id: 1, imageUrl: `${privateHost}/feedback/1/report-used.webp` },
+        ]);
+        mocks.submissionFindMany.mockReset();
+        mocks.submissionFindMany.mockResolvedValue([
+            {
+                id: 2,
+                proofImageUrl: `${privateHost}/exam-proofs/1/2/proof-used.webp`,
+            },
+        ]);
+        mocks.feedbackDeleteMany.mockResolvedValue({ count: 0 });
+        mocks.submissionUpdateMany.mockResolvedValue({ count: 0 });
+        mocks.submissionDeleteMany.mockResolvedValue({ count: 0 });
+
+        const result = await runPrivacyRetention(now);
+
+        expect(mocks.blobList).toHaveBeenCalledWith({
+            prefix: "feedback/",
+            cursor: undefined,
+            token: "private-token",
+        });
+        expect(mocks.blobDel).toHaveBeenCalledOnce();
+        expect(mocks.blobDel).toHaveBeenCalledWith(
+            [
+                `${privateHost}/feedback/1/report-orphan.webp`,
+                `${privateHost}/exam-proofs/1/2/proof-orphan.webp`,
+            ],
+            { token: "private-token" }
+        );
+        expect(result.orphanUploadsDeleted).toBe(2);
     });
 
     it("24시간이 지났고 어디에도 주소가 없는 파일만 지운다", async () => {

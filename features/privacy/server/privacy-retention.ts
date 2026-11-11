@@ -6,11 +6,14 @@ import { subDays, subHours, subMonths } from "date-fns";
 import { ANALYTICS_RETENTION_DAYS, analyticsDateKey } from "@/lib/analytics";
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
+import { serverEnv } from "@/lib/env/server";
 
 const RETENTION_MONTHS = 6;
 const BATCH_SIZE = 500;
 // 프로필 사진 · 이벤트 대표 · 본문 이미지는 올린 뒤 저장해야 주소가 DB 에 남는다
 const UPLOAD_PREFIXES = ["avatars/", "events/"];
+// 피드백 · 제보 사진과 검정 증빙도 올린 뒤 제출해야 주소가 DB 에 남는다
+const PRIVATE_UPLOAD_PREFIXES = ["feedback/", "exam-proofs/"];
 const UPLOAD_GRACE_HOURS = 24;
 const UPLOAD_DELETE_CHUNK = 100;
 const PUBLIC_BLOB_MARK = ".public.blob.vercel-storage.com/";
@@ -114,12 +117,16 @@ async function cleanExpiredRecords(
     }
 }
 
-async function listOldUploads(cutoff: Date) {
+async function listOldUploads(
+    cutoff: Date,
+    prefixes = UPLOAD_PREFIXES,
+    token?: string
+) {
     const uploads: { url: string; pathname: string }[] = [];
-    for (const prefix of UPLOAD_PREFIXES) {
+    for (const prefix of prefixes) {
         let cursor: string | undefined;
         do {
-            const page = await list({ prefix, cursor });
+            const page = await list({ prefix, cursor, token });
             for (const blob of page.blobs)
                 if (blob.uploadedAt <= cutoff)
                     uploads.push({ url: blob.url, pathname: blob.pathname });
@@ -196,6 +203,56 @@ async function cleanOrphanUploads(now: Date, result: PrivacyRetentionResult) {
         } catch (error) {
             result.failed += 1;
             console.error("저장하지 않은 공개 업로드 삭제 실패", error);
+        }
+    }
+}
+
+// 올리고 제출하지 않은 비공개 업로드 — 공개 업로드와 같은 기준으로 지운다
+async function cleanOrphanPrivateUploads(
+    now: Date,
+    result: PrivacyRetentionResult
+) {
+    const token = serverEnv.PRIVATE_BLOB_READ_WRITE_TOKEN;
+    if (process.env.VERCEL_ENV !== "production" || !token) return;
+    let orphans: string[];
+    try {
+        const uploads = await listOldUploads(
+            subHours(now, UPLOAD_GRACE_HOURS),
+            PRIVATE_UPLOAD_PREFIXES,
+            token
+        );
+        if (!uploads.length) return;
+        const [reports, submissions] = await Promise.all([
+            db.feedbackReport.findMany({
+                where: { imageUrl: { not: null } },
+                select: { imageUrl: true },
+            }),
+            db.examSubmission.findMany({
+                where: { proofImageUrl: { not: null } },
+                select: { proofImageUrl: true },
+            }),
+        ]);
+        const references = [
+            ...reports.map((report) => report.imageUrl),
+            ...submissions.map((submission) => submission.proofImageUrl),
+        ].join("\n");
+        orphans = uploads
+            .filter((upload) => !references.includes(upload.pathname))
+            .slice(0, BATCH_SIZE)
+            .map((upload) => upload.url);
+    } catch (error) {
+        result.failed += 1;
+        console.error("제출하지 않은 비공개 업로드 찾기 실패", error);
+        return;
+    }
+    for (let start = 0; start < orphans.length; start += UPLOAD_DELETE_CHUNK) {
+        const chunk = orphans.slice(start, start + UPLOAD_DELETE_CHUNK);
+        try {
+            await del(chunk, { token });
+            result.orphanUploadsDeleted += chunk.length;
+        } catch (error) {
+            result.failed += 1;
+            console.error("제출하지 않은 비공개 업로드 삭제 실패", error);
         }
     }
 }
@@ -316,6 +373,7 @@ export async function runPrivacyRetention(
     await cleanAnalytics(now, result);
     await cleanExpiredRecords(now, cutoff, result);
     await cleanOrphanUploads(now, result);
+    await cleanOrphanPrivateUploads(now, result);
 
     return result;
 }
