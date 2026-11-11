@@ -194,6 +194,21 @@ describe("Discord OAuth", () => {
         }
     );
 
+    it.each(["cross-site", "same-site"])(
+        "%s 요청으로는 인증을 시작하지 않는다",
+        async (fetchSite) => {
+            const response = await startDiscordOAuth(
+                new NextRequest("http://localhost:3000/discord/start", {
+                    headers: { "sec-fetch-site": fetchSite },
+                })
+            );
+            expect(new URL(response.headers.get("location")!).origin).toBe(
+                "http://localhost:3000"
+            );
+            expect(mocks.session.discordOAuthState).toBeUndefined();
+        }
+    );
+
     it("로그인 시작 시 안전한 복귀 주소와 state를 세션에 저장한다", async () => {
         const response = await startDiscordOAuth(
             request("/discord/start?returnTo=%2Fprofile%2F1")
