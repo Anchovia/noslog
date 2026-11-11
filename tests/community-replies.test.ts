@@ -5,6 +5,7 @@ const tx = vi.hoisted(() => ({
     $executeRaw: vi.fn(),
     communityChartEvaluation: {
         findFirst: vi.fn(),
+        findUnique: vi.fn(),
         update: vi.fn(),
         deleteMany: vi.fn(),
     },
@@ -22,6 +23,7 @@ const tx = vi.hoisted(() => ({
     },
     communityOpinionHelpful: { deleteMany: vi.fn() },
     communityOpinionReport: { updateMany: vi.fn(), upsert: vi.fn() },
+    chartGoalVote: { findUnique: vi.fn(), delete: vi.fn() },
     playData: { findFirst: vi.fn() },
     musicChart: { findUnique: vi.fn() },
 }));
@@ -305,5 +307,33 @@ describe("의견 답글", () => {
                 data: expect.objectContaining({ opinion: null, stairs: null }),
             })
         );
+    });
+
+    it("운영자가 제외한 평가 · 체감 투표는 본인이 지우지 못한다", async () => {
+        tx.communityChartEvaluation.findUnique.mockResolvedValue({
+            excluded: true,
+        });
+        await expect(
+            mutateChartCommunity(
+                { action: "delete-evaluation", chartId: 3 },
+                ME
+            )
+        ).rejects.toMatchObject({ message: "evaluation_excluded" });
+        expect(tx.communityChartEvaluation.deleteMany).not.toHaveBeenCalled();
+
+        tx.chartGoalVote.findUnique.mockResolvedValue({
+            id: 9,
+            excluded: true,
+        });
+        await expect(
+            mutateChartCommunity(
+                {
+                    action: "delete-vote",
+                    input: { chartId: 3, mode: "basic", goal: "s" },
+                },
+                ME
+            )
+        ).rejects.toMatchObject({ message: "vote_excluded" });
+        expect(tx.chartGoalVote.delete).not.toHaveBeenCalled();
     });
 });

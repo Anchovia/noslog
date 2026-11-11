@@ -273,6 +273,13 @@ async function executeMutation(
     if (!chart) throw new ApiError("chart_unavailable", "unavailable");
 
     if (input.action === "delete-evaluation") {
+        // 지우고 다시 쓰면 운영자의 제외가 풀린다
+        const own = await transaction.communityChartEvaluation.findUnique({
+            where: { chartId_userId: { chartId, userId } },
+            select: { excluded: true },
+        });
+        if (own?.excluded)
+            throw new ApiError("evaluation_excluded", "unavailable");
         // 남의 답글이 달린 의견은 행을 지우면 답글까지 사라진다 — 평가 · 의견만 비우고 행은 남긴다(2026-09-22)
         const withReplies =
             await transaction.communityChartEvaluation.findFirst({
@@ -409,6 +416,8 @@ async function executeMutation(
         });
     } else {
         if (!existing) return { chartId };
+        if (existing.excluded)
+            throw new ApiError("vote_excluded", "unavailable");
         await transaction.chartGoalVote.delete({ where: { id: existing.id } });
     }
     await transaction.chartGoalVoteAudit.create({
