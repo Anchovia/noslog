@@ -230,10 +230,14 @@ export async function refreshAccessToken(input: {
                 await revokeGrant(tx, row.grant.id, "replay", now);
                 return { ok: false, error: "invalid_grant" } as const;
             }
-            await tx.oAuthRefreshToken.update({
-                where: { id: child.id },
+            // 같은 재시도가 동시에 둘 오면 하나만 새 토큰을 받는다
+            const retired = await tx.oAuthRefreshToken.updateMany({
+                where: { id: child.id, revokedAt: null },
                 data: { revokedAt: now },
             });
+            if (retired.count !== 1) {
+                return { ok: false, error: "invalid_grant" } as const;
+            }
             await tx.oAuthAccessToken.updateMany({
                 where: { refreshTokenId: child.id, revokedAt: null },
                 data: { revokedAt: now },
