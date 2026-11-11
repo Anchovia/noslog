@@ -1415,6 +1415,38 @@ Quaver 처럼 반투명 상자를 띠 아래쪽에 겹친 곳과 제목 상자 �
 
 캡처로 확인한 원본: Frame.io 는 다크 패널에 한 단 밝은 카드(둥글기 약 6)를 쌓고, 카드 안은 [아바타 · 이름 굵게 · 상대 시간] → [노란 시각 칩 · 본문] → [Reply ······ #N] 이다. Streamlabs 는 전폭 가로선으로 줄을 나누고 [아바타 · 이름 ······ 1h] → [파란 「00:18」 · 본문] → [Reply · Resolve · 👍] 이다. osu! 토론은 카드 왼쪽 상태색 테두리 · 종류 아이콘 · 「Marked as resolved by」 를 쓴다. Audius 는 선 없이 간격 약 24 로 [아바타 40 | 이름 · 「7d • 4:14」(시각 보라 링크색)] → 본문 → [♡ · Reply · ⋯] 이다.
 
+### 전체 악보 시각 표시(2026-11-11)
+
+전체 악보 도구 막대 왼쪽의 「0:00.000 / 2:03.600」 을 다시 보려고 악보 · 채보 · 재생기 화면이 지금 위치를 어떻게 보이는지 쟀다. 50곳을 시도해 33곳을 셌다. 실측 30 · 공식 문서 3(Beatmapper · Audacity · Ableton Live)이고 다크 22 · 라이트 6 · 쪽은 라이트이고 조작만 어두움 3 · 미확인 2 다. 디자인 시스템은 7곳(Fluent 2 · Media Chrome · Apple HIG · Material 3 · Carbon · Atlassian · Spectrum)이다. 세지 않은 17곳과 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/sheet-time/` 의 `notes.tsv` · `ds.tsv` · `blocked.txt` 와 캡처다.
+
+| 무엇        | 곳 수                                                                                                                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 보이는 것   | 도구 막대에 시각 없음 11(Songsterr · Flat · Noteflight · Hooktheory · Ultimate Guitar · BeepBox · Song Maker · textage · sdvx.in · Sekai Viewer · Spotify 퍼가기, Bestdori 채보 보기도 없음)               |
+|             | 「현재 / 전체」 한 덩어리 10(Soundslice · Midiano · Bestdori 시뮬레이터 · BeatLeader · YouTube · Loom · bilibili · 니코니코 · Bandcamp · Internet Archive) · 진행 막대 양 끝 2(SoundCloud · Audius)        |
+|             | 밀리초 2(AudioMass · TwistedWave, 근거 약함) · 마디:박:틱 1(Signal) · 시각 + 박 1(Beatmapper) · 악보 옆 1초 눈금 1(PIU Center) · 그 밖 3(Vimeo 올린 자리 말풍선 · Mixcloud 전체만 · ArcViewer 시각 + 숫자) |
+| 글자        | 「현재 / 전체」 10곳 모두 두 값이 같은 색, 「 / 」 앞뒤 띄움. YouTube 만 굵기가 다르다(현재 500 · 전체 400). 크기 11–14px, 고정폭 글꼴은 AudioMass · Signal 뿐                                             |
+| 남은 시각   | 누르면 남은 시각으로 바뀜 2(YouTube · Media Chrome)                                                                                                                                                        |
+| BPM 곁 표시 | 7(Soundslice · Hooktheory · Signal · BeepBox · Song Maker · textage · sdvx.in)                                                                                                                             |
+
+지금 NosLog 의 밀리초와 흐린 전체 길이는 둘 다 드물다. 캡처로 확인한 원본: YouTube 는 조작 줄 반투명 알약 안에 「0:02 / 4:26:51」, BeatLeader 는 떠 있는 조작 상자 안 진행 막대 오른쪽에 「0:00 / 1:32」(11px 같은 색), Midiano 는 진행 막대 가운데에 「00:00 / 04:11」 이다. Bestdori 채보 보기는 설정 · 전체 화면 단추만 두고 시각이 없다. Hooktheory 는 시각 대신 [KEY A maj] · [BPM 169] 칩을 둔다. AudioMass 는 큰 「00:00:000」 오른쪽에 작은 전체 · 마우스 위치 두 줄, Signal 은 가운데 재생 단추 옆 [BPM 120 | 0001:02:384], Beatmapper 는 오른쪽에 작은 대문자 라벨 TIME · BEAT 위에 「00:09」 · 「18.000」 이다. PIU Center 는 세로 채보 왼쪽에 1초마다 시각 눈금(0:10 · 0:11 …)을, 오른쪽 개요 열에 구간 시각 눈금(0:09 · 0:30 …)과 보이는 자리 띠를 둔다.
+
+디자인 시스템 중 시각 표시를 정한 곳은 Fluent 2(경과 · 남은 시각 두 줄 배치)와 Media Chrome(현재 또는 남은 시각, 길이 함께 보이기 옵션) 둘이다. 나머지 5곳은 재생 위치 부품이 없다.
+
+### 말풍선 펼침 움직임(2026-11-11)
+
+정한 말풍선(낙하형 원 → 480 쓰기 상자, 전체 악보 원 → 왼쪽으로 펼친 쓰기 줄)이 열리고 닫힐 때의 움직임을 정하려고 단추 · 아이콘이 칸 · 판으로 바뀌는 곳을 프레임(0 · 50 · 100 · 150 · 200 · 300 · 400 · 600 · 1000ms)으로 쟀다. 62곳을 시도해 실측 34곳을 셌다. 다크 13 · 라이트 15 · 미확인 6 이다. 디자인 시스템은 8곳(Material 2 · 3 와 MDC · Carbon · Fluent 2 · Atlassian · Primer · Spectrum · Polaris · Apple HIG, Apple 은 숫자 없음)이다. 세지 않은 28곳(로그인 10 · 차단 화면 · 단추 못 찾음)과 원본은 `~/noslog-research/desktop-music-detail/v2/viewer/expand-motion/` 의 `notes.tsv` · `ds.tsv` · `blocked.txt` · `frames/` 다. HubSpot · Tidio · Gorgias 는 iframe 이라 시간을 프레임으로만 어림했다.
+
+| 무엇                      | 즉시                                                                  | 페이드 · 짧은 이동                                                                            | 단추 자리에서 커짐                                                              |
+| ------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 머리 줄 검색칸 13         | 9(YouTube · Wikipedia · Twitch · M3 · Microsoft · 무신사 · Medium 등) | 3(IMDb 200 · Google Store 300 · NAVER 400)                                                    | 1(Spotify 폭 220 ease-in)                                                       |
+| 단추에 붙은 판 3 · 변형 1 | -                                                                     | 2(GitHub 200 · Shopify Dawn 200)                                                              | 2(Apple 높이 240 · Airbnb 452)                                                  |
+| 채팅 런처 → 판 8          | -                                                                     | 3(채널톡 400 · Chatwoot 250 · HubSpot 약 250)                                                 | 4(Intercom 300 · LiveChat 430 · Tidio 약 300 · Gorgias 약 250) · 미확인 1(tawk) |
+| 검색 단추 → 가운데 창 9   | 3(react.dev · Tailwind · MDN)                                         | 6(MUI 120 · Stripe 100 · Supabase 150 · Linear 175 · Vercel 300 · Next.js 300, 페이드 + 확대) | -                                                                               |
+
+닫힘은 즉시 11 · 역재생 12 · 페이드만 2 · 미확인 9(Escape · 바깥 누르기로 안 접힘)다. 곡선은 감속이 대부분이다(GitHub `cubic-bezier(0.3,0.8,0.6,1)` · LiveChat `(0.33,0,0,1)` · 채널톡 `(0.36,0,0,1)`). Intercom `(0,1.2,1,1)` 은 끝에서 살짝 튀고, Spotify 는 `ease-in` 이다. 캡처로 확인한 원본: YouTube(폭 500)는 아이콘 줄이 검색 줄로 통째 바뀌고 닫을 때도 즉시다. GitHub 는 검색 단추 오른쪽 끝에 맞춘 판이 투명도 0→1 · 위 8px→0 으로 200ms 에 뜨고 닫힘은 즉시다. Spotify(폭 700)는 지름 48 원이 오른쪽으로 알약 검색칸이 되며(폭 220ms) 닫으면 폭이 줄어든다. Intercom 은 오른쪽 아래 런처 모서리를 기준으로 판이 scale 0→1 300ms 로 커지고 같은 값으로 접힌다.
+
+디자인 시스템은 닫힘을 「역재생하되 더 짧게 · 가속 곡선」 으로 둔 곳이 많다. M3 컨테이너 변형 400 / 200 · M2 300 / 250 · MDC SearchView 펼침 300 / 접힘 250 · Fluent 250 / 200 · Atlassian 팝업 150 / 100 · Primer 300 / 200 · Spectrum 모달 250 / 130 이다. Atlassian 닫힘 곡선 `(0.6,0,0.8,0.6)` 은 NosLog `ease-exit` 와 같다. 검색 아이콘 → 입력칸 수치를 둔 곳은 Carbon(폭 70ms) · MDC 둘뿐이라 근거 약함이다.
+
 ### 첫 화면 판 실제 화면
 
 폭 1440 · 높이 900 이고 의견 네 줄은 표시용 값이다. 지금 무대는 1138×640(폭 1056 에서 1008)이다.
