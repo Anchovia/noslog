@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     cabinet: vi.fn(),
     recent: vi.fn(),
     create: vi.fn(),
+    lock: vi.fn(),
     list: vi.fn(),
     revalidate: vi.fn(),
     tag: vi.fn(),
@@ -13,11 +14,15 @@ vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => ({
     default: {
         arcadeCabinet: { findFirst: mocks.cabinet },
-        arcadeCabinetCheck: {
-            findFirst: mocks.recent,
-            create: mocks.create,
-            findMany: mocks.list,
-        },
+        arcadeCabinetCheck: { findMany: mocks.list },
+        $transaction: (run: (tx: unknown) => unknown) =>
+            run({
+                $executeRaw: mocks.lock,
+                arcadeCabinetCheck: {
+                    findFirst: mocks.recent,
+                    create: mocks.create,
+                },
+            }),
     },
 }));
 vi.mock("next/cache", () => ({
@@ -67,6 +72,11 @@ describe("cabinet running check", () => {
             data: { cabinetId: 4, userId: 9 },
             select: { checkedAt: true },
         });
+        // 조회와 넣기 앞에 사람 · 기체 키로 잠근다
+        expect(mocks.lock.mock.calls[0]).toContain("cabinet-check:9:4");
+        expect(mocks.lock.mock.invocationCallOrder[0]).toBeLessThan(
+            mocks.recent.mock.invocationCallOrder[0]
+        );
         expect(mocks.tag).toHaveBeenCalledWith("arcades");
         const paths = mocks.revalidate.mock.calls.map((call) => call[0]);
         expect(paths).toEqual(

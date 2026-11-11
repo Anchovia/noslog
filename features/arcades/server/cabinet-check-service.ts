@@ -6,6 +6,7 @@ import { seoulDateKey } from "@/features/contributions/contribution-level";
 import { awardContribution } from "@/features/contributions/server/contribution-point-service";
 import type { ActionResult } from "@/lib/actions/result";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { lockInTransaction } from "@/lib/daily-limit";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { localizePath, resolveLocale } from "@/lib/i18n/routing";
@@ -57,26 +58,37 @@ export async function confirmCabinetRunning(
         if (!cabinet)
             return { success: false, message: t("arcades.error.notFound") };
 
+        const userId = session.id;
         const now = new Date();
-        const recent = await db.arcadeCabinetCheck.findFirst({
-            where: {
-                cabinetId: cabinet.id,
-                userId: session.id,
-                checkedAt: { gte: new Date(now.getTime() - CHECK_DEDUPE_MS) },
-            },
-            select: { checkedAt: true },
-            orderBy: { checkedAt: "desc" },
-        });
-        const check =
-            recent ??
-            (await db.arcadeCabinetCheck.create({
-                data: { cabinetId: cabinet.id, userId: session.id },
+        // 동시에 여러 번 눌러도 조회와 넣기 사이에 다른 요청이 끼어들지 못하게 잠근다
+        const { recent, check } = await db.$transaction(async (tx) => {
+            await lockInTransaction(
+                tx,
+                `cabinet-check:${userId}:${cabinet.id}`
+            );
+            const recent = await tx.arcadeCabinetCheck.findFirst({
+                where: {
+                    cabinetId: cabinet.id,
+                    userId,
+                    checkedAt: {
+                        gte: new Date(now.getTime() - CHECK_DEDUPE_MS),
+                    },
+                },
                 select: { checkedAt: true },
-            }));
+                orderBy: { checkedAt: "desc" },
+            });
+            const check =
+                recent ??
+                (await tx.arcadeCabinetCheck.create({
+                    data: { cabinetId: cabinet.id, userId },
+                    select: { checkedAt: true },
+                }));
+            return { recent, check };
+        });
         // 새 확인이면 기여 적립 — 기체가 여럿이어도 서울 날짜로 하루 1점
         if (!recent) {
             await awardContribution({
-                userId: session.id,
+                userId,
                 kind: "cabinet_check",
                 sourceKey: seoulDateKey(check.checkedAt),
             });
