@@ -56,10 +56,12 @@
 | 발 · 아래 바의 주 버튼 | 폼 창 · 글쓰기 · 투표 만들기                                                              |
 
 - 즉시 저장은 저장 상태를 목록 아래 한 곳에 보이고, 실패하면 그 값만 되돌린다. 저장 중 · 저장됨은 흐린 글자 「저장 중」 · 「저장했습니다.」(설정은 `nl-control`, 한 개 투표는 `nl-body-secondary`), 실패는 [상태 메시지](./components/status-message.md) quiet · 위험이고, 서버 · 연결 문제로 실패했으면 고스트 M 「다시 시도」 를 붙인다(설정 · 한 개 투표).
+- 체감 패턴 평가 · 서열 투표는 「저장했습니다.」 · 「저장하지 못했습니다」 를 [알림 토스트](./components/status-message.md#알림-토스트)로 알린다. 실패하면 그 값만 되돌리는 것은 같다.
 - 바쁜 버튼은 [버튼 — 상태](./components/button.md#상태).
 
 ## 바뀐 기록
 
+- [2026-11-12 체감 패턴 · 서열 투표 저장 상태는 토스트](../decisions/2026-11-12-pattern-vote-save-toast.md)
 - [2026-11-01 설정 글자 계층 — 설정의 저장 상태 글자](../decisions/2026-11-01-settings-type-hierarchy.md)
 - [2026-10-29 채보 없는 곡의 패턴 경향 가림](../decisions/2026-10-29-pattern-tendency-locked.md)
 - [2026-10-28 전수 검수 고른 자리 — 즉시 저장 상태 자리](../decisions/2026-10-28-audit-choices.md)
