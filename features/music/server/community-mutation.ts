@@ -8,6 +8,7 @@ import { communityMutationSchema } from "@/features/music/schemas/community-sche
 import { ApiError } from "@/lib/api/response";
 import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 async function detachDeletedOpinion(
     transaction: Prisma.TransactionClient,
@@ -104,7 +105,11 @@ async function executeReplyMutation(
         where: {
             id: input.replyId,
             hidden: false,
-            evaluation: { chartId: input.chartId, excluded: false },
+            evaluation: {
+                chartId: input.chartId,
+                excluded: false,
+                opinionHidden: false,
+            },
         },
         select: { id: true, userId: true, evaluationId: true },
     });
@@ -161,7 +166,7 @@ async function executeMutation(
                 id: replyId,
                 hidden: false,
                 userId: { not: userId },
-                evaluation: { excluded: false },
+                evaluation: { excluded: false, opinionHidden: false },
             },
             select: {
                 userId: true,
@@ -280,10 +285,15 @@ async function executeMutation(
         });
         if (own?.excluded)
             throw new ApiError("evaluation_excluded", "unavailable");
-        // 남의 답글이 달린 의견은 행을 지우면 답글까지 사라진다 — 평가 · 의견만 비우고 행은 남긴다(2026-09-22)
+        // 남의 답글이 달린 의견은 행을 지우면 답글까지 사라진다 — 평가 · 의견만 비우고 행은 남긴다(2026-09-22).
+        // 운영자가 숨긴 의견도 행을 남겨, 지우고 다시 써도 숨김이 풀리지 않게 한다
         const withReplies =
             await transaction.communityChartEvaluation.findFirst({
-                where: { chartId, userId, replies: { some: {} } },
+                where: {
+                    chartId,
+                    userId,
+                    OR: [{ replies: { some: {} } }, { opinionHidden: true }],
+                },
                 select: { id: true },
             });
         if (withReplies) {
@@ -444,9 +454,25 @@ async function executeMutation(
     return { chartId };
 }
 
+// 한 줄을 덮어쓰거나 감사 기록을 남기는 쓰기 — 스크립트 반복만 막는 한도로 센다(답글 · 신고는 하루 한도가 따로 있다)
+const QUOTA_ACTIONS = new Set([
+    "save-evaluation",
+    "delete-evaluation",
+    "delete-opinion",
+    "save-vote",
+    "delete-vote",
+    "helpful",
+    "reply-like",
+]);
+
 export async function mutateChartCommunity(input: unknown, userId: number) {
     const parsed = communityMutationSchema.safeParse(input);
     if (!parsed.success) throw new ApiError("invalid_contribution", "invalid");
+    if (QUOTA_ACTIONS.has(parsed.data.action)) {
+        const quota = await claimUploadTokenQuota(userId, "community-write");
+        if (!quota.allowed)
+            throw new ApiError("community_write_quota", "rateLimited");
+    }
     // 새 답글은 사람마다 잠근 뒤 하루 수를 센다. 직렬화 격리에서는 잠금을 기다리기 전에 읽는 시점이 정해져
     // 앞 요청이 넣은 답글을 세지 못하고 충돌로 끝나므로, 새 답글만 기본 격리로 돌린다
     const newReply =

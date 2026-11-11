@@ -80,6 +80,8 @@ export async function saveChartContribution(
     } catch (error) {
         if (error instanceof ApiError && error.code === "dailyLimit")
             return { success: false, message: t("community.dailyLimit") };
+        if (error instanceof ApiError && error.code === "rateLimited")
+            return { success: false, message: t("common.tooManyRequests") };
         if (
             error instanceof ApiError &&
             (error.code === "invalid" ||
