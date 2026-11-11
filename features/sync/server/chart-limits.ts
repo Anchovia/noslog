@@ -12,6 +12,8 @@ export type ChartLimitMap = Map<string, ChartLimit>;
 
 export type SyncedChartValues = {
     difficulty: Difficulty;
+    score: number;
+    rank: string;
     judge: [number, number, number, number, number];
     maxCombo: number;
     gradeBasic: number;
@@ -51,6 +53,7 @@ export function isWithinChartLimits(
     limit: ChartLimit | undefined,
     values: SyncedChartValues
 ) {
+    if (!isRankConsistent(values.score, values.rank)) return false;
     if (!limit) return true;
     const { noteCount } = limit;
     if (noteCount != null) {
@@ -59,6 +62,14 @@ export function isWithinChartLimits(
         if (values.maxCombo > noteCount) return false;
     }
     return isGradeWithinLimit(limit, values);
+}
+
+// 등급은 점수로 정해진다(P = 1,000,000 · S = 950,000 이상). 점수와 어긋난 등급은 꾸민 값으로 본다
+function isRankConsistent(score: number, rank: string) {
+    const top = rank.toUpperCase();
+    if (score === 1_000_000) return top === "P";
+    if (score >= 950_000) return top === "S";
+    return top !== "P" && top !== "S";
 }
 
 function isGradeWithinLimit(

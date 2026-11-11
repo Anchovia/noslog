@@ -68,6 +68,8 @@ export function dropOutOfRangeSheets(
             const key = `${item["@index"]}:${chart.difficulty}`;
             const within = isWithinChartLimits(limits.get(key), {
                 difficulty: chart.difficulty,
+                score: chart.score,
+                rank: chart.rank,
                 judge: chart.judge,
                 maxCombo: chart.max_combo,
                 gradeBasic: chart.grade_basic,

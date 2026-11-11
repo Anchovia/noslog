@@ -160,6 +160,8 @@ export async function POST(request: NextRequest) {
             chartLimits.get(`${item.music}:${item.difficulty}`),
             {
                 difficulty: item.difficulty,
+                score: item.score,
+                rank: item.rank,
                 judge: item.judge_count,
                 maxCombo: item.max_combo,
                 gradeBasic: item.grade_basic,
