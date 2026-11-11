@@ -641,3 +641,38 @@ Notion 가입(`onboard/Notion_가입.jpg`)은 앱을 흐리게 깐 위의 창이
 - 다른 쪽과 같은 머리 · 푸터를 둔 곳: 로그인 V-ARCHIVE · BeatLeader, 온보딩 Steam · 위키백과 · Sentry, 점검 Nintendo · Square Enix. NOSTALGIA e-amusement 점검은 로고 띠 + 작은 푸터(B·B)다.
 - 고른 꼴: 네 화면 모두 머리 · 푸터 없음 그대로(2026-11-11 사용자 「네 판 모두 추천안」).
 - 서비스마다의 판정 표는 리포 밖 `~/noslog-research/desktop-rest-pages/parts/chrome-survey.md` 에 있다.
+
+## 데이터 동기화 「다시 온 사용자」 실측(2026-11-11)
+
+한 번 이상 동기화한 로그인 사용자가 다시 왔을 때 보는 화면(상태 줄 · 최근 결과 · 달라진 기록 · 이력 · 토큰 무효화)을 잰 기록이다. 같은 일을 하는 「외부 계정 · 데이터를 가져오는 연결의 상태 화면」 을 headless Playwright(다크, 1440)로 열었고, 로그인 뒤 화면은 공식 문서 · 도움말 그림으로 봤다. 그림으로만 본 값은 눈으로 잰 값이다. 곳마다의 원문과 캡처는 리포 밖 `~/noslog-research/desktop-rest-pages/parts/sync-return/<묶음>/results.md` 에 있다(묶음 `game` · `pipeline` · `personal` · `ds`).
+
+| 묶음                   | 센 곳 | 세지 않은 곳 | 근거                                                                                                                  |
+| ---------------------- | ----- | ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| 게임 기록 서비스       | 11    | 21           | 공개 프로필 실화면 8 · 문서 그림 3. 캡차 11 · 로그인 벽 4 · 기능 없음 5                                               |
+| 데이터 연동            | 12    | 2            | 모두 공식 문서 그림(다크는 Linear 1)                                                                                  |
+| 개인 데이터 · 배포     | 12    | 7            | 실화면 GitHub Actions 1 · 문서 그림 11(다크 Render · Vercel · Trakt)                                                  |
+| 실제 서비스 합계       | 35    | 30           |                                                                                                                       |
+| 디자인 시스템 · 가이드 | 11    | 0            | Cloudscape · Carbon · Atlassian · Primer · Polaris · PatternFly · Material 3 · Fluent 2 · Pajamas · Spectrum · GOV.UK |
+
+### 부분별 분포(실제 서비스 35곳)
+
+한 곳은 대표 꼴 한 칸에만 셌다. 「미확인」 은 그림에 그 상태가 없던 곳이다.
+
+| 부분               | 꼴과 곳 수                                                                                                                                                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 실패 표시          | 이력 줄 상태만 8(Hightouch · Zapier · Census · Make · dbt · Stitch · Vercel · GitHub Actions) · 쪽 위 배너 3(Airbyte · Merge · Linear) · 상세 상자 안 3(Netlify · Plaid · Segment) · 미확인 다수                                |
+| 다시 시도 자리     | 이름 아래 왼쪽 7(OP.GG · u.gg · LoLCHESS · FOW · OpenDota · DAK.GG · DEEPLOL) · 쪽 머리 오른쪽 6(Airbyte · Hightouch · Zapier · Make · Render · Steam Ladder) · 구역 안 2(Trakt · Readwise) · 상태 글 오른쪽 2(Todoist · Merge) |
+| 다시 시도 모양     | 주 버튼 9 · 보조 버튼 6 · 아이콘 + 글자 링크 2(Airbyte · OpenDota) · 글자 버튼 1(Todoist)                                                                                                                                       |
+| 마지막 시각        | 상대 10 · 절대 10 · 둘 다 2 · 없음 10. 게임 쪽은 버튼 아래 3 · 버튼 오른쪽 2                                                                                                                                                    |
+| 최근 결과 수치     | 라벨-값 줄 3(Zapier · Make · GitHub Actions) · 한 문장 3(Trakt · Raindrop · Readwise) · 표 한 줄 2(Fivetran · Plaid) · 숫자 타일 3(Census · Stitch · Segment) · 펼침으로 숨긴 곳 0                                              |
+| 달라진 항목        | 쪽 안 표 · 줄 목록 6(Airbyte · Make · Merge · dbt · Segment · Linear) · 따로 쪽으로 넘김 3(Hightouch · Census · chunirec) · 로그 줄 1(V-ARCHIVE) · 없음 22                                                                      |
+| 이력               | 표 7(Hightouch · Fivetran · Census · Make · Plaid · Render · Trakt) · 구분선 줄 목록 5(dbt · Stitch · Segment · Vercel · GitHub Actions) · 타임라인 1(Airbyte) · 같은 쪽 3(Hightouch · Fivetran · Trakt)                        |
+| 재발급 · 연결 끊기 | 자리: 설정 따로 5 · 메뉴 안 4 · 상태 줄 끝 2(Todoist · Trakt) · 쪽 끝 위험 구역 1(dbt). 버튼: 빨강 테두리 · 글자 4 · 보조 3 · 빨강 채움 1. 끝난 뒤 토스트 0(쪽 안 문장 2)                                                       |
+
+### 디자인 시스템 11곳
+
+- 실패 알림: 실패한 구역 안 인라인 10(Material 3 빼고 모두), 쪽 전체 문제는 쪽 위 배너 9, 실패를 토스트로도 알릴 수 있음 6, 토스트를 쓰지 말라고 명시 2(Primer · Pajamas).
+- 「다시 시도」 는 알림 안 버튼 7(Carbon · Primer · Polaris · PatternFly · Fluent 2 · Pajamas · Spectrum).
+- 이력은 표 4 · 타임라인 1 · 시각 붙은 줄 목록 1, 결과 수치는 라벨-값 목록 2(Cloudscape · GOV.UK).
+- 되돌릴 수 없는 동작: 모달 확인 10, 확인 버튼 빨강 채움 7, 쪽 안 버튼 빨강 보조 3(Carbon · Primer · Polaris), 쪽 끝 위험 구역을 지침으로 둔 곳 0.
+- 끝난 뒤 알림: 토스트 8 · 쪽 안 배너 · 인라인 3. 결과가 화면에 보이면 따로 알리지 않는다 3(Primer · Pajamas · Cloudscape).
