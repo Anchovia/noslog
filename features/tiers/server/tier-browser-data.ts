@@ -234,19 +234,15 @@ async function loadTierBrowserBand(query: TierBrowserQuery, bandId: number) {
     return { band, basis };
 }
 
-/**
- * 구간 공개 응답(2026-10-15 S7) — 세션을 읽지 않아 같은 주소면 누구에게나 같다(CDN 캐시).
- * 내 기록은 getTierBrowserBandRecords 로 따로 받는다
- */
-export async function getPublicTierBrowserBand(
-    query: TierBrowserQuery,
-    bandId: number,
+type CachedTierBand = NonNullable<
+    Awaited<ReturnType<typeof getCachedTierBand>>
+>;
+
+function toPublicTierBrowserBand(
+    band: CachedTierBand,
     locale: Locale,
     showLocalizedTitle: boolean
-): Promise<TierBrowserBand | null> {
-    const loaded = await loadTierBrowserBand(query, bandId);
-    if (!loaded) return null;
-    const { band } = loaded;
+): TierBrowserBand {
     return {
         id: band.id,
         value: band.value,
@@ -264,6 +260,10 @@ export async function getPublicTierBrowserBand(
                     reading:
                         entry.chart.music.titleKana?.trim() ||
                         entry.chart.music.title,
+                    artist: entry.chart.music.artist,
+                    translations: entry.chart.music.translations.map(
+                        (translation) => translation.title
+                    ),
                     background: entry.chart.music.background,
                     localizedTitle: getLocalizedMusicTitle(
                         entry.chart.music,
@@ -277,33 +277,72 @@ export async function getPublicTierBrowserBand(
     };
 }
 
-/** 구간 안 내 기록(채보 id → 기록) — 사람마다 달라 캐시하지 않는다 */
-export async function getTierBrowserBandRecords(
+/**
+ * 구간 하나의 공개 본문 — 첫 화면(SSR)의 첫 구간에 쓴다.
+ * 세션을 읽지 않고, 내 기록은 getTierBrowserBandRecords 로 따로 받는다
+ */
+export async function getPublicTierBrowserBand(
     query: TierBrowserQuery,
     bandId: number,
-    viewerId: number
-): Promise<Record<number, TierBrowserRecord> | null> {
+    locale: Locale,
+    showLocalizedTitle: boolean
+): Promise<TierBrowserBand | null> {
     const loaded = await loadTierBrowserBand(query, bandId);
     if (!loaded) return null;
-    const { band, basis } = loaded;
-    const records = band.entries.length
-        ? await db.playData.findMany({
-              where: {
-                  userId: viewerId,
-                  chartId: {
-                      in: band.entries.map((entry) => entry.chartId),
-                  },
-              },
-              select: {
-                  chartId: true,
-                  score: true,
-                  rank: true,
-                  fcType: true,
-                  gradeBasic: true,
-                  gradeRecital: true,
-              },
-          })
-        : [];
+    return toPublicTierBrowserBand(loaded.band, locale, showLocalizedTitle);
+}
+
+/**
+ * 서열표 전체 공개 응답 — 세션을 읽지 않아 같은 주소면 누구에게나 같다(CDN 캐시).
+ * 검색어로 좁히지 않는다(검색은 브라우저가 받아 둔 목록에서 거른다). 곡이 없는 구간은 뺀다
+ */
+export async function getPublicTierBrowserList(
+    query: TierBrowserQuery,
+    locale: Locale,
+    showLocalizedTitle: boolean
+): Promise<TierBrowserBand[]> {
+    const list = await getPublishedTierInventory(query.mode, query.goal);
+    if (!list) return [];
+    const bands = await Promise.all(
+        list.bands
+            .filter((band) =>
+                band.entries.some((entry) => matchesChart(entry.chart, query))
+            )
+            .map((band) =>
+                getCachedTierBand(
+                    list.slug,
+                    band.id,
+                    query.difficulties,
+                    query.levels
+                )
+            )
+    );
+    return bands.flatMap((band) =>
+        band ? [toPublicTierBrowserBand(band, locale, showLocalizedTitle)] : []
+    );
+}
+
+const tierBrowserRecordSelect = {
+    chartId: true,
+    score: true,
+    rank: true,
+    fcType: true,
+    gradeBasic: true,
+    gradeRecital: true,
+} as const;
+
+function toTierBrowserRecords(
+    records: {
+        chartId: number | null;
+        score: number;
+        rank: string;
+        fcType: number;
+        gradeBasic: number | null;
+        gradeRecital: number | null;
+    }[],
+    mode: TierMode,
+    basis: Awaited<ReturnType<typeof getModePianistRatingBasis>>
+) {
     const constants = new Map(
         basis.entries.map((entry) => [entry.chartId, entry.value])
     );
@@ -312,12 +351,12 @@ export async function getTierBrowserBandRecords(
         if (record.chartId === null) continue;
         const played =
             record.score > 0 &&
-            (query.mode === "basic" || (record.gradeRecital ?? 0) > 0);
+            (mode === "basic" || (record.gradeRecital ?? 0) > 0);
         if (!played) continue;
         const constant = constants.get(record.chartId);
         // 공식 Grd 가 0 이면(상위 기록 밖이라 수집되지 않음) 값이 없는 것 — 띠 · 기여에 「+0.00」 대신 비운다
         const grade =
-            query.mode === "basic" ? record.gradeBasic : record.gradeRecital;
+            mode === "basic" ? record.gradeBasic : record.gradeRecital;
         result[record.chartId] = {
             score: record.score,
             rank: record.rank,
@@ -337,6 +376,53 @@ export async function getTierBrowserBandRecords(
         };
     }
     return result;
+}
+
+/** 구간 안 내 기록(채보 id → 기록) — 사람마다 달라 캐시하지 않는다 */
+export async function getTierBrowserBandRecords(
+    query: TierBrowserQuery,
+    bandId: number,
+    viewerId: number
+): Promise<Record<number, TierBrowserRecord> | null> {
+    const loaded = await loadTierBrowserBand(query, bandId);
+    if (!loaded) return null;
+    const { band, basis } = loaded;
+    const records = band.entries.length
+        ? await db.playData.findMany({
+              where: {
+                  userId: viewerId,
+                  chartId: {
+                      in: band.entries.map((entry) => entry.chartId),
+                  },
+              },
+              select: tierBrowserRecordSelect,
+          })
+        : [];
+    return toTierBrowserRecords(records, query.mode, basis);
+}
+
+/** 서열표 전체의 내 기록(채보 id → 기록) — 공개 목록과 따로 한 번에 받는다. 사람마다 달라 캐시하지 않는다 */
+export async function getTierBrowserRecords(
+    query: TierBrowserQuery,
+    viewerId: number
+): Promise<Record<number, TierBrowserRecord>> {
+    const [list, basis] = await Promise.all([
+        getPublishedTierInventory(query.mode, query.goal),
+        getModePianistRatingBasis(query.mode),
+    ]);
+    const chartIds =
+        list?.bands.flatMap((band) =>
+            band.entries
+                .filter((entry) => matchesChart(entry.chart, query))
+                .map((entry) => entry.chartId)
+        ) ?? [];
+    const records = chartIds.length
+        ? await db.playData.findMany({
+              where: { userId: viewerId, chartId: { in: chartIds } },
+              select: tierBrowserRecordSelect,
+          })
+        : [];
+    return toTierBrowserRecords(records, query.mode, basis);
 }
 
 /** 공개 구간 + 내 기록 — 첫 화면(SSR)이 한 번에 쓴다 */

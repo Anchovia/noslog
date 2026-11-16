@@ -81,6 +81,7 @@ export const getCachedTierBand = unstable_cache(
                                         index: true,
                                         title: true,
                                         titleKana: true,
+                                        artist: true,
                                         background: true,
                                         translations:
                                             approvedMusicTranslationsSelect,
@@ -93,7 +94,7 @@ export const getCachedTierBand = unstable_cache(
             },
         });
     },
-    ["public-tier-band", "goal-v3"],
+    ["public-tier-band", "goal-v4"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.tierLists],

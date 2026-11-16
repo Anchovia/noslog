@@ -3,7 +3,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { LayoutGrid, List, ListFilter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -23,7 +23,15 @@ import SearchField from "@/components/ui/search-field";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SkeletonText } from "@/components/ui/skeleton";
 import SortMenu from "@/components/ui/sort-menu";
-import { tierBrowserOverviewOptions } from "@/features/tiers/api/tier-browser";
+import {
+    tierBrowserListOptions,
+    tierBrowserOverviewOptions,
+    tierBrowserRecordsOptions,
+} from "@/features/tiers/api/tier-browser";
+import {
+    selectTierBrowserBands,
+    summarizeTierBrowserBands,
+} from "@/features/tiers/lib/tier-browser-list";
 import type {
     TierBrowserBand,
     TierBrowserOverview,
@@ -73,23 +81,87 @@ export default function TierBrowserPage({
     const [guideOpen, setGuideOpen] = useState(false);
     const moreRef = useRef<HTMLButtonElement>(null);
     const guideFromMenu = useRef(false);
-    const options = tierBrowserOverviewOptions(query, viewerId);
-    const initial =
+    // 검색어는 받아 둔 목록에서 거른다 — 개요 · 목록 · 내 기록은 검색어 없이 한 번만 받는다
+    const options = tierBrowserOverviewOptions({ ...query, q: "" }, viewerId);
+    const sameFilters =
         JSON.stringify(options.queryKey) ===
         JSON.stringify(
-            tierBrowserOverviewOptions(initialQuery, viewerId).queryKey
+            tierBrowserOverviewOptions({ ...initialQuery, q: "" }, viewerId)
+                .queryKey
         );
+    // 첫 화면(SSR)의 개요 · 첫 구간은 그때 검색어로 좁혀 온다 — 조건과 검색어가 같을 때만 쓴다
+    const initial = sameFilters && query.q === initialQuery.q;
     const result = useQuery({
         ...options,
-        initialData: initial ? (initialOverview ?? undefined) : undefined,
+        initialData:
+            sameFilters && !initialQuery.q
+                ? (initialOverview ?? undefined)
+                : undefined,
         placeholderData: keepPreviousData,
     });
+    // 필터 창의 결과 수 미리보기는 고르는 중인 조건이라 받아 둔 목록이 없다 — 검색어까지 서버가 센다
     const preview = useQuery({
         ...tierBrowserOverviewOptions(draft, viewerId),
         enabled: open,
     });
-    const data = result.data;
-    const pending = result.isPlaceholderData || result.isPending;
+    const titlePreference = (result.data ?? initialOverview)
+        ?.showLocalizedTitle;
+    const list = useQuery({
+        ...tierBrowserListOptions(query, locale, titlePreference !== false),
+        enabled: titlePreference !== undefined,
+    });
+    // 내 기록을 받을지는 개요가 알려 준 로그인 상태를 따른다(개요를 받기 전에는 첫 화면의 세션)
+    const recordsViewerId = result.data ? result.data.viewerId : viewerId;
+    const records = useQuery(tierBrowserRecordsOptions(query, recordsViewerId));
+    const listed = Boolean(
+        list.data && (recordsViewerId === null || records.data)
+    );
+    const content = useMemo(() => {
+        if (list.data && (recordsViewerId === null || records.data))
+            return selectTierBrowserBands(
+                list.data.bands,
+                records.data?.records ?? null,
+                query.q
+            );
+        // 목록을 받기 전에는 첫 화면이 준 첫 구간만 있다
+        return initial && initialBand
+            ? new Map([[initialBand.id, initialBand]])
+            : null;
+    }, [
+        list.data,
+        records.data,
+        recordsViewerId,
+        query.q,
+        initial,
+        initialBand,
+    ]);
+    const contentError = list.isError || records.isError;
+    const base = result.data;
+    const settled = listed && !result.isPlaceholderData;
+    // 검색 중의 구간별 곡 수 · 달성 수는 받아 둔 목록에서 센다. 목록을 받기 전에는 첫 화면이 준 개요를 쓴다
+    const searched = useMemo(
+        () =>
+            query.q && settled && base?.list && content
+                ? {
+                      ...base,
+                      list: {
+                          ...base.list,
+                          bands: summarizeTierBrowserBands(
+                              base.list.bands,
+                              content,
+                              query.goal,
+                              base.viewerId !== null
+                          ),
+                      },
+                  }
+                : null,
+        [query.q, query.goal, settled, base, content]
+    );
+    const initialSearched = query.q && initial ? initialOverview : null;
+    const data = query.q ? (searched ?? initialSearched ?? base) : base;
+    const pending = query.q
+        ? !(searched ?? initialSearched)
+        : result.isPlaceholderData || result.isPending;
     const filterCount =
         Number(query.difficulties.length > 0) +
         Number(query.levels.length > 0) +
@@ -596,15 +668,25 @@ export default function TierBrowserPage({
                             }),
                         ]}
                     />
-                    {result.isError ? (
+                    {result.isError || contentError ? (
                         <ResultState
                             error
                             message={t("tiers.loadError")}
                             action={
                                 <ActionButton
                                     variant="secondary"
-                                    busy={result.isFetching}
-                                    onClick={() => void result.refetch()}
+                                    busy={
+                                        result.isFetching ||
+                                        list.isFetching ||
+                                        records.isFetching
+                                    }
+                                    onClick={() => {
+                                        if (result.isError)
+                                            void result.refetch();
+                                        if (list.isError) void list.refetch();
+                                        if (records.isError)
+                                            void records.refetch();
+                                    }}
                                 >
                                     {t("tiers.retry")}
                                 </ActionButton>
@@ -687,11 +769,16 @@ export default function TierBrowserPage({
                                         </Button>
                                     }
                                 />
-                            ) : (
+                            ) : contentError ? null : (
                                 <TierBrowserBands
                                     query={query}
                                     overview={data}
-                                    initialBand={initial ? initialBand : null}
+                                    content={content}
+                                    eagerBandId={
+                                        initial && initialBand
+                                            ? initialBand.id
+                                            : null
+                                    }
                                     pending={pending}
                                 />
                             )}

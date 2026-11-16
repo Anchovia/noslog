@@ -11,7 +11,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
-import { tierBrowserBandOptions } from "@/features/tiers/api/tier-browser";
+import {
+    tierBrowserListOptions,
+    tierBrowserRecordsOptions,
+} from "@/features/tiers/api/tier-browser";
+import { selectTierBrowserBands } from "@/features/tiers/lib/tier-browser-list";
 import {
     canvasBlob,
     defaultExportBands,
@@ -171,22 +175,35 @@ function TierExportPreview({
                     query.sort === "score" && !signedIn
                         ? "position"
                         : query.sort;
-                const loaded = await Promise.all(
-                    bands.map((band) =>
-                        client.fetchQuery(
-                            tierBrowserBandOptions(
-                                query,
-                                band.id,
-                                locale,
-                                overview.viewerId,
-                                overview.showLocalizedTitle
-                            )
+                // 화면이 받아 둔 서열표 전체와 내 기록을 그대로 쓴다(없으면 한 번 받는다)
+                const [list, mine] = await Promise.all([
+                    client.fetchQuery(
+                        tierBrowserListOptions(
+                            query,
+                            locale,
+                            overview.showLocalizedTitle
                         )
-                    )
+                    ),
+                    overview.viewerId === null
+                        ? null
+                        : client.fetchQuery(
+                              tierBrowserRecordsOptions(
+                                  query,
+                                  overview.viewerId
+                              )
+                          ),
+                ]);
+                const content = selectTierBrowserBands(
+                    list.bands,
+                    mine?.records ?? null,
+                    query.q
                 );
-                const exportBands = loaded.map((band) => ({
+                const exportBands = bands.map((band) => ({
                     value: band.value,
-                    entries: sortTierBrowserEntries(band.entries, sort),
+                    entries: sortTierBrowserEntries(
+                        content.get(band.id)?.entries ?? [],
+                        sort
+                    ),
                 }));
                 const canvas = await drawTierImage({
                     host: host.current!,

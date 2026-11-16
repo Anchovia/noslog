@@ -111,8 +111,8 @@ const tierBrowserRecordSchema = z.object({
     grade: z.number().nullable(),
     rating: z.number().nullable(),
 });
-// 구간 안 내 기록(채보 id → 기록) — 공개 구간 응답과 따로 받는다(2026-10-15 S7)
-export const tierBrowserBandRecordsSchema = z.object({
+// 서열표 전체의 내 기록(채보 id → 기록) — 공개 목록 응답과 따로 받는다
+export const tierBrowserRecordsSchema = z.object({
     records: z.record(z.string(), tierBrowserRecordSchema),
 });
 const tierBrowserEntrySchema = z.object({
@@ -128,17 +128,24 @@ const tierBrowserEntrySchema = z.object({
             // 일본어 읽기(가나, 없으면 원제) — 읽기 순 정렬 기준. 악곡 목록 이름 순과 같은 값.
             // 이 칸이 없는 응답(배포 전환 중 옛 서버)도 받아서 원제로 정렬한다
             reading: z.string().optional(),
+            // 곡 검색이 보는 나머지 칸 — 아티스트 · 승인된 번역 제목(브라우저가 받아 둔 목록에서 거른다)
+            artist: z.string().nullable(),
+            translations: z.array(z.string()),
             localizedTitle: z.string().nullable(),
             background: z.string().nullable(),
         }),
     }),
     record: tierBrowserRecordSchema.nullable(),
 });
-export const tierBrowserBandSchema = z.object({
+const tierBrowserBandSchema = z.object({
     id: z.number().int(),
     value: z.number(),
     position: z.number().int(),
     entries: z.array(tierBrowserEntrySchema),
+});
+// 서열표 전체(곡이 있는 구간 모두) — 한 번에 받는다
+export const tierBrowserListSchema = z.object({
+    bands: z.array(tierBrowserBandSchema),
 });
 export type TierBrowserOverview = z.infer<typeof tierBrowserOverviewSchema>;
 export type TierBrowserBand = z.infer<typeof tierBrowserBandSchema>;

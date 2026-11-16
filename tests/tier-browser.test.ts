@@ -30,10 +30,17 @@ vi.mock("@/lib/i18n/music-title", () => ({
 }));
 import {
     getPublicTierBrowserBand,
+    getPublicTierBrowserList,
     getTierBrowserBand,
     getTierBrowserBandRecords,
     getTierBrowserOverview,
+    getTierBrowserRecords,
 } from "@/features/tiers/server/tier-browser-data";
+import {
+    matchesTierBrowserSearch,
+    selectTierBrowserBands,
+    summarizeTierBrowserBands,
+} from "@/features/tiers/lib/tier-browser-list";
 import { tierStripValue } from "@/features/tiers/components/tier-browser-card";
 import {
     nextTierBrowserVisibleCount,
@@ -46,7 +53,13 @@ const query = () => parseTierBrowserQuery(new URLSearchParams());
 const chart = {
     difficulty: "Expert",
     level: 12,
-    music: { index: "stulti", title: "STULTI", background: null },
+    music: {
+        index: "stulti",
+        title: "STULTI",
+        artist: "Camellia",
+        background: null,
+        translations: [{ locale: "ko", title: "스툴티", status: "approved" }],
+    },
 };
 function inventory(goal: string, mode: string) {
     return {
@@ -182,6 +195,8 @@ describe("Tier browser request and data contract", () => {
                     index: `m${position}`,
                     title: reading,
                     reading,
+                    artist: null,
+                    translations: [],
                     localizedTitle: null,
                     background: null,
                 },
@@ -357,6 +372,98 @@ describe("Tier browser request and data contract", () => {
         for (const entry of combined!.entries)
             expect(records?.[entry.chartId] ?? null).toEqual(entry.record);
         expect(await getTierBrowserBandRecords(query(), 22, 9)).toBeNull();
+    });
+    it("serves the whole list in one public response, without sessions or search narrowing", async () => {
+        const bands = await getPublicTierBrowserList(
+            parseTierBrowserQuery(new URLSearchParams("q=zzqq")),
+            "ko",
+            true
+        );
+        expect(bands.map((band) => band.id)).toEqual([11]);
+        expect(bands[0].entries.map((entry) => entry.chartId)).toEqual([1, 80]);
+        expect(bands[0].entries[0].chart.music).toMatchObject({
+            artist: "Camellia",
+            translations: ["스툴티"],
+        });
+        expect(bands[0].entries.every((entry) => entry.record === null)).toBe(
+            true
+        );
+        expect(mocks.records).not.toHaveBeenCalled();
+        expect(mocks.preference).not.toHaveBeenCalled();
+        expect(mocks.music).not.toHaveBeenCalled();
+        // 조건에 맞는 곡이 없는 구간은 받지 않는다
+        mocks.band.mockClear();
+        expect(
+            await getPublicTierBrowserList(
+                { ...query(), difficulties: ["Real"], levels: ["12"] },
+                "ko",
+                true
+            )
+        ).toEqual([]);
+        expect(mocks.band).not.toHaveBeenCalled();
+    });
+    it("returns the viewer's records for the whole list in one query, matching the band records", async () => {
+        const records = await getTierBrowserRecords(query(), 9);
+        expect(mocks.records).toHaveBeenCalledTimes(1);
+        expect(mocks.records).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    userId: 9,
+                    chartId: {
+                        in: Array.from({ length: 70 }, (_, index) => index + 1),
+                    },
+                },
+            })
+        );
+        expect(records).toEqual(
+            await getTierBrowserBandRecords(query(), 11, 9)
+        );
+    });
+    it("searches the loaded list in the browser across the same fields as the server", async () => {
+        const [band] = await getPublicTierBrowserList(query(), "ko", true);
+        const music = band.entries[0].chart.music;
+        for (const q of ["stul", "STULTI", "camel", "스툴"])
+            expect(matchesTierBrowserSearch(music, q)).toBe(true);
+        expect(matchesTierBrowserSearch(music, "zzqq")).toBe(false);
+        expect(
+            matchesTierBrowserSearch(
+                { ...music, reading: "すとぅるてぃ" },
+                "とぅる"
+            )
+        ).toBe(true);
+        const other = {
+            ...band.entries[1],
+            chart: {
+                ...band.entries[1].chart,
+                music: {
+                    ...music,
+                    index: "x",
+                    title: "OTHER",
+                    translations: [],
+                },
+            },
+        };
+        const loaded = [{ ...band, entries: [band.entries[0], other] }];
+        const records = await getTierBrowserRecords(query(), 9);
+        const all = selectTierBrowserBands(loaded, records, "");
+        expect(
+            all.get(11)?.entries.map((entry) => entry.record?.score)
+        ).toEqual([970_000, undefined]);
+        const found = selectTierBrowserBands(loaded, records, "other");
+        expect(found.get(11)?.entries.map((entry) => entry.chartId)).toEqual([
+            80,
+        ]);
+        const summary = [
+            { id: 11, value: 1, position: 0, totalCount: 70, achievedCount: 1 },
+            { id: 12, value: 2, position: 1, totalCount: 3, achievedCount: 0 },
+        ];
+        expect(summarizeTierBrowserBands(summary, all, "s", true)).toEqual([
+            { ...summary[0], totalCount: 2, achievedCount: 1 },
+            { ...summary[1], totalCount: 0, achievedCount: 0 },
+        ]);
+        expect(
+            summarizeTierBrowserBands(summary, found, "s", false)[0]
+        ).toMatchObject({ totalCount: 1, achievedCount: null });
     });
     it("omits personal rows for guests and unplayed Recital charts", async () => {
         expect(

@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
     startTransition,
     useCallback,
@@ -10,10 +9,8 @@ import {
     useState,
 } from "react";
 
-import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
-import ResultState from "@/components/ui/result-state";
-import { tierBrowserBandOptions } from "@/features/tiers/api/tier-browser";
 import type {
     TierBrowserBand,
     TierBrowserBandSummary,
@@ -76,42 +73,40 @@ export function nextTierBrowserVisibleCount(current: number, total: number) {
     return Math.min(total, current + TIER_BROWSER_BATCH_SIZE);
 }
 
+// 한 번 화면에 들어온 구간 — 상세에 갔다 돌아오면 바로 그려 스크롤 자리가 그대로 맞는다
+const seenBands = new Set<string>();
+
 function TierBrowserBandSection({
+    seenKey,
     summary,
     query,
     overview,
-    initialBand,
+    band,
+    eager,
     pending,
 }: {
+    seenKey: string;
     summary: TierBrowserBandSummary;
     query: TierBrowserQuery;
     overview: TierBrowserOverview;
-    initialBand: TierBrowserBand | null;
+    band: TierBrowserBand | undefined;
+    eager: boolean;
     pending: boolean;
 }) {
     const t = useTranslations();
-    const locale = useLocale();
     const ref = useRef<HTMLElement>(null);
     const progress = useRef<HTMLDivElement>(null);
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(() => seenBands.has(seenKey));
     const [visibleCount, setVisibleCount] = useState(TIER_BROWSER_BATCH_SIZE);
     const [announcement, setAnnouncement] = useState("");
-    const band = useQuery({
-        ...tierBrowserBandOptions(
-            query,
-            summary.id,
-            locale,
-            overview.viewerId,
-            overview.showLocalizedTitle
-        ),
-        initialData: initialBand?.id === summary.id ? initialBand : undefined,
-        enabled: visible && !pending,
-    });
+    // 받아 둔 구간도 화면 가까이 왔을 때 그린다. 첫 화면(SSR)이 준 첫 구간만 바로 그린다
+    const data = visible || eager ? band : undefined;
     useEffect(() => {
         if (!ref.current || visible) return;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
+                    seenBands.add(seenKey);
                     setVisible(true);
                     observer.disconnect();
                 }
@@ -120,14 +115,14 @@ function TierBrowserBandSection({
         );
         observer.observe(ref.current);
         return () => observer.disconnect();
-    }, [visible]);
+    }, [visible, seenKey]);
     const list = query.view === "list";
     const signedIn = overview.viewerId !== null;
     // 점수 순은 로그인했을 때만 — 주소에 남아 있어도 로그아웃이면 서열표 순
     const sort = query.sort === "score" && !signedIn ? "position" : query.sort;
     const entries = useMemo(
-        () => sortTierBrowserEntries(band.data?.entries ?? [], sort),
-        [band.data, sort]
+        () => sortTierBrowserEntries(data?.entries ?? [], sort),
+        [data, sort]
     );
     const total = entries.length;
     const shown = entries.slice(0, visibleCount);
@@ -163,7 +158,7 @@ function TierBrowserBandSection({
             ref={ref}
             className="nl-tier-band"
             aria-label={formatTierValue(summary.value)}
-            aria-busy={pending || (visible && band.isPending)}
+            aria-busy={pending || (visible && !data)}
         >
             <header className="nl-tier-band__header">
                 {/* 서열 값 = 악곡 상세 머리와 같은 구간 색 그라데이션 (2026-09-17 G1) */}
@@ -182,22 +177,8 @@ function TierBrowserBandSection({
                     </span>
                 ) : null}
             </header>
-            {band.isError ? (
-                <ResultState
-                    message={t("tiers.loadError")}
-                    action={
-                        <ActionButton
-                            variant="secondary"
-                            busy={band.isFetching}
-                            onClick={() => void band.refetch()}
-                        >
-                            {t("tiers.retry")}
-                        </ActionButton>
-                    }
-                />
-            ) : null}
             <div className={list ? "nl-tier-list" : "nl-tier-grid"}>
-                {band.data
+                {data
                     ? shown.map((entry) =>
                           list ? (
                               <TierBrowserRow
@@ -217,30 +198,28 @@ function TierBrowserBandSection({
                               />
                           )
                       )
-                    : !band.isError
-                      ? Array.from(
-                            {
-                                length: tierBrowserSkeletonCount(
-                                    summary.totalCount,
-                                    visible
-                                ),
-                            },
-                            (_, index) =>
-                                list ? (
-                                    <TierBrowserRowSkeleton
-                                        key={index}
-                                        signedIn={signedIn}
-                                    />
-                                ) : (
-                                    <TierBrowserCardSkeleton
-                                        key={index}
-                                        signedIn={signedIn}
-                                    />
-                                )
-                        )
-                      : null}
+                    : Array.from(
+                          {
+                              length: tierBrowserSkeletonCount(
+                                  summary.totalCount,
+                                  visible
+                              ),
+                          },
+                          (_, index) =>
+                              list ? (
+                                  <TierBrowserRowSkeleton
+                                      key={index}
+                                      signedIn={signedIn}
+                                  />
+                              ) : (
+                                  <TierBrowserCardSkeleton
+                                      key={index}
+                                      signedIn={signedIn}
+                                  />
+                              )
+                      )}
             </div>
-            {band.data && shown.length < total ? (
+            {data && shown.length < total ? (
                 <div className="nl-discovery__progress" ref={progress}>
                     <ActionButton variant="secondary" onClick={appendNext}>
                         {t("discovery.loadMore", { count: nextAmount })}
@@ -258,7 +237,7 @@ function TierBrowserBandSection({
                     {announcement}
                 </p>
             ) : null}
-            {visible && band.isPending ? (
+            {visible && !data ? (
                 <span className="sr-only" role="status">
                     {t("tiers.loading")}
                 </span>
@@ -270,12 +249,14 @@ function TierBrowserBandSection({
 export default function TierBrowserBands({
     query,
     overview,
-    initialBand,
+    content,
+    eagerBandId,
     pending,
 }: {
     query: TierBrowserQuery;
     overview: TierBrowserOverview;
-    initialBand: TierBrowserBand | null;
+    content: ReadonlyMap<number, TierBrowserBand> | null;
+    eagerBandId: number | null;
     pending: boolean;
 }) {
     const t = useTranslations();
@@ -287,16 +268,21 @@ export default function TierBrowserBands({
         ) ?? [];
     return (
         <div className="nl-tier-bands" aria-label={t("tiers.bands")}>
-            {bands.map((summary) => (
-                <TierBrowserBandSection
-                    key={`${overview.list!.id}:${query.mode}:${query.goal}:${query.difficulties.join(",")}:${query.levels.join(",")}:${summary.id}`}
-                    summary={summary}
-                    query={query}
-                    overview={overview}
-                    initialBand={initialBand}
-                    pending={pending}
-                />
-            ))}
+            {bands.map((summary) => {
+                const key = `${overview.list!.id}:${query.mode}:${query.goal}:${query.difficulties.join(",")}:${query.levels.join(",")}:${summary.id}`;
+                return (
+                    <TierBrowserBandSection
+                        key={key}
+                        seenKey={key}
+                        summary={summary}
+                        query={query}
+                        overview={overview}
+                        band={content?.get(summary.id)}
+                        eager={eagerBandId === summary.id}
+                        pending={pending}
+                    />
+                );
+            })}
         </div>
     );
 }

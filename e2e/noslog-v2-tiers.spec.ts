@@ -27,6 +27,8 @@ const bands: TierBrowserBand[] = Array.from({ length: 136 }, (_, index) => ({
                             ? "非常に長い日本語の楽曲タイトルと 한국어 원문 긴 제목 검증 LongOriginalTitleWithoutSpaces"
                             : `STULTI ${index + 1}-${entryIndex + 1}`,
                     reading: `すとぅるてぃ ${index + 1}-${entryIndex + 1}`,
+                    artist: "Camellia",
+                    translations: [],
                     localizedTitle: null,
                     background: null,
                 },
@@ -49,19 +51,28 @@ const bands: TierBrowserBand[] = Array.from({ length: 136 }, (_, index) => ({
     ),
 }));
 
-// 구간은 공개 본문(기록 없음)과 내 기록(part=records)을 따로 받는다(2026-10-15 S7 — features/tiers/api/tier-browser.ts)
-function bandResult(band: TierBrowserBand, params: URLSearchParams) {
+// 서열표 전체 공개 본문(part=list, 기록 없음)과 내 기록(part=records)을 따로 한 번씩 받는다(features/tiers/api/tier-browser.ts)
+function listResult(selected: TierBrowserBand[], params: URLSearchParams) {
     if (params.get("part") === "records")
         return {
             records: Object.fromEntries(
-                band.entries
-                    .filter((entry) => entry.record)
-                    .map((entry) => [entry.chartId, entry.record])
+                selected.flatMap((band) =>
+                    band.entries
+                        .filter((entry) => entry.record)
+                        .map((entry) => [entry.chartId, entry.record])
+                )
             ),
         };
     return {
-        ...band,
-        entries: band.entries.map((entry) => ({ ...entry, record: null })),
+        bands: selected
+            .filter((band) => band.entries.length)
+            .map((band) => ({
+                ...band,
+                entries: band.entries.map((entry) => ({
+                    ...entry,
+                    record: null,
+                })),
+            })),
     };
 }
 
@@ -70,7 +81,7 @@ async function prepare(
     {
         locale = "ko",
         guest = false,
-        errorBand = false,
+        errorList = false,
         failSummary = false,
         unpublished = false,
     } = {}
@@ -78,8 +89,8 @@ async function prepare(
     await page.route("**/api/tier-browser?*", async (route) => {
         const params = new URL(route.request().url()).searchParams;
         if (
-            (!params.has("bandId") && failSummary) ||
-            (params.get("bandId") === "9000" && errorBand)
+            (!params.has("part") && failSummary) ||
+            (params.get("part") === "list" && errorList)
         ) {
             await route.fulfill({
                 status: 503,
@@ -121,13 +132,8 @@ async function prepare(
                     record: guest ? null : entry.record,
                 })),
         }));
-        const result = params.has("bandId")
-            ? bandResult(
-                  selected.find(
-                      (band) => band.id === Number(params.get("bandId"))
-                  )!,
-                  params
-              )
+        const result = params.has("part")
+            ? listResult(selected, params)
             : ({
                   viewerId: guest ? null : 900,
                   showLocalizedTitle: true,
@@ -187,7 +193,7 @@ async function prepare(
         await expect(
             page.locator(".nl-tiers [role=status]:not(.sr-only)").first()
         ).toContainText(unpublished ? "" : "18");
-    if (!failSummary && !unpublished && !errorBand)
+    if (!failSummary && !unpublished && !errorList)
         await expect(page.locator(".nl-tier-card").first()).toBeVisible();
 }
 
@@ -766,36 +772,34 @@ test("guest compact cards contain only jackets and preserve direct navigation", 
     );
 });
 
-test("band failures stay local and retry without losing the selected scope", async ({
+test("a list failure shows one error and retries without losing the selected scope", async ({
     page,
 }) => {
-    await prepare(page, { errorBand: true });
-    const first = page.getByRole("region", { name: "14.5", exact: true });
-    await expect(
-        first.getByText("서열 데이터를 불러오지 못했습니다.")
-    ).toBeVisible();
-    await expect(
-        page.getByRole("region", { name: "14.4", exact: true })
-    ).toBeVisible();
+    await prepare(page, { errorList: true });
+    // 서열표를 바꾸며 나간 목록 요청이 모두 끝난 뒤의 오류 상태를 본다
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator(".nl-tiers").getByRole("alert")).toContainText(
+        "서열 데이터를 불러오지 못했습니다."
+    );
+    await expect(page.locator(".nl-tier-card")).toHaveCount(0);
     await page.route("**/api/tier-browser?*", async (route) => {
-        if (
-            new URL(route.request().url()).searchParams.get("bandId") !== "9000"
-        )
-            return route.fallback();
+        const params = new URL(route.request().url()).searchParams;
+        if (params.get("part") !== "list") return route.fallback();
         await route.fulfill({
             json: {
                 isSuccess: true,
                 code: "SUCCESS",
                 message: "",
-                result: bandResult(
-                    bands[0],
-                    new URL(route.request().url()).searchParams
-                ),
+                result: listResult(bands, params),
             },
         });
     });
-    await first.getByRole("button", { name: "다시 시도", exact: true }).click();
-    await expect(first.locator(".nl-tier-card")).toHaveCount(1);
+    await page.getByRole("button", { name: "다시 시도", exact: true }).click();
+    await expect(
+        page
+            .getByRole("region", { name: "14.5", exact: true })
+            .locator(".nl-tier-card")
+    ).toHaveCount(1);
     await expect(page).toHaveURL(/goal=s/);
 });
 

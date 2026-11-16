@@ -3,9 +3,9 @@ import { queryOptions } from "@tanstack/react-query";
 import type { TierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import {
     serializeTierBrowserQuery,
-    tierBrowserBandRecordsSchema,
-    tierBrowserBandSchema,
+    tierBrowserListSchema,
     tierBrowserOverviewSchema,
+    tierBrowserRecordsSchema,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { readApiResponse } from "@/lib/api/response";
 import type { Locale } from "@/lib/i18n/routing";
@@ -38,65 +38,64 @@ export function tierBrowserOverviewOptions(
     });
 }
 
-export function tierBrowserBandOptions(
+function tierBrowserFilterParams(
+    filters: Pick<TierBrowserQuery, "mode" | "goal" | "difficulties" | "levels">
+) {
+    return serializeTierBrowserQuery({
+        ...filters,
+        q: "",
+        bands: [],
+        view: "grid",
+        sort: "position",
+        strip: "grade",
+    });
+}
+
+// 서열표 전체 공개 본문(CDN) — 검색어 · 구간 · 정렬은 받아 둔 목록에서 브라우저가 처리한다
+export function tierBrowserListOptions(
     query: TierBrowserQuery,
-    bandId: number,
     locale: Locale,
-    viewerId: number | null,
     showLocalizedTitle: boolean
 ) {
-    const { mode, goal, difficulties, levels, q } = query;
-    const filters = { mode, goal, difficulties, levels, q };
+    const { mode, goal, difficulties, levels } = query;
+    const filters = { mode, goal, difficulties, levels };
     return queryOptions({
-        queryKey: [
-            "tier-browser-band",
-            viewerId,
-            locale,
-            showLocalizedTitle,
-            filters,
-            bandId,
-        ],
+        queryKey: ["tier-browser-list", locale, showLocalizedTitle, filters],
         queryFn: async ({ signal }) => {
-            const params = serializeTierBrowserQuery({
-                ...filters,
-                bands: [],
-                view: "grid",
-                sort: "position",
-                strip: "grade",
+            const params = tierBrowserFilterParams(filters);
+            params.set("part", "list");
+            params.set("locale", locale);
+            params.set("localized", showLocalizedTitle ? "1" : "0");
+            const response = await fetch(`/api/tier-browser?${params}`, {
+                signal,
             });
-            params.set("bandId", String(bandId));
-            // 공개 구간(CDN)과 내 기록(로그인 때만)을 따로 받아 합친다(2026-10-15 S7)
-            const publicParams = new URLSearchParams(params);
-            publicParams.set("locale", locale);
-            publicParams.set("localized", showLocalizedTitle ? "1" : "0");
-            const recordParams = new URLSearchParams(params);
-            recordParams.set("part", "records");
-            const [band, mine] = await Promise.all([
-                fetch(`/api/tier-browser?${publicParams}`, { signal }).then(
-                    async (response) =>
-                        tierBrowserBandSchema.parse(
-                            await readApiResponse(response)
-                        )
-                ),
-                viewerId === null
-                    ? null
-                    : fetch(`/api/tier-browser?${recordParams}`, {
-                          signal,
-                      }).then(async (response) =>
-                          tierBrowserBandRecordsSchema.parse(
-                              await readApiResponse(response)
-                          )
-                      ),
-            ]);
-            if (!mine) return band;
-            return {
-                ...band,
-                entries: band.entries.map((entry) => ({
-                    ...entry,
-                    record: mine.records[entry.chartId] ?? null,
-                })),
-            };
+            return tierBrowserListSchema.parse(await readApiResponse(response));
         },
+        staleTime: 60_000,
+        retry: false,
+    });
+}
+
+// 서열표 전체의 내 기록 — 로그인했을 때만 공개 목록과 따로 한 번 받는다
+export function tierBrowserRecordsOptions(
+    query: TierBrowserQuery,
+    viewerId: number | null
+) {
+    const { mode, goal, difficulties, levels } = query;
+    const filters = { mode, goal, difficulties, levels };
+    return queryOptions({
+        queryKey: ["tier-browser-records", viewerId, filters],
+        queryFn: async ({ signal }) => {
+            const params = tierBrowserFilterParams(filters);
+            params.set("part", "records");
+            const response = await fetch(`/api/tier-browser?${params}`, {
+                signal,
+            });
+            return tierBrowserRecordsSchema.parse(
+                await readApiResponse(response)
+            );
+        },
+        enabled: viewerId !== null,
         staleTime: 60_000,
         retry: false,
     });
