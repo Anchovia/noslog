@@ -11,7 +11,11 @@ import {
 } from "@/features/exams/schemas/exam-proof-schema";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
-import { deleteBlobIfOwned, isValidPrivateImageBlob } from "@/lib/blob";
+import {
+    deleteBlobIfOwned,
+    isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata,
+} from "@/lib/blob";
 import db from "@/lib/db";
 import {
     createTranslator,
@@ -256,6 +260,7 @@ export async function submitExamProof(
         proofImageUrl: string | null;
     }[];
     try {
+        await stripPrivateImageBlobMetadata(proofImageUrl);
         rejectedSubmissions = await db.examSubmission.findMany({
             where: {
                 userId,

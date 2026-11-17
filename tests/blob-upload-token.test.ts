@@ -1,14 +1,17 @@
+import sharp from "sharp";
 import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     generateClientTokenFromReadWriteToken: vi.fn(async () => "client-token"),
     head: vi.fn(),
     get: vi.fn(),
+    put: vi.fn(),
 }));
 
 vi.mock("@vercel/blob", () => ({
     head: mocks.head,
     get: mocks.get,
+    put: mocks.put,
     del: vi.fn(),
 }));
 
@@ -25,6 +28,7 @@ import {
     createPrivateImageUploadToken,
     isValidImageBlob,
     isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata,
 } from "@/lib/blob";
 
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
@@ -88,4 +92,84 @@ describe("저장 전 이미지 확인", () => {
             expect(await isValid(url, "avatars/2/profile")).toBe(false);
         }
     );
+});
+
+// 브라우저가 저장소에 바로 올린 원본은 서버가 촬영 정보를 뺀 파일로 같은 경로에 덮어쓴다
+describe("비공개 이미지의 촬영 정보 지우기", () => {
+    const pathname = "exam-proofs/2/30/proof-a.jpg";
+    const url = `https://store.private.blob.vercel-storage.com/${pathname}`;
+    const stored = (bytes: Uint8Array<ArrayBuffer>) =>
+        mocks.get.mockResolvedValue({
+            statusCode: 200,
+            stream: new Blob([bytes]).stream(),
+            blob: { pathname },
+        });
+    const photo = async () =>
+        new Uint8Array(
+            await sharp({
+                create: {
+                    width: 40,
+                    height: 20,
+                    channels: 3,
+                    background: { r: 200, g: 120, b: 60 },
+                },
+            })
+                .withMetadata({ orientation: 6 })
+                .withExif({ IFD0: { Model: "Phone 1" } })
+                .jpeg()
+                .toBuffer()
+        );
+
+    it("같은 경로에 촬영 정보가 없는 같은 형식 파일을 덮어쓴다", async () => {
+        stored(await photo());
+
+        await stripPrivateImageBlobMetadata(url);
+
+        expect(mocks.get).toHaveBeenCalledWith(url, {
+            access: "private",
+            token: "private-token",
+            useCache: false,
+        });
+        expect(mocks.put).toHaveBeenCalledTimes(1);
+        const [target, body, options] = mocks.put.mock.calls[0];
+        expect(target).toBe(pathname);
+        expect(options).toEqual({
+            access: "private",
+            token: "private-token",
+            contentType: "image/jpeg",
+            allowOverwrite: true,
+        });
+        const meta = await sharp(body).metadata();
+        expect([meta.format, meta.exif, meta.orientation]).toEqual([
+            "jpeg",
+            undefined,
+            undefined,
+        ]);
+        expect(Buffer.from(body).includes("Phone 1")).toBe(false);
+    });
+
+    it("읽지 못하는 사진은 덮어쓰지 않고 실패한다", async () => {
+        stored((await photo()).slice(0, 200));
+
+        await expect(stripPrivateImageBlobMetadata(url)).rejects.toThrow();
+        expect(mocks.put).not.toHaveBeenCalled();
+    });
+
+    it("저장소에 파일이 없으면 실패한다", async () => {
+        mocks.get.mockResolvedValue(null);
+
+        await expect(stripPrivateImageBlobMetadata(url)).rejects.toThrow(
+            "private image blob is not readable"
+        );
+        expect(mocks.put).not.toHaveBeenCalled();
+    });
+
+    it("덮어쓰지 못하면 실패한다", async () => {
+        stored(await photo());
+        mocks.put.mockRejectedValueOnce(new Error("blob store unavailable"));
+
+        await expect(stripPrivateImageBlobMetadata(url)).rejects.toThrow(
+            "blob store unavailable"
+        );
+    });
 });

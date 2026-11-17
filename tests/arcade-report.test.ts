@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
     count: vi.fn(),
     lock: vi.fn(),
     image: vi.fn(),
+    strip: vi.fn(),
     invalidate: vi.fn(),
     tag: vi.fn(),
 }));
@@ -25,7 +26,10 @@ vi.mock("@/lib/db", () => {
         },
     };
 });
-vi.mock("@/lib/blob", () => ({ isValidPrivateImageBlob: mocks.image }));
+vi.mock("@/lib/blob", () => ({
+    isValidPrivateImageBlob: mocks.image,
+    stripPrivateImageBlobMetadata: mocks.strip,
+}));
 vi.mock("next/cache", () => ({
     revalidatePath: mocks.invalidate,
     updateTag: mocks.tag,
@@ -114,6 +118,29 @@ describe("P12 arcade report authorization and retries", () => {
         );
         expect(mocks.image).toHaveBeenCalledWith(imageUrl, "feedback/9/report");
         expect(mocks.save).not.toHaveBeenCalled();
+    });
+    it("strips capture metadata from the attachment before saving the report", async () => {
+        const imageUrl =
+            "https://store.private.blob.vercel-storage.com/feedback/9/report-a.jpg";
+        expect((await submitArcadeReport(report({ imageUrl }))).success).toBe(
+            true
+        );
+        expect(mocks.strip).toHaveBeenCalledWith(imageUrl);
+        expect(mocks.strip.mock.invocationCallOrder[0]).toBeLessThan(
+            mocks.save.mock.invocationCallOrder[0]
+        );
+        expect(mocks.save.mock.calls[0][0].create.imageUrl).toBe(imageUrl);
+    });
+    it("does not save a report whose attachment metadata could not be stripped", async () => {
+        const imageUrl =
+            "https://store.private.blob.vercel-storage.com/feedback/9/report-a.jpg";
+        mocks.strip.mockRejectedValue(new Error("corrupt image"));
+        expect(await submitArcadeReport(report({ imageUrl }))).toEqual({
+            success: false,
+            message: "Could not submit your report.",
+        });
+        expect(mocks.save).not.toHaveBeenCalled();
+        expect(mocks.tag).not.toHaveBeenCalled();
     });
     it("records context for moderation without changing public arcade facts", async () => {
         expect(

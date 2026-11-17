@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
     getSession: vi.fn(),
     isValidPrivateImageBlob: vi.fn(),
+    stripPrivateImageBlobMetadata: vi.fn(),
     deleteBlobIfOwned: vi.fn(),
     createPrivateImageUploadToken: vi.fn(),
     examFindFirst: vi.fn(),
@@ -29,6 +30,7 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobIfOwned: mocks.deleteBlobIfOwned,
     isImageContentType: (value: string) => value === "image/jpeg",
     isValidPrivateImageBlob: mocks.isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata: mocks.stripPrivateImageBlobMetadata,
 }));
 
 vi.mock("@/lib/upload-rate-limit", () => ({
@@ -320,6 +322,39 @@ describe("검정 증빙 업로드 액션", () => {
         expect(mocks.deleteBlobIfOwned).not.toHaveBeenCalled();
         expect(mocks.logServerError).toHaveBeenCalledWith(
             expect.any(Error),
+            expect.objectContaining({
+                event: "exam.proof-submit.persist.failed",
+            })
+        );
+    });
+
+    it("제출을 기록하기 전에 증빙 사진의 촬영 정보를 지운다", async () => {
+        await submitExamProof(createSubmissionFormData());
+
+        expect(mocks.stripPrivateImageBlobMetadata).toHaveBeenCalledWith(
+            proofUrl
+        );
+        expect(
+            mocks.stripPrivateImageBlobMetadata.mock.invocationCallOrder[0]
+        ).toBeLessThan(mocks.submissionCreate.mock.invocationCallOrder[0]);
+    });
+
+    it("촬영 정보를 지우지 못한 증빙은 제출로 기록하지 않는다", async () => {
+        mocks.stripPrivateImageBlobMetadata.mockRejectedValueOnce(
+            new Error("corrupt image")
+        );
+
+        await expect(
+            submitExamProof(createSubmissionFormData())
+        ).resolves.toEqual({
+            success: false,
+            message: "합격 인증 제출에 실패했습니다.",
+        });
+
+        expect(mocks.transaction).not.toHaveBeenCalled();
+        expect(mocks.revalidatePath).not.toHaveBeenCalled();
+        expect(mocks.logServerError).toHaveBeenCalledWith(
+            expect.objectContaining({ message: "corrupt image" }),
             expect.objectContaining({
                 event: "exam.proof-submit.persist.failed",
             })

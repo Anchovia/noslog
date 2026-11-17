@@ -13,6 +13,7 @@ import {
     deleteBlobIfOwned,
     isImageContentType,
     isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata,
 } from "@/lib/blob";
 import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
@@ -120,6 +121,7 @@ export async function submitFeedbackReport(
 
     try {
         const userId = session.id;
+        if (imageUrl) await stripPrivateImageBlobMetadata(imageUrl);
         // 세기와 넣기 사이를 사람마다 잠가 동시에 보낸 요청이 하루 한도를 넘지 않게 한다
         const saved = await db.$transaction(async (tx) => {
             const within = await isWithinDailyLimit(tx, {

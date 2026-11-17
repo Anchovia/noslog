@@ -9,7 +9,10 @@ import {
 } from "@/features/arcades/schemas/arcade-report-schema";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
-import { isValidPrivateImageBlob } from "@/lib/blob";
+import {
+    isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata,
+} from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import { isWithinDailyLimit } from "@/lib/daily-limit";
 import db from "@/lib/db";
@@ -66,6 +69,7 @@ export async function submitArcadeReport(
             ))
         )
             return { success: false, message: t("feedback.attachmentError") };
+        if (imageUrl) await stripPrivateImageBlobMetadata(imageUrl);
         const cabinet = arcade.cabinets[0];
         const context = [
             arcade.name,

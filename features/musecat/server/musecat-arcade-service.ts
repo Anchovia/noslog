@@ -38,7 +38,9 @@ import {
 import { getMusecatMode } from "@/features/musecat/server/musecat-mode";
 import { getMusecatArcadeTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { stripImageMetadata } from "@/lib/uploads/strip-image-metadata";
 
 const MUSECAT_PAGE_SIZE = 15;
 
@@ -374,12 +376,33 @@ export async function reportFault(input: {
     }
     const token = await liveToken();
     if (!token.ok) return token;
+    let photos: File[];
+    try {
+        photos = await Promise.all(
+            input.photos.map(async (photo) => {
+                const { data, contentType } = await stripImageMetadata(
+                    new Uint8Array(await photo.arrayBuffer())
+                );
+                return new File([new Uint8Array(data)], photo.name, {
+                    type: contentType,
+                });
+            })
+        );
+    } catch (error) {
+        // 촬영 정보를 빼지 못한 사진은 원본으로 넘기지 않고 신고를 보내지 않는다
+        logServerError(error, {
+            event: "musecat.fault-report.photo-strip.failed",
+            routePath: "/gamecenter",
+            routeType: "action",
+        });
+        return { ok: false, error: "failed" };
+    }
     const result = await reportMusecatFault(token.token, {
         arcade: input.musecatArcadeId,
         gameId: input.gameId,
         disruption: input.disruption,
         message: input.message,
-        photos: input.photos,
+        photos,
     });
     await recordAction({
         userId: token.userId,

@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     createPrivateImageUploadToken: vi.fn(),
     deleteBlobIfOwned: vi.fn(),
     isValidPrivateImageBlob: vi.fn(),
+    stripPrivateImageBlobMetadata: vi.fn(),
     claimUploadTokenQuota: vi.fn(),
     releaseUploadTokenQuota: vi.fn(),
     feedbackCreate: vi.fn(),
@@ -21,6 +22,7 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobIfOwned: mocks.deleteBlobIfOwned,
     isImageContentType: (value: string) => value === "image/png",
     isValidPrivateImageBlob: mocks.isValidPrivateImageBlob,
+    stripPrivateImageBlobMetadata: mocks.stripPrivateImageBlobMetadata,
 }));
 vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
@@ -221,6 +223,43 @@ describe("피드백 제보 액션", () => {
         });
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin");
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/feedback");
+    });
+
+    it("제보를 저장하기 전에 첨부 이미지의 촬영 정보를 지운다", async () => {
+        await submitFeedbackReport(feedbackForm(undefined, feedbackImage));
+
+        expect(mocks.stripPrivateImageBlobMetadata).toHaveBeenCalledWith(
+            feedbackImage
+        );
+        expect(
+            mocks.stripPrivateImageBlobMetadata.mock.invocationCallOrder[0]
+        ).toBeLessThan(mocks.feedbackCreate.mock.invocationCallOrder[0]);
+    });
+
+    it("첨부 이미지가 없으면 촬영 정보 지우기를 부르지 않는다", async () => {
+        await submitFeedbackReport(feedbackForm());
+
+        expect(mocks.stripPrivateImageBlobMetadata).not.toHaveBeenCalled();
+        expect(mocks.feedbackCreate).toHaveBeenCalledTimes(1);
+    });
+
+    it("촬영 정보를 지우지 못하면 제보를 저장하지 않고 첨부 이미지를 지운다", async () => {
+        const error = new Error("corrupt image");
+        mocks.stripPrivateImageBlobMetadata.mockRejectedValueOnce(error);
+
+        await expect(
+            submitFeedbackReport(feedbackForm(undefined, feedbackImage))
+        ).resolves.toEqual({
+            success: false,
+            message: "제보를 접수하지 못했습니다.",
+        });
+        expect(mocks.feedbackCreate).not.toHaveBeenCalled();
+        expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(feedbackImage);
+        expect(mocks.logServerError).toHaveBeenCalledWith(error, {
+            event: "feedback.report.submit.failed",
+            routePath: "/",
+            routeType: "action",
+        });
     });
 
     it("DB 저장 실패 시 첨부 이미지를 정리하고 오류를 기록한다", async () => {

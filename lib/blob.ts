@@ -2,7 +2,7 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 
-import { del, get, head } from "@vercel/blob";
+import { del, get, head, put } from "@vercel/blob";
 import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
 import { serverEnv } from "@/lib/env/server";
@@ -12,6 +12,7 @@ import {
     isImageContentType,
     MAX_IMAGE_SIZE,
 } from "@/lib/image-upload-rules";
+import { stripImageMetadata } from "@/lib/uploads/strip-image-metadata";
 
 export { isImageContentType } from "@/lib/image-upload-rules";
 
@@ -160,6 +161,23 @@ export async function getPrivateImageBlob(url: string) {
         access: "private",
         token: privateBlobToken(),
         useCache: false,
+    });
+}
+
+// 브라우저가 바로 올린 원본을 촬영 정보를 뺀 파일로 같은 경로에 덮어쓴다 — 주소가 그대로라 기록과 중복 확인이 달라지지 않는다.
+// 읽기 · 다시 만들기 · 덮어쓰기 가운데 하나라도 안 되면 던진다. 부르는 쪽은 그 주소를 기록하지 않는다
+export async function stripPrivateImageBlobMetadata(url: string) {
+    const original = await getPrivateImageBlob(url);
+    if (original?.statusCode !== 200)
+        throw new Error("private image blob is not readable");
+    const stripped = await stripImageMetadata(
+        new Uint8Array(await new Response(original.stream).arrayBuffer())
+    );
+    await put(original.blob.pathname, stripped.data, {
+        access: "private",
+        token: privateBlobToken(),
+        contentType: stripped.contentType,
+        allowOverwrite: true,
     });
 }
 
