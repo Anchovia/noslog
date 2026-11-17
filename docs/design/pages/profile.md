@@ -21,6 +21,8 @@
 
 머리는 두 묶음이다. 정체 묶음은 이름 →8→ 정보 두 줄, 실력 묶음은 모드 세그먼트 →12→ 핵심 수치 상자다. 두 묶음 사이는 24.
 
+아바타에 사진이 없으면 첫 글자 대신 채운 사람 그림을 원 안에 띄운다(SEED IdentityPlaceholder person path 원본). 면 `surface/control` · 그림 `content/tertiary` 이고 그림은 원을 꽉 채운 viewBox 640 위에 있다. 설정 「프로필 이미지」 원 32 의 선 아이콘은 그대로다.
+
 이름 줄
 
 - 이름 옆 국기는 `CountryMarker size="large"`(칸 24 · 그림 18)다.

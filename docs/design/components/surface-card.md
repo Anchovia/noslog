@@ -12,7 +12,7 @@
 | secondary 카드 | `surface/surface`  | 누르지 않는 묶음 상자(과제곡 · 합격까지 · 빙고 미션 · 상세 판 · 동기화 안내 단계 · 정보 상자) |
 
 - 예외로 과제곡 곡 카드는 secondary 면이지만 누를 수 있는 카드는 올림 · 누름 · 키 포커스에 `interaction/row` 를 겹친다([검정](../pages/exams.md)).
-- `SurfaceCard` 는 안쪽 16 · 안 사이 8 이고, 안의 항목 이름(`nl-entity-title`)은 14 bold(title S · `content/strong`)다.
+- `SurfaceCard` 는 안쪽 16 · 안 사이 8 이고, 안의 항목 이름(`nl-entity-title`)은 16/22 · 700(`content/strong`), 본문은 14/20 · 400 이다.
 - 누르는 카드는 올림 · 키 포커스에 그림자가 `--nl-overlay-shadow` 로 바뀐다. 오락실 결과 카드는 그림자 대신 면 위에 `interaction/row` 를 겹친다. 고른 카드는 안쪽 2 `content/strong` 선 + `--nl-overlay-shadow` 다.
 - 악곡 카드 · 홈 이동 칸 · 홈 공식 소식 카드는 위 두 종류가 아니라 한 단계 면이다. 면 `surface/surface` · 둘레 · 그림자 없음 · 모서리 `radius/control` 이고, 올림이 있는 것(홈 이동 칸 · 악곡 카드 · 채보 줄)은 올림 · 누름 · 키 포커스에 `surface/control-hover` 다.
 - 따로 누르거나 한 덩어리로 읽어야 하는 것에만 쓴다. 순위 · 기록 목록 줄은 카드로 만들지 않고 구분선 줄로 둔다. 카드 안에 카드를 넣지 않는다.
