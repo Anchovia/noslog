@@ -136,6 +136,110 @@
 - 가장 닮은 본보기는 한국 일로아(2026-06-29 시행, 소셜 로그인만, 게임 기록 랭킹)와 일본 Annict(개인 운영, 2026-10-25 개정)다. 둘 다 본문을 직접 열어 인용을 확인했다.
 - 지금 방침이 더 자세한 곳: 백업 삭제 시점(한국 3/57, 해외 3/60 만 적음), 탈퇴 뒤 남는 것 열거, 「처리하지 않는 정보」 목록, 쿠키 · 기기 저장 표, AI 번역의 학습 이용 고지, 국외 이전 표와 거부 방법, 개정 전후 비교표, 처리 기한 10일.
 
+## 기능이 바뀌는 곳의 다른 서비스 구현
+
+방침 문장이 아니라 코드 동작이 바뀌는 곳은 실제 서비스의 구현을 따로 확인했다. 출처는 오픈소스 코드의 파일과 줄, 공식 문서, 공개 화면 실측이다. 곳별 기록은 `~/noslog-research/privacy-policy-audit-2026-11-17/impl/` 아래 `avatar` · `signup` · `unlink` · `history` · `consent` 폴더의 `notes.md` 에 있다. 수는 출처를 연 곳만 셌고, 핵심 인용은 받아 둔 원문에서 내가 다시 대조했다.
+
+### 로그인 제공자의 프로필 사진
+
+Discord 로그인 · 연결 서비스 31곳의 공개 화면에서 회원 사진 주소를 쟀다(headless Playwright, 로그인 없음).
+
+| 방식                                                  | 곳 수 | 곳                                                                                                           |
+| ----------------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------ |
+| 자기 저장소 · CDN 으로 복사, 주소에 식별자 없음       | 11    | sendou.ink · BeatSaver · Modrinth · Synthriderz · Suno · guns.lol · PixAI · SeaArt · Tensor.Art · Rhythia 등 |
+| 자기 도메인 · 프록시인데 주소에 Discord 식별자가 보임 | 4     | 한국 디스코드 리스트 · Discord Bot List · emoji.gg · MKCentral                                               |
+| `cdn.discordapp.com/avatars/<식별자>/…` 직접          | 12    | Monkeytype · MEE6 순위표 · 메랜지지 · AREDL · Discords.com · Lurkr 등                                        |
+| 사진 없음 · 직접 올린 사진만                          | 4     | Civitai · Thunderstore · 메랜샵 · Battlefy                                                                   |
+
+- 숨긴 회원만 기본 사진으로 바꾸는 곳은 확인하지 못했다. MKCentral 의 `hide_discord` 는 화면에서만 가리고 공개 API 와 사진 파일 이름에 식별자가 남는다.
+- sendou.ink 는 2026-10-23 병합한 PR #3455 로 Discord CDN 직접에서 자기 저장소 복사로 바꿨다. 코드로 확인한 24곳 가운데 내려받아 다시 저장하는 곳은 9곳이고, 갱신은 로그인할 때마다가 가장 많다.
+- Discord 사진 주소에는 식별자가 반드시 들어간다(`avatars/[user_id]/[user_avatar].png`). 옛 해시 주소는 깨진다(Monkeytype 리더보드 73개 중 34개가 404).
+- Discord Developer Terms 5(b)는 API 로 얻은 데이터를 제3자와 공유하지 말라고 하고, 필요 없어졌거나 사용자가 요청하면 지체 없이 지우라고 한다. 사진 복사를 금지하거나 허용하는 문장은 없다.
+
+### 가입을 끝내지 않은 계정
+
+코드 · 공식 문서 21곳과 한국 로그인 가이드 2곳이다.
+
+| 방식                          | 곳 수 | 곳과 값                                                                                                            |
+| ----------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------ |
+| 기본으로 자동 삭제            | 6     | 카카오 로그인 24시간 · Lichess 3일 · GitLab.com 3일 · 롯데쇼핑 방침 5일 · Mastodon 7일 · Discourse 14일            |
+| 삭제 기능 있음, 기본 꺼짐     | 3     | GitLab Self-Managed · Gitea · Forgejo 모두 7일                                                                     |
+| 끝낼 때까지 회원 줄을 안 만듦 | 7     | Misskey · WordPress 멀티사이트 · Flarum 소셜 · django-allauth 소셜 · Discourse 소셜 · Keycloak 외부 로그인 · Clerk |
+| 그대로 둠                     | 11    | Auth.js · Supabase Auth · Firebase Auth · AWS Cognito · Devise · osu-web · phpBB 등                                |
+
+Auth.js 는 콜백 즉시 사용자를 만들고 미완료 사용자를 지우는 기능이 없어 NosLog 의 지금 구조와 같다. 방침에 미완료 가입 정보의 보관 기간을 적은 곳은 받아 둔 169곳 중 0곳이다.
+
+### 새로 생긴 약관 · 나이 확인과 기존 회원
+
+| 대상                       | 방식                                       | 곳 수 | 곳                                                                          |
+| -------------------------- | ------------------------------------------ | ----- | --------------------------------------------------------------------------- |
+| 약관(26곳)                 | 공지하고 기한 안에 거부가 없으면 동의로 봄 | 24    | 네이버 · 카카오 · 넥슨 · STOVE · 토스 · Discord · GitHub · Twitch · osu! 등 |
+| 약관                       | 받아들여야 계속 이용                       | 2     | Riot Games · 솔라피                                                         |
+| 나중에 넣은 나이 확인(8곳) | 확인 전 일부 기능 제한                     | 5     | Reddit · Roblox · Discord · Bluesky 영국 · Xbox 영국                        |
+| 나이 확인                  | 전면 차단                                  | 1     | Instagram                                                                   |
+| 나이 확인                  | 미달로 보이면 정지 · 삭제                  | 2     | Google · Discord                                                            |
+
+- 약관규제법 제12조 제1호는 상당한 기한 안에 의사표시가 없으면 동의로 본다는 뜻을 명확히 따로 고지한 경우를 예외로 둔다. NosLog 약관에는 이 문구가 이미 있다(시행 15일 전, 불리하면 30일 전 공지).
+- 개인정보위 아동 · 청소년 안내서(2024. 12.)에는 기존 회원에게 소급해 나이를 확인하라는 문장도, 안 해도 된다는 문장도 없다. 한국 서비스의 소급 확인 사례는 찾지 못했다.
+
+### 외부 계정 연동을 끊은 뒤
+
+| 쪽                        | 방식                                           | 곳 수 | 곳                                                                                      |
+| ------------------------- | ---------------------------------------------- | ----- | --------------------------------------------------------------------------------------- |
+| 클라이언트(오픈소스 28곳) | 행 · 외부 식별자 · 토큰을 바로 삭제            | 24    | Discourse · GitLab · Gitea · Auth.js · Supabase Auth · Keycloak · Tachi · BeatLeader 등 |
+| 클라이언트                | 연결만 끊고 외부 계정 행을 남김                | 1     | osu-web 의 GitHub 연결                                                                  |
+| 클라이언트                | 토큰만 비우고 폐기 상태 행을 남김(NosLog 방식) | 0     |                                                                                         |
+| 제공자(문서 27곳)         | 권한을 거두면 앱에 알림을 보냄                 | 18    | 카카오 · 네이버 · Google · Apple · Discord · Twitch · Meta · GitHub · Slack 등          |
+| 제공자                    | 알림 없이 토큰만 무효화                        | 4     | Microsoft Entra · Spotify · Dropbox · Atlassian                                         |
+| 제공자 쪽 허락 기록(13곳) | 행을 지움                                      | 6     | Keycloak · Ory Hydra · Lichess · node-oidc-provider · Authentik · Gitea                 |
+| 제공자 쪽 허락 기록       | 폐기 표시만 하고 남김                          | 6     | Doorkeeper · Mastodon(매일 정리) · osu-web(30일 뒤 정리) · Passport 등                  |
+
+- 플랫폼 규정: Spotify 는 연결을 끊으면 5일 안에 삭제, Twitch 와 Zoom 은 권한 철회 때 받은 데이터 삭제, 카카오는 탈퇴 · 연동 해제 때 연결 해제 요청을 반드시 포함하라고 적는다.
+- 숨긴 회원의 시각 값(19곳): 값을 주지 않는 곳 4(Google · Microsoft · GitLab · Discord), 숨기면 null 이나 생략 3(osu! · Steam · Keycloak), 그대로 주는 곳 5, 가입 시각 같은 다른 시각으로 바꿔 넣는 곳 0.
+
+### 탈퇴한 사람의 기여 표시, 신고 기록, 요청 횟수 기록
+
+| 주제                     | 방식                                     | 곳 수 | 곳                                                                             |
+| ------------------------ | ---------------------------------------- | ----- | ------------------------------------------------------------------------------ |
+| 탈퇴한 사람의 기여(40곳) | 작성자를 고정 표시로 바꾸고 기여는 남김  | 23    | GitHub · GitLab · MusicBrainz · OpenStreetMap · osu-web · VNDB · Lichess 등    |
+| 기여                     | 이름과 기여를 그대로 남김                | 7     | phpBB 기본값 · Hacker News · Discogs · TETR.IO 등                              |
+| 기여                     | 기여를 지움                              | 8     | Mastodon · Misskey · velog · Letterboxd 등                                     |
+| 신고의 처리 시각(12곳)   | 전용 칸이 있음                           | 7     | Mastodon · GitLab · OpenStreetMap · Lichess · BeatSaver · PeerTube · Discourse |
+| 신고의 처리 시각         | 전용 칸이 없음                           | 5     | Lemmy(수정 시각 겸용) · Misskey · osu-web 등                                   |
+| 요청 횟수(30여 곳)       | Redis · 캐시 만료                        | 15    | Mastodon · Discourse · GitLab · Rails · Laravel · Upstash 등                   |
+| 요청 횟수                | DB 표 + 주기 작업으로 만료 줄 삭제       | 6     | rate-limiter-flexible 5분 · Ghost 1시간 · Nextcloud 하루 · Supabase 예제 등    |
+| 요청 횟수                | DB 표, 아무 요청에서나 만료 줄 전체 삭제 | 6     | Nextcloud · better-auth · express-rate-limit Postgres 저장소 등                |
+| 요청 횟수                | 그 키를 다시 읽을 때만 삭제(NosLog 방식) | 1     | Laravel DB 캐시                                                                |
+
+- 글 속에 글자로 들어간 이름을 고쳐 쓰는 곳은 Discourse 1곳이다(멘션 · 인용 · 수정 이력). Wikimedia · Zulip · GitLab 은 그대로 둔다고 적는다.
+- 처리한 신고를 일정 기간 뒤 지우는 코드는 본 12곳 가운데 0곳이고 모두 기한 없이 둔다. 기간은 방침 문구에만 있다(디시 6개월 「조치 통지한 날부터」, 일로아 처리 완료 뒤 1년).
+- 요청 횟수 기록의 보존 기간을 방침에 적은 곳은 받아 둔 156곳 중 0곳이다.
+
+### 번역 전송 시점, 동의 자리의 고지, 사진 촬영 정보, 본인 확인
+
+| 주제                           | 방식                                       | 곳 수 | 곳                                                                       |
+| ------------------------------ | ------------------------------------------ | ----- | ------------------------------------------------------------------------ |
+| 이용자 글 번역(25건)           | 읽는 사람이 누를 때만 보냄                 | 16    | Mastodon · Misskey · discourse-translator · X · 카카오톡 · Slack 등      |
+| 번역                           | 누름 + 읽는 사람 설정으로 자동             | 3     | Facebook · Teams · Reddit                                                |
+| 번역                           | 운영 쪽이 미리 번역                        | 6     | note · Discourse AI 번역 · Airbnb · eBay · Intercom 등                   |
+| 번역                           | 쓸 때와 누를 때 둘 다(NosLog 방식)         | 0     |                                                                          |
+| 선택 동의 고지(가입 화면 21곳) | 누르면 동의 창                             | 13    | 네이버 · 카카오 · 넥슨 · 컬리 · SOOP · 티빙 · 다나와 등(표 12곳)         |
+| 고지                           | 새 탭 쪽                                   | 7     | 리디 · 무신사 · 야놀자 · 플로 등                                         |
+| 고지                           | 그 자리 펼침                               | 1     | 펄어비스                                                                 |
+| 고지                           | 체크 옆 글에 다 적음                       | 0     |                                                                          |
+| 사진 촬영 정보(20곳)           | 서버에서 제거(기본 켜진 설정 포함)         | 12    | Mastodon · GitLab · Discourse · osu-web · X · Imgur · Pixelfed 등        |
+| 촬영 정보                      | 브라우저에서 다시 인코딩                   | 3     | Lichess · Signal · Bluesky                                               |
+| 촬영 정보                      | 그대로 둠                                  | 3     | WordPress 원본 · Flickr · Wikimedia Commons                              |
+| 권리 요청 본인 확인(35곳)      | 로그인한 화면으로 받음(10곳은 이메일 병행) | 17    | BeatLeader · Lichess · Dank Memer · Discord · osu! · top.gg · TETR.IO 등 |
+| 본인 확인                      | 이메일로 받고 계정에 묶인 경로로 확인      | 3     | Annict · Trakt · velog                                                   |
+| 본인 확인                      | 소셜 계정 DM · 지원 서버                   | 4     | Monkeytype · 한국 디스코드 리스트 · stat.ink · Sapphire                  |
+| 본인 확인                      | 이메일만, 확인 방법 없음                   | 11    | Dyno · Carl-bot · ScoreSaber · Quaver · 크래프톤 등                      |
+
+- 번역에서 작성자 옵트인 동의를 받는 곳은 0곳이고, 작성자 스위치가 있는 곳은 note 1곳(기본 켜짐)이다. 저장해 다시 쓰는 구조는 discourse-translator 가 가장 가깝다.
+- 동의 창을 쓰는 곳은 보유 기간을 굵게나 밑줄로 강조한다(15곳). 설정 화면의 동의 스위치는 로그인이 필요해 직접 본 곳이 0곳이다.
+- 비공개 첨부에도 촬영 정보를 지우는 근거는 Discourse · GitLab · Signal 에서 확인했다. Zendesk · Intercom · Freshdesk 도움말에는 관련 문장이 없다.
+- 본인 확인 지침: 시행령 제41조 제2항은 열람 요구를 수집한 창구와 같은 방법으로 할 수 있게 하라고 하고, 표준 개인정보 보호지침 제34조는 수집 때 요구하지 않은 증빙을 요구할 수 없다고 한다. EDPB 지침 01/2022 72 – 73항은 로그인에 쓰는 인증을 본인 확인으로 든다.
+
 ## 미확인
 
 - 운영 설정: `MUSECAT_MODE` 값, 등록된 OAuth 클라이언트, Vercel 로그 1일, Blob 리전, DB 백업 12시간 · 2일, Gemini 무료 등급.
