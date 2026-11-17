@@ -9,6 +9,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
+import BrandWordmark from "@/components/layout/brand-wordmark";
 import {
     isDestinationActive,
     productDestinations,
@@ -177,10 +178,10 @@ export default function AppHeader({
                     <div className="nl-header__bar">
                         <IntentLink
                             href={href("/")}
-                            className="nl-wordmark nl-section-title"
+                            className="nl-wordmark flex items-center"
                             lang="en"
                         >
-                            NosLog
+                            <BrandWordmark />
                         </IntentLink>
                         {/* 1056 이상에서만 보인다(CSS) — 그 아래 폭은 ≡ 안(2026-09-30 A1 · P1) */}
                         <nav
