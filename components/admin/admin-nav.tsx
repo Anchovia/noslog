@@ -131,6 +131,7 @@ function AdminMenuDrawer({ account }: { account: ShellAccount }) {
             <Dialog.Trigger asChild>
                 <IconButton
                     className="nl-admin-topbar__menu"
+                    size="compact"
                     label="관리자 메뉴 열기"
                 >
                     <Menu className="nl-icon" aria-hidden />

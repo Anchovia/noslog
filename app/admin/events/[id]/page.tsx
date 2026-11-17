@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AdminCrumb } from "@/components/admin/admin-nav";
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import BackLink from "@/components/ui/back-link";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -45,6 +46,7 @@ export default async function AdminEventPage({
         event.publishedAt !== null && event.status !== "approved";
     return (
         <PageContainer width="reading">
+            <AdminCrumb>{event.title}</AdminCrumb>
             <BackLink href="/admin/events">이벤트</BackLink>
             <PageHeading
                 title={event.title}

@@ -1,3 +1,4 @@
+import { AdminCrumb } from "@/components/admin/admin-nav";
 import {
     countAdminTierEntries,
     getAdminTierList,
@@ -137,6 +138,7 @@ export default async function EditTierListPage({
 
     return (
         <div className="flex flex-col gap-nl-24 py-nl-24">
+            <AdminCrumb>{tierList.title}</AdminCrumb>
             <section className="flex items-start gap-nl-12">
                 {/* 관리자 악곡 상세와 같은 뒤로가기 */}
                 <Link

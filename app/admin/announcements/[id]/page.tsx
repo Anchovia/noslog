@@ -2,6 +2,7 @@ import { getAdminAnnouncement } from "@/features/announcements/server/announceme
 import { notFound } from "next/navigation";
 import { getPollInput } from "@/features/polls/server/poll-service";
 
+import { AdminCrumb } from "@/components/admin/admin-nav";
 import BackLink from "@/components/ui/back-link";
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import AnnouncementEditor, {
@@ -72,6 +73,7 @@ export default async function EditAnnouncementPage({
 
     return (
         <PageContainer width="reading">
+            <AdminCrumb>{translations.ko.title || "제목 없음"}</AdminCrumb>
             <BackLink href="/admin/announcements">공지사항</BackLink>
             <PageHeading
                 title={translations.ko.title || "제목 없음"}

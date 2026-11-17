@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AdminCrumb } from "@/components/admin/admin-nav";
 import ExamEditor from "@/features/exams/components/editor/exam-editor";
 import { getExamEditorData } from "@/features/exams/server/exam-admin-service";
 import { requireAdmin } from "@/lib/admin";
@@ -17,5 +18,10 @@ export default async function EditExamPage({
     const exam = await getExamEditorData(examId);
     if (!exam) notFound();
 
-    return <ExamEditor initialExam={exam} />;
+    return (
+        <>
+            <AdminCrumb>{exam.title}</AdminCrumb>
+            <ExamEditor initialExam={exam} />
+        </>
+    );
 }

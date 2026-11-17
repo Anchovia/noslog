@@ -4,6 +4,8 @@ import {
 } from "@/features/bingos/server/bingo-admin-data";
 import { notFound } from "next/navigation";
 
+import { AdminCrumb } from "@/components/admin/admin-nav";
+
 import BingoEditor, {
     type BingoEditorData,
 } from "@/features/bingos/components/bingo-editor";
@@ -68,5 +70,10 @@ export default async function EditBingoPage({
         }),
     };
 
-    return <BingoEditor bingo={data} musics={musics} />;
+    return (
+        <>
+            <AdminCrumb>{data.title}</AdminCrumb>
+            <BingoEditor bingo={data} musics={musics} />
+        </>
+    );
 }

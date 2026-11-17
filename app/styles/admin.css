@@ -110,6 +110,10 @@
     align-items: baseline;
     gap: var(--nl-spacing-8);
 }
+/* 홈 기간 고르기 — 좁은 폭에서 「28일」 이 두 줄로 꺾이지 않게 */
+.noslog-ui .nl-dashboard__ranges .nl-segments__item {
+    white-space: nowrap;
+}
 /* 홈 패널 = 관리자 카드 꼴 — 머리 줄(제목 · 아래 선) + 줄 목록, 좌우 24 */
 .noslog-ui .nl-dashboard__panel {
     display: flex;
@@ -762,7 +766,8 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    /* 좁은 폭은 컨트롤 높이가 40 이라 작은 컨트롤 높이로 재 넓은 폭과 같은 56 이 되게 한다 */
+    min-height: calc(var(--nl-control-height-compact) + var(--nl-spacing-24));
     padding-inline: var(--nl-spacing-12);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) 0
         var(--nl-border-divider);
@@ -792,6 +797,7 @@
             var(--nl-border-divider);
     }
     .noslog-ui .nl-admin-topbar {
+        min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
         padding-inline: var(--nl-spacing-16);
     }
     .noslog-ui .nl-admin-topbar__menu {
