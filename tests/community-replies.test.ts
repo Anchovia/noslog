@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // 답글(2026-09-22 R1) — 트랜잭션 안에서 쓰는 표만 흉내 낸다
@@ -115,7 +116,7 @@ describe("의견 답글", () => {
         expect(tx.communityOpinionReply.create).not.toHaveBeenCalled();
     });
 
-    it("보이는 의견에 답글을 새로 쓰고 번역할 답글 번호를 돌려준다", async () => {
+    it("보이는 의견에 답글을 새로 쓰고 번역할 글은 돌려주지 않는다", async () => {
         tx.communityChartEvaluation.findFirst.mockResolvedValue({
             id: 5,
             opinion: "후반 트릴",
@@ -132,9 +133,8 @@ describe("의견 답글", () => {
         );
         expect(tx.communityOpinionReply.create).toHaveBeenCalledWith({
             data: { evaluationId: 5, userId: ME, body: "동의해요" },
-            select: { id: true },
         });
-        expect(result).toMatchObject({ translate: { kind: "reply", id: 31 } });
+        expect(result).toEqual({ chartId: 3, evaluationId: 5 });
     });
 
     it("새 답글은 사람마다 잠근 채 최근 24시간 답글을 센다", async () => {
@@ -201,7 +201,11 @@ describe("의견 답글", () => {
                 },
                 ME
             )
-        ).resolves.toMatchObject({ translate: { kind: "reply", id: 31 } });
+        ).resolves.toEqual({ chartId: 3, evaluationId: 5 });
+        expect(tx.communityOpinionReply.updateMany).toHaveBeenCalledWith({
+            where: { id: 31, evaluationId: 5, userId: ME, hidden: false },
+            data: { body: "고친 답글", translations: Prisma.DbNull },
+        });
     });
 
     it("새 답글만 기본 격리로 센다 — 직렬화 격리에서는 잠금 뒤에도 앞 요청의 답글이 보이지 않는다", async () => {

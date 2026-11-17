@@ -70,7 +70,7 @@ describe("이용자 글 번역 요청", () => {
     });
 });
 
-describe("답글 쓰기 · 글 저장 뒤 번역의 한도", () => {
+describe("답글 쓰기 한도 · 글 저장 때는 번역하지 않는다", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.session.mockResolvedValue({ id: 7 });
@@ -89,26 +89,16 @@ describe("답글 쓰기 · 글 저장 뒤 번역의 한도", () => {
         expect(mocks.log).not.toHaveBeenCalled();
     });
 
-    it("translates after saving with the writer's quota and skips quietly at the limit", async () => {
-        mocks.mutate.mockResolvedValue({
-            chartId: 5,
-            translate: { kind: "reply", id: 31 },
-        });
-        await saveChartContribution({ action: "reply-save" }, "ko");
-        const background = mocks.after.mock.calls[0][0] as () => Promise<void>;
-
-        mocks.fill.mockRejectedValueOnce(
-            new ApiError("translation_limit_reached", "dailyLimit")
-        );
-        await background();
-        expect(mocks.fill).toHaveBeenCalledWith("reply", 31, 7);
-        expect(mocks.log).not.toHaveBeenCalled();
-
-        const failure = new Error("model unavailable");
-        mocks.fill.mockRejectedValueOnce(failure);
-        await background();
-        expect(mocks.log).toHaveBeenCalledWith(failure, {
-            event: "music-community.translate.failed",
-        });
-    });
+    it.each(["reply-save", "save-evaluation"])(
+        "%s saves without sending the text to be translated",
+        async (action) => {
+            mocks.mutate.mockResolvedValue({ chartId: 5 });
+            await expect(
+                saveChartContribution({ action }, "ko")
+            ).resolves.toMatchObject({ success: true, chartId: 5 });
+            expect(mocks.after).not.toHaveBeenCalled();
+            expect(mocks.fill).not.toHaveBeenCalled();
+            expect(mocks.translate).not.toHaveBeenCalled();
+        }
+    );
 });

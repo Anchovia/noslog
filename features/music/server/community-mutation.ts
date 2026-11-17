@@ -71,11 +71,7 @@ async function executeReplyMutation(
             });
             if (!updated.count)
                 throw new ApiError("reply_unavailable", "unavailable");
-            return {
-                chartId: input.chartId,
-                evaluationId: opinion.id,
-                translate: { kind: "reply" as const, id: input.replyId },
-            };
+            return { chartId: input.chartId, evaluationId: opinion.id };
         }
         // 지운 의견 자리에는 새 답글을 받지 않는다 — 남은 대화만 보인다
         if (opinion.opinion === null)
@@ -90,15 +86,10 @@ async function executeReplyMutation(
                 }),
         });
         if (!within) throw new ApiError("reply_daily_limit", "dailyLimit");
-        const created = await transaction.communityOpinionReply.create({
+        await transaction.communityOpinionReply.create({
             data: { evaluationId: opinion.id, userId, body: input.body },
-            select: { id: true },
         });
-        return {
-            chartId: input.chartId,
-            evaluationId: opinion.id,
-            translate: { kind: "reply" as const, id: created.id },
-        };
+        return { chartId: input.chartId, evaluationId: opinion.id };
     }
 
     const reply = await transaction.communityOpinionReply.findFirst({
@@ -394,19 +385,12 @@ async function executeMutation(
                 ? {}
                 : { opinionTranslations: Prisma.DbNull }),
         };
-        const saved = await transaction.communityChartEvaluation.upsert({
+        await transaction.communityChartEvaluation.upsert({
             where: { chartId_userId: { chartId, userId } },
             create: { chartId, userId, ...values },
             update: values,
-            select: { id: true },
         });
-        // 글이 새로 쓰였거나 바뀌었으면 응답 뒤 번역해 둔다(2026-09-22 — 올릴 때 한 번)
-        return opinion && previous?.opinion !== opinion
-            ? {
-                  chartId,
-                  translate: { kind: "opinion" as const, id: saved.id },
-              }
-            : { chartId };
+        return { chartId };
     }
 
     const { mode, goal } = input.input;

@@ -21,7 +21,7 @@ const LANGUAGE_NAMES: Record<Locale, string> = {
     en: "English",
 };
 
-// 이용자 글 번역(2026-09-22 — 사용자: 공식 X 번역과 같은 키 · 같은 방식). 올릴 때 한 번 번역해 저장하고 그대로 쓴다
+// 이용자 글 번역(2026-09-22 — 사용자: 공식 X 번역과 같은 키 · 같은 방식). 읽는 사람이 「번역 보기」 를 누를 때 한 번 번역해 저장하고 그대로 쓴다
 export function isCommunityTranslationEnabled() {
     return Boolean(serverEnv.GEMINI_API_KEY);
 }
@@ -193,7 +193,7 @@ export async function fillCommunityTranslations(
 }
 
 /**
- * 「번역 보기」 — 올릴 때 만들어 둔 번역을 그대로. 그때 실패했거나 전부터 있던 글이면 이번에 한 번 만들어 저장한다.
+ * 「번역 보기」 — 저장된 번역이 있으면 그대로, 없으면 이번에 한 번 만들어 저장한다. 글을 쓰거나 고칠 때는 보내지 않는다.
  * 손님(userId null)에게는 저장된 번역만 — 모델은 로그인한 사람의 요청으로만 부른다
  */
 export async function getCommunityTranslation(input: {

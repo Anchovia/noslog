@@ -59,7 +59,7 @@ describe("의견 글 언어 판별", () => {
     });
 });
 
-describe("의견 번역 — 올릴 때 한 번 번역해 저장(2026-09-22)", () => {
+describe("의견 번역 — 「번역 보기」 를 누를 때 한 번 번역해 저장", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.env.GEMINI_API_KEY = "key";

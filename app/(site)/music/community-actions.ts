@@ -1,14 +1,10 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { after } from "next/server";
 
 import { communityTranslateInputSchema } from "@/features/music/schemas/community-schema";
 import { mutateChartCommunity } from "@/features/music/server/community-mutation";
-import {
-    fillCommunityTranslations,
-    getCommunityTranslation,
-} from "@/features/music/server/community-translation";
+import { getCommunityTranslation } from "@/features/music/server/community-translation";
 import type { ActionResult } from "@/lib/actions/result";
 import { ApiError } from "@/lib/api/response";
 import { getChartEvaluationTag } from "@/lib/cache-tags";
@@ -42,36 +38,10 @@ export async function saveChartContribution(
         return { success: false, message: t("community.action.login") };
     const userId = session.id;
     try {
-        const { translate, ...result } = (await mutateChartCommunity(
-            input,
-            userId
-        )) as Awaited<ReturnType<typeof mutateChartCommunity>> & {
-            translate?: { kind: "opinion" | "reply"; id: number };
-        };
+        const result = await mutateChartCommunity(input, userId);
         const action = (input as { action?: unknown }).action;
         if (typeof action === "string" && SHARED_CACHE_ACTIONS.has(action))
             updateTag(getChartEvaluationTag(result.chartId));
-        // 의견 · 답글을 쓰거나 고쳤으면 응답을 늦추지 않고 뒤에서 나머지 두 언어로 번역해 저장한다(실패하면 「번역 보기」 때 다시).
-        // 쓴 사람의 시간당 번역 한도를 넘었으면 건너뛴다 — 그 글은 「번역 보기」 때 만든다
-        if (translate)
-            after(async () => {
-                try {
-                    await fillCommunityTranslations(
-                        translate.kind,
-                        translate.id,
-                        userId
-                    );
-                } catch (error) {
-                    if (
-                        error instanceof ApiError &&
-                        error.code === "dailyLimit"
-                    )
-                        return;
-                    logServerError(error, {
-                        event: "music-community.translate.failed",
-                    });
-                }
-            });
         return {
             success: true,
             message: t("community.action.saved"),

@@ -10,12 +10,10 @@ vi.mock("@/features/music/server/community-mutation", () => ({
     mutateChartCommunity: mocks.mutate,
 }));
 vi.mock("@/features/music/server/community-translation", () => ({
-    fillCommunityTranslations: vi.fn(),
     getCommunityTranslation: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: mocks.session }));
 vi.mock("next/cache", () => ({ updateTag: mocks.updateTag }));
-vi.mock("next/server", () => ({ after: vi.fn() }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: vi.fn() }));
 
 import { saveChartContribution } from "@/app/(site)/music/community-actions";
