@@ -219,7 +219,7 @@ export default function LineChart({
                 <div className={cn("nl-line-chart__plot")}>
                     {showValueAxis ? (
                         <div
-                            className="nl-line-chart__y nl-metadata nl-muted"
+                            className="nl-line-chart__y nl-caption nl-muted"
                             style={frameStyle}
                             aria-hidden
                         >
@@ -450,7 +450,7 @@ export default function LineChart({
                                     }}
                                 >
                                     {points[active].detail ? null : (
-                                        <span className="nl-metadata nl-muted">
+                                        <span className="nl-caption nl-muted">
                                             {points[active].dimension}
                                         </span>
                                     )}
@@ -490,7 +490,7 @@ export default function LineChart({
                                         </span>
                                     ) : null}
                                     {points[active].detail ? (
-                                        <span className="nl-metadata nl-muted">
+                                        <span className="nl-caption nl-muted">
                                             {points[active].detail}
                                         </span>
                                     ) : null}
@@ -498,7 +498,7 @@ export default function LineChart({
                             ) : null}
                         </div>
                         <div
-                            className="nl-line-chart__x nl-metadata nl-muted"
+                            className="nl-line-chart__x nl-caption nl-muted"
                             data-ticks={dimensionTickIndices ? "" : undefined}
                             data-single={
                                 !dimensionTickIndices && points.length === 1

@@ -17,7 +17,7 @@
 .noslog-ui .nl-filter-icon-trigger .nl-filter-count {
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
     box-shadow: 0 0 0 var(--nl-stroke-strong) var(--nl-surface-canvas);
 }
 .noslog-ui .nl-filter-trigger .nl-filter-count {

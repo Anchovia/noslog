@@ -7,7 +7,7 @@
 }
 /* 글자 역할이 굵기를 정한 링크(순위표 이름 · 기여 줄 제목 · 의견 줄 시각)는 medium 으로 누르지 않고 그 역할 굵기 */
 .noslog-ui .nl-link:is(.nl-emphasis-label, .nl-entity-title) {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 @media (hover: hover) {
     .noslog-ui .nl-link:hover {

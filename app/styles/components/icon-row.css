@@ -20,7 +20,7 @@
 }
 .noslog-ui .nl-icon-row__icon {
     margin-top: calc(
-        (var(--nl-type-line-height-24) - var(--nl-icon-medium)) / 2
+        (var(--nl-type-line-height-22) - var(--nl-icon-medium)) / 2
     );
     color: var(--nl-content-subdued);
 }
@@ -33,6 +33,6 @@
     display: flex;
     align-items: center;
     margin-block: calc(
-        (var(--nl-type-line-height-24) - var(--nl-control-height-compact)) / 2
+        (var(--nl-type-line-height-22) - var(--nl-control-height-compact)) / 2
     );
 }

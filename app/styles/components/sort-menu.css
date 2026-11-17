@@ -1,4 +1,4 @@
-/* 정렬 메뉴: 판 · 항목은 select-menu.css 「메뉴 한 모양」 · 소제목 = Spectrum 2 메뉴 묶음 제목 · 선택 = 면 그대로 + 굵기 600 + 체크 */
+/* 정렬 메뉴: 판 · 항목은 select-menu.css 「메뉴 한 모양」 · 소제목 = Spectrum 2 메뉴 묶음 제목 · 선택 = 면 그대로 + bold + 체크 */
 .noslog-ui .nl-sort-menu {
     display: flex;
     width: min(240px, calc(100vw - var(--nl-spacing-32)));
@@ -19,7 +19,7 @@
     color: var(--nl-content-default);
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-ui);
-    font-weight: var(--nl-type-weight-strong);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
 }
 .noslog-ui .nl-sort-menu__item {

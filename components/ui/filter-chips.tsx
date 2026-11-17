@@ -33,7 +33,7 @@ export interface FilterChipOption<Value extends string> {
 
 /**
  * 짧은 열거를 고르는 토글 칩 (Material 3 filter chip 형태).
- * 작은 컨트롤 높이 · 선택 = 고른 면(surface/control) · 선 없음 + 체크 16, 굵기는 그대로(고를 때 폭이 늘지 않게).
+ * 작은 컨트롤 높이 · 선택 = 고른 면(surface/control) · 선 없음 + 체크 16 · bold.
  * multiple=false 면 라디오처럼 하나만 유지하고, 선택된 것을 다시 눌러도 해제되지 않는다.
  * row 는 창 · 팝오버 밖에서 늘 보이는 한 줄(줄바꿈 없이 가로 스크롤).
  */

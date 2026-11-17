@@ -23,12 +23,10 @@
     min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
-    /* 칩 = 컨트롤 면 · 둘레 없음(GitHub 필터 창). 글자 14/18 regular(야놀자 필터 시트 칩) */
+    /* 칩 = 컨트롤 면 · 둘레 없음(GitHub 필터 창). 글자는 함께 붙인 클래스가 정한다:
+       필터 창 · 레일 칩(FilterChips) nl-control 14/20, 목록 위 분류 칩 줄(FilterChipLinks) nl-body 16/22. 고르면 bold */
     background: var(--nl-surface-control);
     color: var(--nl-content-default);
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-18);
-    font-weight: var(--nl-type-weight-regular);
 }
 /* 올림 · 키 포커스 · 누름 = 보조 버튼과 같은 면 gray-200 · 글자 gray-900 */
 .noslog-ui .nl-chip:not(:disabled):is(:focus-visible, :active) {
@@ -49,10 +47,11 @@
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
-   고른 칩 = 컨트롤 면보다 한 단계 밝은 면 · 강한 글자. 굵기는 그대로 — 고를 때 폭이 늘어 줄이 다시 흐르지 않게 */
+   고른 칩 = 컨트롤 면보다 한 단계 밝은 면 · 강한 글자 · bold */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
     background: var(--nl-surface-tag);
     color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui
     .nl-chip:is([aria-pressed="true"], [aria-current="page"]):not(:disabled):is(

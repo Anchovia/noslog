@@ -49,7 +49,7 @@
     height: 100%;
     background: transparent;
     font-size: var(--nl-type-input-size);
-    line-height: var(--nl-type-line-height-ui);
+    line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
     text-overflow: ellipsis;
 }

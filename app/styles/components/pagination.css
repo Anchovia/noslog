@@ -46,7 +46,7 @@
 .noslog-ui .nl-pagination__item[aria-current="page"] {
     background: var(--nl-surface-control);
     color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-pagination__item:disabled,
 .noslog-ui .nl-pagination__item[aria-disabled="true"] {

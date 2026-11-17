@@ -42,7 +42,7 @@ export const Default: Story = {
         await expect(
             await screen.findByText("악곡의 기존 성취 설명")
         ).toBeVisible();
-        // 창 제목 = 부품 제목 16/24 · 600
+        // 창 제목 = 상자 제목 18/24 · 700
         const title = screen.getByText("Pianist", { selector: "strong" });
         await expect(title).toHaveClass("nl-component-title");
         const style = getComputedStyle(title);
@@ -50,7 +50,7 @@ export const Default: Story = {
             style.fontSize,
             style.lineHeight,
             style.fontWeight,
-        ]).toEqual(["16px", "24px", "600"]);
+        ]).toEqual(["18px", "24px", "700"]);
         await userEvent.keyboard("{Escape}");
         await waitFor(() =>
             expect(

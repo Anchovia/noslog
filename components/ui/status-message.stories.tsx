@@ -45,7 +45,7 @@ export const Boxed: Story = {
         description: "확인한 뒤 진행하세요.",
     },
     play: async ({ canvasElement }) => {
-        // 상자 알림 제목 = 부품 제목 16/24 · 600
+        // 상자 알림 제목 = 상자 제목 18/24 · 700
         const title = within(canvasElement).getByText("되돌릴 수 없는 변경");
         await expect(title).toHaveClass("nl-component-title");
         const style = getComputedStyle(title);
@@ -53,6 +53,6 @@ export const Boxed: Story = {
             style.fontSize,
             style.lineHeight,
             style.fontWeight,
-        ]).toEqual(["16px", "24px", "600"]);
+        ]).toEqual(["18px", "24px", "700"]);
     },
 };

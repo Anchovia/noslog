@@ -9,8 +9,8 @@ const meta = {
     args: {
         children: (
             <>
-                <p className="nl-emphasis-label">일반 공지</p>
-                <p className="nl-body-secondary nl-muted">
+                <p className="nl-entity-title">일반 공지</p>
+                <p className="nl-control nl-muted">
                     영업시간 안내 — 주말에는 05시까지 영업합니다.
                 </p>
             </>

@@ -1,4 +1,4 @@
-/* 밑줄 탭 — 한 모양 두 단계. 선택 = 밝은 글자 · semibold + 2px 밑줄, 안 선택 = 흐린 글자 · medium, 올림 = 글자만 밝게.
+/* 밑줄 탭 — 한 모양 두 단계. 선택 = 밝은 글자 · bold + 2px 밑줄, 안 선택 = 흐린 글자 · regular, 올림 = 글자만 밝게.
    1단 `--primary`(페이지 안 큰 구역 · 악곡 상세 · 프로필): 높이 48 · 줄 폭을 똑같이 나눔 · 줄 아래 1px 선 · 넘치면 가로 스크롤.
    2단(같은 목록의 기준 전환 · 랭킹/프로필 메트릭): 컨트롤 높이 — 같은 줄 셀렉트와 맞춘다 */
 .noslog-ui .nl-tabs {
@@ -27,7 +27,7 @@
     padding-inline: var(--nl-spacing-16);
     white-space: nowrap;
     color: var(--nl-content-subdued);
-    font-weight: var(--nl-type-weight-medium);
+    font-weight: var(--nl-type-weight-regular);
 }
 /* 1단 탭 항목 — 줄 폭을 똑같이 나눠 채우고(표시선 = 항목 폭) 글자가 길면 글자 폭까지 늘어난다. 높이 48 · 좌우 안쪽 8 */
 .noslog-ui .nl-tabs--primary .nl-tabs__item {
@@ -63,7 +63,7 @@
         [aria-current="page"]
     ) {
     color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 @media (hover: hover) {
     .noslog-ui

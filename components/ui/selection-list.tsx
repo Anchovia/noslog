@@ -32,7 +32,7 @@ export default function SelectionList<Value extends string>({
     const id = useId();
     return (
         <fieldset className="nl-selection-list">
-            <legend className={hideLabel ? "sr-only" : "nl-component-title"}>
+            <legend className={hideLabel ? "sr-only" : "nl-emphasis-label"}>
                 {label}
             </legend>
             {options.map((option) => (

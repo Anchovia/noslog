@@ -17,12 +17,12 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-type-line-height-24);
+    min-height: var(--nl-type-line-height-22);
 }
-/* 묶음 제목 = 야놀자 필터 시트 구역 제목 16/700 */
+/* 필터 창 묶음 제목 16/22 · 700 */
 .noslog-ui .nl-filter-group__head .nl-component-title {
     font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-20);
+    line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-filter-group__aside {

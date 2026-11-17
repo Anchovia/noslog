@@ -45,7 +45,7 @@ describe("StackedBar", () => {
             },
         ]);
         expect(html).toContain("data-unlabeled");
-        expect(html).not.toContain("nl-metadata");
+        expect(html).not.toContain("nl-caption");
         expect(
             render([{ key: "me", label: "나", segments: [] }])
         ).not.toContain("data-unlabeled");
@@ -56,6 +56,6 @@ describe("StackedBar", () => {
             { key: "low", label: "1–8", segments: [] },
         ]);
         expect(html).toContain('style="color:orange">9<');
-        expect(html).toContain('class="nl-metadata nl-muted">1–8<');
+        expect(html).toContain('class="nl-caption nl-muted">1–8<');
     });
 });

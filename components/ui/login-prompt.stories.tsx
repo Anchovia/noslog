@@ -22,7 +22,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     play: async ({ canvasElement }) => {
-        // 안내 제목 = 부품 제목 16/24 · 600
+        // 안내 제목 = 상자 제목 18/24 · 700
         const title = within(canvasElement).getByText("로그인이 필요합니다.");
         await expect(title).toHaveClass("nl-component-title");
         const style = getComputedStyle(title);
@@ -30,6 +30,6 @@ export const Default: Story = {
             style.fontSize,
             style.lineHeight,
             style.fontWeight,
-        ]).toEqual(["16px", "24px", "600"]);
+        ]).toEqual(["18px", "24px", "700"]);
     },
 };

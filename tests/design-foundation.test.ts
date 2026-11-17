@@ -62,8 +62,11 @@ describe("NosLog design foundation", () => {
             // 악곡 탐색 레벨 슬라이더가 `--nl-difficulty-${난이도}` 로 부른다(discovery-filters.tsx)
             "--nl-difficulty-normal",
             "--nl-difficulty-real",
-            // 서열표 내보내기 이미지가 weight("heading") 으로 읽는다(tier-export-image.ts)
+            // 서열표 내보내기 이미지가 weight("heading") · weight("semibold") 로 읽는다(tier-export-image.ts)
             "--nl-type-weight-heading",
+            "--nl-type-weight-semibold",
+            // 공유 미리보기 이미지가 TOKEN_VALUES.typeSize[32] 로 읽는다(brand-image.tsx)
+            "--nl-type-size-32",
         ]);
         const sources = ["app", "features", "components", "lib"]
             .flatMap((root) =>

@@ -99,7 +99,7 @@ export default function ModalDialog({
                             {description ? (
                                 <Dialog.Description
                                     id={descriptionId}
-                                    className="nl-body-reading nl-muted"
+                                    className="nl-control nl-muted"
                                 >
                                     {description}
                                 </Dialog.Description>

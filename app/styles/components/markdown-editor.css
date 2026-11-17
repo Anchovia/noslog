@@ -61,17 +61,17 @@
     display: block;
     width: 100%;
     min-height: calc(
-        var(--nl-type-line-height-ui) * 8 + var(--nl-spacing-8) * 2
+        var(--nl-type-line-height-22) * 8 + var(--nl-spacing-8) * 2
     );
     max-height: calc(
-        var(--nl-type-line-height-ui) * 35 + var(--nl-spacing-8) * 2
+        var(--nl-type-line-height-22) * 35 + var(--nl-spacing-8) * 2
     );
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border: 0;
     background: transparent;
     color: var(--nl-content-default);
     font-size: var(--nl-type-input-size);
-    line-height: var(--nl-type-line-height-ui);
+    line-height: var(--nl-type-line-height-22);
     field-sizing: content;
     resize: vertical;
 }

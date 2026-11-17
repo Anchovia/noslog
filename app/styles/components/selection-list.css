@@ -61,7 +61,7 @@
     outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 .noslog-ui .nl-selection-list__option[data-selected="true"] {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 /* 비활성 = 글자 · 상자 gray-400(투명도 대신 색). 칸 색(난이도 · 분류) 규칙보다 앞서게 목록 안으로 좁힌다 */
 .noslog-ui .nl-selection-list .nl-selection-list__option[data-disabled="true"],

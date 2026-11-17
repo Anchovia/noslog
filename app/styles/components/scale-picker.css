@@ -1,5 +1,5 @@
 /* 숫자 척도 ScalePicker — 버튼 = 컨트롤 M 정사각 · 모서리 control · 1px border/divider · 숫자 control subdued,
-   고른 값 = surface/control 면 · 선 없음 + content/default 600. 사이 8, 375 미만 4 */
+   고른 값 = surface/control 면 · 선 없음 + content/default bold. 사이 8, 375 미만 4 */
 .noslog-ui .nl-scale-picker {
     display: flex;
     flex: none;
@@ -23,7 +23,7 @@
     background: var(--nl-surface-control);
     box-shadow: none;
     color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 /* 값을 고른 줄의 안 고른 숫자 = 보류 글자색 · 옅은 테두리. 비어 있는 줄은 그대로 둬 누를 수 있어 보이게 (2026-09-17 S1) */
 .noslog-ui

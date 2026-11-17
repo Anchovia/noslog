@@ -6,7 +6,7 @@
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
 }
-/* 페이지 제목 = heading XL · 구역 제목 = heading L(모든 폭). 제목 글자는 heading-color gray-900 */
+/* 쪽 제목 24/32 · 구역 · 상자 제목 18/24, 모두 700. 제목 글자는 content/strong */
 .noslog-ui .nl-page-title {
     font-size: var(--nl-type-page-title-size);
     line-height: var(--nl-type-page-title-line-height);
@@ -18,7 +18,7 @@
 /* 쪽 제목 바로 아래 설명 한 줄은 본문 크기 — 메타 글줄이어도 쪽 제목 다음 단계로 읽힌다 */
 .noslog-ui .nl-page-title + :is(p, .nl-metadata) {
     font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
+    line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-section-title {
@@ -30,9 +30,9 @@
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-component-title {
-    font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-semibold);
+    font-size: var(--nl-type-section-title-size);
+    line-height: var(--nl-type-section-title-line-height);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
 }
@@ -44,21 +44,25 @@
 }
 .noslog-ui .nl-entity-title {
     font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-semibold);
+    line-height: var(--nl-type-line-height-22);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
     font-variant-numeric: normal;
     color: var(--nl-content-strong);
 }
+/* 큰 수치 2단계 = 항목 제목 16/22/700 에 고정폭 숫자만 더한다 */
+.noslog-ui .nl-entity-title--numeric {
+    font-variant-numeric: tabular-nums;
+}
 .noslog-ui .nl-body,
 .noslog-ui .nl-body-secondary {
     font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
+    line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 읽기 본문 = body M — 공지 · 이벤트 글 본문 · 대화상자 본문 */
+/* 읽기 본문 = 공지 · 이벤트 글 · 개발자 문서 본문 */
 .noslog-ui .nl-body-reading {
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-body);
@@ -73,21 +77,35 @@
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 3차 정보 = 메타 12/16 — 자간 0 은 영어 좁은 칸(빙고 판 · FC 태그)이 낱말 중간에서 꺾이지 않게 */
+/* 3차 정보 = 메타 13/18 — 자간 0 은 영어 좁은 칸(빙고 판 · FC 태그)이 낱말 중간에서 꺾이지 않게 */
 .noslog-ui .nl-metadata {
+    font-size: var(--nl-type-size-13);
+    line-height: var(--nl-type-line-height-18);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: var(--nl-type-tracking-detail);
+    font-variant-numeric: normal;
+}
+/* 메타 줄 안 작성자 이름 13/18/700 */
+.noslog-ui .nl-metadata--bold {
+    font-weight: var(--nl-type-weight-bold);
+}
+/* 캡션 12/16 = 그래프 라벨 · 큰 수치 아래 라벨 · 단계 번호. 굵기는 수식어로 500 · 700 */
+.noslog-ui .nl-caption {
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: var(--nl-type-tracking-detail);
     font-variant-numeric: normal;
 }
-/* 여러 줄로 읽는 12 설명(칸 도움말 · 창 안 설명 문단)은 줄 높이만 18 — 한 줄 라벨 · 표 · 목록 줄 안 12 는 16 그대로(2026-10-01 D4) */
-.noslog-ui .nl-metadata--long {
-    line-height: var(--nl-type-line-height-18);
+.noslog-ui .nl-caption--medium {
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-caption--bold {
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-metric-display {
-    font-size: var(--nl-type-size-32);
-    line-height: var(--nl-type-line-height-40);
+    font-size: var(--nl-type-size-20);
+    line-height: var(--nl-type-line-height-28);
     font-weight: var(--nl-type-weight-bold);
     letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: tabular-nums;
@@ -95,29 +113,23 @@
 .noslog-ui .nl-metric-value {
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-ui);
-    font-weight: var(--nl-type-weight-medium);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
     font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-emphasis-label {
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-ui);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 태그 글자(2026-10-15 B1 — 2026-09-23 사용자 결정 600 을 표에 올림) — 태그 · 배지 안에서만. 12 굵게는 이 조합 하나뿐이다.
-   공용 태그 nl-tag 가 이 조합을 그대로 쓴다 */
+/* 꼬리표 글자 — 태그 · 배지 안에서만. 공용 태그 nl-tag 가 이 조합을 그대로 쓴다 */
 .noslog-ui .nl-tag-label,
 .noslog-ui .nl-tag {
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
     font-variant-numeric: normal;
-}
-/* 좁은 열 안 페이지 제목 `nl-page-title--fixed`(악곡 상세 머리 열 272 — 32 면 576곡 중 44% 가 잘림)은 모든 폭 24/32(2026-10-01 D5) */
-.noslog-ui .nl-page-title--fixed {
-    font-size: var(--nl-type-size-24);
-    line-height: var(--nl-type-line-height-32);
 }

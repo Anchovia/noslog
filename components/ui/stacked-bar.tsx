@@ -51,7 +51,7 @@ export default function StackedBar({
                     <div key={row.key} className="nl-stacked-bar__row">
                         {labeled ? (
                             <span
-                                className="nl-metadata nl-muted"
+                                className="nl-caption nl-muted"
                                 style={
                                     row.labelColor
                                         ? { color: row.labelColor }

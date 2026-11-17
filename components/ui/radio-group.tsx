@@ -38,7 +38,7 @@ export default function RadioGroup<Value extends string>({
                 className={
                     labelStyle === "field"
                         ? "nl-field__label"
-                        : "nl-component-title"
+                        : "nl-emphasis-label"
                 }
             >
                 {label}
