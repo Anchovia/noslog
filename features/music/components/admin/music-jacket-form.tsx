@@ -12,11 +12,16 @@ import {
     resetMusicJacket,
     saveMusicJacket,
 } from "@/app/admin/music/actions";
+import { AdminCard, AdminCardHead } from "@/components/admin/admin-card";
+import AdminDeleteDialog from "@/components/admin/admin-delete-dialog";
+import AdminDrawer from "@/components/admin/admin-drawer";
 import {
-    adminCompactPrimaryButtonClass as primaryButtonClass,
     AdminFieldError,
     adminSecondaryButtonClass as secondaryButtonClass,
 } from "@/components/admin/admin-form";
+import ActionButton from "@/components/ui/action-button";
+import ActionMenu from "@/components/ui/action-menu";
+import Button from "@/components/ui/button";
 import useObjectUrl from "@/lib/hooks/use-object-url";
 import {
     IMAGE_ACCEPT,
@@ -69,6 +74,7 @@ export default function MusicJacketForm({
     const [error, setError] = useState("");
     const [uploading, setUploading] = useState(false);
     const [pending, startTransition] = useTransition();
+    const [open, setOpen] = useState(false);
     const busy = uploading || pending;
     const manual = isManualJacketUrl(background);
 
@@ -113,6 +119,7 @@ export default function MusicJacketForm({
             }
             toast.success(result.message);
             clearDraft();
+            setOpen(false);
             router.refresh();
         } catch {
             setError("자켓을 올리지 못했습니다. 다시 시도해주세요.");
@@ -122,12 +129,6 @@ export default function MusicJacketForm({
     }
 
     function reset() {
-        if (
-            !window.confirm(
-                "직접 올린 자켓을 지우고 기본 자켓으로 되돌릴까요? 올린 파일은 삭제됩니다."
-            )
-        )
-            return;
         setError("");
         startTransition(async () => {
             const formData = new FormData();
@@ -138,91 +139,133 @@ export default function MusicJacketForm({
                 return;
             }
             toast.success(result.message);
+            setOpen(false);
             router.refresh();
         });
     }
 
+    function changeOpen(next: boolean) {
+        if (!next) {
+            clearDraft();
+            setError("");
+        }
+        setOpen(next);
+    }
+
+    const source = jacketSource(musicIndex, background);
+    const current = getJacketUrl(musicIndex, background);
+
     return (
-        <section className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-12">
-            <div>
-                <h2 className="nl-component-title text-nl-content">자켓</h2>
-                <p className="nl-metadata mt-nl-4 text-nl-subdued">
-                    직접 올린 자켓은 로컬 파일·수집한 자켓보다 먼저 보이고 바로
-                    반영됩니다. 정사각 이미지를 올려주세요.
-                </p>
-            </div>
-            <div className="flex items-center gap-nl-12">
-                <JacketBox src={getJacketUrl(musicIndex, background)} />
-                <div className="min-w-0 flex-1">
-                    <p className="nl-metadata text-nl-subdued">현재 자켓</p>
-                    <p className="nl-control text-nl-content">
-                        {jacketSource(musicIndex, background)}
+        <AdminCard>
+            <AdminCardHead
+                title="자켓"
+                level="h2"
+                actions={
+                    <ActionMenu
+                        label="자켓 메뉴"
+                        items={[
+                            { label: "고치기", onSelect: () => setOpen(true) },
+                        ]}
+                    />
+                }
+            />
+            <div className="nl-admin-card__body">
+                <div className="flex items-center gap-nl-12">
+                    <JacketBox src={current} />
+                    <p className="nl-control min-w-0 flex-1 text-nl-content">
+                        {source}
                     </p>
                 </div>
             </div>
-            <input
-                ref={fileInput}
-                type="file"
-                hidden
-                accept={IMAGE_ACCEPT}
-                aria-label="자켓 이미지 파일"
-                onChange={(event) => choose(event.target.files?.[0])}
-            />
-            {file && preview ? (
-                <div className="grid gap-nl-8 rounded-nl-control border-nl-stroke border-nl-divider p-nl-8">
+            <AdminDrawer
+                open={open}
+                onOpenChange={changeOpen}
+                title="자켓 고치기"
+                footer={
+                    <>
+                        <Button
+                            variant="secondary"
+                            onClick={() => changeOpen(false)}
+                        >
+                            취소
+                        </Button>
+                        <ActionButton
+                            disabled={!file || pending}
+                            busy={uploading}
+                            busyLabel="올리는 중"
+                            onClick={() => void upload()}
+                        >
+                            올리기
+                        </ActionButton>
+                    </>
+                }
+            >
+                <p className="nl-metadata text-nl-subdued">
+                    직접 올린 자켓은 로컬 파일·수집한 자켓보다 먼저 보이고 바로
+                    반영됩니다. 정사각 이미지를 올려주세요.
+                </p>
+                <div className="flex items-center gap-nl-12">
+                    <JacketBox src={current} />
+                    <div className="min-w-0 flex-1">
+                        <p className="nl-metadata text-nl-subdued">현재 자켓</p>
+                        <p className="nl-control text-nl-content">{source}</p>
+                    </div>
+                </div>
+                <input
+                    ref={fileInput}
+                    type="file"
+                    hidden
+                    accept={IMAGE_ACCEPT}
+                    aria-label="자켓 이미지 파일"
+                    onChange={(event) => choose(event.target.files?.[0])}
+                />
+                {file && preview ? (
                     <div className="flex items-center gap-nl-12">
                         <JacketBox src={preview} />
                         <p className="nl-metadata min-w-0 flex-1 break-all text-nl-subdued">
                             새 자켓 · {file.name}
                         </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-nl-8">
+                ) : (
+                    <div className="flex flex-wrap gap-nl-8">
                         <button
                             type="button"
                             disabled={busy}
-                            onClick={clearDraft}
+                            onClick={() => fileInput.current?.click()}
                             className={secondaryButtonClass}
                         >
-                            취소
+                            <ImagePlus className="nl-icon-small" aria-hidden />{" "}
+                            자켓 바꾸기
                         </button>
-                        <button
-                            type="button"
-                            disabled={busy}
-                            onClick={() => void upload()}
-                            className={primaryButtonClass}
-                        >
-                            {uploading ? "올리는 중" : "올리기"}
-                        </button>
+                        {manual ? (
+                            <AdminDeleteDialog
+                                title="자켓 되돌리기"
+                                description="직접 올린 자켓을 지우고 기본 자켓으로 되돌립니다. 올린 파일은 삭제됩니다."
+                                actionLabel="기본 자켓으로 되돌리기"
+                                pending={busy}
+                                onConfirm={reset}
+                                trigger={
+                                    <button
+                                        type="button"
+                                        disabled={busy}
+                                        className={secondaryButtonClass}
+                                    >
+                                        <RotateCcw
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />{" "}
+                                        기본 자켓으로 되돌리기
+                                    </button>
+                                }
+                            />
+                        ) : null}
                     </div>
-                </div>
-            ) : (
-                <div className="flex flex-wrap gap-nl-8">
-                    <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => fileInput.current?.click()}
-                        className={secondaryButtonClass}
-                    >
-                        <ImagePlus className="nl-icon-small" aria-hidden /> 자켓
-                        바꾸기
-                    </button>
-                    {manual ? (
-                        <button
-                            type="button"
-                            disabled={busy}
-                            onClick={reset}
-                            className={secondaryButtonClass}
-                        >
-                            <RotateCcw className="nl-icon-small" aria-hidden />{" "}
-                            기본 자켓으로 되돌리기
-                        </button>
-                    ) : null}
-                </div>
-            )}
-            <AdminFieldError
-                message={error}
-                className="nl-metadata text-nl-error"
-            />
-        </section>
+                )}
+                <AdminFieldError
+                    message={error}
+                    className="nl-metadata text-nl-error"
+                />
+            </AdminDrawer>
+        </AdminCard>
     );
 }
