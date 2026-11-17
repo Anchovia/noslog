@@ -710,3 +710,22 @@ NosLog 쪽 사실: 지금 촘촘한 격자는 육각 44 를 한 줄 20개 두고
 NosLog 쪽 사실: 악곡 목록(`features/music/components/discovery-page.tsx`)은 목록 · 격자 · 촘촘한 격자를 이미 `list` · `layout-grid` · `grid-3x3` 로 쓴다. 업적은 운영 코드에 `list` · `grid-3x3` 두 개이고, 데스크톱 결정(세 단계)의 가운데 그림은 임시 `layout-grid` 였다.
 
 시안 판 P15 는 Font Awesome 그대로(`list` · `layout-grid` · `grid-3x3`)와 OpenSea 그대로(`rows-2` · `grid-2x2` · `grid-3x3`) 둘을 공용 세그먼트에 넣어 그렸다(`~/noslog-research/desktop-profile/p15-view-icons/mock/`).
+
+## 본인용 버튼 · 동기화 복구 자리
+
+2026-11-11 조사. 프로필 상태 화면 「동기화 실패(머리)」 · 「남의 프로필(본인 버튼 없음)」 을 그리기 전에, 데스크톱 프로필 머리에서 본인에게만 보이는 편집 · 설정 · 공유 버튼과 동기화 실패 때 다시 연결 버튼을 어디에 두는지 세었다. 로그인하지 않았고 공식 도움말 · 공개 가이드 · 공개 소스 코드로만 확인했다. 캡처는 열지 않았다.
+
+| 구분          | 자리                           | 수                 | 곳                                                                                         |
+| ------------- | ------------------------------ | ------------------ | ------------------------------------------------------------------------------------------ |
+| 실제 서비스   | 머리 오른쪽 · 팔로우 버튼 자리 | 7(+근거 약함 2)    | GitLab · Mastodon · Bluesky · SoundCloud · Chess.com · Steam · Lichess(+Twitch · Facebook) |
+| 실제 서비스   | 아바타 아래 · 옆               | 5                  | GitHub · TikTok · Pinterest · Duolingo · Stack Overflow(옛 근거)                           |
+| 실제 서비스   | 동작 아이콘 줄 · ⋯ 안          | 3                  | Lichess · Monkeytype · Spotify                                                             |
+| 실제 서비스   | 머리에 버튼 없음(설정에서)     | 3                  | Exercism · Strava · Gitea                                                                  |
+| 실제 서비스   | 표지 오른쪽 아래               | 1                  | osu!                                                                                       |
+| 실제 서비스   | 자리 미확인                    | 4(+이름만 확인 13) | X · YouTube · Reddit · Instagram 등                                                        |
+| 디자인 시스템 | 머리 오른쪽 끝(trailing)       | 5(표본 6)          | Apple HIG · Atlassian · Primer · Carbon · Material 3(2차 출처)                             |
+| 동기화 복구   | 목록 줄 · 연결 상태 자리       | 3(표본 10)         | YNAB · Tiller · Lunch Money                                                                |
+| 동기화 복구   | 설정의 연동 칸                 | 4(표본 10)         | Vercel · Last.fm · Trakt · Garmin → Strava                                                 |
+| 동기화 복구   | 프로필 머리                    | 0(표본 10)         | —                                                                                          |
+
+실제 서비스는 표본 29곳에 자리마다 7곳 이하라 근거 약함이다. 같은 서비스 안에서도 가이드끼리 자리가 엇갈린다(LinkedIn · Pinterest · Twitch). 판을 만들지 않고, 지금 가이드(프로필 「본인용 공유 · 설정 버튼은 이름 줄 오른쪽 끝」)와 코드 순서(복구 버튼은 머리 묶음 끝)를 그대로 따랐다.
