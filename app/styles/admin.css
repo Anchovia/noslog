@@ -62,6 +62,7 @@
 .noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"] {
     background: var(--nl-surface-control);
     color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-bold);
 }
 /* 공용 올림 · 누름 · 포커스 규칙은 [aria-checked] 만 빼므로 고른 링크 칸도 강한 글자를 지키게 한다 */
 @media (hover: hover) {
@@ -736,7 +737,7 @@
 /* 시험 편집기 보상 이름 — 회색 줄 안 맨 입력, 글자는 입력칸과 같은 토큰 */
 .noslog-ui .nl-admin-reward__input {
     font-size: var(--nl-type-input-size);
-    line-height: var(--nl-type-line-height-ui);
+    line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
 }
 

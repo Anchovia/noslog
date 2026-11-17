@@ -720,9 +720,7 @@ export default function Vid2bmapImportPanel({
                 </Section>
 
                 {loadError ? (
-                    <p className="nl-metadata nl-metadata--long text-nl-error">
-                        {loadError}
-                    </p>
+                    <p className="nl-control text-nl-error">{loadError}</p>
                 ) : !loaded || !counts || !conversion ? (
                     <p className="nl-metadata flex items-center gap-nl-8 text-nl-subdued">
                         <span className="nl-spinner" aria-hidden />
@@ -760,14 +758,14 @@ export default function Vid2bmapImportPanel({
                             !warnings.some(
                                 (warning) => warning.kind === "bpmMismatch"
                             ) ? (
-                                <p className="nl-metadata nl-metadata--long text-nl-subdued">
+                                <p className="nl-metadata text-nl-subdued">
                                     박자선 {counts.bars.toLocaleString("ko-KR")}
                                     개 · 간격으로 본 BPM {estimatedBpm} ≈ 시작
                                     타이밍 {startBpm}
                                 </p>
                             ) : null}
                             {officialNoteCount !== null ? (
-                                <p className="nl-metadata nl-metadata--long text-nl-subdued">
+                                <p className="nl-metadata text-nl-subdued">
                                     {judgments === officialNoteCount
                                         ? `판정 수 ${judgments.toLocaleString("ko-KR")} = 공식 노트 수`
                                         : `판정 수 ${judgments.toLocaleString("ko-KR")} · 공식 ${officialNoteCount.toLocaleString("ko-KR")}(${judgments > officialNoteCount ? "+" : "−"}${Math.abs(judgments - officialNoteCount).toLocaleString("ko-KR")}) — ${judgments > officialNoteCount ? "더 읽은" : "놓친"} 노트가 있을 수 있어요`}
@@ -1018,7 +1016,7 @@ export default function Vid2bmapImportPanel({
                             {visibleWarnings.map((warning, index) => (
                                 <p
                                     key={`${warning.kind}-${index}`}
-                                    className="nl-metadata nl-metadata--long text-nl-subdued"
+                                    className="nl-control text-nl-subdued"
                                 >
                                     {warningText(warning, timingPoints)}
                                 </p>
@@ -1078,7 +1076,7 @@ export default function Vid2bmapImportPanel({
                                     <ChevronRight className="nl-icon-small" />
                                 </button>
                             </div>
-                            <p className="nl-metadata nl-metadata--long text-nl-subdued">
+                            <p className="nl-control text-nl-subdued">
                                 {firstNote
                                     ? `첫 노트 → ${chartPositionLabel(firstNote.tick, timingPoints)}. `
                                     : ""}
@@ -1473,7 +1471,7 @@ export default function Vid2bmapImportPanel({
 
             <footer className="flex flex-col gap-nl-8 border-t-nl-stroke border-nl-divider px-nl-12 py-nl-12">
                 {newConflicts.withDraft > 0 ? (
-                    <p className="nl-metadata nl-metadata--long text-nl-error">
+                    <p className="nl-control text-nl-error">
                         기존 초안 노트와 겹칩니다(
                         {newConflicts.withDraft.toLocaleString("ko-KR")}건
                         {newConflicts.ticks.length > 0
@@ -1483,7 +1481,7 @@ export default function Vid2bmapImportPanel({
                         노트를 비운 뒤 넣어 주세요.
                     </p>
                 ) : newConflicts.count > 0 ? (
-                    <p className="nl-metadata nl-metadata--long text-nl-error">
+                    <p className="nl-control text-nl-error">
                         겹치는 노트 {newConflicts.count.toLocaleString("ko-KR")}
                         곳
                         {newConflicts.ticks.length > 0

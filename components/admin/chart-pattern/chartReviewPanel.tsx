@@ -278,7 +278,7 @@ export default function ChartReviewPanel({
                     ))}
                 </ul>
             ) : (
-                <p className="nl-metadata nl-metadata--long text-nl-subdued">
+                <p className="nl-control text-nl-subdued">
                     {t("editor.review.empty")}
                 </p>
             )}

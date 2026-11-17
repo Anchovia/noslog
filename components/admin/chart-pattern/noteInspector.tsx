@@ -258,7 +258,7 @@ export default function NoteInspector() {
                         <p className="nl-emphasis-label mt-nl-12">
                             {t("editor.note.emptyTitle")}
                         </p>
-                        <p className="nl-metadata nl-metadata--long mt-nl-4 text-nl-subdued">
+                        <p className="nl-control mt-nl-4 text-nl-subdued">
                             {t("editor.note.emptyBody")}
                         </p>
                     </div>
@@ -272,7 +272,7 @@ export default function NoteInspector() {
                                     ),
                                 })}
                             </strong>
-                            <p className="nl-metadata nl-metadata--long mt-nl-4 text-nl-subdued">
+                            <p className="nl-control mt-nl-4 text-nl-subdued">
                                 {t("editor.note.multiHelp")}
                             </p>
                         </div>

@@ -1327,7 +1327,7 @@ function ChartTimingEditorWorkspace({
                                         </button>
                                     ))}
                                 </div>
-                                <p className="nl-metadata nl-metadata--long mt-nl-8 px-nl-4 text-nl-subdued">
+                                <p className="nl-control mt-nl-8 px-nl-4 text-nl-subdued">
                                     {t("editor.toolHelp")}
                                 </p>
                             </section>
@@ -1378,7 +1378,7 @@ function ChartTimingEditorWorkspace({
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="nl-metadata nl-metadata--long px-nl-4 text-nl-subdued">
+                                    <p className="nl-control px-nl-4 text-nl-subdued">
                                         Ctrl+S 또는 버전 저장을 누르면 복구
                                         지점이 만들어집니다.
                                     </p>
