@@ -39,8 +39,8 @@ export interface NostalgiaRecordsInput {
     subject: string;
     playerName: string;
     profileUrl: string;
-    /** 마지막으로 성공한 동기화 시각(요청 시각이 아님) */
-    updatedAt: Date;
+    /** 마지막으로 성공한 동기화 시각(요청 시각이 아님) — 플레이 활동을 숨겼거나 동기화한 적이 없으면 null */
+    updatedAt: Date | null;
     /** 공개 설정 「플레이 점수」 */
     scoresPublic: boolean;
     /** 공개 설정 「플레이 활동」 — 최근 플레이 공개를 가진다 */
@@ -185,7 +185,7 @@ export function buildNostalgiaRecords(
         service: "nostalgia",
         sub: input.subject,
         visibility: input.scoresPublic ? "public" : "private",
-        updated_at: input.updatedAt.toISOString(),
+        updated_at: input.updatedAt?.toISOString() ?? null,
         source: { name: "NosLog", url: input.profileUrl },
         game_schema: MUSECAT_NOSTALGIA_GAME_SCHEMA,
         player: { name: input.playerName },

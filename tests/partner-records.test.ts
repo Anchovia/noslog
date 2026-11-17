@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ profile: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+    profile: vi.fn(),
+    sync: vi.fn(async (): Promise<{ completedAt: Date } | null> => null),
+}));
 
 vi.mock("@/features/profile/server/public-profile-data", () => ({
     getCachedProfileData: mocks.profile,
@@ -8,7 +11,7 @@ vi.mock("@/features/profile/server/public-profile-data", () => ({
 vi.mock("@/lib/db", () => ({
     default: {
         playerRating: { findMany: async () => [] },
-        dataSync: { findFirst: async () => null },
+        dataSync: { findFirst: mocks.sync },
         chartPlayHistory: { findMany: async () => [], count: async () => 0 },
     },
 }));
@@ -161,6 +164,12 @@ describe("NOSTALGIA records for Musecat", () => {
         ).toBe("private");
     });
 
+    it("sends updated_at as null when there is no sync time to give", () => {
+        const records = buildNostalgiaRecords(input({ updatedAt: null }));
+        expect(() => musecatRecordsSchema.parse(records)).not.toThrow();
+        expect(records).toHaveProperty("updated_at", null);
+    });
+
     it("keeps only the newest 50 plays and the authorized window total", () => {
         const items = Array.from({ length: 60 }, (_, index) => play(index));
         const records = buildNostalgiaRecords(
@@ -189,13 +198,13 @@ describe("NOSTALGIA records for Musecat", () => {
 });
 
 describe("NOSTALGIA records source link", () => {
-    function profileUser(hidePlayScores: boolean) {
+    function profileUser(hidePlayScores: boolean, hidePlayActivity = false) {
         return {
             user: {
                 username: "carol",
                 created_at: "2026-10-01T00:00:00.000Z",
                 hide_play_scores: hidePlayScores,
-                hide_play_activity: false,
+                hide_play_activity: hidePlayActivity,
                 rank_basic: null,
                 rank_basic_country: null,
                 rank_recital: null,
@@ -228,5 +237,30 @@ describe("NOSTALGIA records source link", () => {
         expect(await sourceUrl(true, ["summary", "ranks"])).toBe(
             "https://noslog.app"
         );
+    });
+
+    async function updatedAt(
+        hidePlayActivity: boolean,
+        lastSync: { completedAt: Date } | null
+    ) {
+        mocks.profile.mockResolvedValue(profileUser(false, hidePlayActivity));
+        mocks.sync.mockResolvedValueOnce(lastSync);
+        const records = await loadNostalgiaRecords({
+            userId: 42,
+            subject: "nl_subject",
+            sharedItems: ["summary"],
+            origin: "https://noslog.app",
+        });
+        expect(() => musecatRecordsSchema.parse(records)).not.toThrow();
+        return records?.updated_at;
+    }
+
+    it("gives the last sync time only while play activity is public, and never the sign-up time", async () => {
+        const lastSync = { completedAt: new Date("2026-10-19T14:39:20.000Z") };
+        expect(await updatedAt(false, lastSync)).toBe(
+            "2026-10-19T14:39:20.000Z"
+        );
+        expect(await updatedAt(true, lastSync)).toBeNull();
+        expect(await updatedAt(false, null)).toBeNull();
     });
 });

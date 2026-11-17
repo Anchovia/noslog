@@ -87,7 +87,7 @@ export const musecatRecordsSchema = z
         service: z.literal("nostalgia"),
         sub: z.string().min(1).max(256),
         visibility: z.enum(["public", "private"]),
-        updated_at: z.iso.datetime(),
+        updated_at: z.iso.datetime().nullable(),
         source: z.object({ name: z.string().min(1), url: httpsUrlSchema }),
         game_schema: z.literal(MUSECAT_NOSTALGIA_GAME_SCHEMA),
         player: z
