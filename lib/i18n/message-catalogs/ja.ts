@@ -1578,6 +1578,28 @@ export const jaMessages = {
     "settings.allowTranslation": "意見・返信の翻訳を許可",
     "settings.allowTranslationHelp":
         "オンにすると、自分の意見・返信の本文を Google Gemini に送り、ほかの2言語に翻訳します。無料枠のため、Google が送られた文章をサービス改善に使い、レビュー担当者が読む場合があります。オフにすると作成済みの翻訳も削除します。",
+    "settings.translationConsent.recipient": "提供先",
+    "settings.translationConsent.recipientValue": "Google LLC（米国）",
+    "settings.translationConsent.contact": "連絡先",
+    "settings.translationConsent.contactValue":
+        "policies.google.com のお問い合わせフォーム",
+    "settings.translationConsent.country": "移転先の国",
+    "settings.translationConsent.countryValue":
+        "米国などGoogleのサーバーがある国",
+    "settings.translationConsent.timing": "時期・方法",
+    "settings.translationConsent.timingValue":
+        "ほかの会員が「翻訳を見る」を初めて押したときにネットワークで送ります",
+    "settings.translationConsent.items": "項目",
+    "settings.translationConsent.itemsValue":
+        "自分の意見・返信の本文（名前などほかの情報は送りません）",
+    "settings.translationConsent.purpose": "目的",
+    "settings.translationConsent.purposeValue":
+        "ほかの2言語に翻訳します。Googleはサービス改善と機械学習にも使います",
+    "settings.translationConsent.retention": "保有期間",
+    "settings.translationConsent.retentionValue": "Googleが定めます",
+    "settings.translationConsent.refuse":
+        "同意しなくてもかまいません。許可しなければ自分の意見・返信が翻訳されないだけで、ほかの機能はそのまま使えます。設定でいつでもオフにできます。",
+    "settings.translationConsent.agree": "同意する",
     "settings.activityCoupling":
         "最終プレーと最近のプレーが一緒に公開されます。",
     "settings.changeArcade": "変更",

@@ -1584,6 +1584,28 @@ export const enMessages = {
     "settings.allowTranslation": "Allow translation of my opinions and replies",
     "settings.allowTranslationHelp":
         "When on, the text of your opinions and replies is sent to Google Gemini and translated into the other two languages. On the free tier, Google may use it to improve its services and human reviewers may read it. Turning this off also deletes existing translations.",
+    "settings.translationConsent.recipient": "Recipient",
+    "settings.translationConsent.recipientValue": "Google LLC (United States)",
+    "settings.translationConsent.contact": "Contact",
+    "settings.translationConsent.contactValue":
+        "Contact form at policies.google.com",
+    "settings.translationConsent.country": "Destination country",
+    "settings.translationConsent.countryValue":
+        "The United States and other countries with Google servers",
+    "settings.translationConsent.timing": "When and how",
+    "settings.translationConsent.timingValue":
+        "Sent over the network the first time another member selects See translation",
+    "settings.translationConsent.items": "Items",
+    "settings.translationConsent.itemsValue":
+        "The text of your opinions and replies (your name and other information are not sent)",
+    "settings.translationConsent.purpose": "Purpose",
+    "settings.translationConsent.purposeValue":
+        "Translation into the other two languages. Google also uses the text to improve its services and for machine learning",
+    "settings.translationConsent.retention": "Retention",
+    "settings.translationConsent.retentionValue": "Set by Google",
+    "settings.translationConsent.refuse":
+        "You don't have to agree. If you don't, your opinions and replies just won't be translated and everything else works as before. You can turn this off in Settings at any time.",
+    "settings.translationConsent.agree": "Agree",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",

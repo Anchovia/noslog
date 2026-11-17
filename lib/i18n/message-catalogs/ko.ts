@@ -1568,6 +1568,27 @@ export const koMessages = {
     "settings.allowTranslation": "의견 · 답글 번역 허용",
     "settings.allowTranslationHelp":
         "켜면 내 의견 · 답글 본문을 Google Gemini로 보내 다른 두 언어로 번역합니다. 무료 이용 등급이라 Google이 보낸 글을 서비스 개선에 쓰고 검토자가 읽을 수 있습니다. 끄면 만들어 둔 번역도 지웁니다.",
+    "settings.translationConsent.recipient": "받는 자",
+    "settings.translationConsent.recipientValue": "Google LLC(미국)",
+    "settings.translationConsent.contact": "연락처",
+    "settings.translationConsent.contactValue": "policies.google.com 문의 양식",
+    "settings.translationConsent.country": "이전 국가",
+    "settings.translationConsent.countryValue":
+        "미국 등 Google 서버가 있는 국가",
+    "settings.translationConsent.timing": "시기 · 방법",
+    "settings.translationConsent.timingValue":
+        "다른 회원이 「번역 보기」를 처음 누를 때 네트워크로 보냅니다",
+    "settings.translationConsent.items": "항목",
+    "settings.translationConsent.itemsValue":
+        "내 의견 · 답글 본문(이름 등 다른 정보는 보내지 않습니다)",
+    "settings.translationConsent.purpose": "목적",
+    "settings.translationConsent.purposeValue":
+        "다른 두 언어로 번역합니다. Google은 서비스 개선과 기계 학습에도 씁니다",
+    "settings.translationConsent.retention": "보유 기간",
+    "settings.translationConsent.retentionValue": "Google이 정합니다",
+    "settings.translationConsent.refuse":
+        "동의하지 않아도 됩니다. 허용하지 않으면 내 의견 · 답글이 번역되지 않을 뿐 다른 기능은 그대로 쓸 수 있고, 설정에서 언제든 끌 수 있습니다.",
+    "settings.translationConsent.agree": "동의",
     "settings.activityCoupling":
         "마지막 플레이와 최근 플레이가 함께 공개됩니다.",
     "settings.changeArcade": "변경",
