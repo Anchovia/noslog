@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 
 import { updateFeedbackStatus } from "@/app/admin/feedback/actions";
-import { AdminReadRow, AdminReadRows } from "@/components/admin/admin-card";
+import {
+    AdminReadRow,
+    AdminReadRows,
+    adminRowOpenProps,
+} from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
 import ActionMenu from "@/components/ui/action-menu";
 import Button from "@/components/ui/button";
@@ -62,7 +66,7 @@ export default function FeedbackReportRow({
     }
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => setOpen(true))}>
             <td>{firstLine(report.content)}</td>
             <td>
                 <Link href={`/profile/${report.user.id}`} className="nl-link">

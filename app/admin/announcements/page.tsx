@@ -1,3 +1,4 @@
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import { listAdminAnnouncements } from "@/features/announcements/server/announcement-admin-data";
 import Link from "next/link";
 
@@ -107,7 +108,10 @@ export default async function AdminAnnouncementsPage({
                                           : "공개 주소 없음"
                                       : null;
                             return (
-                                <tr key={announcement.id}>
+                                <AdminLinkRow
+                                    key={announcement.id}
+                                    href={`/admin/announcements/${announcement.id}`}
+                                >
                                     <td className="nl-admin-table__wrap">
                                         <Link
                                             href={`/admin/announcements/${announcement.id}`}
@@ -161,7 +165,7 @@ export default async function AdminAnnouncementsPage({
                                             ? `/${announcement.publicSlug}`
                                             : "-"}
                                     </td>
-                                </tr>
+                                </AdminLinkRow>
                             );
                         })}
                     </tbody>

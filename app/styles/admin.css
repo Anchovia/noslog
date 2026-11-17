@@ -1001,6 +1001,10 @@
     padding-inline: var(--nl-spacing-8) var(--nl-spacing-16);
     text-align: right;
 }
+/* 줄을 눌러 「자세히 보기」 를 여는 표 */
+.noslog-ui .nl-admin-table .nl-admin-table__row-open {
+    cursor: pointer;
+}
 @media (hover: hover) {
     .noslog-ui .nl-admin-table tbody tr:hover {
         background: var(--nl-interaction-row);

@@ -4,7 +4,11 @@ import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-import { AdminReadRow, AdminReadRows } from "@/components/admin/admin-card";
+import {
+    AdminReadRow,
+    AdminReadRows,
+    adminRowOpenProps,
+} from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
 import ActionMenu from "@/components/ui/action-menu";
 import type { AdminExamSubmission } from "@/features/exams/types/exam-submission-admin";
@@ -25,7 +29,7 @@ export default function ExamSubmissionRow({
     );
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => setOpen(true))}>
             <td>{submission.userName}</td>
             <td>{submission.examTitle}</td>
             <td>{submittedAt}</td>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AdminTable } from "@/components/admin/admin-card";
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import type { AdminChartDraft } from "@/features/contributions/server/chart-draft-review-service";
 
 /**
@@ -29,7 +30,7 @@ export default function ChartDraftReviewList({
                     const reviewHref = `/admin/music/${encodeURIComponent(draft.chart.musicIndex)}/${draft.chart.difficulty.toLowerCase()}/pattern/review/${draft.id}`;
                     const at = draft.submittedAt ?? draft.reviewedAt;
                     return (
-                        <tr key={draft.id}>
+                        <AdminLinkRow key={draft.id} href={reviewHref}>
                             <td>
                                 <Link href={reviewHref}>
                                     {draft.chart.title} ·{" "}
@@ -50,7 +51,7 @@ export default function ChartDraftReviewList({
                             </td>
                             <td>{draft.openComments || ""}</td>
                             <td>{at ? at.toLocaleString("ko-KR") : ""}</td>
-                        </tr>
+                        </AdminLinkRow>
                     );
                 })}
             </tbody>

@@ -7,6 +7,7 @@ import {
     AdminCardEmpty,
     AdminCardHead,
     AdminPager,
+    adminRowOpenProps,
     AdminStatus,
     AdminTable,
 } from "@/components/admin/admin-card";
@@ -72,7 +73,10 @@ export default function ArcadeAdminList({
                     </thead>
                     <tbody>
                         {arcades.map((arcade) => (
-                            <tr key={arcade.id}>
+                            <tr
+                                key={arcade.id}
+                                {...adminRowOpenProps(() => openEditor(arcade))}
+                            >
                                 <td>{arcade.name}</td>
                                 <td>{arcade.region ?? "-"}</td>
                                 <td className="nl-admin-table__wrap">

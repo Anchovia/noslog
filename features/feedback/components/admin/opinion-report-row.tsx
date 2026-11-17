@@ -8,7 +8,11 @@ import {
     setOpinionReportTargetHidden,
     updateOpinionReportStatus,
 } from "@/app/admin/feedback/actions";
-import { AdminReadRow, AdminReadRows } from "@/components/admin/admin-card";
+import {
+    AdminReadRow,
+    AdminReadRows,
+    adminRowOpenProps,
+} from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
 import ActionMenu from "@/components/ui/action-menu";
 import Button from "@/components/ui/button";
@@ -93,7 +97,7 @@ export default function OpinionReportRow({
     );
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => setOpen(true))}>
             <td>{firstLine(report.snapshot)}</td>
             <td>{targetLabel}</td>
             <td>{report.reason}</td>

@@ -13,6 +13,7 @@ import {
     AdminStatus,
     AdminTable,
 } from "@/components/admin/admin-card";
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import SearchField from "@/components/ui/search-field";
 import MusicTranslationApproveButton from "@/features/music/components/admin/music-translation-approve-button";
 import type { AdminMusicListParams } from "@/features/music/server/admin-music-list-service";
@@ -96,7 +97,13 @@ export default function AdminMusicList({
                     </thead>
                     <tbody aria-busy={searching}>
                         {data.musics.map((music) => (
-                            <tr key={music.index}>
+                            <AdminLinkRow
+                                key={music.index}
+                                href={
+                                    "/admin/music/" +
+                                    encodeURIComponent(music.index)
+                                }
+                            >
                                 <td className="nl-admin-table__wrap">
                                     <Link
                                         href={
@@ -156,7 +163,7 @@ export default function AdminMusicList({
                                         </td>
                                     </>
                                 )}
-                            </tr>
+                            </AdminLinkRow>
                         ))}
                     </tbody>
                 </AdminTable>

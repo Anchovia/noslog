@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
     AdminReadRow,
     AdminReadRows,
+    adminRowOpenProps,
     AdminStatus,
 } from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
@@ -21,7 +22,7 @@ export default function AdminSyncRow({ sync }: { sync: AdminSync }) {
         sync.user.nostalgiaName ?? sync.user.username ?? `유저 ${sync.user.id}`;
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => setOpen(true))}>
             <td>{userName}</td>
             <td>#{sync.id}</td>
             <td>{sync.syncScope === "full" ? "전체 기록" : "최근 기록"}</td>

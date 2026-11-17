@@ -1,3 +1,4 @@
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import { listAdminBingos } from "@/features/bingos/server/bingo-admin-data";
 import Link from "next/link";
 
@@ -64,7 +65,10 @@ export default async function AdminBingosPage({
                     </thead>
                     <tbody>
                         {bingos.map((bingo) => (
-                            <tr key={bingo.id}>
+                            <AdminLinkRow
+                                key={bingo.id}
+                                href={`/admin/bingos/${bingo.id}`}
+                            >
                                 <td>
                                     <Link href={`/admin/bingos/${bingo.id}`}>
                                         {bingo.title ?? "제목 없음"}
@@ -89,7 +93,7 @@ export default async function AdminBingosPage({
                                             bingo.status}
                                     </AdminStatus>
                                 </td>
-                            </tr>
+                            </AdminLinkRow>
                         ))}
                     </tbody>
                 </AdminTable>

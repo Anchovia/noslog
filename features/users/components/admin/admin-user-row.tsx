@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
     AdminReadRow,
     AdminReadRows,
+    adminRowOpenProps,
     AdminStatus,
 } from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
@@ -20,7 +21,7 @@ export default function AdminUserRow({ user }: { user: AdminUserRowData }) {
     const isAdmin = user.role === "admin";
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => setOpen(true))}>
             <td>{user.username ?? "-"}</td>
             <td>{user.nostalgiaName ?? "-"}</td>
             <td>{new Date(user.createdAt).toLocaleDateString("ko-KR")}</td>

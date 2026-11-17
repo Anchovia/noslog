@@ -5,6 +5,7 @@ import {
     AdminCardHead,
     AdminTable,
 } from "@/components/admin/admin-card";
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import AdminDashboardLoading, {
     dashboardPeriod,
 } from "@/features/admin/components/admin-dashboard-loading";
@@ -219,7 +220,7 @@ function TodoTable({ todo }: { todo: AdminDashboardData["todo"] }) {
                 </thead>
                 <tbody>
                     {rows.map((item) => (
-                        <tr key={item.label}>
+                        <AdminLinkRow key={item.label} href={item.href}>
                             <td>
                                 <Link href={item.href}>{item.label}</Link>
                             </td>
@@ -230,7 +231,7 @@ function TodoTable({ todo }: { todo: AdminDashboardData["todo"] }) {
                                     href={item.href}
                                 />
                             </td>
-                        </tr>
+                        </AdminLinkRow>
                     ))}
                 </tbody>
             </AdminTable>

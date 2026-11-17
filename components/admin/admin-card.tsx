@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 
 import StatusDot, { type StatusDotTone } from "@/components/ui/status-dot";
 import { cn } from "@/lib/cn";
@@ -52,6 +52,32 @@ export function AdminTable({ children }: { children: ReactNode }) {
             <table className="nl-admin-table">{children}</table>
         </div>
     );
+}
+
+const ROW_INTERACTIVE =
+    "a, button, input, label, select, textarea, [role='menuitem']";
+
+// 줄 어디를 눌러도 「자세히 보기」 를 연다. 줄 안 링크 · 버튼 · 체크박스와 글자 선택은 그대로 두고,
+// 포털로 그린 서랍 · 메뉴 안의 클릭이 줄까지 올라와 다시 여는 일도 막는다
+export function adminRowOpenProps(open: () => void) {
+    return {
+        tabIndex: 0,
+        "aria-haspopup": "dialog" as const,
+        className: "nl-admin-table__row-open nl-focus-inset",
+        onClick(event: MouseEvent<HTMLTableRowElement>) {
+            const target = event.target as Element;
+            if (!event.currentTarget.contains(target)) return;
+            if (target.closest(ROW_INTERACTIVE)) return;
+            if (window.getSelection()?.toString()) return;
+            open();
+        },
+        onKeyDown(event: KeyboardEvent<HTMLTableRowElement>) {
+            if (event.target !== event.currentTarget) return;
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            open();
+        },
+    };
 }
 
 export function AdminStatus({

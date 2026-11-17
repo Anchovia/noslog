@@ -1,3 +1,4 @@
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import { listAdminTierLists } from "@/features/tiers/server/tier-admin-data";
 import Link from "next/link";
 
@@ -68,7 +69,10 @@ export default async function AdminTiersPage() {
                         </thead>
                         <tbody>
                             {activeTierLists.map((tierList) => (
-                                <tr key={tierList.id}>
+                                <AdminLinkRow
+                                    key={tierList.id}
+                                    href={`/admin/tiers/${tierList.id}`}
+                                >
                                     <td>
                                         <Link
                                             href={`/admin/tiers/${tierList.id}`}
@@ -91,7 +95,7 @@ export default async function AdminTiersPage() {
                                     <td>
                                         <TierStatus status={tierList.status} />
                                     </td>
-                                </tr>
+                                </AdminLinkRow>
                             ))}
                         </tbody>
                     </AdminTable>
@@ -115,7 +119,10 @@ export default async function AdminTiersPage() {
                         </thead>
                         <tbody>
                             {legacyTierLists.map((tierList) => (
-                                <tr key={tierList.id}>
+                                <AdminLinkRow
+                                    key={tierList.id}
+                                    href={`/admin/tiers/${tierList.id}`}
+                                >
                                     <td>
                                         <Link
                                             href={`/admin/tiers/${tierList.id}`}
@@ -128,7 +135,7 @@ export default async function AdminTiersPage() {
                                     <td>
                                         <TierStatus status={tierList.status} />
                                     </td>
-                                </tr>
+                                </AdminLinkRow>
                             ))}
                         </tbody>
                     </AdminTable>

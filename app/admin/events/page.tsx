@@ -13,6 +13,7 @@ import {
     ADMIN_EVENT_TABS,
     getAdminEventList,
 } from "@/features/events/server/event-admin-service";
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import type { EventStatus } from "@/features/events/schemas/event-schema";
 import { eventPeriod } from "@/features/events/components/event-parts";
 import { requireAdmin } from "@/lib/admin";
@@ -88,7 +89,10 @@ export default async function AdminEventsPage({
                             </thead>
                             <tbody>
                                 {items.map((item) => (
-                                    <tr key={item.id}>
+                                    <AdminLinkRow
+                                        key={item.id}
+                                        href={`/admin/events/${item.id}`}
+                                    >
                                         <td>
                                             <Link
                                                 href={`/admin/events/${item.id}`}
@@ -121,7 +125,7 @@ export default async function AdminEventsPage({
                                                 ) : null}
                                             </td>
                                         ) : null}
-                                    </tr>
+                                    </AdminLinkRow>
                                 ))}
                             </tbody>
                         </AdminTable>

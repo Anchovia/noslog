@@ -1,3 +1,4 @@
+import AdminLinkRow from "@/components/admin/admin-link-row";
 import { listAdminExams } from "@/features/exams/server/exam-admin-data";
 import { Search } from "lucide-react";
 import Link from "next/link";
@@ -136,7 +137,10 @@ export default async function AdminExamsPage({
                     </thead>
                     <tbody>
                         {exams.map((exam) => (
-                            <tr key={exam.id}>
+                            <AdminLinkRow
+                                key={exam.id}
+                                href={`/admin/exams/${exam.id}`}
+                            >
                                 <td>
                                     <Link href={`/admin/exams/${exam.id}`}>
                                         {exam.title}
@@ -165,7 +169,7 @@ export default async function AdminExamsPage({
                                         </AdminStatus>
                                     )}
                                 </td>
-                            </tr>
+                            </AdminLinkRow>
                         ))}
                     </tbody>
                 </AdminTable>

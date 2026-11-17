@@ -10,6 +10,7 @@ import {
     AdminCardTools,
     AdminReadRow,
     AdminReadRows,
+    adminRowOpenProps,
     AdminTable,
 } from "@/components/admin/admin-card";
 import AdminDrawer from "@/components/admin/admin-drawer";
@@ -397,7 +398,7 @@ function ProposalRow({
     );
 
     return (
-        <tr>
+        <tr {...adminRowOpenProps(() => openDrawer("view"))}>
             {reviewable ? (
                 <td>
                     <input
