@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { AdminCard, AdminCardHead } from "@/components/admin/admin-card";
+import ActionMenu from "@/components/ui/action-menu";
 import type {
     DashboardMetric,
     DashboardRange,
@@ -62,7 +64,7 @@ export function AdminDashboardMetricLink({
         <Link
             href={href}
             prefetch={false}
-            className="nl-dashboard__kpi"
+            className="nl-dashboard__kpi nl-admin-card"
             aria-current={metric === selected ? "true" : undefined}
             onNavigate={(event) => {
                 event.preventDefault();
@@ -103,83 +105,115 @@ export function AdminDashboardTrend({
     initialMetric,
     hourly,
     series,
+    period,
+    actions,
 }: {
     range: DashboardRange;
     initialMetric: DashboardMetric;
     hourly: AdminDashboardData["hourly"];
     series: AdminDashboardData["series"];
+    period?: string;
+    actions?: ReactNode;
 }) {
     const metric = useDashboardMetric(initialMetric);
     const label = DASHBOARD_METRICS[metric];
     // 방문자는 하루 단위로만 세어 시각별 값이 없다
     const hourlyMetric = metric === "visitors" ? null : metric;
     return (
-        <section
-            className="nl-dashboard__panel"
-            aria-labelledby="dashboard-trend"
-        >
-            <div className="nl-dashboard__panel-head">
-                <h2 id="dashboard-trend" className="nl-component-title">
-                    {label}
-                </h2>
-            </div>
-            {hourly ? (
-                <>
-                    <AdminDashboardHours
-                        key={metric}
-                        data={hourly.map(({ hour, label, values, future }) => ({
-                            hour,
+        <AdminCard>
+            <AdminCardHead
+                level="h2"
+                title={period ? `${label} · ${period}` : label}
+                actions={actions}
+            />
+            <div className="nl-admin-card__body">
+                {hourly ? (
+                    <>
+                        <AdminDashboardHours
+                            key={metric}
+                            data={hourly.map(
+                                ({ hour, label, values, future }) => ({
+                                    hour,
+                                    label,
+                                    value: hourlyMetric
+                                        ? values[hourlyMetric]
+                                        : 0,
+                                    future,
+                                })
+                            )}
+                            label={label}
+                            color={DASHBOARD_METRIC_COLORS[metric]}
+                            emptyMessage={
+                                hourlyMetric ? undefined : HOURLY_NOTE_UNCOUNTED
+                            }
+                        />
+                        <p className="nl-metadata nl-muted">
+                            <HourlyNote metric={metric} label={label} />
+                        </p>
+                    </>
+                ) : (
+                    <AdminDashboardChart
+                        key={`${range}-${metric}`}
+                        data={series.map(({ date, label, values }) => ({
+                            date,
                             label,
-                            value: hourlyMetric ? values[hourlyMetric] : 0,
-                            future,
+                            value: values[metric],
                         }))}
                         label={label}
                         color={DASHBOARD_METRIC_COLORS[metric]}
-                        emptyMessage={
-                            hourlyMetric ? undefined : HOURLY_NOTE_UNCOUNTED
-                        }
                     />
-                    <p className="nl-metadata nl-muted">
-                        <HourlyNote metric={metric} label={label} />
-                    </p>
-                </>
-            ) : (
-                <AdminDashboardChart
-                    key={`${range}-${metric}`}
-                    data={series.map(({ date, label, values }) => ({
-                        date,
-                        label,
-                        value: values[metric],
-                    }))}
-                    label={label}
-                    color={DASHBOARD_METRIC_COLORS[metric]}
-                />
-            )}
-        </section>
+                )}
+            </div>
+        </AdminCard>
     );
 }
 
-/** 추이 패널 로딩 — 오늘 보기도 수치와 관계없이 같은 그래프 틀이라 그래프 자리 스켈레톤 하나 (2026-09-22 B1) */
+/** 추이 카드 로딩 — 오늘 보기도 수치와 관계없이 같은 그래프 틀이라 그래프 자리 스켈레톤 하나 (2026-09-22 B1) */
 export function AdminDashboardTrendLoading({
     initialMetric,
     hourly,
+    period,
+    actions,
 }: {
     initialMetric: DashboardMetric;
     hourly: boolean;
+    period?: string;
+    actions?: ReactNode;
 }) {
     const metric = useDashboardMetric(initialMetric);
     const label = DASHBOARD_METRICS[metric];
     return (
-        <section className="nl-dashboard__panel">
-            <div className="nl-dashboard__panel-head">
-                <h2 className="nl-component-title">{label}</h2>
+        <AdminCard>
+            <AdminCardHead
+                level="h2"
+                title={period ? `${label} · ${period}` : label}
+                actions={actions}
+            />
+            <div className="nl-admin-card__body">
+                <div className="nl-dashboard__chart nl-skeleton" />
+                {hourly ? (
+                    <p className="nl-metadata nl-muted">
+                        <HourlyNote metric={metric} label={label} />
+                    </p>
+                ) : null}
             </div>
-            <div className="nl-dashboard__chart nl-skeleton" />
-            {hourly ? (
-                <p className="nl-metadata nl-muted">
-                    <HourlyNote metric={metric} label={label} />
-                </p>
-            ) : null}
-        </section>
+        </AdminCard>
+    );
+}
+
+// 처리할 일 줄 끝 ⋯ — 그 일의 목록으로
+export function AdminDashboardTodoMenu({
+    label,
+    href,
+}: {
+    label: string;
+    href: string;
+}) {
+    const router = useRouter();
+    return (
+        <ActionMenu
+            label={`${label} 메뉴`}
+            items={[{ label: "목록 열기", onSelect: () => router.push(href) }]}
+        />
     );
 }

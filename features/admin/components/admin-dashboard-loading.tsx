@@ -1,11 +1,30 @@
+import {
+    AdminCard,
+    AdminCardHead,
+    AdminTable,
+} from "@/components/admin/admin-card";
 import { SkeletonText } from "@/components/ui/skeleton";
-import { DASHBOARD_RANGES } from "@/features/admin/dashboard-params";
+import {
+    DASHBOARD_RANGES,
+    type DashboardRange,
+} from "@/features/admin/dashboard-params";
 import type {
     AdminDashboardData,
     DashboardRow,
 } from "@/features/admin/server/admin-dashboard-service";
 
 import { AdminDashboardTrendLoading } from "./admin-dashboard-metric";
+
+function shortDate(key: string) {
+    return `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`;
+}
+
+/** 그래프 카드 제목의 기간 — 대시보드와 로딩이 함께 쓴다 */
+export function dashboardPeriod(data: AdminDashboardData) {
+    return data.days === 1
+        ? `오늘 ${shortDate(data.to)} · 서울 기준`
+        : `최근 ${data.days}일 · ${shortDate(data.from)}–${shortDate(data.to)} · 서울 기준`;
+}
 
 function CountListLoading({
     rows,
@@ -44,41 +63,57 @@ function CountListLoading({
 }
 
 function TodoLoading({ data }: { data: AdminDashboardData }) {
-    const active = data.todo.filter((item) => item.count > 0);
-    const clear = data.todo.filter((item) => item.count === 0);
+    const rows = [
+        ...data.todo.filter((item) => item.count > 0),
+        ...data.todo.filter((item) => item.count === 0),
+    ];
 
     return (
-        <section className="nl-dashboard__panel nl-dashboard__todo">
-            <div className="nl-dashboard__panel-head">
-                <h2 className="nl-component-title">처리할 일</h2>
-                <SkeletonText className="nl-metric-value" sample="00" />
-            </div>
-            {active.length ? (
-                <ul className="nl-dashboard__todo-list">
-                    {active.map((item) => (
-                        <li key={item.label}>
-                            <span className="nl-dashboard__todo-item">
-                                <span
-                                    className="nl-dashboard__todo-dot"
-                                    aria-hidden
-                                />
-                                <span className="nl-control">{item.label}</span>
+        <AdminCard>
+            <AdminCardHead level="h2" title="처리할 일" />
+            <AdminTable>
+                <thead>
+                    <tr>
+                        <th scope="col">종류</th>
+                        <th scope="col">대기</th>
+                        <th scope="col">
+                            <span className="sr-only">메뉴</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((item) => (
+                        <tr key={item.label}>
+                            <td>{item.label}</td>
+                            <td>
                                 <SkeletonText
-                                    className="nl-metric-value"
-                                    sample="00"
+                                    className="nl-body-secondary"
+                                    sample="00건"
                                 />
-                            </span>
-                        </li>
+                            </td>
+                            <td className="nl-admin-table__menu" />
+                        </tr>
                     ))}
-                </ul>
-            ) : null}
-            {clear.length ? (
-                <p className="nl-dashboard__clear nl-body-secondary">
-                    <span className="nl-icon-small nl-skeleton" />
-                    <SkeletonText className="nl-body-secondary" width="l" />
-                </p>
-            ) : null}
-        </section>
+                </tbody>
+            </AdminTable>
+        </AdminCard>
+    );
+}
+
+// 로딩 겹 위의 기간 칸 — 누르는 링크가 아니라 고른 칸만 보여 준다
+function RangesLoading({ range }: { range: DashboardRange }) {
+    return (
+        <div className="nl-segments nl-dashboard__ranges">
+            {(Object.keys(DASHBOARD_RANGES) as DashboardRange[]).map((key) => (
+                <span
+                    key={key}
+                    className="nl-segments__item nl-control"
+                    aria-current={key === range ? "true" : undefined}
+                >
+                    {DASHBOARD_RANGES[key].label}
+                </span>
+            ))}
+        </div>
     );
 }
 
@@ -87,7 +122,10 @@ function KpiLoading({ data }: { data: AdminDashboardData }) {
         <div className="nl-dashboard__kpi-group">
             <div className="nl-dashboard__kpis">
                 {data.kpis.map((kpi) => (
-                    <div key={kpi.metric} className="nl-dashboard__kpi">
+                    <div
+                        key={kpi.metric}
+                        className="nl-dashboard__kpi nl-admin-card"
+                    >
                         <span className="nl-control nl-muted">{kpi.label}</span>
                         <SkeletonText
                             className="nl-metric-display"
@@ -179,7 +217,7 @@ function ActiveLoading() {
 function SyncHealthLoading({ data }: { data: AdminDashboardData }) {
     const rangeLabel = DASHBOARD_RANGES[data.range].label;
     return (
-        <section className="nl-dashboard__panel nl-dashboard__sync">
+        <section className="nl-dashboard__panel">
             <div className="nl-dashboard__panel-head">
                 <h2 className="nl-component-title">동기화 상태</h2>
             </div>
@@ -249,19 +287,20 @@ export default function AdminDashboardLoading({
     }));
 
     return (
-        <div className="nl-dashboard__grid">
+        <div className="nl-admin-stack">
+            <KpiLoading data={data} />
+
+            <AdminDashboardTrendLoading
+                initialMetric={data.metric}
+                hourly={Boolean(data.hourly)}
+                period={dashboardPeriod(data)}
+                actions={<RangesLoading range={data.range} />}
+            />
+
             <TodoLoading data={data} />
 
-            <div className="nl-dashboard__main">
-                <KpiLoading data={data} />
-
-                <AdminDashboardTrendLoading
-                    initialMetric={data.metric}
-                    hourly={Boolean(data.hourly)}
-                />
-
+            <div className="nl-dashboard__grid">
                 <ActiveLoading />
-
                 <ListPanelLoading
                     title="전환 흐름"
                     rows={funnelRows}
@@ -282,28 +321,30 @@ export default function AdminDashboardLoading({
                     rows={data.topPages}
                     note={`페이지뷰 · ${rangeLabel}`}
                 />
+
+                <SyncHealthLoading data={data} />
+
+                <section className="nl-dashboard__panel">
+                    <div className="nl-dashboard__panel-head">
+                        <h2 className="nl-component-title">API 호출</h2>
+                    </div>
+                    <div>
+                        <h3 className="nl-dashboard__group nl-control nl-muted">
+                            우리 API
+                        </h3>
+                        <CountListLoading rows={data.apiCalls} />
+                    </div>
+                    <div>
+                        <h3 className="nl-dashboard__group nl-control nl-muted">
+                            외부 API
+                        </h3>
+                        <CountListLoading rows={data.externalCalls} />
+                    </div>
+                    <p className="nl-metadata nl-muted">
+                        요청 수 · {rangeLabel}
+                    </p>
+                </section>
             </div>
-
-            <SyncHealthLoading data={data} />
-
-            <section className="nl-dashboard__panel nl-dashboard__api">
-                <div className="nl-dashboard__panel-head">
-                    <h2 className="nl-component-title">API 호출</h2>
-                </div>
-                <div>
-                    <h3 className="nl-dashboard__group nl-control nl-muted">
-                        우리 API
-                    </h3>
-                    <CountListLoading rows={data.apiCalls} />
-                </div>
-                <div>
-                    <h3 className="nl-dashboard__group nl-control nl-muted">
-                        외부 API
-                    </h3>
-                    <CountListLoading rows={data.externalCalls} />
-                </div>
-                <p className="nl-metadata nl-muted">요청 수 · {rangeLabel}</p>
-            </section>
         </div>
     );
 }
