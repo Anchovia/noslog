@@ -1,12 +1,22 @@
 import "server-only";
 
 import { requireAdmin } from "@/lib/admin";
+import { adminPageArgs } from "@/lib/admin/page";
 import db from "@/lib/db";
 
 /** 관리자 오락실 편집 목록 — 공개 페이지가 읽는 기체 · 영업시간 · 공개 정보(2026-10-16 D8 — 화면에서 옮김) */
-export async function listAdminArcades() {
+export async function listAdminArcades(page = 1) {
     await requireAdmin();
+    const [arcades, total] = await Promise.all([
+        listAdminArcadePage(page),
+        db.arcade.count(),
+    ]);
+    return { arcades, total };
+}
+
+function listAdminArcadePage(page: number) {
     return db.arcade.findMany({
+        ...adminPageArgs(page),
         include: {
             _count: { select: { users: true } },
             // 공개 페이지가 읽는 기체·영업시간을 그대로 편집한다
