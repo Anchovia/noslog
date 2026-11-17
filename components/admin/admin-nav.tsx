@@ -25,10 +25,14 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { type ReactNode, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
-import { useTranslations } from "@/components/i18n/locale-provider";
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/locale-provider";
 import type { ShellAccount } from "@/components/layout/app-header";
 import Avatar from "@/components/ui/avatar";
 import IconButton from "@/components/ui/icon-button";
+import IntentLink from "@/components/ui/intent-link";
 
 const adminSections = [
     { href: "/admin", label: "대시보드", icon: LayoutGrid },
@@ -109,14 +113,19 @@ function AdminAccount({
 
 // 1056 이상 왼쪽 사이드바(판 1) — 묶음 제목 없이 14개를 한 줄씩, 현재 항목은 면
 export function AdminSidebar({ account }: { account: ShellAccount }) {
+    const href = useLocalizedHref();
     return (
         <aside className="nl-admin-sidebar">
-            <div className="nl-admin-sidebar__brand nl-control">
+            {/* 사이트 헤더 로고처럼 누르면 메인 홈 */}
+            <IntentLink
+                href={href("/")}
+                className="nl-admin-sidebar__brand nl-control nl-focus-inset"
+            >
                 <span className="nl-admin-sidebar__mark" aria-hidden>
                     N
                 </span>
                 NosLog 관리자
-            </div>
+            </IntentLink>
             <AdminNavList />
             <AdminAccount account={account} />
         </aside>
