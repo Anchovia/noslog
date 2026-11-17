@@ -10,20 +10,6 @@
         border-color: Highlight;
     }
 }
-/* 관리자 셸 — 헤더 아래 가로 탭 */
-.noslog-ui .nl-admin-nav {
-    position: sticky;
-    top: var(--nl-header-height);
-    /* 관리자 화면 안의 sticky 머리(서열표 구간 머리 등)보다 위 */
-    z-index: calc(var(--nl-layer-sticky) + var(--nl-layer-above));
-    background: var(--nl-surface-canvas);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
-        var(--nl-border-divider);
-}
-/* 스크롤로 사이트 헤더가 숨으면 맨 위에 붙는다 — 헤더 높이에 남으면 헤더가 빠진 자리가 빈다(서열표 구간 헤더와 같은 규칙) */
-.noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-admin-nav {
-    top: 0;
-}
 
 /* 관리자 대시보드(C안 · 2026-09-13) — 넓은 화면은 본문 8 : 레일 4, 좁은 화면은 처리할 일 → 지표 → API */
 .noslog-ui .nl-dashboard {
@@ -90,26 +76,18 @@
     .nl-segments__item[aria-current="true"]:is(:active, :focus-visible) {
     color: var(--nl-content-strong);
 }
+/* 홈 나머지 패널(판 10 Umami) — 1056 이상 같은 폭 2열 · 사이 12, 같은 줄은 같은 높이, 홀수로 남는 마지막 패널은 전폭 */
 .noslog-ui .nl-dashboard__grid {
     display: grid;
-    grid-template-areas: "todo" "main" "sync" "api";
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-dashboard__todo {
-    grid-area: todo;
-}
-.noslog-ui .nl-dashboard__main {
-    grid-area: main;
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-dashboard__api {
-    grid-area: api;
-}
-.noslog-ui .nl-dashboard__sync {
-    grid-area: sync;
+@media (min-width: 1056px) {
+    .noslog-ui .nl-dashboard__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .noslog-ui .nl-dashboard__grid > :last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
 }
 /* 활성 사용자 숫자 셋(2026-10-17) — 지표 칸과 같은 글자 · 간격, 누르는 칸이 아니라 틀 없이 */
 .noslog-ui .nl-dashboard__stats {
@@ -132,20 +110,34 @@
     align-items: baseline;
     gap: var(--nl-spacing-8);
 }
+/* 홈 패널 = 관리자 카드 꼴 — 머리 줄(제목 · 아래 선) + 줄 목록, 좌우 24 */
 .noslog-ui .nl-dashboard__panel {
     display: flex;
     min-width: 0;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-control);
+    padding-bottom: var(--nl-spacing-16);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-dashboard__panel > * {
+    padding-inline: var(--nl-spacing-24);
 }
 .noslog-ui .nl-dashboard__panel-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    padding-block: var(--nl-spacing-12);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+.noslog-ui .nl-dashboard__panel-head :is(h2, h3) {
+    color: var(--nl-content-strong);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-dashboard__kpi-group {
     display: flex;
@@ -342,78 +334,6 @@
     .noslog-ui .nl-dashboard__chart {
         height: calc(var(--nl-spacing-64) * 3 + var(--nl-spacing-8));
     }
-}
-@media (min-width: 1056px) {
-    .noslog-ui .nl-dashboard__grid {
-        grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-        grid-template-rows: auto auto 1fr;
-        grid-template-areas: "main todo" "main sync" "main api";
-        align-items: start;
-    }
-    .noslog-ui .nl-dashboard__panel {
-        gap: var(--nl-spacing-16);
-        padding: var(--nl-spacing-24);
-    }
-}
-.noslog-ui .nl-admin-nav__content {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    width: 100%;
-    max-width: var(--nl-layout-max);
-    margin-inline: auto;
-    padding-inline: var(--nl-layout-margin);
-}
-.noslog-ui .nl-admin-nav__badge {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-admin-nav__tabs {
-    display: flex;
-    min-width: 0;
-    flex: 1;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-.noslog-ui .nl-admin-nav__tabs::-webkit-scrollbar {
-    display: none;
-}
-.noslog-ui .nl-admin-nav__tab {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    min-height: calc(var(--nl-spacing-48) - var(--nl-spacing-4));
-    padding-inline: var(--nl-spacing-12);
-    color: var(--nl-content-subdued);
-    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) transparent;
-    white-space: nowrap;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-admin-nav__tab:hover {
-        color: var(--nl-content-default);
-    }
-}
-
-.noslog-ui .nl-admin-nav__tab:is(:active, :focus-visible) {
-    color: var(--nl-content-default);
-}
-
-.noslog-ui .nl-admin-nav__tab--current {
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
-    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) var(--nl-border-ring);
-}
-/* 고른 탭은 올림 · 누름 · 키 포커스에 강한 글자 */
-@media (hover: hover) {
-    .noslog-ui .nl-admin-nav__tab--current:hover {
-        color: var(--nl-content-strong);
-    }
-}
-.noslog-ui .nl-admin-nav__tab--current:is(:active, :focus-visible) {
-    color: var(--nl-content-strong);
 }
 
 /* 공지 관리 — 목록 */
@@ -814,4 +734,434 @@
     font-size: var(--nl-type-input-size);
     line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-regular);
+}
+
+/* 관리자 셸(판 1 Medusa) — 1056 이상은 왼쪽 사이드바 216 + 위 막대, 좁은 폭은 헤더 아래 가로 탭 그대로.
+   폭(사이드바 216 · 상세 오른쪽 열 440 · 서랍 560)은 가이드 밖 부품 변수로 둔다(2026-11-17 결정, 대화상자 폭과 같은 방식) */
+.noslog-ui .nl-admin-frame {
+    --nl-admin-sidebar-width: 216px;
+    --nl-admin-side-width: 440px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-admin-frame__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-admin-sidebar {
+    display: none;
+}
+.noslog-ui .nl-admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--nl-layer-sticky);
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    padding-inline: var(--nl-spacing-12);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) 0
+        var(--nl-border-divider);
+    background: var(--nl-surface-canvas);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-main {
+    flex: 1;
+    min-width: 0;
+    padding: var(--nl-spacing-12) var(--nl-layout-margin);
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-admin-frame {
+        display: grid;
+        grid-template-columns: var(--nl-admin-sidebar-width) minmax(0, 1fr);
+        min-height: 100dvh;
+    }
+    .noslog-ui .nl-admin-sidebar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        overflow-y: auto;
+        padding-inline: var(--nl-spacing-8);
+        box-shadow: inset calc(var(--nl-stroke-default) * -1) 0
+            var(--nl-border-divider);
+    }
+    .noslog-ui .nl-admin-topbar {
+        padding-inline: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-admin-topbar__menu {
+        display: none;
+    }
+    .noslog-ui .nl-admin-main {
+        padding: var(--nl-spacing-12);
+    }
+}
+.noslog-ui .nl-admin-sidebar__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    margin-bottom: var(--nl-spacing-8);
+    padding-inline: var(--nl-spacing-4);
+    border-bottom: var(--nl-stroke-default) dashed var(--nl-border-divider);
+    color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-sidebar__mark {
+    display: grid;
+    place-items: center;
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-surface-control);
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+}
+.noslog-ui .nl-admin-sidebar__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding-bottom: var(--nl-spacing-12);
+}
+.noslog-ui .nl-admin-sidebar__item {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height);
+    padding-inline: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-subdued);
+    font-weight: var(--nl-type-weight-medium);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-admin-sidebar__item:hover {
+        background: var(--nl-interaction-row);
+        color: var(--nl-content-default);
+    }
+}
+.noslog-ui .nl-admin-sidebar__item:is(:active, :focus-visible) {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-admin-sidebar__item[aria-current="page"] {
+    background: var(--nl-surface-control);
+    color: var(--nl-content-strong);
+}
+/* 계정 링크는 목록 맨 아래에 붙는다 */
+.noslog-ui .nl-admin-sidebar__account {
+    margin-top: auto;
+    padding-block: var(--nl-spacing-12);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-topbar__crumb {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-admin-topbar__crumb a {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-topbar__current {
+    color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-medium);
+}
+
+/* 좁은 폭 메뉴 서랍(판 9 Medusa) — 왼쪽 · 위 · 아래 가장자리 8, 최대 폭 304, 안은 사이드바와 같은 항목 */
+.noslog-ui .nl-admin-menu-drawer {
+    --nl-admin-menu-width: 304px;
+    position: fixed;
+    top: var(--nl-spacing-8);
+    bottom: var(--nl-spacing-8);
+    left: var(--nl-spacing-8);
+    z-index: var(--nl-layer-dialog);
+    display: flex;
+    flex-direction: column;
+    width: min(var(--nl-admin-menu-width), calc(100vw - var(--nl-spacing-16)));
+    overflow-y: auto;
+    padding: 0 var(--nl-spacing-8);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-canvas);
+    box-shadow: var(--nl-overlay-shadow);
+}
+.noslog-ui .nl-admin-menu-drawer[data-state="open"] {
+    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui .nl-admin-menu-drawer[data-state="closed"] {
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+.noslog-ui:has(> .nl-admin-menu-drawer[data-state="closed"]) {
+    animation: nl-hold var(--nl-motion-duration-overlay-out);
+}
+.noslog-ui .nl-admin-menu-drawer__head {
+    display: flex;
+    padding-block: var(--nl-spacing-4);
+}
+
+/* 관리자 카드(판 2 · 3) — 머리 줄 · 도구 줄 · 표 · 페이지 줄을 한 카드에 쌓는다 */
+.noslog-ui .nl-admin-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-admin-card {
+    min-width: 0;
+    overflow: hidden;
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-admin-card__head,
+.noslog-ui .nl-admin-card__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    padding: var(--nl-spacing-12) var(--nl-spacing-24);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-card__title {
+    min-width: 0;
+    color: var(--nl-content-strong);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-admin-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    padding: var(--nl-spacing-24);
+}
+.noslog-ui .nl-admin-card__empty {
+    padding: var(--nl-spacing-48) var(--nl-spacing-24);
+    color: var(--nl-content-subdued);
+    text-align: center;
+}
+/* 표 안 화면 낭독용 글자(절대 위치)가 스크롤 밖으로 쪽을 넓히지 않게 기준 상자가 된다 */
+.noslog-ui .nl-admin-table-scroll {
+    position: relative;
+    overflow-x: auto;
+}
+.noslog-ui .nl-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-24);
+}
+.noslog-ui .nl-admin-table :is(th, td) {
+    padding: var(--nl-spacing-12) var(--nl-spacing-24);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    color: var(--nl-content-subdued);
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.noslog-ui .nl-admin-table th {
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-table td:first-child {
+    color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-table td:first-child a {
+    color: inherit;
+}
+.noslog-ui .nl-admin-table .nl-admin-table__wrap {
+    min-width: calc(var(--nl-spacing-64) * 3);
+    white-space: normal;
+}
+/* 줄 끝 ⋯ 칸 — 가장 좁게, 오른쪽 */
+.noslog-ui .nl-admin-table .nl-admin-table__menu {
+    width: var(--nl-spacing-48);
+    padding-block: 0;
+    padding-inline: var(--nl-spacing-8) var(--nl-spacing-16);
+    text-align: right;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-admin-table tbody tr:hover {
+        background: var(--nl-interaction-row);
+    }
+}
+.noslog-ui .nl-admin-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-admin-pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-24);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-32));
+    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-pager__range {
+    margin-right: auto;
+}
+.noslog-ui .nl-admin-pager__link {
+    color: var(--nl-content-strong);
+}
+.noslog-ui .nl-admin-pager__link[aria-disabled="true"] {
+    color: var(--nl-content-disabled);
+}
+
+/* 대기열 상태 탭(판 6 GitLab) — 왼쪽부터 글자 폭만, 탭 사이 24, 탭마다 건수 알약 */
+.noslog-ui .nl-admin-tabs {
+    gap: var(--nl-spacing-24);
+}
+.noslog-ui .nl-admin-tabs .nl-tabs__item {
+    flex: none;
+    gap: var(--nl-spacing-8);
+    padding-inline: 0;
+}
+.noslog-ui .nl-admin-tabs__count {
+    padding-inline: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-control);
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-regular);
+}
+
+/* 상세(판 3) — 왼쪽 본문 + 오른쪽 열 440, 사이 12. 읽기 줄 「이름 | 값」 */
+.noslog-ui .nl-admin-detail {
+    display: grid;
+    gap: var(--nl-spacing-12);
+    align-items: start;
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-admin-detail:has(> :nth-child(2)) {
+        grid-template-columns: minmax(0, 1fr) var(--nl-admin-side-width);
+    }
+}
+.noslog-ui .nl-admin-detail__column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-admin-read-rows {
+    margin: 0;
+}
+.noslog-ui .nl-admin-read-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
+/* 서랍 본문은 이미 안쪽 24 라 읽기 줄은 좌우를 비우지 않는다 */
+.noslog-ui .nl-admin-drawer__body .nl-admin-read-row {
+    padding-inline: 0;
+}
+.noslog-ui .nl-admin-read-row:first-child {
+    border-top: 0;
+}
+.noslog-ui .nl-admin-read-row dd {
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* 오른쪽 서랍(판 3 Medusa Drawer) — 화면 가장자리 8, 폭 560. 나타날 때 페이드만 */
+.noslog-ui .nl-admin-drawer {
+    --nl-admin-drawer-width: 560px;
+    position: fixed;
+    top: var(--nl-spacing-8);
+    right: var(--nl-spacing-8);
+    bottom: var(--nl-spacing-8);
+    z-index: var(--nl-layer-dialog);
+    display: flex;
+    flex-direction: column;
+    width: min(
+        var(--nl-admin-drawer-width),
+        calc(100vw - var(--nl-spacing-16))
+    );
+    overflow: hidden;
+    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
+}
+.noslog-ui .nl-admin-drawer[data-state="open"] {
+    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui .nl-admin-drawer[data-state="closed"] {
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+.noslog-ui:has(> .nl-admin-drawer[data-state="closed"]) {
+    animation: nl-hold var(--nl-motion-duration-overlay-out);
+}
+.noslog-ui .nl-admin-drawer__head {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height) + var(--nl-spacing-24));
+    padding: var(--nl-spacing-12) var(--nl-spacing-16) var(--nl-spacing-12)
+        var(--nl-spacing-24);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-drawer__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--nl-spacing-24);
+}
+.noslog-ui .nl-admin-drawer__foot {
+    display: flex;
+    flex: none;
+    justify-content: flex-end;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+
+/* 삭제 확인(판 4 Supabase) — 설명 → 이름 입력 → 전폭 위험 버튼 */
+.noslog-ui .nl-admin-delete {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-admin-delete__description {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-admin-delete__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-admin-delete__action {
+    width: 100%;
+    margin-top: var(--nl-spacing-4);
 }
