@@ -1,6 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
+import { syncDiscordAvatar } from "@/features/users/server/discord-avatar";
 import {
     createDiscordUser,
     findUserByDiscordId,
@@ -8,6 +9,7 @@ import {
     updateDiscordIdentity,
 } from "@/features/users/server/user-data";
 import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
+import { deleteBlobIfOwned } from "@/lib/blob";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import { serverEnv } from "@/lib/env/server";
 import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
@@ -48,27 +50,6 @@ function errorRedirect(
     if (!isLinking && returnTo !== "/")
         url.searchParams.set("returnTo", returnTo);
     return NextResponse.redirect(url);
-}
-
-function discordAvatar(user: DiscordUserResponse) {
-    if (!user.avatar) return null;
-    const extension = user.avatar.startsWith("a_") ? "gif" : "png";
-    return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${extension}?size=256`;
-}
-
-function shouldUseDiscordAvatar(
-    currentAvatar: string | null,
-    userManaged = false
-) {
-    if (userManaged) return false;
-    if (!currentAvatar) return true;
-
-    try {
-        const hostname = new URL(currentAvatar).hostname;
-        return hostname === "cdn.discordapp.com";
-    } catch {
-        return false;
-    }
 }
 
 export async function GET(request: NextRequest) {
@@ -213,7 +194,6 @@ export async function GET(request: NextRequest) {
             destination.searchParams.set("discordResult", "delete");
             return NextResponse.redirect(destination);
         }
-        const avatar = discordAvatar(discordUser);
         const linkedUser = await findUserByDiscordId(discordUser.id);
 
         if (currentUser) {
@@ -252,23 +232,18 @@ export async function GET(request: NextRequest) {
                 changeVerified = true;
             }
 
+            const avatar =
+                mode === "refresh"
+                    ? currentUser.avatar
+                    : await syncDiscordAvatar(currentUser, discordUser);
             await updateDiscordIdentity(currentUser.id, {
                 ...(mode === "refresh" ? {} : { discordId: discordUser.id }),
                 discordName: discordName,
                 discordUsername: discordUser.username,
-                ...(mode === "refresh"
-                    ? {}
-                    : {
-                          avatar:
-                              avatar &&
-                              shouldUseDiscordAvatar(
-                                  currentUser.avatar,
-                                  currentUser.avatarUserManaged
-                              )
-                                  ? avatar
-                                  : currentUser.avatar,
-                      }),
+                ...(mode === "refresh" ? {} : { avatar }),
             });
+            if (avatar !== currentUser.avatar)
+                await deleteBlobIfOwned(currentUser.avatar);
             // 이름 · 아바타는 랭킹 줄과 악곡 순위 줄에도 나온다(2026-10-16 D8 · B6 — 설정 저장과 같게)
             revalidateTag(getUserProfileTag(currentUser.id), "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
@@ -296,14 +271,7 @@ export async function GET(request: NextRequest) {
                   discordName: linkedUser.discordName ?? discordName,
                   discordUsername:
                       linkedUser.discordUsername ?? discordUser.username,
-                  avatar:
-                      avatar &&
-                      shouldUseDiscordAvatar(
-                          linkedUser.avatar,
-                          linkedUser.avatarUserManaged
-                      )
-                          ? avatar
-                          : linkedUser.avatar,
+                  avatar: await syncDiscordAvatar(linkedUser, discordUser),
               }
             : null;
         const linkedChanged =
@@ -325,14 +293,22 @@ export async function GET(request: NextRequest) {
                   discordId: discordUser.id,
                   discordName: discordName,
                   discordUsername: discordUser.username,
-                  avatar,
               });
+        // 저장 경로에 회원 번호가 들어가, 새 계정은 만든 뒤에 사진을 복사한다
+        if (!linkedUser) {
+            const avatar = await syncDiscordAvatar(
+                { id: user.id, avatar: null, avatarUserManaged: false },
+                discordUser
+            );
+            if (avatar) await updateDiscordIdentity(user.id, { avatar });
+        }
         const profileCompleted = Boolean(linkedUser?.profileCompletedAt);
 
         // 새 계정은 그 id 로 캐시된 「없는 프로필」 을 비운다
         if (linkedChanged || !linkedUser)
             revalidateTag(getUserProfileTag(user.id), "max");
         if (linkedChanged && linkedValues?.avatar !== linkedUser?.avatar) {
+            await deleteBlobIfOwned(linkedUser.avatar);
             revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.chartRankings, "max");
         }

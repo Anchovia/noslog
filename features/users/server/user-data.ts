@@ -82,7 +82,6 @@ export function createDiscordUser(data: {
     discordId: string;
     discordName: string | null;
     discordUsername: string;
-    avatar: string | null;
 }) {
     return db.user.create({
         data,

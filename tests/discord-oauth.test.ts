@@ -31,6 +31,8 @@ const mocks = vi.hoisted(() => ({
     userCreate: vi.fn(),
     revalidateTag: vi.fn(),
     fetch: vi.fn(),
+    blobPut: vi.fn(),
+    blobDel: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
@@ -46,7 +48,17 @@ vi.mock("@/lib/env/server", () => ({
         get DISCORD_REDIRECT_URI() {
             return process.env.DISCORD_REDIRECT_URI;
         },
+        get COOKIE_PASSWORD() {
+            return process.env.COOKIE_PASSWORD;
+        },
     },
+}));
+
+vi.mock("@vercel/blob", () => ({
+    put: mocks.blobPut,
+    del: mocks.blobDel,
+    get: vi.fn(),
+    head: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -63,6 +75,12 @@ vi.mock("next/cache", () => ({ revalidateTag: mocks.revalidateTag }));
 
 import { GET as completeDiscordOAuth } from "@/app/(auth)/discord/complete/route";
 import { GET as startDiscordOAuth } from "@/app/(auth)/discord/start/route";
+import { MAX_IMAGE_SIZE } from "@/lib/image-upload-rules";
+
+const BLOB_ORIGIN = "https://store.public.blob.vercel-storage.com";
+const PNG_BYTES = new Uint8Array([
+    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00,
+]);
 
 function request(path: string) {
     return new NextRequest(`http://localhost:3000${path}`);
@@ -116,6 +134,11 @@ describe("Discord OAuth", () => {
         mocks.getSession.mockResolvedValue(mocks.session);
         mocks.userUpdate.mockResolvedValue({ id: 1 });
         mocks.userCreate.mockResolvedValue({ id: 1 });
+        // 토큰 · 사용자 응답 다음 요청은 Discord 사진 내려받기다
+        mocks.fetch.mockImplementation(async () => new Response(PNG_BYTES));
+        mocks.blobPut.mockImplementation(async (pathname: string) => ({
+            url: `${BLOB_ORIGIN}/${pathname}`,
+        }));
         vi.stubGlobal("fetch", mocks.fetch);
         vi.stubEnv("DISCORD_CLIENT_ID", "client-id");
         vi.stubEnv("DISCORD_CLIENT_SECRET", "client-secret");
@@ -566,6 +589,200 @@ describe("Discord OAuth", () => {
         expect(mocks.userUpdate).not.toHaveBeenCalled();
         expect(mocks.revalidateTag).not.toHaveBeenCalled();
         expect(mocks.session.id).toBe(3);
+    });
+
+    function loginAs(linkedUser: {
+        avatar: string | null;
+        avatarUserManaged?: boolean;
+    }) {
+        mocks.session.id = undefined;
+        mocks.session.discordOAuthState = "state";
+        mocks.session.discordOAuthReturnTo = "/music";
+        mocks.userUpdate.mockResolvedValue({ id: 3 });
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 3,
+            discordName: "Discord User",
+            discordUsername: "discord-user",
+            profileCompletedAt: new Date("2026-07-19"),
+            locale: "ko",
+            ...linkedUser,
+        });
+        return completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+    }
+
+    const previousCopy = `${BLOB_ORIGIN}/avatars/3/discord-${"0".repeat(32)}.png`;
+    const copiedAvatar = (userId: number) =>
+        new RegExp(
+            `^${BLOB_ORIGIN}/avatars/${userId}/discord-[0-9a-f]{32}\\.png$`
+        );
+
+    it("새 계정은 Discord 사진을 NosLog 저장소에 복사한 주소로 저장한다", async () => {
+        mocks.session.discordOAuthState = "state";
+        mockDiscordSuccess({ id: "new-discord" });
+        mocks.userFindUnique.mockResolvedValueOnce(null);
+        mocks.userCreate.mockResolvedValueOnce({ id: 7 });
+
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+
+        expect(mocks.fetch).toHaveBeenLastCalledWith(
+            "https://cdn.discordapp.com/avatars/new-discord/avatar-hash.png?size=256",
+            expect.objectContaining({ signal: expect.any(AbortSignal) })
+        );
+        const [pathname, body, options] = mocks.blobPut.mock.calls[0];
+        expect(pathname).toMatch(/^avatars\/7\/discord-[0-9a-f]{32}\.png$/);
+        expect(pathname).not.toContain("new-discord");
+        expect(pathname).not.toContain("avatar-hash");
+        expect(new Uint8Array(body)).toEqual(PNG_BYTES);
+        expect(options).toMatchObject({
+            access: "public",
+            contentType: "image/png",
+        });
+        expect(mocks.userCreate.mock.calls[0][0].data).not.toHaveProperty(
+            "avatar"
+        );
+        expect(mocks.userUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { id: 7 },
+                data: { avatar: `${BLOB_ORIGIN}/${pathname}` },
+            })
+        );
+    });
+
+    it("Discord 주소로 저장돼 있던 사진은 다시 로그인할 때 복사본으로 바뀐다", async () => {
+        mockDiscordSuccess();
+        await loginAs({
+            avatar: "https://cdn.discordapp.com/avatars/discord-1/avatar-hash.png?size=256",
+        });
+
+        expect(mocks.userUpdate.mock.calls[0][0].data.avatar).toMatch(
+            copiedAvatar(3)
+        );
+        expect(mocks.blobDel).not.toHaveBeenCalled();
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "user-rankings",
+            "max"
+        );
+    });
+
+    it("Discord 사진이 그대로면 다시 받지 않는다", async () => {
+        mockDiscordSuccess();
+        await loginAs({ avatar: null });
+        const copied = mocks.userUpdate.mock.calls[0][0].data.avatar;
+        expect(copied).toMatch(copiedAvatar(3));
+        mocks.revalidateTag.mockClear();
+
+        mockDiscordSuccess();
+        await loginAs({ avatar: copied });
+
+        expect(mocks.fetch).toHaveBeenCalledTimes(5);
+        expect(mocks.blobPut).toHaveBeenCalledOnce();
+        expect(mocks.userUpdate).toHaveBeenCalledOnce();
+        expect(mocks.blobDel).not.toHaveBeenCalled();
+        expect(mocks.revalidateTag).not.toHaveBeenCalled();
+    });
+
+    it("Discord 사진이 바뀌면 새로 복사하고 이전 복사본을 지운다", async () => {
+        mockDiscordSuccess({ avatar: "new-hash" });
+        await loginAs({ avatar: previousCopy });
+
+        const saved = mocks.userUpdate.mock.calls[0][0].data.avatar;
+        expect(saved).toMatch(copiedAvatar(3));
+        expect(saved).not.toBe(previousCopy);
+        expect(mocks.blobDel).toHaveBeenCalledExactlyOnceWith(previousCopy);
+    });
+
+    it.each(["download", "format", "size", "upload"])(
+        "사진 복사 실패(%s)는 기본 사진으로 두고 로그인을 막지 않는다",
+        async (failure) => {
+            const log = vi.spyOn(console, "error").mockImplementation(() => {});
+            mockDiscordSuccess({ avatar: "new-hash" });
+            if (failure === "download")
+                mocks.fetch.mockResolvedValueOnce(
+                    new Response(null, { status: 404 })
+                );
+            if (failure === "format")
+                mocks.fetch.mockResolvedValueOnce(
+                    new Response("<html></html>")
+                );
+            if (failure === "size")
+                mocks.fetch.mockResolvedValueOnce(
+                    new Response(new Uint8Array(MAX_IMAGE_SIZE + 1))
+                );
+            if (failure === "upload")
+                mocks.blobPut.mockRejectedValueOnce(new Error("blob down"));
+
+            const response = await loginAs({ avatar: previousCopy });
+
+            expect(mocks.blobPut).toHaveBeenCalledTimes(
+                failure === "upload" ? 1 : 0
+            );
+            expect(mocks.userUpdate.mock.calls[0][0].data.avatar).toBeNull();
+            expect(mocks.blobDel).toHaveBeenCalledExactlyOnceWith(previousCopy);
+            expect(mocks.session.id).toBe(3);
+            expect(new URL(response.headers.get("location")!).pathname).toBe(
+                "/music"
+            );
+            const line = log.mock.calls[0][0] as string;
+            expect(JSON.parse(line).event).toBe(
+                "auth.discord.avatar-copy.failed"
+            );
+            expect(line).not.toContain("discord-1");
+            log.mockRestore();
+        }
+    );
+
+    it("Discord 사진이 없으면 기본 사진으로 두고 복사본을 지운다", async () => {
+        mockDiscordSuccess({ avatar: null });
+        await loginAs({ avatar: previousCopy });
+
+        expect(mocks.fetch).toHaveBeenCalledTimes(2);
+        expect(mocks.userUpdate.mock.calls[0][0].data.avatar).toBeNull();
+        expect(mocks.blobDel).toHaveBeenCalledExactlyOnceWith(previousCopy);
+    });
+
+    it.each([true, false])(
+        "직접 올린 사진은 받지도 바꾸지도 지우지도 않는다(avatarUserManaged %s)",
+        async (avatarUserManaged) => {
+            mockDiscordSuccess();
+            await loginAs({
+                avatar: `${BLOB_ORIGIN}/avatars/3/profile-uuid.webp`,
+                avatarUserManaged,
+            });
+
+            expect(mocks.fetch).toHaveBeenCalledTimes(2);
+            expect(mocks.blobPut).not.toHaveBeenCalled();
+            expect(mocks.blobDel).not.toHaveBeenCalled();
+            expect(mocks.userUpdate).not.toHaveBeenCalled();
+        }
+    );
+
+    it("Discord 연결에서도 사진을 복사하고 이전 복사본을 지운다", async () => {
+        const previous = `${BLOB_ORIGIN}/avatars/1/discord-${"0".repeat(32)}.png`;
+        mocks.session.id = 1;
+        mocks.session.discordOAuthState = "state";
+        mocks.session.discordOAuthReturnTo = "/profile/settings";
+        mockDiscordSuccess();
+        mocks.userFindUnique
+            .mockResolvedValueOnce({
+                id: 1,
+                avatar: previous,
+                avatarUserManaged: false,
+                sessionVersion: 0,
+            })
+            .mockResolvedValueOnce(null);
+
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+
+        const saved = mocks.userUpdate.mock.calls[0][0].data.avatar;
+        expect(saved).toMatch(copiedAvatar(1));
+        expect(saved).not.toBe(previous);
+        expect(mocks.blobDel).toHaveBeenCalledExactlyOnceWith(previous);
     });
 
     it("2단계 인증이 꺼진 관리자는 로그인만 되고 연결 설정에서 안내를 본다", async () => {
