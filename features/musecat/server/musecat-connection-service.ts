@@ -373,7 +373,10 @@ export async function markMusecatNeedsReconnect(token: {
     });
 }
 
-/** 연결 끊기 — NosLog 쪽은 바로 막고, live 면 뮤즈캣 토큰 폐기를 한 번 부른다(RFC 7009, 실패해도 막은 상태 유지) */
+/**
+ * 연결 끊기 — NosLog 쪽 연결 줄을 바로 지워 막고, live 면 뮤즈캣 토큰 폐기를 한 번 부른다(RFC 7009, 실패해도 지운 상태 유지).
+ * 이 연결로 보낸 요청 기록(musecat_actions)은 외래 키 연쇄로 함께 지워진다
+ */
 export async function disconnectMusecat(userId: number) {
     if (getMusecatMode() === "mock") {
         const session = await getSession();
@@ -385,15 +388,7 @@ export async function disconnectMusecat(userId: number) {
         where: { userId },
         select: { refreshTokenEnc: true, generation: true },
     });
-    await db.musecatConnection.updateMany({
-        where: { userId },
-        data: {
-            status: "revoked",
-            revokedAt: new Date(),
-            accessTokenEnc: null,
-            refreshTokenEnc: null,
-        },
-    });
+    await db.musecatConnection.deleteMany({ where: { userId } });
     if (row?.refreshTokenEnc) {
         await musecatOAuthPost(
             "/oauth/revoke",

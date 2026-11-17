@@ -3,6 +3,10 @@ import "server-only";
 import { del, list } from "@vercel/blob";
 import { subDays, subHours, subMonths } from "date-fns";
 
+import {
+    ACCOUNT_UPLOADS_SELECT,
+    deleteAccountData,
+} from "@/features/settings/server/account-deletion-service";
 import { ANALYTICS_RETENTION_DAYS, analyticsDateKey } from "@/lib/analytics";
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
@@ -17,6 +21,9 @@ const PRIVATE_UPLOAD_PREFIXES = ["feedback/", "exam-proofs/"];
 const UPLOAD_GRACE_HOURS = 24;
 const UPLOAD_DELETE_CHUNK = 100;
 const PUBLIC_BLOB_MARK = ".public.blob.vercel-storage.com/";
+const INCOMPLETE_ACCOUNT_DAYS = 7;
+// 계정 하나를 지우는 데 파일 삭제와 쿼리가 여럿 들어, 실행 시간 안에 끝나도록 다른 정리보다 적게 잡는다
+const INCOMPLETE_ACCOUNT_BATCH = 100;
 
 export interface PrivacyRetentionResult {
     cutoff: string;
@@ -31,6 +38,8 @@ export interface PrivacyRetentionResult {
     musecatActionsDeleted: number;
     partnerOutboxDeleted: number;
     oauthCredentialsDeleted: number;
+    musecatTokensCleared: number;
+    incompleteAccountsDeleted: number;
     failed: number;
 }
 
@@ -53,8 +62,8 @@ async function cleanAnalytics(now: Date, result: PrivacyRetentionResult) {
     }
 }
 
-// 처리방침 「보유 기간」 에 적은 나머지 기록 — 처리한 신고(신고된 글 사본 포함) · 뮤즈캣에 보낸 요청 · 보내기를 마친 알림은 6개월,
-// 만료된 OAuth 코드 · 토큰은 만료 하루 뒤(만료 직후 들어온 요청을 거절 사유로 구분하려고 하루를 둔다)
+// 처리방침 「보유 기간」 에 적은 나머지 기록 — 처리한 신고(신고된 글 사본 포함)는 처리한 시각부터, 뮤즈캣에 보낸 요청 · 파트너 알림은 만든 시각부터 6개월,
+// 만료된 OAuth 코드 · 토큰과 뮤즈캣 연결 토큰은 만료 하루 뒤(만료 직후 들어온 요청을 거절 사유로 구분하려고 하루를 둔다)
 async function cleanExpiredRecords(
     now: Date,
     cutoff: Date,
@@ -65,7 +74,7 @@ async function cleanExpiredRecords(
             "처리한 신고",
             async () => {
                 const { count } = await db.communityOpinionReport.deleteMany({
-                    where: { status: "resolved", updatedAt: { lte: cutoff } },
+                    where: { status: "resolved", resolvedAt: { lte: cutoff } },
                 });
                 result.opinionReportsDeleted = count;
             },
@@ -82,11 +91,9 @@ async function cleanExpiredRecords(
         [
             "파트너 알림 대기열",
             async () => {
+                // 받을 주소가 없어 보내지 못한 해제 알림은 pending 으로 남으므로 상태를 가리지 않는다
                 const { count } = await db.partnerOutboxMessage.deleteMany({
-                    where: {
-                        status: { in: ["delivered", "dead"] },
-                        createdAt: { lte: cutoff },
-                    },
+                    where: { createdAt: { lte: cutoff } },
                 });
                 result.partnerOutboxDeleted = count;
             },
@@ -104,6 +111,23 @@ async function cleanExpiredRecords(
                     (sum, { count }) => sum + count,
                     0
                 );
+            },
+        ],
+        [
+            "만료된 뮤즈캣 연결 토큰",
+            async () => {
+                // 줄과 상태는 다시 연결 안내에 쓰여 그대로 두고 암호화한 토큰만 비운다
+                const { count } = await db.musecatConnection.updateMany({
+                    where: {
+                        familyExpiresAt: { lt: subDays(now, 1) },
+                        OR: [
+                            { accessTokenEnc: { not: null } },
+                            { refreshTokenEnc: { not: null } },
+                        ],
+                    },
+                    data: { accessTokenEnc: null, refreshTokenEnc: null },
+                });
+                result.musecatTokensCleared = count;
             },
         ],
     ];
@@ -257,6 +281,40 @@ async function cleanOrphanPrivateUploads(
     }
 }
 
+// 가입을 끝내지 않은 계정 — 온보딩을 마치지 않은 채 만든 지 7일이 지나면 탈퇴와 같은 순서(업로드 파일 → 계정)로 지운다
+async function cleanIncompleteAccounts(
+    now: Date,
+    result: PrivacyRetentionResult
+) {
+    const accounts = await db.user
+        .findMany({
+            where: {
+                profileCompletedAt: null,
+                createdAt: { lt: subDays(now, INCOMPLETE_ACCOUNT_DAYS) },
+            },
+            select: { id: true, ...ACCOUNT_UPLOADS_SELECT },
+            orderBy: { id: "asc" },
+            take: INCOMPLETE_ACCOUNT_BATCH,
+        })
+        .catch((error: unknown) => {
+            result.failed += 1;
+            console.error("가입을 끝내지 않은 계정 찾기 실패", error);
+            return [];
+        });
+    for (const account of accounts) {
+        try {
+            await deleteAccountData(account.id, account);
+            result.incompleteAccountsDeleted += 1;
+        } catch (error) {
+            result.failed += 1;
+            console.error(
+                `가입을 끝내지 않은 계정 ${account.id} 정리 실패`,
+                error
+            );
+        }
+    }
+}
+
 export async function runPrivacyRetention(
     now = new Date()
 ): Promise<PrivacyRetentionResult> {
@@ -306,6 +364,8 @@ export async function runPrivacyRetention(
         musecatActionsDeleted: 0,
         partnerOutboxDeleted: 0,
         oauthCredentialsDeleted: 0,
+        musecatTokensCleared: 0,
+        incompleteAccountsDeleted: 0,
         failed: 0,
     };
 
@@ -374,6 +434,7 @@ export async function runPrivacyRetention(
     await cleanExpiredRecords(now, cutoff, result);
     await cleanOrphanUploads(now, result);
     await cleanOrphanPrivateUploads(now, result);
+    await cleanIncompleteAccounts(now, result);
 
     return result;
 }

@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
     session: {} as Record<string, unknown>,
     row: null as Record<string, unknown> | null,
     updateMany: vi.fn(),
+    deleteMany: vi.fn(),
     live: vi.fn(),
     report: vi.fn(),
     mode: vi.fn(() => "live"),
@@ -35,6 +36,7 @@ vi.mock("@/lib/db", () => ({
         musecatConnection: {
             findUnique: async () => mocks.row,
             updateMany: mocks.updateMany,
+            deleteMany: mocks.deleteMany,
             upsert: vi.fn(),
         },
         musecatAction: { create: vi.fn() },
@@ -64,6 +66,7 @@ import {
 } from "@/features/musecat/server/musecat-arcade-service";
 import {
     completeMusecatConnect,
+    disconnectMusecat,
     getMusecatAccessToken,
 } from "@/features/musecat/server/musecat-connection-service";
 
@@ -79,7 +82,9 @@ function applyToRow() {
             where: Record<string, unknown>;
             data: Record<string, unknown>;
         }) => {
-            const row = mocks.row!;
+            const row = mocks.row;
+            // 연결을 끊으면 줄이 없다
+            if (!row) return { count: 0 };
             const matches = Object.entries(where).every(([key, value]) =>
                 key === "OR" ? true : row[key] === value
             );
@@ -185,6 +190,28 @@ describe("토큰 갱신 중 연결 끊기", () => {
         expect(mocks.row).toMatchObject({ status: "revoked" });
     });
 
+    it("갱신 중에 줄이 지워졌으면 새 토큰을 저장하지도 쓰지도 않는다", async () => {
+        mocks.row = expiring();
+        vi.stubGlobal(
+            "fetch",
+            vi.fn(async () => {
+                mocks.row = null;
+                return new Response(
+                    JSON.stringify({
+                        access_token: "new-access",
+                        refresh_token: "new-refresh",
+                    }),
+                    { status: 200 }
+                );
+            })
+        );
+        await expect(getMusecatAccessToken(9)).resolves.toEqual({
+            ok: false,
+            error: "not_connected",
+        });
+        expect(mocks.row).toBeNull();
+    });
+
     it("끊기지 않은 갱신은 그대로 저장하고 새 토큰을 준다", async () => {
         mocks.row = expiring();
         vi.stubGlobal(
@@ -209,6 +236,56 @@ describe("토큰 갱신 중 연결 끊기", () => {
             accessTokenEnc: "enc:new-access",
             refreshTokenEnc: "enc:new-refresh",
         });
+    });
+});
+
+describe("연결 끊기", () => {
+    it("연결 줄을 지운 뒤 뮤즈캣에 refresh 토큰 폐기를 한 번 부른다", async () => {
+        mocks.row = activeRow();
+        const fetchMock = vi.fn(
+            async (_url: string, _init: { body: URLSearchParams }) =>
+                new Response(null, { status: 200 })
+        );
+        vi.stubGlobal("fetch", fetchMock);
+
+        await disconnectMusecat(9);
+
+        expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { userId: 9 } });
+        expect(mocks.updateMany).not.toHaveBeenCalled();
+        expect(fetchMock).toHaveBeenCalledOnce();
+        const [url, init] = fetchMock.mock.calls[0];
+        expect(url).toBe("https://musecat.test/oauth/revoke");
+        expect(init.body.get("token")).toBe("old-refresh");
+        expect(init.body.get("token_type_hint")).toBe("refresh_token");
+        expect(mocks.deleteMany.mock.invocationCallOrder[0]).toBeLessThan(
+            fetchMock.mock.invocationCallOrder[0]
+        );
+    });
+
+    it("폐기 호출이 실패해도 줄은 지운 채로 끝난다", async () => {
+        mocks.row = activeRow();
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockRejectedValue(new DOMException("t", "TimeoutError"))
+        );
+
+        await expect(disconnectMusecat(9)).resolves.toBeUndefined();
+        expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { userId: 9 } });
+    });
+
+    it("토큰이 이미 비워진 연결은 줄만 지우고 뮤즈캣을 부르지 않는다", async () => {
+        mocks.row = activeRow({
+            status: "needs_reconnect",
+            accessTokenEnc: null,
+            refreshTokenEnc: null,
+        });
+        const fetchMock = vi.fn();
+        vi.stubGlobal("fetch", fetchMock);
+
+        await disconnectMusecat(9);
+
+        expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { userId: 9 } });
+        expect(fetchMock).not.toHaveBeenCalled();
     });
 });
 

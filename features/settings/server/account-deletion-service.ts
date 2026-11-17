@@ -31,6 +31,46 @@ function invalidateDeletedAccount(userId: number) {
     }
 }
 
+/** 계정을 지울 때 함께 지울 업로드 파일이 든 칸 */
+export const ACCOUNT_UPLOADS_SELECT = {
+    avatar: true,
+    feedbackReports: { select: { imageUrl: true } },
+    examSubmissions: { select: { proofImageUrl: true } },
+} as const;
+
+/**
+ * 계정과 딸린 데이터 삭제 — 탈퇴와 가입을 끝내지 않은 계정 정리가 함께 쓴다.
+ * 재인증 · 세션 · 기록은 부르는 쪽이 맡는다
+ */
+export async function deleteAccountData(
+    userId: number,
+    uploads: {
+        avatar: string | null;
+        feedbackReports: { imageUrl: string | null }[];
+        examSubmissions: { proofImageUrl: string | null }[];
+    }
+) {
+    const uploadedUrls = new Set(
+        [
+            uploads.avatar,
+            ...uploads.feedbackReports.map(({ imageUrl }) => imageUrl),
+            ...uploads.examSubmissions.map(
+                ({ proofImageUrl }) => proofImageUrl
+            ),
+        ].filter((url): url is string => Boolean(url))
+    );
+    // DB를 먼저 지우면 Blob 정리에 실패해도 파일을 다시 찾을 수 없으므로
+    // 파일 삭제가 모두 성공한 뒤 계정과 연관 데이터를 삭제함
+    for (const url of uploadedUrls) {
+        await deleteBlobStrict(url);
+    }
+    // 연결 표는 계정과 함께 지워지므로, 그 전에 뮤즈캣 쪽 토큰을 폐기하고 해제 알림을 outbox 에 넣는다
+    await revokeGrantByUser(userId, MUSECAT_OAUTH_CLIENT_ID);
+    await disconnectMusecat(userId);
+    await db.user.delete({ where: { id: userId } });
+    invalidateDeletedAccount(userId);
+}
+
 export async function deleteAccount(
     confirmationInput: string,
     locale: Locale = "ko"
@@ -55,12 +95,7 @@ export async function deleteAccount(
 
     const user = await db.user.findUnique({
         where: { id: session.id },
-        select: {
-            discordId: true,
-            avatar: true,
-            feedbackReports: { select: { imageUrl: true } },
-            examSubmissions: { select: { proofImageUrl: true } },
-        },
+        select: { discordId: true, ...ACCOUNT_UPLOADS_SELECT },
     });
     if (!user) {
         invalidateDeletedAccount(session.id);
@@ -82,31 +117,14 @@ export async function deleteAccount(
         };
     }
 
-    const uploadedUrls = new Set(
-        [
-            user.avatar,
-            ...user.feedbackReports.map(({ imageUrl }) => imageUrl),
-            ...user.examSubmissions.map(({ proofImageUrl }) => proofImageUrl),
-        ].filter((url): url is string => Boolean(url))
-    );
-
     try {
-        // DB를 먼저 지우면 Blob 정리에 실패해도 파일을 다시 찾을 수 없으므로
-        // 파일 삭제가 모두 성공한 뒤 계정과 연관 데이터를 삭제함
-        for (const url of uploadedUrls) {
-            await deleteBlobStrict(url);
-        }
-        // 연결 표는 계정과 함께 지워지므로, 그 전에 뮤즈캣 쪽 토큰을 폐기하고 해제 알림을 outbox 에 넣는다
-        await revokeGrantByUser(session.id, MUSECAT_OAUTH_CLIENT_ID);
-        await disconnectMusecat(session.id);
-        await db.user.delete({ where: { id: session.id } });
+        await deleteAccountData(session.id, user);
         logSecurityEvent({
             event: "account.deleted",
             actorUserId: session.id,
             targetUserId: session.id,
         });
         after(() => dispatchPartnerOutbox().catch(() => null));
-        invalidateDeletedAccount(session.id);
         await session.destroy();
         return { success: true as const };
     } catch (error) {

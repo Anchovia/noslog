@@ -44,6 +44,7 @@ vi.mock("@/lib/blob", () => ({
 }));
 
 import { deleteAccount } from "@/app/(site)/profile/settings/security-actions";
+import { deleteAccountData } from "@/features/settings/server/account-deletion-service";
 
 describe("회원 탈퇴", () => {
     beforeEach(() => {
@@ -146,6 +147,31 @@ describe("회원 탈퇴", () => {
             mocks.disconnectMusecat.mock.invocationCallOrder[0]
         ).toBeLessThan(mocks.userDelete.mock.invocationCallOrder[0]);
         expect(mocks.dispatchPartnerOutbox).toHaveBeenCalledOnce();
+    });
+
+    it("가입을 끝내지 않은 계정 정리도 세션 없이 같은 순서로 지운다", async () => {
+        const avatar =
+            "https://avatar.public.blob.vercel-storage.com/avatars/9/discord.webp";
+
+        await deleteAccountData(9, {
+            avatar,
+            feedbackReports: [],
+            examSubmissions: [],
+        });
+
+        expect(mocks.deleteBlobStrict).toHaveBeenCalledOnce();
+        expect(mocks.deleteBlobStrict).toHaveBeenCalledWith(avatar);
+        expect(mocks.revokeGrantByUser).toHaveBeenCalledWith(9, "musecat");
+        expect(mocks.disconnectMusecat).toHaveBeenCalledWith(9);
+        expect(mocks.userDelete).toHaveBeenCalledWith({ where: { id: 9 } });
+        expect(mocks.deleteBlobStrict.mock.invocationCallOrder[0]).toBeLessThan(
+            mocks.userDelete.mock.invocationCallOrder[0]
+        );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith("user-profile-9", {
+            expire: 0,
+        });
+        expect(mocks.getSession).not.toHaveBeenCalled();
+        expect(mocks.destroy).not.toHaveBeenCalled();
     });
 
     it("파일 삭제에 실패하면 계정 삭제를 중단한다", async () => {

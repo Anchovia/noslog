@@ -147,7 +147,11 @@ export async function updateOpinionReportStatus(
     try {
         const { count } = await db.communityOpinionReport.updateMany({
             where: { id: input.reportId, status: { not: input.status } },
-            data: { status: input.status },
+            // 보관 6개월은 처리한 시각부터 센다. 다시 열면 비워 보관 기간을 세지 않는다
+            data: {
+                status: input.status,
+                resolvedAt: input.status === "resolved" ? new Date() : null,
+            },
         });
         if (count === 0) {
             return {

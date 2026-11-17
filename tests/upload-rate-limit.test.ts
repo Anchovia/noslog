@@ -84,13 +84,13 @@ describe("이미지 업로드 토큰 발급 제한", () => {
         expect(mocks.create).not.toHaveBeenCalled();
     });
 
-    it("목적별 창으로 세고, 정리는 모든 목적의 창보다 오래된 행만 지운다", async () => {
+    it("목적별 창으로 세고, 정리는 모든 목적의 창보다 오래된 행을 누구 것이든 지운다", async () => {
         vi.useFakeTimers({ now: new Date("2026-10-29T12:00:00.000Z") });
         try {
             await claimUploadTokenQuota(2, "community-translation");
             const hourAgo = new Date("2026-10-29T11:00:00.000Z");
             expect(mocks.deleteMany).toHaveBeenCalledWith({
-                where: { userId: 2, createdAt: { lt: hourAgo } },
+                where: { createdAt: { lt: hourAgo } },
             });
             expect(mocks.count).toHaveBeenCalledWith({
                 where: {

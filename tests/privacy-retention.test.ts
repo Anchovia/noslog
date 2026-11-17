@@ -19,6 +19,9 @@ const mocks = vi.hoisted(() => ({
     codeDeleteMany: vi.fn(),
     accessDeleteMany: vi.fn(),
     refreshDeleteMany: vi.fn(),
+    musecatConnectionUpdateMany: vi.fn(),
+    incompleteUserFindMany: vi.fn(),
+    deleteAccountData: vi.fn(),
     env: { PRIVATE_BLOB_READ_WRITE_TOKEN: undefined as string | undefined },
 }));
 
@@ -33,7 +36,13 @@ vi.mock("@/lib/db", () => ({
             updateMany: mocks.submissionUpdateMany,
             deleteMany: mocks.submissionDeleteMany,
         },
-        user: { findMany: mocks.userFindMany },
+        user: {
+            // 업로드 참조 조회와 가입을 끝내지 않은 계정 조회가 같은 표를 읽는다
+            findMany: (args: { where: Record<string, unknown> }) =>
+                "profileCompletedAt" in args.where
+                    ? mocks.incompleteUserFindMany(args)
+                    : mocks.userFindMany(args),
+        },
         communityEvent: { findMany: mocks.eventFindMany },
         announcementTranslation: { findMany: mocks.translationFindMany },
         communityOpinionReport: { deleteMany: mocks.reportDeleteMany },
@@ -42,6 +51,7 @@ vi.mock("@/lib/db", () => ({
         oAuthAuthorizationCode: { deleteMany: mocks.codeDeleteMany },
         oAuthAccessToken: { deleteMany: mocks.accessDeleteMany },
         oAuthRefreshToken: { deleteMany: mocks.refreshDeleteMany },
+        musecatConnection: { updateMany: mocks.musecatConnectionUpdateMany },
         $executeRaw: mocks.executeRaw,
     },
 }));
@@ -50,6 +60,15 @@ vi.mock("@/lib/env/server", () => ({ serverEnv: mocks.env }));
 
 vi.mock("@/lib/blob", () => ({
     deleteBlobStrict: mocks.deleteBlobStrict,
+}));
+
+vi.mock("@/features/settings/server/account-deletion-service", () => ({
+    ACCOUNT_UPLOADS_SELECT: {
+        avatar: true,
+        feedbackReports: { select: { imageUrl: true } },
+        examSubmissions: { select: { proofImageUrl: true } },
+    },
+    deleteAccountData: mocks.deleteAccountData,
 }));
 
 vi.mock("@vercel/blob", () => ({
@@ -89,9 +108,12 @@ describe("개인정보 6개월 보관 정리", () => {
         mocks.codeDeleteMany.mockResolvedValue({ count: 1 });
         mocks.accessDeleteMany.mockResolvedValue({ count: 5 });
         mocks.refreshDeleteMany.mockResolvedValue({ count: 6 });
+        mocks.musecatConnectionUpdateMany.mockResolvedValue({ count: 7 });
+        mocks.incompleteUserFindMany.mockResolvedValue([]);
+        mocks.deleteAccountData.mockResolvedValue(undefined);
     });
 
-    it("처리한 신고 · 뮤즈캣 요청 · 끝난 알림은 6개월, 만료된 OAuth 코드 · 토큰은 만료 하루 뒤 지운다", async () => {
+    it("처리한 신고 · 뮤즈캣 요청 · 파트너 알림은 6개월, 만료된 OAuth 코드 · 토큰은 만료 하루 뒤 지운다", async () => {
         const result = await runPrivacyRetention(
             new Date("2026-07-27T03:00:00+09:00")
         );
@@ -104,17 +126,16 @@ describe("개인정보 6개월 보관 정리", () => {
             failed: 0,
         });
         const cutoff = new Date("2026-01-26T18:00:00.000Z");
+        // 신고는 처리한 시각부터 센다 — 글쓴이가 글을 지워 updated_at 이 바뀌어도 늦어지지 않는다
         expect(mocks.reportDeleteMany).toHaveBeenCalledWith({
-            where: { status: "resolved", updatedAt: { lte: cutoff } },
+            where: { status: "resolved", resolvedAt: { lte: cutoff } },
         });
         expect(mocks.musecatActionDeleteMany).toHaveBeenCalledWith({
             where: { createdAt: { lte: cutoff } },
         });
+        // 보내지 못해 pending 으로 남은 알림도 함께 지운다
         expect(mocks.outboxDeleteMany).toHaveBeenCalledWith({
-            where: {
-                status: { in: ["delivered", "dead"] },
-                createdAt: { lte: cutoff },
-            },
+            where: { createdAt: { lte: cutoff } },
         });
         const expired = {
             where: { expiresAt: { lt: new Date("2026-07-25T18:00:00.000Z") } },
@@ -122,6 +143,78 @@ describe("개인정보 6개월 보관 정리", () => {
         expect(mocks.codeDeleteMany).toHaveBeenCalledWith(expired);
         expect(mocks.accessDeleteMany).toHaveBeenCalledWith(expired);
         expect(mocks.refreshDeleteMany).toHaveBeenCalledWith(expired);
+    });
+
+    it("refresh 묶음이 만료된 지 하루 넘은 뮤즈캣 연결은 줄을 두고 토큰만 비운다", async () => {
+        const result = await runPrivacyRetention(
+            new Date("2026-07-27T03:00:00+09:00")
+        );
+
+        expect(result).toMatchObject({ musecatTokensCleared: 7, failed: 0 });
+        expect(mocks.musecatConnectionUpdateMany).toHaveBeenCalledWith({
+            where: {
+                familyExpiresAt: { lt: new Date("2026-07-25T18:00:00.000Z") },
+                OR: [
+                    { accessTokenEnc: { not: null } },
+                    { refreshTokenEnc: { not: null } },
+                ],
+            },
+            data: { accessTokenEnc: null, refreshTokenEnc: null },
+        });
+    });
+
+    it("가입을 끝내지 않고 7일이 지난 계정은 탈퇴와 같은 삭제를 거친다", async () => {
+        const avatar =
+            "https://abc.public.blob.vercel-storage.com/avatars/8/discord.webp";
+        const accounts = [
+            { id: 8, avatar, feedbackReports: [], examSubmissions: [] },
+            { id: 9, avatar: null, feedbackReports: [], examSubmissions: [] },
+        ];
+        mocks.incompleteUserFindMany.mockResolvedValue(accounts);
+
+        const result = await runPrivacyRetention(
+            new Date("2026-07-27T03:00:00+09:00")
+        );
+
+        expect(result).toMatchObject({
+            incompleteAccountsDeleted: 2,
+            failed: 0,
+        });
+        expect(mocks.incompleteUserFindMany).toHaveBeenCalledWith({
+            where: {
+                profileCompletedAt: null,
+                createdAt: { lt: new Date("2026-07-19T18:00:00.000Z") },
+            },
+            select: {
+                id: true,
+                avatar: true,
+                feedbackReports: { select: { imageUrl: true } },
+                examSubmissions: { select: { proofImageUrl: true } },
+            },
+            orderBy: { id: "asc" },
+            take: 100,
+        });
+        expect(mocks.deleteAccountData).toHaveBeenCalledTimes(2);
+        expect(mocks.deleteAccountData).toHaveBeenCalledWith(8, accounts[0]);
+        expect(mocks.deleteAccountData).toHaveBeenCalledWith(9, accounts[1]);
+    });
+
+    it("삭제에 실패한 미완료 계정은 실패로 세고 다음 계정으로 넘어간다", async () => {
+        mocks.incompleteUserFindMany.mockResolvedValue([
+            { id: 8, avatar: null, feedbackReports: [], examSubmissions: [] },
+            { id: 9, avatar: null, feedbackReports: [], examSubmissions: [] },
+        ]);
+        mocks.deleteAccountData.mockRejectedValueOnce(new Error("blob error"));
+
+        const result = await runPrivacyRetention(
+            new Date("2026-07-27T03:00:00+09:00")
+        );
+
+        expect(mocks.deleteAccountData).toHaveBeenCalledTimes(2);
+        expect(result).toMatchObject({
+            incompleteAccountsDeleted: 1,
+            failed: 1,
+        });
     });
 
     it("처리 완료 자료를 유형별 보관 정책에 맞게 정리한다", async () => {

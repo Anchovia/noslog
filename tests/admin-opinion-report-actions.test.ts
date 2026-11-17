@@ -126,9 +126,21 @@ describe("관리자 의견 신고 처리", () => {
         ).resolves.toMatchObject({ success: true, status: "resolved" });
         expect(mocks.reportUpdateMany).toHaveBeenCalledWith({
             where: { id: 3, status: { not: "resolved" } },
-            data: { status: "resolved" },
+            data: { status: "resolved", resolvedAt: expect.any(Date) },
         });
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/feedback");
+    });
+
+    it("다시 열면 처리 시각을 비운다", async () => {
+        await expect(
+            updateOpinionReportStatus(
+                createOpinionReportStatusUpdateFormData(3, "pending")
+            )
+        ).resolves.toMatchObject({ success: true, status: "pending" });
+        expect(mocks.reportUpdateMany).toHaveBeenCalledWith({
+            where: { id: 3, status: { not: "pending" } },
+            data: { status: "pending", resolvedAt: null },
+        });
     });
 
     it("이미 처리됐거나 없는 신고는 실패로 알린다", async () => {

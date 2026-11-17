@@ -56,6 +56,8 @@ model CommunityOpinionReport {
   reason          OpinionReportReason
   explanation     String?
   status          String                    @default("pending")
+  // 처리 완료로 바꾼 시각 — 보관 6개월을 여기서 센다(updated_at 은 글쓴이가 글을 지울 때도 바뀐다). 다시 열면 비운다
+  resolvedAt      DateTime?                 @map("resolved_at")
   createdAt       DateTime                  @default(now()) @map("created_at")
   updatedAt       DateTime                  @updatedAt @map("updated_at")
   evaluation      CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)

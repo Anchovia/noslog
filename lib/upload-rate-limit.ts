@@ -29,7 +29,8 @@ const QUOTAS = {
 
 export type UploadPurpose = keyof typeof QUOTAS;
 
-// 지난 기록 정리는 가장 긴 창보다 오래된 행만 지운다 — 다른 목적의 창 안 기록을 지우지 않게
+// 지난 기록 정리는 가장 긴 창보다 오래된 행만 지운다 — 어느 목적의 창 안 기록도 지우지 않게.
+// 요청한 사람 것만 지우면 다시 오지 않는 사람의 기록이 남으므로 누구의 요청에서든 전체에서 지운다
 const LONGEST_WINDOW_MS = Math.max(
     ...Object.values(QUOTAS).map((quota) => quota.windowMs)
 );
@@ -48,10 +49,7 @@ export async function claimUploadTokenQuota(
         const now = Date.now();
 
         await tx.uploadTokenGrant.deleteMany({
-            where: {
-                userId,
-                createdAt: { lt: new Date(now - LONGEST_WINDOW_MS) },
-            },
+            where: { createdAt: { lt: new Date(now - LONGEST_WINDOW_MS) } },
         });
 
         const recentGrantCount = await tx.uploadTokenGrant.count({
