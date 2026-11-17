@@ -1,9 +1,9 @@
 "use client";
 
-import { Check, ExternalLink, X } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { reviewChartFieldProposals } from "@/app/admin/contributions/actions";
 import {
@@ -77,6 +77,7 @@ export default function ChartFieldProposalReview({
         });
     }
 
+    const applySelected = useRef(() => {});
     function review(decision: "apply" | "reject") {
         const ids = [...selected];
         if (!ids.length) return;
@@ -107,93 +108,119 @@ export default function ChartFieldProposalReview({
         );
     }
 
+    useEffect(() => {
+        applySelected.current = () => review("apply");
+    });
+
     const allSelected =
         proposals.length > 0 && selected.size === proposals.length;
 
+    // 막대가 떠 있는 동안 R 은 반려 사유 펼침, A 는 반영(판 8 Medusa CommandBar). 글을 쓰는 칸에서는 받지 않는다
+    useEffect(() => {
+        if (!reviewable || !selected.size || isPending) return;
+        function onKeyDown(event: KeyboardEvent) {
+            if (event.metaKey || event.ctrlKey || event.altKey) return;
+            const target = event.target as HTMLElement | null;
+            if (target?.closest("input, textarea, select, [contenteditable]"))
+                return;
+            const key = event.key.toLowerCase();
+            if (key === "r") {
+                event.preventDefault();
+                setRejecting((value) => !value);
+            } else if (key === "a") {
+                event.preventDefault();
+                applySelected.current();
+            }
+        }
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [reviewable, selected.size, isPending]);
+
     return (
         <>
-            {reviewable ? (
+            {reviewable && rejecting && selected.size ? (
                 <AdminCardTools>
-                    <span className="nl-metadata text-nl-subdued">
+                    <div className="flex w-full flex-col gap-nl-8">
+                        {/* 정해 둔 사유(2026-10-01 D2) — 고른 사유가 기여자 화면에 그대로 보인다 */}
+                        <div className="flex flex-col gap-nl-4">
+                            {PROPOSAL_REJECT_REASONS.map((code) => (
+                                <label
+                                    key={code}
+                                    className="nl-body-secondary flex items-center gap-nl-8"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="reject-reason"
+                                        value={code}
+                                        checked={reasonCode === code}
+                                        onChange={() => setReasonCode(code)}
+                                    />
+                                    {REJECT_REASON_LABELS[code]}
+                                </label>
+                            ))}
+                        </div>
+                        <div className="flex flex-wrap gap-nl-8">
+                            <input
+                                value={reason}
+                                maxLength={PROPOSAL_REJECT_REASON_MAX}
+                                onChange={(event) =>
+                                    setReason(event.target.value)
+                                }
+                                placeholder={
+                                    reasonCode === "other"
+                                        ? "반려 사유(제안한 사람에게 보입니다)"
+                                        : "덧붙일 말(선택)"
+                                }
+                                aria-label="덧붙일 말"
+                                className="nl-input min-w-0 flex-1"
+                            />
+                            <button
+                                type="button"
+                                disabled={
+                                    isPending ||
+                                    (reasonCode === "other" && !reason.trim())
+                                }
+                                onClick={() => review("reject")}
+                                className={foundationButtonClass({
+                                    variant: "danger",
+                                })}
+                            >
+                                {`선택 ${selected.size}건 반려`}
+                            </button>
+                        </div>
+                    </div>
+                </AdminCardTools>
+            ) : null}
+            {reviewable && selected.size ? (
+                <div
+                    role="toolbar"
+                    aria-label="선택한 제안"
+                    className="nl-admin-command-bar nl-control"
+                >
+                    <span className="nl-admin-command-bar__count">
                         {selected.size}건 선택
                     </span>
-                    <div className="flex gap-nl-8">
-                        <button
-                            type="button"
-                            disabled={isPending || !selected.size}
-                            onClick={() => setRejecting((value) => !value)}
-                            className={foundationButtonClass({
-                                variant: "danger",
-                            })}
-                        >
-                            <X className="nl-icon-small" aria-hidden />
-                            반려
-                        </button>
-                        <button
-                            type="button"
-                            disabled={isPending || !selected.size}
-                            onClick={() => review("apply")}
-                            className={foundationButtonClass()}
-                        >
-                            <Check className="nl-icon-small" aria-hidden />
-                            {isPending
-                                ? "처리 중"
-                                : `선택 ${selected.size}건 반영`}
-                        </button>
-                    </div>
-                    {rejecting ? (
-                        <div className="flex w-full flex-col gap-nl-8">
-                            {/* 정해 둔 사유(2026-10-01 D2) — 고른 사유가 기여자 화면에 그대로 보인다 */}
-                            <div className="flex flex-col gap-nl-4">
-                                {PROPOSAL_REJECT_REASONS.map((code) => (
-                                    <label
-                                        key={code}
-                                        className="nl-body-secondary flex items-center gap-nl-8"
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="reject-reason"
-                                            value={code}
-                                            checked={reasonCode === code}
-                                            onChange={() => setReasonCode(code)}
-                                        />
-                                        {REJECT_REASON_LABELS[code]}
-                                    </label>
-                                ))}
-                            </div>
-                            <div className="flex flex-wrap gap-nl-8">
-                                <input
-                                    value={reason}
-                                    maxLength={PROPOSAL_REJECT_REASON_MAX}
-                                    onChange={(event) =>
-                                        setReason(event.target.value)
-                                    }
-                                    placeholder={
-                                        reasonCode === "other"
-                                            ? "반려 사유(제안한 사람에게 보입니다)"
-                                            : "덧붙일 말(선택)"
-                                    }
-                                    aria-label="덧붙일 말"
-                                    className="nl-input min-w-0 flex-1"
-                                />
-                                <button
-                                    type="button"
-                                    disabled={
-                                        isPending ||
-                                        (reasonCode === "other" &&
-                                            !reason.trim())
-                                    }
-                                    onClick={() => review("reject")}
-                                    className={foundationButtonClass({
-                                        variant: "danger",
-                                    })}
-                                >
-                                    {`선택 ${selected.size}건 반려`}
-                                </button>
-                            </div>
-                        </div>
-                    ) : null}
-                </AdminCardTools>
+                    <button
+                        type="button"
+                        disabled={isPending}
+                        aria-keyshortcuts="R"
+                        onClick={() => setRejecting((value) => !value)}
+                        className="nl-admin-command-bar__action nl-focus-inset"
+                    >
+                        반려
+                        <kbd className="nl-admin-command-bar__key">R</kbd>
+                    </button>
+                    <button
+                        type="button"
+                        disabled={isPending}
+                        aria-keyshortcuts="A"
+                        onClick={() => review("apply")}
+                        className="nl-admin-command-bar__action nl-focus-inset"
+                    >
+                        {isPending ? "처리 중" : "반영"}
+                        <kbd className="nl-admin-command-bar__key">A</kbd>
+                    </button>
+                </div>
             ) : null}
             <AdminTable>
                 <thead>

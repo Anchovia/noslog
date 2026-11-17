@@ -1026,6 +1026,64 @@
     color: var(--nl-content-disabled);
 }
 
+/* 기여 검토 일괄 선택 막대(판 8 Medusa CommandBar) — 줄을 고르면 본문 아래 가운데에 뜨는 알약. 높이 40, 바닥에서 32 */
+.noslog-ui .nl-admin-command-bar {
+    position: fixed;
+    bottom: var(--nl-spacing-32);
+    left: 50%;
+    z-index: var(--nl-layer-bottom-bar);
+    display: flex;
+    align-items: center;
+    height: var(--nl-control-height-large);
+    padding-inline: var(--nl-spacing-4);
+    transform: translateX(-50%);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-control);
+    box-shadow: var(--nl-overlay-shadow);
+    white-space: nowrap;
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-admin-command-bar {
+        left: calc(
+            var(--nl-admin-sidebar-width) +
+                (100vw - var(--nl-admin-sidebar-width)) / 2
+        );
+    }
+}
+.noslog-ui .nl-admin-command-bar__count,
+.noslog-ui .nl-admin-command-bar__action {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    padding-inline: var(--nl-spacing-12);
+}
+.noslog-ui .nl-admin-command-bar__count {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-command-bar__action {
+    height: 100%;
+    border-left: var(--nl-stroke-default) solid var(--nl-border-divider);
+    color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-medium);
+}
+.noslog-ui .nl-admin-command-bar__action:disabled {
+    color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-admin-command-bar__key {
+    display: grid;
+    place-items: center;
+    min-width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-small);
+    background: var(--nl-surface-canvas);
+    color: var(--nl-content-subdued);
+    font-family: inherit;
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+}
+
 /* 대기열 상태 탭(판 6 GitLab) — 왼쪽부터 글자 폭만, 탭 사이 24, 탭마다 건수 알약 */
 .noslog-ui .nl-admin-tabs {
     gap: var(--nl-spacing-24);
