@@ -15,10 +15,9 @@ export interface ChartSourceRevision {
 /** 기여 버전 메시지 끝 「· 기준 v18」 / 「· 새 채보」 — 공개할 때 남기는 형식 */
 export function contributionRevisionMessage(
     draftId: number,
-    authorName: string,
     baseRevision: number | null
 ) {
-    return `기여 초안 #${draftId} · ${authorName} · ${
+    return `기여 초안 #${draftId} · ${
         baseRevision === null ? "새 채보" : `기준 v${baseRevision}`
     }`;
 }

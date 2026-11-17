@@ -59,12 +59,34 @@ describe("공개 채보 출처 — 영상 추출 줄기", () => {
 
     it("기여 버전 메시지에 기준 버전을 남기고 다시 읽는다", () => {
         expect(
-            contributionBaseRevision(contributionRevisionMessage(1, "하늘", 18))
+            contributionBaseRevision(contributionRevisionMessage(1, 18))
         ).toBe(18);
         expect(
-            contributionBaseRevision(
-                contributionRevisionMessage(1, "하늘", null)
-            )
+            contributionBaseRevision(contributionRevisionMessage(1, null))
+        ).toBeNull();
+    });
+
+    it("기여 버전 메시지에 닉네임을 쓰지 않는다", () => {
+        expect(contributionRevisionMessage(1, 18)).toBe(
+            "기여 초안 #1 · 기준 v18"
+        );
+        expect(contributionRevisionMessage(1, null)).toBe(
+            "기여 초안 #1 · 새 채보"
+        );
+    });
+
+    it("닉네임이 든 옛 메시지에서도 기준 버전을 읽는다", () => {
+        expect(contributionBaseRevision("기여 초안 #1 · 하늘 · 기준 v18")).toBe(
+            18
+        );
+        expect(
+            contributionBaseRevision("기여 초안 #1 · 하 · 늘 · 기준 v18")
+        ).toBe(18);
+        expect(
+            contributionBaseRevision("기여 초안 #1 · 하늘 · 새 채보")
+        ).toBeNull();
+        expect(
+            contributionBaseRevision("기여 초안 #1 · 기준 v3 · 새 채보")
         ).toBeNull();
     });
 });
