@@ -98,7 +98,7 @@ export default function BingoCoordinateBoard({
                             aria-label={`${positionText(cell.position)} ${cell.challenge}${checked ? ` · ${t("bingo.checked")}` : rich ? ` · ${t("bingo.filter.chance")}` : ""}${inLine ? ` · ${t("bingo.lineComplete")}` : ""}`}
                         >
                             <span
-                                className="nl-bingo-board__text nl-metadata"
+                                className="nl-bingo-board__text nl-caption"
                                 lang={cell.language}
                             >
                                 {cell.challenge}

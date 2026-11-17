@@ -149,15 +149,15 @@ export default function MusecatArcadeDetailPage({
     const open = data.closed ? "unknown" : arcadeOpenState(arcade, now);
     const hint = open === "unknown" ? null : arcadeScheduleHint(arcade, now);
     const today = arcadeTodayHours(arcade, now);
-    // 영업 상태 글 — 「영업 종료 · 10:00에 영업 시작」(네이버 지도 · 카카오맵 장소 화면 그대로, 상태만 굵게 · 점 없음)
+    // 영업 상태 글 — 「영업 종료 · 10:00에 영업 시작」(네이버 지도 · 카카오맵 장소 화면 그대로, 점 없음)
     const statusLine =
         open === "unknown" ? null : (
             <>
-                <span className="nl-emphasis-label">
+                <span className="nl-control">
                     {t(open === "open" ? "arcades.open" : "arcades.closed")}
                 </span>
                 {hint ? (
-                    <span className="nl-body-secondary nl-muted">
+                    <span className="nl-control nl-muted">
                         {" · "}
                         {t(
                             hint.kind === "closes"

@@ -165,7 +165,7 @@ export default function PollBuilderDialog({
         >
             <div className="nl-poll-builder">
                 {locked ? (
-                    <p className="nl-body-secondary nl-muted" role="status">
+                    <p className="nl-control nl-muted" role="status">
                         {labels.locked}
                     </p>
                 ) : null}

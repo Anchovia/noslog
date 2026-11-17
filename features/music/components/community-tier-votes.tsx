@@ -96,10 +96,7 @@ export default function CommunityTierVotes({
                                     : {})}
                                 className="nl-vote-row"
                             >
-                                <span
-                                    className="nl-body-secondary nl-muted"
-                                    lang="en"
-                                >
+                                <span className="nl-control nl-muted" lang="en">
                                     {scopeLabel(scope)}
                                 </span>
                                 <span>

@@ -289,7 +289,7 @@ function TierExportPreview({
         <div className="nl-image-share__body" ref={host}>
             {/* 담기는 것 — 지금 서열표 · 필터 조건 + 창에서 고른 구간. 오른쪽 「구간 고르기」 로 목록을 펼친다(R2) */}
             <div className="nl-tier-export__scope">
-                <p className="nl-body-secondary nl-muted">
+                <p className="nl-control nl-muted">
                     {t("tiers.export.scope", {
                         list: heading,
                         bands: bands.length,
@@ -299,7 +299,7 @@ function TierExportPreview({
                 {available.length > 1 ? (
                     <button
                         type="button"
-                        className="nl-link nl-text-link--underlined nl-body-secondary"
+                        className="nl-link nl-text-link--underlined nl-control"
                         aria-expanded={picking}
                         aria-controls={pickerId}
                         onClick={() => setPicking(!picking)}

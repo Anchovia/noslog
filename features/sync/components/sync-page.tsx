@@ -311,14 +311,14 @@ export default function SyncPage({
                                         <li key={entry.id}>
                                             <div className="nl-sync-pair">
                                                 <time
-                                                    className="nl-body-secondary"
+                                                    className="nl-control"
                                                     dateTime={entry.startedAt}
                                                 >
                                                     {syncDateLabel(
                                                         entry.startedAt
                                                     )}
                                                 </time>
-                                                <span className="nl-emphasis-label">
+                                                <span className="nl-control">
                                                     {t(
                                                         `sync.status.${entry.status}`
                                                     )}

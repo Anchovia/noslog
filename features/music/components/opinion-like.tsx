@@ -48,7 +48,7 @@ export default function OpinionLike({
         return (
             <IntentLink
                 href={loginHref}
-                className="nl-opinion-like nl-control"
+                className="nl-opinion-like nl-metadata"
                 title={t("community.likeLogin")}
             >
                 {icon}
@@ -57,7 +57,7 @@ export default function OpinionLike({
         );
     if (!canReact)
         return count ? (
-            <span className="nl-opinion-like nl-control" data-static="">
+            <span className="nl-opinion-like nl-metadata" data-static="">
                 {icon}
                 {content}
             </span>
@@ -65,7 +65,7 @@ export default function OpinionLike({
     return (
         <button
             type="button"
-            className="nl-opinion-like nl-control"
+            className="nl-opinion-like nl-metadata"
             aria-pressed={pressed}
             disabled={pending}
             onClick={() => onToggle(!pressed)}

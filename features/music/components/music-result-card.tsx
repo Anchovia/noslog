@@ -116,9 +116,7 @@ export default function MusicResultCard({
                     {view === "dense" ? null : (
                         <span
                             className={cn(
-                                view === "list"
-                                    ? "nl-body-secondary"
-                                    : "nl-metadata",
+                                view === "list" ? "nl-control" : "nl-metadata",
                                 "nl-muted"
                             )}
                         >

@@ -199,7 +199,7 @@ export default function MusicEntityHeader({
                 {shownRecord ? (
                     <span className="nl-my-best__grd">
                         <span
-                            className="nl-my-best__grd-value nl-page-title nl-page-title--fixed"
+                            className="nl-my-best__grd-value nl-page-title"
                             style={
                                 maxGrade === null
                                     ? undefined
@@ -285,7 +285,7 @@ export default function MusicEntityHeader({
                         <div className="nl-music-entity__title-row">
                             <h1
                                 className={cn(
-                                    "nl-page-title nl-page-title--fixed nl-music-entity__title",
+                                    "nl-page-title nl-music-entity__title",
                                     collapsed && fit.titleCut && "nl-fade-end"
                                 )}
                                 tabIndex={-1}

@@ -31,6 +31,8 @@ export default async function EventDetail({
         locale,
         user?.id ?? null
     );
+    // 작성자 이름만 메타 700 으로 — 문구 안 {name} 자리를 나눠 이름에만 굵기를 준다
+    const [authorBefore, authorAfter] = t("events.author").split("{name}");
     return (
         <PageContainer width="reading" className="nl-events">
             <article className="nl-events__detail">
@@ -55,7 +57,11 @@ export default async function EventDetail({
                         </span>
                         {event.authorName ? (
                             <span className="nl-metadata nl-muted">
-                                {t("events.author", { name: event.authorName })}
+                                {authorBefore}
+                                <span className="nl-metadata nl-metadata--bold">
+                                    {event.authorName}
+                                </span>
+                                {authorAfter}
                             </span>
                         ) : null}
                     </div>

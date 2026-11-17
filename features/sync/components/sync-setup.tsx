@@ -130,7 +130,7 @@ export default function SyncSetup({
             <ol className="nl-stack">
                 <li className="nl-sync-guide-step">
                     <span
-                        className="nl-sync-step__number nl-emphasis-label"
+                        className="nl-sync-step__number nl-caption"
                         aria-hidden
                     >
                         1
@@ -239,7 +239,7 @@ export default function SyncSetup({
                 </li>
                 <li className="nl-sync-guide-step">
                     <span
-                        className="nl-sync-step__number nl-emphasis-label"
+                        className="nl-sync-step__number nl-caption"
                         aria-hidden
                     >
                         2
@@ -278,7 +278,7 @@ export default function SyncSetup({
                 </li>
                 <li className="nl-sync-guide-step">
                     <span
-                        className="nl-sync-step__number nl-emphasis-label"
+                        className="nl-sync-step__number nl-caption"
                         aria-hidden
                     >
                         3

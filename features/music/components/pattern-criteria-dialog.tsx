@@ -38,7 +38,7 @@ export default function PatternCriteriaDialog({
                 </button>
             }
         >
-            <p className="nl-body-secondary">
+            <p className="nl-control">
                 {t(computed ? "pattern.computed" : "pattern.basis")}
             </p>
             {computed ? null : (
@@ -59,7 +59,7 @@ export default function PatternCriteriaDialog({
                                         {level}
                                     </span>
                                 </span>
-                                <span className="nl-body-secondary">
+                                <span className="nl-control">
                                     {t(`pattern.level.${level}`)}
                                 </span>
                             </li>
@@ -75,7 +75,7 @@ export default function PatternCriteriaDialog({
                             <dt className="nl-emphasis-label">
                                 {t(`pattern.axis.${axis}`)}
                             </dt>
-                            <dd className="nl-body-secondary nl-muted">
+                            <dd className="nl-control nl-muted">
                                 {t(
                                     computed
                                         ? `pattern.computedDefinition.${axis}`
@@ -86,11 +86,7 @@ export default function PatternCriteriaDialog({
                     ))}
                 </dl>
             </section>
-            {!computed && (
-                <p className="nl-metadata nl-metadata--long">
-                    {t("pattern.scale")}
-                </p>
-            )}
+            {!computed && <p className="nl-control">{t("pattern.scale")}</p>}
         </ModalDialog>
     );
 }

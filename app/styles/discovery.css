@@ -24,12 +24,6 @@
         var(--nl-spacing-16);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
-/* 창 제목 = 야놀자 필터 시트 제목 20/700 */
-.noslog-ui .nl-full-dialog__header .nl-component-title {
-    font-size: var(--nl-type-size-20);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-bold);
-}
 .noslog-ui .nl-full-dialog__body {
     display: flex;
     flex: 1;

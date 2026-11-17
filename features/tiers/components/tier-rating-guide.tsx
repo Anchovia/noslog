@@ -77,7 +77,7 @@ export default function TierRatingGuide({
             <div className="nl-tier-guide">
                 {overview.list?.description ? (
                     // 운영자가 한국어로 쓰는 데이터 글이라 화면 언어와 상관없이 한국어 줄바꿈(낱말 단위)
-                    <p className="nl-body-secondary" lang="ko">
+                    <p className="nl-control" lang="ko">
                         {overview.list.description}
                     </p>
                 ) : null}
@@ -85,7 +85,7 @@ export default function TierRatingGuide({
                     <dl className="nl-info-rows nl-info-rows--value">
                         {minScore ? (
                             <div>
-                                <dt className="nl-body-secondary nl-muted">
+                                <dt className="nl-control nl-muted">
                                     {t("tiers.guideRequirement")}
                                 </dt>
                                 <dd className="nl-emphasis-label">
@@ -97,7 +97,7 @@ export default function TierRatingGuide({
                         ) : null}
                         {overview.list ? (
                             <div>
-                                <dt className="nl-body-secondary nl-muted">
+                                <dt className="nl-control nl-muted">
                                     {t("tiers.guideUpdated")}
                                 </dt>
                                 <dd className="nl-control">
@@ -114,9 +114,7 @@ export default function TierRatingGuide({
                         ) : null}
                     </dl>
                 ) : null}
-                <p className="nl-body-secondary nl-muted">
-                    {t("tiers.filterHelp")}
-                </p>
+                <p className="nl-control nl-muted">{t("tiers.filterHelp")}</p>
                 {query.goal === "pianist" && max ? (
                     <section className="nl-tier-weight">
                         <div className="nl-tier-weight__heading">
@@ -171,7 +169,7 @@ export default function TierRatingGuide({
                             ]}
                             emptyMessage=""
                         />
-                        <p className="nl-metadata nl-metadata--long">
+                        <p className="nl-control">
                             {t("tiers.weight.formula", {
                                 count: BASIC_RATING_TOP_COUNT,
                                 score: BASIC_RATING_MAX.toLocaleString(locale),

@@ -22,7 +22,9 @@ export default function FooterLinks({
         <>
             <div className="nl-footer__links nl-control">
                 <IntentLink href={termsHref}>{termsLabel}</IntentLink>
-                <IntentLink href={privacyHref}>{privacyLabel}</IntentLink>
+                <IntentLink href={privacyHref} className="nl-emphasis-label">
+                    {privacyLabel}
+                </IntentLink>
                 <a
                     href="https://github.com/Anchovia/noslog"
                     aria-label={`GitHub · ${externalLabel}`}

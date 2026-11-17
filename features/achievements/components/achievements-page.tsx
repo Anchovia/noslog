@@ -95,12 +95,12 @@ function AchievementRow({
                 />
                 <span className="nl-achievement-row__text">
                     <span className="nl-achievement-row__title">
-                        {/* 한 열 목록 줄 = 이름 16/600 + 설명 14(다른 한 열 목록과 같게, 2026-10-01 D3) */}
+                        {/* 한 열 목록 줄 = 이름 16/700 + 설명 14(다른 한 열 목록과 같게, 2026-10-01 D3) */}
                         <span className="nl-entity-title nl-achievement-row__name">
                             {text.titled(key, tier)}
                         </span>
                     </span>
-                    <span className="nl-body-secondary nl-muted nl-achievement-row__number">
+                    <span className="nl-control nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
                             ? showNumbers
                                 ? `${text.condition(key, shownTier)} · ${t(
@@ -158,7 +158,7 @@ function AchievementRow({
                                 size="inline"
                             />
                             <div>
-                                <span className="nl-body-secondary">
+                                <span className="nl-control">
                                     {text.roman(step)} ·{" "}
                                     {text.condition(key, step)}
                                 </span>

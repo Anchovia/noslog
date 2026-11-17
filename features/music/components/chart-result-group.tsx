@@ -59,7 +59,7 @@ export default function ChartResultRows({
                     >
                         {music.title}
                     </span>
-                    <span className="nl-body-secondary nl-muted">
+                    <span className="nl-control nl-muted">
                         {music.artist || t("music.unknownArtist")}
                     </span>
                 </span>

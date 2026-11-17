@@ -442,7 +442,7 @@ function ChartCommentRow({
                 <IntentLink
                     id={`${id}-name`}
                     href={href(`/profile/${comment.user.id}`)}
-                    className="nl-opinion-row__name nl-emphasis-label"
+                    className="nl-opinion-row__name nl-metadata nl-metadata--bold"
                 >
                     {name}
                 </IntentLink>

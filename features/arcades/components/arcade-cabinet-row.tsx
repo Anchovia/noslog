@@ -163,7 +163,7 @@ export default function ArcadeCabinetRow({
             {/* 두 열 — 왼쪽 이름 / 위치 메모, 오른쪽 상태 / 확인 시각(상태의 근거라 상태 밑) · 2026-09-16 */}
             <div className="nl-arcade-cabinet__row">
                 <span className="nl-stack nl-stack--4">
-                    <span className="nl-control">{label}</span>
+                    <span className="nl-entity-title">{label}</span>
                     {cabinet.note ? (
                         <span className="nl-metadata nl-muted">
                             {cabinet.note}

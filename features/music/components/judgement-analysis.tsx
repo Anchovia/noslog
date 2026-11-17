@@ -119,7 +119,7 @@ export default function JudgementAnalysis({
                         <h3 className="nl-component-title">
                             {t("music.recent.judgement")}
                         </h3>
-                        <dl className="nl-facts nl-analysis-values nl-body-secondary">
+                        <dl className="nl-facts nl-analysis-values nl-control">
                             {shownKeys.map((key) => (
                                 <div key={key}>
                                     <dt>
@@ -171,7 +171,7 @@ export default function JudgementAnalysis({
                         <h3 className="nl-component-title">
                             {t("music.judgement.noteSuccess")}
                         </h3>
-                        <dl className="nl-facts nl-analysis-values nl-body-secondary">
+                        <dl className="nl-facts nl-analysis-values nl-control">
                             {peerNoteRateKeys.map((key, index) => {
                                 const average =
                                     peer?.noteRates.averages[key] ?? null;

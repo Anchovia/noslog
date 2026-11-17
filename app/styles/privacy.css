@@ -81,9 +81,9 @@
     padding: 0 var(--nl-spacing-16);
     border-radius: var(--nl-radius-control);
 }
-/* 지금 위치 = Spectrum 2 메뉴 고른 항목 — 면 없이 굵기 600 */
+/* 지금 위치 = Spectrum 2 메뉴 고른 항목 — 면 없이 굵기 700 */
 .noslog-ui .nl-privacy-contents a[aria-current] {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-privacy-contents__wide {
     display: none;

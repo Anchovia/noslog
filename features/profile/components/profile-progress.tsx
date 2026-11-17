@@ -233,13 +233,13 @@ export function ProfileProgressSkeleton() {
                 <div className="nl-line-chart__plot">
                     <div className="nl-line-chart__area">
                         <div className="nl-line-chart__series nl-profile-loading__plot nl-skeleton" />
-                        <div className="nl-line-chart__x nl-metadata">
+                        <div className="nl-line-chart__x nl-caption">
                             <SkeletonText
-                                className="nl-metadata"
+                                className="nl-caption"
                                 sample="2026. 09. 10."
                             />
                             <SkeletonText
-                                className="nl-metadata"
+                                className="nl-caption"
                                 sample="2026. 09. 10."
                             />
                         </div>

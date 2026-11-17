@@ -313,10 +313,10 @@ export default function ChartSheetViewer({
                             {t("chart.source.notes")}
                         </dt>
                         <dd>
-                            <p className="nl-body-secondary">
+                            <p className="nl-control">
                                 {t("chart.source.notesBody")}
                             </p>
-                            <p className="nl-body-secondary">
+                            <p className="nl-control">
                                 {t("chart.source.tool")}
                             </p>
                             <p className="nl-metadata">
@@ -499,11 +499,11 @@ export default function ChartSheetViewer({
                     <div className="nl-chart-viewer__titles">
                         <p className="nl-entity-title">{title}</p>
                         {localizedTitle ? (
-                            <p className="nl-body-secondary nl-muted">
+                            <p className="nl-control nl-muted">
                                 {localizedTitle}
                             </p>
                         ) : null}
-                        <p className="nl-body-secondary">
+                        <p className="nl-control">
                             <span className={`nl-control ${difficultyClass}`}>
                                 {difficulty} · Lv {level}
                             </span>

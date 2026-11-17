@@ -80,7 +80,7 @@ export default function ProfilePinned({
                                     </span>
                                 </span>
                                 {play.comment ? (
-                                    <q className="nl-profile-pinned__comment nl-body-secondary nl-muted">
+                                    <q className="nl-profile-pinned__comment nl-control nl-muted">
                                         {play.comment}
                                     </q>
                                 ) : null}

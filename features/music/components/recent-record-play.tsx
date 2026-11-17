@@ -87,7 +87,7 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
         <li>
             <details>
                 <summary
-                    className="nl-recent-play nl-body-secondary nl-focus-inset nl-forced-press"
+                    className="nl-recent-play nl-control nl-focus-inset nl-forced-press"
                     aria-label={t("music.recent.detailLabel", {
                         date,
                         score: count(play.score),
@@ -118,7 +118,7 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
                         />
                     </span>
                 </summary>
-                <dl className="nl-recent-play__details nl-facts nl-body-secondary">
+                <dl className="nl-recent-play__details nl-facts nl-control">
                     {metrics.map((metric) => (
                         <div key={metric.label}>
                             <dt>{metric.label}</dt>

@@ -58,7 +58,7 @@ export default async function HomeEvents({
                                     <span className="nl-entity-title">
                                         {event.title}
                                     </span>
-                                    <span className="nl-body-secondary">
+                                    <span className="nl-metadata">
                                         {eventPeriod(
                                             event.startsAt,
                                             event.endsAt,

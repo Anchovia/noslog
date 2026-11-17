@@ -149,7 +149,7 @@ export default function PollWidget({
                                 key={option.id}
                                 className="nl-stack nl-stack--4"
                             >
-                                <p className="nl-body-secondary nl-poll__label">
+                                <p className="nl-control nl-poll__label">
                                     <span>
                                         {option.text}
                                         {mine ? (

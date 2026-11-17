@@ -403,7 +403,7 @@ export default function PinnedRecordsPicker({
                             })}
                         </div>
                         {!matches.length ? (
-                            <p className="nl-body-secondary nl-muted">
+                            <p className="nl-control nl-muted">
                                 {t("profile.pinned.noResults")}
                             </p>
                         ) : null}

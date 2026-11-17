@@ -219,6 +219,7 @@ export function createBookmarkletScript(
         spacing: space,
         typeSize,
         lineHeight,
+        weight,
         radius,
         stroke,
     } = TOKEN_VALUES;
@@ -256,7 +257,7 @@ export function createBookmarkletScript(
                 font:'${typeSize[14]}px/${role.lineHeightUi}px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 24%)",
                 display:"flex",flexDirection:"column",gap:"${space[16]}px",maxHeight:"calc(100dvh - 32px)",overflowY:"auto"
             });
-            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:${stroke.strong}px solid #FFFFFF;outline-offset:0}#noslog-sync-overlay .noslog-sync-primary{background:#DBDBDB;color:#111111}#noslog-sync-overlay .noslog-sync-secondary{background:#2C2C2C;color:#DBDBDB}#noslog-sync-overlay .noslog-sync-primary:is(:focus-visible,:active){background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:is(:focus-visible,:active){background:#323232;color:#F2F2F2}@media(hover:hover){#noslog-sync-overlay .noslog-sync-primary:hover{background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:hover{background:#323232;color:#F2F2F2}}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}</style><strong id="noslog-sync-title" style="font-size:${typeSize[16]}px;line-height:${lineHeight[24]}px;font-weight:${role.weightStrong};color:#F2F2F2"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:${space[8]}px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:${stroke.strong}px;background:#323232"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:${space[8]}px;width:100%"></div>';
+            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:${stroke.strong}px solid #FFFFFF;outline-offset:0}#noslog-sync-overlay .noslog-sync-primary{background:#DBDBDB;color:#111111}#noslog-sync-overlay .noslog-sync-secondary{background:#2C2C2C;color:#DBDBDB}#noslog-sync-overlay .noslog-sync-primary:is(:focus-visible,:active){background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:is(:focus-visible,:active){background:#323232;color:#F2F2F2}@media(hover:hover){#noslog-sync-overlay .noslog-sync-primary:hover{background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:hover{background:#323232;color:#F2F2F2}}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}</style><strong id="noslog-sync-title" style="font-size:${typeSize[16]}px;line-height:${lineHeight[22]}px;font-weight:${role.weightStrong};color:#F2F2F2"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:${space[8]}px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:${stroke.strong}px;background:#323232"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:${space[8]}px;width:100%"></div>';
             document.body.appendChild(overlay);
 
             overlay.querySelector("#noslog-sync-title").textContent=copy.title;
@@ -275,7 +276,7 @@ export function createBookmarkletScript(
                 track.style.display=state==="busy"?"block":"none";
             };
             setStatus(copy.preparing);
-            const buttonStyle={display:"flex",alignItems:"center",justifyContent:"center",minHeight:"${controlHeight}px",padding:"${space[8]}px ${controlHeight / 2}px",border:"0",borderRadius:"${radius.full}px",font:"inherit",fontWeight:"${role.weightStrong}",textDecoration:"none",flex:"1 1 0",minWidth:"0",textAlign:"center",cursor:"pointer"};
+            const buttonStyle={display:"flex",alignItems:"center",justifyContent:"center",minHeight:"${controlHeight}px",padding:"${space[8]}px ${controlHeight / 2}px",border:"0",borderRadius:"${radius.full}px",font:"inherit",fontWeight:"${weight.medium}",textDecoration:"none",flex:"1 1 0",minWidth:"0",textAlign:"center",cursor:"pointer"};
             const fitActions=()=>{
                 if(!actions.children.length)return;
                 actions.style.display="flex";

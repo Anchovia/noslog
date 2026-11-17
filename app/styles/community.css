@@ -343,6 +343,10 @@
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-medium);
 }
+/* 좋아요 수는 메타 값(13/18/400), 같은 줄의 번역 · 답글 글자 버튼만 medium */
+.noslog-ui .nl-opinion-like.nl-metadata:is(button, a) {
+    font-weight: var(--nl-type-weight-regular);
+}
 .noslog-ui .nl-opinion-like:is(button, a):is(:focus-visible, :active) {
     background: var(--nl-surface-control-hover);
     color: var(--nl-content-strong);
@@ -387,9 +391,7 @@
     border: 0;
     border-radius: var(--nl-radius-control);
     background: none;
-    /* 공용 고스트(Spectrum 2 ActionButton quiet) 값 — TSX 의 nl-emphasis-label(600)보다 뒤에 읽혀 medium 이 이긴다 */
     color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-opinion-replies__toggle:is(:focus-visible, :active) {
     background: var(--nl-surface-control-hover);

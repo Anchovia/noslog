@@ -62,10 +62,7 @@ export default function MyFeedbackList({
                     {[0, 1, 2].map((index) => (
                         <li key={index} className="nl-feedback-mine__row">
                             <SkeletonText className="nl-metadata" width="m" />
-                            <SkeletonText
-                                className="nl-body-secondary"
-                                width="l"
-                            />
+                            <SkeletonText className="nl-control" width="l" />
                         </li>
                     ))}
                 </ul>
@@ -73,9 +70,7 @@ export default function MyFeedbackList({
         );
     if (!items.length)
         return (
-            <p className="nl-body-secondary nl-muted">
-                {t("feedback.mine.empty")}
-            </p>
+            <p className="nl-control nl-muted">{t("feedback.mine.empty")}</p>
         );
     return (
         <ul>
@@ -106,7 +101,7 @@ export default function MyFeedbackList({
                                 .join(" · ")}
                         </span>
                     </div>
-                    <p className="nl-body-secondary nl-feedback-mine__content">
+                    <p className="nl-control nl-feedback-mine__content">
                         {item.content}
                     </p>
                     {item.reply ? (
@@ -124,7 +119,7 @@ export default function MyFeedbackList({
                                     />
                                 ) : null}
                             </p>
-                            <p className="nl-body-secondary">{item.reply}</p>
+                            <p className="nl-control">{item.reply}</p>
                         </div>
                     ) : null}
                 </li>

@@ -26,7 +26,7 @@ function Example(args: FeedbackDialogViewProps) {
                 setOpen(next);
             }}
             feedbackList={
-                <p className="nl-body-secondary nl-muted">
+                <p className="nl-control nl-muted">
                     {t("feedback.mine.empty")}
                 </p>
             }

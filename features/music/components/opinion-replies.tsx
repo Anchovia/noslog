@@ -115,7 +115,7 @@ export default function OpinionReplies({
             {opinion.replyCount > 0 ? (
                 <button
                     type="button"
-                    className="nl-opinion-replies__toggle nl-emphasis-label"
+                    className="nl-opinion-replies__toggle nl-metadata"
                     aria-expanded={open}
                     aria-controls={`${id}-replies`}
                     onClick={() => setOpen(!open)}
@@ -242,7 +242,7 @@ function ReplyRow({
                 <div className="nl-opinion-row__header">
                     <IntentLink
                         href={href(`/profile/${reply.user.id}`)}
-                        className="nl-opinion-row__name nl-emphasis-label"
+                        className="nl-opinion-row__name nl-metadata nl-metadata--bold"
                     >
                         {name}
                     </IntentLink>
@@ -358,7 +358,7 @@ function ReplyRow({
                     />
                 ) : null}
                 {reported ? (
-                    <p className="nl-body-secondary" role="status">
+                    <p className="nl-control" role="status">
                         {t("community.reportReceived")}
                     </p>
                 ) : null}

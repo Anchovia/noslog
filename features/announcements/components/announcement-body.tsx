@@ -194,7 +194,7 @@ export default function AnnouncementBody({
                         <h2 className="nl-section-title">{children}</h2>
                     ),
                     h3: ({ children }) => (
-                        <h3 className="nl-component-title">{children}</h3>
+                        <h3 className="nl-entity-title">{children}</h3>
                     ),
                     // 표는 열을 줄이면 뜻이 망가지므로 접지 않고 표만 가로로 민다(TB1, 2026-09-23)
                     table: ({ children }) => (

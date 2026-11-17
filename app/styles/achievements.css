@@ -314,7 +314,7 @@
     overflow-wrap: anywhere;
 }
 /* 가운데 맞춘 조건 글이 두 줄이 되면 둘째 줄에 낱말 하나만 남지 않게 줄 길이를 고르게 */
-.noslog-ui .nl-achievement-card > p.nl-body-secondary {
+.noslog-ui .nl-achievement-card > p.nl-control {
     text-wrap: balance;
 }
 .noslog-ui .nl-achievement-card__facts {

@@ -414,7 +414,7 @@ export default function BingoDetailPage({
                                         />
                                         <div className="nl-bingo-mission__text">
                                             <p
-                                                className="nl-body-secondary"
+                                                className="nl-control"
                                                 lang={cell.language}
                                             >
                                                 <BingoTermHelp
@@ -556,7 +556,7 @@ export default function BingoDetailPage({
                                 </>
                             }
                         >
-                            <p className="nl-body-secondary nl-muted">
+                            <p className="nl-control nl-muted">
                                 {t("bingo.resetDescription", {
                                     title: bingo.title,
                                     count: state.completed.size,

@@ -212,7 +212,7 @@ export default function AccountSettings({
                             </>
                         }
                     >
-                        <p className="nl-body-secondary nl-muted">
+                        <p className="nl-control nl-muted">
                             {t("settings.deleteIrreversible")}{" "}
                             {t("settings.deletionBoundary")}
                         </p>
@@ -220,7 +220,7 @@ export default function AccountSettings({
                             <h3 className="nl-metadata nl-muted">
                                 {t("settings.deletionHeading")}
                             </h3>
-                            <dl className="nl-body-secondary">
+                            <dl className="nl-control">
                                 {(
                                     Object.keys(
                                         summary
@@ -259,9 +259,7 @@ export default function AccountSettings({
                                 ) : null}
                                 <p
                                     className={
-                                        verified
-                                            ? "nl-body-secondary"
-                                            : "nl-metadata"
+                                        verified ? "nl-control" : "nl-metadata"
                                     }
                                     role="status"
                                 >
@@ -326,7 +324,7 @@ export default function AccountSettings({
                                     action={
                                         <IntentLink
                                             href={href("/privacy")}
-                                            className="nl-body-secondary nl-link nl-text-link--underlined"
+                                            className="nl-control nl-link nl-text-link--underlined"
                                         >
                                             {t("footer.privacy")}
                                         </IntentLink>

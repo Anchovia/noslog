@@ -148,7 +148,7 @@ export function ProfilePlayListHead({
     const record = kind !== "recent";
     return (
         <div
-            className="nl-profile-play-head nl-metadata nl-muted"
+            className="nl-profile-play-head nl-control nl-muted"
             aria-hidden="true"
         >
             {kind === "best" ? (

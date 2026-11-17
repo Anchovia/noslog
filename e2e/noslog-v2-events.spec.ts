@@ -129,10 +129,10 @@ test("the detail keeps the approved version while an edit is under review", asyn
     });
     expect(color).toBe(success);
     await expect(page.locator(".nl-announcement-body h2")).toHaveText("규칙");
-    // 본문 안 굵게 — 한국어 · 일본어는 600, 영어는 700(news.md 「상세 본문」)
+    // 본문 안 굵게 — 모든 언어 700(글 본문 굵은 구간 16/22 · 700)
     const strong = page.locator(".nl-announcement-body strong");
     await expect(strong).toHaveText("대상");
-    await expect(strong).toHaveCSS("font-weight", "600");
+    await expect(strong).toHaveCSS("font-weight", "700");
     // 작성자가 아니면 고치기 · 검토 안내 없음
     await expect(page.locator(".nl-status")).toHaveCount(0);
     await expect(
@@ -144,7 +144,7 @@ test("the detail keeps the approved version while an edit is under review", asyn
             .violations
     ).toEqual([]);
     for (const [locale, weight] of [
-        ["ja", "600"],
+        ["ja", "700"],
         ["en", "700"],
     ] as const) {
         await page.goto(page.url().replace(/\/(ko|ja)\//, `/${locale}/`));

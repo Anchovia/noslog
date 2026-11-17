@@ -76,9 +76,7 @@ export default function MusecatListRow({
                         M
                     </span>
                     {distance ? (
-                        <span className="nl-body-secondary nl-muted">
-                            {distance}
-                        </span>
+                        <span className="nl-control nl-muted">{distance}</span>
                     ) : null}
                 </span>
                 {/* 한 줄에 태그 하나 — 상태(폐업이 고장보다 먼저) 태그 하나 + 대수는 메타 글자 */}
@@ -95,17 +93,17 @@ export default function MusecatListRow({
                                   })}
                         </span>
                     ) : null}
-                    <span className="nl-body-secondary nl-muted">
+                    <span className="nl-control nl-muted">
                         {t("musecat.list.nostalgiaCount", {
                             count: nostalgiaCount,
                         })}
                     </span>
                 </span>
-                <span className="nl-body-secondary nl-muted nl-musecat-result__address">
+                <span className="nl-control nl-muted nl-musecat-result__address">
                     {arcade.address ?? arcade.region}
                 </span>
                 {state !== "unknown" ? (
-                    <span className="nl-body-secondary nl-muted">
+                    <span className="nl-control nl-muted">
                         <span
                             className="nl-musecat-result__state"
                             data-open={state}
@@ -127,7 +125,7 @@ export default function MusecatListRow({
                     </span>
                 ) : closed ? null : (
                     // 영업시간이 없으면 같은 자리에 흐린 글자 한 줄(사용자 2026-10-22 — 영업 종료 줄처럼)
-                    <span className="nl-body-secondary nl-muted">
+                    <span className="nl-control nl-muted">
                         {t("musecat.list.hoursUnknown")}
                     </span>
                 )}

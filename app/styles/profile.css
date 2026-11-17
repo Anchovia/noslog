@@ -571,6 +571,7 @@
         align-items: center;
         min-height: var(--nl-spacing-32);
         border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
+        font-weight: var(--nl-type-weight-medium);
     }
     /* 「곡」 은 곡 이름 위(자켓 위 아님, 2026-09-30 사용자) */
     .noslog-ui .nl-profile-play-head__song {

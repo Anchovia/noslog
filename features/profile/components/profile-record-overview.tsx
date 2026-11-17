@@ -203,7 +203,7 @@ export function ProfileJudgementSummary({
                                         locale
                                     )}
                                 </dd>
-                                <dd className="nl-body-secondary nl-muted">
+                                <dd className="nl-control nl-muted">
                                     {(
                                         (judgement.counts[key] / total) *
                                         100

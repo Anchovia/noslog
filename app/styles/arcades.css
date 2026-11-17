@@ -974,7 +974,7 @@
 }
 /* 오늘 줄은 크기를 다른 날과 같은 본문으로 두고 굵기로만 가린다 */
 .noslog-ui .nl-arcade-hours > [data-today] {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-arcade-hours > [data-muted] {
     color: var(--nl-content-subdued);

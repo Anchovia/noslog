@@ -145,14 +145,14 @@ export default function MusecatGameCard({
                 장소 상세 안 항목 목록 21곳 실측: 구분선 줄 · 수량은 오른쪽 · 상태는 이름 아래 · 줄에는 버튼 없음 · Pinball Map 「Machine details」) */}
             <div className="nl-musecat-game__top">
                 <h3 className="nl-entity-title">{game.title}</h3>
-                <span className="nl-body-secondary nl-muted">
+                <span className="nl-control nl-muted">
                     {t("arcades.machineCountValue", { count: game.quantity })}
                 </span>
             </div>
-            {sub ? <p className="nl-body-secondary nl-muted">{sub}</p> : null}
+            {sub ? <p className="nl-control nl-muted">{sub}</p> : null}
             {data.closed ? null : (
                 <p
-                    className="nl-musecat-game__status nl-emphasis-label"
+                    className="nl-musecat-game__status nl-control"
                     data-state={game.flags.length ? "fault" : "ok"}
                 >
                     {game.flags.length
@@ -181,7 +181,7 @@ export default function MusecatGameCard({
                             <p className="nl-emphasis-label">
                                 {t("musecat.campaign.title")}
                             </p>
-                            <p className="nl-body-secondary nl-muted">
+                            <p className="nl-control nl-muted">
                                 {t("musecat.campaign.question", {
                                     version: game.campaign.targetVersion,
                                 })}

@@ -65,7 +65,7 @@ export const FEATURE_VALUE_KEYS = {
     >;
 };
 
-/** 「시설」 구역 안 — 아이콘 20 · 글자 본문 보조, 두 열 */
+/** 「시설」 구역 안 — 아이콘 20 · 글자 목록 줄, 두 열 */
 export function ArcadeFacilities({
     facilities,
 }: {
@@ -73,7 +73,7 @@ export function ArcadeFacilities({
 }) {
     const t = useTranslations();
     return (
-        <ul className="nl-arcade-facilities nl-body-secondary">
+        <ul className="nl-arcade-facilities nl-control">
             {facilities.map((facility) => {
                 const Icon = FACILITY_ICONS[facility];
                 return (
@@ -136,7 +136,7 @@ export function CabinetFeatures({
     if (!rows.length && !note) return null;
     return (
         <div
-            className="nl-arcade-cabinet__features nl-body-secondary"
+            className="nl-arcade-cabinet__features nl-control"
             role="group"
             aria-label={t("arcades.cabinetFeatures")}
         >

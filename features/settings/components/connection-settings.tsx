@@ -144,7 +144,7 @@ export function DiscordConnectionDetail({
             (result === "refresh" ||
                 result === "change" ||
                 result === "change_verified") ? (
-                <p role="status" className="nl-body-secondary">
+                <p role="status" className="nl-control">
                     {t(
                         result === "refresh"
                             ? "settings.discordRefreshComplete"

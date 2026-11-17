@@ -79,7 +79,7 @@ export default function CommunityOpinionRow({
                     <IntentLink
                         id={`${id}-name`}
                         href={href(`/profile/${item.user.id}`)}
-                        className="nl-opinion-row__name nl-emphasis-label"
+                        className="nl-opinion-row__name nl-metadata nl-metadata--bold"
                     >
                         {name}
                     </IntentLink>
@@ -190,7 +190,7 @@ export default function CommunityOpinionRow({
                     />
                 ) : null}
                 {reported ? (
-                    <p className="nl-body-secondary" role="status">
+                    <p className="nl-control" role="status">
                         {t("community.reportReceived")}
                     </p>
                 ) : null}

@@ -89,7 +89,7 @@ export default function OfficialXPostArticle({
                         {post.author.name}
                     </a>
                     <p
-                        className="nl-official-post__meta nl-body-secondary nl-muted"
+                        className="nl-official-post__meta nl-metadata nl-muted"
                         lang={locale}
                     >
                         <span className="nl-official-post__handle">

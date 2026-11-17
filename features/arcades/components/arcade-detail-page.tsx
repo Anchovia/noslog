@@ -494,7 +494,7 @@ export default function ArcadeDetailPage({
                             <h2 className="nl-component-title">
                                 {t("arcades.recentChecks")}
                             </h2>
-                            <ul className="nl-arcade-detail__checks nl-body-secondary">
+                            <ul className="nl-arcade-detail__checks nl-control">
                                 {recentChecks.map((check, index) => {
                                     const days = daysAgo(check.checkedAt, now);
                                     return (

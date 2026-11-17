@@ -100,7 +100,7 @@ export default async function EventBoard({
                                 <span className="nl-entity-title">
                                     {event.title}
                                 </span>
-                                <span className="nl-body-secondary nl-muted">
+                                <span className="nl-metadata nl-muted">
                                     {eventPeriod(
                                         event.startsAt,
                                         event.endsAt,

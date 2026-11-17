@@ -252,7 +252,7 @@ export default function ProfileLevels({
             ) : null}
             {/* 범례 = 칸 강조 전환(누르는 버튼, 고른 항목은 글자가 진해진다) + 지금 % 가 무엇인지 */}
             <div
-                className="nl-profile-legend nl-metadata nl-muted"
+                className="nl-profile-legend nl-caption nl-muted"
                 role="group"
                 aria-label={t("profile.levels.legendLabel")}
             >

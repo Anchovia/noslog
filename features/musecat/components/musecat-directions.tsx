@@ -69,7 +69,7 @@ export default function MusecatDirections({
                 <div className="nl-musecat-head">
                     {arcade.address ? (
                         <div className="nl-heading-row">
-                            <span className="nl-body-secondary nl-muted">
+                            <span className="nl-control nl-muted">
                                 {arcade.address}
                             </span>
                             <Button

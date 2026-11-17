@@ -72,7 +72,7 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
-    font-weight: var(--nl-type-weight-strong);
+    font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-skip-link:focus {
     transform: none;
@@ -243,7 +243,7 @@ html:has(.noslog-ui .nl-header) {
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
-    font-weight: var(--nl-type-weight-medium);
+    font-weight: var(--nl-type-weight-regular);
 }
 /* ≡ 이동 줄 = Spectrum 2 메뉴 항목. 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
 .noslog-ui .nl-destination:is(:focus-visible, :active) {
@@ -256,10 +256,10 @@ html:has(.noslog-ui .nl-header) {
         color: var(--nl-content-strong);
     }
 }
-/* 지금 화면 = 한 단계 면 + semibold(Apple Music 사이드바). :where — 올림 · 포커스 · 누름 때는 위 규칙의 면을 받게 */
+/* 지금 화면 = 한 단계 면 + bold(Apple Music 사이드바). :where — 올림 · 포커스 · 누름 때는 위 규칙의 면을 받게 */
 .noslog-ui .nl-destination:where([aria-current="page"]) {
     background: var(--nl-surface-control);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-destinations__divider {
     grid-column: 1 / -1;
@@ -297,6 +297,10 @@ html:has(.noslog-ui .nl-header) {
     gap: var(--nl-spacing-4);
     text-underline-offset: var(--nl-underline-offset);
 }
+/* 푸터 링크 = 혼자 누르는 링크 medium. 처리방침 링크만 bold(nl-emphasis-label)로 구별 */
+.noslog-ui .nl-footer__links a:not(.nl-emphasis-label) {
+    font-weight: var(--nl-type-weight-medium);
+}
 @media (hover: hover) {
     .noslog-ui .nl-footer__links a:hover {
         color: var(--nl-content-strong);
@@ -320,16 +324,6 @@ html:has(.noslog-ui .nl-header) {
     .noslog-ui .nl-header__interaction,
     .noslog-ui .nl-footer__content {
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
-    }
-}
-/* 359 이하는 글자만 12 로 줄인다. 12 에서는 굵게(600)를 쓰지 않으므로 지금 줄은 면만 두고 medium */
-@media (max-width: 359px) {
-    .noslog-ui .nl-destination {
-        font-size: var(--nl-type-size-12);
-        line-height: var(--nl-type-line-height-16);
-    }
-    .noslog-ui .nl-destination[aria-current="page"] {
-        font-weight: var(--nl-type-weight-medium);
     }
 }
 /* 헤더 메뉴 이동 줄 — 1055 이하 48 · 1056 이상 컨트롤 높이 */

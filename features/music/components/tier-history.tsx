@@ -53,7 +53,7 @@ export default function TierHistory({
                                     .map((event) => (
                                         <li
                                             key={event.id}
-                                            className="nl-body-secondary"
+                                            className="nl-control"
                                         >
                                             <span>
                                                 {event.mode === "basic"

@@ -159,6 +159,11 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
+/* 글 본문 소제목 = 20/28 · 700(셋째 제목 h3 은 nl-entity-title 16/22 · 700) */
+.noslog-ui .nl-announcement-body h2 {
+    font-size: var(--nl-type-size-20);
+    line-height: var(--nl-type-line-height-28);
+}
 /* 본문 소제목 — 문단 사이 16 대신 구역 사이 · 구역 제목 → 첫 내용(구역 간격 토큰), 상자 제목(h3) → 내용 8 */
 .noslog-ui .nl-announcement-body > h2:not(:first-child) {
     margin-top: calc(var(--nl-section-gap) - var(--nl-spacing-16));
@@ -198,11 +203,7 @@
     list-style: decimal;
 }
 .noslog-ui .nl-announcement-body strong {
-    font-weight: var(--nl-type-weight-strong);
-}
-/* 한국어 · 일본어 strong 500 은 16 본문 글자 400 과 거의 구분되지 않는다. 읽는 본문의 강조는 강조 글자(600)와 같게 */
-.noslog-ui .nl-announcement-body strong:is(:lang(ko), :lang(ja)) {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 /* 본문 안 링크 = Spectrum 2 secondary 링크 — 늘 밑줄, 올림 · 키 포커스에 밝은 글자 */
 .noslog-ui .nl-announcement-body a {
@@ -257,7 +258,6 @@
     background: var(--nl-surface-surface);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     font-family: var(--nl-font-family-mono);
-    font-size: var(--nl-type-size-14);
 }
 /* 코드 덩이(B1) = 가라앉은 면 상자 · 긴 줄은 접지 않고 이 상자만 가로로 민다 */
 .noslog-ui .nl-announcement-body pre {
@@ -274,7 +274,7 @@
     border-radius: 0;
     background: none;
     padding: 0;
-    line-height: var(--nl-type-line-height-ui);
+    line-height: var(--nl-type-line-height-body);
 }
 /* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다. 개인정보 처리방침 표도 같은 표 */
 .noslog-ui .nl-announcement-body__table,
@@ -308,11 +308,11 @@
     /* 본문의 anywhere 를 끊는다 — 칸 안 코드는 글자 중간에서 꺾지 않고 좁으면 표만 가로로 민다 */
     overflow-wrap: normal;
 }
-/* 머리 칸 = Spectrum 2 TableView 머리 글자 bold */
+/* 머리 칸 = 표 머리 글자 medium */
 .noslog-ui .nl-announcement-body th,
 .noslog-ui .nl-privacy-table th {
     color: var(--nl-content-subdued);
-    font-weight: var(--nl-type-weight-strong);
+    font-weight: var(--nl-type-weight-medium);
     white-space: nowrap;
 }
 
@@ -423,7 +423,7 @@
     border-width: var(--nl-stroke-strong);
     padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-poll__option:disabled {
     color: var(--nl-content-disabled);

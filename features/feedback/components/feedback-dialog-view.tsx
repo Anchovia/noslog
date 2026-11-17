@@ -237,9 +237,7 @@ export default function FeedbackDialogView({
     ) : submitted ? (
         <div className="nl-feedback-done" role="status">
             <p className="nl-emphasis-label">{t("feedback.doneTitle")}</p>
-            <p className="nl-body-secondary nl-muted">
-                {t("feedback.doneBody")}
-            </p>
+            <p className="nl-control nl-muted">{t("feedback.doneBody")}</p>
         </div>
     ) : view === "mine" ? (
         viewTabs(feedbackList)

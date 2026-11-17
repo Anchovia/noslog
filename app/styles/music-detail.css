@@ -152,7 +152,7 @@
     align-items: baseline;
     gap: var(--nl-spacing-4);
 }
-/* 정수 = nl-page-title nl-page-title--fixed · 소수 = nl-component-title — 글자 클래스로 */
+/* 정수 = nl-page-title · 소수 = nl-component-title — 글자 클래스로 */
 /* 카테고리 배지 = 공용 태그(nl-tag)의 카테고리 변형 — 크기 · 모서리 · 글자는 태그 그대로, 면 · 글자색만 자켓 판과 같게 해 목록 카드와 이어진다.
    배지 → 제목 4(글자 묶음 사이 8 에서 당김) */
 .noslog-ui .nl-tag.nl-music-entity__category {

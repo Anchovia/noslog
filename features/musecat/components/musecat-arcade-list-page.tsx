@@ -335,7 +335,7 @@ export default function MusecatArcadeListPage({
                             <span className="nl-emphasis-label nl-musecat-where__label">
                                 {t("musecat.list.where")}
                             </span>
-                            <span className="nl-body-secondary nl-musecat-where__value">
+                            <span className="nl-control nl-musecat-where__value">
                                 {place}
                             </span>
                         </p>

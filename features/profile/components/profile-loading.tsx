@@ -368,9 +368,9 @@ export function ProfileStatsTabSkeleton() {
                                     sample="000,000"
                                 />
                             </dd>
-                            <dd className="nl-body-secondary nl-muted">
+                            <dd className="nl-control nl-muted">
                                 <SkeletonText
-                                    className="nl-body-secondary"
+                                    className="nl-control"
                                     sample="00.0%"
                                 />
                             </dd>
@@ -560,7 +560,7 @@ export function ProfileAchievementsTabSkeleton() {
                                     />
                                 </span>
                                 <SkeletonText
-                                    className="nl-body-secondary"
+                                    className="nl-control"
                                     width="l"
                                 />
                             </div>

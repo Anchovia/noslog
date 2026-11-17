@@ -182,14 +182,14 @@ export default function ChartFieldProposalDialog({
             >
                 <dl className="nl-info-rows nl-info-rows--value">
                     <div>
-                        <dt className="nl-body-secondary nl-muted">
+                        <dt className="nl-control nl-muted">
                             {t("contribution.proposal.current")}
                         </dt>
                         <dd className="nl-emphasis-label">{shownCurrent}</dd>
                     </div>
                 </dl>
                 {pendingValue !== undefined ? (
-                    <p className="nl-body-secondary nl-muted">
+                    <p className="nl-control nl-muted">
                         {t("contribution.proposal.pendingNotice", {
                             value: formatProposalValue(
                                 field,
@@ -287,7 +287,7 @@ export default function ChartFieldProposalDialog({
                         })}
                     />
                 </FormField>
-                <p className="nl-metadata nl-metadata--long nl-muted">
+                <p className="nl-control nl-muted">
                     {t("contribution.proposal.notice")}
                     <QueueStatus open={open} />
                 </p>

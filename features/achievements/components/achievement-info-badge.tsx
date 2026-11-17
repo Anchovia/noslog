@@ -62,10 +62,10 @@ export default function AchievementInfoBadge({
                 tier={tier}
                 size="large"
             />
-            <strong className="nl-component-title">
+            <strong className="nl-entity-title">
                 {text.titled(achievementKey, tier)}
             </strong>
-            <p className="nl-body-secondary">
+            <p className="nl-control">
                 {text.condition(achievementKey, conditionTier)}
             </p>
             {facts.length ? (

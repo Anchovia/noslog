@@ -301,7 +301,7 @@
 }
 /* 영업 상태 글자 — 영업 중 초록 · 영업 종료 빨강(Google · Yahoo · Bing) */
 .noslog-ui .nl-musecat-result__state {
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-musecat-result__state[data-open="open"] {
     color: var(--nl-feedback-success-marker);

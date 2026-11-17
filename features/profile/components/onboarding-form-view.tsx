@@ -234,7 +234,7 @@ export default function OnboardingFormView({
                 >
                     NosLog
                 </Link>
-                <h1 ref={heading} tabIndex={-1} className="nl-section-title">
+                <h1 ref={heading} tabIndex={-1} className="nl-page-title">
                     {t(step === 1 ? "onboarding.title" : "settings.privacy")}
                 </h1>
                 <p className="nl-metadata nl-muted">
@@ -334,7 +334,7 @@ export default function OnboardingFormView({
                                     }}
                                 />
                             </FormField>
-                            <p className="nl-body-secondary nl-muted nl-auth-field-description">
+                            <p className="nl-control nl-muted nl-auth-field-description">
                                 {t("onboarding.nicknameDescription")}
                             </p>
                         </div>
@@ -348,7 +348,7 @@ export default function OnboardingFormView({
                             </legend>
                             <p
                                 id="onboarding-region-help"
-                                className="nl-body-secondary nl-muted"
+                                className="nl-control nl-muted"
                             >
                                 {t("onboarding.regionDescription")}
                             </p>
@@ -447,7 +447,7 @@ export default function OnboardingFormView({
                         </legend>
                         <p
                             id="onboarding-privacy-help"
-                            className="nl-body-secondary nl-muted"
+                            className="nl-control nl-muted"
                         >
                             {t("onboarding.privacyDescription")}
                         </p>
@@ -467,7 +467,7 @@ export default function OnboardingFormView({
                                     {PRIVACY_HELP[key] ? (
                                         <p
                                             id={`onboarding-${key}-help`}
-                                            className="nl-metadata nl-muted nl-settings__control-help"
+                                            className="nl-control nl-muted nl-settings__control-help"
                                         >
                                             {t(PRIVACY_HELP[key])}
                                         </p>

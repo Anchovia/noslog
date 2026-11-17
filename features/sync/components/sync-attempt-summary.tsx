@@ -32,7 +32,7 @@ function SyncMetrics({
         <dl className="nl-sync-metrics">
             {items.map(({ label, value }) => (
                 <div key={label}>
-                    <dt className="nl-body-secondary nl-muted">{label}</dt>
+                    <dt className="nl-control nl-muted">{label}</dt>
                     <dd className="nl-metric-value">
                         {value.toLocaleString(locale)}
                     </dd>
@@ -187,9 +187,7 @@ export default function SyncAttemptSummary({
                 href={achievementsHref}
             />
             {attempt.scope === "recent" ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("sync.recentHelp")}
-                </p>
+                <p className="nl-control nl-muted">{t("sync.recentHelp")}</p>
             ) : null}
             {attempt.status === "partial" ? (
                 <StatusMessage severity="info" title={t("sync.excludedTitle")}>

@@ -108,7 +108,7 @@ export default function ProfileActivity({
                             ))}
                         </div>
                     </div>
-                    <div className="nl-profile-calendar__foot nl-metadata nl-muted">
+                    <div className="nl-profile-calendar__foot nl-caption nl-muted">
                         <span className="nl-profile-calendar__hint">
                             {t("profile.activity.scrollHint")}
                         </span>

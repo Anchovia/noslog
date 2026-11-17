@@ -680,7 +680,7 @@ export default function ArcadeDiscoveryMap({
                                 <strong className="nl-emphasis-label">
                                     {t("arcades.legend")}
                                 </strong>
-                                <ul className="nl-body-secondary">
+                                <ul className="nl-control">
                                     {(
                                         [
                                             "arcades.legendPin",

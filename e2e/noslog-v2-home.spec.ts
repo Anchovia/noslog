@@ -121,10 +121,10 @@ for (const locale of ["ko", "ja", "en"]) {
                     1
                 );
                 expect(measured.navigation.x).toBeCloseTo(measured.search.x, 1);
-                // 페이지 제목은 24, 1056 이상 32 — 언어 공통(가이드 「글자」)
+                // 페이지 제목은 모든 폭 24 — 언어 공통(가이드 「글자」)
                 await expect(
                     page.locator(".nl-home-identity .nl-page-title")
-                ).toHaveCSS("font-size", width >= 1056 ? "32px" : "24px");
+                ).toHaveCSS("font-size", "24px");
                 if (columns === 4)
                     expect(measured.navigation.width).toBeLessThanOrEqual(640);
                 const firstRow = measured.tiles.slice(0, columns);

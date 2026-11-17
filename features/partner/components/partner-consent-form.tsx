@@ -118,7 +118,7 @@ export default function PartnerConsentForm({
                     {t("partner.consent.always")}
                 </h2>
                 <div>
-                    <p className="nl-body">
+                    <p className="nl-control">
                         {t("partner.consent.item.profile")}
                     </p>
                     <p className="nl-metadata nl-muted">
@@ -175,13 +175,13 @@ export default function PartnerConsentForm({
                                         id={`consent-${item}-help`}
                                         className="nl-settings__control-help"
                                     >
-                                        <p className="nl-metadata nl-muted">
+                                        <p className="nl-control nl-muted">
                                             {t(
                                                 `partner.consent.item.${item}.help`
                                             )}
                                         </p>
                                         {privacy ? (
-                                            <p className="nl-metadata nl-muted">
+                                            <p className="nl-control nl-muted">
                                                 {privacy}
                                             </p>
                                         ) : null}
@@ -212,9 +212,7 @@ export default function PartnerConsentForm({
                     {legal.map(([label, value]) => (
                         <div key={label}>
                             <dt className="nl-control">{t(label)}</dt>
-                            <dd className="nl-body-secondary nl-muted">
-                                {value}
-                            </dd>
+                            <dd className="nl-control nl-muted">{value}</dd>
                         </div>
                     ))}
                 </dl>

@@ -315,7 +315,7 @@ export default function ArcadeReportDialog({
                     {t("feedback.attachImage")}
                 </ActionButton>
             )}
-            <p className="nl-metadata nl-muted">
+            <p className="nl-control nl-muted">
                 {t("arcades.reportImageHelp")}
             </p>
             {form.formState.errors.root?.message ? (

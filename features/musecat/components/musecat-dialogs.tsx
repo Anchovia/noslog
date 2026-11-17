@@ -352,7 +352,7 @@ export function MusecatFaultDialog({
                             {t("musecat.fault.addPhoto")}
                         </ActionButton>
                     ) : null}
-                    <p className="nl-metadata nl-muted">
+                    <p className="nl-control nl-muted">
                         {t("musecat.fault.publicNote", {
                             username: username ?? "",
                         })}
@@ -561,7 +561,7 @@ export function MusecatGameEditDialog({
                     <h3 className="nl-component-title">
                         {t("musecat.edit.musecatSection")}
                     </h3>
-                    <p className="nl-metadata nl-metadata--long nl-muted">
+                    <p className="nl-control nl-muted">
                         {t("musecat.edit.note")}{" "}
                         <a
                             className="nl-link"
@@ -722,7 +722,7 @@ export function MusecatGameEditDialog({
                             <h3 id={traitsId} className="nl-component-title">
                                 {t("musecat.edit.noslogSection")}
                             </h3>
-                            <p className="nl-metadata nl-metadata--long nl-muted">
+                            <p className="nl-control nl-muted">
                                 {t("musecat.edit.traitsNote")}
                             </p>
                         </div>

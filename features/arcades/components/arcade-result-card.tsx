@@ -170,7 +170,7 @@ export default function ArcadeResultCard({
                         </span>
                     ) : null}
                 </span>
-                <span className="nl-body-secondary nl-arcade-result__cabinets">
+                <span className="nl-control nl-arcade-result__cabinets">
                     <ArcadeCabinetLine arcade={arcade} />
                     {arcade.region ? (
                         <span className="nl-muted">
@@ -178,7 +178,7 @@ export default function ArcadeResultCard({
                         </span>
                     ) : null}
                 </span>
-                <span className="nl-metadata nl-muted nl-arcade-result__status">
+                <span className="nl-control nl-muted nl-arcade-result__status">
                     <ArcadeOpenLine arcade={arcade} now={now} />
                 </span>
             </span>
@@ -258,7 +258,7 @@ function ArcadeResultMore({
     const directions = arcadeDirections(arcade);
     return (
         <div id={id} className="nl-arcade-result__more">
-            <dl className="nl-arcade-result__facts nl-body-secondary">
+            <dl className="nl-arcade-result__facts nl-control">
                 {arcade.address ? (
                     <div>
                         <dt className="nl-muted">{t("arcades.address")}</dt>
@@ -283,7 +283,7 @@ function ArcadeResultMore({
                 ) : null}
             </dl>
             {arcade.cabinets.length ? (
-                <ul className="nl-arcade-result__machines nl-body-secondary">
+                <ul className="nl-arcade-result__machines nl-control">
                     {arcade.cabinets.map((cabinet) => (
                         <li key={cabinet.id}>
                             <span>

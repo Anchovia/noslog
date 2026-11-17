@@ -240,7 +240,7 @@ export default function AvatarCropDialog({
                 </Button>
             </div>
             {error ? (
-                <p role="alert" className="nl-field__error nl-body-secondary">
+                <p role="alert" className="nl-field__error nl-control">
                     {error}
                 </p>
             ) : null}
