@@ -2,57 +2,66 @@ import "server-only";
 
 import { adminSyncFilterSchema } from "@/features/admin/schemas/admin-sync-schema";
 import { requireAdmin } from "@/lib/admin";
+import { adminPageArgs } from "@/lib/admin/page";
 import {
     getSyncAttemptHealth,
     STALE_SYNC_THRESHOLD_MS,
 } from "@/lib/admin/sync-health";
 import db from "@/lib/db";
 
-export async function getAdminSyncs(input: unknown) {
+export async function getAdminSyncs(input: unknown, page = 1) {
     await requireAdmin();
     const { status } = adminSyncFilterSchema.parse(input);
     const now = new Date();
     const recentStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const staleBefore = new Date(now.getTime() - STALE_SYNC_THRESHOLD_MS);
-    const [syncs, completedCount, failedCount, processingCount, staleCount] =
-        await Promise.all([
-            db.dataSync.findMany({
-                where: status === "all" ? undefined : { status },
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            nostalgiaName: true,
-                        },
+    const where = status === "all" ? undefined : { status };
+    const [
+        syncs,
+        totalCount,
+        completedCount,
+        failedCount,
+        processingCount,
+        staleCount,
+    ] = await Promise.all([
+        db.dataSync.findMany({
+            where,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        nostalgiaName: true,
                     },
-                    _count: {
-                        select: {
-                            playHistory: true,
-                            recordSnapshots: true,
-                        },
+                },
+                _count: {
+                    select: {
+                        playHistory: true,
+                        recordSnapshots: true,
                     },
                 },
-                orderBy: { startedAt: "desc" },
-                take: 100,
-            }),
-            db.dataSync.count({
-                where: {
-                    status: "completed",
-                    startedAt: { gte: recentStart },
-                },
-            }),
-            db.dataSync.count({
-                where: { status: "failed", startedAt: { gte: recentStart } },
-            }),
-            db.dataSync.count({ where: { status: "processing" } }),
-            db.dataSync.count({
-                where: {
-                    status: "processing",
-                    startedAt: { lte: staleBefore },
-                },
-            }),
-        ]);
+            },
+            orderBy: { startedAt: "desc" },
+            ...adminPageArgs(page),
+        }),
+        db.dataSync.count({ where }),
+        db.dataSync.count({
+            where: {
+                status: "completed",
+                startedAt: { gte: recentStart },
+            },
+        }),
+        db.dataSync.count({
+            where: { status: "failed", startedAt: { gte: recentStart } },
+        }),
+        db.dataSync.count({ where: { status: "processing" } }),
+        db.dataSync.count({
+            where: {
+                status: "processing",
+                startedAt: { lte: staleBefore },
+            },
+        }),
+    ]);
     const syncIds = syncs.map((sync) => sync.id);
     const [
         recentJudgementGroups,
@@ -159,6 +168,7 @@ export async function getAdminSyncs(input: unknown) {
     return {
         status,
         syncs: rows,
+        totalCount,
         completedCount,
         failedCount,
         processingCount,

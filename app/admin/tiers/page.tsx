@@ -1,7 +1,13 @@
 import { listAdminTierLists } from "@/features/tiers/server/tier-admin-data";
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+import {
+    AdminCard,
+    AdminCardEmpty,
+    AdminCardHead,
+    AdminStatus,
+    AdminTable,
+} from "@/components/admin/admin-card";
 import {
     TIER_MODE_GOALS,
     TIER_MODES,
@@ -44,75 +50,98 @@ export default async function AdminTiersPage() {
     );
 
     return (
-        <div className="flex flex-col gap-nl-16 py-nl-24">
-            <section>
-                <div>
-                    <h1 className="nl-section-title text-nl-content">
-                        서열표 관리
-                    </h1>
-                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
-                        서열표의 상수 구간과 채보 배치를 관리합니다.
-                    </p>
-                </div>
-            </section>
-
-            <section className="overflow-hidden rounded-nl-control bg-nl-surface">
-                {activeTierLists.map((tierList, index) => (
-                    <Link
-                        key={tierList.id}
-                        href={`/admin/tiers/${tierList.id}`}
-                        className={`nl-hover-layer flex min-h-nl-64 items-center gap-nl-12 px-nl-12 ${index > 0 ? "border-t-nl-stroke border-nl-divider" : ""}`}
-                    >
-                        <span className="nl-tag shrink-0">
-                            {tierList.mode === "recital" ? "Recital" : "Basic"}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                            <strong className="nl-emphasis-label block truncate text-nl-content">
-                                {tierList.mode === "recital"
-                                    ? tierListLabel(
-                                          tierList.mode,
-                                          tierList.goal
-                                      )
-                                    : `Basic · ${tierListLabel(tierList.mode, tierList.goal)}`}
-                            </strong>
-                            <span className="nl-metadata block truncate text-nl-subdued">
-                                상수 구간 {tierList._count.bands}개 · 채보{" "}
-                                {tierList._count.entries}곡 ·{" "}
-                                {statusLabel[tierList.status] ??
-                                    tierList.status}
-                            </span>
-                        </span>
-                        <ChevronRight className="nl-icon-small text-nl-disabled" />
-                    </Link>
-                ))}
+        <div className="nl-admin-stack">
+            <AdminCard>
+                <AdminCardHead title="서열표" />
                 {activeTierLists.length === 0 ? (
-                    <p className="nl-body-secondary py-nl-48 text-center text-nl-subdued">
-                        등록된 서열표가 없습니다.
-                    </p>
-                ) : null}
-            </section>
+                    <AdminCardEmpty>등록된 서열표가 없습니다.</AdminCardEmpty>
+                ) : (
+                    <AdminTable>
+                        <thead>
+                            <tr>
+                                <th scope="col">서열표</th>
+                                <th scope="col">모드</th>
+                                <th scope="col">상수 구간</th>
+                                <th scope="col">채보</th>
+                                <th scope="col">상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {activeTierLists.map((tierList) => (
+                                <tr key={tierList.id}>
+                                    <td>
+                                        <Link
+                                            href={`/admin/tiers/${tierList.id}`}
+                                        >
+                                            {tierList.mode === "recital"
+                                                ? tierListLabel(
+                                                      tierList.mode,
+                                                      tierList.goal
+                                                  )
+                                                : `Basic · ${tierListLabel(tierList.mode, tierList.goal)}`}
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        {tierList.mode === "recital"
+                                            ? "Recital"
+                                            : "Basic"}
+                                    </td>
+                                    <td>{tierList._count.bands}개</td>
+                                    <td>{tierList._count.entries}곡</td>
+                                    <td>
+                                        <TierStatus status={tierList.status} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </AdminTable>
+                )}
+            </AdminCard>
 
             {legacyTierLists.length > 0 ? (
-                <details className="rounded-nl-control bg-nl-surface px-nl-12 py-nl-12">
-                    <summary className="nl-admin-card-summary nl-emphasis-label cursor-pointer list-none text-nl-content">
-                        기존 보관 서열표 {legacyTierLists.length}개
-                    </summary>
-                    <div className="mt-nl-12 flex flex-col border-t-nl-stroke border-nl-divider pt-nl-8">
-                        {legacyTierLists.map((tierList) => (
-                            <Link
-                                key={tierList.id}
-                                href={`/admin/tiers/${tierList.id}`}
-                                className="nl-hover-layer flex min-h-nl-48 items-center gap-nl-8 rounded-nl-control px-nl-8"
-                            >
-                                <span className="nl-body-secondary min-w-0 flex-1 truncate">
-                                    {tierList.title}
-                                </span>
-                                <ChevronRight className="nl-icon-small text-nl-disabled" />
-                            </Link>
-                        ))}
-                    </div>
-                </details>
+                <AdminCard>
+                    <AdminCardHead
+                        level="h2"
+                        title={`기존 보관 서열표 ${legacyTierLists.length}개`}
+                    />
+                    <AdminTable>
+                        <thead>
+                            <tr>
+                                <th scope="col">제목</th>
+                                <th scope="col">상수 구간</th>
+                                <th scope="col">채보</th>
+                                <th scope="col">상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {legacyTierLists.map((tierList) => (
+                                <tr key={tierList.id}>
+                                    <td>
+                                        <Link
+                                            href={`/admin/tiers/${tierList.id}`}
+                                        >
+                                            {tierList.title}
+                                        </Link>
+                                    </td>
+                                    <td>{tierList._count.bands}개</td>
+                                    <td>{tierList._count.entries}곡</td>
+                                    <td>
+                                        <TierStatus status={tierList.status} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </AdminTable>
+                </AdminCard>
             ) : null}
         </div>
+    );
+}
+
+function TierStatus({ status }: { status: string }) {
+    return (
+        <AdminStatus tone={status === "published" ? "success" : "empty"}>
+            {statusLabel[status] ?? status}
+        </AdminStatus>
     );
 }

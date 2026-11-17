@@ -72,7 +72,7 @@ describe("admin monitoring server boundaries", () => {
             if (key !== "admin") expect(mock).not.toHaveBeenCalled();
     });
     it.each([undefined, "invalid", "all", "processing", "completed", "failed"])(
-        "normalizes sync filter %s and bounds the list to 100 newest",
+        "normalizes sync filter %s and pages the list by 50 newest",
         async (status) => {
             const data = await getAdminSyncs({ status });
             const expected =
@@ -86,7 +86,8 @@ describe("admin monitoring server boundaries", () => {
                     where:
                         expected === "all" ? undefined : { status: expected },
                     orderBy: { startedAt: "desc" },
-                    take: 100,
+                    skip: 0,
+                    take: 50,
                 })
             );
             expect(mocks.history).toHaveBeenCalledWith(

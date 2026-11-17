@@ -13,6 +13,7 @@ import type {
     AdminMusicPage,
 } from "@/features/music/types/music-admin";
 import { requireAdmin } from "@/lib/admin";
+import { adminPageArgs } from "@/lib/admin/page";
 import db from "@/lib/db";
 
 export interface AdminMusicListParams {
@@ -77,6 +78,60 @@ function adminMusicFilters(params: AdminMusicListParams) {
     };
 }
 
+function adminMusicSelect(filters: ReturnType<typeof adminMusicFilters>) {
+    return {
+        index: true,
+        title: true,
+        artist: true,
+        categoryShort: true,
+        charts: { select: { levelConstant: true } },
+        translations: {
+            where: filters.activeLocale
+                ? { locale: filters.activeLocale }
+                : { locale: { in: [...MUSIC_TRANSLATION_LOCALES] } },
+            select: { locale: true, title: true, status: true },
+        },
+    } as const;
+}
+
+const adminMusicOrder = [{ title: "asc" as const }, { index: "asc" as const }];
+
+function toAdminMusicItem(
+    filters: ReturnType<typeof adminMusicFilters>,
+    music: {
+        index: string;
+        title: string;
+        artist: string | null;
+        categoryShort: string;
+        charts: { levelConstant: unknown }[];
+        translations: { locale: string; title: string; status: string }[];
+    }
+) {
+    const translation = filters.activeLocale
+        ? music.translations.find(
+              (item) => item.locale === filters.activeLocale
+          )
+        : null;
+    return {
+        index: music.index,
+        title: music.title,
+        artist: music.artist,
+        categoryShort: music.categoryShort,
+        chartCount: music.charts.length,
+        configuredChartCount: music.charts.filter(
+            (chart) => chart.levelConstant !== null
+        ).length,
+        translation: translation
+            ? {
+                  title: translation.title,
+                  status:
+                      normalizeMusicTranslationStatus(translation.status) ??
+                      "draft",
+              }
+            : null,
+    };
+}
+
 /** 목록 한 쪽 — offset 부터 ADMIN_MUSIC_PAGE_SIZE 곡, 더 있는지는 한 곡 더 읽어 안다 */
 async function queryAdminMusicPage(
     filters: ReturnType<typeof adminMusicFilters>,
@@ -84,52 +139,17 @@ async function queryAdminMusicPage(
 ) {
     const rows = await db.music.findMany({
         where: filters.where,
-        select: {
-            index: true,
-            title: true,
-            artist: true,
-            categoryShort: true,
-            charts: { select: { levelConstant: true } },
-            translations: {
-                where: filters.activeLocale
-                    ? { locale: filters.activeLocale }
-                    : { locale: { in: [...MUSIC_TRANSLATION_LOCALES] } },
-                select: { locale: true, title: true, status: true },
-            },
-        },
-        orderBy: [{ title: "asc" }, { index: "asc" }],
+        select: adminMusicSelect(filters),
+        orderBy: adminMusicOrder,
         skip: offset,
         take: ADMIN_MUSIC_PAGE_SIZE + 1,
     });
     const hasMore = rows.length > ADMIN_MUSIC_PAGE_SIZE;
     return {
         hasMore,
-        musics: rows.slice(0, ADMIN_MUSIC_PAGE_SIZE).map((music) => {
-            const translation = filters.activeLocale
-                ? music.translations.find(
-                      (item) => item.locale === filters.activeLocale
-                  )
-                : null;
-            return {
-                index: music.index,
-                title: music.title,
-                artist: music.artist,
-                categoryShort: music.categoryShort,
-                chartCount: music.charts.length,
-                configuredChartCount: music.charts.filter(
-                    (chart) => chart.levelConstant !== null
-                ).length,
-                translation: translation
-                    ? {
-                          title: translation.title,
-                          status:
-                              normalizeMusicTranslationStatus(
-                                  translation.status
-                              ) ?? "draft",
-                      }
-                    : null,
-            };
-        }),
+        musics: rows
+            .slice(0, ADMIN_MUSIC_PAGE_SIZE)
+            .map((music) => toAdminMusicItem(filters, music)),
     };
 }
 
@@ -150,21 +170,30 @@ export async function getAdminMusicPage(
     }
 }
 
+/** 관리자 악곡 목록 화면 — 쪽(ADMIN_PAGE_SIZE)과 같은 조건의 전체 수, 번역 현황 */
 export async function getAdminMusicList(
-    params: AdminMusicListParams
+    params: AdminMusicListParams,
+    page = 1
 ): Promise<AdminMusicListData> {
     await requireAdmin();
     const filters = adminMusicFilters(params);
     try {
-        const [page, totalMusicCount, translationGroups] = await Promise.all([
-            queryAdminMusicPage(filters, 0),
-            db.music.count(),
-            db.musicTranslation.groupBy({
-                by: ["locale", "status"],
-                where: { locale: { in: [...MUSIC_TRANSLATION_LOCALES] } },
-                _count: { _all: true },
-            }),
-        ]);
+        const [rows, totalCount, totalMusicCount, translationGroups] =
+            await Promise.all([
+                db.music.findMany({
+                    where: filters.where,
+                    select: adminMusicSelect(filters),
+                    orderBy: adminMusicOrder,
+                    ...adminPageArgs(page),
+                }),
+                db.music.count({ where: filters.where }),
+                db.music.count(),
+                db.musicTranslation.groupBy({
+                    by: ["locale", "status"],
+                    where: { locale: { in: [...MUSIC_TRANSLATION_LOCALES] } },
+                    _count: { _all: true },
+                }),
+            ]);
         const coverage = [
             { locale: "ko", label: "한국어" },
             { locale: "en", label: "영어" },
@@ -195,8 +224,9 @@ export async function getAdminMusicList(
             activeStatus: filters.activeStatus,
             missingLevelConstant: filters.missingLevelConstant,
             coverage,
-            musics: page.musics,
-            hasMore: page.hasMore,
+            musics: rows.map((music) => toAdminMusicItem(filters, music)),
+            totalCount,
+            page,
         };
     } catch (error) {
         logMusicTranslationError(error, "admin.music.list.failed", "page");

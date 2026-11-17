@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 import {
@@ -17,6 +18,7 @@ import type {
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
+import { adminPageArgs } from "@/lib/admin/page";
 import { getUserSyncHealth } from "@/lib/admin/sync-health";
 import db from "@/lib/db";
 import { logSecurityEvent, logServerError } from "@/lib/observability/server";
@@ -73,51 +75,129 @@ function refreshAdminUsers() {
 
 export async function listAdminUsers(
     filters: UserAdminFilters,
-    now = new Date()
+    now = new Date(),
+    page = 1
 ): Promise<AdminUserList> {
     await requireAdmin();
 
     try {
-        const users = await db.user.findMany({
-            where: filters.q
-                ? {
-                      OR: [
-                          { username: { contains: filters.q } },
-                          { nostalgiaName: { contains: filters.q } },
-                          { discordName: { contains: filters.q } },
-                          { discordUsername: { contains: filters.q } },
-                      ],
-                  }
-                : undefined,
-            select: {
-                id: true,
-                username: true,
-                nostalgiaName: true,
-                country: true,
-                role: true,
-                // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 DB 재설계 P4)
-                stats: { select: { playCount: true, lastPlayedAt: true } },
-                syncTokenVersion: true,
-                createdAt: true,
-                dataSyncs: {
-                    select: { status: true, startedAt: true },
-                    orderBy: { startedAt: "desc" },
-                    take: 1,
-                },
-                _count: {
-                    select: {
-                        dataSyncs: true,
-                        playData: true,
-                        chartPlayHistory: true,
-                        // 「평가」 는 지금 쓰는 채보 의견 · 평가(옛 ChartEvaluation 은 지웠다, 2026-10-16 D6)
-                        communityEvaluations: true,
-                        examAchievements: true,
+        const searchWhere: Prisma.UserWhereInput | undefined = filters.q
+            ? {
+                  OR: [
+                      { username: { contains: filters.q } },
+                      { nostalgiaName: { contains: filters.q } },
+                      { discordName: { contains: filters.q } },
+                      { discordUsername: { contains: filters.q } },
+                  ],
+              }
+            : undefined;
+        // 「점검 필요」 는 사람마다 가장 최근 동기화 한 건의 상태로 정해진다. Prisma where 는 관계의 「가장 최근 한 건」 을
+        // 조건으로 쓸 수 없어서, 검색에 맞는 모든 사람의 id 와 최근 동기화 한 건만 읽어 판정하고 쪽은 그 id 로 나눈다.
+        // 기록 누락(전체 기록 없음 · 판정 · 음표 성공률 빈 칸)은 DB 조건으로 거른다
+        const [candidates, coverageGaps] = await Promise.all([
+            db.user.findMany({
+                where: searchWhere,
+                select: {
+                    id: true,
+                    dataSyncs: {
+                        select: { status: true, startedAt: true },
+                        orderBy: { startedAt: "desc" },
+                        take: 1,
                     },
                 },
-            },
-            orderBy: { updatedAt: "desc" },
-            take: 100,
-        });
+                orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+            }),
+            db.user.findMany({
+                where: {
+                    AND: [
+                        ...(searchWhere ? [searchWhere] : []),
+                        {
+                            OR: [
+                                { playData: { none: {} } },
+                                {
+                                    playData: {
+                                        some: {
+                                            OR: [
+                                                { judgeSjust: null },
+                                                { judgeJust: null },
+                                                { judgeGood: null },
+                                                { judgeMiss: null },
+                                                { judgeNear: null },
+                                                { noteRateStandard: null },
+                                            ],
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                select: { id: true },
+            }),
+        ]);
+        const coverageGapIds = new Set(coverageGaps.map((user) => user.id));
+        const attentionIds = candidates
+            .filter((user) => {
+                const latestSync = user.dataSyncs[0] ?? null;
+                // 판정 규칙은 getUserSyncHealth 하나만 쓴다 — 기록 수는 누락 여부만 뜻이 같게 넘긴다
+                const hasGap = coverageGapIds.has(user.id);
+                return getUserSyncHealth(
+                    {
+                        latestStatus: latestSync?.status ?? null,
+                        latestStartedAt: latestSync?.startedAt ?? null,
+                        totalRecords: hasGap ? 0 : 1,
+                        judgementRecords: 1,
+                        noteRateRecords: 1,
+                    },
+                    now
+                ).needsAttention;
+            })
+            .map((user) => user.id);
+        const listIds =
+            filters.state === "attention"
+                ? attentionIds
+                : candidates.map((user) => user.id);
+        const { skip, take } = adminPageArgs(page);
+        const pageIds = listIds.slice(skip, skip + take);
+        const pageOrder = new Map(pageIds.map((id, index) => [id, index]));
+        const users = (
+            pageIds.length === 0
+                ? []
+                : await db.user.findMany({
+                      where: { id: { in: pageIds } },
+                      select: {
+                          id: true,
+                          username: true,
+                          nostalgiaName: true,
+                          country: true,
+                          role: true,
+                          // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 DB 재설계 P4)
+                          stats: {
+                              select: { playCount: true, lastPlayedAt: true },
+                          },
+                          syncTokenVersion: true,
+                          createdAt: true,
+                          dataSyncs: {
+                              select: { status: true, startedAt: true },
+                              orderBy: { startedAt: "desc" },
+                              take: 1,
+                          },
+                          _count: {
+                              select: {
+                                  dataSyncs: true,
+                                  playData: true,
+                                  chartPlayHistory: true,
+                                  // 「평가」 는 지금 쓰는 채보 의견 · 평가(옛 ChartEvaluation 은 지웠다, 2026-10-16 D6)
+                                  communityEvaluations: true,
+                                  examAchievements: true,
+                              },
+                          },
+                      },
+                  })
+        ).sort(
+            (left, right) =>
+                (pageOrder.get(left.id) ?? 0) - (pageOrder.get(right.id) ?? 0)
+        );
         const userIds = users.map((user) => user.id);
         const [
             judgementGroups,
@@ -191,6 +271,8 @@ export async function listAdminUsers(
             return {
                 id: user.id,
                 name: user.nostalgiaName ?? user.username ?? `유저 ${user.id}`,
+                username: user.username,
+                nostalgiaName: user.nostalgiaName,
                 country: user.country,
                 role: user.role === "admin" ? "admin" : "user",
                 playCount: user.stats?.playCount ?? 0,
@@ -227,17 +309,10 @@ export async function listAdminUsers(
                 ),
             };
         });
-        const attentionCount = userRows.filter(
-            ({ health }) => health.needsAttention
-        ).length;
-
         return {
-            totalCount: userRows.length,
-            attentionCount,
-            users:
-                filters.state === "attention"
-                    ? userRows.filter(({ health }) => health.needsAttention)
-                    : userRows,
+            totalCount: candidates.length,
+            attentionCount: attentionIds.length,
+            users: userRows,
         };
     } catch (error) {
         logUserAdminError(error, "admin.user.list.failed", "page");

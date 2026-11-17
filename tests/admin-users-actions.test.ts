@@ -73,7 +73,7 @@ describe("관리자 사용자 관리", () => {
     it("사용자와 데이터 적재 상태를 관리자 화면용 타입으로 정규화한다", async () => {
         const createdAt = new Date("2026-01-01T00:00:00.000Z");
         const syncedAt = new Date("2026-09-05T00:00:00.000Z");
-        mocks.userFindMany.mockResolvedValue([
+        const userRows = [
             {
                 id: 2,
                 username: "noslog-user",
@@ -96,7 +96,12 @@ describe("관리자 사용자 관리", () => {
                     examAchievements: 1,
                 },
             },
-        ]);
+        ];
+        // 점검 필요 후보(전체 id) → 기록 누락 조회(없음) → 쪽 안 사람 상세 순서로 읽는다
+        mocks.userFindMany
+            .mockResolvedValueOnce(userRows)
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce(userRows);
         mocks.playDataGroupBy
             .mockResolvedValueOnce([{ userId: 2, _count: { _all: 2 } }])
             .mockResolvedValueOnce([{ userId: 2, _count: { _all: 2 } }]);
@@ -116,6 +121,8 @@ describe("관리자 사용자 관리", () => {
                 {
                     id: 2,
                     name: "NOSTALGIA USER",
+                    username: "noslog-user",
+                    nostalgiaName: "NOSTALGIA USER",
                     country: "ko-KR",
                     role: "user",
                     playCount: 20,
@@ -154,7 +161,7 @@ describe("관리자 사용자 관리", () => {
                         { discordUsername: { contains: "NOSTALGIA" } },
                     ],
                 },
-                take: 100,
+                orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
             })
         );
     });

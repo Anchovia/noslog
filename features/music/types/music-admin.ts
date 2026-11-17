@@ -45,9 +45,9 @@ export interface AdminMusicListData {
     coverage: AdminMusicTranslationCoverage[];
     missingLevelConstant: boolean;
     musics: AdminMusicListItem[];
-    /** 다음 쪽이 더 있는지(무한 스크롤, 2026-09-25) */
-    hasMore: boolean;
+    page: number;
     query: string;
+    totalCount: number;
 }
 
 /** 무한 스크롤 한 쪽 */

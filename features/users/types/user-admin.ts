@@ -22,9 +22,11 @@ export interface AdminUserRow {
     latestSyncAt: string | null;
     name: string;
     nostalgiaLastPlaytime: string | null;
+    nostalgiaName: string | null;
     playCount: number;
     role: UserRole;
     syncTokenVersion: number;
+    username: string | null;
 }
 
 export interface AdminUserList {
