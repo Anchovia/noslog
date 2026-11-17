@@ -57,7 +57,7 @@ describe("관리자 · 채보 에디터 TSX 토큰", () => {
             {
                 file: "features/music/components/admin/music-translation-coverage.tsx",
                 match: "Tailwind breakpoint sm:",
-                reason: "관리자 번역 현황 두 열 — 640 기준이라 NosLog 폭(672)으로 옮기면 640–671 모양이 바뀐다. 관리자 화면은 재설계하지 않는다",
+                reason: "관리자 번역 현황 두 열 — 640 기준이라 NosLog 폭(672)으로 옮기면 640–671 모양이 바뀐다. 관리자 화면은 파운데이션 값에 맞추려고 모양을 바꾸지 않는다",
             },
         ];
         const isAllowed = (violation: string) =>
