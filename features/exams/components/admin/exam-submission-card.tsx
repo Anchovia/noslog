@@ -68,6 +68,7 @@ export default function ExamSubmissionCard({
                 <DeleteExamSubmissionButton
                     submissionId={submission.id}
                     isApproved={submission.status === "approved"}
+                    userName={submission.userName}
                 />
             </div>
         </article>

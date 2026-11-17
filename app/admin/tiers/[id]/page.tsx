@@ -325,7 +325,10 @@ export default async function EditTierListPage({
 
             {!current ? (
                 <div className="border-t-nl-stroke border-nl-divider pt-nl-24">
-                    <TierListDeleteButton tierListId={tierList.id} />
+                    <TierListDeleteButton
+                        tierListId={tierList.id}
+                        title={tierList.title}
+                    />
                 </div>
             ) : null}
         </div>

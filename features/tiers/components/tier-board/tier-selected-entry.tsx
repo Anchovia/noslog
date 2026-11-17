@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { deleteTierEntry } from "@/app/admin/tiers/actions";
+import AdminDeleteDialog from "@/components/admin/admin-delete-dialog";
 import { foundationButtonClass } from "@/components/ui/button";
 import { createTierIdFormData } from "@/features/tiers/schemas/tier-admin-schema";
 import { cn } from "@/lib/cn";
@@ -40,19 +41,27 @@ export default function TierSelectedEntry({ entry }: { entry: TierEntryData }) {
                     {entry.chart.difficulty} Lv{entry.chart.level}
                 </p>
             </div>
-            <button
-                type="button"
-                disabled={isPending}
-                onClick={handleDelete}
-                aria-label="채보 제거"
+            <AdminDeleteDialog
                 title="채보 제거"
-                className={foundationButtonClass({
-                    variant: "ghost",
-                    size: "icon-sm",
-                })}
-            >
-                <Trash2 className="nl-icon-small" aria-hidden />
-            </button>
+                description={`${entry.chart.music.title} ${entry.chart.difficulty} 채보를 서열표에서 뺍니다.`}
+                actionLabel="채보 제거"
+                pending={isPending}
+                onConfirm={handleDelete}
+                trigger={
+                    <button
+                        type="button"
+                        disabled={isPending}
+                        aria-label="채보 제거"
+                        title="채보 제거"
+                        className={foundationButtonClass({
+                            variant: "ghost",
+                            size: "icon-sm",
+                        })}
+                    >
+                        <Trash2 className="nl-icon-small" aria-hidden />
+                    </button>
+                }
+            />
         </div>
     );
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { type FormEvent } from "react";
 
 import { deleteTierBand, updateTierBand } from "@/app/admin/tiers/actions";
+import AdminDeleteDialog from "@/components/admin/admin-delete-dialog";
 import { foundationButtonClass } from "@/components/ui/button";
 import {
     createTierBandFormData,
@@ -89,19 +90,28 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
             <span className="nl-metadata flex h-nl-32 items-center text-nl-subdued">
                 {band.entries.length}곡
             </span>
-            <button
-                type="button"
-                disabled={isPending}
-                onClick={handleDelete}
-                aria-label={`${band.value} 구간 삭제`}
+            <AdminDeleteDialog
                 title="구간 삭제"
-                className={foundationButtonClass({
-                    variant: "ghost",
-                    size: "icon-sm",
-                })}
-            >
-                <Trash2 className="nl-icon-small" aria-hidden />
-            </button>
+                description={`${formatTierValue(band.value)} 구간과 그 안의 항목 배치 ${band.entries.length}곡이 모두 지워집니다. 되돌릴 수 없습니다.`}
+                confirmText={formatTierValue(band.value)}
+                actionLabel="구간 삭제"
+                pending={isPending}
+                onConfirm={handleDelete}
+                trigger={
+                    <button
+                        type="button"
+                        disabled={isPending}
+                        aria-label={`${band.value} 구간 삭제`}
+                        title="구간 삭제"
+                        className={foundationButtonClass({
+                            variant: "ghost",
+                            size: "icon-sm",
+                        })}
+                    >
+                        <Trash2 className="nl-icon-small" aria-hidden />
+                    </button>
+                }
+            />
         </header>
     );
 }

@@ -12,6 +12,7 @@ import {
     saveExam,
     searchAdminMusic,
 } from "@/app/admin/exams/actions";
+import AdminDeleteDialog from "@/components/admin/admin-delete-dialog";
 import Button, { foundationButtonClass } from "@/components/ui/button";
 import IntentLink from "@/components/ui/intent-link";
 import {
@@ -291,7 +292,7 @@ export default function ExamEditor({
     }
 
     function handleDelete() {
-        if (!examId || !window.confirm("이 검정을 삭제할까요?")) return;
+        if (!examId) return;
 
         startDeleteTransition(async () => {
             const result = await deleteExam(examId);
@@ -381,14 +382,23 @@ export default function ExamEditor({
                             {errors.root.server.message}
                         </p>
                     ) : null}
-                    {examId ? (
-                        <Button
-                            variant="danger"
-                            onClick={handleDelete}
-                            disabled={isDeleting || isSubmitting}
-                        >
-                            검정 삭제
-                        </Button>
+                    {examId && initialExam ? (
+                        <AdminDeleteDialog
+                            title="검정 삭제"
+                            description={`「${initialExam.title}」 검정과 단계 · 단계 채보 · 보상이 모두 지워집니다. 되돌릴 수 없습니다.`}
+                            confirmText={initialExam.title}
+                            actionLabel="검정 삭제"
+                            pending={isDeleting || isSubmitting}
+                            onConfirm={handleDelete}
+                            trigger={
+                                <Button
+                                    variant="danger"
+                                    disabled={isDeleting || isSubmitting}
+                                >
+                                    검정 삭제
+                                </Button>
+                            }
+                        />
                     ) : null}
                 </div>
 

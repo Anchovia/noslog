@@ -12,6 +12,7 @@ import {
     saveArcadePhoto,
     setArcadeMainPhoto,
 } from "@/app/admin/arcades/actions";
+import AdminDeleteDialog from "@/components/admin/admin-delete-dialog";
 import {
     adminCompactInputClass as inputClass,
     adminCompactPrimaryButtonClass as primaryButtonClass,
@@ -183,28 +184,29 @@ export default function ArcadePhotoManager({
                             대표로
                         </button>
                     ) : null}
-                    <button
-                        type="button"
-                        aria-label={`${index + 1}번째 사진 삭제`}
-                        disabled={busy}
-                        onClick={() => {
-                            if (
-                                window.confirm(
-                                    "이 사진을 지울까요? 되돌릴 수 없습니다."
-                                )
-                            )
-                                change(deleteArcadePhoto, photo.id);
-                        }}
-                        className={cn(
-                            foundationButtonClass({
-                                variant: "ghost",
-                                size: "icon-sm",
-                            }),
-                            "shrink-0"
-                        )}
-                    >
-                        <Trash2 className="nl-icon-small" aria-hidden />
-                    </button>
+                    <AdminDeleteDialog
+                        title="사진 삭제"
+                        description={`${index + 1}번째 사진을 지웁니다. 되돌릴 수 없습니다.`}
+                        actionLabel="사진 삭제"
+                        pending={busy}
+                        onConfirm={() => change(deleteArcadePhoto, photo.id)}
+                        trigger={
+                            <button
+                                type="button"
+                                aria-label={`${index + 1}번째 사진 삭제`}
+                                disabled={busy}
+                                className={cn(
+                                    foundationButtonClass({
+                                        variant: "ghost",
+                                        size: "icon-sm",
+                                    }),
+                                    "shrink-0"
+                                )}
+                            >
+                                <Trash2 className="nl-icon-small" aria-hidden />
+                            </button>
+                        }
+                    />
                 </div>
             ))}
             {photos.length === 0 ? (

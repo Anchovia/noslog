@@ -101,7 +101,9 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                 />
                 <SaveBingoButton isSubmitting={isSubmitting} />
             </form>
-            {bingo.id ? <DeleteBingoButton bingoId={bingo.id} /> : null}
+            {bingo.id ? (
+                <DeleteBingoButton bingoId={bingo.id} title={bingo.title} />
+            ) : null}
         </div>
     );
 }
