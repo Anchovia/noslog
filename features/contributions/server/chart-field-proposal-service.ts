@@ -204,8 +204,10 @@ export interface AdminChartFieldProposal {
     authorRejected: number;
 }
 
+// range 는 관리자 목록의 쪽(adminPageArgs)
 export async function listChartFieldProposals(
-    status: ChartFieldProposalStatus
+    status: ChartFieldProposalStatus,
+    range: { skip: number; take: number }
 ): Promise<AdminChartFieldProposal[]> {
     await requireAdmin();
     const rows = await db.chartFieldProposal.findMany({
@@ -214,7 +216,7 @@ export async function listChartFieldProposals(
             status === "pending"
                 ? { createdAt: "asc" }
                 : { reviewedAt: "desc" },
-        take: 200,
+        ...range,
         include: {
             user: { select: { id: true, username: true } },
             chart: {
@@ -275,6 +277,22 @@ export async function listChartFieldProposals(
               ]
             : []
     );
+}
+
+// 상태 탭의 건수 — 상태마다 전체 기준
+export async function countChartFieldProposalsByStatus(): Promise<
+    Record<ChartFieldProposalStatus, number>
+> {
+    await requireAdmin();
+    const rows = await db.chartFieldProposal.groupBy({
+        by: ["status"],
+        _count: { _all: true },
+    });
+    const counts = Object.fromEntries(
+        CHART_FIELD_PROPOSAL_STATUSES.map((status) => [status, 0])
+    ) as Record<ChartFieldProposalStatus, number>;
+    for (const row of rows) counts[row.status] = row._count._all;
+    return counts;
 }
 
 export interface ChartFieldQueueStatus {

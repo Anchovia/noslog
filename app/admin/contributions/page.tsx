@@ -1,17 +1,34 @@
 import Link from "next/link";
 
+import {
+    AdminCard,
+    AdminCardEmpty,
+    AdminCardHead,
+    AdminCountTabs,
+    AdminPager,
+} from "@/components/admin/admin-card";
 import ChartDraftReviewList from "@/features/contributions/components/admin/chart-draft-review-list";
 import ChartFieldProposalReview from "@/features/contributions/components/admin/chart-field-proposal-review";
 import {
     CHART_FIELD_PROPOSAL_STATUSES,
     type ChartFieldProposalStatus,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
-import { listChartDraftsForReview } from "@/features/contributions/server/chart-draft-review-service";
 import {
+    countChartDraftsForReview,
+    listChartDraftsForReview,
+} from "@/features/contributions/server/chart-draft-review-service";
+import {
+    countChartFieldProposalsByStatus,
     getChartFieldQueueStatus,
     listChartFieldProposals,
 } from "@/features/contributions/server/chart-field-proposal-service";
 import { requireAdmin } from "@/lib/admin";
+import {
+    ADMIN_PAGE_SIZE,
+    adminPageArgs,
+    adminPageHref,
+    parseAdminPage,
+} from "@/lib/admin/page";
 
 const DRAFT_STATUSES = ["pending", "changes_requested", "approved"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
@@ -44,23 +61,21 @@ function tabClass(active: boolean) {
 export default async function AdminContributionsPage({
     searchParams,
 }: {
-    searchParams: Promise<{ kind?: string; status?: string }>;
+    searchParams: Promise<{ kind?: string; status?: string; page?: string }>;
 }) {
     await requireAdmin();
     const params = await searchParams;
     const kind = params.kind === "chart" ? "chart" : "field";
+    const page = parseAdminPage(params.page);
+    const hrefFor = (next: number) =>
+        adminPageHref(
+            "/admin/contributions",
+            { kind: params.kind, status: params.status },
+            next
+        );
 
     return (
-        <div className="flex flex-col gap-nl-16 py-nl-24">
-            <section>
-                <h1 className="nl-section-title text-nl-content">기여</h1>
-                <p className="nl-metadata mt-nl-4 text-nl-subdued">
-                    {kind === "field"
-                        ? "유저가 제안한 채보 정보를 확인하고 반영하거나 반려합니다. 반영하면 곡 상세에 바로 보이고 출처가 제안으로 남습니다."
-                        : "유저가 만든 채보 초안을 검토합니다. 에디터 검토 모드에서 시각 댓글을 달고 수정을 요청하거나 공개합니다."}
-                </p>
-            </section>
-
+        <div className="nl-admin-stack">
             <nav className="flex gap-nl-8" aria-label="기여 종류">
                 <Link
                     href="/admin/contributions"
@@ -77,80 +92,131 @@ export default async function AdminContributionsPage({
             </nav>
 
             {kind === "field" ? (
-                <FieldProposals status={params.status} />
+                <FieldProposals
+                    status={params.status}
+                    page={page}
+                    hrefFor={hrefFor}
+                />
             ) : (
-                <ChartDrafts status={params.status} />
+                <ChartDrafts
+                    status={params.status}
+                    page={page}
+                    hrefFor={hrefFor}
+                />
             )}
         </div>
     );
 }
 
-async function FieldProposals({ status: raw }: { status?: string }) {
+async function FieldProposals({
+    status: raw,
+    page,
+    hrefFor,
+}: {
+    status?: string;
+    page: number;
+    hrefFor: (page: number) => string;
+}) {
     const status =
         CHART_FIELD_PROPOSAL_STATUSES.find((item) => item === raw) ?? "pending";
-    const [proposals, queue] = await Promise.all([
-        listChartFieldProposals(status),
+    const [proposals, counts, queue] = await Promise.all([
+        listChartFieldProposals(status, adminPageArgs(page)),
+        countChartFieldProposalsByStatus(),
         getChartFieldQueueStatus(),
     ]);
     return (
         <>
-            <nav className="flex gap-nl-8" aria-label="처리 상태">
-                {CHART_FIELD_PROPOSAL_STATUSES.map((item) => (
-                    <Link
-                        key={item}
-                        href={"/admin/contributions?status=" + item}
-                        className={tabClass(status === item)}
-                    >
-                        {fieldStatusLabel(item)}
-                    </Link>
-                ))}
-            </nav>
-            {/* 대기 현황(2026-10-01 G1) — 기여자 쪽 제안 창과 같은 숫자를 운영자도 본다 */}
-            {queue.pending ? (
-                <p className="nl-metadata text-nl-subdued">
-                    검토 대기 {queue.pending.toLocaleString("ko-KR")}건
-                    {queue.oldestDays
-                        ? ` · 가장 오래 기다린 제안 ${queue.oldestDays.toLocaleString("ko-KR")}일`
-                        : " · 모두 오늘 들어왔습니다"}
-                </p>
-            ) : null}
-            {proposals.length ? (
-                <ChartFieldProposalReview
-                    proposals={proposals}
-                    reviewable={status === "pending"}
+            <AdminCountTabs
+                label="처리 상태"
+                options={CHART_FIELD_PROPOSAL_STATUSES.map((item) => ({
+                    key: item,
+                    label: fieldStatusLabel(item),
+                    count: counts[item],
+                    href: "/admin/contributions?status=" + item,
+                    selected: status === item,
+                }))}
+            />
+            <AdminCard>
+                <AdminCardHead
+                    title="기여"
+                    actions={
+                        // 대기 현황(2026-10-01 G1) — 기여자 쪽 제안 창과 같은 숫자를 운영자도 본다. 대기 건수는 탭에 있다
+                        queue.pending ? (
+                            <p className="nl-metadata text-nl-subdued">
+                                {queue.oldestDays
+                                    ? `가장 오래 기다린 제안 ${queue.oldestDays.toLocaleString("ko-KR")}일`
+                                    : "모두 오늘 들어왔습니다"}
+                            </p>
+                        ) : null
+                    }
                 />
-            ) : (
-                <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
-                    해당하는 제안이 없습니다.
-                </p>
-            )}
+                {proposals.length ? (
+                    <>
+                        <ChartFieldProposalReview
+                            proposals={proposals}
+                            reviewable={status === "pending"}
+                        />
+                        <AdminPager
+                            page={page}
+                            pageSize={ADMIN_PAGE_SIZE}
+                            total={counts[status]}
+                            unit="건"
+                            hrefFor={hrefFor}
+                        />
+                    </>
+                ) : (
+                    <AdminCardEmpty>해당하는 제안이 없습니다.</AdminCardEmpty>
+                )}
+            </AdminCard>
         </>
     );
 }
 
-async function ChartDrafts({ status: raw }: { status?: string }) {
+async function ChartDrafts({
+    status: raw,
+    page,
+    hrefFor,
+}: {
+    status?: string;
+    page: number;
+    hrefFor: (page: number) => string;
+}) {
     const status = DRAFT_STATUSES.find((item) => item === raw) ?? "pending";
-    const drafts = await listChartDraftsForReview(status);
+    const [drafts, counts] = await Promise.all([
+        listChartDraftsForReview(status, adminPageArgs(page)),
+        countChartDraftsForReview(),
+    ]);
     return (
         <>
-            <nav className="flex gap-nl-8" aria-label="처리 상태">
-                {DRAFT_STATUSES.map((item) => (
-                    <Link
-                        key={item}
-                        href={`/admin/contributions?kind=chart&status=${item}`}
-                        className={tabClass(status === item)}
-                    >
-                        {draftStatusLabel(item)}
-                    </Link>
-                ))}
-            </nav>
-            {drafts.length ? (
-                <ChartDraftReviewList drafts={drafts} />
-            ) : (
-                <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
-                    해당하는 채보 초안이 없습니다.
-                </p>
-            )}
+            <AdminCountTabs
+                label="처리 상태"
+                options={DRAFT_STATUSES.map((item) => ({
+                    key: item,
+                    label: draftStatusLabel(item),
+                    count: counts[item],
+                    href: `/admin/contributions?kind=chart&status=${item}`,
+                    selected: status === item,
+                }))}
+            />
+            <AdminCard>
+                <AdminCardHead title="기여" />
+                {drafts.length ? (
+                    <>
+                        <ChartDraftReviewList drafts={drafts} />
+                        <AdminPager
+                            page={page}
+                            pageSize={ADMIN_PAGE_SIZE}
+                            total={counts[status]}
+                            unit="건"
+                            hrefFor={hrefFor}
+                        />
+                    </>
+                ) : (
+                    <AdminCardEmpty>
+                        해당하는 채보 초안이 없습니다.
+                    </AdminCardEmpty>
+                )}
+            </AdminCard>
         </>
     );
 }

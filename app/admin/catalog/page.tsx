@@ -1,13 +1,28 @@
-import Link from "next/link";
-
+import {
+    AdminCard,
+    AdminCardEmpty,
+    AdminCardHead,
+    AdminCountTabs,
+    AdminPager,
+    AdminTable,
+} from "@/components/admin/admin-card";
 import MusicCatalogReviewActions from "@/features/music/components/admin/music-catalog-review-actions";
 import {
     MUSIC_CATALOG_STATUSES,
     normalizeMusicCatalogStatus,
     type MusicCatalogStatus,
 } from "@/features/music/schemas/music-catalog-admin-schema";
-import { listMusicCatalogCandidates } from "@/features/music/server/music-catalog-admin-service";
+import {
+    countMusicCatalogCandidatesByStatus,
+    listMusicCatalogCandidates,
+} from "@/features/music/server/music-catalog-admin-service";
 import { requireAdmin } from "@/lib/admin";
+import {
+    ADMIN_PAGE_SIZE,
+    adminPageArgs,
+    adminPageHref,
+    parseAdminPage,
+} from "@/lib/admin/page";
 
 function statusLabel(status: MusicCatalogStatus) {
     if (status === "pending") return "검토 대기";
@@ -18,97 +33,101 @@ function statusLabel(status: MusicCatalogStatus) {
 export default async function AdminCatalogPage({
     searchParams,
 }: {
-    searchParams: Promise<{ status?: string }>;
+    searchParams: Promise<{ status?: string; page?: string }>;
 }) {
     await requireAdmin();
     const params = await searchParams;
     const status = normalizeMusicCatalogStatus(params.status);
-    const candidates = await listMusicCatalogCandidates(status);
+    const page = parseAdminPage(params.page);
+    const [candidates, counts] = await Promise.all([
+        listMusicCatalogCandidates(status, adminPageArgs(page)),
+        countMusicCatalogCandidatesByStatus(),
+    ]);
 
     return (
-        <div className="flex flex-col gap-nl-16 py-nl-24">
-            <section>
-                <h1 className="nl-section-title text-nl-content">
-                    악곡 업데이트
-                </h1>
-                <p className="nl-metadata mt-nl-4 text-nl-subdued">
-                    BEMANI 연동에서 감지한 공식 악곡과 채보 변경을 관리합니다.
-                </p>
-            </section>
-
-            <nav className="flex gap-nl-8">
-                {MUSIC_CATALOG_STATUSES.map((item) => (
-                    <Link
-                        key={item}
-                        href={"/admin/catalog?status=" + item}
-                        className={
-                            "nl-emphasis-label rounded-nl-control px-nl-12 py-nl-8 transition-colors duration-nl-state " +
-                            (status === item
-                                ? "bg-nl-primary text-nl-on-primary"
-                                : "nl-hover-layer bg-nl-surface text-nl-subdued")
-                        }
-                    >
-                        {statusLabel(item)}
-                    </Link>
-                ))}
-            </nav>
-
-            <section className="flex flex-col gap-nl-12">
-                {candidates.map((candidate) => (
-                    <article
-                        key={candidate.id}
-                        className="flex flex-col gap-nl-12 rounded-nl-control bg-nl-surface p-nl-16"
-                    >
-                        <div className="flex items-start justify-between gap-nl-12">
-                            <div className="min-w-0">
-                                <h2 className="nl-component-title truncate text-nl-content">
-                                    {candidate.title}
-                                </h2>
-                                <p className="nl-metadata mt-nl-4 truncate text-nl-subdued">
-                                    {candidate.artist ?? "아티스트 미상"}
-                                </p>
-                            </div>
-                            <span className="nl-tag shrink-0">
-                                {statusLabel(candidate.status)}
-                            </span>
-                        </div>
-
-                        <ul className="flex flex-wrap gap-nl-8">
-                            {candidate.changes.map((change) => (
-                                <li key={change} className="nl-tag">
-                                    {change}
-                                </li>
-                            ))}
-                        </ul>
-
-                        <dl className="nl-admin-pairs nl-metadata gap-x-nl-12 gap-y-nl-4 text-nl-subdued">
-                            <dt>악곡 ID</dt>
-                            <dd className="truncate font-nl-mono text-nl-content">
-                                {candidate.musicIndex}
-                            </dd>
-                            <dt>감지 횟수</dt>
-                            <dd className="text-nl-content">
-                                {candidate.seenCount.toLocaleString("ko-KR")}회
-                            </dd>
-                            <dt>최근 감지</dt>
-                            <dd className="text-nl-content">
-                                {candidate.lastSeenAt.toLocaleString("ko-KR")}
-                            </dd>
-                        </dl>
-
-                        {candidate.status === "pending" ? (
-                            <MusicCatalogReviewActions
-                                candidateId={candidate.id}
-                            />
-                        ) : null}
-                    </article>
-                ))}
-                {candidates.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
+        <div className="nl-admin-stack">
+            <AdminCountTabs
+                label="처리 상태"
+                options={MUSIC_CATALOG_STATUSES.map((item) => ({
+                    key: item,
+                    label: statusLabel(item),
+                    count: counts[item],
+                    href: `/admin/catalog?status=${item}`,
+                    selected: status === item,
+                }))}
+            />
+            <AdminCard>
+                <AdminCardHead title="악곡 업데이트" />
+                {candidates.length ? (
+                    <>
+                        <AdminTable>
+                            <thead>
+                                <tr>
+                                    <th>곡</th>
+                                    <th>아티스트</th>
+                                    <th>변경</th>
+                                    <th>악곡 ID</th>
+                                    <th>감지 횟수</th>
+                                    <th>최근 감지</th>
+                                    <th />
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {candidates.map((candidate) => (
+                                    <tr key={candidate.id}>
+                                        <td>{candidate.title}</td>
+                                        <td>
+                                            {candidate.artist ??
+                                                "아티스트 미상"}
+                                        </td>
+                                        <td className="nl-admin-table__wrap">
+                                            {candidate.changes.join(" · ")}
+                                        </td>
+                                        <td className="font-nl-mono">
+                                            {candidate.musicIndex}
+                                        </td>
+                                        <td>
+                                            {candidate.seenCount.toLocaleString(
+                                                "ko-KR"
+                                            )}
+                                            회
+                                        </td>
+                                        <td>
+                                            {candidate.lastSeenAt.toLocaleString(
+                                                "ko-KR"
+                                            )}
+                                        </td>
+                                        <td className="nl-admin-table__menu">
+                                            {candidate.status === "pending" ? (
+                                                <MusicCatalogReviewActions
+                                                    candidateId={candidate.id}
+                                                />
+                                            ) : null}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </AdminTable>
+                        <AdminPager
+                            page={page}
+                            pageSize={ADMIN_PAGE_SIZE}
+                            total={counts[status]}
+                            unit="건"
+                            hrefFor={(next) =>
+                                adminPageHref(
+                                    "/admin/catalog",
+                                    { status: params.status },
+                                    next
+                                )
+                            }
+                        />
+                    </>
+                ) : (
+                    <AdminCardEmpty>
                         해당하는 악곡 업데이트가 없습니다.
-                    </p>
-                ) : null}
-            </section>
+                    </AdminCardEmpty>
+                )}
+            </AdminCard>
         </div>
     );
 }

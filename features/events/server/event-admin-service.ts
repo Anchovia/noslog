@@ -19,13 +19,17 @@ export const ADMIN_EVENT_TABS = [
     "rejected",
 ] as const satisfies readonly EventStatus[];
 
-export async function getAdminEventList(status: EventStatus) {
+// range 는 관리자 목록의 쪽(adminPageArgs)
+export async function getAdminEventList(
+    status: EventStatus,
+    range: { skip: number; take: number }
+) {
     await requireAdmin();
     const [items, counts] = await Promise.all([
         db.communityEvent.findMany({
             where: { status },
             orderBy: [{ submittedAt: "desc" }, { updatedAt: "desc" }],
-            take: 100,
+            ...range,
             select: {
                 id: true,
                 title: true,

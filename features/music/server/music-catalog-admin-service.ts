@@ -46,8 +46,10 @@ function refreshMusicCatalog(updatePublicData: boolean) {
     revalidatePath("/admin/catalog");
 }
 
+// range 는 관리자 목록의 쪽(adminPageArgs)
 export async function listMusicCatalogCandidates(
-    status: MusicCatalogStatus
+    status: MusicCatalogStatus,
+    range: { skip: number; take: number }
 ): Promise<AdminMusicCatalogCandidate[]> {
     await requireAdmin();
 
@@ -55,7 +57,7 @@ export async function listMusicCatalogCandidates(
         const candidates = await db.musicCatalogCandidate.findMany({
             where: { status },
             orderBy: { lastSeenAt: "desc" },
-            take: 100,
+            ...range,
         });
 
         return candidates.flatMap((candidate) => {
@@ -89,6 +91,24 @@ export async function listMusicCatalogCandidates(
         logMusicCatalogError(error, "admin.music-catalog.list.failed", "page");
         throw error;
     }
+}
+
+// 상태 탭의 건수 — 상태마다 전체 기준
+export async function countMusicCatalogCandidatesByStatus(): Promise<
+    Record<MusicCatalogStatus, number>
+> {
+    await requireAdmin();
+    const rows = await db.musicCatalogCandidate.groupBy({
+        by: ["status"],
+        _count: { _all: true },
+    });
+    const counts: Record<MusicCatalogStatus, number> = {
+        pending: 0,
+        applied: 0,
+        rejected: 0,
+    };
+    for (const row of rows) counts[row.status] = row._count._all;
+    return counts;
 }
 
 export async function reviewMusicCatalogCandidate(

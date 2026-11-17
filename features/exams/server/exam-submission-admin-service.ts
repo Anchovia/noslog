@@ -39,8 +39,10 @@ function logExamSubmissionError(error: unknown, event: string) {
     });
 }
 
+// range 는 관리자 목록의 쪽(adminPageArgs) — 주지 않으면 최근 100건
 export async function listExamSubmissions(
-    status: ExamSubmissionStatus
+    status: ExamSubmissionStatus,
+    range: { skip?: number; take: number } = { take: 100 }
 ): Promise<AdminExamSubmission[]> {
     await requireAdmin();
 
@@ -57,7 +59,7 @@ export async function listExamSubmissions(
                 exam: { select: { title: true } },
             },
             orderBy: { submittedAt: "desc" },
-            take: 100,
+            ...range,
         });
 
         return submissions.map((submission) => ({
@@ -76,6 +78,24 @@ export async function listExamSubmissions(
         logExamSubmissionError(error, "admin.exam-submission.list.failed");
         throw error;
     }
+}
+
+// 상태 탭의 건수 — 상태마다 전체 기준
+export async function countExamSubmissionsByStatus(): Promise<
+    Record<ExamSubmissionStatus, number>
+> {
+    await requireAdmin();
+    const rows = await db.examSubmission.groupBy({
+        by: ["status"],
+        _count: { _all: true },
+    });
+    const counts: Record<ExamSubmissionStatus, number> = {
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+    };
+    for (const row of rows) counts[row.status] = row._count._all;
+    return counts;
 }
 
 export async function reviewExamSubmission(

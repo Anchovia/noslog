@@ -76,8 +76,10 @@ function changedNoteCount(next: ChartDocument, base: ChartDocument) {
     return Math.max(added, removed);
 }
 
+// range 는 관리자 목록의 쪽(adminPageArgs)
 export async function listChartDraftsForReview(
-    status: "pending" | "changes_requested" | "approved"
+    status: "pending" | "changes_requested" | "approved",
+    range: { skip: number; take: number }
 ): Promise<AdminChartDraft[]> {
     await requireAdmin();
     const rows = await db.chartDraft.findMany({
@@ -86,7 +88,7 @@ export async function listChartDraftsForReview(
             status === "pending"
                 ? { submittedAt: "asc" }
                 : { updatedAt: "desc" },
-        take: 100,
+        ...range,
         select: {
             id: true,
             status: true,
@@ -145,6 +147,23 @@ export async function listChartDraftsForReview(
     });
 }
 
+// 상태 탭의 건수 — 상태마다 전체 기준(작성 중 초안은 세지 않는다)
+export async function countChartDraftsForReview(): Promise<
+    Record<"pending" | "changes_requested" | "approved", number>
+> {
+    await requireAdmin();
+    const rows = await db.chartDraft.groupBy({
+        by: ["status"],
+        where: { status: { in: ["pending", "changes_requested", "approved"] } },
+        _count: { _all: true },
+    });
+    const counts = { pending: 0, changes_requested: 0, approved: 0 };
+    for (const row of rows) {
+        if (row.status !== "draft") counts[row.status] = row._count._all;
+    }
+    return counts;
+}
+
 /** 운영자 검토용 초안 전체(에디터 검토 모드에 넘긴다) */
 export async function getChartDraftForReview(draftId: number) {
     await requireAdmin();
@@ -186,7 +205,6 @@ export async function reviewChartDraft(
             chartId: true,
             userId: true,
             baseRevision: true,
-            user: { select: { username: true } },
             chart: { select: { musicIdx: true, difficulty: true } },
         },
     });
@@ -304,7 +322,6 @@ export async function reviewChartDraft(
                     // 기준 버전을 남겨 둔다 — 공개 채보 출처(영상 추출 여부)를 줄기로 따진다
                     message: contributionRevisionMessage(
                         draft.id,
-                        draft.user.username ?? "이름 없음",
                         draft.baseRevision
                     ),
                     content: inputJson(document.data),

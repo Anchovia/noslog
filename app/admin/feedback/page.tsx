@@ -1,32 +1,39 @@
-import Link from "next/link";
-
-import FeedbackReportCard from "@/features/feedback/components/admin/feedback-report-card";
-import OpinionReportCard from "@/features/feedback/components/admin/opinion-report-card";
 import {
-    feedbackStatusSchema,
-    normalizeFeedbackStatus,
-} from "@/features/feedback/schemas/feedback-admin-schema";
-import { listFeedbackReports } from "@/features/feedback/server/feedback-admin-service";
-import { listOpinionReports } from "@/features/feedback/server/opinion-report-admin-service";
+    AdminCard,
+    AdminCardEmpty,
+    AdminCardHead,
+    AdminCountTabs,
+    AdminPager,
+    AdminTable,
+} from "@/components/admin/admin-card";
+import FeedbackReportRow from "@/features/feedback/components/admin/feedback-report-row";
+import OpinionReportRow from "@/features/feedback/components/admin/opinion-report-row";
+import { normalizeFeedbackStatus } from "@/features/feedback/schemas/feedback-admin-schema";
+import {
+    countFeedbackReportsByStatus,
+    listFeedbackReports,
+} from "@/features/feedback/server/feedback-admin-service";
+import {
+    countOpinionReportsByStatus,
+    listOpinionReports,
+} from "@/features/feedback/server/opinion-report-admin-service";
 import { requireAdmin } from "@/lib/admin";
+import {
+    ADMIN_PAGE_SIZE,
+    adminPageArgs,
+    adminPageHref,
+    parseAdminPage,
+} from "@/lib/admin/page";
 
 // 피드백 두 탭 + 채보 커뮤니티 의견 · 답글 신고 두 탭(2026-10-17)
-const tabs = [
-    ...feedbackStatusSchema.options.map((item) => ({
-        key: item,
-        label: item === "open" ? "접수" : "처리 완료",
-    })),
-    { key: "reports", label: "의견 신고" },
-    { key: "reports-resolved", label: "신고 처리 완료" },
-] as const;
-
 export default async function AdminFeedbackPage({
     searchParams,
 }: {
-    searchParams: Promise<{ status?: string }>;
+    searchParams: Promise<{ status?: string; page?: string }>;
 }) {
     await requireAdmin();
     const params = await searchParams;
+    const page = parseAdminPage(params.page);
     const opinionStatus =
         params.status === "reports"
             ? "pending"
@@ -37,50 +44,101 @@ export default async function AdminFeedbackPage({
         ? null
         : normalizeFeedbackStatus(params.status);
     const active = status ?? params.status;
-    const reports = status ? await listFeedbackReports(status) : [];
-    const opinionReports = opinionStatus
-        ? await listOpinionReports(opinionStatus)
-        : [];
+    const [feedbackCounts, opinionCounts, reports, opinionReports] =
+        await Promise.all([
+            countFeedbackReportsByStatus(),
+            countOpinionReportsByStatus(),
+            status ? listFeedbackReports(status, adminPageArgs(page)) : [],
+            opinionStatus
+                ? listOpinionReports(opinionStatus, adminPageArgs(page))
+                : [],
+        ]);
+    const tabs = [
+        { key: "open", label: "접수", count: feedbackCounts.open },
+        { key: "resolved", label: "처리 완료", count: feedbackCounts.resolved },
+        { key: "reports", label: "의견 신고", count: opinionCounts.pending },
+        {
+            key: "reports-resolved",
+            label: "신고 처리 완료",
+            count: opinionCounts.resolved,
+        },
+    ];
+    const total = tabs.find((item) => item.key === active)?.count ?? 0;
+    const hrefFor = (next: number) =>
+        adminPageHref("/admin/feedback", { status: params.status }, next);
 
     return (
-        <div className="flex flex-col gap-nl-16 py-nl-24">
-            <section>
-                <h1 className="nl-section-title text-nl-content">
-                    피드백 관리
-                </h1>
-                <p className="nl-metadata mt-nl-4 text-nl-subdued">
-                    사용자가 제출한 피드백 · 오류 제보와 채보 커뮤니티 신고를
-                    확인합니다.
-                </p>
-            </section>
-
-            <nav className="flex flex-wrap gap-nl-8">
-                {tabs.map((item) => (
-                    <Link
-                        key={item.key}
-                        href={`/admin/feedback?status=${item.key}`}
-                        className={`nl-emphasis-label rounded-nl-control px-nl-12 py-nl-8 transition-colors duration-nl-state ${active === item.key ? "bg-nl-primary text-nl-on-primary" : "nl-hover-layer bg-nl-surface text-nl-subdued"}`}
-                    >
-                        {item.label}
-                    </Link>
-                ))}
-            </nav>
-
-            <section className="flex flex-col gap-nl-12">
-                {reports.map((report) => (
-                    <FeedbackReportCard key={report.id} report={report} />
-                ))}
-                {opinionReports.map((report) => (
-                    <OpinionReportCard key={report.id} report={report} />
-                ))}
+        <div className="nl-admin-stack">
+            <AdminCountTabs
+                label="처리 상태"
+                options={tabs.map((item) => ({
+                    ...item,
+                    href: `/admin/feedback?status=${item.key}`,
+                    selected: active === item.key,
+                }))}
+            />
+            <AdminCard>
+                <AdminCardHead title="피드백" />
+                {status && reports.length ? (
+                    <AdminTable>
+                        <thead>
+                            <tr>
+                                <th>내용</th>
+                                <th>보낸 사람</th>
+                                <th>종류</th>
+                                <th>받은 날</th>
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reports.map((report) => (
+                                <FeedbackReportRow
+                                    key={report.id}
+                                    report={report}
+                                />
+                            ))}
+                        </tbody>
+                    </AdminTable>
+                ) : null}
+                {opinionStatus && opinionReports.length ? (
+                    <AdminTable>
+                        <thead>
+                            <tr>
+                                <th>신고된 글</th>
+                                <th>종류</th>
+                                <th>사유</th>
+                                <th>작성자</th>
+                                <th>신고한 사람</th>
+                                <th>받은 날</th>
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {opinionReports.map((report) => (
+                                <OpinionReportRow
+                                    key={report.id}
+                                    report={report}
+                                />
+                            ))}
+                        </tbody>
+                    </AdminTable>
+                ) : null}
                 {reports.length === 0 && opinionReports.length === 0 ? (
-                    <p className="nl-body-secondary rounded-nl-control bg-nl-surface py-nl-48 text-center text-nl-subdued">
+                    <AdminCardEmpty>
                         {opinionStatus
                             ? "해당하는 신고가 없습니다."
                             : "해당하는 피드백이 없습니다."}
-                    </p>
-                ) : null}
-            </section>
+                    </AdminCardEmpty>
+                ) : (
+                    <AdminPager
+                        page={page}
+                        pageSize={ADMIN_PAGE_SIZE}
+                        total={total}
+                        unit="건"
+                        hrefFor={hrefFor}
+                    />
+                )}
+            </AdminCard>
         </div>
     );
 }

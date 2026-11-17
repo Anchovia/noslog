@@ -1,10 +1,9 @@
 "use client";
 
-import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { reviewMusicCatalogCandidate } from "@/app/admin/catalog/actions";
-import { foundationButtonClass } from "@/components/ui/button";
+import ActionMenu from "@/components/ui/action-menu";
 import {
     createMusicCatalogReviewFormData,
     type MusicCatalogDecision,
@@ -35,25 +34,13 @@ export default function MusicCatalogReviewActions({
     }
 
     return (
-        <div className="grid grid-cols-2 gap-nl-8">
-            <button
-                type="button"
-                disabled={isPending}
-                onClick={() => review("reject")}
-                className={foundationButtonClass({ variant: "secondary" })}
-            >
-                <X className="nl-icon-small" aria-hidden />
-                {isPending ? "처리 중" : "반려"}
-            </button>
-            <button
-                type="button"
-                disabled={isPending}
-                onClick={() => review("approve")}
-                className={foundationButtonClass()}
-            >
-                <Check className="nl-icon-small" aria-hidden />
-                {isPending ? "처리 중" : "반영"}
-            </button>
-        </div>
+        <ActionMenu
+            label="악곡 업데이트 메뉴"
+            disabled={isPending}
+            items={[
+                { label: "반영", onSelect: () => review("approve") },
+                { label: "반려", onSelect: () => review("reject") },
+            ]}
+        />
     );
 }
