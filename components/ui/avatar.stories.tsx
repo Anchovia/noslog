@@ -26,4 +26,16 @@ export const Default: Story = {
 };
 export const Photo: Story = { args: { src: "/brand/noslog-cat.png" } };
 export const IconFallback: Story = { args: { fallbackName: null } };
+export const ProfilePlaceholder: Story = {
+    args: { size: "profile" },
+    play: async ({ canvasElement }) => {
+        const avatar = within(canvasElement).getByRole("img", {
+            name: "NosLog 프로필",
+        });
+        await expect(avatar).toHaveTextContent("");
+        await expect(
+            avatar.querySelector("svg.nl-avatar__placeholder")
+        ).not.toBeNull();
+    },
+};
 export const Decorative: Story = { args: { alt: "" } };

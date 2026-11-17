@@ -38,16 +38,6 @@ const ownerActionClass = foundationButtonClass({
     size: "icon-sm",
 });
 
-function initialForName(name: string | null, locale: string) {
-    if (!name) return undefined;
-    const graphemes = new Intl.Segmenter(locale, {
-        granularity: "grapheme",
-    }).segment(name);
-    for (const { segment } of graphemes)
-        if (/\p{L}/u.test(segment)) return segment.toLocaleUpperCase(locale);
-    return undefined;
-}
-
 /** 정보 줄 값 — 공개면 기본 글자색, 본인에게만 보이는 값은 흐린 채로 두고 화면 읽기에 「나에게만 보입니다」 */
 function MetaValue({
     item,
@@ -167,8 +157,6 @@ export default function ProfileIdentity({
                     alt={t("common.profileImage", { name })}
                     size="profile"
                     loading="eager"
-                    fallbackInitial={initialForName(user.username, locale)}
-                    initialClassName="nl-display"
                     className="nl-profile-identity__avatar"
                 />
                 <div className="nl-profile-identity__name-stack">

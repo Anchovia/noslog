@@ -91,7 +91,7 @@ const flags = [
     "hide_play_activity",
     "all",
 ] as const;
-test("P6 a missing avatar keeps the profile usable with an accessible initial fallback", async ({
+test("P6 a missing avatar keeps the profile usable with an accessible silhouette fallback", async ({
     page,
 }) => {
     const user = await db!.user.create({
@@ -111,7 +111,10 @@ test("P6 a missing avatar keeps the profile usable with an accessible initial fa
             `${user.username} 프로필 이미지`
         );
         await expect(avatar.locator("img")).toHaveCount(0);
-        await expect(avatar).toHaveText("P");
+        await expect(avatar).toHaveText("");
+        await expect(avatar.locator("svg.nl-avatar__placeholder")).toHaveCount(
+            1
+        );
         await expect(avatar).toHaveCSS("width", "64px");
         await expect(avatar).toHaveCSS("height", "64px");
         await expect(page.getByRole("main")).not.toContainText(
