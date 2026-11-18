@@ -55,3 +55,4 @@
 | 2026-11-17 | [개인정보 처리방침 재점검 — 코드 대조 · 법령 · 방침 117곳](../research/2026-11-17-privacy-policy-audit.md)          |
 | 2026-11-17 | [AWS Lambda + OpenNext 호스팅 검토](../research/2026-11-17-hosting-lambda-opennext.md)                              |
 | 2026-11-17 | [선택 동의 창 — 실제 서비스 38곳 · 디자인 시스템 10곳](../research/2026-11-17-translation-consent-dialog.md)        |
+| 2026-11-17 | [간격 눈금 — 실제 서비스 · 디자인 시스템 간격 체계](../research/2026-11-17-spacing-scale.md)                        |
