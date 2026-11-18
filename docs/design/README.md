@@ -58,6 +58,6 @@ Figma · Z1 · 옛 브리프 · 핸드오프 · 감사 문서 · PDF · 레거�
 - 가로 넘침이 없다는 것만으로 통과시키지 않는다. 같은 줄 높이 · 여백 · 정렬을 함께 본다.
 - 시안이 있는 화면은 시안과 같은 폭으로 나란히 대조하고, 바꾼 동작(메뉴 · 시트 · 창 · 핀 · 쪽 넘김 · 펼치기 · 복사 · 포커스 이동)을 하나씩 눌러 본다. 폰 · 데스크톱, 로그아웃 · 로그인 둘 다. 저장 · 제출 · 삭제는 누르지 않는다.
 - 토큰 검사: `tests/design-foundation.test.ts`(CSS, `admin.css` 포함 — 간격 · 모서리 · 색 · 글자 크기 · 층 · 굵기 · 줄 높이 px · 선 두께 px · 헤더 높이) · `tests/design-tsx-tokens.test.ts`(공개 TSX · TS — 정적 토큰 참조 · nl 밖 CSS 변수 이름 · 인라인 값 · Tailwind 기본 스케일과 임의값 · 중단점 변형 · 색 팔레트 · Radix 자리 숫자 · 정본 색 상수 파일 밖 캔버스 색) · `tests/admin-tsx-tokens.test.ts`(관리자 · 에디터, 같은 검사). 예외는 각 테스트의 목록에 이유와 함께 둔다 · `tests/legacy-theme-tokens.test.ts`(옛 이름 없음) · `tests/ai-tells.test.ts`(AI 티 기계 검사). 떠 있는 창 자리는 `components/ui/overlay-position.ts`, JS 크기 계산은 `lib/design-tokens.ts` 의 `readTokenPixels`.
-- 공용 UI 를 바꾸면 `npm run test:storybook`(부품 동작 · WCAG A · AA 자동 검사). 기능 화면 스토리는 실제 View 에 로컬 콜백을 연결하고, 폼 폭 계약(입력 글자 14px · 가로 넘침 · 창 전환 경계)은 같은 스토리 파일의 `Contract*` 가 검사한다.
+- 공용 UI 를 바꾸면 `npm run test:storybook`(부품 동작 · WCAG A · AA 자동 검사).
 - typecheck · lint · 테스트 · e2e 명령은 `AGENTS.md` 「스택 · 명령」. e2e 는 로컬 테스트 DB 에서만.
 - 보고에는 실제로 돌린 것만 쓴다. 안 돌린 검사는 「안 함」. 실패는 원래 있던 것과 이번에 생긴 것을 나눠 적는다.

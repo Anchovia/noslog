@@ -25,8 +25,6 @@
 - 비동기 첨부: `features/announcements/lib/attach-tier-change-image.ts`
 - 생성 칸: `features/announcements/components/tier-change-image-builder.tsx`
 
-Storybook `Features/Announcements/TierChangeImageBuilder`는 실제 검색 결과 형태와 생성 코드를 사용하고 검색·업로드만 mock으로 격리한다.
-기준 예제·곡 검색/자동 레벨·빈 입력·첨부/미리보기 무효화·업로드 실패/재시도를 검증한다.
 단위 테스트 `tests/tier-change-image.test.ts`는 입력 계약·방향 분류·원본 크기·긴 제목·세 언어 대체 설명·업로드 중 본문 보존과 실패를 검사한다.
 DB·Blob·로그인·실제 공지 저장/게시는 자동 부품 검사에서 실행하지 않는다.
 
@@ -51,4 +49,4 @@ DB·Blob·로그인·실제 공지 저장/게시는 자동 부품 검사에서 �
 
 두 이미지 생성기는 서로 작업 중인 동안 입력·생성·첨부가 잠긴다. 입력을 고치면 이전 미리보기를 지우고 업로드 실패 시 본문을 보존한다. 고정 칸 폭을 넘는 큰 숫자는 잘라내거나 축소하지 않고 오류로 알린다.
 
-원본은 `features/announcements/schemas/tier-rebalance-image-schema.ts` · `features/announcements/lib/tier-rebalance-image.ts` · `features/announcements/components/tier-rebalance-image-builder.tsx` 다. Storybook `Features/Announcements/TierRebalanceImageBuilder`에서 실제 PNG 크기·명시적 프리셋·빈 입력/모순·첨부 실패/재시도·미리보기 무효화를 검사한다. 실제 DB·Blob·공지 저장은 실행하지 않는다.
+원본은 `features/announcements/schemas/tier-rebalance-image-schema.ts` · `features/announcements/lib/tier-rebalance-image.ts` · `features/announcements/components/tier-rebalance-image-builder.tsx` 다.
