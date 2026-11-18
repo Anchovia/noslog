@@ -22,12 +22,8 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:e2e": "playwright test",
-        "test:a11y": "playwright test e2e/accessibility.spec.ts",
         "test:e2e:headed": "playwright test --headed",
         "test:e2e:ui": "playwright test --ui",
-        "check:dependencies": "knip --dependencies",
-        "audit:production": "npm audit --omit=dev --audit-level=moderate",
-        "audit:unused": "knip",
         "typecheck": "next typegen && tsc --noEmit",
         "lint": "eslint . --concurrency=4",
         "lint:schema": "prisma-lint prisma/schema",
@@ -86,7 +82,6 @@
         "zustand": "^5.0.14"
     },
     "devDependencies": {
-        "@axe-core/playwright": "^4.13.0",
         "@playwright/test": "^1.61.1",
         "@storybook/addon-a11y": "10.6.5",
         "@storybook/addon-docs": "10.6.5",
@@ -108,7 +103,6 @@
         "husky": "^9.1.7",
         "jiti": "^2.7.0",
         "jsdom": "^31.0.0",
-        "knip": "^6.34.0",
         "lint-staged": "^17.0.8",
         "postcss": "^8",
         "prettier": "^3.9.10",

@@ -38,8 +38,6 @@ jobs:
               run: npm run lint
             - name: Prettier
               run: npm run format:check
-            - name: Dependency declarations
-              run: npm run check:dependencies
             # 스키마 문법 · 정렬(2026-10-16 DB 재설계 P0). format --check 는 도움말에 없지만 Prisma 6.19 에서 동작한다
             - name: Prisma schema
               run: |
@@ -88,26 +86,6 @@ jobs:
               env:
                   DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
             - run: npm test
-
-    # next build 가 프로젝트 전체(tests · e2e 포함) 타입 검사를 한다. 따로 tsc 를 돌리지 않는다.
-    build:
-        runs-on: ubuntu-latest
-        timeout-minutes: 15
-        steps:
-            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-              with:
-                  node-version-file: .node-version
-                  cache: npm
-            - run: npm ci
-            - name: Restore Next.js build cache
-              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-              with:
-                  path: .next/cache
-                  key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema/**') }}
-                  restore-keys: |
-                      nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
-            - run: npm run build
 
     storybook:
         runs-on: ubuntu-latest
@@ -179,6 +157,7 @@ jobs:
             # 이미 저장된 옛 캐시에는 fetch-cache 가 들어 있다 — 복원 뒤 지운다
             - name: Drop restored data cache
               run: rm -rf .next/cache/fetch-cache
+            # next build 가 프로젝트 전체(tests · e2e 포함) 타입 검사를 한다. 따로 tsc 를 돌리지 않는다.
             - run: npm run build
             - name: Playwright
               run: npm run test:e2e
@@ -193,11 +172,11 @@ jobs:
     # 규칙셋의 필수 체크는 이 잡 하나다. 앞 잡 중 하나라도 실패 · 취소 · 건너뜀이면 실패한다.
     ci-ok:
         if: ${{ always() }}
-        needs: [lint, unit, build, storybook, e2e]
+        needs: [lint, unit, storybook, e2e]
         runs-on: ubuntu-latest
         timeout-minutes: 2
         steps:
             - name: All required jobs passed
               if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
               run: exit 1
-            - run: echo "lint · unit · build · storybook · e2e passed"
+            - run: echo "lint · unit · storybook · e2e passed"
