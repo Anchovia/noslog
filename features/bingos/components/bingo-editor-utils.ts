@@ -6,7 +6,3 @@ export function getBingoEditorCellLabel(position: number) {
 
     return `${row}${column}`;
 }
-
-export function getBingoEditorCellPrefix(position: number) {
-    return `cell-${position}`;
-}
