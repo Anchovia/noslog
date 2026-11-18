@@ -29,6 +29,7 @@ describe("스크립트 정책(CSP)", () => {
         expect(policy).toContain("'strict-dynamic'");
         expect(policy).toContain("object-src 'none'");
         expect(policy).toContain("base-uri 'self'");
+        expect(policy).toContain("frame-ancestors 'none'");
         expect(policy).toContain("report-uri /api/csp-report");
         expect(policy).not.toContain("'unsafe-inline'");
         const nonce = nonceOf(policy);

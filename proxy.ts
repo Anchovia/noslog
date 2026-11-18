@@ -37,11 +37,24 @@ function applyScriptPolicy(requestHeaders: Headers) {
         `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${devEval}`,
         "object-src 'none'",
         "base-uri 'self'",
+        // 같은 이름의 헤더는 이 응답 값이 next.config 의 것을 덮는다 — 끼워 넣기 금지를 여기서도 적는다
+        "frame-ancestors 'none'",
         `report-uri ${CSP_REPORT_PATH}`,
     ].join("; ");
     requestHeaders.set("x-nonce", nonce);
     requestHeaders.set("Content-Security-Policy", policy);
     return policy;
+}
+
+// 사용자가 쓴 글을 그리는 HTML 응답에 스크립트 정책만 붙여 그대로 내보낸다
+function nextWithScriptPolicy(request: NextRequest) {
+    const requestHeaders = new Headers(request.headers);
+    const policy = applyScriptPolicy(requestHeaders);
+    const response = NextResponse.next({
+        request: { headers: requestHeaders },
+    });
+    response.headers.set("Content-Security-Policy", policy);
+    return response;
 }
 
 // public, private route 설정
@@ -101,7 +114,10 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
             pathname === "/twitter-image";
 
         if (isMaintenanceBypass) {
-            return;
+            // 점검 중에도 로그인 · 관리자 화면은 스크립트 정책을 받는다
+            return pathname === "/login" || pathname.startsWith("/admin")
+                ? nextWithScriptPolicy(request)
+                : undefined;
         }
 
         const { retryAfter } = getMaintenanceConfig();
@@ -215,13 +231,7 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     if (isNonLocalizedPath(requestedPathname)) {
         // 관리자 화면도 사용자가 쓴 글을 그리므로 같은 스크립트 정책을 건다
         if (pathname !== "/admin" && !pathname.startsWith("/admin/")) return;
-        const adminHeaders = new Headers(request.headers);
-        const adminPolicy = applyScriptPolicy(adminHeaders);
-        const adminResponse = NextResponse.next({
-            request: { headers: adminHeaders },
-        });
-        adminResponse.headers.set("Content-Security-Policy", adminPolicy);
-        return adminResponse;
+        return nextWithScriptPolicy(request);
     }
 
     if (!pathLocale) {

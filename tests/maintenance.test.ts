@@ -67,7 +67,23 @@ describe("점검 모드", () => {
                 new NextRequest(`https://noslog.app${pathname}`)
             );
 
-            expect(response).toBeUndefined();
+            // 점검 화면으로 돌리지 않고 그대로 내보낸다
+            expect(response?.status ?? 200).toBe(200);
+            expect(response?.headers.get("x-middleware-rewrite")).toBeFalsy();
+            expect(mocks.getSession).not.toHaveBeenCalled();
+        }
+    );
+
+    it.each(["/login", "/admin/events/1"])(
+        "점검 중에도 %s 화면은 스크립트 정책을 받는다",
+        async (pathname) => {
+            const response = await proxy(
+                new NextRequest(`https://noslog.app${pathname}`)
+            );
+
+            const policy = response?.headers.get("content-security-policy");
+            expect(policy).toContain("'strict-dynamic'");
+            expect(policy).toContain("frame-ancestors 'none'");
             expect(mocks.getSession).not.toHaveBeenCalled();
         }
     );
