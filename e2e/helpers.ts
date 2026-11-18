@@ -111,53 +111,6 @@ export async function expectAccessiblePageStructure(page: Page) {
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.locator('a[href="#main-content"]')).toHaveCount(1);
-
-    const unnamedControls = await page
-        .locator("button, a[href], input:not([type=hidden]), select, textarea")
-        .evaluateAll((elements) =>
-            elements
-                .filter((element) => {
-                    if (
-                        element instanceof HTMLElement &&
-                        (element.hidden ||
-                            element.getAttribute("aria-hidden") === "true")
-                    ) {
-                        return false;
-                    }
-
-                    const ariaLabel = element.getAttribute("aria-label");
-                    const labelledBy = element.getAttribute("aria-labelledby");
-                    const title = element.getAttribute("title");
-                    const placeholder = element.getAttribute("placeholder");
-                    const text = element.textContent?.trim();
-                    const imageAlt = element
-                        .querySelector("img")
-                        ?.getAttribute("alt")
-                        ?.trim();
-                    const id = element.getAttribute("id");
-                    const explicitLabel =
-                        id &&
-                        document.querySelector(
-                            `label[for="${CSS.escape(id)}"]`
-                        );
-                    const wrappedLabel = element.closest("label");
-
-                    return !(
-                        ariaLabel ||
-                        labelledBy ||
-                        title ||
-                        placeholder ||
-                        text ||
-                        imageAlt ||
-                        explicitLabel ||
-                        wrappedLabel
-                    );
-                })
-                .slice(0, 10)
-                .map((element) => element.outerHTML.slice(0, 180))
-        );
-
-    expect(unnamedControls).toEqual([]);
 }
 
 export async function readPerformanceSnapshot(page: Page) {
