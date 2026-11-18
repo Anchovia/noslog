@@ -109,24 +109,21 @@ npm run test:e2e
 
 ## 자주 쓰는 명령
 
-| 명령                         | 용도                                       |
-| ---------------------------- | ------------------------------------------ |
-| `npm run dev`                | 개발 서버 실행                             |
-| `npm run lint`               | ESLint 검사                                |
-| `npm run format:check`       | Prettier 검사                              |
-| `npm run typecheck`          | TypeScript 타입 검사                       |
-| `npm test`                   | Vitest 테스트                              |
-| `npm run build`              | 프로덕션 빌드                              |
-| `npm run test:e2e`           | Playwright E2E 테스트                      |
-| `npm run test:a11y`          | 접근성 E2E 테스트                          |
-| `npm run storybook`          | 공용 UI 개발·문서                          |
-| `npm run test:storybook`     | 부품 동작·접근성 검사                      |
-| `npm run build-storybook`    | 공용 UI 문서 빌드                          |
-| `npm run check:dependencies` | 사용 중인 의존성 검사                      |
-| `npm run audit:production`   | 운영 의존성 보안 검사                      |
-| `npm run lint:schema`        | Prisma 스키마 검사(외래 키 인덱스)         |
-| `npm run lint:migrations`    | 새 마이그레이션 검사(트랜잭션 · 잠금 위험) |
-| `npx prisma generate`        | Prisma Client 재생성                       |
+| 명령                      | 용도                                       |
+| ------------------------- | ------------------------------------------ |
+| `npm run dev`             | 개발 서버 실행                             |
+| `npm run lint`            | ESLint 검사                                |
+| `npm run format:check`    | Prettier 검사                              |
+| `npm run typecheck`       | TypeScript 타입 검사                       |
+| `npm test`                | Vitest 테스트                              |
+| `npm run build`           | 프로덕션 빌드                              |
+| `npm run test:e2e`        | Playwright E2E 테스트                      |
+| `npm run storybook`       | 공용 UI 개발·문서                          |
+| `npm run test:storybook`  | 부품 동작·접근성 검사                      |
+| `npm run build-storybook` | 공용 UI 문서 빌드                          |
+| `npm run lint:schema`     | Prisma 스키마 검사(외래 키 인덱스)         |
+| `npm run lint:migrations` | 새 마이그레이션 검사(트랜잭션 · 잠금 위험) |
+| `npx prisma generate`     | Prisma Client 재생성                       |
 
 카탈로그·서열표·빙고·검정 데이터를 가져오는 명령은 운영 데이터에 영향을 줄 수 있으므로 실행 전에 해당 스크립트와 운영 문서를 확인하세요.
 
@@ -181,14 +178,13 @@ GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행
 | ----------- | ------------------------------------------------------------------------------------------ |
 | `lint`      | ESLint · Prettier · 의존성 선언 · Prisma 스키마 · prisma-lint · Squawk                     |
 | `unit`      | 마이그레이션 적용 뒤 스키마와 차이 없는지 확인, Vitest 단위 + PostgreSQL 16 DB 통합 테스트 |
-| `build`     | 프로덕션 빌드(프로젝트 전체 타입 검사 포함)                                                |
 | `storybook` | 공용 UI 동작·접근성·폭 계약 검사와 Storybook 빌드                                          |
-| `e2e`       | 운영 빌드 대상 Playwright(PostgreSQL 16, 모바일 기본 + 두 폭)                              |
+| `e2e`       | 프로덕션 빌드(전체 타입 검사) 뒤 Playwright 핵심 흐름 스모크(PostgreSQL 16, 모바일 한 폭)  |
 
-의존성 보안은 `Dependencies` 워크플로가 PR의 새 의존성 검토와 주 1회 운영 의존성 감사로 따로 확인합니다. 버전 갱신 PR(Dependabot)은 쓰지 않습니다.
+의존성 보안 검사 워크플로와 버전 갱신 PR(Dependabot)은 쓰지 않습니다.
 
-주간 운영 의존성 감사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
-확인할 때는 `npm audit`를 실행합니다. 2026-10-29 기준 운영 권고는 0건이며(`@vercel/cli-config` 가
+의존성 권고는 필요할 때 `npm audit`로
+확인합니다. 2026-10-29 기준 운영 권고는 0건이며(`@vercel/cli-config` 가
 고정한 zod 는 `overrides` 로 루트 zod 를 따릅니다), 전체 감사에는 prisma-lint 가 쓰는 zod 3.25.76 의
 [high 권고](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5) 2건이 남습니다. prisma-lint 는 리포의
 스키마 파일만 읽는 개발 도구라 이 권고를 미해결로 기록합니다.
