@@ -24,23 +24,13 @@ export default defineConfig({
     expect: {
         timeout: 10_000,
     },
-    // 기본은 모바일 한 폭. 스펙 대부분이 setViewportSize 로 폭을 스스로 바꾼다.
-    // 데스크톱 프로젝트는 @desktop(데스크톱 전용) · @responsive(두 폭 모두) 태그만 돈다.
+    // 모바일 한 폭. 다른 폭이 필요한 스펙은 setViewportSize 로 폭을 스스로 바꾼다.
     projects: [
         {
             name: "mobile-chromium",
-            grepInvert: /@desktop/,
             use: {
                 ...devices["Desktop Chrome"],
                 viewport: { width: 390, height: 844 },
-            },
-        },
-        {
-            name: "desktop-chromium",
-            grep: /@desktop|@responsive/,
-            use: {
-                ...devices["Desktop Chrome"],
-                viewport: { width: 1280, height: 900 },
             },
         },
     ],
