@@ -22,8 +22,6 @@ export const serverEnv = createEnv({
         DISCORD_CLIENT_SECRET: optionalSecret,
         DISCORD_REDIRECT_URI: z.url().optional(),
         BLOB_READ_WRITE_TOKEN: optionalSecret,
-        BLOB_STORE_ID: optionalSecret,
-        BLOB_WEBHOOK_PUBLIC_KEY: optionalSecret,
         PRIVATE_BLOB_READ_WRITE_TOKEN: optionalSecret,
         CRON_SECRET: z.string().min(32).optional(),
         GOOGLE_SITE_VERIFICATION: optionalSecret,
@@ -53,8 +51,6 @@ export const serverEnv = createEnv({
         DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
         DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
         BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
-        BLOB_STORE_ID: process.env.BLOB_STORE_ID,
-        BLOB_WEBHOOK_PUBLIC_KEY: process.env.BLOB_WEBHOOK_PUBLIC_KEY,
         PRIVATE_BLOB_READ_WRITE_TOKEN:
             process.env.PRIVATE_BLOB_READ_WRITE_TOKEN,
         CRON_SECRET: process.env.CRON_SECRET,
