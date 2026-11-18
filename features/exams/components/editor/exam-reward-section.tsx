@@ -1,13 +1,12 @@
 import { Plus, X } from "lucide-react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { AdminFieldError } from "@/components/admin/admin-form";
 import { foundationButtonClass } from "@/components/ui/button";
 import type {
     ExamEditorFormValues,
     ExamRewardEditor,
 } from "@/features/exams/schemas/exam-editor-schema";
-
-import ExamFieldError from "./exam-field-error";
 
 interface ExamRewardSectionProps {
     error?: string;
@@ -75,7 +74,7 @@ export default function ExamRewardSection({
                                 <X className="nl-icon-small" />
                             </button>
                         </div>
-                        <ExamFieldError
+                        <AdminFieldError
                             message={
                                 errors.rewards?.[index]?.label?.message ??
                                 errors.rewards?.[index]?.musicIndex?.message
@@ -90,7 +89,7 @@ export default function ExamRewardSection({
                     </p>
                 ) : null}
             </div>
-            <ExamFieldError message={error} />
+            <AdminFieldError message={error} />
         </section>
     );
 }

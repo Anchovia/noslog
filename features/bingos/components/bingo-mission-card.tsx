@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { useWatch } from "react-hook-form";
 
+import { AdminFieldError } from "@/components/admin/admin-form";
 import type {
     BingoFormValues,
     BingoValues,
@@ -12,7 +13,6 @@ import {
     BINGO_EDITOR_INPUT_CLASS,
     getBingoEditorCellLabel,
 } from "./bingo-editor-utils";
-import BingoFieldError from "./bingo-field-error";
 
 interface BingoMissionCardProps {
     control: Control<BingoFormValues, unknown, BingoValues>;
@@ -76,7 +76,7 @@ export default function BingoMissionCard({
                         className={BINGO_EDITOR_INPUT_CLASS}
                         {...register(`${fieldPrefix}.title`)}
                     />
-                    <BingoFieldError message={cellErrors?.title?.message} />
+                    <AdminFieldError message={cellErrors?.title?.message} />
                 </label>
                 <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     미션 종류
@@ -90,7 +90,7 @@ export default function BingoMissionCard({
                         <option value="category">카테고리</option>
                         <option value="exam">검정</option>
                     </select>
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.missionType?.message}
                     />
                 </label>
@@ -107,7 +107,7 @@ export default function BingoMissionCard({
                         <option value="rank">랭크</option>
                         <option value="full_combo">풀콤보</option>
                     </select>
-                    <BingoFieldError message={cellErrors?.ruleType?.message} />
+                    <AdminFieldError message={cellErrors?.ruleType?.message} />
                 </label>
                 <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     대상 악곡
@@ -123,7 +123,7 @@ export default function BingoMissionCard({
                             </option>
                         ))}
                     </select>
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.musicIndex?.message}
                     />
                 </label>
@@ -134,7 +134,7 @@ export default function BingoMissionCard({
                         className={BINGO_EDITOR_INPUT_CLASS}
                         {...register(`${fieldPrefix}.categoryShort`)}
                     />
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.categoryShort?.message}
                     />
                 </label>
@@ -151,7 +151,7 @@ export default function BingoMissionCard({
                         <option value="expert">Expert</option>
                         <option value="real">Real</option>
                     </select>
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.targetDifficulty?.message}
                     />
                 </label>
@@ -166,7 +166,7 @@ export default function BingoMissionCard({
                         className={BINGO_EDITOR_INPUT_CLASS}
                         {...register(`${fieldPrefix}.targetLevel`)}
                     />
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.targetLevel?.message}
                     />
                 </label>
@@ -178,7 +178,7 @@ export default function BingoMissionCard({
                         className={BINGO_EDITOR_INPUT_CLASS}
                         {...register(`${fieldPrefix}.ruleConfig`)}
                     />
-                    <BingoFieldError
+                    <AdminFieldError
                         message={cellErrors?.ruleConfig?.message}
                     />
                 </label>

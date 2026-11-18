@@ -1,10 +1,10 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { AdminFieldError } from "@/components/admin/admin-form";
 import type { BingoFormValues } from "@/features/bingos/schemas/bingo-editor-schema";
 
 import type { BingoMusicOption } from "./bingo-editor-types";
 import { BINGO_EDITOR_INPUT_CLASS } from "./bingo-editor-utils";
-import BingoFieldError from "./bingo-field-error";
 
 interface BingoBasicFieldsProps {
     errors: FieldErrors<BingoFormValues>;
@@ -26,7 +26,7 @@ export default function BingoBasicFields({
                     className={BINGO_EDITOR_INPUT_CLASS}
                     {...register("title")}
                 />
-                <BingoFieldError message={errors.title?.message} />
+                <AdminFieldError message={errors.title?.message} />
             </label>
             <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                 설명
@@ -36,7 +36,7 @@ export default function BingoBasicFields({
                     className="nl-input resize-none"
                     {...register("description")}
                 />
-                <BingoFieldError message={errors.description?.message} />
+                <AdminFieldError message={errors.description?.message} />
             </label>
             <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                 표지 악곡
@@ -52,7 +52,7 @@ export default function BingoBasicFields({
                         </option>
                     ))}
                 </select>
-                <BingoFieldError message={errors.coverMusicIndex?.message} />
+                <AdminFieldError message={errors.coverMusicIndex?.message} />
             </label>
             <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 보상 nos
@@ -65,7 +65,7 @@ export default function BingoBasicFields({
                     className={BINGO_EDITOR_INPUT_CLASS}
                     {...register("rewardNos")}
                 />
-                <BingoFieldError message={errors.rewardNos?.message} />
+                <AdminFieldError message={errors.rewardNos?.message} />
             </label>
             <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 필요 줄 수
@@ -79,7 +79,7 @@ export default function BingoBasicFields({
                     className={BINGO_EDITOR_INPUT_CLASS}
                     {...register("requiredLines")}
                 />
-                <BingoFieldError message={errors.requiredLines?.message} />
+                <AdminFieldError message={errors.requiredLines?.message} />
             </label>
             <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 상태
@@ -92,7 +92,7 @@ export default function BingoBasicFields({
                     <option value="published">공개</option>
                     <option value="archived">보관</option>
                 </select>
-                <BingoFieldError message={errors.status?.message} />
+                <AdminFieldError message={errors.status?.message} />
             </label>
             <span />
             <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
@@ -103,7 +103,7 @@ export default function BingoBasicFields({
                     className={BINGO_EDITOR_INPUT_CLASS}
                     {...register("startsAt")}
                 />
-                <BingoFieldError message={errors.startsAt?.message} />
+                <AdminFieldError message={errors.startsAt?.message} />
             </label>
             <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 종료일
@@ -113,7 +113,7 @@ export default function BingoBasicFields({
                     className={BINGO_EDITOR_INPUT_CLASS}
                     {...register("endsAt")}
                 />
-                <BingoFieldError message={errors.endsAt?.message} />
+                <AdminFieldError message={errors.endsAt?.message} />
             </label>
         </section>
     );

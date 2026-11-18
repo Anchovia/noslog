@@ -1,7 +1,6 @@
+import { AdminFieldError } from "@/components/admin/admin-form";
 import { Switch } from "@/components/ui/switch";
 import type { ExamStatus } from "@/features/exams/schemas/exam-editor-schema";
-
-import ExamFieldError from "./exam-field-error";
 
 interface ExamPublicationSectionProps {
     error?: string;
@@ -36,7 +35,7 @@ export default function ExamPublicationSection({
                     }
                 />
             </div>
-            <ExamFieldError message={error} />
+            <AdminFieldError message={error} />
         </section>
     );
 }

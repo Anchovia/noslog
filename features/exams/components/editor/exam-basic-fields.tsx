@@ -1,5 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { AdminFieldError } from "@/components/admin/admin-form";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import type {
     ExamEditorFormValues,
@@ -11,7 +12,6 @@ import {
     EXAM_LABEL_CLASS,
     getExamModeLabel,
 } from "./exam-editor-types";
-import ExamFieldError from "./exam-field-error";
 
 interface ExamBasicFieldsProps {
     errors: FieldErrors<ExamEditorFormValues>;
@@ -42,7 +42,7 @@ export default function ExamBasicFields({
                     (value) => ({ value, label: getExamModeLabel(value) })
                 )}
             />
-            <ExamFieldError message={errors.mode?.message} />
+            <AdminFieldError message={errors.mode?.message} />
 
             <div className="mt-nl-12 grid grid-cols-2 gap-nl-12">
                 {mode !== "event" ? (
@@ -62,7 +62,7 @@ export default function ExamBasicFields({
                                     onGradeChange(Number(event.target.value)),
                             })}
                         />
-                        <ExamFieldError message={errors.grade?.message} />
+                        <AdminFieldError message={errors.grade?.message} />
                     </label>
                 ) : (
                     <label>
@@ -77,7 +77,9 @@ export default function ExamBasicFields({
                                 리사이틀 포인트
                             </option>
                         </select>
-                        <ExamFieldError message={errors.scoringType?.message} />
+                        <AdminFieldError
+                            message={errors.scoringType?.message}
+                        />
                     </label>
                 )}
                 <label>
@@ -87,7 +89,7 @@ export default function ExamBasicFields({
                         className={EXAM_INPUT_CLASS}
                         {...register("slug")}
                     />
-                    <ExamFieldError message={errors.slug?.message} />
+                    <AdminFieldError message={errors.slug?.message} />
                 </label>
             </div>
 
@@ -99,7 +101,7 @@ export default function ExamBasicFields({
                     className={EXAM_INPUT_CLASS}
                     {...register("shortLabel")}
                 />
-                <ExamFieldError message={errors.shortLabel?.message} />
+                <AdminFieldError message={errors.shortLabel?.message} />
             </label>
             <label className="mt-nl-12 block">
                 <span className={EXAM_LABEL_CLASS}>검정명</span>
@@ -109,7 +111,7 @@ export default function ExamBasicFields({
                     className={EXAM_INPUT_CLASS}
                     {...register("title")}
                 />
-                <ExamFieldError message={errors.title?.message} />
+                <AdminFieldError message={errors.title?.message} />
             </label>
             <label className="mt-nl-12 block">
                 <span className={EXAM_LABEL_CLASS}>설명</span>
@@ -119,7 +121,7 @@ export default function ExamBasicFields({
                     className="nl-input resize-none"
                     {...register("description")}
                 />
-                <ExamFieldError message={errors.description?.message} />
+                <AdminFieldError message={errors.description?.message} />
             </label>
             <div className="mt-nl-12 grid grid-cols-2 gap-nl-12">
                 <label>
@@ -132,7 +134,7 @@ export default function ExamBasicFields({
                         className={EXAM_INPUT_CLASS}
                         {...register("requiredGrade", { valueAsNumber: true })}
                     />
-                    <ExamFieldError message={errors.requiredGrade?.message} />
+                    <AdminFieldError message={errors.requiredGrade?.message} />
                 </label>
                 <label>
                     <span className={EXAM_LABEL_CLASS}>검정료 (nos)</span>
@@ -144,7 +146,7 @@ export default function ExamBasicFields({
                         className={EXAM_INPUT_CLASS}
                         {...register("feeNos", { valueAsNumber: true })}
                     />
-                    <ExamFieldError message={errors.feeNos?.message} />
+                    <AdminFieldError message={errors.feeNos?.message} />
                 </label>
             </div>
         </section>

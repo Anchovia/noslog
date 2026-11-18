@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp, Check, Plus, Trash2 } from "lucide-react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { AdminFieldError } from "@/components/admin/admin-form";
 import { foundationButtonClass } from "@/components/ui/button";
 import type {
     ExamEditorFormValues,
@@ -9,7 +10,6 @@ import type {
 } from "@/features/exams/schemas/exam-editor-schema";
 
 import { EXAM_INPUT_CLASS, EXAM_LABEL_CLASS } from "./exam-editor-types";
-import ExamFieldError from "./exam-field-error";
 
 interface ExamStageSectionProps {
     error?: string;
@@ -144,7 +144,7 @@ export default function ExamStageSection({
                                 );
                             })}
                         </div>
-                        <ExamFieldError
+                        <AdminFieldError
                             message={
                                 errors.stages?.[index]?.allowedChartIds?.message
                             }
@@ -167,7 +167,7 @@ export default function ExamStageSection({
                                         누적 합계
                                     </option>
                                 </select>
-                                <ExamFieldError
+                                <AdminFieldError
                                     message={
                                         errors.stages?.[index]?.requirementType
                                             ?.message
@@ -194,7 +194,7 @@ export default function ExamStageSection({
                                         { valueAsNumber: true }
                                     )}
                                 />
-                                <ExamFieldError
+                                <AdminFieldError
                                     message={
                                         errors.stages?.[index]?.requiredValue
                                             ?.message
@@ -211,7 +211,7 @@ export default function ExamStageSection({
                     </div>
                 ) : null}
             </div>
-            <ExamFieldError message={error} />
+            <AdminFieldError message={error} />
         </section>
     );
 }
