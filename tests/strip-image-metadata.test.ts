@@ -182,6 +182,23 @@ describe("올린 사진의 촬영 정보 지우기", () => {
         }
     );
 
+    it("픽셀 수가 상한을 넘는 사진은 풀지 않고 실패한다", async () => {
+        const huge = await sharp({
+            create: {
+                width: 4097,
+                height: 4096,
+                channels: 3,
+                background: "#000",
+            },
+        })
+            .png()
+            .toBuffer();
+
+        await expect(stripImageMetadata(new Uint8Array(huge))).rejects.toThrow(
+            /pixel limit/
+        );
+    });
+
     it("읽지 못하는 사진은 원본을 돌려주지 않고 실패한다", async () => {
         const source = await sample("jpeg", 1);
 

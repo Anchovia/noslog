@@ -8,6 +8,8 @@ import {
 } from "@/lib/image-upload-rules";
 
 const REENCODE_QUALITY = 90;
+// 작은 파일로 큰 그림을 풀게 하는 사진은 풀기 전에 거절한다. 브라우저는 긴 변 2048 로 줄여 올린다
+const MAX_INPUT_PIXELS = 4096 * 4096;
 
 // 무손실로 저장한 WebP(화면 캡처 등)를 손실로 다시 만들면 흐려지고 파일도 커진다 — 첫 그림 조각 이름으로 가린다
 function isLosslessWebp(bytes: Uint8Array) {
@@ -37,7 +39,10 @@ export async function stripImageMetadata(
     if (!contentType) throw new Error("unsupported image format");
 
     // animated 를 켜지 않으면 움직이는 WebP 가 첫 장만 남는다
-    const image = sharp(bytes, { animated: true });
+    const image = sharp(bytes, {
+        animated: true,
+        limitInputPixels: MAX_INPUT_PIXELS,
+    });
     if (contentType === "image/png")
         return { data: await image.rotate().png().toBuffer(), contentType };
     if (contentType === "image/webp")
