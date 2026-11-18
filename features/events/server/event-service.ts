@@ -24,6 +24,7 @@ import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
+    hasInvalidBodyImage,
     isImageContentType,
     isValidImageBlob,
 } from "@/lib/blob";
@@ -264,6 +265,8 @@ export async function saveEvent(
             message: t("events.invalidBanner"),
             fieldErrors: { bannerUrl: [t("events.invalidBanner")] },
         };
+    if (await hasInvalidBodyImage(parsed.data.content, existing?.content))
+        return { success: false, message: t("events.invalidImage") };
 
     const now = new Date();
     const data = {

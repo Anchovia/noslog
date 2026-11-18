@@ -21,7 +21,7 @@ import {
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
-import { isImageContentType } from "@/lib/blob";
+import { hasInvalidBodyImage, isImageContentType } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
@@ -106,6 +106,24 @@ function translationRows(input: AnnouncementValues) {
     }));
 }
 
+const INVALID_BODY_IMAGE: AnnouncementFailure = {
+    success: false,
+    message: "본문 이미지는 JPG · PNG · WebP 파일만 넣을 수 있습니다.",
+};
+
+// 언어마다 본문에 새로 들어온 이미지를 본다
+async function hasInvalidAnnouncementImage(
+    input: AnnouncementValues,
+    previous: { locale: string; content: string }[] = []
+) {
+    for (const row of translationRows(input)) {
+        const before = previous.find((item) => item.locale === row.locale);
+        if (await hasInvalidBodyImage(row.content, before?.content))
+            return true;
+    }
+    return false;
+}
+
 // 투표 저장이 막힌 이유를 관리자 화면 문구로 (2026-09-23 V2)
 class PollSaveAbort extends Error {
     constructor(readonly reason: PollSaveError) {
@@ -136,6 +154,7 @@ export async function createAnnouncement(
     const publishedAt = input.isPublished ? new Date() : null;
 
     try {
+        if (await hasInvalidAnnouncementImage(input)) return INVALID_BODY_IMAGE;
         const created = await db.$transaction(async (tx) => {
             const row = await tx.announcement.create({
                 data: {
@@ -215,6 +234,8 @@ export async function updateAnnouncement(
                 message: "공지사항을 찾을 수 없습니다.",
             };
         }
+        if (await hasInvalidAnnouncementImage(input, current.translations))
+            return INVALID_BODY_IMAGE;
         const publishedAt = input.isPublished
             ? (current.publishedAt ?? new Date())
             : null;

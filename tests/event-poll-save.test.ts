@@ -37,6 +37,7 @@ vi.mock("next/cache", () => ({
 vi.mock("@/lib/blob", () => ({
     createImageUploadToken: vi.fn(),
     deleteBlobIfOwned: vi.fn(),
+    hasInvalidBodyImage: vi.fn(async () => false),
     isImageContentType: vi.fn(),
     isValidImageBlob: vi.fn(),
 }));

@@ -29,13 +29,24 @@ function singleUsePathname(
     return `${pathnameWithoutExtension}-${randomUUID()}.${imageExtension(contentType)}`;
 }
 
+// 우리 저장소의 호스트 — 읽기 · 쓰기 토큰(vercel_blob_rw_<저장소 id>_<비밀>)의 저장소 id 로 만든다(next.config.mjs 와 같은 규칙).
+// 접미사만 보면 다른 사람의 Vercel Blob 저장소 주소도 통과한다
+function blobHostname(access: "public" | "private") {
+    const token =
+        access === "public"
+            ? serverEnv.BLOB_READ_WRITE_TOKEN
+            : serverEnv.PRIVATE_BLOB_READ_WRITE_TOKEN;
+    const storeId = token?.trim().split("_")[3]?.toLowerCase();
+    return storeId ? `${storeId}.${access}.blob.vercel-storage.com` : null;
+}
+
 function hasBlobHostname(url: string, access: "public" | "private") {
     try {
         const parsed = new URL(url);
 
         return (
             parsed.protocol === "https:" &&
-            parsed.hostname.endsWith(`.${access}.blob.vercel-storage.com`) &&
+            parsed.hostname === blobHostname(access) &&
             !parsed.search &&
             !parsed.hash
         );
@@ -133,6 +144,31 @@ export async function isValidImageBlob(url: string, pathnamePrefix: string) {
     } catch {
         return false;
     }
+}
+
+// 본문 화면이 그리는 폴더 — features/announcements/components/announcement-body.tsx 의 BODY_IMAGE_PATHS 와 같다
+const BODY_IMAGE_PREFIXES = ["announcements/", "events/"];
+
+// 본문에 새로 들어온 우리 공개 저장소 이미지가 실제 이미지인지 본다. 올리기 토큰은 형식 선언만 확인하므로 글을 저장할 때 파일 머리를 본다.
+// 고치기 전 본문에 이미 있던 주소는 다시 보지 않는다. 화면이 그리지 않는 주소(다른 호스트 · 다른 폴더)는 건너뛴다
+export async function hasInvalidBodyImage(content: string, previous = "") {
+    const host = blobHostname("public");
+    if (!host) return false;
+    const mark = `https://${host}/`;
+    const urls = (text: string) =>
+        text
+            .split(mark)
+            .slice(1)
+            .map((rest) => mark + rest.split(/[\s)>\]"']/, 1)[0]);
+    const known = new Set(urls(previous));
+    for (const url of new Set(urls(content))) {
+        if (known.has(url)) continue;
+        const prefix = BODY_IMAGE_PREFIXES.find((folder) =>
+            url.startsWith(mark + folder)
+        );
+        if (prefix && !(await isValidImageBlob(url, prefix))) return true;
+    }
+    return false;
 }
 
 export async function isValidPrivateImageBlob(

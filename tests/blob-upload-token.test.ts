@@ -16,7 +16,10 @@ vi.mock("@vercel/blob", () => ({
 }));
 
 vi.mock("@/lib/env/server", () => ({
-    serverEnv: { PRIVATE_BLOB_READ_WRITE_TOKEN: "private-token" },
+    serverEnv: {
+        BLOB_READ_WRITE_TOKEN: "vercel_blob_rw_store_secret",
+        PRIVATE_BLOB_READ_WRITE_TOKEN: "vercel_blob_rw_store_private",
+    },
 }));
 vi.mock("@vercel/blob/client", () => ({
     generateClientTokenFromReadWriteToken:
@@ -26,6 +29,7 @@ vi.mock("@vercel/blob/client", () => ({
 import {
     createImageUploadToken,
     createPrivateImageUploadToken,
+    hasInvalidBodyImage,
     isValidImageBlob,
     isValidPrivateImageBlob,
     stripPrivateImageBlobMetadata,
@@ -63,9 +67,13 @@ describe("이미지 업로드 토큰", () => {
 // 올릴 때의 Content-Type 은 보내는 쪽이 정한다 — 저장 전에 파일 머리가 그 형식인지 본다
 describe("저장 전 이미지 확인", () => {
     const PNG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13];
-    const stored = (bytes: number[], contentType = "image/png") => {
+    const stored = (
+        bytes: number[],
+        contentType = "image/png",
+        pathname = "avatars/2/profile-a.png"
+    ) => {
         mocks.head.mockResolvedValue({
-            pathname: "avatars/2/profile-a.png",
+            pathname,
             contentType,
             size: 100,
         });
@@ -92,6 +100,52 @@ describe("저장 전 이미지 확인", () => {
             expect(await isValid(url, "avatars/2/profile")).toBe(false);
         }
     );
+
+    it.each([
+        ["공개", isValidImageBlob, "public"],
+        ["비공개", isValidPrivateImageBlob, "private"],
+    ] as const)(
+        "%s 저장소라도 우리 저장소 호스트가 아니면 읽지 않고 거절한다",
+        async (_, isValid, access) => {
+            mocks.head.mockClear();
+            stored(PNG);
+
+            expect(
+                await isValid(
+                    `https://other.${access}.blob.vercel-storage.com/avatars/2/profile-a.png`,
+                    "avatars/2/profile"
+                )
+            ).toBe(false);
+            expect(mocks.head).not.toHaveBeenCalled();
+        }
+    );
+
+    it("본문에 새로 들어온 우리 저장소 이미지만 파일 머리를 본다", async () => {
+        const base = "https://store.public.blob.vercel-storage.com";
+        const kept = `![a](${base}/events/2/image-old.png)`;
+        const added = `![b](${base}/events/2/image-new.png)`;
+
+        stored(
+            [...new TextEncoder().encode("<html><script>")],
+            "image/png",
+            "events/2/image-new.png"
+        );
+        expect(await hasInvalidBodyImage(`${kept}\n${added}`, kept)).toBe(true);
+        // 고치기 전에도 있던 주소 · 화면이 그리지 않는 주소는 보지 않는다
+        mocks.head.mockClear();
+        expect(
+            await hasInvalidBodyImage(
+                `${kept}\n![c](https://example.com/x.png) ${base}/avatars/2/profile-a.png`,
+                kept
+            )
+        ).toBe(false);
+        expect(mocks.head).not.toHaveBeenCalled();
+
+        stored(PNG, "image/png", "events/2/image-new.png");
+        expect(await hasInvalidBodyImage(`${kept}\n${added}`, kept)).toBe(
+            false
+        );
+    });
 });
 
 // 브라우저가 저장소에 바로 올린 원본은 서버가 촬영 정보를 뺀 파일로 같은 경로에 덮어쓴다
@@ -127,7 +181,7 @@ describe("비공개 이미지의 촬영 정보 지우기", () => {
 
         expect(mocks.get).toHaveBeenCalledWith(url, {
             access: "private",
-            token: "private-token",
+            token: "vercel_blob_rw_store_private",
             useCache: false,
         });
         expect(mocks.put).toHaveBeenCalledTimes(1);
@@ -135,7 +189,7 @@ describe("비공개 이미지의 촬영 정보 지우기", () => {
         expect(target).toBe(pathname);
         expect(options).toEqual({
             access: "private",
-            token: "private-token",
+            token: "vercel_blob_rw_store_private",
             contentType: "image/jpeg",
             allowOverwrite: true,
         });
