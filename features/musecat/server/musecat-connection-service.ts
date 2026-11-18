@@ -132,15 +132,14 @@ async function tokenRequest(body: URLSearchParams) {
 export async function completeMusecatConnect(params: URLSearchParams) {
     const session = await getSession();
     const pending = session.musecatConnect;
+    const returnTo = pending?.returnTo ?? "/settings?category=connections";
+    // state 가 맞을 때만 진행 값을 지운다 — 다른 사이트가 이 주소를 열게 해 진행 중인 연결을 끊지 못한다
+    if (!pending || params.get("state") !== pending.state) {
+        return { ok: false as const, error: "invalid_state", returnTo };
+    }
     delete session.musecatConnect;
     await session.save();
-    const returnTo = pending?.returnTo ?? "/settings?category=connections";
-    if (
-        !session.id ||
-        !pending ||
-        Date.now() - pending.createdAt > CONNECT_TTL_MS ||
-        params.get("state") !== pending.state
-    ) {
+    if (!session.id || Date.now() - pending.createdAt > CONNECT_TTL_MS) {
         return { ok: false as const, error: "invalid_state", returnTo };
     }
     const issuer = params.get("iss");

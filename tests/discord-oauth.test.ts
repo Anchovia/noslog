@@ -51,6 +51,7 @@ vi.mock("@/lib/env/server", () => ({
         get COOKIE_PASSWORD() {
             return process.env.COOKIE_PASSWORD;
         },
+        BLOB_READ_WRITE_TOKEN: "vercel_blob_rw_store_secret",
     },
 }));
 
@@ -278,7 +279,9 @@ describe("Discord OAuth", () => {
         expect(location.pathname).toBe("/login");
         expect(location.searchParams.get("error")).toBe("invalid_state");
         expect(mocks.fetch).not.toHaveBeenCalled();
-        expect(mocks.session.discordOAuthState).toBeUndefined();
+        // 다른 사이트가 틀린 state 로 이 주소를 열어도 진행 중인 인증은 남는다
+        expect(mocks.session.discordOAuthState).toBe("expected-state");
+        expect(mocks.session.save).not.toHaveBeenCalled();
     });
 
     it("유효한 state의 사용자 취소는 만료와 구분하고 복귀 주소를 유지한다", async () => {

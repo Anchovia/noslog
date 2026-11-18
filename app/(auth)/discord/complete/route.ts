@@ -91,15 +91,16 @@ export async function GET(request: NextRequest) {
         );
     };
 
+    // state 가 맞을 때만 진행 값을 지운다 — 다른 사이트가 이 주소를 열게 해 진행 중인 인증을 끊지 못한다
+    if (!state || !expectedState || state !== expectedState) {
+        return errorResponse("invalid_state");
+    }
     delete session.discordOAuthState;
     delete session.discordOAuthReturnTo;
     delete session.discordOAuthMode;
     delete session.discordOAuthUserId;
     await session.save();
 
-    if (!state || !expectedState || state !== expectedState) {
-        return errorResponse("invalid_state");
-    }
     if (mode && (!currentUser || currentUser.id !== initiatingUserId))
         return errorResponse("session_expired");
     if (request.nextUrl.searchParams.get("error") === "access_denied")

@@ -124,6 +124,27 @@ beforeEach(() => {
 });
 
 describe("뮤즈캣 연결 콜백", () => {
+    it("state 가 다르면 진행 중인 연결 값을 지우지 않는다", async () => {
+        const pending = {
+            state: "s",
+            verifier: "v",
+            returnTo: "/settings",
+            createdAt: Date.now(),
+        };
+        mocks.session.musecatConnect = pending;
+        await expect(
+            completeMusecatConnect(
+                new URLSearchParams({ state: "wrong", code: "c" })
+            )
+        ).resolves.toEqual({
+            ok: false,
+            error: "invalid_state",
+            returnTo: "/settings",
+        });
+        expect(mocks.session.musecatConnect).toBe(pending);
+        expect(mocks.session.save).not.toHaveBeenCalled();
+    });
+
     it("token 호출이 시간 초과되면 던지지 않고 token_exchange 로 돌아간다", async () => {
         vi.stubGlobal(
             "fetch",
