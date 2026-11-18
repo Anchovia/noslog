@@ -77,8 +77,8 @@ const unwrapSingleton = (value: unknown) =>
     Array.isArray(value) && value.length === 1 ? value[0] : value;
 const normalizeCollection = (value: unknown) =>
     value === undefined || Array.isArray(value) ? value : [value];
-export const syncRequestSchema = z.object({
-    token: z.string().min(1).max(512),
+export const syncTokenSchema = z.object({ token: z.string().min(1).max(512) });
+export const syncRequestSchema = syncTokenSchema.extend({
     playerData: z.object({
         status: z.number().int(),
         data: sourceStatusSchema.extend({

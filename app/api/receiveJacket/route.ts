@@ -18,8 +18,8 @@ import { isSyncTokenExpired, verifySyncToken } from "@/lib/bookmarklet";
 const MAX_BASE64_LENGTH = Math.ceil(MAX_COLLECTED_JACKET_BYTES / 3) * 4;
 const MAX_BODY_BYTES = MAX_BASE64_LENGTH + 4 * 1024;
 
-const jacketRequestSchema = z.object({
-    token: z.string().min(1).max(512),
+const jacketTokenSchema = z.object({ token: z.string().min(1).max(512) });
+const jacketRequestSchema = jacketTokenSchema.extend({
     index: z.string().regex(JACKET_INDEX_PATTERN),
     data: z
         .string()
@@ -38,11 +38,14 @@ export async function POST(request: NextRequest) {
         return json(read.status, { saved: false });
     }
 
+    // 서명이 맞는 토큰일 때만 자켓 본문을 검사한다
+    const token = jacketTokenSchema.safeParse(read.body);
+    if (!token.success) return json(400, { saved: false });
+    const verifiedToken = verifySyncToken(token.data.token);
+    if (verifiedToken.status !== "valid") return json(401, { saved: false });
+
     const parsed = jacketRequestSchema.safeParse(read.body);
     if (!parsed.success) return json(400, { saved: false });
-
-    const verifiedToken = verifySyncToken(parsed.data.token);
-    if (verifiedToken.status !== "valid") return json(401, { saved: false });
     const tokenPayload = verifiedToken.payload;
     const user = await getUserSyncAuth(tokenPayload.userId);
     if (

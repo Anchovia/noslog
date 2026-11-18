@@ -4,6 +4,7 @@ import { getMissingJacketIndexes } from "@/features/music/server/jacket-collecti
 import {
     type SyncMusicInput,
     syncRequestSchema,
+    syncTokenSchema,
 } from "@/features/sync/schemas/sync-request-schema";
 import {
     isWithinChartLimits,
@@ -98,6 +99,19 @@ export async function POST(request: NextRequest) {
         return json(copy[read.reason], read.status);
     }
 
+    // 서명이 맞는 토큰일 때만 큰 본문을 검사한다 — 로그인 없이 보낸 본문에 스키마 검사 비용을 쓰지 않는다
+    const token = syncTokenSchema.safeParse(read.body);
+    if (!token.success) {
+        return json(copy.invalidPayload, 400);
+    }
+    const verifiedToken = verifySyncToken(token.data.token);
+    if (verifiedToken.status === "invalid") {
+        return json(copy.invalidToken, 401);
+    }
+    if (verifiedToken.status === "expired") {
+        return json(copy.expiredToken, 401);
+    }
+
     const parsed = syncRequestSchema.safeParse(read.body);
     if (!parsed.success) {
         console.warn("BEMANI sync payload validation failed", {
@@ -109,13 +123,6 @@ export async function POST(request: NextRequest) {
         return json(copy.invalidPayload, 400);
     }
 
-    const verifiedToken = verifySyncToken(parsed.data.token);
-    if (verifiedToken.status === "invalid") {
-        return json(copy.invalidToken, 401);
-    }
-    if (verifiedToken.status === "expired") {
-        return json(copy.expiredToken, 401);
-    }
     const tokenPayload = verifiedToken.payload;
 
     const user = await getSyncUser(tokenPayload.userId);

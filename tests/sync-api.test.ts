@@ -361,6 +361,29 @@ describe("POST /api/receivePlayerData", () => {
         const response = await POST(createRequest(body));
 
         expect(response.status).toBe(400);
+        expect(mocks.userFindUnique).not.toHaveBeenCalled();
+    });
+
+    it("토큰 서명이 틀리면 본문을 검사하지 않고 거부한다", async () => {
+        mocks.verifySyncToken.mockReturnValue({ status: "invalid" });
+        const body = requestBody();
+        const history = body.recentData.data.player.history_list.history;
+        body.recentData.data.player.history_list.history = Array.from(
+            { length: 101 },
+            () => history[0]
+        );
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(401);
+    });
+
+    it("토큰 칸이 없는 본문은 서명을 보지 않고 거부한다", async () => {
+        const response = await POST(
+            createRequest({ ...requestBody(), token: undefined })
+        );
+
+        expect(response.status).toBe(400);
         expect(mocks.verifySyncToken).not.toHaveBeenCalled();
     });
 
