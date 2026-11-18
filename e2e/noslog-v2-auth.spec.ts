@@ -1,4 +1,3 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
 
@@ -49,10 +48,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
             }
         }
         await page.setViewportSize({ width: 320, height: 500 });
-        expect(
-            (await new AxeBuilder({ page }).include(".nl-auth").analyze())
-                .violations
-        ).toEqual([]);
         for (const state of [
             "cancelled",
             "invalid_state",

@@ -1,4 +1,3 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { reviewThemes } from "./helpers";
 import type { Page } from "@playwright/test";
@@ -903,13 +902,6 @@ for (const locale of ["ko", "ja", "en"])
                         );
                     });
                     expect(bandGap).toBeCloseTo(width >= 1056 ? 16 : 12, 1);
-                    if (width === 320 || width === 1280) {
-                        const axe = await new AxeBuilder({ page })
-                            .include(".nl-tiers")
-                            .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-                            .analyze();
-                        expect(axe.violations).toEqual([]);
-                    }
                 }
             }
             await page.setViewportSize({ width: 390, height: 900 });

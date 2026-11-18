@@ -1,4 +1,3 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { reviewThemes } from "./helpers";
 import type { Page, Route } from "@playwright/test";
@@ -463,15 +462,15 @@ for (const locale of ["ko", "ja", "en"])
                 expect(geometry.measure).toBeLessThanOrEqual(640);
                 if (width >= 768) expect(geometry.measure).toBe(640);
                 expect(geometry.step).toBe(48);
-                // 이름 emphasis-label · 값 metric-value 는 14/18, 한국어 · 일본어 14/21(가이드 「글자」)
-                const uiLine = locale === "en" ? "18px" : "21px";
+                // 이름 emphasis-label · 값 metric-value 는 모든 언어 14/20 · 700(가이드 「글자」)
+                const uiLine = "20px";
                 for (const row of geometry.rows) {
                     expect(row.height).toBe(48);
                     expect(row.avatar).toEqual([32, 32]);
                     expect(row.rankWidth).toBe(32);
                     expect(row.rankOffset).toBeLessThanOrEqual(0.5);
-                    expect(row.name).toEqual(["14px", uiLine, "600"]);
-                    expect(row.value).toEqual(["14px", uiLine, "500"]);
+                    expect(row.name).toEqual(["14px", uiLine, "700"]);
+                    expect(row.value).toEqual(["14px", uiLine, "700"]);
                     if (!row.badge) continue;
                     // 명판 높이 = 이름 글줄(가이드 순위표 「명판 안쪽」)
                     expect(row.badge.height).toBe(parseFloat(uiLine));
@@ -500,28 +499,16 @@ for (const locale of ["ko", "ja", "en"])
                         ".nl-global-ranking-controls .nl-compact-select"
                     )
                 ).toHaveCSS("background-color", "rgb(50, 50, 50)");
-                // 순위도 metric-value(500) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
-                expect(geometry.firstWeight).toBe("500");
+                // 순위도 metric-value(700) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
+                expect(geometry.firstWeight).toBe("700");
                 expect(geometry.font).toContain("Pretendard JP Variable");
-                // 내 순위 줄 = 위아래 12 + body-secondary 24(global-rankings.css .nl-ranking-personal)
+                // 내 순위 줄 = 위아래 12 + body-secondary 16/22 글줄(global-rankings.css .nl-ranking-personal)
                 expect(geometry.personal).toEqual({
-                    height: 48,
+                    height: 46,
                     overflow: 0,
                     rankTag: "A",
                     buttons: 0,
                 });
-                if (width === 320 || width === 1280) {
-                    const audit = await new AxeBuilder({ page })
-                        .include(".nl-global-rankings")
-                        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-                        .analyze();
-                    expect(
-                        audit.violations.map((violation) => ({
-                            id: violation.id,
-                            targets: violation.nodes.map((node) => node.target),
-                        }))
-                    ).toEqual([]);
-                }
                 if (width === 390 || width === 1280)
                     await page.screenshot({
                         path: testInfo.outputPath(

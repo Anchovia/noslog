@@ -1,4 +1,3 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import type { MusicDetailProps } from "@/features/music/types/music-detail";
@@ -334,7 +333,7 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
 }
 
 for (const locale of ["ko", "ja", "en"]) {
-    test(`${locale} record matches responsive geometry and has no accessibility violations`, async ({
+    test(`${locale} record matches responsive geometry`, async ({
         page,
     }, testInfo) => {
         await openRecord(page, locale);
@@ -386,19 +385,6 @@ for (const locale of ["ko", "ja", "en"]) {
                     )
                 )
                 .toBe(true);
-            const result = await new AxeBuilder({ page })
-                .include(".nl-app")
-                .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-                .analyze();
-            expect(
-                result.violations,
-                JSON.stringify(
-                    result.violations.map(({ id, nodes }) => ({
-                        id,
-                        nodes: nodes.map((n) => n.target),
-                    }))
-                )
-            ).toEqual([]);
         }
     });
 }

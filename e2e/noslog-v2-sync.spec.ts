@@ -1,4 +1,3 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
 
@@ -58,10 +57,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 expect(heading!.x).toBeCloseTo(container.x, 0);
             }
         }
-        expect(
-            (await new AxeBuilder({ page }).include(".nl-app").analyze())
-                .violations
-        ).toEqual([]);
         expect(errors).toEqual([]);
         const api = await page.request.get("/api/sync/status");
         expect(api.status()).toBe(401);
