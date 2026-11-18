@@ -8,6 +8,10 @@ const mocks = vi.hoisted(() => ({
     revalidate: vi.fn(),
     tag: vi.fn(),
     log: vi.fn(),
+    claim: vi.fn(),
+}));
+vi.mock("@/lib/upload-rate-limit", () => ({
+    claimUploadTokenQuota: mocks.claim,
 }));
 vi.mock("@/lib/session", () => ({ default: mocks.session }));
 vi.mock("@/lib/db", () => ({
@@ -37,6 +41,25 @@ describe("profile preference action boundaries", () => {
         mocks.session.mockResolvedValue({ id: 7 });
         mocks.arcade.mockResolvedValue({ id: 4, name: "Arcade" });
         mocks.update.mockResolvedValue({});
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+    });
+    it("저장 한도를 넘으면 선호 오락실을 바꾸지 않고 캐시도 비우지 않는다", async () => {
+        mocks.claim.mockResolvedValue({ allowed: false, grantId: null });
+        const t = createTranslator(getMessages("ko"));
+        const limited = {
+            success: false,
+            message: t("common.tooManyRequests"),
+        };
+        expect(await setPreferredArcade(4, "ko")).toEqual(limited);
+        expect(await clearPreferredArcade(4, "ko")).toEqual(limited);
+        expect(mocks.claim.mock.calls).toEqual([
+            [7, "settings-save"],
+            [7, "settings-save"],
+        ]);
+        expect(mocks.update).not.toHaveBeenCalled();
+        expect(mocks.updateMany).not.toHaveBeenCalled();
+        expect(mocks.tag).not.toHaveBeenCalled();
+        expect(mocks.revalidate).not.toHaveBeenCalled();
     });
     it.each(["ko", "ja", "en"] as const)(
         "requires login with %s copy",

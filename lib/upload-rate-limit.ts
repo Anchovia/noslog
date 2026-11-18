@@ -25,6 +25,7 @@ const QUOTAS = {
     "draft-comment": WRITE_QUOTA,
     "draft-save": WRITE_QUOTA,
     "community-write": WRITE_QUOTA,
+    "settings-save": WRITE_QUOTA,
 } satisfies Record<string, { limit: number; windowMs: number }>;
 
 export type UploadPurpose = keyof typeof QUOTAS;

@@ -10,6 +10,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale, localizePath, resolveLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 export type PreferredArcadeActionResult = ActionResult;
 
@@ -38,6 +39,10 @@ export async function setPreferredArcade(
     }
     if (!preferredArcadeSchema.safeParse({ arcadeId }).success) {
         return { success: false, message: t("arcades.error.select") };
+    }
+    // 저장할 때마다 오락실 · 프로필 공용 캐시를 비우므로 설정 저장과 같은 한도로 센다
+    if (!(await claimUploadTokenQuota(session.id, "settings-save")).allowed) {
+        return { success: false, message: t("common.tooManyRequests") };
     }
 
     let arcade: { id: number; name: string };
@@ -94,6 +99,10 @@ export async function clearPreferredArcade(
     }
     if (!preferredArcadeSchema.safeParse({ arcadeId }).success) {
         return { success: false, message: t("arcades.error.select") };
+    }
+    // 저장할 때마다 오락실 · 프로필 공용 캐시를 비우므로 설정 저장과 같은 한도로 센다
+    if (!(await claimUploadTokenQuota(session.id, "settings-save")).allowed) {
+        return { success: false, message: t("common.tooManyRequests") };
     }
 
     try {

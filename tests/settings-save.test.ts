@@ -14,6 +14,10 @@ const mocks = vi.hoisted(() => ({
     invalidateRecords: vi.fn(),
     clearOpinionTranslations: vi.fn(),
     clearReplyTranslations: vi.fn(),
+    claim: vi.fn(),
+}));
+vi.mock("@/lib/upload-rate-limit", () => ({
+    claimUploadTokenQuota: mocks.claim,
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => {
@@ -86,6 +90,25 @@ describe("P10 settings save boundaries", () => {
         mocks.validateBlob.mockResolvedValue(true);
         mocks.setShowcase.mockResolvedValue({ status: "ok", keys: [] });
         mocks.setPinned.mockResolvedValue({ status: "ok" });
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
+    });
+    it("저장 한도를 넘으면 읽거나 쓰지 않고 캐시도 비우지 않는다", async () => {
+        mocks.claim.mockResolvedValue({ allowed: false, grantId: null });
+        expect(await saveSettingsProfile(settingsFormData(profile))).toEqual({
+            success: false,
+            message: "common.tooManyRequests",
+        });
+        expect(await saveSettingsPrivacy(settingsFormData(privacy))).toEqual({
+            success: false,
+            message: "common.tooManyRequests",
+        });
+        expect(mocks.claim.mock.calls).toEqual([
+            [9, "settings-save"],
+            [9, "settings-save"],
+        ]);
+        expect(mocks.findUser).not.toHaveBeenCalled();
+        expect(mocks.updateUser).not.toHaveBeenCalled();
+        expect(mocks.updateTag).not.toHaveBeenCalled();
     });
     it("requires a completed authenticated account before accessing data", async () => {
         mocks.session.id = undefined;

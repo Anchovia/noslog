@@ -25,6 +25,7 @@ import db from "@/lib/db";
 import { getServerI18n } from "@/lib/i18n/server";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 /**
  * 바뀐 값이 들어 있는 캐시만 비운다(2026-10-15 S4) — 본인 프로필은 늘.
@@ -63,6 +64,8 @@ export async function saveSettingsProfile(
             alwaysIncludeFieldErrors: true,
         });
     const values = parsed.data;
+    if (!(await claimUploadTokenQuota(session.id, "settings-save")).allowed)
+        return { success: false, message: t("common.tooManyRequests") };
     const current = await db.user.findUnique({
         where: { id: session.id },
         select: {
@@ -203,6 +206,8 @@ export async function saveSettingsPrivacy(
         return { success: false, message: t("settings.checkInput") };
     const values = parsed.data;
     const userId = session.id;
+    if (!(await claimUploadTokenQuota(userId, "settings-save")).allowed)
+        return { success: false, message: t("common.tooManyRequests") };
     let scoresVisibilityChanged: boolean;
     try {
         scoresVisibilityChanged = await db.$transaction(async (tx) => {

@@ -19,6 +19,9 @@ vi.mock("next/cache", () => ({
     updateTag: mocks.updateTag,
     revalidatePath: mocks.revalidatePath,
 }));
+vi.mock("@/lib/upload-rate-limit", () => ({
+    claimUploadTokenQuota: async () => ({ allowed: true, grantId: 1 }),
+}));
 
 import { regenerateSyncToken } from "@/app/(site)/bookmarklet/action";
 import { setPreferredArcade } from "@/app/(site)/gamecenter/actions";
