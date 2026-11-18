@@ -113,30 +113,6 @@ export function formatOfficialChartLevel(difficulty: string, level: number) {
         : `Lv.${level}`;
 }
 
-interface PublicTierBandEntry {
-    id: number;
-    chartId: number;
-    position: number;
-    chart: {
-        difficulty: string;
-        level: number;
-        music: {
-            index: string;
-            title: string;
-            localizedTitle: string | null;
-            background: string | null;
-        };
-    };
-    record: TierRecord | null;
-}
-
-export interface PublicTierBandPayload {
-    id: number;
-    value: number;
-    position: number;
-    entries: PublicTierBandEntry[];
-}
-
 export type TierRecordStatus =
     "pianist" | "fc" | "s" | "a_plus" | "played" | "unplayed";
 
