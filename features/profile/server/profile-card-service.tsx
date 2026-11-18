@@ -17,6 +17,7 @@ import {
     localizePath,
     resolveLocale,
 } from "@/lib/i18n/routing";
+import { MAX_IMAGE_SIZE } from "@/lib/image-upload-rules";
 import getSession from "@/lib/session";
 
 let fonts:
@@ -77,6 +78,9 @@ function getFlag(country: string) {
         );
     return flags.get(file)!;
 }
+// 공유 카드는 누구나 부를 수 있다 — 사진 받기에 Discord 사진 복사와 같은 시간 · 크기 상한을 둔다
+const AVATAR_TIMEOUT_MS = 10_000;
+
 // 사진은 형식과 상관없이 PNG 로 바꿔서 넣는다 — 엔진이 webp 를 못 읽어 카드가 통째로 실패했다(2026-09-30)
 async function getAvatar(userId: number, avatar: string | null) {
     if (!avatar) return null;
@@ -85,9 +89,24 @@ async function getAvatar(userId: number, avatar: string | null) {
         const response = await fetch(avatar, {
             cache: "force-cache",
             next: { tags: [getUserProfileTag(userId)] },
+            signal: AbortSignal.timeout(AVATAR_TIMEOUT_MS),
         });
-        if (!response.ok) return null;
-        return toCardAvatar(new Uint8Array(await response.arrayBuffer()));
+        if (!response.ok || !response.body) return null;
+        // Content-Length 는 보내는 쪽이 정하므로 받은 바이트로 센다
+        const reader = response.body.getReader();
+        const chunks: Uint8Array[] = [];
+        let size = 0;
+        for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            size += value.length;
+            if (size > MAX_IMAGE_SIZE) {
+                await reader.cancel();
+                return null;
+            }
+            chunks.push(value);
+        }
+        return toCardAvatar(new Uint8Array(Buffer.concat(chunks)));
     } catch {
         return null;
     }
