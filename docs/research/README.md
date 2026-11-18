@@ -57,3 +57,4 @@
 | 2026-11-17 | [선택 동의 창 — 실제 서비스 38곳 · 디자인 시스템 10곳](../research/2026-11-17-translation-consent-dialog.md)        |
 | 2026-11-17 | [간격 눈금 — 실제 서비스 · 디자인 시스템 간격 체계](../research/2026-11-17-spacing-scale.md)                        |
 | 2026-11-18 | [AWS 에서 DB 까지 월 $1 안팎 구성 검토](../research/2026-11-18-aws-under-1-dollar.md)                               |
+| 2026-11-18 | [CI · e2e 규모 · Storybook 범위 — 저장소 67곳 · 가이드 11곳](../research/2026-11-18-ci-e2e-scale.md)                |
