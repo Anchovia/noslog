@@ -1,7 +1,12 @@
+import { z } from "zod";
+
 import {
     recordClientDiagnostic,
     recordClientError,
 } from "@/lib/observability/client";
+
+// 운영 CSP 는 eval 을 막는다. zod 가 첫 스키마에서 Function("") 으로 eval 을 시험하면 화면마다 CSP 위반 보고가 나가므로 그 시험을 끈다
+z.config({ jitless: true });
 
 try {
     performance.mark("noslog:instrumentation-ready");
