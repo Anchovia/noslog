@@ -1,7 +1,5 @@
 export const BASIC_RATING_MAX = 10_000;
 export const BASIC_RATING_POLICY_VERSION = "basic-top70-mastery-v1";
-export const BASIC_RATING_TIER_MODE = "basic";
-export const BASIC_RATING_TIER_GOAL = "pianist";
 export const BASIC_RATING_TOP_COUNT = 70;
 export const BASIC_RATING_SCORE_FLOOR = 950_000;
 const BASIC_RATING_SCORE_MAX = 1_000_000;
