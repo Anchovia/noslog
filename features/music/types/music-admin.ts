@@ -50,12 +50,6 @@ export interface AdminMusicListData {
     totalCount: number;
 }
 
-/** 무한 스크롤 한 쪽 */
-export interface AdminMusicPage {
-    musics: AdminMusicListItem[];
-    hasMore: boolean;
-}
-
 export interface AdminMusicChart {
     chartPreviewUrl: string;
     difficulty: string;
