@@ -10,6 +10,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import db from "@/lib/db";
 import { translatorFor } from "@/lib/i18n/messages";
 import { logServerError } from "@/lib/observability/server";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 import { getSessionUser } from "@/lib/user";
 
 export type ToggleBingoCellResult = ActionResult<{ isCompleted: boolean }>;
@@ -37,6 +38,8 @@ export async function setBingoCellCompletion(
 
     let bingoId: number;
     try {
+        if (!(await claimUploadTokenQuota(user.id, "bingo-write")).allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         const cell = await db.bingoCell.findUnique({
             where: { id: bingoCellId },
             select: {
@@ -109,6 +112,8 @@ export async function resetBingoProgress(
     if (!bingoResetSchema.safeParse({ bingoId }).success)
         return { success: false, message: t("bingo.invalidCell") };
     try {
+        if (!(await claimUploadTokenQuota(user.id, "bingo-write")).allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         const bingo = await db.bingo.findFirst({
             where: { id: bingoId, status: "published" },
             select: { id: true },

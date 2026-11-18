@@ -9,6 +9,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale, localizePath } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 export async function regenerateSyncToken(
     requestedLocale?: Locale
@@ -26,6 +27,8 @@ export async function regenerateSyncToken(
     }
 
     try {
+        if (!(await claimUploadTokenQuota(session.id, "settings-save")).allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         await db.user.update({
             where: { id: session.id },
             data: { syncTokenVersion: { increment: 1 } },

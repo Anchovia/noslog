@@ -52,7 +52,9 @@ describe("profile preference action boundaries", () => {
         };
         expect(await setPreferredArcade(4, "ko")).toEqual(limited);
         expect(await clearPreferredArcade(4, "ko")).toEqual(limited);
+        expect(await regenerateSyncToken("ko")).toEqual(limited);
         expect(mocks.claim.mock.calls).toEqual([
+            [7, "settings-save"],
             [7, "settings-save"],
             [7, "settings-save"],
         ]);

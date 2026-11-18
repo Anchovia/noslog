@@ -14,6 +14,7 @@ import {
 } from "@/features/partner/server/partner-outbox";
 import { MUSECAT_OAUTH_CLIENT_ID } from "@/features/partner/server/partner-settings-data";
 import getSession from "@/lib/session";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 
 /** 아직 형식을 맞추기 전이라 저장하지 않는 항목 */
 const UNAVAILABLE = ["song_records"];
@@ -22,6 +23,9 @@ const UNAVAILABLE = ["song_records"];
 export async function updateMusecatSharedItems(items: string[]) {
     const session = await getSession();
     if (!session.id) return { ok: false as const };
+    // 항목을 줄일 때마다 파트너 알림을 보내므로 설정 저장과 같은 한도로 센다
+    if (!(await claimUploadTokenQuota(session.id, "settings-save")).allowed)
+        return { ok: false as const };
     const next = PARTNER_SHARE_ITEMS.filter(
         (item) => items.includes(item) && !UNAVAILABLE.includes(item)
     );

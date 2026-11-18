@@ -12,6 +12,10 @@ const mocks = vi.hoisted(() => ({
     progressDeleteMany: vi.fn(),
     revalidatePath: vi.fn(),
     log: vi.fn(),
+    claim: vi.fn(),
+}));
+vi.mock("@/lib/upload-rate-limit", () => ({
+    claimUploadTokenQuota: mocks.claim,
 }));
 
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
@@ -46,6 +50,7 @@ const availableCell = {
 describe("빙고 진행 상태 액션", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mocks.claim.mockResolvedValue({ allowed: true, grantId: 1 });
         mocks.session.id = 2;
         mocks.getSessionUser.mockResolvedValue({
             session: mocks.session,
@@ -180,6 +185,21 @@ describe("빙고 진행 상태 액션", () => {
         mocks.cellFindUnique.mockResolvedValue(cell);
         expect((await setBingoCellCompletion(3, true)).success).toBe(true);
         expect(mocks.progressUpsert).toHaveBeenCalledOnce();
+    });
+
+    it("쓰기 한도를 넘으면 칸을 읽지도 저장하지도 지우지도 않는다", async () => {
+        mocks.claim.mockResolvedValue({ allowed: false, grantId: null });
+
+        expect((await setBingoCellCompletion(11, true)).success).toBe(false);
+        expect((await resetBingoProgress(5)).success).toBe(false);
+
+        expect(mocks.claim.mock.calls).toEqual([
+            [2, "bingo-write"],
+            [2, "bingo-write"],
+        ]);
+        expect(mocks.cellFindUnique).not.toHaveBeenCalled();
+        expect(mocks.progressUpsert).not.toHaveBeenCalled();
+        expect(mocks.progressDeleteMany).not.toHaveBeenCalled();
     });
 
     it("없는 칸에는 저장하지 않는다", async () => {

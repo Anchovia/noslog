@@ -8,6 +8,7 @@ import {
 } from "@/features/polls/server/poll-service";
 import { getServerI18n } from "@/lib/i18n/server";
 import { logServerError } from "@/lib/observability/server";
+import { claimUploadTokenQuota } from "@/lib/upload-rate-limit";
 import { getUser } from "@/lib/user";
 
 const VOTE_MESSAGE_KEYS = {
@@ -31,6 +32,8 @@ export async function votePoll(
     if (!input.success)
         return { success: false, message: t("poll.voteFailed") };
     try {
+        if (!(await claimUploadTokenQuota(user.id, "poll-vote")).allowed)
+            return { success: false, message: t("common.tooManyRequests") };
         const failed = await castVote(
             input.data.pollId,
             user.id,
