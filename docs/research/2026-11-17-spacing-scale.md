@@ -402,6 +402,206 @@ S1 구역 사이를 40 으로 정한 뒤(2026-11-17) 열 사이를 다시 쟀다
 
 디자인 시스템(8곳, 공유 메모 폴더 `research/ds/` 원문으로 다시 확인): 당근 SEED Layout 대시보드 거터 24(같은 문서 Breakpoint 표는 768 이상 32 로 적어 서로 다름) · KRDS 가터 「최소 16, 최적 24」(쪽 틀 왼쪽 메뉴–본문 64 · 본문–오른쪽 40) · Primer PageLayout `columnGap` normal 16, 1012 이상 24 · Material 3 large · expanded 칸 사이 spacer 24 · Montage 격자 20 · Polaris Layout.Section 16 · GOV.UK 격자 30(양쪽 15) · Carbon 거터 32. 24 가 4곳, 16 · 20 · 30 · 32 가 1곳씩. Atlassian · Ant · 토스 TDS 는 미확인.
 
+## 열 안 상자 위아래 (S6b)
+
+S2 열 사이를 24 로 정한 뒤(2026-11-18) 「열 사이가 24 면 위아래도 24 인가」 를 따로 쟀다. 같은 격자 안 줄 사이는 그 격자의 열 사이와 짝이었고(당근 12/12 · 18/18), 위아래 24 는 한 열 안에 쌓인 큰 상자 사이에서만 나왔다. 그래서 한 열 안에 세로로 쌓인 판 · 상자(오른쪽 레일의 판과 판, 본문 열의 상자와 상자) 사이를 새로 쟀다. 확인 2026-11-18, PC 1440 × 900, `colorScheme: 'dark'`, 로그아웃, headless Playwright. 나란한 다른 열이 있는 그릇 안에서 세로로 이어진 형제 상자(폭 150 이상, 면 · 테두리가 있거나 제목을 품은 것) 쌍을 잡고, 보이는 틈(위 상자의 면 · 글 · 그림 아래 끝 → 아래 상자의 위 끝)을 쟀다. 표의 곳은 모두 전체 캡처나 조각을 열어 상자 · 열인지 확인한 곳이다. 캡처는 공유 메모 폴더 `research/sites/<곳>/pc1440-stackGap-a-view.png` · `-a-full.jpg` · `pc1440-stackGap-a<번호>.png` · `-a.json`, 스크립트 · 정리는 `draw-s6/_scripts/` · `draw-s6/STACK.md`.
+
+판끼리(면 있는 상자가 한 열에 쌓임, 21곳):
+
+| 곳                 | 쪽                | 자리                                     | 보이는 틈 |
+| ------------------ | ----------------- | ---------------------------------------- | --------- |
+| 네이버             | 첫 화면           | 본문 열 판 · 오른쪽 열 판                | 16 · 16   |
+| 다음               | 첫 화면           | 본문 열 판 · 오른쪽 열 판                | 16 · 16   |
+| 네이버 뉴스        | 언론사별          | 카드 세 열의 카드 → 카드                 | 16        |
+| DEV                | 첫 화면           | 오른쪽 레일 판 → 판                      | 16        |
+| GitLab             | 저장소            | 본문 열 커밋 상자 → 파일 표              | 16        |
+| 디시인사이드       | 실시간 베스트     | 오른쪽 열 상자 → 상자                    | 15        |
+| osu!               | 비트맵 정보       | 왼쪽 열 판 → 판                          | 15        |
+| U.GG               | 소환사            | 왼쪽 열 판 → 판                          | 12        |
+| 네이트             | 첫 화면           | 오른쪽 열 로그인 → 광고 · 광고 → 쿠팡 판 | 18 · 12   |
+| 인벤               | 첫 화면           | 오른쪽 레일 판 → 판                      | 10        |
+| 멜론               | 첫 화면           | 오른쪽 열 로그인 → 배너                  | 10        |
+| 뽐뿌               | 첫 화면           | 오른쪽 열 글 상자 → 배너                 | 9         |
+| op.gg              | 소환사            | 왼쪽 열 판 → 판                          | 8         |
+| Steam              | Muse Dash 상점 쪽 | 오른쪽 열 판 → 판                        | 8         |
+| 루리웹             | 첫 화면           | 본문 열 상자 → 상자                      | 19        |
+| 닥지지             | 첫 화면           | 오른쪽 열 배너 → 최신 소식 판            | 19–20     |
+| 클리앙             | 모두의공원        | 오른쪽 열 판 → 광고                      | 21        |
+| 네이버 게임 라운지 | 메이플 게시판     | 왼쪽 열 · 오른쪽 열 판 → 판              | 24 · 24   |
+| Spotify            | 첫 화면           | 왼쪽 라이브러리 판 안 카드 → 카드        | 24        |
+| Chess.com          | 리더보드          | 본문 열 고르기 판 → 표 판                | 24        |
+| 메이플스토리       | 첫 화면           | 오른쪽 열 판 → 판                        | 30        |
+
+판 없이 선으로 가르는 곳: GitHub 저장소 사이드바 36–38(글 끝 → 선 → 다음 제목), Reddit 오른쪽 판 안 구역 28–54. 면 없이 제목이 상자 밖에 있는 구역끼리(참고, S1 구역 사이 자리): 당근 첫 화면 왼쪽 41(노드 24) · 오른쪽 32–33(노드 16), 보배드림 오른쪽 18–23, AniList 29–30, 디스이즈게임 27–32, 티스토리 42–60, 네이버 웹툰 31–60, 원티드 52, Tracker.gg 판 안 구역 16. 막힘: 에펨코리아 430, Speedrun.com · Stack Overflow · npm · Product Hunt 403, IMDb 보안 확인. 캡처를 열어 열 안 판 쌓임이 없음을 본 곳: 게임메카(팝업 광고가 가림) · 로스트아크 · Twitch · Metacritic · zum · 아카라이브 · 나무위키 · 지니 · 교보문고 · YES24 · 토스증권 · Lichess · 토스피드 · YouTube · Medium · MyAnimeList · 인프런 · 네이버 증권 · 네이버 블로그 · Goodreads · itch.io · MDN · Wikipedia. 국내 대부분은 다크가 없어 밝은 화면으로 쟀다.
+
+### 묶어 보기 (판끼리 21곳: 국내 14 · 해외 7)
+
+| 값 묶음 | 곳                                                                   | 수                |
+| ------- | -------------------------------------------------------------------- | ----------------- |
+| 8–12    | op.gg 8 · Steam 8 · 뽐뿌 9 · 인벤 10 · 멜론 10 · U.GG 12 (네이트 12) | 6(+1)             |
+| 15–16   | 네이버 · 다음 · 네이버 뉴스 · DEV · GitLab 16, 디시 · osu! 15        | 7(정확히 16 은 5) |
+| 18–21   | 루리웹 19 · 닥지지 20 · 클리앙 21 (네이트 18)                        | 3(+1)             |
+| 24      | 네이버 게임 라운지 · Spotify · Chess.com                             | 3                 |
+| 30      | 메이플스토리                                                         | 1                 |
+
+- 국내 14곳만 보면 16 이 3곳(네이버 · 다음 · 네이버 뉴스), 8–12 가 5곳, 18–21 이 4곳, 24 · 30 이 1곳씩이다.
+- 같은 쪽 열 사이와 견주면 네이버 30 · 16, 다음 16 · 16, 디시 20 · 15, 네이버 뉴스 24 · 16, 멜론 24 · 10, 네이버 게임 24 · 24, Chess.com 24 · 24(열 · 쌓임). 열 사이 24 인 판끼리 4곳 가운데 쌓임도 24 인 곳은 2곳이다.
+- 제목이 상자 밖인 구역끼리는 27–60 으로 구역 사이 자리와 겹쳐 판끼리 셈에 넣지 않았다.
+
+디자인 시스템(7곳, 공유 메모 폴더 `research/ds/` 원문): KRDS 카드 세로형 · 가로형 · 모듈형 목록 gap-7 24(「세로형 카드 리스트의 간격은 gutter값」) · Primer PageLayout `--spacing-normal` 1012 이상 24(쌓인 판 사이 `rowGap`) · Ant Design 세로 간격 large 24 · Polaris `Layout.Section` 위 `--p-space-400` 16 · 당근 SEED 판 단위 값 없음, 컴포넌트 사이 기본 세로 `spacing-y-component-default` 12 · Atlassian 「덜 빽빽하거나 큰 부품 사이」 Medium 12–24(구간) · Material 3 세로 쌓임 값 없음(미확인). 24 가 3곳, 16 · 12 가 1곳씩, 구간 1곳.
+
+## 머리 띠와 쪽 제목 (S1 40 기준 재조사)
+
+S1 구역 사이를 40 으로 정한 뒤(2026-11-17) 머리 띠와 쪽 제목을 다시 쟀다. 위 표의 머리→제목(1920, 9곳 남짓)은 쪽 제목 앞에 배너 · 탭이 낀 곳이 섞여 있어, 이번에는 1440 폭에서 쪽 제목이 머리 띠 바로 아래 있는 쪽만 세고, 같은 쪽의 구역 사이와 짝으로 견줬다. 확인 2026-11-18, PC 1440 × 900, `colorScheme: 'dark'`, 로그아웃, headless Playwright. ① = 머리 띠(위에 붙은 폭 80% 이상 막대, 바로 아래 붙은 고정 탭 줄 포함) 아래 끝 → 쪽 제목 글자 줄 상자 위. ② = 쪽 제목 아래 → 첫 보이는 것. ③ = 같은 본문 칸에서 앞 구역의 마지막 보이는 것 → 다음 구역 제목 줄 위. ①과 ③ 의 차가 4 이하면 같음으로 셌다. 캡처는 공유 메모 `research/sites/<곳>/pc1440-navToTitle-a-*`(첫 화면 · ①② 조각 · 전체 반 배율), 원문과 스크립트는 `draw-s5/REDO.md` · `draw-s5/_scripts/`. 아래 숫자는 캡처를 열어 맞는 자리인지 본 것만 적었다.
+
+| 곳                | 쪽                     | ①                   | ③ 구역 사이           | ①과 ③ |
+| ----------------- | ---------------------- | ------------------- | --------------------- | ----- |
+| 당근              | 중고거래 검색          | 32(전역 탭 줄 아래) | 구역 하나             | —     |
+| 바이브            | 오늘 Top 100           | 30                  | 구역 하나             | —     |
+| 리디              | 일반도서 베스트        | 45                  | 구역 하나             | —     |
+| 원티드            | 채용 목록              | 50                  | 구역 하나             | —     |
+| 벅스              | 벅스차트               | 32                  | 구역 하나             | —     |
+| 라프텔            | 태그검색               | 29                  | 구역 하나             | —     |
+| SOOP              | 카테고리               | 25                  | 구역 하나             | —     |
+| 점핏              | 개발 직무 탐색         | 33                  | 구역 하나             | —     |
+| NOL 티켓          | 장르별 랭킹            | 38                  | 구역 하나             | —     |
+| OP.GG             | 랭킹                   | 19                  | 구역 하나             | —     |
+| 네이버 웹툰       | 요일 웹툰              | 28                  | 28                    | 같음  |
+| 카카오 고객센터   | 첫 화면                | 40                  | 64                    | 작음  |
+| 카카오 테크       | 블로그                 | 67                  | 62 · 95               | 작음  |
+| 나무위키          | 리듬 게임 문서         | 37                  | 29–33(위 4차 1920 값) | 큼    |
+| 네이버 클라우드   | 사용 가이드            | 24                  | 50 · 60               | 작음  |
+| 카카오 개발자     | 카카오 로그인 이해하기 | 73(위에 눈썹 글)    | 52–57                 | 큼    |
+| 카카오페이 개발자 | 온라인 결제 이해하기   | 59(경로 아래)       | 64 · 104              | 작음  |
+| Twitch            | 탐색                   | 18                  | 구역 하나             | —     |
+| Lichess           | 플레이어               | 41                  | 구역 하나             | —     |
+| Linear            | 변경 기록              | 67                  | 구역 하나             | —     |
+| 위키백과          | Rhythm game            | 27                  | 47(위 2차 1920 값)    | 작음  |
+| AniList           | 인기 애니              | 33                  | 구역 하나             | —     |
+| GitHub            | Trending               | 45                  | 구역 하나             | —     |
+| MDN               | CSS gap                | 14                  | 17–18                 | 같음  |
+| itch.io           | 게임 목록              | 23                  | 구역 하나             | —     |
+| Vercel            | 문서 Getting started   | 70                  | 39                    | 큼    |
+| React             | Quick Start            | 57(위에 눈썹 글)    | 30                    | 큼    |
+| GitHub Docs       | What is GitHub? 글     | 19                  | 73(선 포함)           | 작음  |
+| Spotify           | 홈                     | 22                  | 50 넘음(값 미확인)    | 작음  |
+
+세지 않은 곳: 제목이 그림 띠 안(Steam · 네이버 게임 · 네이버 고객센터 · 메이플스토리 · 디스코드 · LoL 새 소식 · 원티드 이벤트 · 토스 테크), 머리 띠와 제목 사이에 다른 띠(디시인사이드 61 · 교보문고 86 · Medium 100), 쪽 제목 없음(치지직 · 네이버 시리즈 · velog · DEV), 막힘(Speedrun · npm · Product Hunt 403, IMDb 확인 창, 카카오뱅크 404). 값은 남겼지만 캡처를 열지 않은 곳(지니 · 토스증권 · Reddit 등 30여 쪽)은 미확인이다.
+
+디자인 시스템(6곳, 공유 메모 `draw-s5/DS.md`): 당근 SEED `nav-to-title` 20(구역 사이 이름 없음) · KRDS 머리 → 경로 24, 경로 → h1 40, h1-h2 48 · GOV.UK 경로 없는 쪽 `govuk-main-wrapper--l` 50, 본문 → H2 40 · Primer PageLayout 위 24, 영역 `rowGap` 24 · Polaris Page Header 위 24, `Layout.Section` 16 · Atlassian 「쪽 위와 머리 사이」 32–80 구간.
+
+### 묶어 보기 (서비스 29곳: 국내 17 · 해외 12)
+
+- ① 은 14–73, 가운데값 33(국내만도 33). 묶음: 14–19 4곳 · 22–25 4곳 · 27–33 8곳 · 37–41 4곳 · 45–50 3곳 · 57–73 6곳. 정확히 32 는 당근 · 벅스 2곳, 40 은 카카오 고객센터 1곳, 24 는 네이버 클라우드 1곳.
+- 같은 쪽에서 ①과 ③ 을 함께 잰 13곳: ①<③ 7곳 · ①=③ 2곳 · ①>③ 4곳. 나머지 16곳은 쪽 안 구역이 하나(제목 + 목록)라 ③ 이 없다.
+- 디자인 시스템의 ①과 ③: 큼 2(GOV.UK · Polaris) · 같음 1(Primer) · 작음 1(KRDS, 경로 뒤 값) · 미확인 2(SEED · Atlassian).
+- 계층 자리(구역 사이 40 · 열 사이 24 · 쪽 아래 끝 56 기준): 32 는 24 와 40 사이 한 칸을 따로 쓰고, 24 는 열 사이와, 40 은 구역 사이와 같은 값이 되며, 48 은 쪽 아래 끝 56 과 8 차이다.
+
+## 최종안 걸림 (2026-11-18)
+
+간격 일곱 값(S1 40 · S2 24 · S3 16 · S4 24 · S5 32 · S6 12 · S6b 16)을 모두 입힌 최종안에서 나온 걸림을 고를 수 있게 새로 쟀다. 확인 2026-11-18, PC 1440 × 900, `colorScheme: 'dark'`(다크가 없는 곳은 밝은 화면), `ko-KR`, 로그아웃, headless Playwright. 값은 보이는 거리(글자 줄 상자 · 면 · 선 끝끼리)다. 원문 · 캡처 · 스크립트는 공유 메모 `draw-issues/`(`R-A.md` · `R-DS.md` · `sheets/` · `scripts/A/`)와 `research/sites/<곳>/issue1-*.png` · `issue3-*.png` 에 있고, 아래 숫자는 덧그린 캡처를 열어 맞는 자리인지 본 것만 적었다. 이 절은 걸림 1 · 2 · 3 만 담는다.
+
+### 걸림 1 · 2 · 경로가 있는 쪽의 머리 띠 → 경로 → 쪽 제목 (서비스 42곳: 국내 15 · 해외 27)
+
+ⓐ 머리 띠 아래 끝 → 경로 글 위(경로 띠면 띠 면 위) · ⓑ 경로 아래 끝 → 쪽 제목 글자 위 · ⓒ 머리 띠 아래 끝 → 쪽 제목 글자 위.
+
+| 묶음                                        | 곳 수 | 곳(ⓐ/ⓑ/ⓒ)                                                                                                                                                                                      |
+| ------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 경로가 S5 자리 근처, 제목에 붙음(ⓑ 10–20)   | 7     | 리디 31/13/60 · 네이버 클라우드 28/13/56 · 번개장터 42/20/78 · AWS 20/10/47 · React 21/16/57 · Docker 35/19/69 · Stripe 33/19/69                                                               |
+| 경로가 S5 자리 근처, 제목과 떨어짐(ⓑ 33–60) | 8     | 정부24 26/36/80 · 교보문고 23/45/84 · Atlassian 35/38/90 · Cloudflare 24/33/72 · GitLab 36/35/86 · MS Learn 31/52/102 · Shopify 42/48/107 · Apple 개발자 42/60/118                             |
+| 경로가 머리 띠에서 멂(ⓐ 49–91)              | 9     | 인프런 66/13/95 · 토스페이먼츠 67/91/178 · Android 68/39/124 · Figma 69/30/117 · Linear 66/50/135(뒤로가기 링크) · Next.js 57/15/90 · Notion 49/91/157 · Supabase 50/45/111 · Vercel 91/18/127 |
+| 경로 띠가 머리 띠에 붙음(ⓐ 0–1)             | 5     | 카카오 developers 1/73/126 · LG전자 0/77/117 · 영풍문고 0/60/116 · GitHub Docs 0/19/64 · MDN 0/14/46                                                                                           |
+| 맨 글자 경로가 머리 띠에 가까움(ⓐ 0–15)     | 3     | G마켓 15/107/139 · GOV.UK 15/51/85 · IKEA 0/82/100(근거 약함)                                                                                                                                  |
+| 머리 띠와 경로 사이에 다른 띠 · 상자        | 10    | 11번가 · 다나와 · 네이버 Developers · YES24 · Dropbox · osu! 위키 · Slack · Steam · web.dev · Spotify 지원(꼴 비교 밖)                                                                         |
+
+- ⓒ 가 30–40 인 곳은 0곳이다. 42곳 모두 46 이상(MDN 46 · AWS 47 · 네이버 클라우드 56). 경로가 있는 쪽은 머리 띠 아래 첫 간격을 경로까지 잰다.
+- ⓐ 가 24–40 인 곳 10곳(Cloudflare 24 · 정부24 26 · 네이버 클라우드 28 · 리디 31 · MS Learn 31 · Spotify 32 · Stripe 33 · Docker 35 · Atlassian 35 · GitLab 36).
+- 경로 꼴: 맨 글자 33 · 경로 띠(면 · 선) 7(머리 띠에 붙음 5) · 테두리 셀렉트 줄 1 · 뒤로가기 링크 1. 「← 목록」 단추 꼴은 상세 쪽에서 찾지 못했다.
+- 막힘: Twilio 문서(쿠키 창) · 프로그래머스 문제(안내 창) · 당근 상세(로그아웃이면 검색 결과로 넘어감).
+
+디자인 시스템(7곳, 지침 없음 SEED · Material 3, 미확인 Fluent 2 · Montage · Spectrum): 머리 → 경로는 24 가 4곳(KRDS · Atlassian · Primer · Polaris). 경로 → 제목은 따로 두고 40 넘게 띄움 2곳(KRDS 실측 49 · GOV.UK 55) · 쪽 머리 안 24 안팎 2곳(Carbon 35 · Ant Design Pro 27) · 거의 붙임 2곳(Atlassian 3 · Primer 좁은 폭 18) · 같은 줄 2곳(Polaris · Primer 넓은 폭). 경로를 쪽 머리 부품 안에 두는 곳 5곳(Polaris · Primer · Carbon · Atlassian · Ant Design Pro), 밖 2곳(KRDS · GOV.UK). 모두 근거 약함.
+
+### 걸림 3 · 쪽 제목 줄 오른쪽 조작 칸의 세로 정렬 (서비스 29곳: 국내 6 · 해외 23)
+
+위 끝 차 = 조작 칸 면 위 − 제목 글자 줄 상자 위(음수면 면이 위), 가운데 차는 두 상자 가운데의 차. NosLog 01 은 가운데 맞춤, 위 끝 차 −9(제목 글자 32 · 면 23).
+
+| 묶음                                       | 곳 수 | 곳(위 끝 차 / 가운데 차)                                                                                                                                                               |
+| ------------------------------------------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 가운데 맞춤, 면 위가 제목 글자 위보다 위   | 9     | 치지직 −5/−2 · 나무위키 −3/−3 · itch.io −6/1 · Reddit −2/−2 · Hugging Face −3/1 · GitHub −2/1 · DEV −6/0 · Gitea −4/1 · Gitee −1/0                                                     |
+| 가운데 맞춤, 면 위가 제목 글자 위보다 아래 | 12    | 토스페이먼츠 9/0 · 리브레 위키 2/1 · 더위키 1/−2 · 알파위키 3/2 · u.gg 6/3 · Steam 7/3 · CoinGecko 5/−1 · GOG 4/0 · Next.js 8/−1 · Mintlify 5/0 · LangChain 3/0 · Chrome 웹 스토어 1/1 |
+| 기준선 맞춤                                | 2     | StatCounter 4/6 · Edge 부가 기능 4/4                                                                                                                                                   |
+| 위 맞춤                                    | 1     | Firefox 부가 기능 1/−20(근거 약함)                                                                                                                                                     |
+| 조작 칸이 제목 줄보다 아래로 처짐          | 5     | Vercel 3/−10 · OpenRouter 14/24 · Raycast 19/27 · WordPress 12/18 · Modrinth 3/13                                                                                                      |
+
+- 가운데 맞춤 21곳. 위 끝 차가 −9 만큼 큰 곳은 0곳(가장 큰 것 −6). 머리 띠 → 면 위가 32 안팎인 곳: Hugging Face 32(글자 35) · 치지직 33(글자 38) · 나무위키 34(글자 37).
+- 원티드 목록은 제목 자리에 고르는 칸이 잡혀 세지 않았다. 미확인: Android 문서 · Resend 문서(단추를 못 잡음) · 로스트아크 공지(제목 글자를 못 잡음). 막힘은 `R-A.md` 에 곳마다 적었다.
+- 국내 6곳 가운데 3곳(나무위키 · 더위키 · 알파위키)은 같은 위키 엔진 계열이다. 국내 랭킹 · 차트 쪽 대부분(멜론 · 지니 · 벅스 · OP.GG · 메이플 · 교보 · 리디 등)은 제목 줄에 면 있는 조작 칸이 없었다.
+
+디자인 시스템(5곳): 가운데 3곳(Primer 중심 차 −1 · Polaris · Ant Design Pro 1) · 위 맞춤 2곳(Atlassian · Carbon). 기준선 0곳. 근거 약함.
+
+### 걸림 2 · 경로 → 쪽 제목, 보이는 거리 (서비스 36곳: 국내 9 · 해외 27, 디자인 시스템 6곳)
+
+위 「걸림 1 · 2」 절의 ⓑ 는 줄 상자 기준이라, 경로 글자 아랫선 → 쪽 제목 글자 윗선(잉크)을 새로 쟀다. 위 절의 42곳은 다시 재지 않았다. 확인 2026-11-19, PC 1440 × 900, `colorScheme: 'dark'`(다크가 없는 곳은 밝은 화면), `ko-KR`, 로그아웃, headless Playwright. 잉크는 캡처 화소에서 바탕색과 40 넘게 다른 줄로 찾았고(경로의 현재 항목 면 · 아이콘 포함), 줄 상자 거리를 함께 적었다. 덧그린 캡처(파랑 띠 = 잰 거리)를 모두 열어 맞는 자리인지 본 것만 적었다. 캡처 · 원자료 · 스크립트는 공유 메모 `redraw-issue2/`(`sites/<곳>.png` · `out/<곳>.json` · `scripts/m.mjs`)에 있다.
+
+| 곳                                       | 구분 | 꼴                                                      | 보이는 거리 | 줄 상자 | 제목 글자 | 주소                                                                                                                                                                                                                                                                                                             | 캡처                     |
+| ---------------------------------------- | ---- | ------------------------------------------------------- | ----------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| Square 개발자 문서                       | 해외 | 한 열                                                   | 16          | 4       | 32        | <https://developer.squareup.com/docs/payments-api/take-payments>                                                                                                                                                                                                                                                 | `sites/square.png`       |
+| Netlify 문서                             | 해외 | 한 열                                                   | 22          | 9       | 42        | <https://docs.netlify.com/deploy/deploy-overview/>                                                                                                                                                                                                                                                               | `sites/netlify.png`      |
+| Flutter 문서                             | 해외 | 한 열                                                   | 21          | 4       | 44        | <https://docs.flutter.dev/install>                                                                                                                                                                                                                                                                               | `sites/flutter.png`      |
+| Nuxt 문서                                | 해외 | 한 열                                                   | 21          | 7       | 36        | <https://nuxt.com/docs/4.x/getting-started/installation>                                                                                                                                                                                                                                                         | `sites/nuxt.png`         |
+| 카카오비즈니스 가이드                    | 국내 | 한 열                                                   | 22          | 11      | 36        | <https://kakaobusiness.gitbook.io/main/business-start/kakaobusiness-signup>                                                                                                                                                                                                                                      | `sites/kakaobiz.png`     |
+| Go 패키지(pkg.go.dev)                    | 해외 | 한 열                                                   | 23          | 14      | 24        | <https://pkg.go.dev/net/http>                                                                                                                                                                                                                                                                                    | `sites/gopkg.png`        |
+| Angular 문서                             | 해외 | 한 열                                                   | 23          | 16      | 36        | <https://angular.dev/guide/components>                                                                                                                                                                                                                                                                           | `sites/angular.png`      |
+| Google Cloud 문서                        | 해외 | 한 열                                                   | 25          | 15      | 36        | <https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run?hl=ko>                                                                                                                                                                                                                                        | `sites/gcloud.png`       |
+| GitBook 문서                             | 해외 | 한 열                                                   | 25          | 15      | 36        | <https://gitbook.com/docs/getting-started/quickstart>                                                                                                                                                                                                                                                            | `sites/gitbook.png`      |
+| 왓챠 고객센터                            | 국내 | 한 열                                                   | 26          | 17      | 32        | <https://help.watcha.com/hc/ko/articles/59858471598361-Google%EB%A1%9C-%EB%B6%80%ED%84%B0-%EC%99%93%EC%B1%A0-%EA%B3%84%EC%A0%95%EC%9D%B4-%EB%B3%B4%EC%95%88-%EC%9C%84%ED%97%98%EC%97%90-%EB%85%B8%EC%B6%9C%EB%90%98%EC%97%88%EB%8B%A4%EB%8A%94-%EB%A9%94%EC%9D%BC%EC%9D%84-%EB%B0%9B%EC%95%98%EC%96%B4%EC%9A%94> | `sites/watcha.png`       |
+| Kubernetes 문서                          | 해외 | 한 열                                                   | 26          | 12      | 40        | <https://kubernetes.io/docs/concepts/overview/>                                                                                                                                                                                                                                                                  | `sites/k8s.png`          |
+| 네이버페이 개발자센터                    | 국내 | 한 열                                                   | 27          | 13      | 32        | <https://docs.pay.naver.com/docs/common/online-payment-overview/>                                                                                                                                                                                                                                                | `sites/naverpaydev.png`  |
+| MongoDB 문서                             | 해외 | 한 열                                                   | 27          | 16      | 32        | <https://www.mongodb.com/ko-kr/docs/manual/>                                                                                                                                                                                                                                                                     | `sites/mongodb.png`      |
+| Fastly 문서                              | 해외 | 한 열                                                   | 31          | 22      | 32        | <https://www.fastly.com/documentation/guides/getting-started/>                                                                                                                                                                                                                                                   | `sites/fastly.png`       |
+| Meta 개발자 문서                         | 해외 | 한 열                                                   | 32          | 21      | 42        | <https://developers.facebook.com/docs/graph-api/overview>                                                                                                                                                                                                                                                        | `sites/metadev.png`      |
+| Playwright 문서                          | 해외 | 한 열                                                   | 33          | 15      | 48        | <https://playwright.dev/docs/intro>                                                                                                                                                                                                                                                                              | `sites/playwright.png`   |
+| WooCommerce 문서                         | 해외 | 한 열                                                   | 33          | 24      | 40        | <https://woocommerce.com/document/woocommerce-shipping-and-tax/>                                                                                                                                                                                                                                                 | `sites/woocommerce.png`  |
+| Unity 매뉴얼                             | 해외 | 한 열                                                   | 34          | 24      | 32        | <https://docs.unity.com/en-us/engine/6000.0/manual>                                                                                                                                                                                                                                                              | `sites/unity6.png`       |
+| HashiCorp Terraform 문서                 | 해외 | 한 열                                                   | 39          | 24      | 34        | <https://developer.hashicorp.com/terraform/intro>                                                                                                                                                                                                                                                                | `sites/terraform.png`    |
+| DigitalOcean 문서                        | 해외 | 한 열                                                   | 40          | 30      | 38        | <https://docs.digitalocean.com/products/droplets/>                                                                                                                                                                                                                                                               | `sites/digitalocean.png` |
+| Roblox 크리에이터 문서                   | 해외 | 한 열                                                   | 48          | 41      | 28        | <https://create.roblox.com/docs/ko-kr/scripting>                                                                                                                                                                                                                                                                 | `sites/roblox.png`       |
+| 국가데이터처(통계청)                     | 국내 | 한 열                                                   | 49          | 43      | 28        | <https://mods.go.kr/menu.es?mid=a10101010100>                                                                                                                                                                                                                                                                    | `sites/kostat.png`       |
+| Spring Boot 문서                         | 해외 | 한 열                                                   | 49          | 37      | 42        | <https://docs.spring.io/spring-boot/reference/features/spring-application.html>                                                                                                                                                                                                                                  | `sites/spring.png`       |
+| 카카오클라우드 문서                      | 국내 | 한 열                                                   | 50          | 37      | 40        | <https://docs.kakaocloud.com/service/bcs/vm/vm-overview>                                                                                                                                                                                                                                                         | `sites/kakaocloud.png`   |
+| Sentry 문서                              | 해외 | 한 열                                                   | 50          | 40      | 32        | <https://docs.sentry.io/platforms/javascript/>                                                                                                                                                                                                                                                                   | `sites/sentry.png`       |
+| 보건복지부                               | 국내 | 한 열                                                   | 54          | 46      | 40        | <https://www.mohw.go.kr/menu.es?mid=a10101030100>                                                                                                                                                                                                                                                                | `sites/mohw.png`         |
+| Godot 문서                               | 해외 | 한 열                                                   | 56          | 49      | 28        | <https://docs.godotengine.org/en/stable/getting_started/introduction/index.html>                                                                                                                                                                                                                                 | `sites/godot.png`        |
+| 업비트 고객센터                          | 국내 | 한 열                                                   | 64          | 62      | 32        | <https://support.upbit.com/hc/ko/articles/30139364405017-%EC%A0%84%EA%B8%B0%ED%86%B5%EC%8B%A0%EA%B8%88%EC%9C%B5%EC%82%AC%EA%B8%B0-%EC%A3%BC%EC%9D%98-%EC%95%88%EB%82%B4>                                                                                                                                         | `sites/upbit.png`        |
+| Symfony 문서                             | 해외 | 두 열(경로 아래 왼쪽 목차 · 검색이 먼저)                | 41          | 29      | 36        | <https://symfony.com/doc/current/setup.html>                                                                                                                                                                                                                                                                     | `sites/symfony.png`      |
+| 마이리얼트립 고객센터                    | 국내 | 두 열(경로 아래 왼쪽 목차 · 검색이 먼저)                | 71          | 65      | 32        | <https://help.myrealtrip.com/hc/ko/articles/50333385369613--%EC%A4%91%EC%9A%94-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4-%EC%9C%A0%EC%B6%9C-%EC%82%AC%EC%8B%A4-%EC%95%88%EB%82%B4-%EB%B0%8F-%EC%82%AC%EA%B3%BC%EC%9D%98-%EB%A7%90%EC%94%80>                                                                           | `sites/myrealtrip.png`   |
+| 리그 오브 레전드 고객지원                | 해외 | 두 열(경로 아래 왼쪽 목차 · 검색이 먼저)                | 78          | 68      | 32        | <https://support.riotgames.com/en-us/league-of-legends/performance/minimum-and-recommended-system-requirements-league-of-legends>                                                                                                                                                                                | `sites/riot.png`         |
+| WordPress 개발자 문서                    | 해외 | 두 열(경로 아래 왼쪽 목차 · 검색이 먼저)                | 121         | 107     | 36        | <https://developer.wordpress.org/plugins/intro/>                                                                                                                                                                                                                                                                 | `sites/wpdev.png`        |
+| Jest 문서                                | 해외 | 경로와 제목 사이에 배지 · 날짜(Version: 30.5)           | 59          | 41      | 48        | <https://jestjs.io/docs/getting-started>                                                                                                                                                                                                                                                                         | `sites/jest.png`         |
+| 카페24 개발자센터                        | 국내 | 경로와 제목 사이에 배지 · 날짜(버전: 2026-09-01 (최신)) | 59          | 41      | 48        | <https://apidocs.cafe24.com/docs/guide/intro>                                                                                                                                                                                                                                                                    | `sites/cafe24dev.png`    |
+| Docusaurus 문서                          | 해외 | 경로와 제목 사이에 배지 · 날짜(Version: 3.10.2)         | 60          | 41      | 48        | <https://docusaurus.io/docs/installation>                                                                                                                                                                                                                                                                        | `sites/docusaurus.png`   |
+| Databricks 문서                          | 해외 | 경로와 제목 사이에 배지 · 날짜(Last updated on Nov )    | 66          | 44      | 45        | <https://docs.databricks.com/aws/en/getting-started/>                                                                                                                                                                                                                                                            | `sites/databricks.png`   |
+| NHS 디자인 시스템(service-manual.nhs.uk) | DS   | DS(제목 위 작은 분류 글까지)                            | 36          | 28      | 48        | <https://service-manual.nhs.uk/design-system/components/breadcrumbs>                                                                                                                                                                                                                                             | `sites/ds-nhs.png`       |
+| NL Design System(rijksoverheid.nl)       | DS   | DS                                                      | 36          | 25      | 40        | <https://www.rijksoverheid.nl/themas/belastingen-uitkeringen-en-toeslagen/belastingplan>                                                                                                                                                                                                                         | `sites/ds-nl.png`        |
+| USWDS(usa.gov)                           | DS   | DS · 두 열                                              | 43          | -2      | 31.2      | <https://www.usa.gov/passport>                                                                                                                                                                                                                                                                                   | `sites/ds-uswds.png`     |
+| 스코틀랜드 정부 디자인 시스템            | DS   | DS · 두 열(쪽 머리 라벨까지)                            | 62          | 55      | 16        | <https://designsystem.gov.scot/components/breadcrumbs>                                                                                                                                                                                                                                                           | `sites/ds-scot.png`      |
+| 호주 AGDS(농업부 디자인 시스템)          | DS   | DS                                                      | 63          | 42      | 40        | <https://design-system.agriculture.gov.au/components/breadcrumbs>                                                                                                                                                                                                                                                | `sites/ds-agds.png`      |
+| Canada.ca 디자인 시스템                  | DS   | DS                                                      | 67          | 42      | 41        | <https://www.canada.ca/en/services/benefits/ei.html>                                                                                                                                                                                                                                                             | `sites/ds-canada.png`    |
+
+묶어 보기(한 열 28곳, 경로 바로 아래 제목):
+
+| 보이는 거리 | 곳 수               | 곳                                                                                                                                                               |
+| ----------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 16          | 1                   | Square                                                                                                                                                           |
+| 21–27       | 12(국내 3 · 해외 9) | Flutter 21 · Nuxt 21 · Netlify 22 · 카카오비즈니스 22 · Go 23 · Angular 23 · Google Cloud 25 · GitBook 25 · 왓챠 26 · Kubernetes 26 · 네이버페이 27 · MongoDB 27 |
+| 31–40       | 7(해외 7)           | Fastly 31 · Meta 32 · Playwright 33 · WooCommerce 33 · Unity 34 · Terraform 39 · DigitalOcean 40                                                                 |
+| 48–64       | 8(국내 4 · 해외 4)  | Roblox 48 · 국가데이터처 49 · Spring 49 · 카카오클라우드 50 · Sentry 50 · 보건복지부 54 · Godot 56 · 업비트 64                                                   |
+
+- 21–27 묶음이 가장 많다(12곳). 32 보다 작은 값은 이 묶음과 Square 16 뿐이다. 국가데이터처 · 보건복지부는 같은 정부 누리집 틀(`menu.es?mid=`)이다.
+- 두 열 4곳(Symfony 41 · 마이리얼트립 71 · 리그 오브 레전드 78 · WordPress 121)과 사이에 배지 · 날짜가 있는 4곳(Jest 59 · 카페24 59 · Docusaurus 60 · Databricks 66, 셋은 Docusaurus 버전 배지)은 묶음 값에서 뺐다.
+- 디자인 시스템 6곳은 모두 36 이상이다: NHS 36(분류 글까지) · NL Design System 36 · USWDS 43 · 스코틀랜드 62 · AGDS 63 · Canada.ca 67. 모두 공공 디자인 시스템이고, 위 절의 KRDS 49 · GOV.UK 55 처럼 경로를 쪽 머리 밖에 따로 둔다. 근거 약함(공식 누리집 한 쪽씩).
+- 막힘 · 못 잼: SSG · 오늘의집 · 올리브영 · Adobe · Red Hat · IBM(접속 제한), Oracle · Linode(쿠키 창), Amazon · Newegg(배송지 띠가 사이에 낌), 국세청(경로가 쪽 제목 아래), KT(경로 글이 비어 보임), Steamworks · NVIDIA(잰 제목이 소제목), Adyen(경로 줄 오른쪽 상자가 잡힘), Firebase · Grafana · Okta(사이에 다른 덩어리). 디자인 시스템 미확인: Cloudscape(데모 알림 띠가 사이에 낌) · 토스 TDS(요소 좌표와 화면이 어긋남) · Ontario · gov.br · Queensland · 원티드 Montage(경로를 못 잡음). 그 밖에 경로 · 제목을 못 찾은 국내 정부 · 쇼핑 · 대학 누리집 50여 곳은 `run*.log` 에 남겼다.
+
 ## 한계
 
 - 자동 수집이라 「제목」 은 h1–h4 와 18px · 600 이상 글자만 잡았다. 마케팅 쪽 · 첫 화면이 그림인 쪽은 엉뚱한 요소가 잡혀 「미확인」 이 많다. 치지직 · 원티드 · 트위치만 요소를 골라 다시 확인했다.
