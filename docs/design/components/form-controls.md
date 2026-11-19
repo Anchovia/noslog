@@ -30,7 +30,8 @@
 - 트랙 26 × 16 · 모서리 원(Spectrum 2). 둘레는 2 실제 선이라 고대비 모드에서도 남는다.
 - 꺼짐 = `surface/input` 트랙 + 2 `content/default` 둘레 · 손잡이 8 `switch-thumb`. 켜짐 = `primary/default` 트랙 · 손잡이 10 `on-primary`. 손잡이는 선 안쪽 상자 가운데(꺼짐 안쪽 2 · 켜짐 안쪽 1)다.
 - 올림 · 누름 · 키 포커스에 꺼짐은 둘레 · 손잡이가 `content/strong`, 켜짐은 트랙이 `primary/hover` 다.
-- 비활성은 꺼짐 둘레 · 손잡이, 켜짐 트랙이 `content/disabled` 다. 움직임 표에 없어 손잡이는 즉시 옮긴다.
+- 비활성은 꺼짐 둘레 · 손잡이, 켜짐 트랙이 `content/disabled` 다.
+- 손잡이 · 바탕색 움직임은 [기초값 — 움직임 ⑨](../foundations.md#움직임).
 - 라벨은 `<label htmlFor>` 로 이어 줄 글자를 눌러도 켜고 끈다.
 
 ## 숫자 척도
@@ -54,6 +55,7 @@
 
 ## 바뀐 기록
 
+- [2026-11-19 움직임 판 남은 칸과 반영](../../decisions/2026-11-19-motion-apply.md)
 - [2026-10-28 전수 검수 — 스테퍼 값 글자](../../decisions/2026-10-28-audit-fixes.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-26 Geist 색 · 모서리 · 포커스 — 체크박스 · 라디오 경계 · 스위치 · 고른 숫자](../../decisions/2026-10-26-geist-color-radius.md)

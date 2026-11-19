@@ -9,7 +9,7 @@
 - 안 고른 항목 `content/subdued`(올림 · 누름 · 키 포커스 `content/default`) · 고른 항목 `content/default`(올림 · 누름 · 키 포커스 `content/strong`). 글자는 안 고른 항목 medium · 고른 항목 600 이다.
 - 고른 항목 표시선 = 항목 맨 아래 `--nl-stroke-strong` · `content/default` · 둥근 끝 · 항목 폭. 1단 탭 줄 아래에는 1px `border/divider` 선을 두고, 고른 표시선이 그 위에 겹친다.
 - 비활성 항목은 `content/disabled`.
-- 밑줄 이동은 움직임 없이 즉시다.
+- 밑줄 이동은 [기초값 — 움직임 ⑥](../foundations.md#움직임).
 
 ## 두 단계
 
@@ -25,6 +25,7 @@
 
 ## 바뀐 기록
 
+- [2026-11-19 움직임 판 남은 칸과 반영](../../decisions/2026-11-19-motion-apply.md)
 - [2026-10-27 운영 방식 탭으로 되돌림](../../decisions/2026-10-27-production-regression-fixes.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)
