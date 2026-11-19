@@ -879,14 +879,14 @@ for (const locale of ["ko", "ja", "en"])
                                   320: 4,
                                   390: 4,
                                   768: 5,
-                                  1024: 7,
-                                  1280: 6,
-                                  1600: 6,
+                                  1024: 8,
+                                  1280: 7,
+                                  1600: 7,
                               };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );
-                    // 구간 머리 아래 선 → 첫 카드 · 행 = section-title-gap(12, 1056 이상 16). 머리가 붙기 전인 맨 위에서 잰다
+                    // 구간 머리 아래 선 → 첫 카드 · 행 = 구역 제목 → 내용 12(모든 폭). 머리가 붙기 전인 맨 위에서 잰다
                     const bandGap = await page.evaluate(() => {
                         scrollTo(0, 0);
                         const band = document.querySelector(
@@ -901,7 +901,7 @@ for (const locale of ["ko", "ja", "en"])
                                 .getBoundingClientRect().bottom
                         );
                     });
-                    expect(bandGap).toBeCloseTo(width >= 1056 ? 16 : 12, 1);
+                    expect(bandGap).toBeCloseTo(12, 1);
                 }
             }
             await page.setViewportSize({ width: 390, height: 900 });
