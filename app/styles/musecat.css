@@ -258,6 +258,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
+}
+/* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 사진만 커진다 */
+@media (hover: hover) {
+    .noslog-ui .nl-musecat-result:hover .nl-musecat-result__thumb img {
+        scale: var(--nl-motion-scale-card-media);
+    }
 }
 .noslog-ui .nl-musecat-result__name {
     display: flex;

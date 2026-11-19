@@ -1,8 +1,10 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
+import { useRef } from "react";
 
 import { rovingIndex } from "@/components/ui/roving-index";
+import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 
 export default function MetricSwitch<Value extends string>({
     label,
@@ -15,6 +17,8 @@ export default function MetricSwitch<Value extends string>({
     options: readonly { value: Value; label: string; shortLabel: string }[];
     onValueChange: (value: Value) => void;
 }) {
+    const list = useRef<HTMLDivElement>(null);
+    useTabIndicator(list, value);
     function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
         const buttons = Array.from(
             event.currentTarget.querySelectorAll<HTMLButtonElement>("button")
@@ -30,6 +34,7 @@ export default function MetricSwitch<Value extends string>({
     return (
         // 2단 밑줄 탭 — 모양은 공용 `nl-tabs`, 의미는 전환 버튼 묶음(aria-pressed) · 부품 결정 ②
         <div
+            ref={list}
             className="nl-tabs nl-metric-switch"
             role="group"
             aria-label={label}

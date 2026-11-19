@@ -1,5 +1,6 @@
 /* 스위치 = Spectrum 2 — 트랙 26 × 16 · 2px 경계(고대비 모드에서도 보이게 실제 선), 손잡이 꺼짐 8 · 켜짐 10.
-   꺼짐 면 gray-25 + 경계 gray-800 · 손잡이 gray-800, 켜짐 면 gray-800 · 손잡이 gray-25. 움직임 목록에 없어 손잡이는 즉시 옮긴다 */
+   꺼짐 면 gray-25 + 경계 gray-800 · 손잡이 gray-800, 켜짐 면 gray-800 · 손잡이 gray-25.
+   ⑨ 손잡이는 자리 · 크기가 옮겨 가고, 바탕색은 손잡이보다 조금 늦게 바뀐다(당근 SEED 스위치) */
 .noslog-ui .nl-switch {
     position: relative;
     flex-shrink: 0;
@@ -11,6 +12,11 @@
     border: var(--nl-stroke-strong) solid var(--nl-content-default);
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-input);
+    transition:
+        background-color var(--nl-motion-duration-d1) var(--nl-ease-easing)
+            var(--nl-motion-delay-switch),
+        border-color var(--nl-motion-duration-d1) var(--nl-ease-easing)
+            var(--nl-motion-delay-switch);
 }
 /* 손잡이는 선 안쪽 상자 가운데 — 꺼짐은 안쪽 2, 켜짐은 안쪽 1 */
 .noslog-ui .nl-switch::after {
@@ -34,6 +40,11 @@
     height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-full);
     background: var(--nl-switch-thumb);
+    transition:
+        top var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        left var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        width var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        height var(--nl-motion-duration-d3) var(--nl-ease-easing);
 }
 .noslog-ui .nl-switch[aria-checked="true"] {
     border-color: transparent;

@@ -249,6 +249,25 @@
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
         var(--nl-overlay-shadow);
+    /* ③ 떠 있는 메뉴와 같은 움직임 — 원점은 검색칸 쪽(위 가운데) */
+    transform-origin: top center;
+    transition:
+        opacity var(--nl-motion-duration-d3) var(--nl-ease-enter),
+        scale var(--nl-motion-duration-d3) var(--nl-ease-enter),
+        display var(--nl-motion-duration-d3) allow-discrete;
+}
+.noslog-ui .nl-search-preview[hidden] {
+    display: none;
+    opacity: 0;
+    scale: var(--nl-motion-scale-popup);
+    transition-duration: var(--nl-motion-duration-d2);
+    transition-timing-function: var(--nl-ease-exit);
+}
+@starting-style {
+    .noslog-ui .nl-search-preview:not([hidden]) {
+        opacity: 0;
+        scale: var(--nl-motion-scale-popup);
+    }
 }
 .noslog-ui .nl-search-preview__list {
     display: flex;
@@ -324,6 +343,13 @@
 }
 .noslog-ui .nl-home-event img {
     object-fit: cover;
+    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
+}
+/* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */
+@media (hover: hover) {
+    .noslog-ui .nl-home-event:hover img {
+        scale: var(--nl-motion-scale-card-media);
+    }
 }
 .noslog-ui .nl-home-event__caption {
     position: absolute;

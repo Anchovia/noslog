@@ -7,14 +7,33 @@
 .noslog-ui .nl-skeleton.nl-skeleton {
     background: var(--nl-surface-control);
 }
+/* ⑪ 로딩 — 물결 띠가 왼쪽에서 오른쪽으로 지나간다(당근 SEED skeleton, 동작 줄이기에서 멈춤).
+   잘라 내기는 clip 으로 — hidden 은 표본 글자 자리의 기준선을 옮긴다 */
 .noslog-ui .nl-skeleton {
-    /* ⑪ 로딩 — 은은한 깜빡임(동작 줄이기에서 멈춤) */
-    animation: nl-pulse var(--nl-motion-loop-pulse) var(--nl-ease-pulse)
+    position: relative;
+    overflow: clip;
+}
+.noslog-ui .nl-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--nl-skeleton-shimmer) 46%,
+        var(--nl-skeleton-shimmer) 54%,
+        transparent 100%
+    );
+    translate: -100% 0;
+    animation: nl-shimmer var(--nl-motion-loop-shimmer) var(--nl-ease-easing)
         infinite;
 }
-@keyframes nl-pulse {
-    50% {
-        opacity: 0.5;
+@keyframes nl-shimmer {
+    from {
+        translate: -100% 0;
+    }
+    to {
+        translate: 100% 0;
     }
 }
 /* 스켈레톤(2026-09-19 로딩 시안 S1 · M1) — 실제 부품의 틀 · 클래스를 그대로 쓰고 글자 · 사진 자리만 채운다.

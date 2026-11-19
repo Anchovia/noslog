@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { expect, fn, screen, userEvent, within } from "storybook/test";
+import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 
 import CompactSelect from "./compact-select";
 const meta = {
@@ -50,7 +50,8 @@ export const Default: Story = {
         trigger.focus();
         await userEvent.keyboard("{ArrowDown}{End}{Enter}");
         await expect(trigger).toHaveTextContent("Hard");
-        await expect(trigger).toHaveFocus();
+        // 메뉴가 닫히는 움직임이 끝나면 포커스가 돌아온다
+        await waitFor(() => expect(trigger).toHaveFocus());
     },
 };
 export const EscapeReopens: Story = {
@@ -63,11 +64,17 @@ export const EscapeReopens: Story = {
         await screen.findByRole("listbox");
         await userEvent.keyboard("{Escape}");
         await expect(trigger).toHaveAttribute("aria-expanded", "false");
+        // 메뉴가 닫히는 움직임이 끝나면 포커스가 돌아온다
+        await waitFor(() => expect(trigger).toHaveFocus());
         // 다시 열기 막음(200ms)은 누름 닫기에만 — Escape 뒤 곧바로 키보드로 다시 연다
         await userEvent.keyboard("{ArrowDown}");
-        await screen.findByRole("listbox");
-        await expect(trigger).toHaveAttribute("aria-expanded", "true");
+        await waitFor(() =>
+            expect(trigger).toHaveAttribute("aria-expanded", "true")
+        );
         await userEvent.keyboard("{Escape}");
+        await waitFor(() =>
+            expect(screen.queryByRole("listbox")).not.toBeInTheDocument()
+        );
     },
 };
 export const PressTriggerCloses: Story = {

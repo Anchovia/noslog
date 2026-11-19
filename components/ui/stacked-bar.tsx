@@ -19,6 +19,8 @@ export interface StackedBarRow {
     segments: StackedBarSegment[];
     /** 줄 오른쪽 값(metric-value) — 한 줄이라도 있으면 모든 줄에 값 칸이 생긴다(프로필 레벨별 달성) */
     value?: ReactNode;
+    /** 있으면 접고 펴는 줄 — true 면 접힘. 펼침 판(`nl-disclosure-panel`)처럼 높이 · 불투명도가 바뀐다 */
+    hidden?: boolean;
 }
 
 /**
@@ -48,7 +50,14 @@ export default function StackedBar({
                     0
                 );
                 return (
-                    <div key={row.key} className="nl-stacked-bar__row">
+                    <div
+                        key={row.key}
+                        className={cn(
+                            "nl-stacked-bar__row",
+                            row.hidden !== undefined && "nl-disclosure-panel"
+                        )}
+                        hidden={row.hidden}
+                    >
                         {labeled ? (
                             <span
                                 className="nl-caption nl-muted"

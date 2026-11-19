@@ -101,3 +101,32 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-content-default);
 }
+/* ⑥ 탭 밑줄 — 고른 탭을 재는 탭 줄(useTabIndicator)은 표시선을 줄 하나로 그려 고른 탭 자리로 옮겨 간다(당근 SEED 탭).
+   재기 전 · 재지 않는 탭 줄은 위 항목 표시선 그대로 */
+.noslog-ui .nl-tabs {
+    --nl-tabs-indicator-x: 0px;
+    --nl-tabs-indicator-width: 0px;
+}
+.noslog-ui
+    .nl-tabs[data-indicator]
+    > .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    )::after {
+    content: none;
+}
+.noslog-ui .nl-tabs[data-indicator]::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: var(--nl-tabs-indicator-x);
+    width: var(--nl-tabs-indicator-width);
+    height: var(--nl-stroke-strong);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-content-default);
+    pointer-events: none;
+    transition:
+        left var(--nl-motion-duration-d4) var(--nl-ease-easing),
+        width var(--nl-motion-duration-d4) var(--nl-ease-easing);
+}

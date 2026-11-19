@@ -3,11 +3,10 @@
    LineChart 가 같은 토큰을 읽어 움직인다(lib/motion) */
 .noslog-ui .nl-chart-reveal {
     animation: nl-reveal-x var(--nl-motion-duration-chart-in)
-        var(--nl-ease-enter);
+        var(--nl-ease-chart-in);
 }
 .noslog-ui .nl-chart-bar {
-    transition: width var(--nl-motion-duration-chart-change)
-        var(--nl-ease-enter);
+    transition: width var(--nl-motion-duration-d6) var(--nl-ease-enter);
 }
 @keyframes nl-reveal-x {
     from {

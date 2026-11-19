@@ -28,9 +28,10 @@ export const Default: Story = {
             name: "Pianist 도움말",
         });
         trigger.focus();
-        await expect(
-            await screen.findByText("악곡의 기존 성취 설명")
-        ).toBeVisible();
+        // 툴팁은 불투명 0 에서 나타나므로 페이드가 끝날 때까지 기다린다
+        await waitFor(() =>
+            expect(screen.getByText("악곡의 기존 성취 설명")).toBeVisible()
+        );
         await userEvent.keyboard("{Escape}");
         await waitFor(() =>
             expect(
@@ -39,9 +40,10 @@ export const Default: Story = {
         );
         // 다시 열기 막음(200ms)은 누름 닫기에만 — Escape 뒤 곧바로 Enter 로 다시 연다
         await userEvent.keyboard("{Enter}");
-        await expect(
-            await screen.findByText("악곡의 기존 성취 설명")
-        ).toBeVisible();
+        // 툴팁은 불투명 0 에서 나타나므로 페이드가 끝날 때까지 기다린다
+        await waitFor(() =>
+            expect(screen.getByText("악곡의 기존 성취 설명")).toBeVisible()
+        );
         // 창 제목 = 상자 제목 18/24 · 700
         const title = screen.getByText("Pianist", { selector: "strong" });
         await expect(title).toHaveClass("nl-component-title");

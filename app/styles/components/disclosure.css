@@ -78,7 +78,65 @@
     padding-inline: var(--nl-box-padding);
     padding-bottom: var(--nl-box-padding);
 }
+/* ⑦ 구역 펼침 — 내용 높이 · 불투명도가 함께 바뀐다(당근 SEED 아코디언). 높이를 auto 까지 옮기는 기능이 없는 브라우저는 곧바로 펼친다.
+   펼침 부품 밖에서 화살표로 여닫는 줄도 같다: raw details 는 내용 칸, hidden 으로 여닫는 판은 nl-disclosure-panel */
+.noslog-ui :is(.nl-disclosure, details:has(> summary .nl-disclosure__chevron)),
+.noslog-ui .nl-disclosure-panel {
+    interpolate-size: allow-keywords;
+}
+.noslog-ui
+    :is(
+        .nl-disclosure,
+        details:has(> summary .nl-disclosure__chevron)
+    )::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+        height var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        opacity var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        content-visibility var(--nl-motion-duration-d6) allow-discrete;
+}
+.noslog-ui
+    :is(
+        .nl-disclosure,
+        details:has(> summary .nl-disclosure__chevron)
+    )[open]::details-content {
+    height: auto;
+    opacity: 1;
+}
+/* 판의 위아래 여백 · 경계도 0 에서 펼쳐 닫힌 판이 자리를 남기지 않게 한다 */
+.noslog-ui .nl-disclosure-panel {
+    overflow: clip;
+    transition:
+        height var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        padding-block var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        margin-block var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        border-block-width var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        opacity var(--nl-motion-duration-d6) var(--nl-ease-easing),
+        display var(--nl-motion-duration-d6) allow-discrete;
+}
+.noslog-ui .nl-disclosure-panel[hidden] {
+    display: none;
+    height: 0;
+    padding-block: 0;
+    margin-block: 0;
+    border-block-width: 0;
+    opacity: 0;
+}
+@starting-style {
+    .noslog-ui .nl-disclosure-panel:not([hidden]) {
+        height: 0;
+        padding-block: 0;
+        margin-block: 0;
+        border-block-width: 0;
+        opacity: 0;
+    }
+}
 /* 화살표 회전 — 펼침 부품과 목록 줄(raw details · aria-expanded 버튼) 공통 */
+.noslog-ui .nl-disclosure__chevron {
+    transition: transform var(--nl-motion-duration-d6) var(--nl-ease-easing);
+}
 .noslog-ui details[open] > summary .nl-disclosure__chevron,
 .noslog-ui [aria-expanded="true"] .nl-disclosure__chevron {
     transform: rotate(180deg);

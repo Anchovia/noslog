@@ -234,9 +234,6 @@
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
 }
-.noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-tier-band__header {
-    top: 0;
-}
 /* 폰 격자 4열(2026-09-22 B안) — 672 이상은 아래 auto-fill 규칙, 카드 사이 12 */
 .noslog-ui .nl-tier-grid {
     display: grid;

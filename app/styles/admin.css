@@ -898,15 +898,14 @@
     box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-admin-menu-drawer[data-state="open"] {
-    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
-        var(--nl-ease-enter);
+    animation: nl-fade-in var(--nl-motion-duration-d4) var(--nl-ease-enter);
 }
 .noslog-ui .nl-admin-menu-drawer[data-state="closed"] {
-    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
-        var(--nl-ease-exit) forwards;
+    animation: nl-fade-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
 }
 .noslog-ui:has(> .nl-admin-menu-drawer[data-state="closed"]) {
-    animation: nl-hold var(--nl-motion-duration-overlay-out);
+    animation: nl-hold var(--nl-motion-duration-d2);
 }
 .noslog-ui .nl-admin-menu-drawer__head {
     display: flex;
@@ -1177,15 +1176,14 @@
     background: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-admin-drawer[data-state="open"] {
-    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
-        var(--nl-ease-enter);
+    animation: nl-fade-in var(--nl-motion-duration-d4) var(--nl-ease-enter);
 }
 .noslog-ui .nl-admin-drawer[data-state="closed"] {
-    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
-        var(--nl-ease-exit) forwards;
+    animation: nl-fade-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
 }
 .noslog-ui:has(> .nl-admin-drawer[data-state="closed"]) {
-    animation: nl-hold var(--nl-motion-duration-overlay-out);
+    animation: nl-hold var(--nl-motion-duration-d2);
 }
 .noslog-ui .nl-admin-drawer__head {
     display: flex;

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
-import { expect, fn, screen, userEvent, within } from "storybook/test";
+import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 
 import { contractStory } from "@/.storybook/responsive-contract";
 
@@ -57,7 +57,11 @@ export const Default: Story = {
         recent.focus();
         await userEvent.keyboard("{ArrowDown}{Enter}");
         await expect(opener).toHaveAccessibleName("정렬: 이름 순");
-        await expect(opener).toHaveFocus();
+        // 메뉴가 닫히는 움직임이 끝나면 포커스가 돌아온다
+        await waitFor(() => expect(opener).toHaveFocus());
+        await waitFor(() =>
+            expect(screen.queryByRole("menuitemradio")).not.toBeInTheDocument()
+        );
     },
 };
 // 메뉴 행 = 컨트롤 높이 · 글자 14, 판 둘레는 고대비에서도 남는 실제 border(안쪽을 그만큼 줄여 판 크기 그대로)
@@ -80,6 +84,9 @@ const menuRowsMatchControls: Story["play"] = async ({ canvasElement }) => {
         parseFloat(panel.paddingTop) + parseFloat(panel.borderTopWidth)
     ).toBe(8);
     await userEvent.keyboard("{Escape}");
+    await waitFor(() =>
+        expect(screen.queryByRole("menuitemradio")).not.toBeInTheDocument()
+    );
 };
 export const MenuRows: Story = { play: menuRowsMatchControls };
 export const MenuRowsWide: Story = {

@@ -55,6 +55,8 @@
     /* 줄 올림 — 폭이 꽉 찬 목록 · 표 줄에 겹친다(table-row-hover gray-900 7%).
        흰 6% 는 Spectrum 2 에 없는 단계라 새로 쓰지 않는다 — 면 없는 누르는 것 · 메뉴 항목의 올림은 surface/control-hover */
     --nl-interaction-row: rgb(242 242 242 / 7%);
+    /* 스켈레톤 물결 띠 — 당근 SEED 다크 shimmer neutral 흰 10% */
+    --nl-skeleton-shimmer: #ffffff1a;
     /* 비활성 투명도 — 그림 · 사진을 품은 줄(고르기 줄 · 업적 고르기 · 사진 칸)만. 글자 · 아이콘 · 선만 있는 것은 content/disabled 색 */
     --nl-disabled-opacity: 0.5;
     /* 포커스 = 흰 2px 선 한 줄 — 유채색을 쓰지 않아 Spectrum 2 의 파랑 링 대신 무채색 */
@@ -225,9 +227,11 @@ html[data-theme="light"] .noslog-ui,
         var(--nl-content-default)
     );
     --nl-tier-value-end: var(--nl-judgement-s-just);
+    /* 스켈레톤 물결 띠 — 당근 SEED 밝은 shimmer 흰 67% */
+    --nl-skeleton-shimmer: #ffffffab;
 }
 /* 상호작용 겹침 층(2026-09-23 I2) — 올림 · 선택 · 누름 규칙이 이 색을 지금 면 위에 background-image 로 겹친다.
-   색으로 등록해 두어야 ① 올림 · 누름 색 움직임(--nl-motion-duration-state)이 켜질 때 서서히 나타난다 */
+   색으로 등록해 두어야 ① 올림 · 누름 색 움직임(--nl-motion-duration-d3)이 켜질 때 서서히 나타난다 */
 @property --nl-state-layer {
     syntax: "<color>";
     inherits: false;

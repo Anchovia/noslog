@@ -413,7 +413,7 @@ export default function MusecatArcadeDetailPage({
                                             <div
                                                 id={weeklyId}
                                                 hidden={!weeklyOpen}
-                                                className="nl-musecat-weekly"
+                                                className="nl-musecat-weekly nl-disclosure-panel"
                                             >
                                                 <ArcadeHours
                                                     arcade={arcade}
@@ -667,9 +667,10 @@ export default function MusecatArcadeDetailPage({
                                                             aria-hidden
                                                         />
                                                     </button>
-                                                    {expanded && notice.link ? (
+                                                    {notice.link ? (
                                                         <a
-                                                            className="nl-heading-link nl-control nl-musecat-notice-link"
+                                                            hidden={!expanded}
+                                                            className="nl-heading-link nl-control nl-musecat-notice-link nl-disclosure-panel"
                                                             href={notice.link}
                                                             target="_blank"
                                                             rel="noreferrer"

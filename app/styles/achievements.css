@@ -1,6 +1,11 @@
 [data-radix-popper-content-wrapper]
     > .noslog-ui.nl-achievement-card-popover[data-state="open"] {
-    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+    animation: nl-pop-in var(--nl-motion-duration-d3) var(--nl-ease-enter);
+}
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-achievement-card-popover[data-state="closed"] {
+    animation: nl-pop-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
 }
 /* 업적(2026-09-24 T2 · I1 · L2 · K1 · P5 · D1 · B1 · C1 · E1) — 색은 검정 명판 금속 사다리 토큰(exam/tier-*)을 그대로 불러 쓴다 */
 

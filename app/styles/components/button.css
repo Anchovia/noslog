@@ -34,6 +34,32 @@
     ) {
     background: var(--nl-primary-hover);
 }
+/* 누름 축소(당근 SEED action-button) — 누르는 동안 크기마다 정한 배율로 줄고, 색은 ① 값으로 바뀐다. 동작 줄이기면 배율 1 */
+.noslog-ui .nl-button {
+    transition:
+        background-color var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        color var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        --nl-state-layer var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        scale var(--nl-motion-duration-d3) var(--nl-ease-enter);
+}
+.noslog-ui
+    .nl-button:not(
+        :disabled,
+        [data-locked],
+        [aria-busy="true"],
+        [aria-disabled="true"]
+    ):active {
+    scale: var(--nl-press-scale);
+}
+.noslog-ui
+    .nl-button--compact:not(
+        :disabled,
+        [data-locked],
+        [aria-busy="true"],
+        [aria-disabled="true"]
+    ):active {
+    scale: var(--nl-press-scale-compact);
+}
 /* 고스트 · 아이콘 버튼(ActionButton)의 기본 크기 = 줄의 컨트롤 높이 */
 .noslog-ui :is(.nl-button--ghost, .nl-button--icon) {
     min-height: var(--nl-control-height);

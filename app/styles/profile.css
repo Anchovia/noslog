@@ -686,6 +686,7 @@
 .noslog-ui .nl-profile-disclosure svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
+    transition: transform var(--nl-motion-duration-d6) var(--nl-ease-easing);
 }
 .noslog-ui .nl-profile-disclosure[aria-expanded="true"] svg {
     transform: rotate(180deg);

@@ -328,7 +328,7 @@ export default function ArcadeDetailPage({
                             {hasHours ? (
                                 <li
                                     id={hoursId}
-                                    className="nl-arcade-fact__detail"
+                                    className="nl-arcade-fact__detail nl-disclosure-panel"
                                     hidden={!hoursOpen}
                                 >
                                     <ArcadeHours arcade={arcade} now={now} />

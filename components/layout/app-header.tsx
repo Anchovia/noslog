@@ -20,7 +20,6 @@ import { useFeedbackUnread } from "@/features/feedback/components/feedback-unrea
 import LazyFeedbackDialog, {
     preloadFeedbackDialog,
 } from "@/features/feedback/components/lazy-feedback-dialog";
-import { readTokenPixels } from "@/lib/design-tokens";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -49,15 +48,16 @@ export default function AppHeader({
     const [open, setOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const { count: feedbackUnread } = useFeedbackUnread();
-    const [visible, setVisible] = useState(true);
-    // 이동하면 메뉴 · 창을 닫고 숨김 상태를 처음으로 — 헤더를 통째로 다시 마운트하지 않고 상태만 되돌린다
+    // ≡ 창은 닫힐 때 줄어드는 움직임이 끝날 때까지 그려 둔다
+    const [panelShown, setPanelShown] = useState(false);
+    if (open && !panelShown) setPanelShown(true);
+    // 이동하면 메뉴 · 창을 닫는다 — 헤더를 통째로 다시 마운트하지 않고 상태만 되돌린다
     const route = `${fullPathname}?${searchParams.toString()}`;
     const [seenRoute, setSeenRoute] = useState(route);
     if (seenRoute !== route) {
         setSeenRoute(route);
         setOpen(false);
         setFeedbackOpen(false);
-        setVisible(true);
     }
     const headerRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -107,37 +107,6 @@ export default function AppHeader({
         };
     }, [open, wide]);
 
-    useEffect(() => {
-        if (desktop || open) return;
-        let previous = window.scrollY;
-        let frame = 0;
-        // 헤더 높이만큼 내려간 뒤부터 숨긴다
-        const hideAfter = headerRef.current
-            ? readTokenPixels(headerRef.current, "--nl-header-height")
-            : 0;
-        function onScroll() {
-            if (frame) return;
-            frame = requestAnimationFrame(() => {
-                const current = Math.max(0, window.scrollY);
-                if (
-                    headerRef.current?.contains(document.activeElement) ||
-                    current <= 8
-                )
-                    setVisible(true);
-                else if (current > hideAfter && current - previous > 4)
-                    setVisible(false);
-                else if (current - previous < -4) setVisible(true);
-                previous = current;
-                frame = 0;
-            });
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => {
-            window.removeEventListener("scroll", onScroll);
-            cancelAnimationFrame(frame);
-        };
-    }, [desktop, open, route]);
-
     function containFocus(event: KeyboardEvent<HTMLElement>) {
         if (!open || wide || event.key !== "Tab") return;
         const controls = Array.from(
@@ -161,10 +130,6 @@ export default function AppHeader({
             <header
                 ref={headerRef}
                 className="nl-header"
-                data-scroll-state={
-                    visible || desktop || open ? "visible" : "hidden"
-                }
-                onFocusCapture={() => setVisible(true)}
                 onKeyDown={containFocus}
             >
                 <div
@@ -254,11 +219,12 @@ export default function AppHeader({
                             </button>
                         </div>
                     </div>
-                    {open ? (
+                    {panelShown ? (
                         <>
                             {!wide ? (
                                 <div
                                     className="nl-nav-scrim"
+                                    data-state={open ? "open" : "closed"}
                                     aria-hidden
                                     onPointerDown={() => {
                                         setOpen(false);
@@ -270,6 +236,15 @@ export default function AppHeader({
                                 ref={panelRef}
                                 id="app-destinations"
                                 className="nl-destinations"
+                                data-state={open ? "open" : "closed"}
+                                inert={!open}
+                                onAnimationEnd={(event) => {
+                                    if (
+                                        !open &&
+                                        event.target === event.currentTarget
+                                    )
+                                        setPanelShown(false);
+                                }}
                                 aria-label={t(
                                     desktop
                                         ? "header.moreMenu"

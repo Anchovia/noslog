@@ -257,16 +257,15 @@
     flex: 1;
     max-height: none;
 }
-/* ④ 대화상자 · 전체 화면 창 — 나타날 때 페이드 + 떠오름, 사라질 때 페이드만.
-   떠오름은 translate 속성으로(가운데 맞춤 transform 과 따로) */
+/* ④ 대화상자 · 전체 화면 창 — 가림막은 페이드, 상자는 1.3 에서 줄며 나타남(강조 곡선), 사라질 때 둘 다 페이드만.
+   크기는 scale 속성으로(가운데 맞춤 transform 과 따로) */
 .noslog-ui .nl-dialog-overlay[data-state="open"] {
-    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
-        var(--nl-ease-enter);
+    animation: nl-fade-in var(--nl-motion-duration-d2) var(--nl-ease-enter);
 }
 .noslog-ui
     :is(.nl-dialog, .nl-full-dialog, .nl-photo-viewer)[data-state="open"] {
-    animation: nl-rise-in var(--nl-motion-duration-overlay-in)
-        var(--nl-ease-enter);
+    animation: nl-dialog-in var(--nl-motion-duration-d4)
+        var(--nl-ease-enter-expressive);
 }
 .noslog-ui
     :is(
@@ -275,13 +274,13 @@
         .nl-full-dialog,
         .nl-photo-viewer
     )[data-state="closed"] {
-    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
-        var(--nl-ease-exit) forwards;
+    animation: nl-fade-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
 }
 /* 창 부품은 포털 안에 셸 겹(div.noslog-ui)을 두므로 Radix 포털이 그 겹의 움직임만 보고 떼어 낸다.
    창이 닫히는 동안 셸 겹도 같은 시간 버티게 해 페이드가 끝난 뒤 사라지게 한다(보이는 변화 없음) */
 .noslog-ui:has(
     > :is(.nl-dialog, .nl-full-dialog, .nl-photo-viewer)[data-state="closed"]
 ) {
-    animation: nl-hold var(--nl-motion-duration-overlay-out);
+    animation: nl-hold var(--nl-motion-duration-d2);
 }

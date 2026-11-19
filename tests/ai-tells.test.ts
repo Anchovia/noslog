@@ -107,6 +107,11 @@ const allowedGradients: Allowed[] = [
         selector: '.nl-tier-card__outline[data-achievement="goal-fc"]',
         reason: "서열표 달성 + FC 테두리",
     },
+    {
+        file: "components/skeleton.css",
+        selector: ".nl-skeleton::after",
+        reason: "스켈레톤 물결 띠",
+    },
 ];
 
 // 흐림 · 글자 그림자 · 그림자 필터

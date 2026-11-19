@@ -1,5 +1,5 @@
-import { useDroppable } from "@dnd-kit/core";
-import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { useDndContext, useDroppable } from "@dnd-kit/core";
+import { SortableContext, type SortingStrategy } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 
 import { cn } from "@/lib/cn";
@@ -17,6 +17,9 @@ interface TierBandDropAreaProps {
     onOpenSearch: () => void;
 }
 
+// 끄는 동안 다른 채보는 비켜나지 않는다 — 놓을 때 한 번에 바뀌고 놓일 구간만 강조한다
+const stayInPlace: SortingStrategy = () => null;
+
 // 상수 구간의 채보 배치와 추가 슬롯을 한곳에서 관리함
 export default function TierBandDropArea({
     band,
@@ -29,18 +32,21 @@ export default function TierBandDropArea({
         id: getBandDropId(band.id),
         data: { type: "band", bandId: band.id },
     });
+    // 구간 안 채보 위에 있어도 그 구간에 놓이므로 구간을 강조한다
+    const { over } = useDndContext();
+    const dropTarget = isOver || over?.data.current?.bandId === band.id;
 
     return (
         <div
             ref={setNodeRef}
             className={cn(
                 "flex min-h-nl-64 flex-wrap items-center gap-nl-8 p-nl-12 transition-colors duration-nl-state",
-                isOver && "bg-nl-surface"
+                dropTarget && "bg-nl-surface"
             )}
         >
             <SortableContext
                 items={band.entries.map((entry) => getEntryDragId(entry.id))}
-                strategy={rectSortingStrategy}
+                strategy={stayInPlace}
             >
                 {band.entries.map((entry) => (
                     <SortableTierChart

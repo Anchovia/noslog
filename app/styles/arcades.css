@@ -263,6 +263,16 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
+}
+/* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 사진만 커진다 */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-arcade-result:has(> button.nl-arcade-result__summary:hover)
+        .nl-arcade-result__photo
+        img {
+        scale: var(--nl-motion-scale-card-media);
+    }
 }
 .noslog-ui .nl-arcade-result__copy {
     display: flex;
@@ -612,8 +622,8 @@
         background: var(--nl-surface-elevated);
         box-shadow: var(--nl-overlay-shadow);
         transform: translateY(calc(100% - var(--nl-sheet-peek)));
-        transition: transform var(--nl-motion-duration-move)
-            var(--nl-ease-enter);
+        transition: transform var(--nl-motion-duration-d6)
+            var(--nl-ease-enter-expressive);
     }
     .noslog-ui
         .nl-arcades[data-sheet-layout]
@@ -645,7 +655,7 @@
         .nl-arcades__results:not([data-dragging])
         .nl-arcades__map-region {
         visibility: hidden;
-        transition: visibility 0s var(--nl-motion-duration-move);
+        transition: visibility 0s var(--nl-motion-duration-d6);
     }
     .noslog-ui
         .nl-arcades[data-sheet-layout][data-sheet="expanded"]

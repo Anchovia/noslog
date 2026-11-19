@@ -41,6 +41,25 @@
     box-shadow: var(--nl-tooltip-shadow);
     padding: var(--nl-spacing-4) var(--nl-spacing-8);
 }
+/* ⑧ 용어 도움말 = 툴팁 — 나타날 때 .9 에서 커지며 페이드(원점은 단추 쪽), 사라질 때 페이드만(당근 help-bubble).
+   업적 배지 카드는 같은 부품이지만 떠 있는 메뉴 값(③, achievements.css) */
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-term__popover:not(.nl-achievement-card-popover) {
+    transform-origin: var(--radix-popper-transform-origin);
+}
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-term__popover:not(
+        .nl-achievement-card-popover
+    )[data-state="open"] {
+    animation: nl-tooltip-in var(--nl-motion-duration-d4) var(--nl-ease-enter);
+}
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-term__popover:not(
+        .nl-achievement-card-popover
+    )[data-state="closed"] {
+    animation: nl-fade-out var(--nl-motion-duration-d4) var(--nl-ease-easing)
+        forwards;
+}
 /* 반전 면 창의 제목도 창 글자색(content/on-inverse) — 부품 제목의 content/strong 은 일반 면 위 값이다.
    업적 배지 카드는 떠 있는 창 면으로 바꾼 변형이라 제목 색을 그대로 둔다 */
 .noslog-ui.nl-term__popover:not(.nl-achievement-card-popover)

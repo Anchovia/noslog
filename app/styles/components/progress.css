@@ -17,12 +17,12 @@
 .noslog-ui .nl-progress[data-phase="running"] .nl-progress__bar {
     opacity: 1;
     animation: nl-progress-run var(--nl-motion-duration-progress)
-        var(--nl-ease-enter) forwards;
+        var(--nl-ease-progress-run) forwards;
 }
 .noslog-ui .nl-progress[data-phase="done"] .nl-progress__bar {
     width: 100%;
-    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
-        var(--nl-ease-exit) forwards;
+    animation: nl-fade-out var(--nl-motion-duration-progress-out)
+        var(--nl-ease-progress-out) forwards;
 }
 @keyframes nl-progress-run {
     to {

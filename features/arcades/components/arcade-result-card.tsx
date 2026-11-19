@@ -24,6 +24,7 @@ import {
 } from "@/features/arcades/arcade-discovery";
 import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
+import useDisclosurePresence from "@/lib/hooks/use-disclosure-presence";
 
 import {
     cabinetDotTone,
@@ -135,6 +136,7 @@ export default function ArcadeResultCard({
     const locale = useLocale();
     const href = useLocalizedHref();
     const panelId = useId();
+    const more = useDisclosurePresence(expanded);
     const photo = arcade.photos[0];
     const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
     const saveQuery = useArcadeSession((state) => state.setDiscoveryQuery);
@@ -208,9 +210,10 @@ export default function ArcadeResultCard({
                     aria-hidden
                 />
             </button>
-            {expanded ? (
+            {more.mounted ? (
                 <ArcadeResultMore
                     id={panelId}
+                    panelProps={more.panelProps}
                     arcade={arcade}
                     now={now}
                     locale={locale}
@@ -235,6 +238,7 @@ export default function ArcadeResultCard({
 
 function ArcadeResultMore({
     id,
+    panelProps,
     arcade,
     now,
     locale,
@@ -243,6 +247,7 @@ function ArcadeResultMore({
     onOpenDetail,
 }: {
     id: string;
+    panelProps: ReturnType<typeof useDisclosurePresence>["panelProps"];
     arcade: PublicArcade;
     now: Date;
     locale: string;
@@ -257,7 +262,11 @@ function ArcadeResultMore({
     );
     const directions = arcadeDirections(arcade);
     return (
-        <div id={id} className="nl-arcade-result__more">
+        <div
+            id={id}
+            className="nl-arcade-result__more nl-disclosure-panel"
+            {...panelProps}
+        >
             <dl className="nl-arcade-result__facts nl-control">
                 {arcade.address ? (
                     <div>

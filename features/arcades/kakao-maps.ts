@@ -13,7 +13,6 @@ export interface KakaoMapInstance {
     };
     setBounds(bounds: KakaoLatLngBounds): void;
     getCenter(): KakaoLatLng;
-    panTo(position: KakaoLatLng): void;
     setCenter(position: KakaoLatLng): void;
     relayout(): void;
     getLevel(): number;

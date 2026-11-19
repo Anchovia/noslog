@@ -66,6 +66,11 @@ export function ProfileRankDistribution({
         ...rows.map((row) => row.value ?? 0)
     );
     const countWidth = `${Math.max(...shown.map((row) => (row.value?.toLocaleString(locale) ?? "—").length))}ch`;
+    // 5번째부터는 늘 그려 두고 접는다 — 펼칠 때 높이 · 불투명도가 펼침과 같이 바뀐다
+    const listed = [
+        ...rows.map((row, index) => ({ ...row, folded: index >= 4 })),
+        { rank: "FC", value: fullCombo, folded: false },
+    ];
     return (
         <section
             className="nl-profile-section nl-profile-ranks"
@@ -78,8 +83,14 @@ export function ProfileRankDistribution({
                 id="profile-rank-distribution"
                 className="nl-profile-distribution nl-stack nl-stack--8"
             >
-                {shown.map((row) => (
-                    <div key={row.rank}>
+                {listed.map((row) => (
+                    <div
+                        key={row.rank}
+                        className={
+                            row.folded ? "nl-disclosure-panel" : undefined
+                        }
+                        hidden={row.folded && !expanded}
+                    >
                         <dt className="nl-full-combo-slot">
                             {row.rank === "FC" ? (
                                 <span className="nl-full-combo nl-metadata">

@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import type { ReactNode } from "react";
 import { Fragment, useId, useState } from "react";
 
 import {
@@ -11,6 +12,7 @@ import {
 import Disclosure from "@/components/ui/disclosure";
 import IntentLink from "@/components/ui/intent-link";
 import type { CommunityData } from "@/features/music/schemas/community-schema";
+import useDisclosurePresence from "@/lib/hooks/use-disclosure-presence";
 
 import TierVoteContribution from "./tier-vote-contribution";
 import TierVoteDistribution from "./tier-vote-distribution";
@@ -138,10 +140,10 @@ export default function CommunityTierVotes({
                                     ) : null}
                                 </span>
                             </Row>
-                            {expanded ? (
-                                <div
+                            {expandable ? (
+                                <VotePanel
                                     id={`${id}-${key}-distribution`}
-                                    className="nl-vote-list__body"
+                                    open={expanded}
                                 >
                                     {scope.average !== null ? (
                                         <TierVoteDistribution
@@ -158,12 +160,35 @@ export default function CommunityTierVotes({
                                             hasRecord={data.canEvaluate}
                                         />
                                     ) : null}
-                                </div>
+                                </VotePanel>
                             ) : null}
                         </Fragment>
                     );
                 })}
             </div>
         </Disclosure>
+    );
+}
+
+/** 고른 범위의 분포 · 투표 판 — 닫는 움직임을 마친 뒤 지운다 */
+function VotePanel({
+    id,
+    open,
+    children,
+}: {
+    id: string;
+    open: boolean;
+    children: ReactNode;
+}) {
+    const panel = useDisclosurePresence(open);
+    if (!panel.mounted) return null;
+    return (
+        <div
+            id={id}
+            className="nl-vote-list__body nl-disclosure-panel"
+            {...panel.panelProps}
+        >
+            {children}
+        </div>
     );
 }

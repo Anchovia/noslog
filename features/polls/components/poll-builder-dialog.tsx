@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 import ActionButton from "@/components/ui/action-button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,6 +20,7 @@ import {
     type PollValidationError,
     validatePollInput,
 } from "@/features/polls/schemas/poll-schema";
+import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 import type { Locale } from "@/lib/i18n/routing";
 
 export interface PollBuilderLabels {
@@ -82,6 +83,8 @@ export default function PollBuilderDialog({
     const id = useId();
     const [draft, setDraft] = useState(value);
     const [locale, setLocale] = useState<Locale>(locales[0]);
+    const localeTabs = useRef<HTMLDivElement>(null);
+    useTabIndicator(localeTabs, locale);
     const [error, setError] = useState<PollValidationError | null>(null);
     const [paste, setPaste] = useState(false);
     const [pasted, setPasted] = useState("");
@@ -171,6 +174,7 @@ export default function PollBuilderDialog({
                 ) : null}
                 {locales.length > 1 && labels.localeLabels ? (
                     <div
+                        ref={localeTabs}
                         role="tablist"
                         aria-label={labels.question}
                         className="nl-tabs"

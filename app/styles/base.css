@@ -70,8 +70,8 @@ html[data-theme="light"] .noslog-ui,
     ):focus-visible {
     outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
-/* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens/animations.css 의 움직임 토큰만 쓴다.
-   목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
+/* 움직임 — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens/animations.css 의 움직임 토큰만 쓴다.
+   목록 밖(스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 /* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
    label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과 · 순위표 줄),
    올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
@@ -91,21 +91,64 @@ html[data-theme="light"] .noslog-ui,
     ),
 .noslog-ui :is(a, button)::before {
     transition:
-        background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
-        color var(--nl-motion-duration-state) var(--nl-ease-enter),
-        --nl-state-layer var(--nl-motion-duration-state) var(--nl-ease-enter);
+        background-color var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        color var(--nl-motion-duration-d3) var(--nl-ease-easing),
+        --nl-state-layer var(--nl-motion-duration-d3) var(--nl-ease-easing);
 }
-/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드만, 닫을 때 즉시.
-   용어 도움말은 툴팁이라 즉시(⑧). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */
+/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드 + .95 에서 커짐(원점은 단추 쪽),
+   닫을 때 페이드 + .95 로 줄어듦. 용어 도움말은 툴팁 값(⑧, term.css). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */
+.noslog-ui [data-radix-popper-content-wrapper] > :not(.nl-term__popover),
+[data-radix-popper-content-wrapper] > .noslog-ui:not(.nl-term__popover),
+[data-radix-popper-content-wrapper] > .noslog-ui.nl-achievement-card-popover {
+    transform-origin: var(--radix-popper-transform-origin);
+}
 .noslog-ui
     [data-radix-popper-content-wrapper]
     > [data-state="open"]:not(.nl-term__popover),
 [data-radix-popper-content-wrapper]
     > .noslog-ui[data-state="open"]:not(.nl-term__popover) {
-    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+    animation: nl-pop-in var(--nl-motion-duration-d3) var(--nl-ease-enter);
+}
+.noslog-ui
+    [data-radix-popper-content-wrapper]
+    > [data-state="closed"]:not(.nl-term__popover),
+[data-radix-popper-content-wrapper]
+    > .noslog-ui[data-state="closed"]:not(.nl-term__popover) {
+    animation: nl-pop-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
+}
+/* 포털 안 셸 겹(div.noslog-ui)이 메뉴가 닫히는 동안 같은 시간 버텨 줄어듦이 끝난 뒤 사라지게 한다(대화상자와 같은 방식) */
+.noslog-ui:has(
+    > [data-radix-popper-content-wrapper]
+        > [data-state="closed"]:not(.nl-term__popover)
+) {
+    animation: nl-hold var(--nl-motion-duration-d2);
+}
+@keyframes nl-tooltip-in {
+    from {
+        opacity: 0;
+        scale: var(--nl-motion-scale-tooltip);
+    }
+}
+@keyframes nl-pop-in {
+    from {
+        opacity: 0;
+        scale: var(--nl-motion-scale-popup);
+    }
+}
+@keyframes nl-pop-out {
+    to {
+        opacity: 0;
+        scale: var(--nl-motion-scale-popup);
+    }
 }
 @keyframes nl-sheet-in {
     from {
+        translate: 0 100%;
+    }
+}
+@keyframes nl-sheet-out {
+    to {
         translate: 0 100%;
     }
 }
@@ -124,9 +167,9 @@ html[data-theme="light"] .noslog-ui,
         visibility: visible;
     }
 }
-@keyframes nl-rise-in {
+@keyframes nl-dialog-in {
     from {
         opacity: 0;
-        translate: 0 var(--nl-motion-distance);
+        scale: var(--nl-motion-scale-dialog);
     }
 }

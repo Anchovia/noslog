@@ -15,32 +15,36 @@
 .noslog-ui .nl-toast__content {
     min-width: 0;
 }
-/* ⑤ 토스트(sonner) — 나타날 때 페이드 + 조금 올라옴, 사라질 때 페이드만. 라이브러리 기본(400 · 전체 높이만큼 이동)을 토큰으로 덮는다 */
+/* ⑤ 토스트(sonner) — 나타날 때 .8 에서 커지며 페이드, 사라질 때 .8 로 줄며 페이드. 여러 장이 쌓이거나 펼쳐질 때 자리 옮김.
+   라이브러리 기본(400 · 전체 높이만큼 이동)을 토큰으로 덮는다. 크기는 scale 속성으로(쌓임 transform 과 따로) */
 html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] {
     transition:
-        transform var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
-        opacity var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
-        height var(--nl-motion-duration-overlay-in) var(--nl-ease-enter);
+        transform var(--nl-motion-duration-d4) var(--nl-ease-easing),
+        height var(--nl-motion-duration-d4) var(--nl-ease-easing),
+        scale var(--nl-motion-duration-d3) var(--nl-ease-enter),
+        opacity var(--nl-motion-duration-d3) var(--nl-ease-enter);
 }
 html:has(.noslog-ui)
     [data-sonner-toaster]
     [data-sonner-toast][data-mounted="false"] {
-    --y: translateY(var(--nl-motion-distance));
+    --y: translateY(0);
+    scale: var(--nl-motion-scale-toast);
 }
 html:has(.noslog-ui)
     [data-sonner-toaster]
     [data-sonner-toast][data-removed="true"][data-swipe-out="false"] {
     --y: translateY(0);
-    transition: opacity var(--nl-motion-duration-overlay-out)
-        var(--nl-ease-exit);
+    scale: var(--nl-motion-scale-toast);
+    transition:
+        scale var(--nl-motion-duration-d2) var(--nl-ease-exit),
+        opacity var(--nl-motion-duration-d2) var(--nl-ease-exit);
 }
 html:has(.noslog-ui)
     [data-sonner-toaster]
     [data-sonner-toast][data-swipe-out="true"] {
-    animation-duration: var(--nl-motion-duration-overlay-out);
+    animation-duration: var(--nl-motion-duration-d2);
     animation-timing-function: var(--nl-ease-exit);
 }
 html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
-    transition: opacity var(--nl-motion-duration-overlay-in)
-        var(--nl-ease-enter);
+    transition: opacity var(--nl-motion-duration-d4) var(--nl-ease-easing);
 }

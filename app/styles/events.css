@@ -62,7 +62,14 @@
         box-shadow: var(--nl-overlay-shadow);
     }
 }
+/* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */
+@media (hover: hover) {
+    .noslog-ui .nl-event-card:hover > .nl-event-banner img {
+        scale: var(--nl-motion-scale-card-media);
+    }
+}
 .noslog-ui .nl-event-banner img {
+    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
     width: 100%;
     height: 100%;
     object-fit: cover;

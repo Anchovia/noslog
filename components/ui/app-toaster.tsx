@@ -13,7 +13,7 @@ export default function AppToaster() {
         <div className="noslog-ui">
             <Toaster
                 position="bottom-center"
-                duration={3000}
+                duration={4000}
                 visibleToasts={3}
                 offset="var(--nl-spacing-16)"
                 mobileOffset="var(--nl-spacing-16)"

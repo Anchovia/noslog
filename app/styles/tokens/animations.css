@@ -1,41 +1,80 @@
-/* 움직임 토큰(2026-09-19) — 가이드 「움직임」 절이 원본. 값은 여기서만 정하고 부품은 이름으로만 쓴다(인라인 · 부품별 값 없음).
+/* 움직임 토큰 — 가이드 「움직임」 절이 원본. 시간 단계 · 곡선은 당근 SEED 한 벌이다.
+   값은 여기서만 정하고 부품은 이름으로만 쓴다(인라인 · 부품별 값 없음).
    토스트(sonner)는 셸 밖에 그려지므로 같은 블록을 토스터에도 선언한다 */
 .noslog-ui,
 html:has(.noslog-ui) [data-sonner-toaster] {
-    /* 시간 */
-    --nl-motion-duration-state: 100ms; /* 올림 · 누름 색 */
-    --nl-motion-duration-popup: 150ms; /* 메뉴 · 셀렉트 · 팝오버 · ≡ 메뉴 열림(닫힘은 즉시) */
-    --nl-motion-duration-overlay-in: 200ms; /* 대화상자 · 토스트 나타남 */
-    --nl-motion-duration-overlay-out: 150ms; /* 대화상자 · 토스트 사라짐 */
-    --nl-motion-duration-move: 200ms; /* 헤더 숨김 · 오락실 시트 */
-    --nl-motion-duration-chart-in: 800ms; /* 그래프 나타남(막대 · 선이 왼쪽부터) */
-    --nl-motion-duration-chart-change: 300ms; /* 그래프 값 바뀜(새 값으로 옮겨 감) */
-    --nl-motion-loop-spin: 800ms; /* 스피너 한 바퀴 */
-    --nl-motion-loop-pulse: 1600ms; /* 스켈레톤 한 번 깜빡임 */
-    /* 로딩(2026-09-19 로딩 시안 결정 4) — 이 시간 안에 끝나면 로딩 표시를 띄우지 않는다 */
+    /* 시간 단계(SEED duration d1–d6 중 쓰는 단계) */
+    --nl-motion-duration-d1: 50ms; /* 스위치 바탕색 */
+    --nl-motion-duration-d2: 100ms; /* 가림막 나타남 · 메뉴 · 말풍선 · 토스트 · 대화상자 사라짐 */
+    --nl-motion-duration-d3: 150ms; /* 올림 · 누름 색 · 누름 축소 · 메뉴 · 말풍선 · 토스트 나타남 · 스위치 손잡이 · 체크 상자 */
+    --nl-motion-duration-d4: 200ms; /* 대화상자 나타남 · 툴팁 · 토스트 자리 옮김 · 탭 밑줄 · 내보내기 창 닫힘 */
+    --nl-motion-duration-d6: 300ms; /* 시트 · 내보내기 창 열림 · 구역 펼침 · 값 바뀜 · 카드 그림 올림 */
+    --nl-motion-delay-switch: 20ms; /* 스위치 바탕색이 손잡이보다 늦게 */
+    /* 자리마다 정한 시간 */
+    --nl-motion-duration-chart-in: 1000ms; /* 그래프 나타남(선이 왼쪽부터) */
+    --nl-motion-loop-spin: 1200ms; /* 스피너 한 바퀴 */
+    --nl-motion-loop-shimmer: 1500ms; /* 스켈레톤 물결 한 번 */
+    /* 로딩 — 이 시간 안에 끝나면 로딩 표시를 띄우지 않는다 */
     --nl-motion-delay-progress: 100ms; /* 사이트 안 이동 — 위쪽 진행 막대 */
     --nl-motion-delay-skeleton: 300ms; /* 화면 안 다시 불러오기 — 스켈레톤 */
-    --nl-motion-duration-progress: 1500ms; /* 위쪽 진행 막대가 80% 까지 차오르는 시간(끝나면 채우고 사라짐) */
-    /* 곡선 — 들어올 때 감속 · 나갈 때 가속(Atlassian practical 과 같은 값) */
-    --nl-ease-enter: cubic-bezier(0.4, 1, 0.6, 1);
-    --nl-ease-exit: cubic-bezier(0.6, 0, 0.8, 0.6);
-    --nl-ease-spin: linear;
-    --nl-ease-pulse: ease-in-out;
-    /* 거리 — 대화상자 · 토스트가 떠오르는 만큼 */
-    --nl-motion-distance: 8px;
+    --nl-motion-duration-progress: 1500ms; /* 위쪽 진행 막대가 80% 까지 차오르는 시간 */
+    --nl-motion-duration-progress-out: 150ms; /* 위쪽 진행 막대가 끝까지 채운 뒤 사라지는 시간 */
+    /* 곡선(SEED) */
+    --nl-ease-enter: cubic-bezier(0, 0, 0.15, 1);
+    --nl-ease-exit: cubic-bezier(0.35, 0, 1, 1);
+    --nl-ease-easing: cubic-bezier(0.35, 0, 0.35, 1);
+    --nl-ease-enter-expressive: cubic-bezier(0.03, 0.4, 0.1, 1);
+    /* 자리마다 정한 곡선 */
+    --nl-ease-spin: cubic-bezier(
+        0.35,
+        0.25,
+        0.65,
+        0.75
+    ); /* SEED 원형 진행 회전 */
+    --nl-ease-chart-in: cubic-bezier(
+        0.37,
+        0,
+        0.63,
+        1
+    ); /* swing(easeInOutSine) — Steam Charts 그래프 드러남 */
+    --nl-ease-card-media: ease; /* 당근 상품 카드 그림 올림 */
+    --nl-ease-progress-run: cubic-bezier(
+        0.4,
+        1,
+        0.6,
+        1
+    ); /* 위쪽 진행 막대 차오름 */
+    --nl-ease-progress-out: cubic-bezier(
+        0.6,
+        0,
+        0.8,
+        0.6
+    ); /* 위쪽 진행 막대 사라짐 */
+    /* 크기 — 나타나기 전 · 사라진 뒤 · 누를 때 */
+    --nl-motion-scale-dialog: 1.3; /* 대화상자 상자가 커진 채로 나타남 */
+    --nl-motion-scale-toast: 0.8; /* 토스트 */
+    --nl-motion-scale-tooltip: 0.9; /* 툴팁 · 용어 도움말 나타남 */
+    --nl-motion-scale-popup: 0.95; /* 메뉴 · 셀렉트 · 팝오버 */
+    --nl-motion-scale-card-media: 1.05; /* 카드를 올렸을 때 안쪽 그림 */
+    --nl-press-scale: 0.97; /* 버튼 누름 축소(기본 · 큰 버튼) */
+    --nl-press-scale-compact: 0.95; /* 작은 버튼 누름 축소 */
 }
-/* 동작 줄이기 — 시간을 모두 0 으로(한 곳). 스피너 한 바퀴와 위쪽 진행 막대 차오름은 남긴다: 멈추면 고장처럼 보인다 */
+/* 동작 줄이기 — 시간을 모두 0 으로(한 곳). 스피너 한 바퀴와 위쪽 진행 막대 차오름은 남긴다: 멈추면 고장처럼 보인다.
+   누름 축소 · 카드 그림 올림은 배율도 1 로 */
 @media (prefers-reduced-motion: reduce) {
     .noslog-ui,
     html:has(.noslog-ui) [data-sonner-toaster] {
-        --nl-motion-duration-state: 0ms;
-        --nl-motion-duration-popup: 0ms;
-        --nl-motion-duration-overlay-in: 0ms;
-        --nl-motion-duration-overlay-out: 0ms;
-        --nl-motion-duration-move: 0ms;
+        --nl-motion-duration-d1: 0ms;
+        --nl-motion-duration-d2: 0ms;
+        --nl-motion-duration-d3: 0ms;
+        --nl-motion-duration-d4: 0ms;
+        --nl-motion-duration-d6: 0ms;
+        --nl-motion-delay-switch: 0ms;
         --nl-motion-duration-chart-in: 0ms;
-        --nl-motion-duration-chart-change: 0ms;
-        --nl-motion-loop-pulse: 0ms;
-        --nl-motion-distance: 0px;
+        --nl-motion-loop-shimmer: 0ms;
+        --nl-motion-duration-progress-out: 0ms;
+        --nl-motion-scale-card-media: 1;
+        --nl-press-scale: 1;
+        --nl-press-scale-compact: 1;
     }
 }

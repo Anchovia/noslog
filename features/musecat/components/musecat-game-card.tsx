@@ -22,6 +22,7 @@ import {
     type MusecatFlag,
     type MusecatGame,
 } from "@/features/musecat/musecat-arcade";
+import useDisclosurePresence from "@/lib/hooks/use-disclosure-presence";
 
 import {
     type MusecatAction,
@@ -122,6 +123,7 @@ export default function MusecatGameCard({
         </Button>
     );
     const detailsId = useId();
+    const details = useDisclosurePresence(open);
     // 금액이 숫자로 오면 보는 사람의 언어 · 통화 형식으로 쓴다(뮤즈캣 글은 한국어 「원」 이라)
     const priceLabel = (price: MusecatGame["prices"][number]) =>
         price.amount === null
@@ -164,8 +166,12 @@ export default function MusecatGameCard({
                         : t("musecat.fault.none")}
                 </p>
             )}
-            {open ? (
-                <div id={detailsId} className="nl-musecat-game__details">
+            {details.mounted ? (
+                <div
+                    id={detailsId}
+                    className="nl-musecat-game__details nl-disclosure-panel"
+                    {...details.panelProps}
+                >
                     {viewer.connected
                         ? game.flags.map((flag) => (
                               <FlagDetail

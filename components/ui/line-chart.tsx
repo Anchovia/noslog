@@ -83,6 +83,9 @@ export default function LineChart({
         height: tooltipHeight,
     } = useElementWidth<HTMLDivElement>("border-box");
     const [active, setActive] = useState<number | null>(null);
+    // 툴팁은 사라지는 페이드가 끝날 때까지 마지막 점으로 그려 둔다
+    const [tip, setTip] = useState<number | null>(null);
+    if (active !== null && active !== tip) setTip(active);
     // 점 → 툴팁 간격 16 — 토큰을 점 버튼에서 읽는다
     const [tooltipGap, setTooltipGap] = useState(0);
     const show = (index: number, target: HTMLElement) => {
@@ -423,35 +426,46 @@ export default function LineChart({
                                     />
                                 );
                             })}
-                            {active !== null && points[active] ? (
+                            {tip !== null && points[tip] ? (
                                 <div
                                     id={tooltipId}
                                     role="tooltip"
                                     ref={tooltipRef}
                                     className="nl-line-chart__tooltip"
+                                    data-state={
+                                        active === null ? "closed" : "open"
+                                    }
+                                    data-side={
+                                        position(tip).y <
+                                        tooltipHeight + tooltipGap
+                                            ? "bottom"
+                                            : "top"
+                                    }
+                                    onAnimationEnd={() => {
+                                        if (active === null) setTip(null);
+                                    }}
                                     style={{
                                         left: Math.max(
                                             0,
                                             Math.min(
                                                 width - tooltipWidth,
-                                                position(active).x -
+                                                position(tip).x -
                                                     tooltipWidth / 2
                                             )
                                         ),
                                         // 위에 자리가 모자라면 점 아래로
                                         top:
-                                            position(active).y <
+                                            position(tip).y <
                                             tooltipHeight + tooltipGap
-                                                ? position(active).y +
-                                                  tooltipGap
-                                                : position(active).y -
+                                                ? position(tip).y + tooltipGap
+                                                : position(tip).y -
                                                   tooltipHeight -
                                                   tooltipGap,
                                     }}
                                 >
-                                    {points[active].detail ? null : (
+                                    {points[tip].detail ? null : (
                                         <span className="nl-caption nl-muted">
-                                            {points[active].dimension}
+                                            {points[tip].dimension}
                                         </span>
                                     )}
                                     <span className="nl-control">
@@ -472,7 +486,7 @@ export default function LineChart({
                                                 {" · "}
                                             </>
                                         ) : null}
-                                        {formatValue(points[active].value)}
+                                        {formatValue(points[tip].value)}
                                     </span>
                                     {secondaryLabel ? (
                                         <span className="nl-control">
@@ -485,13 +499,13 @@ export default function LineChart({
                                             </span>
                                             {" · "}
                                             {formatValue(
-                                                points[active].secondaryValue!
+                                                points[tip].secondaryValue!
                                             )}
                                         </span>
                                     ) : null}
-                                    {points[active].detail ? (
+                                    {points[tip].detail ? (
                                         <span className="nl-caption nl-muted">
-                                            {points[active].detail}
+                                            {points[tip].detail}
                                         </span>
                                     ) : null}
                                 </div>
@@ -614,7 +628,7 @@ function useMorph(
         const { duration, ease } = figure.current
             ? readMotion(
                   figure.current,
-                  "--nl-motion-duration-chart-change",
+                  "--nl-motion-duration-d6",
                   "--nl-ease-enter"
               )
             : { duration: 0, ease: (value: number) => value };

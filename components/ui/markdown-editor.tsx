@@ -22,6 +22,7 @@ import ActionButton from "@/components/ui/action-button";
 import ActionMenu from "@/components/ui/action-menu";
 import FullScreenDialog from "@/components/ui/full-screen-dialog";
 import IconButton from "@/components/ui/icon-button";
+import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 import {
     IMAGE_ACCEPT,
     imageFileValidationError,
@@ -213,6 +214,8 @@ export default function MarkdownEditor({
 }) {
     const tabsId = useId();
     const [mode, setMode] = useState<"write" | "preview">("write");
+    const tabList = useRef<HTMLDivElement>(null);
+    useTabIndicator(tabList, mode);
     const textarea = useRef<HTMLTextAreaElement | null>(null);
     const fileInput = useRef<HTMLInputElement | null>(null);
     const uploads = useRef(0);
@@ -303,6 +306,7 @@ export default function MarkdownEditor({
             <div className="nl-markdown-editor__head">
                 {/* 「쓰기 / 미리보기」 2단 탭 — 미리보기 탭은 전체 화면 창을 연다(2026-09-23 P2 · 사용자 선택 A) */}
                 <div
+                    ref={tabList}
                     role="tablist"
                     aria-label={labels.tabs}
                     className="nl-tabs"

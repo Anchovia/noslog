@@ -1,8 +1,23 @@
-/* 이미지 내보내기 창은 1055 이하 전체 화면이라 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200) */
+/* 이미지 내보내기 창은 1055 이하 전체 화면이라 바텀시트처럼 움직인다 — 열 때 가림막 페이드 · 창이 아래에서 올라옴(강조 곡선),
+   닫을 때 가림막 페이드 · 창이 아래로 내려감. 셸 겹도 닫힘 시간만큼 버틴다 */
 @media (max-width: 1055px) {
+    .noslog-ui .nl-dialog-overlay[data-state="open"]:has(+ .nl-image-share) {
+        animation: nl-fade-in var(--nl-motion-duration-d6) var(--nl-ease-enter);
+    }
     .noslog-ui .nl-image-share[data-state="open"] {
-        animation: nl-sheet-in var(--nl-motion-duration-move)
-            var(--nl-ease-enter);
+        animation: nl-sheet-in var(--nl-motion-duration-d6)
+            var(--nl-ease-enter-expressive);
+    }
+    .noslog-ui .nl-dialog-overlay[data-state="closed"]:has(+ .nl-image-share) {
+        animation: nl-fade-out var(--nl-motion-duration-d4) var(--nl-ease-exit)
+            forwards;
+    }
+    .noslog-ui .nl-image-share[data-state="closed"] {
+        animation: nl-sheet-out var(--nl-motion-duration-d4) var(--nl-ease-exit)
+            forwards;
+    }
+    .noslog-ui:has(> .nl-image-share[data-state="closed"]) {
+        animation: nl-hold var(--nl-motion-duration-d4);
     }
 }
 /* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유.

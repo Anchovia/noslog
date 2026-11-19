@@ -136,7 +136,11 @@ function AchievementRow({
                 />
             </button>
             {/* 상세(D1) — 단계 사다리 · 달성 인원(명단 없음) */}
-            <ol id={detailId} className="nl-achievement-ladder" hidden={!open}>
+            <ol
+                id={detailId}
+                className="nl-achievement-ladder nl-disclosure-panel"
+                hidden={!open}
+            >
                 {steps.map(({ tier: step }) => {
                     const date = achievedAt(step);
                     const stepProgress =

@@ -122,15 +122,14 @@ export function profileLevelRows(
         for (const tier of PROFILE_TIER_KEYS)
             current.tiers[tier] += row.tiers[tier];
     }
-    // 묶음 → 레벨 오름차순 → REAL (입력 순서와 무관하게)
-    const order = (row: ProfileLevelGroup) =>
-        row.grouped
-            ? 0
-            : row.difficulty === "real"
-              ? 100 + row.level
-              : row.level;
-    return [...rows.values()].sort((a, b) => order(a) - order(b));
+    return [...rows.values()].sort(byLevelOrder);
 }
+
+/** 묶음 → 레벨 오름차순 → REAL (입력 순서와 무관하게) */
+const levelOrder = (row: ProfileLevelGroup) =>
+    row.grouped ? 0 : row.difficulty === "real" ? 100 + row.level : row.level;
+const byLevelOrder = (a: ProfileLevelGroup, b: ProfileLevelGroup) =>
+    levelOrder(a) - levelOrder(b);
 
 /** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄(「1–8」)은 색이 하나로 정해지지 않아 막대 기본 subdued(2026-10-01 D1) */
 const levelColor = (row: ProfileLevelGroup) =>
@@ -161,16 +160,32 @@ export default function ProfileLevels({
     const [difficulty, setDifficulty] = useState<Difficulty>("all");
     const [selected, setSelected] = useState<ProfileTierKey | null>(null);
     const [expanded, setExpanded] = useState(false);
+    // 펼침 버튼을 한 번 누른 뒤에만 두 상태의 줄을 함께 그려 접고 편다 — 처음 그릴 때 줄이 펼쳐지는 움직임을 내지 않으려고
+    const [toggled, setToggled] = useState(false);
     const shownDifficulty = variant === "full" ? difficulty : "all";
     // 개요 요약도 묶음 줄(「1–8」)은 남긴다 — 낮은 레벨을 통째로 빼면 달성이 있는데 없는 것처럼 보인다(2026-10-01 사용자)
-    const rows = profileLevelRows(levels, shownDifficulty, expanded).filter(
-        (row) =>
-            variant === "full" ||
-            expanded ||
-            row.grouped ||
-            row.difficulty === "real" ||
-            row.level >= 9
-    );
+    const pick = (open: boolean) =>
+        profileLevelRows(levels, shownDifficulty, open).filter(
+            (row) =>
+                variant === "full" ||
+                open ||
+                row.grouped ||
+                row.difficulty === "real" ||
+                row.level >= 9
+        );
+    const rowKey = (row: ProfileLevelGroup) =>
+        row.grouped ? "low" : `${row.difficulty}:${row.level}`;
+    const current = pick(expanded);
+    const currentKeys = new Set(current.map(rowKey));
+    const folding = toggled && shownDifficulty === "all";
+    const rows: (ProfileLevelGroup & { hidden?: boolean })[] = folding
+        ? [
+              ...current.map((row) => ({ ...row, hidden: false })),
+              ...pick(!expanded)
+                  .filter((row) => !currentKeys.has(rowKey(row)))
+                  .map((row) => ({ ...row, hidden: true })),
+          ].sort(byLevelOrder)
+        : current;
     const listId = `profile-levels-${variant}-rows`;
     const label = (key: ProfileTierKey) => profileTierLabel(key, t);
     const percent = (value: number, total: number) =>
@@ -207,13 +222,17 @@ export default function ProfileLevels({
                     className="nl-profile-levels__difficulty"
                     label={t("profile.levels.difficultyLabel")}
                     value={difficulty}
-                    onValueChange={setDifficulty}
+                    onValueChange={(value) => {
+                        setDifficulty(value);
+                        setToggled(false);
+                    }}
                     options={profileLevelDifficultyOptions(t)}
                 />
             ) : null}
             <StackedBar
                 rows={rows.map((row) => ({
-                    key: `${row.difficulty}:${row.level}`,
+                    key: rowKey(row),
+                    hidden: row.hidden,
                     label: row.label,
                     labelColor: levelColor(row),
                     segments: [
@@ -244,7 +263,10 @@ export default function ProfileLevels({
                     className="nl-profile-disclosure nl-control"
                     aria-expanded={expanded}
                     aria-controls={listId}
-                    onClick={() => setExpanded((value) => !value)}
+                    onClick={() => {
+                        setToggled(true);
+                        setExpanded((value) => !value);
+                    }}
                 >
                     {t(expanded ? "profile.collapse" : "profile.showAllLevels")}
                     <ChevronDown aria-hidden />

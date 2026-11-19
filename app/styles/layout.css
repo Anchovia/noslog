@@ -1,6 +1,21 @@
-.noslog-ui .nl-destinations,
-.noslog-ui .nl-nav-scrim {
-    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+/* ③ ≡ 창 = 떠 있는 메뉴 — 열 때 페이드 + .95 에서 커짐(원점은 ≡ 단추 쪽), 닫을 때 페이드 + .95 로 줄어듦. 폰 뒤 어둠은 페이드만 */
+.noslog-ui .nl-destinations {
+    transform-origin: top right;
+}
+.noslog-ui .nl-destinations[data-state="open"] {
+    animation: nl-pop-in var(--nl-motion-duration-d3) var(--nl-ease-enter);
+}
+.noslog-ui .nl-destinations[data-state="closed"] {
+    animation: nl-pop-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
+}
+.noslog-ui .nl-nav-scrim[data-state="open"] {
+    animation: nl-fade-in var(--nl-motion-duration-d3) var(--nl-ease-enter);
+}
+.noslog-ui .nl-nav-scrim[data-state="closed"] {
+    pointer-events: none;
+    animation: nl-fade-out var(--nl-motion-duration-d2) var(--nl-ease-exit)
+        forwards;
 }
 .noslog-ui {
     --nl-layout-margin: var(--nl-spacing-16);
@@ -96,14 +111,6 @@
 /* 앵커 · 포커스 이동이 sticky 헤더에 가리지 않게 — 스크롤하는 요소가 html 이라 전역 한 곳에 둔다 */
 html:has(.noslog-ui .nl-header) {
     scroll-padding-top: var(--nl-header-height);
-}
-/* ⑫ 헤더 숨김 — 나타날 때 감속 · 숨을 때 가속 */
-.noslog-ui .nl-header {
-    transition: transform var(--nl-motion-duration-move) var(--nl-ease-enter);
-}
-.noslog-ui .nl-header[data-scroll-state="hidden"] {
-    transform: translateY(-100%);
-    transition-timing-function: var(--nl-ease-exit);
 }
 .noslog-ui .nl-header__bar {
     position: relative;

@@ -248,7 +248,7 @@ export default function TierBoard({
                 ))}
             </div>
 
-            <DragOverlay>
+            <DragOverlay dropAnimation={null}>
                 <TierDragOverlay entry={activeEntry} />
             </DragOverlay>
         </DndContext>

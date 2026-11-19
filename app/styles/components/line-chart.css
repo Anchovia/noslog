@@ -170,4 +170,16 @@
     max-width: 100%;
     pointer-events: none;
     z-index: calc(var(--nl-layer-above) + 1);
+    transform-origin: center bottom;
+}
+/* ⑧ 툴팁 — 나타날 때 .9 에서 커지며 페이드, 사라질 때 페이드만(당근 help-bubble). 점 아래에 뜨면 원점이 위 */
+.noslog-ui .nl-line-chart__tooltip[data-side="bottom"] {
+    transform-origin: center top;
+}
+.noslog-ui .nl-line-chart__tooltip[data-state="open"] {
+    animation: nl-tooltip-in var(--nl-motion-duration-d4) var(--nl-ease-enter);
+}
+.noslog-ui .nl-line-chart__tooltip[data-state="closed"] {
+    animation: nl-fade-out var(--nl-motion-duration-d4) var(--nl-ease-easing)
+        forwards;
 }

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 
 import IntentLink from "@/components/ui/intent-link";
+import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 
 /**
  * 주소가 다른 구역을 잇는 1단 밑줄 탭(프로필 구역 탭, 2026-09-25) — 모양은 AreaTabs 와 같고(높이 48 · 항목이 줄 폭을 나눔 ·
@@ -23,6 +24,7 @@ export default function AreaTabLinks({
 }) {
     const row = useRef<HTMLElement>(null);
     const selected = options.find((option) => option.selected)?.key;
+    useTabIndicator(row, selected);
     // 고른 탭이 가로 스크롤 밖에 있으면 보이는 곳으로 — 페이지는 세로로 움직이지 않는다(AreaTabs 와 같음)
     useEffect(() => {
         const list = row.current;

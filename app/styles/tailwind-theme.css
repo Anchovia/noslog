@@ -58,8 +58,10 @@
     --z-index-nl-popover: var(--nl-layer-popover);
     --z-index-nl-fullscreen: var(--nl-layer-fullscreen);
     --shadow-nl-overlay: var(--nl-overlay-shadow);
-    --transition-duration-nl-state: var(--nl-motion-duration-state);
-    --transition-duration-nl-move: var(--nl-motion-duration-move);
+    --transition-duration-nl-state: var(--nl-motion-duration-d3);
+    --transition-duration-nl-move: var(--nl-motion-duration-d4);
     --ease-nl-enter: var(--nl-ease-enter);
+    /* ① 올림 색을 Tailwind transition-colors 로 쓴 곳도 같은 곡선 */
+    --default-transition-timing-function: var(--nl-ease-easing);
     --font-nl-mono: var(--nl-font-family-mono);
 }

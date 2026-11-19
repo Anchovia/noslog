@@ -29,6 +29,9 @@
     border: var(--nl-stroke-strong) solid var(--nl-content-default);
     border-radius: var(--nl-radius-small);
     background: var(--nl-surface-input);
+    /* ⑨ 고르면 바탕색이 바뀐다(당근 SEED 체크박스) */
+    transition: background-color var(--nl-motion-duration-d3)
+        var(--nl-ease-easing);
 }
 /* 체크는 Spectrum 2 처럼 상자보다 한 단계 작은 10. Lucide 모양 그대로 선만 3 */
 .noslog-ui .nl-check__box > svg {

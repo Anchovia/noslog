@@ -1,5 +1,4 @@
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
 import MusicJacket from "@/components/music/music-jacket";
 import { cn } from "@/lib/cn";
@@ -21,15 +20,11 @@ export default function SortableTierChart({
     selected,
     onSelect,
 }: SortableTierChartProps) {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({
+    const { attributes, listeners, setNodeRef, isDragging } = useSortable({
         id: getEntryDragId(entry.id),
+        // 놓은 뒤 자리 바뀜은 한 프레임에(움직임 없음)
+        animateLayoutChanges: () => false,
+        transition: null,
         data: {
             type: "entry",
             entryId: entry.id,
@@ -45,10 +40,6 @@ export default function SortableTierChart({
             title={entry.chart.music.title}
             aria-label={`${entry.chart.music.title} 채보 이동`}
             onClick={onSelect}
-            style={{
-                transform: CSS.Transform.toString(transform),
-                transition,
-            }}
             className={cn(
                 "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-control border-nl-stroke-strong bg-nl-surface bg-cover bg-center active:cursor-grabbing",
                 getTierDifficultyBorder(entry.chart.difficulty),
