@@ -1447,6 +1447,8 @@ Quaver 처럼 반투명 상자를 띠 아래쪽에 겹친 곳과 제목 상자 �
 
 디자인 시스템은 닫힘을 「역재생하되 더 짧게 · 가속 곡선」 으로 둔 곳이 많다. M3 컨테이너 변형 400 / 200 · M2 300 / 250 · MDC SearchView 펼침 300 / 접힘 250 · Fluent 250 / 200 · Atlassian 팝업 150 / 100 · Primer 300 / 200 · Spectrum 모달 250 / 130 이다. Atlassian 닫힘 곡선 `(0.6,0,0.8,0.6)` 은 NosLog `ease-exit` 와 같다. 검색 아이콘 → 입력칸 수치를 둔 곳은 Carbon(폭 70ms) · MDC 둘뿐이라 근거 약함이다.
 
+2026-11-19 에 값이 비어 있던 런처만 다시 쟀다(같은 조건, 위젯 스타일시트 규칙을 읽음). HubSpot 은 투명도 0.01→1 · 아래 12px→0 을 450ms(지연 50) `cubic-bezier(0.25,0.8,0.25,1)` 로 열고 같은 값으로 닫는다. Tidio 는 커지지 않고 투명도 0.01→1 · 오른쪽 8px→0 을 300ms `ease` 로 연다(닫힘 규칙은 역재생 300 인데 프레임으로는 50ms 안에 사라짐). 그래서 위 표의 단추 자리에서 커짐 채팅 런처는 3곳(Intercom · LiveChat · Gorgias)이고 Tidio 는 페이드 쪽이다. tawk.to 는 판이 움직임 없이 한 번에 떴지만 누른 단추가 런처인지 확실하지 않아 근거 약함, Gorgias 는 위젯이 뜨지 않아 못 쟀다. 당근(SEED 3.2.1)은 Popover · Menu 가 투명도 + scale 0.95→1 을 150ms `cubic-bezier(0,0,.15,1)` 로 열고 100ms `cubic-bezier(.35,0,1,1)` 로 닫으며 원점은 단추 쪽 모서리, HelpBubble 은 scale 0.9→1 200ms · 닫힘 페이드만 200ms · 원점 가운데다. 원본은 공통 층 공유 메모 `common-layer/stage3/motion/mo-bubble/BUBBLE.md` 와 `~/noslog-research/common-layer-motion/mo-bubble/` 이다.
+
 ### 첫 화면 판 실제 화면
 
 폭 1440 · 높이 900 이고 의견 네 줄은 표시용 값이다. 지금 무대는 1138×640(폭 1056 에서 1008)이다.
