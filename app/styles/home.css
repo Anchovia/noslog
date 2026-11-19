@@ -1,14 +1,10 @@
 .noslog-ui .nl-home {
     --nl-home-search-width: var(--nl-container-compact);
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
 }
-/* 묶음(2026-09-28 인상 점검 B4 — 근접의 법칙): 검색 · 타일은 「어디로 갈지 찾기」 한 묶음이라 16,
-   새 소식(공지 · 이벤트 · 공식 소식)은 다른 덩어리라 48. 구역끼리는 32 그대로 */
+/* 검색 · 타일은 「어디로 갈지 찾기」 한 묶음이라 구역 사이(40)보다 좁은 16 */
 .noslog-ui .nl-home > .nl-home-navigation {
-    margin-top: calc(var(--nl-spacing-16) - var(--nl-section-gap));
-}
-.noslog-ui .nl-home > .nl-home-updates {
-    margin-top: calc(var(--nl-spacing-48) - var(--nl-section-gap));
+    margin-top: calc(var(--nl-space-box-gap) - var(--nl-space-section));
 }
 .noslog-ui .nl-home-hero,
 .noslog-ui .nl-home-navigation,
@@ -49,7 +45,7 @@
 .noslog-ui .nl-home-destinations {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--nl-grid-gutter-compact);
+    gap: var(--nl-space-grid-gap);
 }
 .noslog-ui .nl-home-tile {
     display: flex;
@@ -94,14 +90,13 @@
 }
 .noslog-ui .nl-home-updates {
     display: grid;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
 }
-/* 새 소식 구역 — 사이 · 제목 → 내용 = 구역 간격 토큰(2026-10-01 D1) */
 .noslog-ui .nl-home-update {
     display: flex;
     min-width: 0;
     flex-direction: column;
-    gap: var(--nl-section-title-gap);
+    gap: var(--nl-space-group);
 }
 /* 홈 공지는 폭과 상관없이 「태그 · 제목 · 날짜」 한 줄. 좁은 폭에서 두 줄이면 새 소식 구역이 길어져서, 제목만 한 줄 말줄임 */
 .noslog-ui .nl-home-announcements > ul {
@@ -127,7 +122,7 @@
 /* 공식 소식 · 상태 상자 = 바탕보다 한 단계 밝은 면 · 둘레 · 그림자 없음 · 모서리 control.
    상태 상자는 소식 카드 자리를 대신하므로 같은 값 */
 .noslog-ui .nl-home-news-state {
-    padding: var(--nl-spacing-16);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
@@ -135,8 +130,8 @@
     container: official-post / inline-size;
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-16);
+    gap: var(--nl-space-group);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
@@ -287,23 +282,22 @@
 @media (min-width: 672px) {
     .noslog-ui .nl-home-destinations {
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: var(--nl-grid-gutter-wide);
     }
     /* 4열은 8칸이 두 줄로 꽉 찬다 — 피드백 칸은 3열에서만 */
     .noslog-ui .nl-home-destinations__compact-only {
         display: none;
     }
     .noslog-ui .nl-home-tile {
-        padding: var(--nl-spacing-24);
+        padding: var(--nl-box-padding);
     }
 }
-/* 진행 중인 이벤트 — 큰 배너 카드(2.4 : 1 · 카드 모서리) 위에 제목 · 기간. 카드 사이 8.
+/* 진행 중인 이벤트 — 큰 배너 카드(2.4 : 1 · 카드 모서리) 위에 제목 · 기간. 카드 사이 12.
    글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 해
    경계가 딱딱하게 서지 않는다. 흐림은 두지 않는다 */
 .noslog-ui .nl-home-events__list {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-space-grid-gap);
 }
 /* 진행 중인 이벤트가 없을 때 — 빈 상자 대신 안내 한 줄 */
 .noslog-ui .nl-home-events__empty {

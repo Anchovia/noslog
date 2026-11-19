@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-24);
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
     min-width: 0;
 }
 /* 제목 · 검색창 — 오락실 머리(`nl-arcades__head`)와 같은 간격 16 */
@@ -30,12 +30,12 @@
     flex: 1;
     min-width: 0;
 }
-/* 모든 폭: 검색 → 상태 칩 · 결과 줄 12 → 목록 12 — 컨트롤 묶음 안 12, 컨테이너 24 에서 당긴다 */
+/* 모든 폭: 검색 → 상태 칩 · 결과 줄 12 → 목록 12 — 조작 줄 사이 12, 컨테이너 24 에서 당긴다 */
 .noslog-ui .nl-bingo-catalog__head {
-    margin-bottom: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+    margin-bottom: calc(var(--nl-space-group) - var(--nl-spacing-24));
 }
 .noslog-ui .nl-bingo-catalog__head + .nl-bingo-catalog__controls {
-    margin-bottom: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+    margin-bottom: calc(var(--nl-space-group) - var(--nl-spacing-24));
 }
 /* 결과 줄 — 왼쪽 정렬(로그인) · 오른쪽 보기 전환(악곡 목록과 같은 자리) */
 .noslog-ui .nl-bingo-catalog__summary-row {
@@ -58,11 +58,11 @@
     min-width: 0;
     margin-left: calc(-1 * var(--nl-spacing-12));
 }
-/* 격자(기본, 2026-09-22) — 폰 3열 · 사이 8, 672 이상 악곡 격자와 같은 카드 최소 156 · 사이 16 */
+/* 격자(기본, 2026-09-22) — 폰 3열, 672 이상 악곡 격자와 같은 카드 최소 156, 카드 사이 12 */
 .noslog-ui .nl-bingo-catalog__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-space-grid-gap);
     min-width: 0;
 }
 .noslog-ui .nl-bingo-catalog__grid > li {
@@ -118,7 +118,7 @@
 .noslog-ui .nl-bingo-catalog__list {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    column-gap: var(--nl-spacing-16);
+    column-gap: var(--nl-space-column);
     min-width: 0;
 }
 .noslog-ui .nl-bingo-catalog__list > li {
@@ -160,30 +160,34 @@
 .noslog-ui .nl-bingo-recent {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-space-group);
 }
-/* 헤더 → 돌아가기 24 · 돌아가기 → 내용 24 — 다른 상세 페이지 머리와 같게(2026-10-01 규칙 맞춤) */
+/* 헤더 → 돌아가기 32 · 돌아가기 글자 → 내용 24 — 다른 상세 페이지 머리와 같게 */
 .noslog-ui .nl-bingo-detail {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
     min-width: 0;
 }
 .noslog-ui .nl-bingo-detail > .nl-back-link {
-    margin-bottom: calc(var(--nl-spacing-24) - var(--nl-spacing-16));
+    margin-bottom: calc(
+        var(--nl-space-crumb-title) -
+            (var(--nl-back-link-height) - var(--nl-type-line-height-ui)) / 2 -
+            var(--nl-spacing-16)
+    );
 }
 /* 상세 배치 — Compact 는 소스 순서(정체성 → 요약 → 보드 → 제자리 상세 → 목록)를 구역 사이로 쌓고, Wide 는 보드 | 상세 두 열 */
 .noslog-ui .nl-bingo-detail__layout {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
     min-width: 0;
 }
 .noslog-ui .nl-bingo-missions {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-box-gap);
     min-width: 0;
     overflow-wrap: anywhere;
 }
@@ -461,7 +465,7 @@
 .noslog-ui .nl-bingo-missions__list {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-space-grid-gap);
 }
 .noslog-ui .nl-bingo-mission {
     display: flex;
@@ -540,7 +544,7 @@
             "board detail"
             "board missions";
         grid-template-rows: auto auto auto 1fr;
-        gap: var(--nl-spacing-16);
+        gap: var(--nl-space-box-gap) var(--nl-space-column);
         align-items: start;
     }
     .noslog-ui .nl-bingo-identity {
@@ -569,7 +573,6 @@
 @media (min-width: 672px) {
     .noslog-ui .nl-bingo-catalog__grid {
         grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
-        gap: var(--nl-spacing-16);
     }
 }
 /* 넓은 화면 목록형 = 두 열 행(2026-09-22 T2) */

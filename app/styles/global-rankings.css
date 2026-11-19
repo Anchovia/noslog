@@ -8,12 +8,13 @@
     --nl-ranking-inset: var(--nl-spacing-12);
 }
 .noslog-ui .nl-global-rankings {
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
 }
 .noslog-ui .nl-global-rankings__measure {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
+    /* 조작 줄 → 조작 줄 → 순위표 12 */
+    gap: var(--nl-space-group);
     width: 100%;
     max-width: var(--nl-container-compact);
     margin-inline: auto;
@@ -21,7 +22,11 @@
 /* 페이지 제목 → 첫 내용(세그먼트) 16 — 폭 · 가운데 정렬은 이 줄이 아니라 위 묶음이 맡는다(2026-09-23:
    2026-09-16 간격 통일 때 폭 선언이 제목으로 옮겨 가 목록만 폭을 채우고 제목만 640 가운데에 남았다) */
 .noslog-ui .nl-global-rankings__measure > .nl-page-title {
-    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-space-group));
+}
+/* 순위표 → 쪽 번호 24 */
+.noslog-ui .nl-global-rankings__measure > .nl-pagination {
+    margin-top: calc(var(--nl-spacing-24) - var(--nl-space-group));
 }
 .noslog-ui .nl-global-ranking-controls {
     container: metric-controls / inline-size;
@@ -33,7 +38,7 @@
 .noslog-ui .nl-global-ranking-content {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-box-gap);
 }
 /* 표 — 모든 폭 같은 규격: 행 48 · 아바타 32 · 글자 14 · 줄 높이 ui(18, CJK 21).
    묶음 사이 12(순위 → 아바타 → 이름 묶음), 묶음 안 8(국기 → 이름 → 명판) */

@@ -6,21 +6,21 @@
     background: var(--nl-content-subdued) !important;
 }
 .noslog-ui .nl-music-detail {
-    padding-top: var(--nl-spacing-24);
-    padding-bottom: var(--nl-spacing-48);
+    padding-top: var(--nl-space-header-title);
+    padding-bottom: var(--nl-page-bottom);
 }
 /* 1056 미만: 머리(자켓 80 · 제목 · 난이도 세그먼트 · 그레이드 · 수치 띠 · 채보/영상 칸) → 16 → 탭 세로 한 열.
-   1056+: 왼쪽 열 = 악곡 레일 폭 (100% − 3·16) / 4 에 머리 카드(세로), 오른쪽 = 탭 + 내용 (2026-09-16 데스크톱 B) */
+   1056+: 왼쪽 열 = 악곡 레일 폭 (100% − 3·16) / 4 에 머리 카드(세로), 열 사이 24, 오른쪽 = 탭 + 내용 (2026-09-16 데스크톱 B) */
 .noslog-ui .nl-music-detail__layout {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-box-gap);
     min-width: 0;
 }
 .noslog-ui .nl-music-entity {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-space-group);
     min-width: 0;
 }
 /* 자켓 · 제목 묶음 → 난이도 세그먼트 16 (제목 → 첫 내용) */
@@ -207,18 +207,18 @@
 .noslog-ui .nl-overview {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
     min-width: 0;
 }
 .noslog-ui .nl-overview__section {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-title-gap);
+    gap: var(--nl-space-group);
     min-width: 0;
 }
 /* 개요 묶음 상자 = Spectrum 2 secondary 카드(layer-1 면 · emphasized 그림자 · 모서리 large) */
 .noslog-ui .nl-overview__card {
-    padding: var(--nl-spacing-16);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
     box-shadow: var(--nl-card-shadow);
@@ -226,7 +226,7 @@
 .noslog-ui .nl-detail-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-space-group);
     min-width: 0;
 }
 .noslog-ui .nl-facts {
@@ -337,17 +337,14 @@
     flex-direction: column;
     min-width: 0;
 }
-/* 판정 분석 — 소구역(요약 · 판정 · 음표별 성공률 · 최근 판정 추이) 사이 24, 소제목(component-title) → 내용 8 (2026-09-18) */
+/* 판정 분석 — 소구역(요약 · 판정 · 음표별 성공률 · 최근 판정 추이) 사이 · 소제목(component-title) → 내용 모두 상자 안 세로 12 */
 .noslog-ui .nl-analysis-content {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
+    gap: var(--nl-space-group);
 }
 .noslog-ui .nl-analysis-content .nl-detail-columns {
-    gap: var(--nl-spacing-24);
-}
-.noslog-ui .nl-analysis-content .nl-detail-panel {
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-space-group);
 }
 .noslog-ui .nl-analysis-values dd {
     display: flex;
@@ -387,10 +384,10 @@
     align-items: flex-start;
     gap: var(--nl-spacing-24);
 }
-/* 최근 플레이 = 카드 안 선 목록(카드 안쪽 16, 줄 올림 면은 안쪽 4 까지) */
+/* 최근 플레이 = 카드 안 선 목록(카드 안쪽 20, 줄 올림 면은 안쪽 8 까지) */
 .noslog-ui .nl-recent-plays {
     list-style: none;
-    padding: 0 var(--nl-spacing-16);
+    padding: 0 var(--nl-box-padding);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
@@ -435,7 +432,7 @@
 .noslog-ui .nl-recent-play__rank {
     width: var(--nl-icon-small);
 }
-/* 펼친 내용 = 보조 펼침처럼 위 8 · 아래 8, 들여쓰기는 줄 글자선(카드 안쪽 16)에 맞춤 · 카드 면 위에 면을 겹치지 않음 */
+/* 펼친 내용 = 보조 펼침처럼 위 8 · 아래 8, 들여쓰기는 줄 글자선(카드 안쪽 20)에 맞춤 · 카드 면 위에 면을 겹치지 않음 */
 .noslog-ui .nl-recent-play__details {
     padding-block: var(--nl-spacing-8);
 }
@@ -445,19 +442,19 @@
         grid-template-columns:
             calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
             minmax(0, 1fr);
-        gap: var(--nl-spacing-16);
+        gap: var(--nl-space-column);
         align-items: start;
     }
     /* 왼쪽 열 머리 카드 — 자켓은 열 폭 정사각, 제목 아래, 난이도는 세로 세그먼트 · 띠는 세로 목록(공용 변형), 위 24 에 고정(움직임 아님) */
     .noslog-ui .nl-music-entity {
         position: sticky;
         top: var(--nl-spacing-24);
-        gap: var(--nl-spacing-12);
+        gap: var(--nl-space-group);
     }
     .noslog-ui .nl-music-entity__identity {
         flex-direction: column;
         align-items: stretch;
-        gap: var(--nl-spacing-12);
+        gap: var(--nl-space-group);
     }
     .noslog-ui .nl-music-entity__identity > .nl-jacket {
         width: 100%;
@@ -467,12 +464,12 @@
     .noslog-ui .nl-music-entity__copy {
         min-height: 0;
     }
-    /* 개요 = 두 열(왼쪽 패턴 경향 · 오른쪽 내 기록 → 채보 정보 → 이력), 열 사이 16 · 구역 사이는 구역 간격. 내 기록 탭은 한 열 */
+    /* 개요 = 두 열(왼쪽 패턴 경향 · 오른쪽 내 기록 → 채보 정보 → 이력), 열 사이 24 · 구역 사이 40. 내 기록 탭은 한 열 */
     .noslog-ui .nl-overview {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
-        gap: var(--nl-section-gap) var(--nl-spacing-16);
+        gap: var(--nl-space-section) var(--nl-space-column);
     }
     .noslog-ui .nl-overview > :first-child {
         grid-row: span 3;
