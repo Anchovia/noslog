@@ -105,8 +105,10 @@
     height: auto;
     opacity: 1;
 }
-/* 판의 위아래 여백 · 경계도 0 에서 펼쳐 닫힌 판이 자리를 남기지 않게 한다 */
+/* 판의 위아래 여백 · 경계도 0 에서 펼쳐 닫힌 판이 자리를 남기지 않게 한다.
+   세로 flex 줄 안의 판은 최소 높이가 내용 높이(min-height: auto)라 높이가 줄지 못하므로 0 으로 푼다 */
 .noslog-ui .nl-disclosure-panel {
+    min-height: 0;
     overflow: clip;
     transition:
         height var(--nl-motion-duration-d6) var(--nl-ease-easing),

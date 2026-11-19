@@ -19,8 +19,10 @@
     animation: nl-progress-run var(--nl-motion-duration-progress)
         var(--nl-ease-progress-run) forwards;
 }
+/* 막대 기본 불투명이 0 이라 사라짐 움직임이 1 에서 시작하도록 끝 단계에서 1 을 다시 준다 */
 .noslog-ui .nl-progress[data-phase="done"] .nl-progress__bar {
     width: 100%;
+    opacity: 1;
     animation: nl-fade-out var(--nl-motion-duration-progress-out)
         var(--nl-ease-progress-out) forwards;
 }
