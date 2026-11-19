@@ -21,12 +21,12 @@
     gap: var(--nl-spacing-8);
     margin-inline-start: auto;
 }
-/* 정보 상자 = Spectrum 2 secondary 카드(누르지 않는 묶음) — layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 12 16, 줄 사이 8 */
+/* 정보 상자 = Spectrum 2 secondary 카드(누르지 않는 묶음) — layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 = 상자 안쪽, 줄 사이 8 */
 .noslog-ui .nl-chart-viewer__info {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
     box-shadow: var(--nl-card-shadow);
@@ -647,7 +647,7 @@
    재생 · 시각 · 전체 악보 · 설정 · 전체화면만(처음으로는 막대 · ← 로, 속도는 설정 창에서) */
 @media (max-width: 671px) {
     .noslog-ui .nl-chart-viewer__stage[data-view="falling"] {
-        margin-inline: calc(-1 * var(--nl-layout-margin));
+        margin-inline: calc(-1 * var(--nl-page-margin));
     }
     .noslog-ui .nl-chart-viewer__stage[data-view="falling"] .nl-chart-stage {
         border-radius: 0;

@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-inline: var(--nl-spacing-16);
+    padding-inline: var(--nl-page-margin);
 }
 .noslog-ui.nl-auth--onboarding .nl-auth-main {
     padding-block: var(--nl-spacing-48) var(--nl-spacing-24);
@@ -51,7 +51,7 @@
     flex-direction: column;
     align-items: center;
     gap: var(--nl-spacing-12);
-    padding: 0 var(--nl-spacing-16) var(--nl-spacing-24);
+    padding: 0 var(--nl-page-margin) var(--nl-spacing-24);
     text-align: center;
 }
 .noslog-ui .nl-auth-account {

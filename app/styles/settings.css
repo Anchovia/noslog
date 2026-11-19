@@ -1,5 +1,5 @@
 .noslog-ui .nl-settings {
-    padding-bottom: var(--nl-spacing-48);
+    padding-bottom: var(--nl-page-bottom);
 }
 .noslog-ui .nl-settings__category {
     display: flex;
@@ -114,13 +114,13 @@
     flex-direction: column;
     gap: var(--nl-spacing-16);
 }
-/* 회원 탈퇴 창(2026-09-26 폼 창) — 지워지는 것 = 면 상자(안쪽 16 · 소제목 metadata →8→ 이름 · 값 줄 사이 8),
+/* 회원 탈퇴 창(2026-09-26 폼 창) — 지워지는 것 = 면 상자(안쪽 20 · 소제목 metadata →8→ 이름 · 값 줄 사이 8),
    1단계 = 다시 인증 버튼 + 한 줄 안내 */
 .noslog-ui .nl-account-consequences {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-16);
+    padding: var(--nl-box-padding);
     /* 창 면(surface/elevated) 위에 놓인 판이라 한 단계 밝은 면 */
     background: var(--nl-surface-control);
     border-radius: var(--nl-radius-control);
@@ -153,8 +153,10 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
-/* 페이지 제목 → 첫 내용(설정 목록 · 분류 상세) 16 — 컨테이너 간격 24 에서 당긴다(상세 쪽은 2026-10-01 규칙 맞춤) */
-.noslog-ui .nl-settings__overview-heading,
+/* 페이지 제목 → 첫 내용(설정 목록 · 분류 상세) 16 — 개요 제목은 컨테이너 간격(구역 사이), 상세 제목은 상세 간격 24 에서 당긴다 */
+.noslog-ui .nl-settings__overview-heading {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-space-section));
+}
 .noslog-ui .nl-settings__detail > .nl-page-heading {
     margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
 }
@@ -178,7 +180,7 @@
         grid-template-columns:
             calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
             minmax(0, var(--nl-container-reading));
-        gap: var(--nl-spacing-16);
+        gap: var(--nl-space-column);
         align-items: start;
     }
     .noslog-ui .nl-settings__overview-heading,

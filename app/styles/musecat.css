@@ -9,9 +9,9 @@
 .noslog-ui .nl-musecat-head {
     gap: var(--nl-spacing-8);
 }
-/* 뒤로 → 이름 24(다른 상세 화면과 같음) · 머리 글줄 끝 → 사진 줄 16(설명 끝 → 첫 내용) */
+/* 뒤로 → 이름 = 경로 → 쪽 제목(다른 상세 화면과 같음) · 머리 글줄 끝 → 사진 줄 16(설명 끝 → 첫 내용) */
 .noslog-ui .nl-musecat-head > .nl-back-link {
-    margin-bottom: calc(var(--nl-spacing-24) - var(--nl-spacing-8));
+    margin-bottom: calc(var(--nl-space-crumb-title) - var(--nl-spacing-8));
 }
 .noslog-ui .nl-musecat-head > .nl-arcade-photos {
     margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-8));
@@ -19,7 +19,7 @@
 .noslog-ui .nl-musecat-section {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-title-gap);
+    gap: var(--nl-space-group);
     min-width: 0;
 }
 .noslog-ui .nl-musecat-rule {
@@ -170,7 +170,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     margin-top: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
@@ -332,8 +332,8 @@
 .noslog-ui .nl-musecat-float {
     position: absolute;
     top: var(--nl-spacing-12);
-    right: var(--nl-layout-margin);
-    left: var(--nl-layout-margin);
+    right: var(--nl-page-margin);
+    left: var(--nl-page-margin);
     z-index: calc(var(--nl-layer-above) + 1);
 }
 /* 목록 위 「◎ 위치 ○○」 줄(2026-10-22 사용자 — 카카오맵 목록 그대로) — 조준선 16 · 「위치」 굵게 정보 파랑(카카오 파랑 자리, 떠 있는 면 위 4.54) · 기준 위치 기본 글자, 넘치면 말줄임 */
@@ -431,8 +431,8 @@
             var(--nl-overlay-shadow);
     }
     .noslog-ui .nl-musecat-arcades .nl-arcades__sheet-head {
-        gap: var(--nl-spacing-12);
-        padding: var(--nl-spacing-16);
+        gap: var(--nl-space-group);
+        padding: var(--nl-box-padding);
         box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
             var(--nl-border-divider);
     }
@@ -448,9 +448,9 @@
         .nl-arcades__sheet-body
         > :not(.nl-musecat-section),
     .noslog-ui .nl-musecat-arcades .nl-musecat-section > .nl-pagination {
-        padding-inline: var(--nl-spacing-16);
+        padding-inline: var(--nl-box-padding);
     }
     .noslog-ui .nl-musecat-arcades .nl-musecat-result {
-        padding-inline: var(--nl-spacing-16);
+        padding-inline: var(--nl-box-padding);
     }
 }

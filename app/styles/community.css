@@ -1,7 +1,7 @@
 .noslog-ui .nl-community-columns {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
     min-width: 0;
 }
 /* 구역 제목 → 내용 12 (간격 결정 2026-09-15) · 구역 사이는 구역 간격 토큰(2026-10-01 D1) */
@@ -9,17 +9,17 @@
     min-width: 0;
 }
 .noslog-ui .nl-community-votes > .nl-disclosure__body > .nl-heading-row {
-    margin-bottom: var(--nl-spacing-8);
+    margin-bottom: var(--nl-space-group);
 }
 .noslog-ui .nl-tier-history {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-box-gap);
 }
-/* 날짜 묶음 하나 = 카드 하나(공용 펼침 card · 요약 줄 컨트롤 높이 · 안쪽 16), 카드 사이 8.
+/* 날짜 묶음 하나 = 카드 하나(공용 펼침 card · 요약 줄 컨트롤 높이 · 안쪽 = 상자 안쪽), 카드 사이 = 열 안 상자 사이.
    구역 제목 → 날짜 → 항목이 상자로 갈린다 — 들여쓰기 대신 컨테이너 (2026-09-18 사용자 결정 C1) */
 .noslog-ui .nl-tier-history__day > .nl-disclosure__body {
-    padding: var(--nl-spacing-8) var(--nl-spacing-16) var(--nl-spacing-16);
+    padding: var(--nl-spacing-8) var(--nl-box-padding) var(--nl-box-padding);
 }
 .noslog-ui .nl-tier-history li {
     display: flex;
@@ -31,12 +31,12 @@
 .noslog-ui .nl-tier-history li + li {
     border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
-/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 좌우 16) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px 줄 선(border/row).
+/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 좌우 = 상자 안쪽) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px 줄 선(border/row).
    여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
 .noslog-ui .nl-vote-list {
     display: flex;
     flex-direction: column;
-    padding-inline: var(--nl-spacing-16);
+    padding-inline: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-surface);
     box-shadow: var(--nl-card-shadow);
@@ -154,7 +154,7 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     max-width: 280px;
-    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
     box-shadow:
@@ -210,7 +210,7 @@
     min-width: 0;
 }
 .noslog-ui .nl-opinions > .nl-disclosure__body > .nl-heading-row {
-    margin-bottom: var(--nl-spacing-8);
+    margin-bottom: var(--nl-space-group);
 }
 /* 의견 목록 — 상자도 구분선도 없이 간격 16 으로만 가른다(2026-09-16 L2 · 09-18 O1).
    형식이 반복되는 목록에는 구분선을 쓰지 않는다(Material 3) · 실측한 YouTube 댓글도 배경 · 테두리 없이 간격 16 */
@@ -313,8 +313,8 @@
     .noslog-ui .nl-music-detail .nl-community-columns {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        /* 열 사이 16 = 개요 두 열과 같음 (2026-09-18 사용자 결정) · 행 사이는 구역 간격 */
-        gap: var(--nl-section-gap) var(--nl-spacing-16);
+        /* 열 사이 = 본문 안 두 열 · 행 사이는 구역 사이 */
+        gap: var(--nl-space-section) var(--nl-space-column);
         align-items: start;
     }
 }

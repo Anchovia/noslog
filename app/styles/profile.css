@@ -266,19 +266,19 @@
     height: var(--nl-profile-avatar-size);
 }
 .noslog-ui .nl-profile {
-    gap: var(--nl-section-gap);
-    /* 위 = 헤더 → 첫 요소 24(다른 페이지와 같다) · 아래 = 페이지 끝 48 */
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    gap: var(--nl-space-section);
+    /* 위 = 머리 띠 → 첫 요소 · 아래 = 쪽 아래 끝 */
+    padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
 }
-/* 머리 →32→ 탭 →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
+/* 머리 →구역 사이→ 탭 →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
 .noslog-ui .nl-profile > .nl-tabs + * {
-    margin-top: calc(var(--nl-spacing-24) - var(--nl-section-gap));
+    margin-top: calc(var(--nl-spacing-24) - var(--nl-space-section));
 }
-/* 개요 탭 — 구역 사이 = 구역 간격 토큰(모든 폭 32). 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
+/* 개요 탭 — 구역 사이 = 구역 간격 토큰(모든 폭 40). 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
 .noslog-ui .nl-profile-body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
     min-width: 0;
 }
 .noslog-ui
@@ -322,7 +322,7 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
-        gap: var(--nl-section-gap) var(--nl-spacing-16);
+        gap: var(--nl-space-section) var(--nl-space-column);
         order: 4;
     }
     /* 폰 순서(order)는 672 이상 옆 열 안에서 풀어 코드 순서(고정 기록 → 레벨별 달성 → 업적 → 기여)대로 */
@@ -343,7 +343,7 @@
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         align-items: start;
-        column-gap: var(--nl-spacing-16);
+        column-gap: var(--nl-space-column);
     }
     .noslog-ui
         .nl-profile-body:not(.nl-profile-body--single)
@@ -352,7 +352,7 @@
         flex-direction: column;
         /* 태블릿 격자의 align-items: start 를 되돌린다 — 크기 컨테이너인 구역이 폭 0 으로 줄지 않게 */
         align-items: stretch;
-        gap: var(--nl-section-gap);
+        gap: var(--nl-space-section);
         min-width: 0;
     }
     .noslog-ui .nl-profile-side .nl-profile-levels {
@@ -363,7 +363,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--nl-section-title-gap);
+    gap: var(--nl-space-group);
     container: profile-section / inline-size;
 }
 .noslog-ui .nl-profile-section__header {
@@ -703,9 +703,9 @@
     align-items: center;
     gap: var(--nl-spacing-8);
 }
-/* 판정 요약 — 누적 막대 →8→ 판정 줄(한 묶음). 구역 안 묶음 사이라 폭에 따라 바뀌는 제목 간격을 빼고 8 로 고정 */
+/* 판정 요약 — 누적 막대 →8→ 판정 줄(한 묶음이라 상자 안 세로 간격에서 당긴다) */
 .noslog-ui .nl-profile-judgement .nl-stacked-bar + .nl-profile-judgements {
-    margin-top: calc(var(--nl-spacing-8) - var(--nl-section-title-gap));
+    margin-top: calc(var(--nl-spacing-8) - var(--nl-space-group));
 }
 .noslog-ui .nl-profile-judgements dt {
     flex: 1;
@@ -744,15 +744,8 @@
 .noslog-ui .nl-profile-progress__content {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-group);
     min-width: 0;
-}
-.noslog-ui .nl-profile-progress__header {
-    gap: var(--nl-spacing-12);
-}
-/* 조작부 →16→ 그래프는 구역 안 묶음 사이라 모든 폭 16(넓은 폭은 제목 줄과 조작부가 한 줄이라 제목 → 그래프도 16) */
-.noslog-ui .nl-profile-section.nl-profile-progress {
-    gap: var(--nl-spacing-16);
 }
 /* 조작부(2026-09-26 D3) = 지표 세그먼트 M + 기간 CompactSelect M, 폰 · 태블릿은 세그먼트가 남는 폭을 채움 */
 .noslog-ui .nl-profile-progress__controls {
@@ -813,10 +806,6 @@
     overflow: hidden;
     list-style: none;
 }
-/* 육각 줄 →12→ 「최근 달성」 줄 — 구역 안 묶음 사이라 폭에 따라 바뀌는 제목 간격을 빼고 12 로 고정 */
-.noslog-ui .nl-profile-achievements__strip + .nl-profile-achievements__recent {
-    margin-top: calc(var(--nl-spacing-12) - var(--nl-section-title-gap));
-}
 /* 더 있음 「⋯」(2026-09-26 A1) — 육각 칸 크기 자리에 아이콘 20, 누르면 업적 탭.
    Spectrum 2 ActionButton quiet — 면 없음 → 올림 · 키 포커스 · 누름 control-hover 면 + 밝은 아이콘 */
 .noslog-ui .nl-profile-achievements__more a {
@@ -855,7 +844,7 @@
 .noslog-ui .nl-profile-side {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
     min-width: 0;
 }
 .noslog-ui .nl-profile-side:empty {
@@ -922,9 +911,9 @@
 .noslog-ui .nl-profile-section .nl-segments__item {
     white-space: nowrap;
 }
-/* 「기록」 탭(2026-09-25 2단계) — 세그먼트 M | 고스트 정렬 한 줄(모든 폭, 2026-09-26 R1) →16→ 표. 검색 · 필터 없음(2026-09-26) */
+/* 「기록」 탭(2026-09-25 2단계) — 세그먼트 M | 고스트 정렬 한 줄(모든 폭, 2026-09-26 R1) →12→ 표. 검색 · 필터 없음(2026-09-26) */
 .noslog-ui .nl-profile-records {
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-group);
 }
 .noslog-ui .nl-profile-records__toolbar {
     display: flex;
@@ -935,13 +924,7 @@
     min-width: 0;
 }
 
-/* 레벨별 달성 — 제목 →구역 제목 간격→ (통계 탭: 난이도 세그먼트 →12→) 한 막대 →12→ 펼치기 →12→ 범례. 제목 아래 묶음 사이는 모든 폭 12 */
-.noslog-ui .nl-profile-section.nl-profile-levels {
-    gap: var(--nl-spacing-12);
-}
-.noslog-ui .nl-profile-levels > .nl-heading-row {
-    margin-bottom: calc(var(--nl-section-title-gap) - var(--nl-spacing-12));
-}
+/* 레벨별 달성 — 제목 →12→ (통계 탭: 난이도 세그먼트 →12→) 한 막대 →12→ 펼치기 →12→ 범례(구역 기본 간격 그대로) */
 .noslog-ui .nl-profile-levels__difficulty {
     align-self: stretch;
 }
@@ -1022,7 +1005,7 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "levels" "progress" "judgement" "ranks";
     align-items: start;
-    gap: var(--nl-section-gap) var(--nl-spacing-16);
+    gap: var(--nl-space-section) var(--nl-space-column);
     min-width: 0;
 }
 .noslog-ui .nl-profile-stats > .nl-profile-progress {
@@ -1055,7 +1038,7 @@
     }
 }
 
-/* 「활동」 탭 — 제목 →구역 제목 간격→ 요약 띠 →16→ 달력 →8→ 안내 · 범례 →구역 사이→ 최근 플레이 */
+/* 「활동」 탭 — 제목 →12→ 요약 띠 →12→ 달력 →8→ 안내 · 범례 →구역 사이→ 최근 플레이 */
 /* 칸 16 · 사이 4 · 모서리 4(small). 한 주 20 = 폰 약 17주 · 태블릿 약 36주 · 넓은 화면 53주 */
 .noslog-ui .nl-profile-calendar {
     --nl-profile-calendar-cell: var(--nl-spacing-16);
@@ -1065,8 +1048,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
-    /* 수치 띠 →16→ 달력 — 구역 안 묶음 사이라 폭에 따라 바뀌는 제목 간격을 빼고 16 으로 고정 */
-    margin-top: calc(var(--nl-spacing-16) - var(--nl-section-title-gap));
 }
 .noslog-ui .nl-profile-calendar__scroller {
     overflow-x: auto;
