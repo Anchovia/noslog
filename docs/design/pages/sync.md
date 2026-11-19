@@ -16,8 +16,8 @@
 | 2    | 2단계 공식 사이트 로그인 |
 | 3    | 3단계 북마클릿 실행      |
 
-- 단계 하나는 누르지 않는 묶음 상자다. 면 `surface/surface` · 둘레 없음 · 그림자 `--nl-card-shadow` · 모서리 `radius/large` · 안쪽 16(1056 이상 24)이다. 카드 사이는 16.
-- 672 이상에서는 번호 원 칸 24 →16→ 내용 두 칸이다. 672 미만에서는 번호 원이 카드 왼쪽 위(안쪽 16)에 붙고, 단계 제목이 원 24 + 12 만큼 들여 쓴다.
+- 단계 하나는 누르지 않는 묶음 상자다. 면 `surface/surface` · 둘레 없음 · 그림자 `--nl-card-shadow` · 모서리 `radius/large` · 안쪽 20 이다. 카드 사이는 16.
+- 672 이상에서는 번호 원 칸 24 →16→ 내용 두 칸이다. 672 미만에서는 번호 원이 카드 왼쪽 위(안쪽 20)에 붙고, 단계 제목이 원 24 + 12 만큼 들여 쓴다.
 - 단계마다 번호 원 24 를 단다. 면은 `primary/default`, 숫자는 `emphasis-label` · `on-primary` 다.
 - 단계 제목 `component-title` →8→ 내용이고, 내용끼리는 16 이다.
 - 단계의 예시 이미지는 펼침 안에 둔다. 예시 이미지 상자는 높이 64–240 · `surface/canvas` 면 · 1px `border/divider` · `radius/control` 이고, 올리면 경계가 `border/ring` 이다. 누르면 큰 창(`size="large"`)으로 연다.
@@ -68,7 +68,7 @@
 | 단계 번호 원       | 24                                                                                  | 동기화 단계. 모든 화면 같음             |
 | 결과 줄            | 위아래 12 · 줄 사이 1px `border/row`                                                | 동기화 결과 수치 · 미리보기 · 기록 목록 |
 | 첫 사용 두 번째 칸 | 위 1px `border/divider` + 24                                                        | 첫 동기화 화면                          |
-| 설치 카드          | 안쪽 16 · 사이 12 · `radius/control` · `surface/canvas` 면 · 1px 점선 `border/ring` | 1단계 설치                              |
+| 설치 카드          | 안쪽 20 · 사이 12 · `radius/control` · `surface/canvas` 면 · 1px 점선 `border/ring` | 1단계 설치                              |
 
 ## 바뀐 기록
 

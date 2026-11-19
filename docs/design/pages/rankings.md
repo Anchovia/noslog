@@ -6,13 +6,13 @@
 
 ## 구성
 
-모든 폭에서 내용 폭 `--nl-container-compact`(640) 가운데 한 열이다. 헤더 →24→ 제목, 맨 아래 →48→ 푸터.
+모든 폭에서 내용 폭 `--nl-container-compact`(640) 가운데 한 열이다. 헤더 →32→ 제목, 맨 아래 →56→ 푸터.
 
 | 순서 | 내용                                                                                                   |
 | ---- | ------------------------------------------------------------------------------------------------------ |
 | 1    | 제목 「랭킹」 `page-title` →16→                                                                        |
-| 2    | 모드 [세그먼트](../components/segmented-control.md) Basic · Recital →24→                               |
-| 3    | 지표 전환 `MetricSwitch`(공식 Grd · NosLog 레이팅) \| 오른쪽 지역 `CompactSelect` 기본(면 없음) →24→   |
+| 2    | 모드 [세그먼트](../components/segmented-control.md) Basic · Recital →12→                               |
+| 3    | 지표 전환 `MetricSwitch`(공식 Grd · NosLog 레이팅) \| 오른쪽 지역 `CompactSelect` 기본(면 없음) →12→   |
 | 4    | 결과 구역 — 내 순위 한 줄(있을 때) →16→ 순위표 →24→                                                    |
 | 5    | [쪽 번호](../components/pagination.md). 한 쪽뿐이어도 보인다(`showSingle`). 기록이 0명이면 두지 않는다 |
 

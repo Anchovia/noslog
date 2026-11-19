@@ -12,8 +12,8 @@
 | 구역           | 48 · 제목은 자리대로(페이지 구역 `nl-section-title`, 상자 안 `nl-component-title`) | 16       |
 | 보조 `compact` | 컨트롤 높이 · `nl-control`                                                         | 8        |
 
-- 혼자 떠 있는 상자는 `card` 다. 누르지 않는 묶음 상자와 같은 secondary 카드([면 카드](./surface-card.md))이고, 요약 줄 좌우 안쪽 16 · 올림은 카드 전체 `interaction/row` 다.
-- 접히는 구역끼리도 다른 구역과 같이 `--nl-section-gap` 으로 띄운다. 펼침 사이에 구분선을 넣지 않는다.
+- 혼자 떠 있는 상자는 `card` 다. 누르지 않는 묶음 상자와 같은 secondary 카드([면 카드](./surface-card.md))이고, 요약 줄 좌우 안쪽 20 · 올림은 카드 전체 `interaction/row` 다.
+- 접히는 구역끼리도 다른 구역과 같이 `--nl-space-section` 으로 띄운다. 펼침 사이에 구분선을 넣지 않는다.
 - 구역 제목 줄이 펼침 줄이 되면 그 줄에 버튼 · 링크를 둘 수 없다(누르면 접힌다). 저장 상태 · 로그인 링크 같은 것은 펼친 내용 첫 줄 오른쪽 끝으로 내린다.
 - 요약(`meta`)이 길면 meta 가 말줄임으로 줄고 제목은 줄지 않는다.
 - 구역 이름표(`aria-labelledby`)와 저장 뒤 포커스 되돌리기는 `titleId` · `titleRef` 로 지킨다.
