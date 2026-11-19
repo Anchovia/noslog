@@ -58,7 +58,7 @@
 }
 .noslog-ui .nl-disclosure--card > summary {
     margin-inline: 0;
-    padding-inline: var(--nl-spacing-16);
+    padding-inline: var(--nl-box-padding);
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure--card > summary:hover {
@@ -75,8 +75,8 @@
     }
 }
 .noslog-ui .nl-disclosure--card > .nl-disclosure__body {
-    padding-inline: var(--nl-spacing-16);
-    padding-bottom: var(--nl-spacing-16);
+    padding-inline: var(--nl-box-padding);
+    padding-bottom: var(--nl-box-padding);
 }
 /* 화살표 회전 — 펼침 부품과 목록 줄(raw details · aria-expanded 버튼) 공통 */
 .noslog-ui details[open] > summary .nl-disclosure__chevron,

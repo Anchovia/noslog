@@ -4,10 +4,10 @@
 .noslog-ui .nl-stack {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-space-box-gap);
     min-width: 0;
 }
-/* 세로 쌓기 간격 — nl-stack(16)에 함께 붙인다 */
+/* 세로 쌓기 간격 — nl-stack(열 안 상자 사이 16)에 함께 붙인다. 역할 이름을 먼저 쓴다 */
 .noslog-ui .nl-stack--4 {
     gap: var(--nl-spacing-4);
 }
@@ -24,7 +24,7 @@
     gap: var(--nl-spacing-32);
 }
 .noslog-ui .nl-stack--section {
-    gap: var(--nl-section-gap);
+    gap: var(--nl-space-section);
 }
 .noslog-ui .nl-inline {
     display: flex;

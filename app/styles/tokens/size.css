@@ -3,20 +3,32 @@
     --nl-spacing-0: 0px;
     --nl-spacing-2: 2px;
     --nl-spacing-4: 4px;
+    --nl-spacing-6: 6px;
     --nl-spacing-8: 8px;
     --nl-spacing-12: 12px;
     --nl-spacing-16: 16px;
+    --nl-spacing-20: 20px;
     --nl-spacing-24: 24px;
     --nl-spacing-32: 32px;
+    --nl-spacing-40: 40px;
+    --nl-spacing-56: 56px;
+    /* 48 · 64 는 간격 눈금 밖 — 부품 크기(높이 · 아바타)에만 쓴다 */
     --nl-spacing-48: 48px;
     --nl-spacing-64: 64px;
-    /* 구역 간격 — 구역 사이 32(2026-10-25 체계 묶음) · 구역 제목 → 내용 1055 이하 12, 1056 이상 16(아래 미디어 쿼리) */
-    --nl-section-gap: var(--nl-spacing-32);
-    --nl-section-title-gap: var(--nl-spacing-12);
-    --nl-grid-gutter-compact: 12px;
+    /* 간격 역할 — 모든 폭 같은 값, 쪽 좌우 여백만 폰(672 미만) 16 */
+    --nl-space-section: var(--nl-spacing-40);
+    --nl-space-column: var(--nl-spacing-24);
+    --nl-space-paragraph: var(--nl-spacing-16);
+    --nl-page-margin: var(--nl-spacing-16);
+    --nl-space-header-title: var(--nl-spacing-32);
+    --nl-space-crumb-title: var(--nl-spacing-24);
+    --nl-space-box-gap: var(--nl-spacing-16);
+    --nl-space-grid-gap: var(--nl-spacing-12);
+    --nl-box-padding: var(--nl-spacing-20);
+    --nl-space-group: var(--nl-spacing-12);
+    --nl-page-bottom: var(--nl-spacing-56);
     --nl-grid-gutter-wide: 16px;
-    --nl-grid-margin-compact: 16px;
-    --nl-grid-margin-intermediate: 24px;
+    --nl-container-page: 1200px;
     --nl-container-reading: 768px;
     /* 좁은 그릇(2026-10-01) — 좁은 열 358(인증 · 미리보기 판) · 가운데 열 640(홈 검색 · 랭킹 · 설정 오른쪽 열) */
     --nl-container-narrow: 358px;
@@ -44,10 +56,14 @@ html:has(.noslog-ui) {
         --nl-header-height: 64px;
     }
 }
+@media (min-width: 672px) {
+    .noslog-ui {
+        --nl-page-margin: var(--nl-spacing-24);
+    }
+}
 /* 넓은 폭(1056 이상) — 컨트롤 높이를 낮춘다(헤더 높이는 위 규칙). 좁은 · 중간 폭은 위 값 그대로 */
 @media (min-width: 1056px) {
     .noslog-ui {
-        --nl-section-title-gap: var(--nl-spacing-16);
         /* 컨트롤 높이 — 데스크톱 집계 1위 */
         --nl-control-height: 32px;
         --nl-control-height-compact: 24px;

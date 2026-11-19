@@ -3,9 +3,7 @@
     animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
 }
 .noslog-ui {
-    /* 본문 최대 폭 1200 — 레이아웃 결정 2026-09-15 (사이트 16곳 중 9곳이 1200–1280) */
-    --nl-layout-max: 1200px;
-    --nl-layout-margin: var(--nl-grid-margin-compact);
+    --nl-layout-margin: var(--nl-spacing-16);
 }
 .noslog-ui.nl-app {
     display: flex;
@@ -18,7 +16,7 @@
 .noslog-ui .nl-header__interaction,
 .noslog-ui .nl-footer__content {
     width: 100%;
-    max-width: var(--nl-layout-max);
+    max-width: var(--nl-container-page);
     margin-inline: auto;
 }
 .noslog-ui .nl-main {
@@ -29,27 +27,33 @@
 .noslog-ui .nl-main__content {
     display: flow-root;
     min-width: 0;
-    padding-inline: var(--nl-layout-margin);
+    padding-inline: var(--nl-page-margin);
 }
 .noslog-ui .nl-container {
     display: flex;
     width: 100%;
     margin-inline: auto;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
-    /* 페이지 끝 48 — 마지막 구역에서 푸터 선까지, 구역 사이(32)보다 한 단계 넓게(2026-10-01 E1) */
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    gap: var(--nl-space-section);
+    padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
 }
 .noslog-ui .nl-container--standard {
-    max-width: var(--nl-layout-max);
+    max-width: var(--nl-container-page);
 }
 .noslog-ui .nl-container--reading {
     max-width: var(--nl-container-reading);
 }
-/* 페이지 제목(또는 제목 + 설명) → 첫 내용 16 — 컨테이너 기본 간격 24 를 제목 아래에서만 16 으로 (2026-09-15 역할값).
-   페이지가 컨테이너 간격을 32 로 바꾼 곳(동기화 · 검정 · 개인정보)은 그 파일에서 같은 식으로 맞춘다 */
+/* 페이지 제목(또는 제목 + 설명) → 첫 내용 16 — 컨테이너 간격(구역 사이)을 제목 아래에서만 16 으로 */
 .noslog-ui .nl-container > :is(.nl-page-title, .nl-page-heading) {
-    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-space-section));
+}
+/* 뒤로 링크 글자 → 쪽 제목 24 — 링크 칸(44)이 글줄보다 높아 남는 아래 몫을 뺀다 */
+.noslog-ui .nl-container > .nl-back-link {
+    margin-bottom: calc(
+        var(--nl-space-crumb-title) -
+            (var(--nl-back-link-height) - var(--nl-type-line-height-ui)) / 2 -
+            var(--nl-space-section)
+    );
 }
 .noslog-ui .nl-page-heading {
     display: flex;
@@ -108,17 +112,12 @@ html:has(.noslog-ui .nl-header) {
     align-items: center;
     justify-content: space-between;
     height: var(--nl-header-height);
-    padding: var(--nl-spacing-8) var(--nl-layout-margin);
+    padding: var(--nl-spacing-8) var(--nl-page-margin);
     background: var(--nl-surface-surface);
 }
 /* 채보 에디터 옛 셸 헤더 — 좌우 여백 · 1056 이상 늘 보임은 셸 헤더와 같은 폭 단계 */
 .noslog-ui .nl-editor-header {
-    padding-inline: var(--nl-grid-margin-compact);
-}
-@media (min-width: 672px) {
-    .noslog-ui .nl-editor-header {
-        padding-inline: var(--nl-grid-margin-intermediate);
-    }
+    padding-inline: var(--nl-page-margin);
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-editor-header {
@@ -281,7 +280,7 @@ html:has(.noslog-ui .nl-header) {
     flex-direction: column;
     align-items: center;
     gap: var(--nl-spacing-16);
-    padding: var(--nl-spacing-16) var(--nl-layout-margin);
+    padding: var(--nl-spacing-16) var(--nl-page-margin);
 }
 .noslog-ui .nl-footer__links {
     display: flex;
@@ -319,13 +318,6 @@ html:has(.noslog-ui .nl-header) {
     min-width: 0;
     text-align: center;
 }
-@media (min-width: 672px) {
-    .noslog-ui .nl-main,
-    .noslog-ui .nl-header__interaction,
-    .noslog-ui .nl-footer__content {
-        --nl-layout-margin: var(--nl-grid-margin-intermediate);
-    }
-}
 /* 헤더 메뉴 이동 줄 — 1055 이하 48 · 1056 이상 컨트롤 높이 */
 @media (min-width: 1056px) {
     .noslog-ui .nl-destination {
@@ -355,12 +347,9 @@ html:has(.noslog-ui .nl-header) {
     }
 }
 @media (min-width: 672px) {
-    .noslog-ui.nl-recovery-minimal {
-        --nl-layout-margin: var(--nl-grid-margin-intermediate);
-    }
     .noslog-ui .nl-destinations {
         top: calc(var(--nl-header-height) + var(--nl-spacing-8));
-        right: var(--nl-layout-margin);
+        right: var(--nl-page-margin);
         left: auto;
         width: 488px;
         border-radius: var(--nl-radius-large);
