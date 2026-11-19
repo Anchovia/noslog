@@ -458,6 +458,14 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
     await expect(chart.getByRole("tooltip")).toContainText("1.0");
     await page.keyboard.press("End");
     await expect(chart.getByRole("tooltip")).toContainText("14.5");
+    // 대화상자가 커진 채로 나타나는 움직임(1.3 → 1)이 끝난 뒤 크기를 잰다
+    await chart.evaluate((element) =>
+        Promise.all(
+            (element.closest('[role="dialog"]')?.getAnimations() ?? []).map(
+                (animation) => animation.finished
+            )
+        )
+    );
     expect((await chart.boundingBox())!.height).toBeLessThan(500);
     await page.screenshot({
         path: testInfo.outputPath("tier-guide.png"),
