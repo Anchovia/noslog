@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -13,6 +13,7 @@ import {
     isMachinePrompt,
     judgeHandoff,
     judgeKorean,
+    judgeSessionTier,
     lastAssistantText,
     lastTurnState,
     parseTail,
@@ -327,5 +328,81 @@ describe("훅 스크립트", () => {
 
     it("turn-context 는 규칙 파일이 없으면 stderr 로 알리고 exit 1", () => {
         expect(() => turnContext("AGENTS.md", directory)).toThrow(/ENOENT/);
+    });
+});
+
+describe("세션 3층 판정", () => {
+    const delegate =
+        "실측 · 캡처 찍기 · 판 조립 · 게시는 Sonnet 세션을 띄워 맡긴다.";
+
+    it("model 이 있고 손작업 낱말이 없으면 통과", () => {
+        expect(
+            judgeSessionTier({
+                initiation: "user_asked",
+                model: "opus",
+                prompt: "숫자를 대조하고 정리한다",
+            })
+        ).toBeNull();
+        expect(
+            judgeSessionTier({ model: "sonnet", prompt: "캡처를 찍는다" })
+        ).toBeNull();
+    });
+
+    it("model 이 없으면 막는다", () => {
+        expect(
+            judgeSessionTier({ initiation: "user_asked", prompt: "정리" })
+        ).toContain("model 을 적으세요");
+    });
+
+    it("opus 에 손작업 낱말이 있으면 막는다", () => {
+        expect(
+            judgeSessionTier({ model: "opus", prompt: "9개를 다시 게시한다" })
+        ).toContain("Opus 세션에 손작업이 들어 있습니다");
+    });
+
+    it("opus 라도 Sonnet 세션 위임 문장이 있으면 통과", () => {
+        expect(
+            judgeSessionTier({
+                model: "opus",
+                prompt: `대조한다. ${delegate}`,
+            })
+        ).toBeNull();
+    });
+
+    it("proposal_id 만 있는 호출은 통과", () => {
+        expect(judgeSessionTier({ proposal_id: "p1" })).toBeNull();
+    });
+
+    it("offer 는 통과", () => {
+        expect(
+            judgeSessionTier({ initiation: "offer", title: "게시 작업" })
+        ).toBeNull();
+    });
+
+    it("session-tier 스크립트는 막을 때 exit 2 와 stderr, 통과할 때 exit 0", () => {
+        const run = (tool_input: unknown) =>
+            spawnSync("node", [".claude/hooks/session-tier.mjs"], {
+                input: JSON.stringify({
+                    hook_event_name: "PreToolUse",
+                    tool_name: "mcp__ccd_session__start_session",
+                    tool_input,
+                }),
+                encoding: "utf8",
+            });
+        const blocked = run({ initiation: "user_asked", prompt: "정리" });
+        expect(blocked.status).toBe(2);
+        expect(blocked.stderr).toContain("model 을 적으세요");
+        expect(run({ proposal_id: "p1" }).status).toBe(0);
+    });
+
+    it("settings.json 은 start_session 에 session-tier 훅을 건다", () => {
+        const settings = JSON.parse(
+            readFileSync(".claude/settings.json", "utf8")
+        );
+        const entry = settings.hooks.PreToolUse.find(
+            (item: { matcher: string }) =>
+                item.matcher === "mcp__ccd_session__start_session"
+        );
+        expect(entry.hooks[0].command).toMatch(/session-tier\.mjs"$/);
     });
 });

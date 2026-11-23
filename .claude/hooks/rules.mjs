@@ -143,6 +143,29 @@ export function readTail(path, sizes = [256 * 1024, 8 * 1024 * 1024]) {
     }
 }
 
+// 세션 3층 — docs/decisions/2026-11-23-session-tier-hook.md
+export const HAND_WORK_WORDS =
+    /다시 게시|게시|판 조립|판을 만들|캡처|찍|실측|publish/i;
+
+/** start_session 입력을 3층 규칙에 대어 막을 이유, 막지 않으면 null. */
+export function judgeSessionTier(toolInput) {
+    const input = toolInput ?? {};
+    if (input.initiation === "offer") return null;
+    const keys = Object.keys(input).filter((key) => input[key] != null);
+    if (keys.length === 1 && keys[0] === "proposal_id") return null;
+    const model = typeof input.model === "string" ? input.model.trim() : "";
+    if (!model)
+        return "세션 층을 정해 model 을 적으세요. 실측 · 캡처 찍기 · 판 조립 · 게시 = Sonnet, 대조 · 정리 · 검수 = Opus 중간–낮음 (AGENTS.md 3층)";
+    const prompt = typeof input.prompt === "string" ? input.prompt : "";
+    if (
+        /opus/i.test(model) &&
+        HAND_WORK_WORDS.test(prompt) &&
+        !prompt.includes("Sonnet 세션")
+    )
+        return "Opus 세션에 손작업이 들어 있습니다. 손작업은 Sonnet 세션으로 열거나, 지시문에 '실측 · 캡처 찍기 · 판 조립 · 게시는 Sonnet 세션을 띄워 맡긴다' 를 넣으세요 (AGENTS.md 3층)";
+    return null;
+}
+
 export async function readStdinJson() {
     let raw = "";
     for await (const chunk of process.stdin) raw += chunk;
