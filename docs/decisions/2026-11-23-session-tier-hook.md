@@ -12,7 +12,7 @@
 ## 결정
 
 1. `.claude/settings.json` 의 `PreToolUse` 에 matcher `mcp__ccd_session__start_session` 으로 `.claude/hooks/session-tier.mjs` 를 건다.
-2. `proposal_id` 만 있는 호출(이미 만든 제안을 시작)과 `initiation: "offer"` 는 통과시킨다.
+2. `proposal_id` 가 있는 호출(이미 만든 제안을 「New session」 카드로 시작)과 `initiation: "offer"` 는 통과시킨다. `prompt` · `background` 가 함께 와도 같다. 카드에서 사용자가 model 을 고르므로 호출에 넣을 수 없다.
 3. 그 밖의 호출에서 `model` 이 비어 있으면 막는다.
 4. `model` 에 `opus` 가 있고 `prompt` 에 손작업 낱말(게시 · 다시 게시 · 판 조립 · 판을 만들 · 캡처 · 찍 · 실측 · publish)이 있는데 `prompt` 에 「Sonnet 세션」 이 없으면 막는다.
 5. 막을 때는 종료 코드 2 와 한국어 stderr 로 이유를 알린다. 훅이 스스로 실패하면 기존 훅처럼 exit 1 로 세션을 막지 않는다. 판정 함수 `judgeSessionTier` 는 `.claude/hooks/rules.mjs` 에 두고 `tests/rule-enforcement-hooks.test.ts` 가 검사한다.

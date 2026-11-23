@@ -373,6 +373,16 @@ describe("세션 3층 판정", () => {
         expect(judgeSessionTier({ proposal_id: "p1" })).toBeNull();
     });
 
+    it("proposal_id 가 있으면 prompt · background 가 함께 와도 model 없이 통과", () => {
+        expect(
+            judgeSessionTier({
+                proposal_id: "p1",
+                prompt: "9개를 다시 게시한다",
+                background: true,
+            })
+        ).toBeNull();
+    });
+
     it("offer 는 통과", () => {
         expect(
             judgeSessionTier({ initiation: "offer", title: "게시 작업" })

@@ -151,8 +151,7 @@ export const HAND_WORK_WORDS =
 export function judgeSessionTier(toolInput) {
     const input = toolInput ?? {};
     if (input.initiation === "offer") return null;
-    const keys = Object.keys(input).filter((key) => input[key] != null);
-    if (keys.length === 1 && keys[0] === "proposal_id") return null;
+    if (input.proposal_id) return null;
     const model = typeof input.model === "string" ? input.model.trim() : "";
     if (!model)
         return "세션 층을 정해 model 을 적으세요. 실측 · 캡처 찍기 · 판 조립 · 게시 = Sonnet, 대조 · 정리 · 검수 = Opus 중간–낮음 (AGENTS.md 3층)";
