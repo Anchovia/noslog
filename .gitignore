@@ -57,6 +57,7 @@ pnpm-debug.log*
 .claude/*
 !.claude/skills/
 !.claude/hooks/
+!.claude/templates/
 !.claude/settings.json
 
 # Local analysis outputs (keep generated datasets out of Git)

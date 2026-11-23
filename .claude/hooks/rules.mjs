@@ -1,4 +1,14 @@
-import { closeSync, existsSync, fstatSync, openSync, readSync } from "node:fs";
+import {
+    closeSync,
+    existsSync,
+    fstatSync,
+    openSync,
+    readdirSync,
+    readFileSync,
+    readSync,
+} from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 
 // 기준값은 이 리포 세션 기록으로 정했다 — docs/decisions/2026-10-27-rule-enforcement-hooks.md
 export const KOREAN_MIN_RATIO = 0.2;
@@ -163,6 +173,233 @@ export function judgeSessionTier(toolInput) {
     )
         return "Opus 세션에 손작업이 들어 있습니다. 손작업은 Sonnet 세션으로 열거나, 지시문에 '실측 · 캡처 찍기 · 판 조립 · 게시는 Sonnet 세션을 띄워 맡긴다' 를 넣으세요 (AGENTS.md 3층)";
     return null;
+}
+
+// 세션 운영 — docs/decisions/2026-11-23-session-orchestration.md
+export const BRIEF_HEADINGS = [
+    "목적",
+    "출력 형식",
+    "도구와 출처",
+    "범위 경계",
+    "투입 한도",
+];
+
+/** start_session 지시문에 다섯 칸 머리가 모두 있는지. 빠진 칸이 있으면 막을 이유, 없으면 null. */
+export function judgeSessionBrief(toolInput) {
+    const input = toolInput ?? {};
+    if (input.initiation === "offer" || input.proposal_id) return null;
+    const prompt = typeof input.prompt === "string" ? input.prompt : "";
+    const missing = BRIEF_HEADINGS.filter(
+        (heading) => !new RegExp(`^[\\s#>*-]*${heading}\\s*:`, "m").test(prompt)
+    );
+    if (!missing.length) return null;
+    return `지시문에 칸 머리가 빠졌습니다: ${missing.map((h) => `「${h}:」`).join(" ")}. .claude/templates/session-brief.md 양식대로 다섯 칸(목적 · 출력 형식 · 도구와 출처 · 범위 경계 · 투입 한도)을 줄 머리로 적으세요 (AGENTS.md 세션 운영)`;
+}
+
+/** 부른 세션이 조사(Sonnet) 층이면 막을 이유. Sonnet 은 세션을 직접 열지 않고 조사 취합 세션에 인원을 요청한다. */
+export function judgeCallerLayer(toolInput, callerModel) {
+    const input = toolInput ?? {};
+    if (input.initiation === "offer" || input.proposal_id) return null;
+    if (!/sonnet/i.test(callerModel ?? "")) return null;
+    return "조사(Sonnet) 세션은 세션을 직접 열 수 없습니다. 바로 위 조사 취합 세션에 인원 요청을 SendMessage 로 보내세요(조사 취합이 판단해 새 Sonnet 세션을 띄웁니다) (AGENTS.md 세션 운영)";
+}
+
+export function sessionsDir() {
+    return (
+        process.env.CLAUDE_SESSIONS_DIR ??
+        join(
+            homedir(),
+            "Library/Application Support/Claude/claude-code-sessions"
+        )
+    );
+}
+
+export function notesDir() {
+    return (
+        process.env.CLAUDE_NOTES_DIR ??
+        join(homedir(), "Library/Application Support/Claude/side-session-notes")
+    );
+}
+
+/** 데스크톱 앱이 세션마다 두는 메타 파일(local_*.json: sessionId · cliSessionId · model · spawnedFrom)을 모두 읽는다. */
+export function loadSessionMetas(dir = sessionsDir()) {
+    const metas = [];
+    if (!existsSync(dir)) return metas;
+    for (const a of readdirSync(dir)) {
+        const aDir = join(dir, a);
+        let bs = [];
+        try {
+            bs = readdirSync(aDir);
+        } catch {
+            continue;
+        }
+        for (const b of bs) {
+            let files = [];
+            try {
+                files = readdirSync(join(aDir, b));
+            } catch {
+                continue;
+            }
+            for (const file of files) {
+                if (!/^local_.*\.json$/.test(file)) continue;
+                try {
+                    metas.push(
+                        JSON.parse(readFileSync(join(aDir, b, file), "utf8"))
+                    );
+                } catch {
+                    // 쓰는 중인 파일일 수 있다.
+                }
+            }
+        }
+    }
+    return metas;
+}
+
+export function findSelf(metas, cliSessionId) {
+    return metas.find((meta) => meta.cliSessionId === cliSessionId) ?? null;
+}
+
+/** 기록 파일에서 부른 세션의 모델. 마지막 assistant 메시지, 없으면 시작 때 넣는 model 항목. */
+export function transcriptModel(entries) {
+    const last = entries.findLast(isAssistant);
+    if (last?.message?.model) return last.message.model;
+    const first = entries.find(
+        (entry) =>
+            entry?.type === "attachment" && entry.attachment?.type === "model"
+    );
+    return first?.attachment?.identity?.modelId ?? null;
+}
+
+/** SendMessage 가 바로 위 세션(또는 이 세션이 띄운 아래 세션 · 세션이 아닌 서브에이전트)이 아닌 세션으로 가면 막을 이유. */
+export function judgeSendMessage({ to, self, metas, isSubagent = false }) {
+    if (isSubagent || !self) return null;
+    const parent = self.spawnedFrom?.sessionId;
+    if (!parent) return null;
+    const target = typeof to === "string" ? to.trim() : "";
+    if (!target) return null;
+    if (target === parent || target === "parent" || target === "main")
+        return null;
+    const parentMeta = metas.find((meta) => meta.sessionId === parent);
+    const parentNames = [parentMeta?.title, parentMeta?.spawnedFrom?.name];
+    if (parentNames.includes(target)) return null;
+    const isChild = metas.some(
+        (meta) =>
+            meta.spawnedFrom?.sessionId === self.sessionId &&
+            [meta.sessionId, meta.title, meta.spawnedFrom?.name].includes(
+                target
+            )
+    );
+    if (isChild) return null;
+    const isSession = metas.some((meta) =>
+        [meta.sessionId, meta.title, meta.spawnedFrom?.name].includes(target)
+    );
+    if (!isSession) return null;
+    return `이 세션의 바로 위 세션은 ${parent} 입니다. 막힘 · 질문 · 요청은 바로 위 층에만 보내고 층을 건너뛰지 않습니다(조사 → 조사 취합 → master → 사용자). to 를 ${parent} 로 하세요 (AGENTS.md 세션 운영)`;
+}
+
+const ARTIFACT_URL = /claude\.ai\/(?:code\/)?artifact\/([A-Za-z0-9_-]+)/g;
+const VERSION_ID = /\b\d{9,}-[0-9a-f]{3,}\b/g;
+
+export function artifactSlugs(text) {
+    return [
+        ...new Set([...(text ?? "").matchAll(ARTIFACT_URL)].map((m) => m[1])),
+    ];
+}
+
+/** 기록의 도구 결과에서 이 아티팩트의 마지막 version id 와, 이 세션이 직접 게시한 버전인지. */
+export function currentArtifactVersion(entries, slug) {
+    const uses = new Map();
+    let version = null;
+    let published = false;
+    for (const entry of entries) {
+        const content = entry?.message?.content;
+        if (!Array.isArray(content)) continue;
+        for (const block of content) {
+            if (block?.type === "tool_use") {
+                uses.set(block.id, {
+                    name: block.name ?? "",
+                    input: JSON.stringify(block.input ?? {}),
+                });
+            } else if (block?.type === "tool_result") {
+                const use = uses.get(block.tool_use_id);
+                const text = JSON.stringify(block.content ?? "");
+                if (!text.includes(slug) && !use?.input.includes(slug))
+                    continue;
+                const ids = text.match(VERSION_ID);
+                if (!ids) continue;
+                version = ids[ids.length - 1];
+                published =
+                    /publish|edit_version|^Artifact$/.test(use?.name ?? "") &&
+                    /Published|published/.test(text);
+            }
+        }
+    }
+    return { version, published };
+}
+
+/** 공유 폴더 글에서 「review: <아티팩트> version=<id> 검수=<세션> 쓴=<세션>」 줄을 모은다. */
+export function parseReviewRecords(text) {
+    const records = [];
+    for (const line of (text ?? "").split("\n")) {
+        const m = line.match(
+            /^\s*(?:[-*]\s*)?review:\s*(\S+)\s+version=(\S+)\s+검수=(\S+)\s+쓴=(\S+)/
+        );
+        if (m)
+            records.push({
+                target: m[1],
+                version: m[2],
+                reviewer: m[3],
+                writer: m[4],
+            });
+    }
+    return records;
+}
+
+/** 위 층에 올리는 보고에 담긴 아티팩트마다 지금 버전의 검수 기록(검수 ≠ 쓴 세션)이 있는지. 없으면 막을 이유. */
+export function judgeReviewGate({
+    text,
+    entries,
+    records,
+    model,
+    stopHookActive = false,
+}) {
+    if (stopHookActive || /sonnet/i.test(model ?? "")) return null;
+    for (const slug of artifactSlugs(text)) {
+        const { version, published } = currentArtifactVersion(entries, slug);
+        if (!version)
+            return `보고한 아티팩트 ${slug} 의 지금 version id 를 기록에서 찾지 못했습니다. get_artifact 로 version id 를 확인한 뒤 검수 기록과 맞춰 다시 보고하세요 (AGENTS.md 세션 운영)`;
+        if (published) continue;
+        const forVersion = records.filter(
+            (r) => r.version === version && r.target.includes(slug)
+        );
+        if (!forVersion.length)
+            return `아티팩트 ${slug} 의 지금 version id ${version} 에 검수 기록이 없습니다. 쓴 세션과 다른 검수 세션이 공유 폴더에 「review: ${slug} version=${version} 검수=<세션 id> 쓴=<세션 id>」 줄을 남겨야 위 층에 올릴 수 있습니다. 새 버전이 나왔으면 다시 검수해야 합니다 (AGENTS.md 세션 운영)`;
+        if (!forVersion.some((r) => r.reviewer !== r.writer))
+            return `아티팩트 ${slug} 의 검수 기록에서 검수 세션이 쓴 세션과 같습니다. 쓴 세션은 자기 결과를 통과시키지 못합니다. 다른 세션이 검수하게 하세요 (AGENTS.md 세션 운영)`;
+    }
+    return null;
+}
+
+/** 공유 폴더들의 .md · .txt 글을 이어 붙인다. */
+export function readNotes(folders) {
+    let out = "";
+    for (const folder of folders) {
+        let files = [];
+        try {
+            files = readdirSync(folder);
+        } catch {
+            continue;
+        }
+        for (const file of files) {
+            if (!/\.(md|txt)$/.test(file)) continue;
+            try {
+                out += `${readFileSync(join(folder, file), "utf8")}\n`;
+            } catch {
+                // 읽을 수 없는 파일은 건너뛴다.
+            }
+        }
+    }
+    return out;
 }
 
 export async function readStdinJson() {

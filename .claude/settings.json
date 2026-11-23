@@ -62,6 +62,16 @@
                         "timeout": 10
                     }
                 ]
+            },
+            {
+                "matcher": "SendMessage|mcp__ccd_session_mgmt__send_message",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/send-message.mjs\"",
+                        "timeout": 10
+                    }
+                ]
             }
         ],
         "Stop": [
@@ -70,6 +80,11 @@
                     {
                         "type": "command",
                         "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-korean.mjs\"",
+                        "timeout": 10
+                    },
+                    {
+                        "type": "command",
+                        "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/review-gate.mjs\"",
                         "timeout": 10
                     }
                 ]
