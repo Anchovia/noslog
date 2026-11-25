@@ -4,11 +4,11 @@
 
 ## 모양
 
-- 셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록이 한 모양이다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)). 판 = `surface/elevated` · 다크 둘레 1px `border/elevated` + 그림자 · 안쪽 8 · `radius/large`(Spectrum 2 popover · menu). 트리거에서 8 떨어진다.
+- 셀렉트 목록 · 정렬 메뉴 · 액션 메뉴 · 검정 선택 목록이 한 모양이다([기초값 — 떠 있는 창](../foundations.md#떠-있는-창)). 판 = `surface/elevated` · 보더 없음 + 그림자 · 안쪽 8 · `radius/large`(Spectrum 2 popover · menu). 트리거에서 8 떨어진다.
 - 판 둘레는 고대비 모드에서도 남게 실제 `border` 로 그리고, 선 두께만큼 안쪽을 줄여 판 크기는 같다. Radix 가 판에 `outline: none` 을 인라인으로 넣어 `outline` 은 쓰지 않는다.
-- 행 = 컨트롤 높이 · 좌우 안쪽 12 · 모서리 `radius/control` · 글자 14/20 · 400(고른 행 700). 행 사이는 0 이다(Spectrum 2 Menu). 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`, 항목 설명 글자는 `content/default` 다. 비활성 행 글자는 `content/disabled`.
+- 행 = 컨트롤 높이 · 좌우 안쪽 12 · 모서리 `radius/control` · 글자 14/20 · 400(고른 행 700). 행 사이는 0 이다(Spectrum 2 Menu). 올림 · 누름 · 키 포커스에 면 `interaction/row` · 글자 `content/strong`, 항목 설명 글자는 `content/default` 다. 비활성 행 글자는 `content/disabled`.
 - 되돌릴 수 없는 항목은 글자 `feedback/destructive` 이고, 올려도 면만 바뀌고 글자는 빨강 그대로다.
-- 고른 행 = 면 `surface/control` + 700 + 오른쪽 체크 16(Apple Music 사이드바). 올리면 그 면 위에 올림 면을 겹친다. Spectrum 의 파랑 체크는 쓰지 않는다.
+- 고른 행 = 반전 면 `primary/default` · 글자 `primary/on-primary` + 700 + 오른쪽 체크 16(Apple Music 사이드바). Spectrum 의 파랑 체크는 쓰지 않는다.
 - 소제목은 Spectrum 2 메뉴 묶음 제목(14 bold · `content/default` · 자간 0)이고, 그룹이 둘 이상일 때만 둔다. 정렬 하나뿐이면 트리거 라벨이 이미 이름이라 소제목 없이 행부터.
 - 셀렉트 목록 · 정렬 메뉴 폭은 240(화면 폭 − 32 를 넘지 않는다). `ActionMenu` 최소 폭 160, 항목에 아이콘을 두지 않는다. 메뉴에서 연 창을 닫으면 포커스는 ⋯ 로 돌아간다.
 
@@ -18,7 +18,7 @@
 
 - 폭은 트리거 폭이다.
 - 행 오른쪽 칸은 상태 글자가 쓴다. 체크는 두지 않는다.
-- 고른 행은 위 메뉴와 같이 면 `surface/control` + 600 이다.
+- 고른 행은 위 메뉴와 같이 반전 면 + 600 이다.
 
 ## 정렬
 

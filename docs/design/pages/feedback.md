@@ -26,7 +26,7 @@
 | 2    | 내용 `body-secondary` →8→   |
 | 3    | 답변 상자                   |
 
-줄은 위아래 12 · 아래 1px `border/row` 다(첫 줄은 위 0).
+줄은 위아래 12 · 줄 사이 선 없음이다(첫 줄은 위 0).
 상태 태그는 접수 = 경고, 처리 완료 = 성공이다([태그 — 상태 태그](../components/tag.md#상태-태그)).
 답변 상자는 면 `surface` · 모서리 `radius/control` · 안쪽 12이다. 안은 「NosLog 답변 · 날짜」 `metadata` →4→ 답변.
 

@@ -20,9 +20,9 @@
 
 순위표
 
-- 머리 줄은 `metadata` 흐림 「순위 · 플레이어 · 지표 이름(공식 Grd / NosLog 레이팅)」 이고, 아래 8 · 1px `border/row` 다.
-- 줄은 순위 칸 →12→ 아바타 →12→ 이름 묶음(국기 →8→ 이름 `emphasis-label` →8→ 검정 명판 →8→ 기여 라벨) · 오른쪽 끝 값 `metric-value` 순이다. 좌우 안쪽 12 · 아래 1px `border/row` 다.
-- 순위는 `metric-value` 가운데 맞춤이다. 1 · 2 · 3위는 `exam/tier-top` · `high` · `mid`, 그 밖은 `content/subdued` 다.
+- 머리 줄은 `metadata` 흐림 「순위 · 플레이어 · 지표 이름(공식 Grd / NosLog 레이팅)」 이고, 아래 8 이고 줄 사이 선이 없다.
+- 줄은 순위 칸 →12→ 아바타 →12→ 이름 묶음(국기 →8→ 이름 `emphasis-label` →8→ 검정 명판 →8→ 기여 라벨) · 오른쪽 끝 값 `metric-value` 순이다. 좌우 안쪽 12 이고 줄 사이 선이 없다. 줄무늬 칸은 `#1d2025` 다.
+- 순위는 `metric-value` 가운데 맞춤이다. 1–3위도 다른 순위와 같은 글자 단계(`content/default`)다.
 - 값은 Grd · 레이팅 구간 색이다([수치 띠 › 값 색](../components/stat-strip.md)). 단위는 머리 줄이 말하고 줄에는 화면 읽기에만 둔다.
 - 명판 · 기여 라벨의 줄이기 순서는 [프로필 › 기여](./profile.md)의 「전체 랭킹 줄」 이다.
 - 줄 전체가 그 사람 프로필 링크다([펼침 › 순위표 줄](../components/disclosure.md)). 내 행은 면 `surface/surface` 이고 화면 읽기에 「내 순위」 를 붙인다.

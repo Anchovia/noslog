@@ -6,7 +6,7 @@
 
 ## 용어 뜻
 
-`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(면 `surface/inverse` #282828 · 글자 `content/on-inverse` · `radius/small` · 그림자 `--nl-tooltip-shadow` · 최대 280 · 안쪽 4 8 · 제목 `nl-component-title` + 설명 `nl-body-secondary`).
+`TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(면 `surface/inverse` · 글자 `content/on-inverse` · `radius/small` · 그림자 `--nl-overlay-shadow` · 최대 280 · 안쪽 4 8 · 제목 `nl-component-title` + 설명 `nl-body-secondary`).
 
 - 오락실 기체 상태 이유만 줄 끝을 맞추려고 ? 없이 점선.
 - `plain` 변형은 창 안 내용을 자유롭게 둔다(기여 라벨 · 업적 배지 정보 카드). 업적 배지 정보 카드는 카드라 떠 있는 창 규격이다.

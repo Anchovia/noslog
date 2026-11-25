@@ -8,7 +8,7 @@
 - 조작부는 사진 위 어두운 판(카운터와 같은 문법, `surface/media-scrim` · `content/on-media`).
     - 닫기 24 오른쪽 위 8.
     - ‹ › 컨트롤 높이 정사각 · 좌우 8 · 세로 가운데(폰 포함).
-    - 아래 칸 「N / M」 `nl-metadata` →8→ 썸네일 줄(컨트롤 높이 · 4 : 3 · `radius/small` · 사이 8 · 고른 것은 `border/ring` 2 테두리 · 안 고른 것은 `--nl-disabled-opacity`, 넘치면 가로 스크롤).
+    - 아래 칸 「N / M」 `nl-metadata` →8→ 썸네일 줄(컨트롤 높이 · 4 : 3 · `radius/small` · 사이 8 · 지금 것은 선 없이 불투명 1 · 안 고른 것은 `--nl-disabled-opacity`, 넘치면 가로 스크롤).
 - 격자 단계는 두지 않는다.
 
 ## 동작

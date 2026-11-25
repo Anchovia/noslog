@@ -106,7 +106,7 @@
 - 전체는 NORMAL · HARD · EXPERT 를 합쳐 「1–8」 한 줄, 9 · 10 · 11 · 12, REAL 1–3 을 따로 둔다.
 - 난이도를 고르면 그 난이도의 레벨마다 한 줄이다.
 - 요약은 「1–8」 묶음, 9 이상, REAL 세 줄이다.
-- 줄 라벨 색은 레벨 1–12 가 서열 값 색 `tierValueColor` 다(악곡 상세 「공식 레벨」 과 같은 색, 레벨 n = n.0). REAL 1 · 2 · 3 은 셋 다 `difficulty/text-real`, 묶은 「1–8」 은 subdued 그대로다.
+- 줄 라벨 색은 레벨 1–12 가 서열 값 색 `tierValueColor` 다(악곡 상세 「공식 레벨」 과 같은 색, 레벨 n = n.0). 레벨 1–5.9 Normal · 6–9.9 Hard · 10–12.5 Expert 색이고, REAL 1 · 2 · 3 은 셋 다 `difficulty/real`, 묶은 「1–8」 은 `content/subdued` 그대로다.
 
 펼치기
 
@@ -144,7 +144,7 @@
 - 맨 아래에 FC 막대를 둔다. 라벨은 FC 태그 `nl-full-combo`, 값은 FC 램프 + Pianist 다.
 - 플레이 횟수를 함께 둔다.
 - 트랙은 8 · 모서리 `radius/small` · `border/divider` 다. 바탕 위 막대 트랙이라 누적 막대와 같다([차트](../components/charts.md)).
-- 막대 색은 등급 색이다. P `score-goal-pianist` · S `score-goal-s` · A+ `score-grade-a-plus` · A `score-grade-a` · B+ · B `score-grade-b` · FC `achievement/full-combo`, C · D 는 `content/subdued`.
+- 막대 색은 등급 색이다. P `score-goal-pianist` · S `score-goal-s` · A+ `score-grade-a-plus` · A `score-grade-a` · B+ · B `score-grade-b` · C `score-grade-c` · D `score-grade-d` · FC `achievement/full-combo`.
 
 ### 활동 탭
 
@@ -158,7 +158,7 @@
 
 - 연속은 지금 이어지는 일수다. 오늘 아직 치지 않았으면 어제까지 센다.
 - 활동 달력은 7행 × 53주, 칸 16 · 사이 4 · 모서리 `radius/small` 이다. 모든 폭에서 같은 값이다.
-- 칸 색은 플레이가 없으면 `surface/surface`, 있으면 그 사람이 가장 많이 한 날 대비 `local-data/bucket-1…6` 이다.
+- 칸 색은 플레이가 없으면 활동 달력 빈 칸, 있으면 그 사람이 가장 많이 한 날 대비 활동 달력 1–4단이다.
 - 달력은 칸 폭만큼 보이고 옆으로 밀면 1년을 다 본다. 처음에는 오늘 쪽 끝을 보인다.
 - 범례 칸은 12, 모서리 `radius/small`.
 
@@ -221,7 +221,7 @@
 - 새 소식 점은 `nl-unread-dot` 으로, 피드백 새 답변과 같은 부품이다. 구역을 열면 본 것으로 표시한다.
 - 쌓인 한 줄은 `metadata` 흐림이다. 반영된 종류만 「곡 정보 5 · 채보 1」 처럼 쓴다. 반영된 것이 없으면 줄이 없다.
 - 수치 띠는 본인에게 내 제안 상태별(검토 중 · 반영됨 · 반려) 값을, 남에게는 종류별(곡 정보 · 채보 · 채보 의견 · 오락실 제보 · 기체 확인) 값을 보인다. 대기 · 반려는 본인만 보는 값이다.
-- 내 제안 목록은 줄 선 `border/row` 로 가른 구분선 목록이다. 줄에 상태 태그를 달고 반려 사유는 오류 글자색으로 쓴다. 「모두 보기」 는 큰 창(`size="large"`, [대화상자](../components/dialog.md))에 최근 100건을 보인다.
+- 내 제안 목록은 줄 사이 선 없이 높이 · 간격으로 나눈 목록이다. 줄에 상태 태그를 달고 반려 사유는 오류 글자색으로 쓴다. 「모두 보기」 는 큰 창(`size="large"`, [대화상자](../components/dialog.md))에 최근 100건을 보인다.
 - 「작성 중」 · 「수정 요청」 초안 줄은 상태 태그 →8→ 고스트 S 「삭제」 를 단다. 누르면 [확인 창](../components/dialog.md#확인-창)이 뜨고, 확정 버튼은 「초안 삭제」 다.
 - 반려 줄은 정해 둔 사유와 덧붙인 말이다. 운영자가 고쳐 반영했으면 「운영자가 N 로 고쳐 반영했습니다」 한 줄을 쓴다.
 

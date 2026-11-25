@@ -15,57 +15,82 @@
 
 ## 목록
 
-| 날짜       | 조사                                                                                                                                     |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-09-14 | [입력칸 · 셀렉트 · 검색창 · 버튼 디자인 시스템 22곳](../research/research-design-systems.md)                                             |
-| 2026-09-14 | [셀렉트 목록 · 버튼 · 검색창 다크 테마 추가 조사](../research/research-menus-buttons.md)                                                 |
-| 2026-09-14 | [실제 사이트 입력창 실측](../research/research-sites.md)                                                                                 |
-| 2026-09-14 | [타이포 · 아이콘 크기 디자인 시스템 19곳](../research/research-typography-guides.md)                                                     |
-| 2026-09-14 | [타이포 · 아이콘 크기 실제 사이트 36곳](../research/research-typography-sites.md)                                                        |
-| 2026-09-15 | [컨트롤 높이 실측](../research/research-control-heights.md)                                                                              |
-| 2026-10-24 | [공개 디자인 시스템 문서 구조](../research/2026-10-24-a-design-systems.md)                                                               |
-| 2026-10-24 | [실제 서비스 골조(뼈대) UI 실측](../research/2026-10-24-b-site-skeletons.md)                                                             |
-| 2026-10-24 | [결정 기록 · 문서 체계 · 사용성 · 구현 근거](../research/2026-10-24-c-papers-methods.md)                                                 |
-| 2026-10-24 | [AI 티 반패턴(디자인 · 구현)](../research/2026-10-24-d-ai-design-code.md)                                                                |
-| 2026-10-24 | [AI 글 티 반패턴](../research/2026-10-24-e-ai-writing.md)                                                                                |
-| 2026-10-24 | [AI 티를 막는 스킬 · 규칙 파일](../research/2026-10-24-f-claude-skills.md)                                                               |
-| 2026-10-24 | [Claude Code 효율 · 토큰 절약](../research/2026-10-24-g-claude-efficiency.md)                                                            |
-| 2026-10-24 | [AI 문서 운영](../research/2026-10-24-h-ai-docs-ops.md)                                                                                  |
-| 2026-10-25 | [부품 · 글자 · 간격 체계 묶음](../research/2026-10-25-design-system-cluster.md)                                                          |
-| 2026-10-26 | [색 · 모서리 · 포커스 자리별 조사](../research/2026-10-26-geist-color-radius.md)                                                         |
-| 2026-10-28 | [다른 서비스 업적 · 언어별 이름](../research/2026-10-28-achievement-ideas.md)                                                            |
-| 2026-10-28 | [업적 이름 · 한일영 밈과 일화](../research/2026-10-28-achievement-memes.md)                                                              |
-| 2026-11-02 | [데스크톱 홈 · 공지 뼈대 실측](../research/2026-11-02-desktop-home-news.md)                                                              |
-| 2026-11-02 | [데스크톱 이벤트 · 빙고 · 검정 뼈대 실측](../research/2026-11-02-desktop-community.md)                                                   |
-| 2026-11-02 | [데스크톱 프로필 탭 뼈대 실측](../research/2026-11-02-desktop-profile.md)                                                                |
-| 2026-11-02 | [데스크톱 오락실 목록 · 상세 뼈대 실측](../research/2026-11-02-desktop-arcades.md)                                                       |
-| 2026-11-02 | [데스크톱 랭킹 · 서열표 뼈대 실측](../research/2026-11-02-desktop-rankings.md)                                                           |
-| 2026-11-02 | [데스크톱 악곡 목록 · 채보 뷰어 뼈대 실측](../research/2026-11-02-desktop-music.md)                                                      |
-| 2026-11-02 | [데스크톱 공통 층 — 헤더 · 폭 · 간격 · 글자 · 부품 크기 실측](../research/2026-11-02-desktop-foundation.md)                              |
-| 2026-11-02 | [데스크톱 설정 · 약관 · 로그인 · 동기화 · 개발자 · 점검 뼈대 실측](../research/2026-11-02-desktop-settings-auth.md)                      |
-| 2026-11-02 | [임시 저장 초안 삭제](../research/2026-11-02-draft-delete.md)                                                                            |
-| 2026-11-11 | [Figma 파일 · 페이지 · 섹션 정리 방식 31곳](../research/2026-11-11-figma-file-organization.md)                                           |
-| 2026-11-11 | [파운데이션 구성 — 토큰 층 · 파일 나누기 · 공용 클래스](../research/2026-11-11-foundation-structure.md)                                  |
-| 2026-11-11 | [커밋 제목 — 공개 저장소 43곳 실측 · 가이드 문서 16곳](../research/2026-11-11-commit-titles.md)                                          |
-| 2026-11-11 | [토스트 자리 — 디자인 시스템 10곳](../research/2026-11-11-toast-position.md)                                                             |
-| 2026-11-11 | [디자인 작업 순서와 방법 — 순서 · 타이포 계층 · 부품 · 레이아웃 · Figma](../research/2026-11-11-design-process.md)                       |
-| 2026-11-12 | [다크 서비스 값 한 벌 · 한국 · 애플 · 점검표](../research/2026-11-12-dark-service-sets.md)                                               |
-| 2026-11-17 | [긴 목록 · 검색의 요청 수 — 실제 서비스 36곳](../research/2026-11-17-list-requests.md)                                                   |
-| 2026-11-17 | [관리자 화면 — 어드민 UI 35곳 · 공지 틀 · 관리자 기능 · 보안 관행](../research/2026-11-17-admin.md)                                      |
-| 2026-11-17 | [개인정보 처리방침 재점검 — 코드 대조 · 법령 · 방침 117곳](../research/2026-11-17-privacy-policy-audit.md)                               |
-| 2026-11-17 | [AWS Lambda + OpenNext 호스팅 검토](../research/2026-11-17-hosting-lambda-opennext.md)                                                   |
-| 2026-11-17 | [선택 동의 창 — 실제 서비스 38곳 · 디자인 시스템 10곳](../research/2026-11-17-translation-consent-dialog.md)                             |
-| 2026-11-17 | [간격 눈금 — 실제 서비스 · 디자인 시스템 간격 체계](../research/2026-11-17-spacing-scale.md)                                             |
-| 2026-11-18 | [AWS 에서 DB 까지 월 $1 안팎 구성 검토](../research/2026-11-18-aws-under-1-dollar.md)                                                    |
-| 2026-11-18 | [CI · e2e 규모 · Storybook 범위 — 저장소 67곳 · 가이드 11곳](../research/2026-11-18-ci-e2e-scale.md)                                     |
-| 2026-11-19 | [움직임 누름 쪽 — 눌림 축소 · 올림 색 · 떠 있는 메뉴, 실제 서비스 31곳](../research/2026-11-19-motion-press.md)                          |
-| 2026-11-19 | [움직임 — 디자인 시스템 11곳 공식 모션 지침](../research/2026-11-19-motion-design-systems.md)                                            |
-| 2026-11-19 | [고름 표시 · 펼침 · 체크 · 툴팁 움직임 — 실제 서비스 실측](../research/2026-11-19-motion-selection.md)                                   |
-| 2026-11-19 | [겹침 움직임 — 대화상자 · 토스트 · 바텀시트 · 사이드 패널 실측](../research/2026-11-19-motion-overlay.md)                                |
-| 2026-11-19 | [그래프 · 로딩 움직임 — 실제 서비스 45곳 실측](../research/2026-11-19-motion-data-loading.md)                                            |
-| 2026-11-19 | [움직임 — 당근(daangn.com) 실제 화면 실측](../research/2026-11-19-motion-daangn.md)                                                      |
-| 2026-11-19 | [스크롤할 때 헤더를 숨기는 범위 — 실제 서비스 39곳 · 디자인 시스템 11곳](../research/2026-11-19-header-hide-scope.md)                    |
-| 2026-11-19 | [지도 미끄러짐 — 목록 · 핀을 누를 때 지도가 옮겨 가는 방식 실측](../research/2026-11-19-motion-map.md)                                   |
-| 2026-11-19 | [끌어 옮기기 움직임 — 칸 · 줄 사이로 항목을 옮기는 방식 실측](../research/2026-11-19-motion-drag.md)                                     |
-| 2026-11-23 | [개발 회사 팀 운영 · 멀티 에이전트 오케스트레이션 — 역할 · 티켓 · 리뷰 · 막힘 · 강제 수단](../research/2026-11-23-team-orchestration.md) |
-| 2026-11-23 | [기업의 사내 스킬 · 플러그인 · 규칙 파일 — 무엇을 · 만드는 법 · 배포 · 역할 연결](../research/2026-11-23-company-skills.md)              |
+| 날짜       | 조사                                                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-14 | [입력칸 · 셀렉트 · 검색창 · 버튼 디자인 시스템 22곳](../research/research-design-systems.md)                                                                               |
+| 2026-09-14 | [셀렉트 목록 · 버튼 · 검색창 다크 테마 추가 조사](../research/research-menus-buttons.md)                                                                                   |
+| 2026-09-14 | [실제 사이트 입력창 실측](../research/research-sites.md)                                                                                                                   |
+| 2026-09-14 | [타이포 · 아이콘 크기 디자인 시스템 19곳](../research/research-typography-guides.md)                                                                                       |
+| 2026-09-14 | [타이포 · 아이콘 크기 실제 사이트 36곳](../research/research-typography-sites.md)                                                                                          |
+| 2026-09-15 | [컨트롤 높이 실측](../research/research-control-heights.md)                                                                                                                |
+| 2026-10-24 | [공개 디자인 시스템 문서 구조](../research/2026-10-24-a-design-systems.md)                                                                                                 |
+| 2026-10-24 | [실제 서비스 골조(뼈대) UI 실측](../research/2026-10-24-b-site-skeletons.md)                                                                                               |
+| 2026-10-24 | [결정 기록 · 문서 체계 · 사용성 · 구현 근거](../research/2026-10-24-c-papers-methods.md)                                                                                   |
+| 2026-10-24 | [AI 티 반패턴(디자인 · 구현)](../research/2026-10-24-d-ai-design-code.md)                                                                                                  |
+| 2026-10-24 | [AI 글 티 반패턴](../research/2026-10-24-e-ai-writing.md)                                                                                                                  |
+| 2026-10-24 | [AI 티를 막는 스킬 · 규칙 파일](../research/2026-10-24-f-claude-skills.md)                                                                                                 |
+| 2026-10-24 | [Claude Code 효율 · 토큰 절약](../research/2026-10-24-g-claude-efficiency.md)                                                                                              |
+| 2026-10-24 | [AI 문서 운영](../research/2026-10-24-h-ai-docs-ops.md)                                                                                                                    |
+| 2026-10-25 | [부품 · 글자 · 간격 체계 묶음](../research/2026-10-25-design-system-cluster.md)                                                                                            |
+| 2026-10-26 | [색 · 모서리 · 포커스 자리별 조사](../research/2026-10-26-geist-color-radius.md)                                                                                           |
+| 2026-10-28 | [다른 서비스 업적 · 언어별 이름](../research/2026-10-28-achievement-ideas.md)                                                                                              |
+| 2026-10-28 | [업적 이름 · 한일영 밈과 일화](../research/2026-10-28-achievement-memes.md)                                                                                                |
+| 2026-11-02 | [데스크톱 홈 · 공지 뼈대 실측](../research/2026-11-02-desktop-home-news.md)                                                                                                |
+| 2026-11-02 | [데스크톱 이벤트 · 빙고 · 검정 뼈대 실측](../research/2026-11-02-desktop-community.md)                                                                                     |
+| 2026-11-02 | [데스크톱 프로필 탭 뼈대 실측](../research/2026-11-02-desktop-profile.md)                                                                                                  |
+| 2026-11-02 | [데스크톱 오락실 목록 · 상세 뼈대 실측](../research/2026-11-02-desktop-arcades.md)                                                                                         |
+| 2026-11-02 | [데스크톱 랭킹 · 서열표 뼈대 실측](../research/2026-11-02-desktop-rankings.md)                                                                                             |
+| 2026-11-02 | [데스크톱 악곡 목록 · 채보 뷰어 뼈대 실측](../research/2026-11-02-desktop-music.md)                                                                                        |
+| 2026-11-02 | [데스크톱 공통 층 — 헤더 · 폭 · 간격 · 글자 · 부품 크기 실측](../research/2026-11-02-desktop-foundation.md)                                                                |
+| 2026-11-02 | [데스크톱 설정 · 약관 · 로그인 · 동기화 · 개발자 · 점검 뼈대 실측](../research/2026-11-02-desktop-settings-auth.md)                                                        |
+| 2026-11-02 | [임시 저장 초안 삭제](../research/2026-11-02-draft-delete.md)                                                                                                              |
+| 2026-11-11 | [Figma 파일 · 페이지 · 섹션 정리 방식 31곳](../research/2026-11-11-figma-file-organization.md)                                                                             |
+| 2026-11-11 | [파운데이션 구성 — 토큰 층 · 파일 나누기 · 공용 클래스](../research/2026-11-11-foundation-structure.md)                                                                    |
+| 2026-11-11 | [커밋 제목 — 공개 저장소 43곳 실측 · 가이드 문서 16곳](../research/2026-11-11-commit-titles.md)                                                                            |
+| 2026-11-11 | [토스트 자리 — 디자인 시스템 10곳](../research/2026-11-11-toast-position.md)                                                                                               |
+| 2026-11-11 | [디자인 작업 순서와 방법 — 순서 · 타이포 계층 · 부품 · 레이아웃 · Figma](../research/2026-11-11-design-process.md)                                                         |
+| 2026-11-12 | [다크 서비스 값 한 벌 · 한국 · 애플 · 점검표](../research/2026-11-12-dark-service-sets.md)                                                                                 |
+| 2026-11-17 | [긴 목록 · 검색의 요청 수 — 실제 서비스 36곳](../research/2026-11-17-list-requests.md)                                                                                     |
+| 2026-11-17 | [관리자 화면 — 어드민 UI 35곳 · 공지 틀 · 관리자 기능 · 보안 관행](../research/2026-11-17-admin.md)                                                                        |
+| 2026-11-17 | [개인정보 처리방침 재점검 — 코드 대조 · 법령 · 방침 117곳](../research/2026-11-17-privacy-policy-audit.md)                                                                 |
+| 2026-11-17 | [AWS Lambda + OpenNext 호스팅 검토](../research/2026-11-17-hosting-lambda-opennext.md)                                                                                     |
+| 2026-11-17 | [선택 동의 창 — 실제 서비스 38곳 · 디자인 시스템 10곳](../research/2026-11-17-translation-consent-dialog.md)                                                               |
+| 2026-11-17 | [간격 눈금 — 실제 서비스 · 디자인 시스템 간격 체계](../research/2026-11-17-spacing-scale.md)                                                                               |
+| 2026-11-18 | [AWS 에서 DB 까지 월 $1 안팎 구성 검토](../research/2026-11-18-aws-under-1-dollar.md)                                                                                      |
+| 2026-11-18 | [CI · e2e 규모 · Storybook 범위 — 저장소 67곳 · 가이드 11곳](../research/2026-11-18-ci-e2e-scale.md)                                                                       |
+| 2026-11-19 | [움직임 누름 쪽 — 눌림 축소 · 올림 색 · 떠 있는 메뉴, 실제 서비스 31곳](../research/2026-11-19-motion-press.md)                                                            |
+| 2026-11-19 | [움직임 — 디자인 시스템 11곳 공식 모션 지침](../research/2026-11-19-motion-design-systems.md)                                                                              |
+| 2026-11-19 | [고름 표시 · 펼침 · 체크 · 툴팁 움직임 — 실제 서비스 실측](../research/2026-11-19-motion-selection.md)                                                                     |
+| 2026-11-19 | [겹침 움직임 — 대화상자 · 토스트 · 바텀시트 · 사이드 패널 실측](../research/2026-11-19-motion-overlay.md)                                                                  |
+| 2026-11-19 | [그래프 · 로딩 움직임 — 실제 서비스 45곳 실측](../research/2026-11-19-motion-data-loading.md)                                                                              |
+| 2026-11-19 | [움직임 — 당근(daangn.com) 실제 화면 실측](../research/2026-11-19-motion-daangn.md)                                                                                        |
+| 2026-11-19 | [스크롤할 때 헤더를 숨기는 범위 — 실제 서비스 39곳 · 디자인 시스템 11곳](../research/2026-11-19-header-hide-scope.md)                                                      |
+| 2026-11-19 | [지도 미끄러짐 — 목록 · 핀을 누를 때 지도가 옮겨 가는 방식 실측](../research/2026-11-19-motion-map.md)                                                                     |
+| 2026-11-19 | [끌어 옮기기 움직임 — 칸 · 줄 사이로 항목을 옮기는 방식 실측](../research/2026-11-19-motion-drag.md)                                                                       |
+| 2026-11-20 | [상태색 — 실제 서비스 32곳 · 디자인 시스템 7곳](../research/2026-11-20-color-status.md)                                                                                    |
+| 2026-11-20 | [차트 색 — 다크 실제 서비스 32곳 · 디자인 시스템 9곳](../research/2026-11-20-color-chart.md)                                                                               |
+| 2026-11-20 | [지도 핀 색 — 국내 · 해외 지도 서비스 52곳 · 지도 SDK 10곳](../research/2026-11-20-color-map-pin.md)                                                                       |
+| 2026-11-20 | [글자색 단계 — 실제 서비스 33곳 · 디자인 시스템 9곳](../research/2026-11-20-color-text.md)                                                                                 |
+| 2026-11-20 | [그림자 · 쌓임 층 — 다크 실제 서비스 36곳 · 디자인 시스템 13곳](../research/2026-11-20-color-shadow-layer.md)                                                              |
+| 2026-11-20 | [선 — 다크 실제 서비스 34곳 · 디자인 시스템 6곳](../research/2026-11-20-color-line.md)                                                                                     |
+| 2026-11-20 | [강조색 · 링크 · 포커스 — 다크 실제 서비스 34곳 · 디자인 시스템 6곳](../research/2026-11-20-color-accent.md)                                                               |
+| 2026-11-21 | [흰 면 요소의 키보드 포커스 — 다크 실제 서비스 29곳 · 디자인 시스템 7곳](../research/2026-11-21-focus-on-white.md)                                                         |
+| 2026-11-21 | [일반 UI 빌린 자리 기능별 색 — 진행 막대 · 주말 · 내 위치 · 좋아요 · 범위 슬라이더](../research/2026-11-21-color-feature-ui.md)                                            |
+| 2026-11-21 | [순위 표시 색 — 기능별 실측(프로필 · 고정 기록 · 플레이 줄 · 악곡 내 순위 · 곡 순위표 · 랭킹)](../research/2026-11-21-color-feature-rank.md)                               |
+| 2026-11-21 | [등급 · 구간 색 기능별 — 레이팅 구간 · 진행 · 난이도 사다리 · 업적 단계](../research/2026-11-21-color-feature-grade.md)                                                    |
+| 2026-11-21 | [그래프 계열 · 비교 색 기능별 — 성장 추이 · 고른 지표 · 두 계열 비교 · 점수 향상 · 계산 곡선 · 조각 막대](../research/2026-11-21-color-feature-series.md)                  |
+| 2026-11-23 | [개발 회사 팀 운영 · 멀티 에이전트 오케스트레이션 — 역할 · 티켓 · 리뷰 · 막힘 · 강제 수단](../research/2026-11-23-team-orchestration.md)                                   |
+| 2026-11-23 | [기업의 사내 스킬 · 플러그인 · 규칙 파일 — 무엇을 · 만드는 법 · 배포 · 역할 연결](../research/2026-11-23-company-skills.md)                                                |
+| 2026-11-24 | [밝은 테마 둘 곳 — 정보 · 기록 · 랭킹 · 게임 서비스 43곳 · 디자인 시스템 10곳(다크만 · 라이트만 · 전환 자리 · 시스템 따름)](../research/2026-11-24-color-light-theme.md)   |
+| 2026-11-24 | [기타 색 역할 — 회색 단계 · 올림 · 입력 면 · 태그 · 비활성 · 로고 · 채보 판 · 외부 브랜드, 서비스 35곳 · DS 13곳](../research/2026-11-24-color-misc-roles.md)              |
+| 2026-11-24 | [색 규칙 물음 근거 — 게임 공식 색 · 입력 포커스 · 고른 경계 · 체크박스 · 줄무늬 · 종류색, 서비스 140쪽 안팎 · 디자인 시스템 25곳](../research/2026-11-24-color-rules19.md) |
+| 2026-11-25 | [색 값 재료 — 차트 계열 · 두 방향 쌍 · 곡 세 색 · 활동 달력 · 내 위치 · 좋아요 눌림, 서비스 한 벌 값 · SEED 최근접](../research/2026-11-25-color-values-chart.md)          |
+| 2026-11-25 | [색 값 재료 — 그레이드 구간 · 점수 등급 글자 · 끝 색 · 난이도 글자용 값 · Pianist, 서비스 한 벌 값 · SEED 최근접](../research/2026-11-25-color-values-grade.md)            |
+| 2026-11-25 | [색 값 재료 — 업적 금속 단계 · FC · 장르 여섯, 서비스 한 벌 값 · SEED 최근접](../research/2026-11-25-color-values-achievement.md)                                          |
+| 2026-11-25 | [색 값 재료 — 면 · 회색 · 상호작용(올림 · 눌림 · 검색칸 · 스켈레톤 · 트랙 · 위험 버튼), 서비스 54곳 · DS 15곳](../research/2026-11-25-color-values-surface.md)             |
+| 2026-11-25 | [그림 카드 위 달성 · 풀콤보 표시 — 공개 쪽 13곳, 미완](../research/2026-11-25-clear-mark-on-card.md)                                                                       |
+| 2026-11-25 | [점수 자 다른 사람 핀 테두리 — 사진 원 둘레 실제 서비스 20곳 · DS 6곳, 근거 약함](../research/2026-11-25-pin-rim.md)                                                       |
+| 2026-11-25 | [뮤즈캣 장소 라벨 — 다크 지도 · 장소 서비스 실제 6곳(국내 2) · DS 값 확인 0곳, 근거 약함](../research/2026-11-25-color-musecat-label.md)                                   |
+| 2026-11-25 | [바탕 값 판 재료 — 게임 공식 출처 확인 · 리듬게임 기록 사이트 · 무채 한 벌 국내 8곳 추가 실측](../research/2026-11-25-color-base.md)                                       |
+| 2026-11-25 | [당근 입력칸 둘레 — 당근 웹 · SEED 문서 다크 실측, 앱 스크린샷 값](../research/2026-11-25-daangn-input-line.md)                                                            |
+| 2026-11-25 | [리듬게임 FAST · SLOW 방향 색 — 게임 14곳 · 사이트 1곳, 파랑 / 빨강 5곳](../research/2026-11-25-rhythm-fast-slow-colors.md)                                                |

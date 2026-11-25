@@ -10,10 +10,10 @@
 
 MangaDex 보기 전환 방식이다.
 
-- 판 = `surface/surface` 면 · 선 없음 · `radius/control` · 안쪽 0. 판 높이 = 칸 높이 = 컨트롤 높이다.
+- 판 = `surface/segment` 면 · 선 없음 · `radius/control` · 안쪽 0. 판 높이 = 칸 높이 = 컨트롤 높이다.
 - 칸 = 좌우 안쪽 12 · `radius/small` · 칸 사이 4 · 글자 `nl-control`(14 · 400). 고른 칸도 굵기는 400 이고 색만 다르다.
 - 고르지 않은 칸 글자는 `content/subdued` 이고, 올림 · 누름 · 키 포커스에 `content/default` 로 밝아진다.
-- 고른 칸 = `surface/control` 면 + 글자 `content/strong` · 선 없음. 고른 표시는 칸과 같은 자리 · 크기다. 고대비 모드에서는 시스템 색 바꿈을 꺼 면을 남긴다([기초값 — 색 규칙](../foundations.md#색-규칙)).
+- 고른 칸 = 반전 면 `primary/default` + 글자 `primary/on-primary` · 선 없음. 고른 표시는 칸과 같은 자리 · 크기다. 고대비 모드에서는 시스템 색 바꿈을 꺼 면을 남긴다([기초값 — 색 규칙](../foundations.md#색-규칙)).
 - 비활성 칸은 글자 `content/disabled`.
 - 고른 칸 안의 색 글자(난이도 레벨 숫자 · 난이도 이름)는 기본 글자색으로 돌린다(고른 칩과 같은 규칙).
 - 칸은 균등 분할이다. 아이콘 칸만 내용 폭이다.

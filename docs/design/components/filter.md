@@ -30,7 +30,7 @@
 - 짧은 열거는 창 · 팝오버에서 `FilterChips`.
 - 칩 = GitHub 필터 창 방식. `surface/control` 면 · 둘레 없음 · `radius/control` · M 높이. 글자는 [기초값 — 글자](../foundations.md#글자)의 필터 창 칩 글자다. 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`. 비활성 칩은 글자만 `content/disabled`.
 - 정렬 메뉴 안 칩은 좌우 안쪽 8 인 촘촘한 변형이다. 공용 파일에 둔다.
-- 고른 칩 = `surface/tag` 면 + 글자 `content/strong` + ✓. 올림 · 누름 · 키 포커스도 같은 면이다. 굵기 400 그대로(고를 때 폭이 늘지 않게). 안의 개수 · 색 글자도 칩 글자색으로.
+- 고른 칩 = 반전 면 `primary/default` + 글자 `primary/on-primary` + ✓. 올림 · 누름 · 키 포커스도 같은 면이다. 굵기 400 그대로(고를 때 폭이 늘지 않게). 안의 개수 · 색 글자도 칩 글자색으로.
 - 창 밖에서 늘 보이는 한 줄은 `row` — 줄바꿈 없이 가로 스크롤.
 - 주소가 곧 상태인 페이지 필터(공지 분류 · 이벤트 상태)는 같은 모양의 링크 칩 `FilterChipLinks`(고름 = `aria-current`).
 - 레일에서는 체크박스 목록 `SelectionList`. 줄 높이는 컨트롤 높이, 줄 사이는 0 이다. 줄에 올림 면을 깔지 않고, 올림 · 누름 · 키 포커스에 체크 상자 경계와 글자만 `content/strong` 이다(체크한 상자는 `primary/hover`). 체크 상자는 그룹 제목 선에 맞춘다.

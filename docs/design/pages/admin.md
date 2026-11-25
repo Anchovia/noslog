@@ -2,7 +2,7 @@
 
 주소 `/admin/*` · 코드 `components/admin`(셸 `admin-shell` · 메뉴 `admin-nav` · 카드 `admin-card` · 서랍 `admin-drawer` · 삭제 확인 `admin-delete-dialog`) · 스타일 `app/styles/admin.css`
 
-관리자 화면은 있는 토큰으로 만든다. 파운데이션 판 · 결정은 관리자 화면을 기준으로 삼지 않고, 관리자 화면 때문에 바꾸지 않는다. 공지 편집기는 [관리자 공지 작성](./admin-announcements.md), 채보 에디터는 [채보 에디터](./chart-editor.md)대로 지금 모양을 둔다.
+관리자 화면은 있는 토큰으로 만든다. 파운데이션 판 · 결정은 관리자 화면을 기준으로 삼지 않고, 관리자 화면 때문에 바꾸지 않는다. 공용 토큰 · 부품 값이 바뀌면 관리자 화면도 묻지 않고 같이 따라 바꾼다(공지 편집기 · 채보 에디터의 모양은 그대로). 공지 편집기는 [관리자 공지 작성](./admin-announcements.md), 채보 에디터는 [채보 에디터](./chart-editor.md)대로 지금 모양을 둔다.
 
 ## 셸
 

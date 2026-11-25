@@ -25,10 +25,10 @@
 보기는 격자(기본) · 목록형 둘이다.
 
 격자 카드는 [악곡 격자 카드](./music-list.md#악곡-카드)와 같은 카드다(면 · 모서리 · 안쪽 12 · 올림). 난이도 판 자리 없이 이름 `emphasis-label` · 상태 `metadata` 이고, 한 줄씩 말줄임이다.
-로그인하면 자켓 오른쪽 아래에 미니 판, 아래에 진행 트랙 4(`border/divider` · 채움 `local-data/single`)를 둔다.
+로그인하면 자켓 오른쪽 아래에 미니 판, 아래에 진행 트랙 4(`track` · 채움 `primary/default`)를 둔다.
 미니 판은 칸 6 · 사이 2 · 판 안쪽 4 · `surface/surface` · 채운 칸 `content/default` 이고, 아래 트랙 위 8 에 선다. 자켓 카테고리 판과 같은 자리 · 같은 면이다.
 
-목록형 행은 서열표 목록 행 규격이다(자켓 48 · 모서리 `radius/small` · 사이 12 · 위아래 8 · 아래 `border/row`).
+목록형 행은 서열표 목록 행 규격이다(자켓 48 · 모서리 `radius/small` · 사이 12 · 위아래 8).
 위에서부터 이름 · 상태 · 진행 막대(위 4, [그래프 — 진행 막대](../components/charts.md#진행-막대))이고, 오른쪽 끝에 미니 판(바탕 없이 칸만)을 둔다.
 로그인한 목록형 상태 글은 버전 · 상태 순이다.
 행의 올림은 목록 줄 `interaction/row` 겹침이다. 좌우 12 를 넓혀 칠하고 자켓 · 글자 선 · 아래 선은 그대로 둔다.
@@ -50,13 +50,13 @@
 판 칸에는 미션 글을 쓴다. `metadata` 12/16 · 안쪽 4 이고, 칸 높이만큼 말줄임한다.
 칸 위치는 화면 읽기로 「n행 m열」 이라고 읽는다.
 
-| 칸 상태   | 모양                                                                                                     |
-| --------- | -------------------------------------------------------------------------------------------------------- |
-| 기본      | 면 `surface/surface` · `--nl-stroke-default` `border/divider` · `radius/small`                           |
-| 완료      | 면 `primary/default` · 글자 `primary/on-primary` · 선 없음                                               |
-| 완성된 줄 | `surface/control` 겹침 · 선 `border/ring`. 완료 칸이면 완료 면 + 안쪽 `--nl-stroke-strong` `border/ring` |
-| 찬스      | `--nl-stroke-default` 점선 `border/ring`                                                                 |
-| 고른 칸   | 안쪽 `--nl-stroke-strong` `border/ring`                                                                  |
+| 칸 상태   | 모양                                                            |
+| --------- | --------------------------------------------------------------- |
+| 기본      | 면 `surface/surface` · 선 없음 · `radius/small`                 |
+| 완료      | 면 `primary/default` · 글자 `primary/on-primary` · 선 없음      |
+| 완성된 줄 | 면 `surface/control` · 선 없음. 완료 칸이면 완료 면 그대로      |
+| 찬스      | `--nl-stroke-default` 점선 `border/input`                       |
+| 고른 칸   | 반전 면 `primary/default` · 글자 `primary/on-primary` · 선 없음 |
 
 완료 · 완성된 줄이 아닌 칸은 올리거나 누르면 `interaction/row` 를 겹친다.
 

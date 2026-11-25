@@ -4,8 +4,8 @@
 
 ## 모양
 
-- 항목 = 컨트롤 높이 정사각 · `radius/control` · 글자 `content/default`. 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`(Spectrum 2 ActionButton quiet). 비활성 항목은 면 없이 글자 `content/disabled`.
-- 지금 쪽 = `surface/control` 면 + `content/default` 글자 + 600 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
+- 항목 = 컨트롤 높이 정사각 · `radius/control` · 글자 `content/default`. 올림 · 누름 · 키 포커스에 면 `interaction/row` · 글자 `content/strong`(Spectrum 2 ActionButton quiet). 비활성 항목은 면 없이 글자 `content/disabled`.
+- 지금 쪽 = 반전 면 `primary/default` + `primary/on-primary` 글자 + 600 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
 
 ## 동작
 
