@@ -44,8 +44,8 @@ export const FALLING_COLORS = {
 
 /** 알림 표시색 — `tokens/colors.css` 의 `--nl-feedback-warning-marker` · `--nl-feedback-destructive` 와 같은 값 */
 export const FEEDBACK_COLORS = {
-    warning: "#fbc828",
-    destructive: "#fc432e",
+    warning: "#ca901c",
+    destructive: "#ff6e60",
 } as const;
 
 /**

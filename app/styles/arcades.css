@@ -78,7 +78,7 @@
     height: var(--nl-spacing-4);
     margin: 0 auto var(--nl-spacing-4);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-ring);
+    background: var(--nl-track);
 }
 .noslog-ui .nl-arcades__list {
     display: flex;
@@ -143,34 +143,33 @@
     display: flex;
     flex-direction: column;
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-card-shadow);
     overflow-wrap: anywhere;
 }
 @media (hover: hover) {
-    .noslog-ui .nl-arcade-result:has(> button.nl-arcade-result__summary:hover) {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+    .noslog-ui
+        .nl-arcade-result:not([data-selected]):has(
+            > button.nl-arcade-result__summary:hover
+        ) {
+        background: var(--nl-surface-elevated);
     }
 }
 .noslog-ui
-    .nl-arcade-result:has(
+    .nl-arcade-result:not([data-selected]):has(
         > button.nl-arcade-result__summary:is(:active, :focus-visible)
     ) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background: var(--nl-surface-elevated);
 }
-/* 고른 카드 = Spectrum 2 카드 고름 — 안쪽 2px 선 · elevated 그림자. 선 색은 gray-1000(#fff) 토큰이 포커스 선뿐이라 gray-900 */
+/* 고른 카드 = 반전 면, 안쪽 선 없음 */
 .noslog-ui .nl-arcade-result[data-selected] {
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-strong) var(--nl-content-strong),
-        var(--nl-overlay-shadow);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
+}
+.noslog-ui
+    .nl-arcade-result[data-selected]
+    :is(.nl-muted, .nl-metadata, .nl-body-secondary) {
+    color: inherit;
 }
 /* 요약 버튼이 포커스를 받으면 카드에 공용 선(안쪽) */
 .noslog-ui .nl-arcade-result:has(> .nl-arcade-result__summary:focus-visible) {
@@ -337,20 +336,18 @@
 .noslog-ui .nl-arcade-map__legend {
     position: absolute;
     background: var(--nl-surface-elevated);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
 }
-/* 면 있는 버튼이라 올림 · 키 포커스 · 누름 = 보조 버튼과 같은 면 gray-200 · 글자 gray-900 */
+/* 면(elevated)이 있는 버튼이라 올림 · 키 포커스 · 누름 = 한 단계 위 면 surface/control */
 .noslog-ui .nl-arcade-map__area:is(:focus-visible, :active),
 .noslog-ui .nl-arcade-map .nl-arcade-map__legend:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-surface-control);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-arcade-map__area:hover,
     .noslog-ui .nl-arcade-map .nl-arcade-map__legend:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-surface-control);
         color: var(--nl-content-strong);
     }
 }
@@ -394,9 +391,9 @@
 .noslog-ui .nl-arcade-map__controls > .nl-arcade-map__legend {
     position: static;
 }
-/* 내 위치 — 내 위치를 보고 있으면 채운 조준선 · 정보 표시색(구글 지도 · 카카오맵과 같은 파랑 계열), 찾는 중 · 거부는 흐림 */
+/* 내 위치 — 내 위치를 보고 있으면 채운 조준선 · my-position 색, 찾는 중 · 거부는 흐림 */
 .noslog-ui .nl-arcade-map .nl-arcade-map__locate[data-state="active"] {
-    color: var(--nl-feedback-info-marker);
+    color: var(--nl-my-position);
 }
 .noslog-ui
     .nl-arcade-map
@@ -414,9 +411,7 @@
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui.nl-arcade-map__legend-popover ul {
     display: flex;
@@ -441,15 +436,14 @@
 .noslog-ui .nl-arcade-marker__pin {
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
-    fill: var(--nl-feedback-warning-marker);
-    stroke: var(--nl-surface-canvas);
+    fill: var(--nl-map-pin);
+    stroke: var(--nl-content-on-media);
     stroke-width: var(--nl-stroke-default);
-    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 40%));
 }
 .noslog-ui .nl-arcade-marker--pin[aria-pressed="true"] .nl-arcade-marker__pin {
     width: calc(var(--nl-spacing-32) + var(--nl-spacing-8));
     height: calc(var(--nl-spacing-32) + var(--nl-spacing-8));
-    fill: var(--nl-content-on-media);
+    stroke-width: var(--nl-stroke-strong);
 }
 .noslog-ui .nl-arcade-marker__bubble {
     display: flex;
@@ -458,8 +452,7 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-media-scrim);
     color: var(--nl-content-on-media);
-    box-shadow: inset 0 0 0 var(--nl-stroke-strong)
-        var(--nl-feedback-warning-marker);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-map-pin);
 }
 .noslog-ui .nl-arcade-marker:focus-visible {
     outline: none;
@@ -482,9 +475,7 @@
     /* 떠 있는 창 규격 — elevated 면 · 다크 둘레 1px · 그림자 · 모서리 large */
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -618,7 +609,6 @@
         inset: 0;
         margin-top: 0;
         overflow: hidden;
-        border-top: var(--nl-stroke-default) solid var(--nl-border-elevated);
         background: var(--nl-surface-elevated);
         box-shadow: var(--nl-overlay-shadow);
         transform: translateY(calc(100% - var(--nl-sheet-peek)));
@@ -940,11 +930,7 @@
     .nl-arcade-fact:has(
         > .nl-arcade-fact__action[aria-expanded]:is(:active, :focus-visible)
     ) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 /* 포커스 선도 넓힌 면 안쪽(−2)에 — 안의 버튼 상자에 그으면 넓힌 면과 어긋난다 */
 .noslog-ui .nl-arcade-fact__action[aria-expanded]:focus-visible {
@@ -960,11 +946,7 @@
 @media (hover: hover) {
     .noslog-ui
         .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-arcade-fact__link {

@@ -62,7 +62,7 @@ export default function ExamPractice({ exam }: { exam: ExamDashboardItem }) {
             ...list,
             {
                 id: stage.id,
-                series: (index % 5) + 1,
+                series: (index % 3) + 1,
                 left: last ? last.left + last.value : 0,
                 value: stage.bestValue,
             },
@@ -145,7 +145,7 @@ export default function ExamPractice({ exam }: { exam: ExamDashboardItem }) {
                     <li key={stage.id} className="nl-metadata nl-muted">
                         <span
                             className="nl-exam-progress__swatch"
-                            data-series={(index % 5) + 1}
+                            data-series={(index % 3) + 1}
                             aria-hidden
                         />
                         {getStageLabel(stage, index, exam.stages.length)}

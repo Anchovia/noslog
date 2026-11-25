@@ -117,30 +117,34 @@
     text-align: start;
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
-    --nl-state-layer: var(--nl-surface-control-hover);
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
 }
 :root[data-input="pointer"]
     .noslog-ui
     .nl-exam-select__option[data-highlighted]:not(:hover) {
     color: inherit;
-    background-image: none;
+    background-color: transparent;
+}
+:root[data-input="pointer"]
+    .noslog-ui
+    .nl-exam-select__option[data-state="checked"][data-highlighted]:not(
+        :hover
+    ) {
+    color: var(--nl-primary-on-primary);
+    background-color: var(--nl-primary-default);
 }
 :root[data-input="pointer"] .noslog-ui .nl-exam-select__option:focus-visible {
     outline: none;
 }
 /* 레일 줄 = Spectrum 2 메뉴 항목 — 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900, 고른 줄 = 셀렉트 목록 고른 줄과 같은 surface/control + 700 */
 .noslog-ui .nl-exam-rail button:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-exam-rail button:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
@@ -200,12 +204,12 @@
 .noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
     color: var(--nl-feedback-destructive);
 }
-/* 여유 색 — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. 상태라 표시색만: + = 성공 초록 · − = 알림 파랑. 부호 · ✓/✗ 는 그대로 */
+/* 여유 색 — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. 부호 · ✓/✗ 는 그대로 */
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
-    color: var(--nl-feedback-success-marker);
+    color: var(--nl-exam-margin-plus);
 }
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="behind"] {
-    color: var(--nl-feedback-info-marker);
+    color: var(--nl-exam-margin-minus);
 }
 .noslog-ui .nl-exam-stage__row {
     display: flex;
@@ -223,19 +227,11 @@
 /* 채보가 없어 누르지 않는 카드(div)는 올림 반응이 없다 */
 @media (hover: hover) {
     .noslog-ui :is(a, button).nl-exam-stage__row:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-surface-elevated);
     }
 }
 .noslog-ui :is(a, button).nl-exam-stage__row:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-exam-stage__jacket {
     width: var(--nl-exam-jacket-size);
@@ -289,7 +285,7 @@
     text-align: end;
 }
 /* 합격까지(2026-09-22 P2-a) — 상자 surface · 안쪽 20 · 사이 12.
-   막대 = 공용 진행 막대 트랙(8 · 모서리 4 · divider) 위에 곡별 베스트 조각(차트 범주 색 1 · 2 · 3, 조각 사이 2 틈),
+   막대 = 공용 진행 막대 트랙(8 · 모서리 4 · track) 위에 곡별 베스트 조각(곡 색 exam-song-1 · 2 · 3, 조각 사이 2 틈),
    합격선 눈금 = 2 × 16 기본 글자색, 아래 눈금 이름 · 값, 범례 「색 · 곡 · 점수」 */
 .noslog-ui .nl-exam-practice {
     display: flex;
@@ -319,7 +315,7 @@
     inset: 0;
     overflow: hidden;
     border-radius: var(--nl-radius-small);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
 }
 .noslog-ui .nl-exam-progress__fill {
     position: absolute;
@@ -345,35 +341,21 @@
         .nl-exam-progress__segment,
         .nl-exam-progress__swatch
     )[data-series="1"] {
-    background: var(--nl-local-data-categorical-1);
+    background: var(--nl-exam-song-1);
 }
 .noslog-ui
     :is(
         .nl-exam-progress__segment,
         .nl-exam-progress__swatch
     )[data-series="2"] {
-    background: var(--nl-local-data-categorical-2);
+    background: var(--nl-exam-song-2);
 }
 .noslog-ui
     :is(
         .nl-exam-progress__segment,
         .nl-exam-progress__swatch
     )[data-series="3"] {
-    background: var(--nl-local-data-categorical-3);
-}
-.noslog-ui
-    :is(
-        .nl-exam-progress__segment,
-        .nl-exam-progress__swatch
-    )[data-series="4"] {
-    background: var(--nl-local-data-categorical-4);
-}
-.noslog-ui
-    :is(
-        .nl-exam-progress__segment,
-        .nl-exam-progress__swatch
-    )[data-series="5"] {
-    background: var(--nl-local-data-categorical-5);
+    background: var(--nl-exam-song-3);
 }
 .noslog-ui .nl-exam-progress__labels {
     position: relative;

@@ -16,22 +16,14 @@
 }
 @media (hover: hover) {
     .noslog-ui :is(a, button).nl-bleed-row:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui :is(a, button).nl-bleed-row:focus-visible {
     outline: none;
 }
 .noslog-ui :is(a, button).nl-bleed-row:is(:active, :focus-visible)::before {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 .noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);

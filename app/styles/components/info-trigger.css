@@ -31,12 +31,12 @@
         color: var(--nl-content-strong);
     }
     .noslog-ui .nl-info-trigger:hover::after {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-info-trigger:is(:active, :focus-visible) {
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-info-trigger:is(:active, :focus-visible)::after {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
 }

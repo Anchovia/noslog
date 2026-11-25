@@ -34,7 +34,7 @@
     display: flex;
     height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-small);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
     overflow: hidden;
 }
 .noslog-ui .nl-stacked-bar__fill {

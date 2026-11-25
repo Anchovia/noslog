@@ -9,8 +9,6 @@
     --color-nl-content: var(--nl-content-default);
     --color-nl-subdued: var(--nl-content-subdued);
     --color-nl-divider: var(--nl-border-divider);
-    --color-nl-elevated-border: var(--nl-border-elevated);
-    --color-nl-ring: var(--nl-border-ring);
     --color-nl-input: var(--nl-border-input);
     --color-nl-error: var(--nl-feedback-destructive);
     /* 관리자 · 채보 에디터가 쓰던 옛 이름의 자리(2026-10-15 B5 2단계) — 있는 토큰만 가리킨다 */
@@ -21,10 +19,10 @@
     --color-nl-warning: var(--nl-feedback-warning-marker);
     --color-nl-chart: var(--nl-local-data-single);
     --color-nl-scrim: var(--nl-surface-scrim);
-    --color-nl-difficulty-normal: var(--nl-difficulty-text-normal);
-    --color-nl-difficulty-hard: var(--nl-difficulty-text-hard);
-    --color-nl-difficulty-expert: var(--nl-difficulty-text-expert);
-    --color-nl-difficulty-real: var(--nl-difficulty-text-real);
+    --color-nl-difficulty-normal: var(--nl-difficulty-normal);
+    --color-nl-difficulty-hard: var(--nl-difficulty-hard);
+    --color-nl-difficulty-expert: var(--nl-difficulty-expert);
+    --color-nl-difficulty-real: var(--nl-difficulty-real);
     --spacing-nl-4: var(--nl-spacing-4);
     --spacing-nl-6: var(--nl-spacing-6);
     --spacing-nl-8: var(--nl-spacing-8);

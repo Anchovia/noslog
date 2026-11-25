@@ -43,7 +43,7 @@ export default function SortableTierChart({
             className={cn(
                 "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-control border-nl-stroke-strong bg-nl-surface bg-cover bg-center active:cursor-grabbing",
                 getTierDifficultyBorder(entry.chart.difficulty),
-                selected && "ring-nl-stroke-strong ring-nl-ring",
+                selected && "bg-nl-primary",
                 isDragging && "opacity-0"
             )}
             {...attributes}
@@ -53,7 +53,7 @@ export default function SortableTierChart({
                 index={entry.chart.music.index}
                 background={entry.chart.music.background}
                 title={entry.chart.music.title}
-                className="absolute inset-0"
+                className={cn("absolute", selected ? "inset-nl-4" : "inset-0")}
                 fallback={
                     <span className="nl-metadata m-auto text-nl-disabled">
                         {entry.chart.level}

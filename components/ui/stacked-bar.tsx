@@ -8,6 +8,8 @@ interface StackedBarSegment {
     value: number;
     /** 조각 색(CSS 색 · 토큰 변수) */
     color: string;
+    /** 거른 조각 — 같은 색에 투명도 0.5 */
+    dimmed?: boolean;
 }
 
 export interface StackedBarRow {
@@ -25,7 +27,7 @@ export interface StackedBarRow {
 
 /**
  * 누적 막대 — 전체 중 부분(판정 비율 등)을 한 줄로, 줄을 겹쳐 나 · 평균을 비교.
- * 줄 = 라벨 metadata(최소 40) · 트랙 8(모서리 4 · border/divider), 줄 사이 8 · 열 사이 12, 조각 사이 틈 없음.
+ * 줄 = 라벨 metadata(최소 40) · 트랙 8(모서리 4 · track), 줄 사이 8 · 열 사이 12, 조각 사이 틈 없음.
  * 줄 오른쪽 값 칸은 선택(값 metric-value, 열 사이 12). 정확한 값은 곁의 목록이 말하므로 막대는 화면 읽기 프로그램에서 숨긴다.
  */
 export default function StackedBar({
@@ -82,6 +84,9 @@ export default function StackedBar({
                                                 style={{
                                                     width: `${(segment.value / total) * 100}%`,
                                                     background: segment.color,
+                                                    opacity: segment.dimmed
+                                                        ? "var(--nl-disabled-opacity)"
+                                                        : undefined,
                                                 }}
                                             />
                                         ))}

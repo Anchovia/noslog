@@ -22,7 +22,6 @@
     align-content: center;
     min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-4);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
 }
 .noslog-ui .nl-info-rows > :last-child {
     box-shadow: none;

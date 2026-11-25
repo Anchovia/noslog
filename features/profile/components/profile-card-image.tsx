@@ -7,6 +7,7 @@ import {
 } from "@/features/exams/exam-grades";
 import {
     PROFILE_CARD_DARK_HEX,
+    PROFILE_CARD_PIANIST_TEXT,
     profileCardAlpha,
 } from "@/features/profile/profile-card-colors";
 import { profileCardGlobe } from "@/features/profile/profile-card-globe";
@@ -45,7 +46,6 @@ const {
     subdued,
     flagBorder,
     emptySurface,
-    pianist,
     fullCombo,
     s: goalS,
 } = PROFILE_CARD_DARK_HEX;
@@ -100,10 +100,10 @@ const examPlates: Record<ExamTier, { metal: string; fill: string | null }> = {
     low: { metal: EXAM_TIER_DARK_HEX.low, fill: null },
     mid: { metal: EXAM_TIER_DARK_HEX.mid, fill: null },
     high: { metal: EXAM_TIER_DARK_HEX.high, fill: null },
-    top: { metal: EXAM_TIER_DARK_HEX.top, fill: EXAM_TIER_DARK_HEX.topTint },
+    top: { metal: EXAM_TIER_DARK_HEX.top, fill: EXAM_TIER_DARK_HEX.ground },
     peak: {
         metal: EXAM_TIER_DARK_HEX.peak,
-        fill: EXAM_TIER_DARK_HEX.peakPlate,
+        fill: EXAM_TIER_DARK_HEX.ground,
     },
 };
 const plateLine = 2;
@@ -577,9 +577,14 @@ export default function ProfileCardImage({
                     </span>
                     <span
                         style={{
-                            color: data.grade
-                                ? toneHex(gradeBandTone(data.grade))
-                                : subdued,
+                            ...(data.grade &&
+                            gradeBandTone(data.grade) === "grade-5"
+                                ? PROFILE_CARD_PIANIST_TEXT
+                                : {
+                                      color: data.grade
+                                          ? toneHex(gradeBandTone(data.grade))
+                                          : subdued,
+                                  }),
                             fontSize: data.grade ? 120 : 54,
                             lineHeight: data.grade ? "156px" : "70px",
                             fontWeight: weight.bold,
@@ -680,7 +685,7 @@ export default function ProfileCardImage({
                     }}
                 >
                     {[
-                        { label: "P", value: user.score_p, color: pianist },
+                        { label: "P", value: user.score_p, color: null },
                         {
                             label: "FC",
                             value: getProfileCardFullComboCount(user),
@@ -706,7 +711,13 @@ export default function ProfileCardImage({
                                     whiteSpace: "nowrap",
                                 }}
                             >
-                                <span style={{ color: item.color }}>
+                                <span
+                                    style={
+                                        item.color
+                                            ? { color: item.color }
+                                            : PROFILE_CARD_PIANIST_TEXT
+                                    }
+                                >
                                     {item.label}
                                 </span>
                                 <span>{formatToComma(item.value)}</span>

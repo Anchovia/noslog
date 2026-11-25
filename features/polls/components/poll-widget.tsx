@@ -144,6 +144,9 @@ export default function PollWidget({
                             ? Math.round((option.votes / total) * 100)
                             : 0;
                         const mine = state.myOptionIds.includes(option.id);
+                        const top = Math.max(
+                            ...state.options.map(({ votes }) => votes)
+                        );
                         return (
                             <li
                                 key={option.id}
@@ -165,7 +168,10 @@ export default function PollWidget({
                                     <i
                                         className="nl-chart-reveal nl-chart-bar"
                                         style={{ width: `${share}%` }}
-                                        data-mine={mine || undefined}
+                                        data-top={
+                                            (top > 0 && option.votes === top) ||
+                                            undefined
+                                        }
                                     />
                                 </span>
                             </li>

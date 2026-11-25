@@ -52,14 +52,6 @@
     padding: 0;
     list-style: none;
 }
-.noslog-ui .nl-musecat-lines > li + li {
-    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-row);
-}
-.noslog-ui .nl-musecat-lines--framed {
-    box-shadow:
-        inset 0 var(--nl-stroke-default) var(--nl-border-row),
-        inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
-}
 .noslog-ui .nl-musecat-line {
     display: flex;
     align-items: center;
@@ -138,9 +130,6 @@
     padding: 0;
     list-style: none;
 }
-.noslog-ui .nl-musecat-games > li + li {
-    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-row);
-}
 .noslog-ui .nl-musecat-game {
     display: flex;
     flex-direction: column;
@@ -187,12 +176,12 @@
 }
 /* Spectrum 2 ActionButton quiet — 평소 면 없음, 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
 .noslog-ui .nl-musecat-game__toggle:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-musecat-game__toggle:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
@@ -224,19 +213,11 @@
 /* 폭이 꽉 찬 목록 줄 올림 = 제 면 위에 interaction/row 겹침, 누름 · 키 포커스도 같다 */
 @media (hover: hover) {
     .noslog-ui .nl-musecat-result:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-musecat-result:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 /* 같은 뜻의 다시 불러오기(쪽 · 나라 · 지역 · 기준 위치) — 이전 줄을 흐린 글자로 둔다 */
 .noslog-ui
@@ -343,7 +324,7 @@
     left: var(--nl-page-margin);
     z-index: calc(var(--nl-layer-above) + 1);
 }
-/* 목록 위 「◎ 위치 ○○」 줄(2026-10-22 사용자 — 카카오맵 목록 그대로) — 조준선 16 · 「위치」 굵게 정보 파랑(카카오 파랑 자리, 떠 있는 면 위 4.54) · 기준 위치 기본 글자, 넘치면 말줄임 */
+/* 목록 위 「◎ 위치 ○○」 줄(2026-10-22 사용자 — 카카오맵 목록 그대로) — 조준선 16 · 「위치」 굵게 musecat-label 색 · 기준 위치 기본 글자, 넘치면 말줄임 */
 .noslog-ui .nl-musecat-where {
     display: flex;
     align-items: center;
@@ -353,7 +334,7 @@
 .noslog-ui .nl-musecat-where > svg,
 .noslog-ui .nl-musecat-where__label {
     flex-shrink: 0;
-    color: var(--nl-feedback-info-marker);
+    color: var(--nl-musecat-label);
 }
 .noslog-ui .nl-musecat-where__value {
     overflow: hidden;
@@ -433,9 +414,7 @@
         overflow: hidden;
         border-radius: var(--nl-radius-large);
         background: var(--nl-surface-elevated);
-        box-shadow:
-            inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-            var(--nl-overlay-shadow);
+        box-shadow: var(--nl-overlay-shadow);
     }
     .noslog-ui .nl-musecat-arcades .nl-arcades__sheet-head {
         gap: var(--nl-space-group);

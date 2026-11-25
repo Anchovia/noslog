@@ -22,32 +22,15 @@ describe("Grd · 레이팅 구간 색", () => {
     it("공유 카드용 다크 값이 tokens/colors.css 의 다크 토큰과 같다", () => {
         const token = (name: string) =>
             darkToken(name)?.match(/^#[0-9a-f]{6}$/i)?.[0];
-        const mix = (a: string, b: string) =>
-            "#" +
-            [1, 3, 5]
-                .map((i) =>
-                    Math.round(
-                        (parseInt(a.slice(i, i + 2), 16) +
-                            parseInt(b.slice(i, i + 2), 16)) /
-                            2
-                    )
-                        .toString(16)
-                        .padStart(2, "0")
-                )
-                .join("");
         expect(STAT_TONE_DARK_HEX).toEqual({
-            "rank-1": token("exam-tier-top"),
-            "rank-2": token("exam-tier-high"),
-            "rank-3": token("exam-tier-mid"),
+            "rank-1": token("content-subdued"),
+            "rank-2": token("content-subdued"),
+            "rank-3": token("content-subdued"),
             rank: token("content-subdued"),
-            "grade-1": token("judgement-near"),
-            "grade-2": token("judgement-good"),
-            "grade-3": token("judgement-just"),
-            "grade-4": mix(
-                token("judgement-just")!,
-                token("judgement-s-just")!
-            ),
-            "grade-5": token("judgement-s-just"),
+            "grade-1": token("score-grade-b"),
+            "grade-2": token("score-grade-a"),
+            "grade-3": token("score-goal-s"),
+            "grade-4": token("score-goal-990k"),
         });
         // 검정 명판(공유 카드, 2026-09-26 E4)
         expect(EXAM_TIER_DARK_HEX).toEqual({
@@ -56,8 +39,7 @@ describe("Grd · 레이팅 구간 색", () => {
             high: token("exam-tier-high"),
             top: token("exam-tier-top"),
             peak: token("exam-tier-peak"),
-            topTint: token("exam-tint-top"),
-            peakPlate: token("exam-plate-peak"),
+            ground: token("surface-canvas"),
         });
     });
 });

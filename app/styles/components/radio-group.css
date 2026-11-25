@@ -1,13 +1,13 @@
 @media (hover: hover) {
     .noslog-ui .nl-radio-group__option:not(:has(input:disabled)):hover input {
-        border-color: var(--nl-content-strong);
+        border-color: var(--nl-border-input);
     }
 }
 .noslog-ui .nl-radio-group__option:not(:has(input:disabled)):active input,
 .noslog-ui
     .nl-radio-group__option:not(:has(input:disabled))
     input:focus-visible {
-    border-color: var(--nl-content-strong);
+    border-color: var(--nl-border-input);
 }
 /* 라디오 묶음 RadioGroup */
 .noslog-ui .nl-radio-group {
@@ -36,9 +36,9 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
     flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-input);
+    background: transparent;
 }
 /* 고르면 경계가 (높이 − 4) ÷ 2 = 6 으로 굵어진다 */
 .noslog-ui .nl-radio-group__option input:checked {
@@ -52,5 +52,5 @@
 }
 .noslog-ui .nl-radio-group:disabled .nl-radio-group__option input,
 .noslog-ui .nl-radio-group__option input:disabled {
-    border-color: var(--nl-content-disabled);
+    border-color: var(--nl-border-default);
 }

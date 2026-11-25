@@ -276,7 +276,6 @@
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
     box-shadow: var(--nl-overlay-shadow);
     z-index: var(--nl-layer-popover);
 }
@@ -346,15 +345,13 @@
     background: transparent;
     cursor: pointer;
 }
-/* Spectrum 2 ActionButton quiet — 올림 · 키 포커스 · 누름 = 면 gray-200 · 아이콘 gray-900 */
+/* 영상 위 버튼 — 올림 · 키 포커스 · 누름 = 겹침(interaction/row) */
 .noslog-ui .nl-chart-stage__media-button:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
-    color: var(--nl-content-strong);
+    background: var(--nl-interaction-row);
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__media-button:hover {
-        background: var(--nl-surface-control-hover);
-        color: var(--nl-content-strong);
+        background: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-chart-stage__host {
@@ -393,7 +390,7 @@
     transform: translateY(-50%);
     pointer-events: none;
 }
-/* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
+/* 눈금 = 반전 면 색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
 .noslog-ui .nl-chart-stage__marker {
     /* 시각 / 길이 — 눈금마다 인라인으로 준다 */
     --nl-marker-at: 0;
@@ -402,7 +399,7 @@
     width: var(--nl-stroke-strong);
     height: var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-feedback-warning-marker);
+    background: var(--nl-primary-default);
     transform: translate(-50%, -50%);
     pointer-events: none;
     /* 손잡이 중심이 움직이는 폭(양끝 반지름 안쪽)에 맞춘다. --nl-marker-at = 시각 / 길이 */
@@ -423,12 +420,12 @@
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-runnable-track {
     height: var(--nl-chart-seek-track);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-track {
     height: var(--nl-chart-seek-track);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
 }
 /* 필터 슬라이더와 같은 채운 점 20 — 네이티브 range 는 손잡이 가장자리를 트랙 끝에 맞추므로
    상자 = 보이는 크기여야 끝에서 점과 트랙이 붙는다 (바 어디를 눌러도 이동하므로 조작 영역은 바 전체) */
@@ -619,12 +616,8 @@
     position: absolute;
     left: 0;
     right: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-feedback-warning-marker);
-    background: color-mix(
-        in srgb,
-        var(--nl-feedback-warning-marker) 14%,
-        transparent
-    );
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    background: var(--nl-interaction-row);
     border-radius: var(--nl-radius-small);
     pointer-events: none;
 }

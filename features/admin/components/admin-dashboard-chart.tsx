@@ -14,10 +14,9 @@ import {
 
 import { TOKEN_VALUES } from "@/lib/design-token-values";
 
-// 툴팁 = 떠 있는 창 규격(면 elevated · 둘레 border/elevated · 모서리 large · 그림자 · 안쪽 8) · 본문 14
+// 툴팁 = 떠 있는 창 규격(면 elevated · 모서리 large · 그림자 · 안쪽 8) · 본문 14
 const TOOLTIP_STYLE = {
     background: "var(--nl-surface-elevated)",
-    border: "var(--nl-stroke-default) solid var(--nl-border-elevated)",
     borderRadius: "var(--nl-radius-large)",
     boxShadow: "var(--nl-overlay-shadow)",
     padding: "var(--nl-spacing-8)",
@@ -84,7 +83,7 @@ export default function AdminDashboardChart({
                         }}
                     />
                     <Tooltip
-                        cursor={{ stroke: "var(--nl-border-ring)" }}
+                        cursor={{ stroke: "var(--nl-border-input)" }}
                         contentStyle={TOOLTIP_STYLE}
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [

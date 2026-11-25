@@ -46,22 +46,23 @@
 .noslog-ui .nl-jacket__category[data-category="Cl/Jz"] {
     color: var(--nl-category-cljz);
 }
-/* 악곡 카드 = 바탕보다 한 단계 밝은 면 · 둘레 · 그림자 없음 · 모서리 control */
+/* 악곡 카드 = 바탕보다 한 단계 밝은 면 · 놓인 것 그림자 · 모서리 control */
 .noslog-ui .nl-music-card {
     display: flex;
     min-width: 0;
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
 /* 누르는 악곡 카드 · 채보 줄 = 한 단계 면이라 올림 · 누름 · 키 포커스도 홈 이동 칸처럼 한 단계 위 면 */
 @media (hover: hover) {
     .noslog-ui a.nl-music-card:not([aria-disabled="true"]):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-surface-elevated);
     }
 }
 .noslog-ui
     a.nl-music-card:not([aria-disabled="true"]):is(:active, :focus-visible) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-music-card__body {
     display: flex;
@@ -145,16 +146,16 @@
     justify-content: center;
 }
 .noslog-ui .nl-level--normal {
-    color: var(--nl-difficulty-text-normal);
+    color: var(--nl-difficulty-normal);
 }
 .noslog-ui .nl-level--hard {
-    color: var(--nl-difficulty-text-hard);
+    color: var(--nl-difficulty-hard);
 }
 .noslog-ui .nl-level--expert {
-    color: var(--nl-difficulty-text-expert);
+    color: var(--nl-difficulty-expert);
 }
 .noslog-ui .nl-level--real {
-    color: var(--nl-difficulty-text-real);
+    color: var(--nl-difficulty-real);
 }
 .noslog-ui
     [aria-busy="true"]

@@ -1,10 +1,6 @@
 /* 랭킹 페이지 — 2026-09-13 재설계. 정보가 적은 목록이라 폭을 채우지 않고 640 가운데에 둔다.
    상단(제목 · 모드 세그먼트 · 지표 탭과 지역)은 이전 그대로, 표는 모든 폭에서 한 규격이다. */
 .noslog-ui :is(.nl-global-rankings, .nl-chart-leaderboard) {
-    /* 1~3위 순위 숫자는 검정 명판의 금속색(골드·실버·브론즈). 곡 상세 순위표(ranking.css)도 같은 목록 규격이라 함께 받는다 */
-    --nl-rank-1: var(--nl-exam-tier-top);
-    --nl-rank-2: var(--nl-exam-tier-high);
-    --nl-rank-3: var(--nl-exam-tier-mid);
     --nl-ranking-inset: var(--nl-spacing-12);
 }
 .noslog-ui .nl-global-rankings {
@@ -51,7 +47,7 @@
 }
 .noslog-ui .nl-ranking-head {
     padding-bottom: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-ranking-head__rank,
 .noslog-ui .nl-player-row__rank {
@@ -69,20 +65,10 @@
 }
 .noslog-ui .nl-player-row {
     height: var(--nl-spacing-48);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-player-row__rank {
     white-space: nowrap;
     color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-player-row__rank[data-podium="1"] {
-    color: var(--nl-rank-1);
-}
-.noslog-ui .nl-player-row__rank[data-podium="2"] {
-    color: var(--nl-rank-2);
-}
-.noslog-ui .nl-player-row__rank[data-podium="3"] {
-    color: var(--nl-rank-3);
 }
 .noslog-ui .nl-player-row .nl-avatar {
     width: var(--nl-spacing-32);
@@ -140,22 +126,34 @@
     position: relative;
     z-index: var(--nl-layer-above);
 }
+/* 올림 · 눌림 = 평소 면에 따라 한 단계. 투명 줄은 interaction/row, 줄무늬 줄은 surface/control, 내 줄은 surface/elevated */
 @media (hover: hover) {
     .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background: var(--nl-interaction-row);
+    }
+    .noslog-ui .nl-player-row:nth-child(even):has(.nl-player-row__link:hover) {
+        background: var(--nl-surface-control);
+    }
+    .noslog-ui
+        .nl-player-row[data-current="true"]:has(.nl-player-row__link:hover) {
+        background: var(--nl-surface-elevated);
     }
 }
 .noslog-ui
     .nl-player-row:has(.nl-player-row__link:is(:active, :focus-visible)) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background: var(--nl-interaction-row);
+}
+.noslog-ui
+    .nl-player-row:nth-child(even):has(
+        .nl-player-row__link:is(:active, :focus-visible)
+    ) {
+    background: var(--nl-surface-control);
+}
+.noslog-ui
+    .nl-player-row[data-current="true"]:has(
+        .nl-player-row__link:is(:active, :focus-visible)
+    ) {
+    background: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-player-row__link {
     min-width: 0;
@@ -168,6 +166,10 @@
     flex-shrink: 0;
     text-align: right;
     white-space: nowrap;
+}
+/* 줄 사이 선 대신 짝수 줄에 줄무늬 칸 */
+.noslog-ui .nl-player-row:nth-child(even) {
+    background: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-player-row[data-current="true"] {
     background: var(--nl-surface-surface);

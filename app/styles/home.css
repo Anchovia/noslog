@@ -60,6 +60,7 @@
     /* 면은 바탕보다 한 단계(surface) · 글자 medium, 올림 면 gray-200 · 글자 gray-900 */
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
     font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-home-tile__label {
@@ -134,6 +135,7 @@
     padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-official-post__author {
     display: flex;
@@ -246,9 +248,7 @@
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
     /* ③ 떠 있는 메뉴와 같은 움직임 — 원점은 검색칸 쪽(위 가운데) */
     transform-origin: top center;
     transition:
@@ -284,12 +284,12 @@
     font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-search-preview__all:active {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-search-preview__all:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
@@ -336,9 +336,9 @@
     max-width: 100%;
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
-    /* 누르는 카드 = Spectrum 2 primary 카드 — elevated 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
+    /* 누르는 카드 — elevated 면 · 둘레 없음 · 놓인 것 그림자 · 모서리 large */
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
+    background: var(--nl-surface-surface);
     box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-home-event img {
@@ -375,13 +375,22 @@
 .noslog-ui .nl-home-event__caption > .nl-entity-title {
     color: var(--nl-content-on-media);
 }
-/* 누르는 카드 올림 · 누름 · 키 포커스 = 그림자 overlay */
-.noslog-ui .nl-home-event:is(:active, :focus-visible) {
-    box-shadow: var(--nl-overlay-shadow);
+/* 누르는 카드 올림 · 누름 · 키 포커스 = 겹침(interaction/row), 그림자 없음 */
+.noslog-ui .nl-home-event::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    pointer-events: none;
+    transition: background-color var(--nl-motion-duration-d3)
+        var(--nl-ease-easing);
+}
+.noslog-ui .nl-home-event:is(:active, :focus-visible)::after {
+    background: var(--nl-interaction-row);
 }
 @media (hover: hover) {
-    .noslog-ui .nl-home-event:hover {
-        box-shadow: var(--nl-overlay-shadow);
+    .noslog-ui .nl-home-event:hover::after {
+        background: var(--nl-interaction-row);
     }
     .noslog-ui .nl-home-event:hover .nl-entity-title {
         text-decoration: underline;

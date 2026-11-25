@@ -135,11 +135,9 @@
 }
 .noslog-ui .nl-exam-badge[data-tier="top"] {
     --nl-exam-badge-metal: var(--nl-exam-tier-top);
-    --nl-exam-badge-fill: var(--nl-exam-tint-top);
 }
 .noslog-ui .nl-exam-badge[data-tier="peak"] {
     --nl-exam-badge-metal: var(--nl-exam-tier-peak);
-    --nl-exam-badge-fill: var(--nl-exam-plate-peak);
 }
 .noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__mode {
     color: var(--nl-exam-badge-metal);

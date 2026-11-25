@@ -445,7 +445,7 @@ export function ProfileActivityTabSkeleton() {
                         </span>
                         <ul className="nl-profile-legend">
                             <li>{t("profile.activity.less")}</li>
-                            {[0, 1, 2, 3, 4, 5, 6].map((level) => (
+                            {[0, 1, 2, 3, 4].map((level) => (
                                 <li key={level}>
                                     <i
                                         className="nl-profile-calendar__cell"

@@ -36,7 +36,7 @@
     width: 100%;
     padding: var(--nl-box-padding);
     background: var(--nl-surface-canvas);
-    border: var(--nl-stroke-default) dashed var(--nl-border-ring);
+    border: var(--nl-stroke-default) dashed var(--nl-border-input);
     border-radius: var(--nl-radius-control);
     text-align: center;
 }
@@ -95,11 +95,6 @@
     gap: var(--nl-spacing-16);
     padding-block: var(--nl-spacing-12);
 }
-.noslog-ui .nl-sync-metrics > div + div,
-.noslog-ui .nl-sync-previews > li + li,
-.noslog-ui .nl-sync-history > li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
-}
 .noslog-ui .nl-sync-metrics dd {
     flex-shrink: 0;
 }
@@ -131,20 +126,36 @@
     overflow: hidden;
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
-/* 그림만 있는 누르는 칸 — 올림은 테두리 */
+/* 그림만 있는 누르는 칸 — 올림은 겹침(interaction/row) + 안쪽 그림 확대(⑰) */
+.noslog-ui .nl-sync-media {
+    position: relative;
+}
+.noslog-ui .nl-sync-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    pointer-events: none;
+    transition: background-color var(--nl-motion-duration-d3)
+        var(--nl-ease-easing);
+}
 @media (hover: hover) {
-    .noslog-ui .nl-sync-media:hover {
-        border-color: var(--nl-border-ring);
+    .noslog-ui .nl-sync-media:hover::after {
+        background: var(--nl-interaction-row);
+    }
+    .noslog-ui .nl-sync-media:hover img {
+        scale: var(--nl-motion-scale-card-media);
     }
 }
-.noslog-ui .nl-sync-media:is(:active, :focus-visible) {
-    border-color: var(--nl-border-ring);
+.noslog-ui .nl-sync-media:is(:active, :focus-visible)::after {
+    background: var(--nl-interaction-row);
 }
 .noslog-ui .nl-sync-media img {
     width: 100%;
     height: auto;
     max-height: calc(var(--nl-spacing-48) * 5);
     object-fit: contain;
+    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
 }
 .noslog-ui .nl-sync-media-expanded {
     width: 100%;

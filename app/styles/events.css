@@ -43,7 +43,7 @@
 .noslog-ui .nl-event-card:focus-visible {
     border-radius: var(--nl-radius-control);
 }
-/* 대표 이미지 2.4 : 1 = Spectrum 2 quiet 카드의 미리보기 — 모서리 large · 둘레 없음, 카드를 올리면 그림자.
+/* 대표 이미지 2.4 : 1 — 모서리 large · 둘레 없음, 카드를 올리면 겹침(interaction/row) + 안쪽 그림 확대.
    없으면 같은 비율의 elevated 면(홈 이벤트 카드와 같은 면) */
 .noslog-ui .nl-event-banner {
     position: relative;
@@ -54,12 +54,23 @@
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
 }
-.noslog-ui .nl-event-card:focus-visible > .nl-event-banner {
-    box-shadow: var(--nl-overlay-shadow);
+.noslog-ui .nl-event-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    pointer-events: none;
+    transition: background-color var(--nl-motion-duration-d3)
+        var(--nl-ease-easing);
+}
+.noslog-ui
+    .nl-event-card:is(:active, :focus-visible)
+    > .nl-event-banner::after {
+    background: var(--nl-interaction-row);
 }
 @media (hover: hover) {
-    .noslog-ui .nl-event-card:hover > .nl-event-banner {
-        box-shadow: var(--nl-overlay-shadow);
+    .noslog-ui .nl-event-card:hover > .nl-event-banner::after {
+        background: var(--nl-interaction-row);
     }
 }
 /* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */

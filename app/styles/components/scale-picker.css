@@ -20,9 +20,9 @@
     cursor: pointer;
 }
 .noslog-ui .nl-scale-picker__option--checked {
-    background: var(--nl-surface-control);
+    background: var(--nl-primary-default);
     box-shadow: none;
-    color: var(--nl-content-default);
+    color: var(--nl-primary-on-primary);
     font-weight: var(--nl-type-weight-bold);
 }
 /* 값을 고른 줄의 안 고른 숫자 = 보류 글자색 · 옅은 테두리. 비어 있는 줄은 그대로 둬 누를 수 있어 보이게 (2026-09-17 S1) */

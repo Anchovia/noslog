@@ -19,18 +19,14 @@
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
 }
-/* 링크인 태그(프로필 기여) — 올리면 반전 태그(GitHub 토픽) */
+/* 링크인 태그(프로필 기여) — 면(gray-300)이 있어 올림 · 누름 · 키 포커스 = 한 단계 위 면 control-hover */
 @media (hover: hover) {
-    .noslog-ui a.nl-tag:hover {
-        border-color: var(--nl-primary-default);
-        background: var(--nl-primary-default);
-        color: var(--nl-primary-on-primary);
+    .noslog-ui a.nl-tag:not(.nl-tag--strong):hover {
+        background: var(--nl-surface-control-hover);
     }
 }
-.noslog-ui a.nl-tag:is(:active, :focus-visible) {
-    border-color: var(--nl-primary-default);
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
+.noslog-ui a.nl-tag:not(.nl-tag--strong):is(:active, :focus-visible) {
+    background: var(--nl-surface-control-hover);
 }
 /* 상태 태그(이벤트 진행 · 글 승인, 2026-09-23 S-c) = 글자만 알림 표시색. 기본 배지 면(gray-400 #444) 위에서는 초록 3.93 · 빨강 3.26 : 1 로
    4.5 에 못 미쳐(2026-10-26 axe) 상태 태그만 카드 면 + 둘레 선으로 둔다. 색 단독으로 뜻을 전하지 않는다 — 글자가 늘 상태 이름을 말한다(WCAG 1.4.1) */

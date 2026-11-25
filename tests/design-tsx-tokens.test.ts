@@ -156,12 +156,12 @@ describe("TSX design token checks", () => {
         const allowed = [
             {
                 file: "app/layout.tsx",
-                match: 'color literal "#111111"',
+                match: 'color literal "#000000"',
                 reason: "주소창 theme-color 메타 값은 CSS 밖이라 변수를 못 읽는다(surface/canvas 다크 값)",
             },
             {
                 file: "app/manifest.ts",
-                match: 'color literal "#111111"',
+                match: 'color literal "#000000"',
                 reason: "manifest 바탕 · 테마 색은 JSON 이라 변수를 못 읽는다(surface/canvas 다크 값)",
             },
         ];

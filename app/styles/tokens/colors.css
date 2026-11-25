@@ -1,108 +1,102 @@
 /* 색 토큰 — 회색 단계 · 역할 색 · 도메인 색. 쓰임과 규칙은 docs/design/foundations.md */
 .noslog-ui {
-    /* 회색 단계 = Adobe Spectrum 2 다크 gray-25 … gray-1000. 아래 무채색 역할 토큰만 이 단계를 가리키고, 화면 · 부품 CSS 는 역할 토큰으로만 쓴다 */
-    --nl-gray-25: #111111;
-    --nl-gray-50: #1b1b1b;
-    --nl-gray-75: #222222;
-    --nl-gray-100: #2c2c2c;
-    --nl-gray-200: #323232;
-    --nl-gray-300: #393939;
-    --nl-gray-400: #444444;
-    --nl-gray-500: #6d6d6d;
-    --nl-gray-600: #8a8a8a;
-    --nl-gray-700: #afafaf;
-    --nl-gray-800: #dbdbdb;
-    --nl-gray-900: #f2f2f2;
-    --nl-gray-1000: #ffffff;
-    /* 무채색 = Adobe Spectrum 2 다크 회색 단계(괄호 안이 Spectrum 토큰). 면만으로 칸이 보이게 바탕과 판을 한 단계 띄운다.
-       바탕 background-base(gray-25) · 누르지 않는 묶음 상자 background-layer-1(gray-50) ·
-       면 있는 컨트롤 · 고른 세그먼트 · 고른 줄 · 비활성 면 · 스켈레톤 gray-100. 고른 칩은 태그 면(surface/tag).
-       고른 면이 gray-100 인 까닭: 그 위 난이도 · 판정 색 글자가 4.5 : 1 을 넘는 가장 밝은 단계다(gray-300 이면 3.7) */
-    --nl-surface-canvas: var(--nl-gray-25);
-    --nl-surface-surface: var(--nl-gray-50);
-    --nl-surface-control: var(--nl-gray-100);
-    /* 떠 있는 면(background-elevated · gray-75) — 카드 · 메뉴 판 · 팝오버 · 대화상자 */
-    --nl-surface-elevated: var(--nl-gray-75);
-    /* 면 있는 컨트롤의 올림(gray-200) — 보조 버튼 · 셀렉트 · 칩 · 메뉴 항목 · 고스트 */
-    --nl-surface-control-hover: var(--nl-gray-200);
-    /* 입력 면(gray-25) — 텍스트 필드 · 체크박스 · 라디오 · 꺼진 스위치 */
-    --nl-surface-input: var(--nl-gray-25);
-    /* 가림막 — overlay-opacity 60% */
-    --nl-surface-scrim: rgb(0 0 0 / 60%);
-    --nl-surface-nav-scrim: rgb(0 0 0 / 60%);
-    /* 툴팁 = Spotify 웹 툴팁 면 · 글자(다크 서비스 22곳 중 18곳이 어두운 면), 배지 = gray-400 · 흰 글자 */
-    --nl-surface-inverse: #282828;
-    --nl-content-on-inverse: var(--nl-gray-1000);
-    --nl-surface-tag: var(--nl-gray-400);
-    --nl-content-on-tag: var(--nl-gray-1000);
-    /* 글자 neutral-content(gray-800) · 보조 · 라벨 neutral-subdued-content(gray-700) · 흐림 · 자리표시자 gray-600 */
+    /* 회색 단계 = SEED palette-gray 11단(다크). 아래 무채색 역할 토큰만 이 단계를 가리키고, 화면 · 부품 CSS 는 역할 토큰으로만 쓴다 */
+    --nl-gray-00: #000000;
+    --nl-gray-100: #16171b;
+    --nl-gray-200: #1d2025;
+    --nl-gray-300: #2b2e35;
+    --nl-gray-400: #393d46;
+    --nl-gray-500: #5b606a;
+    --nl-gray-600: #868b94;
+    --nl-gray-700: #b0b3ba;
+    --nl-gray-800: #dcdee3;
+    --nl-gray-900: #e9eaec;
+    --nl-gray-1000: #f3f4f5;
+    /* 면 — 바탕 gray-00 · 놓인 묶음 상자 gray-100 · 면 있는 컨트롤(보조 버튼 · 셀렉트 · 칩) gray-300.
+       고른 면은 반전 면(primary/default) */
+    --nl-surface-canvas: var(--nl-gray-00);
+    --nl-surface-surface: var(--nl-gray-100);
+    --nl-surface-control: var(--nl-gray-300);
+    /* 떠 있는 것 면(gray-200). 바탕 위 보조 버튼 · 셀렉트도 이 면 */
+    --nl-surface-elevated: var(--nl-gray-200);
+    /* 면 있는 컨트롤의 올림 = 눌림 한 값(gray-400) */
+    --nl-surface-control-hover: var(--nl-gray-400);
+    /* 검색칸만 면이 있다. 일반 입력칸 · 체크박스 · 라디오는 면 없이 바탕 그대로 */
+    --nl-surface-search: var(--nl-gray-200);
+    /* 가림막 */
+    --nl-surface-scrim: #00000074;
+    --nl-surface-nav-scrim: #00000074;
+    /* 용어 도움말 면 · 글자(반전) */
+    --nl-surface-inverse: var(--nl-gray-1000);
+    --nl-content-on-inverse: var(--nl-gray-100);
+    /* 태그 면 · 글자 */
+    --nl-surface-tag: var(--nl-gray-300);
+    --nl-content-on-tag: var(--nl-gray-800);
+    /* 세그먼트 판 */
+    --nl-surface-segment: #ffffff20;
+    /* 글자 1단 제목 · 2단 · 3단 · 자리표시자 · 비활성 */
+    --nl-content-strong: var(--nl-gray-1000);
     --nl-content-default: var(--nl-gray-800);
     --nl-content-subdued: var(--nl-gray-700);
     --nl-content-tertiary: var(--nl-gray-600);
-    /* 제목(heading · title-color) · 누르는 부품 글자의 올림 · 누름 · 포커스(neutral-content-color-hover) gray-900 */
-    --nl-content-strong: var(--nl-gray-900);
-    /* 비활성 글자 · 선 · 면(disabled-content-color) gray-400 */
-    --nl-content-disabled: var(--nl-gray-400);
-    /* 선 — 구분선 gray-200 · 목록 · 표 줄(table-divider-color) gray-300 · 태그 둘레 gray-400 ·
-       떠 있는 창 다크 둘레 gray-200 · 입력 경계 gray-300(올림 gray-400) · 고른 경계 gray-500 */
-    --nl-border-divider: var(--nl-gray-200);
-    --nl-border-default: var(--nl-gray-400);
-    --nl-border-row: var(--nl-gray-300);
-    --nl-border-elevated: var(--nl-gray-200);
-    --nl-border-input: var(--nl-gray-300);
-    --nl-border-input-hover: var(--nl-gray-400);
-    --nl-border-ring: var(--nl-gray-500);
-    /* 줄 올림 — 폭이 꽉 찬 목록 · 표 줄에 겹친다(table-row-hover gray-900 7%).
-       흰 6% 는 Spectrum 2 에 없는 단계라 새로 쓰지 않는다 — 면 없는 누르는 것 · 메뉴 항목의 올림은 surface/control-hover */
-    --nl-interaction-row: rgb(242 242 242 / 7%);
-    /* 스켈레톤 물결 띠 — 당근 SEED 다크 shimmer neutral 흰 10% */
+    --nl-content-disabled: var(--nl-gray-500);
+    /* 선 — 구분선 · 부품 둘레 · 입력 경계. 목록 줄 · 떠 있는 창 둘레는 선을 쓰지 않는다 */
+    --nl-border-divider: #ffffff0d;
+    --nl-border-default: #ffffff17;
+    --nl-border-input: var(--nl-gray-400);
+    /* 줄 올림 · 면 없는 부품 올림 */
+    --nl-interaction-row: #ffffff0d;
+    /* 막대 트랙 · 빈 칸 */
+    --nl-track: var(--nl-gray-400);
+    /* 스켈레톤 면 · 물결 띠 */
+    --nl-skeleton-surface: var(--nl-gray-200);
     --nl-skeleton-shimmer: #ffffff1a;
-    /* 비활성 투명도 — 그림 · 사진을 품은 줄(고르기 줄 · 업적 고르기 · 사진 칸)만. 글자 · 아이콘 · 선만 있는 것은 content/disabled 색 */
+    /* 비활성 투명도 — 그림 · 사진을 품은 줄만. 글자 · 아이콘 · 선만 있는 것은 content/disabled 색 */
     --nl-disabled-opacity: 0.5;
-    /* 포커스 = 흰 2px 선 한 줄 — 유채색을 쓰지 않아 Spectrum 2 의 파랑 링 대신 무채색 */
+    /* 포커스 = 2px 링, 흰 계열 */
     --nl-focus-ring: var(--nl-gray-1000);
-    --nl-identity-mark: var(--nl-gray-800);
-    /* 주 버튼 gray-800 · 글자 gray-25 · 올림 gray-900(Spectrum 의 파랑 accent 대신 무채색) */
-    --nl-primary-default: var(--nl-gray-800);
-    --nl-primary-hover: var(--nl-gray-900);
-    --nl-primary-on-primary: var(--nl-gray-25);
-    /* 꺼진 스위치 손잡이(neutral gray-800) */
-    --nl-switch-thumb: var(--nl-gray-800);
-    --nl-feedback-info-marker: #4688ec;
-    --nl-feedback-success-marker: #82b536;
-    --nl-feedback-warning-marker: #fbc828;
-    /* 위험 = Spectrum 2 negative — 글자 · 경계 negative-900, 채운 위험 버튼 negative-700(올림 · 누름 600) */
-    --nl-feedback-destructive: #fc432e;
-    --nl-feedback-destructive-surface: #cd2e1d;
-    --nl-feedback-destructive-hover: #b12617;
+    --nl-identity-mark: var(--nl-gray-1000);
+    /* 주 버튼 · 고른 면 = 반전 면 */
+    --nl-primary-default: var(--nl-gray-1000);
+    --nl-primary-hover: var(--nl-gray-800);
+    --nl-primary-on-primary: var(--nl-gray-100);
+    --nl-switch-thumb: var(--nl-gray-100);
+    --nl-switch-track-off: var(--nl-gray-600);
+    --nl-feedback-info-marker: #41a2f9;
+    --nl-feedback-success-marker: #22b27f;
+    --nl-feedback-warning-marker: #ca901c;
+    /* 위험 — 글자 · 점 · 선 · 입력칸 오류 선 한 값, 채운 위험 버튼, 누름만 글자 값 */
+    --nl-feedback-destructive: #ff6e60;
+    --nl-feedback-destructive-surface: #f73526;
+    --nl-feedback-destructive-hover: #ff6e60;
     --nl-feedback-on-destructive: #ffffff;
-    --nl-difficulty-normal: #068850;
-    --nl-difficulty-hard: #e06400;
-    --nl-difficulty-expert: #cd2e1d;
-    --nl-difficulty-real: #ad69e9;
+    /* 난이도 — 면 · 글자 한 벌 */
+    --nl-difficulty-normal: #42be65;
+    --nl-difficulty-hard: #ff832b;
+    --nl-difficulty-expert: #ff8389;
+    --nl-difficulty-real: #be95ff;
     --nl-judgement-s-just: #ff8dcc;
-    --nl-judgement-just: #ffca16;
-    --nl-judgement-good: #4ccce6;
-    --nl-judgement-near: #70b8ff;
-    --nl-judgement-miss: #b4b4b4;
+    --nl-judgement-just: #fce49c;
+    --nl-judgement-good: #00a8c4;
+    --nl-judgement-near: #bfd5ec;
+    --nl-judgement-miss: #ccd4d8;
+    /* 관리자 화면 차트만 쓴다 */
     --nl-local-data-single: #3278be;
     --nl-local-data-bucket-1: #1d456d;
-    --nl-local-data-bucket-2: #275e96;
-    --nl-local-data-bucket-3: #3278be;
-    --nl-local-data-bucket-4: #5291d1;
     --nl-local-data-bucket-5: #7aabdc;
-    --nl-local-data-bucket-6: #a2c4e7;
-    --nl-local-data-fast: #3278be;
-    --nl-local-data-slow: #f2a634;
     --nl-local-data-categorical-1: #3278be;
     --nl-local-data-categorical-2: #f2a634;
     --nl-local-data-categorical-3: #b4ce35;
-    --nl-local-data-categorical-4: #fa4f96;
     --nl-local-data-categorical-5: #8b47d7;
-    --nl-local-data-personal: #3278be;
-    --nl-achievement-full-combo: #b4ce35;
-    --nl-achievement-pianist: #f2a634;
-    --nl-surface-media-scrim: #00000099;
+    /* 시리즈 · 하나짜리 선 · 좋아요 · 뮤즈캣 라벨 · 내 위치 */
+    --nl-series-fast: #5cc1f7;
+    --nl-series-slow: #fa575e;
+    --nl-series-single: #4bc0c0;
+    --nl-like-active: #ffa299;
+    --nl-musecat-label: #54bce1;
+    --nl-my-position: #dab156;
+    --nl-map-pin: #5b63d2;
+    --nl-surface-media-scrim: #000000a2;
     --nl-content-on-media: #ffffff;
     /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
     --nl-stage-canvas: #070910;
@@ -110,51 +104,65 @@
     --nl-hand-right: #e85f5d;
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
-    /* 색 글자는 누르는 면 surface/control 위에서도 4.5 : 1 — 같은 색상각에서 명도만 한 칸(2026-09-30 A, 2026-09-18 의 연장) */
-    --nl-difficulty-text-normal: #25a76f;
-    --nl-difficulty-text-hard: #ef6b00;
-    --nl-difficulty-text-expert: #de7469;
-    --nl-difficulty-text-real: #b477eb;
-    --nl-category-pops: #bf8383;
-    --nl-category-anime: #ba829e;
-    --nl-category-bm: #7d94b8;
-    --nl-category-org: #b5896e;
-    --nl-category-var: #729d7f;
-    --nl-category-cljz: #b09365;
-    --nl-exam-tier-low: #8a8a8a;
-    --nl-exam-tier-mid: #b98b67;
-    --nl-exam-tier-high: #c4c8ce;
-    --nl-exam-tier-top: #d6b56d;
-    --nl-exam-tier-peak: #d6b56d;
-    --nl-exam-plate-peak: #000000;
-    --nl-exam-tint-top: #25211a;
-    /* 서열 값 그라데이션 양끝(2026-09-17 G1) — 1.0 = Normal 을 밝게 · 14.5 = 분홍 */
-    --nl-tier-value-start: color-mix(
-        in oklch,
-        var(--nl-difficulty-text-normal) 55%,
-        white
+    --nl-category-pops: #c88567;
+    --nl-category-anime: #c87bb6;
+    --nl-category-bm: #7e96ba;
+    --nl-category-org: #ec996e;
+    --nl-category-var: #bf8b3c;
+    --nl-category-cljz: #5ba64f;
+    /* 업적 단계 · 검정 급 금속 */
+    --nl-achievement-bronze: #b6720d;
+    --nl-achievement-silver: #b0b3ba;
+    --nl-achievement-gold: #dab156;
+    --nl-achievement-platinum: #36cfb0;
+    --nl-achievement-diamond: #b9f2ff;
+    --nl-achievement-full-combo: #d4f6ef;
+    --nl-exam-tier-low: #b6720d;
+    --nl-exam-tier-mid: #b0b3ba;
+    --nl-exam-tier-high: #dab156;
+    --nl-exam-tier-top: #36cfb0;
+    --nl-exam-tier-peak: #b9f2ff;
+    --nl-exam-song-1: #4589ff;
+    --nl-exam-song-2: #00c9c9;
+    --nl-exam-song-3: #f1c21b;
+    --nl-exam-margin-minus: #ffa299;
+    --nl-exam-margin-plus: #35ce9a;
+    /* 활동 달력 — 빈 칸 · 1–4단 */
+    --nl-activity-0: #1d2025;
+    --nl-activity-1: #033a16;
+    --nl-activity-2: #196c2e;
+    --nl-activity-3: #2ea043;
+    --nl-activity-4: #56d364;
+    /* 서열 값 계단 사이 칸 넷 · 끝 색 */
+    --nl-tier-value-normal-hard: #c0a600;
+    --nl-tier-value-hard-expert: #ff8162;
+    --nl-tier-value-expert-real: #ec85cd;
+    --nl-tier-value-real-end: #dc76ff;
+    --nl-tier-value-end: #ff45ff;
+    /* 점수 목표 색 — S · 990k · Pianist(세 색을 같은 간격으로 이은 그라데이션) */
+    --nl-score-goal-s: #e3cb53;
+    --nl-score-goal-990k: #f7c481;
+    --nl-score-goal-pianist-1: #e9bcf2;
+    --nl-score-goal-pianist-2: #eab7d4;
+    --nl-score-goal-pianist-3: #f7c6ad;
+    --nl-score-goal-pianist: linear-gradient(
+        90deg,
+        var(--nl-score-goal-pianist-1),
+        var(--nl-score-goal-pianist-2),
+        var(--nl-score-goal-pianist-3)
     );
-    --nl-tier-value-end: #ff5fd2;
-    /* 점수 목표 색 — S(950k) = JUST 노랑 · 990k = 노랑과 ◆JUST 분홍 사이 · Pianist = ◆JUST 분홍.
-       서열표 테두리 · 악곡 상세 수치 띠가 같이 쓴다 (2026-09-14 · 2026-09-17) */
-    --nl-score-goal-s: var(--nl-judgement-just);
-    --nl-score-goal-990k: color-mix(
-        in srgb,
-        var(--nl-judgement-just) 50%,
-        var(--nl-judgement-s-just)
-    );
-    --nl-score-goal-pianist: var(--nl-judgement-s-just);
-    /* Grd · 레이팅 구간 색(2026-09-19 R1) — 아래 두 칸은 판정 색(NEAR · GOOD)을 빌리고, 위 세 칸은 점수 목표 색 */
-    --nl-grade-band-1: var(--nl-judgement-near);
-    --nl-grade-band-2: var(--nl-judgement-good);
+    /* Grd · 레이팅 구간 색 — 아래 둘은 등급 B · A, 위 셋은 점수 목표 색 */
+    --nl-grade-band-1: var(--nl-score-grade-b);
+    --nl-grade-band-2: var(--nl-score-grade-a);
     --nl-grade-band-3: var(--nl-score-goal-s);
     --nl-grade-band-4: var(--nl-score-goal-990k);
     --nl-grade-band-5: var(--nl-score-goal-pianist);
-    /* 등급 색(2026-09-26 C2a) — 게임 등급 아이콘 색을 있는 토큰으로 빌린다(새 값 없음). S · P 는 점수 목표 색,
-       A+ = 난이도 글자 빨강(한 단계 밝게) · A = 난이도 빨강 · B = 차트 파랑, C · D 는 정하지 않음(흐린 글자색) */
-    --nl-score-grade-a-plus: var(--nl-difficulty-text-expert);
-    --nl-score-grade-a: var(--nl-difficulty-expert);
-    --nl-score-grade-b: var(--nl-local-data-single);
+    /* 등급 색 — S · P 는 점수 목표 색. A+ · A 는 같은 값(「+」 글자로 갈림) */
+    --nl-score-grade-a-plus: #f56757;
+    --nl-score-grade-a: #f56757;
+    --nl-score-grade-b: #459fbe;
+    --nl-score-grade-c: #eb9593;
+    --nl-score-grade-d: #adada0;
 }
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {
@@ -162,12 +170,10 @@ html[data-theme="light"] .noslog-ui,
     --nl-surface-canvas: #ffffff;
     --nl-surface-surface: #ffffff;
     --nl-surface-control: #f5f5f5;
-    --nl-surface-input: transparent;
     --nl-content-default: #0a0a0a;
     --nl-content-subdued: #737373;
     --nl-border-divider: #e5e5e5;
     --nl-border-input: #e5e5e5;
-    --nl-border-ring: #a1a1a1;
     --nl-focus-ring: #000000;
     --nl-identity-mark: #292929;
     --nl-primary-default: #171717;
@@ -188,25 +194,12 @@ html[data-theme="light"] .noslog-ui,
     --nl-judgement-miss: #646464;
     --nl-local-data-single: #168eff;
     --nl-local-data-bucket-1: #62b3ff;
-    --nl-local-data-bucket-2: #3fa2ff;
-    --nl-local-data-bucket-3: #168eff;
-    --nl-local-data-bucket-4: #0074e2;
     --nl-local-data-bucket-5: #0065c3;
-    --nl-local-data-bucket-6: #0055a5;
-    --nl-local-data-fast: #168eff;
-    --nl-local-data-slow: #c87b00;
     --nl-local-data-categorical-1: #168eff;
     --nl-local-data-categorical-2: #c87b00;
     --nl-local-data-categorical-3: #75980b;
-    --nl-local-data-categorical-4: #df1278;
     --nl-local-data-categorical-5: #8b47d7;
-    --nl-local-data-personal: #168eff;
     --nl-achievement-full-combo: #75980b;
-    --nl-achievement-pianist: #c87b00;
-    --nl-difficulty-text-normal: #09834a;
-    --nl-difficulty-text-hard: #ba5500;
-    --nl-difficulty-text-expert: #cd2e1d;
-    --nl-difficulty-text-real: #9452ce;
     --nl-category-pops: #b0413b;
     --nl-category-anime: #984a79;
     --nl-category-bm: #3f6fa8;
@@ -218,22 +211,7 @@ html[data-theme="light"] .noslog-ui,
     --nl-exam-tier-high: #6d737b;
     --nl-exam-tier-top: #80601d;
     --nl-exam-tier-peak: #d6b56d;
-    --nl-exam-plate-peak: #111111;
-    --nl-exam-tint-top: #f2efe8;
-    /* 흰 바탕에서는 흰 섞음 · 밝은 분홍이 흐려서 기본 글자색 섞음 · ◆JUST 분홍 */
-    --nl-tier-value-start: color-mix(
-        in oklch,
-        var(--nl-difficulty-text-normal) 55%,
-        var(--nl-content-default)
-    );
     --nl-tier-value-end: var(--nl-judgement-s-just);
     /* 스켈레톤 물결 띠 — 당근 SEED 밝은 shimmer 흰 67% */
     --nl-skeleton-shimmer: #ffffffab;
-}
-/* 상호작용 겹침 층(2026-09-23 I2) — 올림 · 선택 · 누름 규칙이 이 색을 지금 면 위에 background-image 로 겹친다.
-   색으로 등록해 두어야 ① 올림 · 누름 색 움직임(--nl-motion-duration-d3)이 켜질 때 서서히 나타난다 */
-@property --nl-state-layer {
-    syntax: "<color>";
-    inherits: false;
-    initial-value: rgb(255 255 255 / 0%);
 }

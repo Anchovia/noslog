@@ -24,11 +24,11 @@
 .noslog-ui .nl-bar-list__track {
     height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-small);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
     overflow: hidden;
 }
 .noslog-ui .nl-bar-list .nl-bar-list__track {
-    background: var(--nl-surface-control);
+    background: var(--nl-track);
 }
 .noslog-ui .nl-bar-list .nl-bar-list__track--steps {
     display: grid;
@@ -43,7 +43,7 @@
 .noslog-ui
     .nl-bar-list__track--steps
     > span:not(.nl-bar-list__steps-fill, .nl-bar-list__fill) {
-    background: var(--nl-surface-control);
+    background: var(--nl-track);
 }
 /* 채운 칸은 같은 칸 격자를 한 장으로 덮어 드러남을 한 번만 건다 — 칸마다 따로 돌지 않고 트랙을 왼쪽부터 한 번에 훑는다 */
 .noslog-ui .nl-bar-list__steps-fill {
@@ -59,7 +59,7 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: var(--nl-local-data-single);
+    background: var(--nl-primary-default);
 }
 .noslog-ui .nl-bar-list__value {
     text-align: end;

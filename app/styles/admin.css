@@ -60,22 +60,22 @@
 }
 /* 링크로 만든 세그먼트 — 고른 칸은 공용 [aria-checked="true"] 규칙(components/segments.css)과 같은 값. 공용 값이 바뀌면 함께 맞춘다 */
 .noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"] {
-    background: var(--nl-surface-control);
-    color: var(--nl-content-strong);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
     font-weight: var(--nl-type-weight-bold);
 }
-/* 공용 올림 · 누름 · 포커스 규칙은 [aria-checked] 만 빼므로 고른 링크 칸도 강한 글자를 지키게 한다 */
+/* 공용 올림 · 누름 · 포커스 규칙은 [aria-checked] 만 빼므로 고른 링크 칸도 반전 면 글자를 지키게 한다 */
 @media (hover: hover) {
     .noslog-ui
         .nl-dashboard__ranges
         .nl-segments__item[aria-current="true"]:hover {
-        color: var(--nl-content-strong);
+        color: var(--nl-primary-on-primary);
     }
 }
 .noslog-ui
     .nl-dashboard__ranges
     .nl-segments__item[aria-current="true"]:is(:active, :focus-visible) {
-    color: var(--nl-content-strong);
+    color: var(--nl-primary-on-primary);
 }
 /* 홈 나머지 패널(판 10 Umami) — 1056 이상 같은 폭 2열 · 사이 12, 같은 줄은 같은 높이, 홀수로 남는 마지막 패널은 전폭 */
 .noslog-ui .nl-dashboard__grid {
@@ -167,18 +167,18 @@
     text-decoration: none;
 }
 .noslog-ui .nl-dashboard__kpi[aria-current="true"] {
-    border-color: var(--nl-border-ring);
+    border-color: var(--nl-border-input);
     background: var(--nl-surface-surface);
 }
 /* 면 있는 이동 칸 = 한 단계 위 면 + 강한 글자. 고른 칸 규칙보다 뒤에 두어 고른 칸도 반응한다 */
 @media (hover: hover) {
     .noslog-ui a.nl-dashboard__kpi:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-surface-elevated);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui a.nl-dashboard__kpi:is(:active, :focus-visible) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-surface-elevated);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-dashboard__delta {
@@ -276,19 +276,11 @@
 }
 @media (hover: hover) {
     .noslog-ui a.nl-dashboard__todo-item:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui a.nl-dashboard__todo-item:is(:active, :focus-visible)::before {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 .noslog-ui a.nl-dashboard__todo-item:focus-visible {
     outline: none;
@@ -376,22 +368,14 @@
         color: var(--nl-content-strong);
     }
     .noslog-ui a.nl-admin-row:hover::before {
-        --nl-state-layer: var(--nl-surface-control-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui a.nl-admin-row:is(:active, :focus-visible) {
     color: var(--nl-content-strong);
 }
 .noslog-ui a.nl-admin-row:is(:active, :focus-visible)::before {
-    --nl-state-layer: var(--nl-surface-control-hover);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 .noslog-ui a.nl-admin-row:focus-visible {
     outline: none;
@@ -473,20 +457,12 @@
 @media (hover: hover) {
     .noslog-ui .nl-admin-summary:hover::before,
     .noslog-ui details:has(> .nl-admin-card-summary:hover) {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-admin-summary:is(:active, :focus-visible)::before,
 .noslog-ui details:has(> .nl-admin-card-summary:is(:active, :focus-visible)) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 .noslog-ui .nl-admin-summary:focus-visible {
     outline: none;
@@ -508,7 +484,7 @@
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-admin-chip--live {
-    border-color: var(--nl-border-ring);
+    border-color: var(--nl-border-input);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-admin-chip--warning {
@@ -725,7 +701,7 @@
 }
 /* 캔버스 위에 떠 있는 것(가져오기 메뉴 · 범례 · 확대 막대) — 떠 있는 창 둘레 */
 .noslog-ui .nl-editor-floating {
-    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
 }
 /* 전체 화면 에디터 위에서 여는 확인 창 — 에디터 층보다 위 */
 .noslog-ui:has(> .nl-editor-dialog) > .nl-dialog-overlay {
@@ -1171,7 +1147,6 @@
         calc(100vw - var(--nl-spacing-16))
     );
     overflow: hidden;
-    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
 }

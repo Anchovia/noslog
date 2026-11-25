@@ -31,26 +31,18 @@
     color: var(--nl-content-default);
 }
 @media (hover: hover) {
-    .noslog-ui .nl-sort-menu__item:not(:disabled):hover {
-        --nl-state-layer: var(--nl-surface-control-hover);
+    .noslog-ui .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):hover {
+        background-color: var(--nl-interaction-row);
         color: var(--nl-content-strong);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
     }
 }
 /* 누름 · 키로 가리킨 항목도 올림과 같은 면(액션 메뉴 항목과 같음). 마우스로 연 메뉴의 첫 항목은 면을 깔지 않는다 */
 :root:not([data-input="pointer"])
     .noslog-ui
-    .nl-sort-menu__item:not(:disabled):focus-visible,
-.noslog-ui .nl-sort-menu__item:not(:disabled):active {
-    --nl-state-layer: var(--nl-surface-control-hover);
+    .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):focus-visible,
+.noslog-ui .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):active {
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
 }
 /* 마우스로 연 메뉴는 첫 항목에 포커스 선을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-sort-menu__item:focus-visible {

@@ -1,3 +1,7 @@
+/* 소수 칸은 글자 역할(component-title)이 색을 따로 정해 바깥 숫자의 등급 색을 끊으므로 바깥 색을 그대로 받는다 */
+.noslog-ui .nl-my-best__grd-fraction {
+    color: inherit;
+}
 .noslog-ui .nl-stat-card[data-pending] .nl-my-best__grd-value,
 .noslog-ui .nl-stat-card[data-pending] .nl-my-best__grd-max-value {
     color: var(--nl-content-subdued) !important;
@@ -116,7 +120,10 @@
 }
 /* 내 Grd 숫자 = 막대 위치 색(최대값을 모르면 기본 글자색), 최대 Grd = Pianist 색 (2026-09-18) */
 .noslog-ui .nl-my-best__grd-max-value {
-    color: var(--nl-score-goal-pianist);
+    background: var(--nl-score-goal-pianist);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 /* 그레이드 진행 막대 — 트랙은 공용 막대 목록 트랙(nl-bar-list__track), 0 → 최대 Grd.
    채움 색 = 막대 전체 기준 등급 그라데이션(채운 만큼만 보임) — 경계 · 색은 lib/music/grade-progress-color.
@@ -240,7 +247,6 @@
     justify-content: space-between;
     gap: var(--nl-spacing-16);
     min-height: var(--nl-control-height);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-facts > div:last-child {
     border-bottom: 0;
@@ -391,9 +397,6 @@
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-surface);
 }
-.noslog-ui .nl-recent-plays > li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
-}
 .noslog-ui .nl-recent-play {
     display: flex;
     align-items: center;
@@ -409,11 +412,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-recent-play:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-recent-play::-webkit-details-marker {
@@ -479,22 +478,22 @@
 /* 최근 판정 추이 선 색 — 판정 목록의 색 점과 같은 색 (2026-09-17 B).
    MISS 빨강은 판정 색에 빨강이 없어 feedback/destructive 를 빌려 쓴다(결정 기록 예외) */
 .noslog-ui .nl-performance-chart[data-metric="sjust"] {
-    --nl-local-data-personal: var(--nl-judgement-s-just);
+    --nl-line-color: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-performance-chart[data-metric="miss"] {
-    --nl-local-data-personal: var(--nl-feedback-destructive);
+    --nl-line-color: var(--nl-feedback-destructive);
 }
 .noslog-ui .nl-performance-chart[data-metric="timing"] {
-    --nl-local-data-fast: var(--nl-judgement-near);
+    --nl-series-fast: var(--nl-judgement-near);
 }
 
 /* 패턴 경향 단계 색 = 기존 토큰 별칭(새 색 없음 · 2026-09-17 E2). 테마마다 가리키는 값이 따라 바뀌게 개요 안에서 정의.
    기준 창(포털)의 단계 목록도 같은 색 네모를 쓰므로 그 목록에서도 정의 (2026-09-23) */
 .noslog-ui .nl-overview,
 .noslog-ui .nl-pattern-steps {
-    --nl-pattern-level-0: var(--nl-local-data-bucket-3);
-    --nl-pattern-level-1: var(--nl-judgement-near);
-    --nl-pattern-level-2: var(--nl-judgement-just);
-    --nl-pattern-level-3: var(--nl-difficulty-hard);
-    --nl-pattern-level-4: var(--nl-difficulty-expert);
+    --nl-pattern-level-0: var(--nl-content-tertiary);
+    --nl-pattern-level-1: var(--nl-difficulty-normal);
+    --nl-pattern-level-2: var(--nl-difficulty-hard);
+    --nl-pattern-level-3: var(--nl-difficulty-expert);
+    --nl-pattern-level-4: var(--nl-difficulty-real);
 }

@@ -1,31 +1,23 @@
 /**
- * 서열 값(1.0–14.5) → 글자 색. 구간 기준 색을 oklch 로 이어 칠한다(2026-09-17 G1, osu! 난이도 색 참고).
- * 1.0 밝은 Normal → 3.5 Normal → 6.0 JUST 노랑 → 8.0 Hard → 11.25 Expert → 13.05 Real → 14.5 분홍.
- * 구간: Normal 1–5.9 · Hard 6–9.9 · Expert 10–12.5 · Real 12.6–13.5 · Real+ 13.6–14.5
+ * 서열 값(1.0–14.5) → 글자 색. 아홉 칸 계단, 칸 안은 단색이다.
+ * 칸마다 아래 끝은 포함하고 위 끝은 포함하지 않는다. 1 아래는 Normal.
+ * Normal 1–4.5 · N–H 4.5–8 · Hard 8–9.625 · H–E 9.625–11.25 · Expert 11.25–12.15 ·
+ * E–R 12.15–13.05 · Real 13.05–13.775 · R–끝 13.775–14.5 · 끝 14.5 이상
  */
-const ANCHORS: [number, string][] = [
-    [1, "var(--nl-tier-value-start)"],
-    [3.5, "var(--nl-difficulty-text-normal)"],
-    [6, "var(--nl-judgement-just)"],
-    [8, "var(--nl-difficulty-text-hard)"],
-    [11.25, "var(--nl-difficulty-text-expert)"],
-    [13.05, "var(--nl-difficulty-text-real)"],
-    [14.5, "var(--nl-tier-value-end)"],
+const STEPS: [number, string][] = [
+    [4.5, "var(--nl-difficulty-normal)"],
+    [8, "var(--nl-tier-value-normal-hard)"],
+    [9.625, "var(--nl-difficulty-hard)"],
+    [11.25, "var(--nl-tier-value-hard-expert)"],
+    [12.15, "var(--nl-difficulty-expert)"],
+    [13.05, "var(--nl-tier-value-expert-real)"],
+    [13.775, "var(--nl-difficulty-real)"],
+    [14.5, "var(--nl-tier-value-real-end)"],
 ];
 
 export function tierValueColor(value: number) {
-    const clamped = Math.min(
-        ANCHORS.at(-1)![0],
-        Math.max(ANCHORS[0][0], value)
+    return (
+        STEPS.find(([limit]) => value < limit)?.[1] ??
+        "var(--nl-tier-value-end)"
     );
-    for (let index = 0; index < ANCHORS.length - 1; index++) {
-        const [from, fromColor] = ANCHORS[index];
-        const [to, toColor] = ANCHORS[index + 1];
-        if (clamped > to) continue;
-        const share = Math.round(((to - clamped) / (to - from)) * 100);
-        if (share >= 100) return fromColor;
-        if (share <= 0) return toColor;
-        return `color-mix(in oklch, ${fromColor} ${share}%, ${toColor})`;
-    }
-    return ANCHORS.at(-1)![1];
 }

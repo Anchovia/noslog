@@ -49,6 +49,8 @@ export default function ScoreScatter({
     const t = useTranslations();
     const locale = useLocale();
     const id = useId();
+    const pianistGradient = `${id.replace(/:/g, "")}-pianist`;
+    const pianistFill = { fill: `url(#${pianistGradient})` };
     const { ref, width } = useElementWidth<HTMLDivElement>();
     // SVG 좌표는 CSS 변수를 못 읽어 간격 토큰을 그 자리 요소에서 잰다
     const [plot, setPlot] = useState<HTMLDivElement | null>(null);
@@ -105,6 +107,31 @@ export default function ScoreScatter({
                         className="nl-score-scatter__svg"
                         aria-hidden
                     >
+                        <defs>
+                            <linearGradient id={pianistGradient}>
+                                <stop
+                                    offset="0"
+                                    style={{
+                                        stopColor:
+                                            "var(--nl-score-goal-pianist-1)",
+                                    }}
+                                />
+                                <stop
+                                    offset="0.5"
+                                    style={{
+                                        stopColor:
+                                            "var(--nl-score-goal-pianist-2)",
+                                    }}
+                                />
+                                <stop
+                                    offset="1"
+                                    style={{
+                                        stopColor:
+                                            "var(--nl-score-goal-pianist-3)",
+                                    }}
+                                />
+                            </linearGradient>
+                        </defs>
                         <line
                             x1={0}
                             x2={width}
@@ -122,6 +149,11 @@ export default function ScoreScatter({
                                 className="nl-score-scatter__dot"
                                 data-me={score === myScore ? "" : undefined}
                                 data-tone={scoreTone(score)}
+                                style={
+                                    scoreTone(score) === "pianist"
+                                        ? pianistFill
+                                        : undefined
+                                }
                             />
                         ))}
                         {guides
@@ -136,6 +168,11 @@ export default function ScoreScatter({
                                     dominantBaseline="central"
                                     className="nl-score-scatter__label"
                                     data-goal={guide.goal}
+                                    style={
+                                        guide.goal === "pianist"
+                                            ? pianistFill
+                                            : undefined
+                                    }
                                     textAnchor={guide.anchor}
                                 >
                                     {guide.label}

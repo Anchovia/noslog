@@ -38,7 +38,7 @@
     color: var(--nl-content-on-inverse);
     border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-small);
-    box-shadow: var(--nl-tooltip-shadow);
+    box-shadow: var(--nl-overlay-shadow);
     padding: var(--nl-spacing-4) var(--nl-spacing-8);
 }
 /* ⑧ 용어 도움말 = 툴팁 — 나타날 때 .9 에서 커지며 페이드(원점은 단추 쪽), 사라질 때 페이드만(당근 help-bubble).

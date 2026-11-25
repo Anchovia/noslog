@@ -18,14 +18,14 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-/* 상자 없는 셀렉트 = Spectrum 2 picker quiet — 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
+/* 상자 없는 셀렉트 = 면 없는 누르는 것 — 올림 · 키 포커스 · 누름 = interaction/row 면 · 글자 content/strong */
 .noslog-ui .nl-compact-select:not(:disabled):is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-compact-select:not(:disabled):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }

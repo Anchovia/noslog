@@ -30,6 +30,29 @@ const preview: Preview = {
         viewport: { options: contractViewports },
         a11y: {
             test: "error",
+            // 색 대비 기준 3 : 1 — axe 기본 검사의 비율만 바꾸고 나머지 값은 기본 그대로
+            config: {
+                checks: [
+                    {
+                        id: "color-contrast",
+                        options: {
+                            ignoreUnicode: true,
+                            ignoreLength: false,
+                            ignorePseudo: false,
+                            boldValue: 700,
+                            boldTextPt: 14,
+                            largeTextPt: 18,
+                            contrastRatio: {
+                                normal: { expected: 3 },
+                                large: { expected: 3 },
+                            },
+                            pseudoSizeThreshold: 0.25,
+                            shadowOutlineEmMax: 0.2,
+                            textStrokeEmMin: 0.03,
+                        },
+                    },
+                ],
+            },
             options: {
                 runOnly: {
                     type: "tag",

@@ -48,39 +48,36 @@
 .noslog-ui .nl-line-chart__state[data-placement="center"] {
     transform: translateY(-50%);
 }
-/* 성장 추이 선 = 주황(osu! 계열). 선이 하나라 「평균 · SLOW」 뜻과 부딪히지 않는다 */
-.noslog-ui .nl-line-chart[data-tone="growth"] {
-    --nl-local-data-personal: var(--nl-local-data-categorical-2);
-}
+/* 선 색 = 선이 하나인 그래프(성장 추이 · 레이팅 곡선 · 점수 향상)는 series-single. 판정 추이는 지표마다 --nl-line-color 로 덮는다 */
 .noslog-ui .nl-line-chart__grid {
     stroke: var(--nl-border-divider);
     stroke-width: var(--nl-stroke-default);
 }
 .noslog-ui .nl-line-chart__line {
     fill: none;
-    stroke: var(--nl-local-data-personal);
+    stroke: var(--nl-line-color, var(--nl-series-single));
     stroke-width: var(--nl-stroke-strong);
     stroke-linejoin: round;
 }
 .noslog-ui .nl-line-chart__point {
     fill: var(--nl-surface-canvas);
-    stroke: var(--nl-local-data-personal);
+    stroke: var(--nl-line-color, var(--nl-series-single));
     stroke-width: var(--nl-stroke-strong);
 }
 /* 가리킨 점(점을 끈 그래프) = 선 색으로 채운 반지름 4 */
 .noslog-ui .nl-line-chart__point[data-active] {
-    fill: var(--nl-local-data-personal);
+    fill: var(--nl-line-color, var(--nl-series-single));
     stroke-width: 0;
 }
 .noslog-ui .nl-line-chart [data-series="fast"] {
-    stroke: var(--nl-local-data-fast);
+    stroke: var(--nl-series-fast);
 }
 .noslog-ui .nl-line-chart__line[data-series="slow"] {
-    stroke: var(--nl-local-data-slow);
+    stroke: var(--nl-series-slow);
     stroke-dasharray: var(--nl-spacing-4) var(--nl-spacing-4);
 }
 .noslog-ui .nl-line-chart__point[data-series="slow"] {
-    fill: var(--nl-local-data-slow);
+    fill: var(--nl-series-slow);
     stroke-width: 0;
 }
 .noslog-ui .nl-line-chart__legend {
@@ -98,11 +95,11 @@
     height: var(--nl-spacing-8);
 }
 .noslog-ui .nl-line-chart__legend [data-series="fast"] {
-    border: var(--nl-stroke-strong) solid var(--nl-local-data-fast);
+    border: var(--nl-stroke-strong) solid var(--nl-series-fast);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-line-chart__legend [data-series="slow"] {
-    background: var(--nl-local-data-slow);
+    background: var(--nl-series-slow);
 }
 .noslog-ui .nl-line-chart__x {
     display: flex;
@@ -147,13 +144,13 @@
     width: var(--nl-spacing-8);
     height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-local-data-personal);
+    background: var(--nl-line-color, var(--nl-series-single));
 }
 .noslog-ui .nl-line-chart__series-name[data-series="fast"] > i {
-    background: var(--nl-local-data-fast);
+    background: var(--nl-series-fast);
 }
 .noslog-ui .nl-line-chart__series-name[data-series="slow"] > i {
-    background: var(--nl-local-data-slow);
+    background: var(--nl-series-slow);
 }
 .noslog-ui .nl-line-chart__tooltip {
     display: flex;
@@ -162,9 +159,7 @@
     padding: var(--nl-spacing-8);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
     position: absolute;
     width: max-content;
     max-width: 100%;

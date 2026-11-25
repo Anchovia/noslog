@@ -49,7 +49,6 @@
     gap: var(--nl-spacing-4) var(--nl-spacing-12);
     align-items: center;
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-row);
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-announcement-row > .nl-announcement-meta {
@@ -154,19 +153,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-announcements__adjacent-link:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-surface-elevated);
     }
 }
 .noslog-ui .nl-announcements__adjacent-link:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-surface-elevated);
 }
 .noslog-ui .nl-announcement-body {
     display: flex;
@@ -259,7 +250,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-ring);
+    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-input);
     padding-inline-start: var(--nl-spacing-12);
     color: var(--nl-content-subdued);
 }
@@ -310,7 +301,6 @@
 .noslog-ui .nl-announcement-body td,
 .noslog-ui .nl-privacy-table th,
 .noslog-ui .nl-privacy-table td {
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     padding: calc(
             (
                     var(--nl-control-height) - var(--nl-type-line-height-ui) -
@@ -409,7 +399,7 @@
     padding: 0;
     list-style: none;
 }
-/* 고르는 줄 — 컨트롤 높이 · 고른 줄은 경계를 세게 */
+/* 고르는 줄 — 컨트롤 높이 · 올림은 겹침만 · 고른 줄은 반전 면 */
 .noslog-ui .nl-poll__option {
     display: flex;
     align-items: center;
@@ -425,20 +415,23 @@
     text-align: start;
 }
 @media (hover: hover) {
-    .noslog-ui .nl-poll__option:hover:not(:disabled) {
-        border-color: var(--nl-border-ring);
+    .noslog-ui .nl-poll__option:hover:not(:disabled, [aria-pressed="true"]) {
+        background-color: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
-.noslog-ui .nl-poll__option:is(:focus-visible, :active):not(:disabled) {
-    border-color: var(--nl-border-ring);
+.noslog-ui
+    .nl-poll__option:is(:focus-visible, :active):not(
+        :disabled,
+        [aria-pressed="true"]
+    ) {
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
-    border-color: var(--nl-border-ring);
-    border-width: var(--nl-stroke-strong);
-    padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
-    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    border-color: transparent;
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
     font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-poll__option:disabled {
@@ -462,22 +455,22 @@
 .noslog-ui .nl-poll__label svg {
     flex-shrink: 0;
 }
-/* 진행 막대 — 공용 규격(트랙 8 · 모서리 4 · 트랙 divider) */
+/* 진행 막대 — 공용 규격(트랙 8 · 모서리 4 · 트랙 track). 1위만 subdued, 나머지 tertiary */
 .noslog-ui .nl-poll__bar {
     display: block;
     height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-small);
-    background: var(--nl-border-divider);
+    background: var(--nl-track);
     overflow: hidden;
 }
 .noslog-ui .nl-poll__bar i {
     display: block;
     height: 100%;
     border-radius: var(--nl-radius-small);
-    background: var(--nl-border-ring);
+    background: var(--nl-content-tertiary);
 }
-.noslog-ui .nl-poll__bar i[data-mine] {
-    background: var(--nl-content-default);
+.noslog-ui .nl-poll__bar i[data-top] {
+    background: var(--nl-content-subdued);
 }
 .noslog-ui .nl-poll__foot {
     display: flex;

@@ -9,11 +9,11 @@ import { PROFILE_ACTIVITY_BATCH_SIZE } from "@/features/profile/schemas/public-p
 import ProfileOnlyMe from "./profile-only-me";
 import ProfilePlaysList from "./profile-plays-list";
 
-const LEVELS = [0, 1, 2, 3, 4, 5, 6] as const;
+const LEVELS = [0, 1, 2, 3, 4] as const;
 
-/** 달력 칸 단계 — 0 = 플레이 없음, 1–6 = 그 사람의 가장 많이 한 날에 대한 비율(차트 단계 색 6) */
+/** 달력 칸 단계 — 0 = 플레이 없음, 1–4 = 그 사람의 가장 많이 한 날에 대한 비율 */
 function activityLevel(count: number, max: number) {
-    return count > 0 && max > 0 ? Math.min(6, Math.ceil((count / max) * 6)) : 0;
+    return count > 0 && max > 0 ? Math.min(4, Math.ceil((count / max) * 4)) : 0;
 }
 
 /**

@@ -7,7 +7,7 @@
     /* 둘레 선 두께만큼 안쪽을 줄여 판 크기는 안쪽 8 일 때와 같다.
        outline 이 아닌 border 인 까닭 — Radix 가 판에 outline: none 을 인라인으로 넣어 outline 은 지워진다 */
     padding: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
-    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
     box-shadow: var(--nl-overlay-shadow);
@@ -32,15 +32,36 @@
     line-height: var(--nl-type-line-height-ui);
     font-weight: var(--nl-type-weight-regular);
 }
-/* 고른 줄 = 한 단계 면 + bold. 체크 표시는 그대로, 올림 겹침은 이 면 위에 그린다 */
+/* 고른 줄 = 반전 면 + 반전 면 위 글자 + bold. 체크 표시는 그대로 */
 .noslog-ui
     :is(
         .nl-select-option[data-state="checked"],
         .nl-sort-menu__item[aria-checked="true"],
         .nl-exam-select__option[data-state="checked"]
     ) {
-    background-color: var(--nl-surface-control);
+    background-color: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
     font-weight: var(--nl-type-weight-bold);
+}
+.noslog-ui
+    :is(
+        .nl-select-option[data-state="checked"],
+        .nl-sort-menu__item[aria-checked="true"],
+        .nl-exam-select__option[data-state="checked"]
+    ):is([data-highlighted], :focus-visible) {
+    background-color: var(--nl-primary-hover);
+    color: var(--nl-primary-on-primary);
+}
+@media (hover: hover) {
+    .noslog-ui
+        :is(
+            .nl-select-option[data-state="checked"],
+            .nl-sort-menu__item[aria-checked="true"],
+            .nl-exam-select__option[data-state="checked"]
+        ):hover {
+        background-color: var(--nl-primary-hover);
+        color: var(--nl-primary-on-primary);
+    }
 }
 /* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양(판 · 항목 값은 위 「메뉴 한 모양」) · 행 사이 4
    선택 = bold + 오른쪽 체크 16(면은 바꾸지 않는다) · 마우스 위치 = 올림 면 · 키보드 위치 = 포커스 선 */
@@ -71,19 +92,21 @@
     flex-shrink: 0;
 }
 .noslog-ui .nl-select-option[data-highlighted] {
-    --nl-state-layer: var(--nl-surface-control-hover);
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
 }
 /* 마우스로 연 목록은 Radix 가 고른 항목을 가리킨 것으로 둔다 — 마우스가 올라가기 전에는 면 · 글자를 칠하지 않는다 */
 :root[data-input="pointer"]
     .noslog-ui
     .nl-select-option[data-highlighted]:not(:hover) {
     color: inherit;
-    background-image: none;
+    background-color: transparent;
+}
+:root[data-input="pointer"]
+    .noslog-ui
+    .nl-select-option[data-state="checked"][data-highlighted]:not(:hover) {
+    color: var(--nl-primary-on-primary);
+    background-color: var(--nl-primary-default);
 }
 /* 마우스로 연 목록은 선택 항목에 포커스 선을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-select-option:focus-visible {

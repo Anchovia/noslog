@@ -148,7 +148,7 @@ const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
 const TIER_NUMERALS = ["", "I", "II", "III", "IV", "V"];
 
 /**
- * 업적 육각(2026-09-24 I1 · T2) — 테두리 = 동 · 은 · 금(검정 명판 금속 사다리) · 플래티넘(판정 GOOD) · 다이아(판정 ◆JUST), 못 얻은 것은 흐린 선 · 흐린 그림(K1).
+ * 업적 육각(2026-09-24 I1 · T2) — 테두리 = 동 · 은 · 금 · 플래티넘 · 다이아, 못 얻은 단계는 금속 색에 투명도 0.5.
  * `size="row"` 목록 48 + 단계 숫자 알약(색 + 숫자 두 단서), `size="inline"` 머리 · 한 줄 24(색만, 이름은 aria · title),
  * `size="large"` 배지 정보 창 64(2026-09-25 M1 — 단계는 제목의 로마 숫자가 말한다).
  * 글자 · 이름은 부르는 쪽이 붙인다 — 여기는 그림만.
@@ -158,6 +158,7 @@ export default function AchievementHex({
     tier,
     size = "row",
     label,
+    locked,
     className,
 }: {
     achievementKey: string;
@@ -166,6 +167,8 @@ export default function AchievementHex({
     size?: "row" | "inline" | "large";
     /** 접근 이름 — 주면 그림으로 읽고(title 도), 없으면 옆 글자가 설명하는 장식 */
     label?: string;
+    /** 못 얻은 단계 — 단계 금속 색을 투명도 0.5 로 */
+    locked?: boolean;
     className?: string;
 }) {
     const Icon = ACHIEVEMENT_ICONS[achievementKey] ?? Star;
@@ -174,6 +177,7 @@ export default function AchievementHex({
             className={cn("nl-achievement-hex", className)}
             data-size={size}
             data-tier={tier || undefined}
+            data-locked={locked ? "" : undefined}
             role={label ? "img" : undefined}
             aria-label={label}
             aria-hidden={label ? undefined : true}

@@ -46,7 +46,7 @@ export function rankTone(
 
 /**
  * Grd · 레이팅 구간 색(2026-09-19 B2 · R1) — 두 모드 · 두 값 같은 기준. 6,000 아래는 기본 글자색.
- * 6,000 파랑 · 6,500 하늘 · 7,000 S 노랑 · 7,500 990k 살구 · 8,000 Pianist 분홍
+ * 6,000 등급 B · 6,500 등급 A · 7,000 S · 7,500 990k · 8,000 Pianist
  */
 const GRADE_BAND_CUTS = [6000, 6500, 7000, 7500, 8000] as const;
 export function gradeBandTone(
@@ -62,13 +62,12 @@ export function gradeBandTone(
  * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 확인한다
  */
 export const EXAM_TIER_DARK_HEX = {
-    low: "#8a8a8a", // exam-tier-low
-    mid: "#b98b67", // exam-tier-mid
-    high: "#c4c8ce", // exam-tier-high
-    top: "#d6b56d", // exam-tier-top
-    peak: "#d6b56d", // exam-tier-peak
-    topTint: "#25211a", // exam-tint-top
-    peakPlate: "#000000", // exam-plate-peak
+    low: "#b6720d", // exam-tier-low
+    mid: "#b0b3ba", // exam-tier-mid
+    high: "#dab156", // exam-tier-high
+    top: "#36cfb0", // exam-tier-top
+    peak: "#b9f2ff", // exam-tier-peak
+    ground: "#000000", // exam-badge-ground = surface-canvas
 } as const;
 
 /**
@@ -76,13 +75,12 @@ export const EXAM_TIER_DARK_HEX = {
  * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 tokens/colors.css 를 읽어 확인한다
  */
 export const STAT_TONE_DARK_HEX: Partial<Record<StatTone, string>> = {
-    "rank-1": EXAM_TIER_DARK_HEX.top,
-    "rank-2": EXAM_TIER_DARK_HEX.high,
-    "rank-3": EXAM_TIER_DARK_HEX.mid,
-    rank: "#afafaf", // content-subdued
-    "grade-1": "#70b8ff", // judgement-near
-    "grade-2": "#4ccce6", // judgement-good
-    "grade-3": "#ffca16", // judgement-just(S)
-    "grade-4": "#ffac71", // judgement-just 50% + judgement-s-just(990k)
-    "grade-5": "#ff8dcc", // judgement-s-just(Pianist)
+    "rank-1": "#b0b3ba", // content-subdued(1–3위도 같은 글자 단계)
+    "rank-2": "#b0b3ba", // content-subdued
+    "rank-3": "#b0b3ba", // content-subdued
+    rank: "#b0b3ba", // content-subdued
+    "grade-1": "#459fbe", // score-grade-b
+    "grade-2": "#f56757", // score-grade-a
+    "grade-3": "#e3cb53", // score-goal-s
+    "grade-4": "#f7c481", // score-goal-990k
 };

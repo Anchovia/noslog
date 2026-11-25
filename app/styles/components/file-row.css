@@ -7,7 +7,7 @@
     padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
     border: var(--nl-stroke-strong) solid var(--nl-border-input);
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-input);
+    background: transparent;
 }
 /* 썸네일 = 줄 높이(컨트롤 높이) − 8 → 위아래 4 · 모서리 4(상자 안 항목) · 비율 유지 채움 */
 .noslog-ui .nl-file-row__thumb {

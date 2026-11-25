@@ -26,9 +26,9 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
     flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border: var(--nl-stroke-strong) solid var(--nl-border-input);
     border-radius: var(--nl-radius-small);
-    background: var(--nl-surface-input);
+    background: transparent;
     /* ⑨ 고르면 바탕색이 바뀐다(당근 SEED 체크박스) */
     transition: background-color var(--nl-motion-duration-d3)
         var(--nl-ease-easing);
@@ -54,7 +54,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-check:not(:has(input:disabled)):hover .nl-check__box {
-        border-color: var(--nl-content-strong);
+        border-color: var(--nl-border-input);
     }
     .noslog-ui
         .nl-check:not(:has(input:disabled)):hover
@@ -65,7 +65,7 @@
 }
 .noslog-ui .nl-check:not(:has(input:disabled)):active .nl-check__box,
 .noslog-ui .nl-check input:focus-visible + .nl-check__box {
-    border-color: var(--nl-content-strong);
+    border-color: var(--nl-border-input);
 }
 .noslog-ui
     .nl-check:not(:has(input:disabled)):active
@@ -78,7 +78,7 @@
     color: var(--nl-content-disabled);
 }
 .noslog-ui .nl-check input:disabled + .nl-check__box {
-    border-color: var(--nl-content-disabled);
+    border-color: var(--nl-border-default);
 }
 .noslog-ui .nl-check input:disabled:checked + .nl-check__box {
     background: var(--nl-content-disabled);

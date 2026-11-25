@@ -8,7 +8,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--nl-spacing-16);
-    border: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
     box-shadow: var(--nl-overlay-shadow);

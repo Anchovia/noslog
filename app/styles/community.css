@@ -28,10 +28,7 @@
     gap: var(--nl-spacing-8);
     padding-block: var(--nl-spacing-8);
 }
-.noslog-ui .nl-tier-history li + li {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
-}
-/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 좌우 = 상자 안쪽) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px 줄 선(border/row).
+/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 좌우 = 상자 안쪽) 안 선 목록. 줄 = 컨트롤 높이, 줄 사이 선 없음.
    여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
 .noslog-ui .nl-vote-list {
     display: flex;
@@ -50,10 +47,6 @@
     width: 100%;
     text-align: start;
 }
-.noslog-ui .nl-vote-list > .nl-vote-row + .nl-vote-row,
-.noslog-ui .nl-vote-list__body + .nl-vote-row {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
-}
 .noslog-ui .nl-vote-row > span:last-child {
     display: flex;
     align-items: center;
@@ -65,19 +58,6 @@
     padding-inline: var(--nl-spacing-12);
     width: calc(100% + var(--nl-spacing-24));
     border-radius: var(--nl-radius-control);
-}
-/* 넓힌 줄의 구분선은 글자 선 안쪽에만(면만 넓힌다) */
-.noslog-ui .nl-vote-list > button.nl-vote-row + button.nl-vote-row,
-.noslog-ui .nl-vote-list > .nl-vote-row + button.nl-vote-row,
-.noslog-ui .nl-vote-list__body + button.nl-vote-row {
-    border-top: 0;
-    background-image: linear-gradient(
-        var(--nl-border-row),
-        var(--nl-border-row)
-    );
-    background-repeat: no-repeat;
-    background-position: var(--nl-spacing-12) 0;
-    background-size: calc(100% - var(--nl-spacing-24)) var(--nl-stroke-default);
 }
 @media (hover: hover) {
     .noslog-ui button.nl-vote-row:hover {
@@ -157,9 +137,7 @@
     padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-elevated),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
     text-align: center;
 }
 .noslog-ui .nl-pattern-lock__card > p {
@@ -177,9 +155,6 @@
     gap: var(--nl-spacing-12);
     min-height: var(--nl-control-height);
     padding-block: var(--nl-spacing-4);
-}
-.noslog-ui .nl-pattern-axis + .nl-pattern-axis {
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-pattern-axis > .nl-control {
     min-width: 0;
@@ -348,21 +323,21 @@
     font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-opinion-like:is(button, a):is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-opinion-like:is(button, a):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-opinion-like[data-static] {
     cursor: default;
 }
-/* 눌림 = 채운 하트 + 데이터 색 categorical-4(새 색 아님) — 모양과 색 둘로 말한다 */
+/* 눌림 = 채운 하트 + like-active 색 — 모양과 색 둘로 말한다 */
 .noslog-ui .nl-opinion-like[aria-pressed="true"] > svg {
-    color: var(--nl-local-data-categorical-4);
+    color: var(--nl-like-active);
 }
 .noslog-ui .nl-opinion-like[aria-pressed="true"] {
     color: var(--nl-content-default);
@@ -394,12 +369,12 @@
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-opinion-replies__toggle:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-opinion-replies__toggle:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }

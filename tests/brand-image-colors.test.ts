@@ -63,7 +63,7 @@ function decodeLargestIcoFrame(file: string) {
 
 describe("아이콘 · 공유 이미지 색", () => {
     const token = (name: string) =>
-        darkToken(name)?.match(/^#[0-9a-f]{6}$/i)?.[0];
+        darkToken(name)?.match(/^#[0-9a-f]{6}(?:[0-9a-f]{2})?$/i)?.[0];
     // 반투명 토큰(rgb(255 255 255 / 10%))은 이미지가 읽는 rgba(255, 255, 255, 0.1) 꼴로 맞춰 비교한다. 불투명 hex 토큰은 그대로
     const rgba = (name: string) => {
         const solid = token(name);

@@ -1,16 +1,16 @@
 /* 쌓임 층 토큰 */
 .noslog-ui {
-    /* 쌓임 층(2026-10-01) — 전역 z-index 는 이 이름으로만. 부품 안쪽 쌓기는 calc(var(--nl-layer-above) + n) */
+    /* 쌓임 층 — 전역 z-index 는 이 이름으로만. 부품 안쪽 쌓기는 calc(var(--nl-layer-above) + n). 같은 단계 안은 문서 순서 */
     --nl-layer-above: 1;
-    --nl-layer-sticky: 10;
-    --nl-layer-search-preview: 30;
-    --nl-layer-bottom-bar: 40;
-    --nl-layer-header: 50;
-    --nl-layer-progress: 60;
-    --nl-layer-popover: 70;
-    --nl-layer-overlay: 80;
-    --nl-layer-dialog: 81;
-    --nl-layer-select: 90;
-    --nl-layer-fullscreen: 100;
-    --nl-layer-fullscreen-dialog: 110;
+    --nl-layer-sticky: 200;
+    --nl-layer-search-preview: 400;
+    --nl-layer-bottom-bar: 200;
+    --nl-layer-header: 200;
+    --nl-layer-progress: 200;
+    --nl-layer-popover: 400;
+    --nl-layer-overlay: 300;
+    --nl-layer-dialog: 300;
+    --nl-layer-select: 400;
+    --nl-layer-fullscreen: 300;
+    --nl-layer-fullscreen-dialog: 300;
 }

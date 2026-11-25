@@ -49,17 +49,14 @@
         text-align: start;
     }
 }
-/* 값 색(2026-09-17) — 순위 1·2·3 = 순위표 시상 색, 그 밖 = 순위표 순위 색(subdued) · 점수 · 등급 = 점수 목표 색 · 최대 콤보 FC = FC 초록 */
-.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-1"] {
-    color: var(--nl-exam-tier-top);
-}
-.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-2"] {
-    color: var(--nl-exam-tier-high);
-}
-.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-3"] {
-    color: var(--nl-exam-tier-mid);
-}
-.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank"] {
+/* 값 색 — 순위(1·2·3위 포함) = subdued · 점수 · 등급 = 점수 목표 색 · 최대 콤보 FC = FC 색 */
+.noslog-ui
+    :is(.nl-stat-strip__value, .nl-toned):is(
+        [data-tone="rank"],
+        [data-tone="rank-1"],
+        [data-tone="rank-2"],
+        [data-tone="rank-3"]
+    ) {
     color: var(--nl-content-subdued);
 }
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="s"] {
@@ -69,7 +66,10 @@
     color: var(--nl-score-goal-990k);
 }
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="pianist"] {
-    color: var(--nl-score-goal-pianist);
+    background: var(--nl-score-goal-pianist);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="fc"] {
     color: var(--nl-achievement-full-combo);
@@ -88,5 +88,8 @@
     color: var(--nl-grade-band-4);
 }
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-5"] {
-    color: var(--nl-grade-band-5);
+    background: var(--nl-grade-band-5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }

@@ -42,15 +42,15 @@
         .nl-chip:is([aria-pressed="true"], [aria-current="page"]):not(
             :disabled
         ):hover {
-        background: var(--nl-surface-tag);
-        color: var(--nl-content-strong);
+        background: var(--nl-primary-hover);
+        color: var(--nl-primary-on-primary);
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
-   고른 칩 = 컨트롤 면보다 한 단계 밝은 면 · 강한 글자 · bold */
+   고른 칩 = 반전 면(primary) · 반전 면 위 글자 · bold */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-surface-tag);
-    color: var(--nl-content-strong);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
     font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui
@@ -58,8 +58,8 @@
         :focus-visible,
         :active
     ) {
-    background: var(--nl-surface-tag);
-    color: var(--nl-content-strong);
+    background: var(--nl-primary-hover);
+    color: var(--nl-primary-on-primary);
 }
 /* 비활성 = 투명도 대신 글자색 gray-400 */
 .noslog-ui .nl-chip:disabled {
@@ -68,16 +68,16 @@
 /* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
    칩은 선택되면 중립으로 돌아가고(면·경계·체크가 선택을 말한다), 레일 목록은 체크 상자가 선택을 말해 글자 색을 유지한다 */
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="normal"] {
-    --nl-tone: var(--nl-difficulty-text-normal);
+    --nl-tone: var(--nl-difficulty-normal);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="hard"] {
-    --nl-tone: var(--nl-difficulty-text-hard);
+    --nl-tone: var(--nl-difficulty-hard);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="expert"] {
-    --nl-tone: var(--nl-difficulty-text-expert);
+    --nl-tone: var(--nl-difficulty-expert);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="real"] {
-    --nl-tone: var(--nl-difficulty-text-real);
+    --nl-tone: var(--nl-difficulty-real);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pops"] {
     --nl-tone: var(--nl-category-pops);
@@ -104,7 +104,7 @@
     --nl-tone: var(--nl-achievement-full-combo);
 }
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pianist"] {
-    --nl-tone: var(--nl-achievement-pianist);
+    --nl-tone: var(--nl-score-goal-pianist);
 }
 /* 마우스를 올리면 기본 글자색 — hover 면 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정).
    키 포커스 · 누름도 같은 올림 면이라 같이 뺀다 */
@@ -113,6 +113,27 @@
         :disabled
     ):not(:hover):not(:focus-visible):not(:active) {
     color: var(--nl-tone);
+}
+/* Pianist 칩 — 글자는 그라데이션, 고르면 칩 면이 그라데이션 */
+.noslog-ui
+    .nl-chip[data-tone="pianist"]:not(
+        [aria-pressed="true"],
+        [aria-current]
+    ):not(:disabled):not(:hover):not(:focus-visible):not(:active) {
+    background-image:
+        var(--nl-score-goal-pianist),
+        linear-gradient(var(--nl-surface-control), var(--nl-surface-control));
+    -webkit-background-clip: text, border-box;
+    background-clip: text, border-box;
+    color: transparent;
+}
+.noslog-ui
+    .nl-chip[data-tone="pianist"]:is(
+        [aria-pressed="true"],
+        [aria-current="page"]
+    ) {
+    background: var(--nl-score-goal-pianist);
+    color: var(--nl-primary-on-primary);
 }
 .noslog-ui .nl-chip__count {
     color: var(--nl-content-subdued);

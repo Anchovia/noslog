@@ -205,13 +205,16 @@ export async function drawTierImage(input: TierExportInput) {
             scrim: tokens.color("var(--nl-surface-media-scrim)"),
             onMedia: tokens.color("var(--nl-content-on-media)"),
             fullCombo: tokens.color("var(--nl-achievement-full-combo)"),
-            goal: tokens.color(`var(--nl-score-goal-${input.goal})`),
+            goal: tokens.color(
+                `var(--nl-score-goal-${input.goal === "pianist" ? "pianist-1" : input.goal})`
+            ),
+            pianist: [1, 2, 3].map((step) =>
+                tokens.color(`var(--nl-score-goal-pianist-${step})`)
+            ),
         };
         // 난이도 판 글자 = 난이도 글자색 그대로(2026-10-01 D12, 화면 서열 카드와 같게)
         const difficultyColor = (difficulty: string) =>
-            tokens.color(
-                `var(--nl-difficulty-text-${difficulty.toLowerCase()})`
-            );
+            tokens.color(`var(--nl-difficulty-${difficulty.toLowerCase()})`);
         const hairline = tokens.px("--nl-stroke-default");
 
         const padding = space(32);
@@ -479,7 +482,18 @@ export async function drawTierImage(input: TierExportInput) {
                 // 테두리 — 달성 = 기준 색(달성 + FC = FC 초록 → 기준 색), 그 밖은 빈 칸 선
                 if (input.showAchievement && achieved) {
                     const stroke = tokens.px("--nl-stroke-strong");
-                    if (fc) {
+                    if (input.goal === "pianist") {
+                        const gradient = context.createLinearGradient(
+                            x,
+                            top,
+                            x + cell,
+                            top + cell
+                        );
+                        colors.pianist.forEach((color, step) =>
+                            gradient.addColorStop(step / 2, color)
+                        );
+                        context.strokeStyle = gradient;
+                    } else if (fc) {
                         const gradient = context.createLinearGradient(
                             x,
                             top,

@@ -67,6 +67,8 @@ describe("NosLog design foundation", () => {
             "--nl-type-weight-semibold",
             // 공유 미리보기 이미지가 TOKEN_VALUES.typeSize[32] 로 읽는다(brand-image.tsx)
             "--nl-type-size-32",
+            // SEED palette-gray 11단 가운데 역할이 가리키지 않는 한 단(대응표 1절)
+            "--nl-gray-900",
         ]);
         const sources = ["app", "features", "components", "lib"]
             .flatMap((root) =>

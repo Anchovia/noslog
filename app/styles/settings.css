@@ -6,23 +6,14 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 @media (hover: hover) {
     .noslog-ui .nl-settings__category:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-settings__category:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 .noslog-ui .nl-settings__category > span {
     display: flex;
@@ -241,11 +232,9 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__rows > * {
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-settings__rows .nl-field__label {
     color: var(--nl-content-default);
@@ -283,19 +272,11 @@
 }
 @media (hover: hover) {
     .noslog-ui :is(a, button).nl-settings__row:hover {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui :is(a, button).nl-settings__row:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-interaction-row);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
 }
 /* 연결 계정 로고 — 원 40(아이콘 M 두 배, 홈 로고 원과 같은 값), 가운데 Discord 로고 20 */
 .noslog-ui .nl-settings__logo {

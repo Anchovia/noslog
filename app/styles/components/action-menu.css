@@ -18,21 +18,13 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-action-menu__item:hover {
-        --nl-state-layer: var(--nl-surface-control-hover);
+        background-color: var(--nl-interaction-row);
         color: var(--nl-content-strong);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
     }
 }
 .noslog-ui .nl-action-menu__item:is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-surface-control-hover);
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
 }
 /* 위험 항목은 올려도 글자 빨강 그대로 — 면만 바뀐다 */
 @media (hover: hover) {

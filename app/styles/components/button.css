@@ -39,7 +39,6 @@
     transition:
         background-color var(--nl-motion-duration-d3) var(--nl-ease-easing),
         color var(--nl-motion-duration-d3) var(--nl-ease-easing),
-        --nl-state-layer var(--nl-motion-duration-d3) var(--nl-ease-easing),
         scale var(--nl-motion-duration-d3) var(--nl-ease-enter);
 }
 .noslog-ui
@@ -77,17 +76,6 @@
         var(--nl-control-height-large) / 2 - var(--nl-stroke-default)
     );
 }
-/* 버튼 포커스 = 2px 선, 간격 0. 버튼처럼 혼자 서는 줄 안 셀렉트 · 쪽 번호 · 숫자 척도도 같다 */
-.noslog-ui
-    :is(
-        .nl-button,
-        .nl-select,
-        .nl-compact-select,
-        .nl-pagination__item,
-        .nl-scale-picker__option
-    ):focus-visible {
-    outline-offset: 0;
-}
 /* 보조 = Spectrum 2 secondary fill(gray-100), 고스트 = ActionButton quiet(면 없음 · 모서리 8 · 좌우 12 · medium) */
 .noslog-ui .nl-button--secondary {
     background: var(--nl-surface-control);
@@ -99,10 +87,10 @@
     color: var(--nl-content-strong);
     font-weight: var(--nl-type-weight-medium);
 }
-/* 올림 · 누름 · 키 포커스 = 면 gray-200 · 글자 gray-900 */
+/* 올림 · 누름 · 키 포커스 — 면 있는 보조 버튼은 control-hover, 면 없는 고스트는 interaction/row 면 · 글자 content/strong */
 @media (hover: hover) {
     .noslog-ui
-        :is(.nl-button--secondary, .nl-button--ghost):not(
+        .nl-button--secondary:not(
             :disabled,
             [data-locked],
             [aria-busy="true"]
@@ -110,13 +98,30 @@
         background: var(--nl-surface-control-hover);
         color: var(--nl-content-strong);
     }
+    .noslog-ui
+        .nl-button--ghost:not(
+            :disabled,
+            [data-locked],
+            [aria-busy="true"]
+        ):hover {
+        background: var(--nl-interaction-row);
+        color: var(--nl-content-strong);
+    }
 }
 .noslog-ui
-    :is(.nl-button--secondary, .nl-button--ghost):not(
-        :disabled,
-        [data-locked]
-    ):is(:not([aria-busy="true"]):active, :focus-visible) {
+    .nl-button--secondary:not(:disabled, [data-locked]):is(
+        :not([aria-busy="true"]):active,
+        :focus-visible
+    ) {
     background: var(--nl-surface-control-hover);
+    color: var(--nl-content-strong);
+}
+.noslog-ui
+    .nl-button--ghost:not(:disabled, [data-locked]):is(
+        :not([aria-busy="true"]):active,
+        :focus-visible
+    ) {
+    background: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-button--danger {
@@ -124,17 +129,7 @@
     color: var(--nl-feedback-on-destructive);
     border-color: transparent;
 }
-/* 위험 버튼 = Spectrum 2 negative fill, 올림 · 누름 · 키 포커스 한 단계 어둡게 */
-@media (hover: hover) {
-    .noslog-ui
-        .nl-button--danger:not(
-            :disabled,
-            [data-locked],
-            [aria-busy="true"]
-        ):hover {
-        background: var(--nl-feedback-destructive-hover);
-    }
-}
+/* 위험 버튼 = 올림 없음, 누름 · 키 포커스에서만 색이 바뀐다 */
 .noslog-ui
     .nl-button--danger:not(:disabled, [data-locked]):is(
         :not([aria-busy="true"]):active,

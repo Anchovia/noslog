@@ -43,20 +43,12 @@
    Spectrum 2 ActionButton quiet 처럼 올림 · 누름 · 키 포커스에 면 gray-200 · 글자 gray-900(모서리는 요소 것 그대로) */
 @media (hover: hover) {
     .noslog-ui .nl-hover-layer:not(:disabled):hover {
-        --nl-state-layer: var(--nl-surface-control-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-hover-layer:not(:disabled):is(:active, :focus-visible) {
-    --nl-state-layer: var(--nl-surface-control-hover);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 /* 끝 페이드 — 한 줄로 자른 글자의 오른쪽 32 를 흐리게(말줄임표 대신). 누르면 펼치는 곳에서만 쓴다 (2026-09-17) */

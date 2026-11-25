@@ -16,7 +16,6 @@ import {
     type ProfileLevelRow,
     type ProfileTierKey,
 } from "@/features/profile/schemas/profile-stats-schema";
-import { tierValueColor } from "@/lib/music/tier-value-color";
 
 type Difficulty = "all" | "normal" | "hard" | "expert" | "real";
 
@@ -26,9 +25,8 @@ const DIFFICULTIES = [
     ["expert", "EX"],
     ["real", "R"],
 ] as const;
-/** 칸 색 = 등급 색(랭크 분포와 같음). 「안 함」 은 카드 위 트랙 면, 고른 칸 밖은 그보다 한 단계 밝은 입력 경계 색이라 둘이 갈린다 */
-const NONE = "var(--nl-surface-control)";
-const DIMMED = "var(--nl-border-input)";
+/** 칸 색 = 등급 색(랭크 분포와 같음). 「안 함」 은 트랙 색, 범례로 거른 칸은 같은 색에 투명도 0.5 */
+const NONE = "var(--nl-track)";
 export const PROFILE_TIER_COLORS: Record<ProfileTierKey, string> = {
     pianist: "var(--nl-score-goal-pianist)",
     fc: "var(--nl-achievement-full-combo)",
@@ -131,13 +129,17 @@ const levelOrder = (row: ProfileLevelGroup) =>
 const byLevelOrder = (a: ProfileLevelGroup, b: ProfileLevelGroup) =>
     levelOrder(a) - levelOrder(b);
 
-/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄(「1–8」)은 색이 하나로 정해지지 않아 막대 기본 subdued(2026-10-01 D1) */
+/** 레벨 글자 색 = 난이도 사다리(1–5.9 Normal · 6–9.9 Hard · 10–12.5 Expert), REAL 은 Real. 묶은 줄(「1–8」)은 색이 하나로 정해지지 않아 막대 기본 subdued */
 const levelColor = (row: ProfileLevelGroup) =>
     row.grouped
         ? undefined
         : row.difficulty === "real"
-          ? "var(--nl-difficulty-text-real)"
-          : tierValueColor(row.level);
+          ? "var(--nl-difficulty-real)"
+          : row.level < 6
+            ? "var(--nl-difficulty-normal)"
+            : row.level < 10
+              ? "var(--nl-difficulty-hard)"
+              : "var(--nl-difficulty-expert)";
 
 /**
  * 레벨별 달성(2026-09-26 R2 · L1) — 레벨마다 한 막대(`StackedBar`): 채보마다 가장 높은 한 칸(Pianist → FC → S → A+ → A → B 이하),
@@ -239,10 +241,8 @@ export default function ProfileLevels({
                         ...PROFILE_TIER_KEYS.map((key) => ({
                             key,
                             value: row.tiers[key],
-                            color:
-                                selected === null || selected === key
-                                    ? PROFILE_TIER_COLORS[key]
-                                    : DIMMED,
+                            color: PROFILE_TIER_COLORS[key],
+                            dimmed: selected !== null && selected !== key,
                         })),
                         {
                             key: "none",

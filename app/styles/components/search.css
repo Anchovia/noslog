@@ -17,23 +17,17 @@
     /* 입력칸과 같은 2px 실제 테두리(그림자로 그리지 않는다) */
     border: var(--nl-stroke-strong) solid var(--nl-border-input);
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-input);
+    background: var(--nl-surface-search);
+    box-shadow: var(--nl-card-shadow);
 }
 /* 입력 아이콘(돋보기 · 지우기 ×)은 자리표시자와 같은 흐린 색 */
 .noslog-ui .nl-search > .nl-icon,
 .noslog-ui .nl-search__clear {
     color: var(--nl-content-tertiary);
 }
-/* 올리면 입력칸처럼 경계만 밝아진다. 포커스 · 비활성일 때는 그대로 */
-@media (hover: hover) {
-    .noslog-ui
-        .nl-search:not(:has(.nl-search__input:is(:disabled, :focus))):hover {
-        border-color: var(--nl-border-input-hover);
-    }
-}
 /* 떠 있는 검색(지도 위)도 SearchField 라 경계 · 원 끝은 검색칸 그대로. 지도 위에 떠 있어 그림자만 떠 있는 창 규격 */
 .noslog-ui .nl-search--floating {
-    box-shadow: var(--nl-overlay-shadow);
+    box-shadow: var(--nl-card-shadow);
 }
 .noslog-ui .nl-search__divider {
     width: var(--nl-stroke-default);
@@ -109,9 +103,9 @@
     z-index: calc(var(--nl-layer-above) * -1);
     border-radius: var(--nl-radius-small);
 }
-/* 필드 안 버튼 = Spectrum 2 ActionButton quiet — 올림 · 키 포커스 · 누름 = 면 gray-200(안쪽 층) · 잉크 gray-900 */
+/* 필드 안 버튼 = 면 없는 누르는 것 — 올림 · 키 포커스 · 누름 = interaction/row 면(안쪽 층) · 잉크 content/strong */
 .noslog-ui .nl-search__clear:is(:focus-visible, :active)::before {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-interaction-row);
 }
 .noslog-ui .nl-search__clear:is(:focus-visible, :active) {
     background: transparent;
@@ -119,7 +113,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-search__clear:hover::before {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-interaction-row);
     }
     .noslog-ui .nl-search__clear:hover {
         background: transparent;

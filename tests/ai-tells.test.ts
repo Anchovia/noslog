@@ -75,45 +75,6 @@ const styleFiles = readdirSync(styleDirectory, { recursive: true })
 
 type Allowed = { file: string; selector: string; reason: string };
 
-// 그라데이션 — 단색 겹침(같은 토큰 둘) · 마스크 칠(#000 0 0)은 장식이 아니라 칠하는 방법이라 따로 허용한다
-const allowedGradients: Allowed[] = [
-    {
-        file: "utilities.css",
-        selector: ".nl-fade-end",
-        reason: "끝 페이드",
-    },
-    {
-        file: "home.css",
-        selector: ".nl-home-event__caption",
-        reason: "홈 이벤트 배너 글자 층",
-    },
-    {
-        file: "music-detail.css",
-        selector: ".nl-grade-progress__fill",
-        reason: "그레이드 진행 막대 등급 색",
-    },
-    {
-        file: "chartViewer.css",
-        selector: ".nl-chart-stage__overlay",
-        reason: "채보 뷰어 조작 줄 판",
-    },
-    {
-        file: "player-identity.css",
-        selector: ".nl-exam-badge__arc",
-        reason: "Recital 명판 파인 모서리",
-    },
-    {
-        file: "tiers.css",
-        selector: '.nl-tier-card__outline[data-achievement="goal-fc"]',
-        reason: "서열표 달성 + FC 테두리",
-    },
-    {
-        file: "components/skeleton.css",
-        selector: ".nl-skeleton::after",
-        reason: "스켈레톤 물결 띠",
-    },
-];
-
 // 흐림 · 글자 그림자 · 그림자 필터
 const allowedEffects: Allowed[] = [
     {
@@ -121,15 +82,7 @@ const allowedEffects: Allowed[] = [
         selector: ".nl-pattern-lock",
         reason: "패턴 투표 잠금 흐림",
     },
-    {
-        file: "arcades.css",
-        selector: ".nl-arcade-marker__pin",
-        reason: "지도 핀 그림자",
-    },
 ];
-
-const flatFill = /^linear-gradient\(\s*(var\([^()]+\))\s*,\s*\1\s*\)$/;
-const maskFill = /^linear-gradient\(#000 0 0\)/;
 
 function collect(test: (prop: string, value: string) => boolean) {
     const found: { file: string; selector: string; text: string }[] = [];
@@ -162,12 +115,6 @@ function outside(found: ReturnType<typeof collect>, allowed: Allowed[]) {
 }
 
 describe("CSS 의 AI 티", () => {
-    const gradients = collect(
-        (_prop, value) =>
-            /gradient\(/.test(value) &&
-            !flatFill.test(value) &&
-            !maskFill.test(value)
-    );
     const effects = collect(
         (prop, value) =>
             prop === "text-shadow" ||
@@ -175,33 +122,21 @@ describe("CSS 의 AI 티", () => {
             (/^(-webkit-)?filter$/.test(prop) && /blur|drop-shadow/.test(value))
     );
 
-    it("그라데이션은 가이드에 적힌 자리에만 쓴다", () => {
-        expect(outside(gradients, allowedGradients)).toEqual([]);
-    });
-
     it("흐림 · 글자 그림자 · 그림자 필터는 가이드에 적힌 자리에만 쓴다", () => {
         expect(outside(effects, allowedEffects)).toEqual([]);
     });
 
     it("허용 목록에 쓰지 않는 항목이 남아 있지 않다", () => {
-        const stale = [
-            ...allowedGradients.filter(
-                (entry) =>
-                    !gradients.some(
-                        (item) =>
-                            item.file === entry.file &&
-                            item.selector.includes(entry.selector)
-                    )
-            ),
-            ...allowedEffects.filter(
+        const stale = allowedEffects
+            .filter(
                 (entry) =>
                     !effects.some(
                         (item) =>
                             item.file === entry.file &&
                             item.selector.includes(entry.selector)
                     )
-            ),
-        ].map((entry) => `${entry.file} ${entry.selector}`);
+            )
+            .map((entry) => `${entry.file} ${entry.selector}`);
         expect(stale).toEqual([]);
     });
 

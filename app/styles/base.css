@@ -41,7 +41,7 @@ html[data-theme="light"] .noslog-ui,
     opacity: 1;
 }
 /* 포커스 = 한 겹 2px 흰 선 하나(2026-10-24 토큰 정리 판 2 B — Atlassian focusable 의 바깥형 +2 · 안쪽형 −2).
-   떨어진 요소는 바깥 간격 2, 폭이 꽉 찬 줄 · 탭 · 메뉴 항목 · 칩은 안쪽 −2. 부품마다 따로 그리지 않는다 */
+   버튼 · 칩 · 세그먼트 칸 · 탭 · 체크박스 · 라디오 · 스위치 · 링크는 바깥 간격 2, 폭이 꽉 찬 줄 · 메뉴 항목은 안쪽 −2. 부품마다 따로 그리지 않는다 */
 .noslog-ui :focus-visible {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     outline-offset: var(--nl-stroke-strong);
@@ -50,9 +50,6 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui
     :is(
         .nl-focus-inset,
-        .nl-tabs__item,
-        .nl-chip,
-        .nl-segments__item,
         .nl-applied__token,
         .nl-sort-menu__item,
         .nl-select-option,
@@ -65,8 +62,7 @@ html[data-theme="light"] .noslog-ui,
         .nl-search__clear,
         [role="option"],
         [role="menuitem"],
-        [role="menuitemradio"],
-        [role="tab"]
+        [role="menuitemradio"]
     ):focus-visible {
     outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
@@ -93,7 +89,7 @@ html[data-theme="light"] .noslog-ui,
     transition:
         background-color var(--nl-motion-duration-d3) var(--nl-ease-easing),
         color var(--nl-motion-duration-d3) var(--nl-ease-easing),
-        --nl-state-layer var(--nl-motion-duration-d3) var(--nl-ease-easing);
+        box-shadow var(--nl-motion-duration-d3) var(--nl-ease-easing);
 }
 /* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드 + .95 에서 커짐(원점은 단추 쪽),
    닫을 때 페이드 + .95 로 줄어듦. 용어 도움말은 툴팁 값(⑧, term.css). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */

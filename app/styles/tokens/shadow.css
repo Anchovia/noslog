@@ -1,15 +1,9 @@
 /* 그림자 토큰 */
 .noslog-ui {
-    /* 그림자 = Spectrum 2 drop-shadow 3겹(key · transition · ambient). 떠 있는 창 elevated · 카드 emphasized */
-    --nl-overlay-shadow:
-        0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
-        0 4px 12px rgb(0 0 0 / 24%);
-    --nl-card-shadow:
-        0 0 1px rgb(0 0 0 / 24%), 0 1px 4px rgb(0 0 0 / 12%),
-        0 2px 8px rgb(0 0 0 / 24%);
-    /* 툴팁 그림자 — Spotify 웹 툴팁 값 그대로 */
-    --nl-tooltip-shadow:
-        0 16px 24px rgb(0 0 0 / 30%), 0 6px 8px rgb(0 0 0 / 20%);
+    /* 그림자 두 단계 — 놓인 것(구역 · 상자 · 카드 · 검색칸) 한 줄, 떠 있는 것(메뉴 · 셀렉트 · 팝오버 · 툴팁 · 토스트 · 시트 · 검색 미리보기) SEED md.
+       붙은 것(헤더 · 표 머리 · 아래 막대 · 진행 막대)과 창(대화상자 · 전체 화면)은 그림자가 없다 */
+    --nl-overlay-shadow: 0 4px 16px #000000cc;
+    --nl-card-shadow: 0 1px 1px #0000000d;
 }
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {

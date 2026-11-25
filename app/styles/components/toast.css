@@ -6,7 +6,7 @@
     align-items: center;
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
     border-radius: var(--nl-radius-large);
-    outline: var(--nl-stroke-default) solid var(--nl-border-elevated);
+    outline: var(--nl-stroke-default) solid transparent;
     outline-offset: calc(var(--nl-stroke-default) * -1);
     background: var(--nl-surface-elevated);
     color: var(--nl-content-default);

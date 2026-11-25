@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { PROFILE_CARD_DARK_HEX } from "@/features/profile/profile-card-colors";
+import {
+    PROFILE_CARD_DARK_HEX,
+    PROFILE_CARD_PIANIST_STOPS,
+} from "@/features/profile/profile-card-colors";
 import { profileCardGlobe } from "@/features/profile/profile-card-globe";
 
 import { darkToken } from "./helpers/design-tokens";
 
 describe("프로필 공유 카드 색", () => {
     const token = (name: string) =>
-        darkToken(name)?.match(/^#[0-9a-f]{6}$/i)?.[0];
+        darkToken(name)?.match(/^#[0-9a-f]{6}(?:[0-9a-f]{2})?$/i)?.[0];
     // 반투명 토큰(rgb(255 255 255 / 10%))은 이미지가 읽는 rgba(255, 255, 255, 0.1) 꼴로 맞춰 비교한다. 불투명 hex 토큰은 그대로
     const rgba = (name: string) => {
         const solid = token(name);
@@ -26,11 +29,18 @@ describe("프로필 공유 카드 색", () => {
             subdued: token("content-subdued"),
             divider: rgba("border-divider"),
             emptySurface: token("surface-surface"),
-            gold: token("exam-tier-top"),
-            pianist: token("judgement-s-just"),
+            gold: "#d6b56d",
             fullCombo: token("achievement-full-combo"),
-            s: token("judgement-just"),
+            s: token("score-goal-s"),
         });
+    });
+
+    it("Pianist 글자 세 색이 토큰과 같다", () => {
+        expect([...PROFILE_CARD_PIANIST_STOPS]).toEqual([
+            token("score-goal-pianist-1"),
+            token("score-goal-pianist-2"),
+            token("score-goal-pianist-3"),
+        ]);
     });
 
     it("지구본 아이콘 선 색도 흐린 글자색이다", () => {

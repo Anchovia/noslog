@@ -57,8 +57,8 @@ export const KeyboardNavigation: Story = {
         await expect(all).toHaveFocus();
         await userEvent.keyboard("{End}{ArrowRight}");
         await expect(all).toHaveFocus();
-        // 키 포커스 선은 칸 안쪽 −2 — 판 둘레 밖으로 나가지 않는다
+        // 키 포커스 선은 링 2 + 바깥 간격 2(세그먼트 칸도 공용 포커스)
         await expect(getComputedStyle(all).outlineStyle).toBe("solid");
-        await expect(getComputedStyle(all).outlineOffset).toBe("-2px");
+        await expect(getComputedStyle(all).outlineOffset).toBe("2px");
     },
 };

@@ -158,7 +158,8 @@ function AchievementRow({
                         >
                             <AchievementHex
                                 achievementKey={key}
-                                tier={date ? step : 0}
+                                tier={step}
+                                locked={!date}
                                 size="inline"
                             />
                             <div>

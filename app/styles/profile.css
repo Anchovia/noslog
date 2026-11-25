@@ -403,7 +403,6 @@
     min-width: 0;
     min-height: var(--nl-spacing-64);
     padding-block: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 /* 베스트 · 기록 탭 줄 — 좁으면 오른쪽 위 Grd · 아래 곡 순위(날짜는 표에서만) */
 .noslog-ui
@@ -434,11 +433,7 @@
    링크가 아닌 뼈대 줄(span)에도 올림 면이 걸리던 것을 그대로 두려고 이 규칙만 남긴다 */
 @media (hover: hover) {
     .noslog-ui .nl-profile-play-row:hover::before {
-        --nl-state-layer: var(--nl-interaction-row);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
     }
 }
 .noslog-ui .nl-profile-play-row__position {
@@ -570,7 +565,7 @@
         display: grid;
         align-items: center;
         min-height: var(--nl-spacing-32);
-        border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
+        border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
         font-weight: var(--nl-type-weight-medium);
     }
     /* 「곡」 은 곡 이름 위(자켓 위 아님, 2026-09-30 사용자) */
@@ -660,6 +655,12 @@
     .nl-profile-distribution__track
     > :is([data-rank="B+"], [data-rank="B"]) {
     background: var(--nl-score-grade-b);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="C"] {
+    background: var(--nl-score-grade-c);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="D"] {
+    background: var(--nl-score-grade-d);
 }
 .noslog-ui .nl-profile-disclosure {
     display: inline-flex;
@@ -824,20 +825,12 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-achievements__more a:hover {
-        --nl-state-layer: var(--nl-surface-control-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
+        background-color: var(--nl-interaction-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-profile-achievements__more a:is(:focus-visible, :active) {
-    --nl-state-layer: var(--nl-surface-control-hover);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+    background-color: var(--nl-interaction-row);
     color: var(--nl-content-strong);
 }
 
@@ -881,7 +874,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
     padding-block: var(--nl-spacing-8);
-    border-top: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-profile-contribution__item:first-child {
     border-top: 0;
@@ -1069,29 +1061,23 @@
 .noslog-ui .nl-profile-calendar__cell {
     display: block;
     border-radius: var(--nl-radius-small);
-    background: var(--nl-surface-surface);
+    background: var(--nl-activity-0);
 }
 .noslog-ui .nl-profile-legend .nl-profile-calendar__cell {
     width: var(--nl-profile-legend-swatch);
     height: var(--nl-profile-legend-swatch);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="1"] {
-    background: var(--nl-local-data-bucket-1);
+    background: var(--nl-activity-1);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="2"] {
-    background: var(--nl-local-data-bucket-2);
+    background: var(--nl-activity-2);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="3"] {
-    background: var(--nl-local-data-bucket-3);
+    background: var(--nl-activity-3);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="4"] {
-    background: var(--nl-local-data-bucket-4);
-}
-.noslog-ui .nl-profile-calendar__cell[data-level="5"] {
-    background: var(--nl-local-data-bucket-5);
-}
-.noslog-ui .nl-profile-calendar__cell[data-level="6"] {
-    background: var(--nl-local-data-bucket-6);
+    background: var(--nl-activity-4);
 }
 .noslog-ui .nl-profile-calendar__foot {
     display: flex;
@@ -1124,7 +1110,6 @@
     align-items: start;
     column-gap: var(--nl-spacing-12);
     padding-block: var(--nl-spacing-8);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
 }
 .noslog-ui .nl-profile-pinned__jacket {
     width: var(--nl-spacing-48);

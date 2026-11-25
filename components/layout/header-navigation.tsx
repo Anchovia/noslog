@@ -162,7 +162,7 @@ export default function HeaderMenu({ isAdmin = false }: { isAdmin?: boolean }) {
                     <nav
                         id="header-secondary-menu"
                         aria-label={t("header.fullMenu")}
-                        className="nl-admin-phone-frame fixed top-nl-header left-1/2 grid w-full -translate-x-1/2 grid-cols-2 gap-nl-8 border-b-nl-stroke border-nl-elevated-border bg-nl-elevated p-nl-12 shadow-nl-overlay"
+                        className="nl-admin-phone-frame fixed top-nl-header left-1/2 grid w-full -translate-x-1/2 grid-cols-2 gap-nl-8 border-b-nl-stroke border-nl-divider bg-nl-elevated p-nl-12 shadow-nl-overlay"
                     >
                         {menuItems.map((item) => {
                             const Icon = item.icon;

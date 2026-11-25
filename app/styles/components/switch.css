@@ -9,9 +9,9 @@
     );
     height: var(--nl-icon-small);
     padding: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-content-default);
+    border: var(--nl-stroke-strong) solid transparent;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-input);
+    background: var(--nl-switch-track-off);
     transition:
         background-color var(--nl-motion-duration-d1) var(--nl-ease-easing)
             var(--nl-motion-delay-switch),

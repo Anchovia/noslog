@@ -4,7 +4,7 @@
     border-color: var(--nl-content-strong);
     outline: none;
 }
-/* 입력칸 = Spectrum 2 텍스트 필드 — 면 gray-25 · 2px 경계 gray-300, 올리면 경계 gray-400 */
+/* 입력칸 — 면 없음(바탕 그대로) · 2px 경계 border-input, 올려도 바뀌지 않는다 */
 .noslog-ui .nl-input {
     width: 100%;
     min-width: 0;
@@ -17,24 +17,11 @@
         calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
     border: var(--nl-stroke-strong) solid var(--nl-border-input);
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-input);
+    background: transparent;
     color: var(--nl-content-default);
     font-size: var(--nl-type-input-size);
     line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
-}
-@media (hover: hover) {
-    .noslog-ui
-        .nl-input:not(
-            :disabled,
-            [data-disabled],
-            [readonly],
-            :focus,
-            [aria-invalid="true"],
-            :has(.nl-unit-input__field[aria-invalid="true"])
-        ):hover {
-        border-color: var(--nl-border-input-hover);
-    }
 }
 /* 단위 입력은 aria-invalid 가 안 입력에 붙으므로 겉 상자가 그것을 보고 같은 빨간 경계를 그린다 */
 .noslog-ui .nl-input[aria-invalid="true"] {

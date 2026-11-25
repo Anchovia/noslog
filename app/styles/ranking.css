@@ -30,9 +30,6 @@
 .noslog-ui .nl-score-scatter__label[data-goal="990k"] {
     fill: var(--nl-score-goal-990k);
 }
-.noslog-ui .nl-score-scatter__label[data-goal="pianist"] {
-    fill: var(--nl-score-goal-pianist);
-}
 /* 참가자 한 명 = 자 위의 점 6(나는 8) — 핀으로 묶인 사람도 점으로는 남는다. 색은 순위표 점수 글자와 같다: 950k 아래 기본 글자색 · S 노랑 · 990k 살구 · Pianist 분홍 */
 .noslog-ui .nl-score-scatter__dot {
     fill: var(--nl-content-default);
@@ -43,10 +40,7 @@
 .noslog-ui .nl-score-scatter__dot[data-tone="990k"] {
     fill: var(--nl-score-goal-990k);
 }
-.noslog-ui .nl-score-scatter__dot[data-tone="pianist"] {
-    fill: var(--nl-score-goal-pianist);
-}
-/* 자 위 사진 핀(2026-09-17 E · 09-18) — 핀 끝이 자 위 점수 자리를 가리킴. 원 24(나 28) + 2 테두리(strong · 나는 판정 JUST 노랑).
+/* 자 위 사진 핀(2026-09-17 E · 09-18) — 핀 끝이 자 위 점수 자리를 가리킴. 원 24(나 28) + 2 테두리(strong · 남은 흰색 · 나는 my-position).
    핀 줄은 한 줄 고정 — 높이에는 뜻이 없다. 묶음은 대표 한 명 + 오른쪽 위 「+N」. 겹칠 때 나를 맨 위 */
 .noslog-ui .nl-score-pins {
     position: absolute;
@@ -77,12 +71,12 @@
     position: absolute;
     inset: 0;
     border-radius: 50% 50% 50% 0;
-    background: var(--nl-border-ring);
+    background: var(--nl-content-on-media);
     transform: rotate(-45deg);
 }
-/* 내 핀 = 판정 JUST 노랑 — 세로선 · 「상위 N%」 대신 색으로만 내 위치를 가리킨다 (2026-09-18 사용자 결정) */
+/* 내 핀 = my-position 색 — 세로선 · 「상위 N%」 대신 색으로만 내 위치를 가리킨다 */
 .noslog-ui .nl-score-pin[data-me] .nl-score-pin__shape {
-    background: var(--nl-judgement-just);
+    background: var(--nl-my-position);
 }
 .noslog-ui .nl-score-pin .nl-score-pin__photo {
     position: absolute;
@@ -178,6 +172,5 @@
     min-height: var(--nl-spacing-48);
     margin: 0;
     padding-inline: var(--nl-ranking-inset);
-    border-bottom: var(--nl-stroke-default) solid var(--nl-border-row);
     text-align: center;
 }

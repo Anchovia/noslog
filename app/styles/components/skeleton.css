@@ -5,7 +5,7 @@
     border-radius: var(--nl-radius-small);
 }
 .noslog-ui .nl-skeleton.nl-skeleton {
-    background: var(--nl-surface-control);
+    background: var(--nl-skeleton-surface);
 }
 /* ⑪ 로딩 — 물결 띠가 왼쪽에서 오른쪽으로 지나간다(당근 SEED skeleton, 동작 줄이기에서 멈춤).
    잘라 내기는 clip 으로 — hidden 은 표본 글자 자리의 기준선을 옮긴다 */

@@ -203,7 +203,7 @@ export function createBookmarkletHref(
 
 // 로더가 불러오는 동기화 본체 — 토큰은 담지 않고, 자기를 불러온 스크립트 태그에서 읽는다
 // 창 모양은 공용 규칙 값을 그대로 옮긴다(공식 사이트 위라 CSS 변수를 못 읽음). 크기 · 굵기는 TOKEN_VALUES, 색은 tokens/colors.css 다크 값을
-// 글자로 적었다 — 떠 있는 창(elevated · border/elevated · overlay-shadow · radius/large), 결과 링크 = 주 버튼 · 닫기 = 보조 버튼,
+// 글자로 적었다 — 떠 있는 창(elevated · overlay-shadow · radius/large), 결과 링크 = 주 버튼 · 닫기 = 보조 버튼,
 // 상태는 글자만(실패만 위험 글자색, 바쁠 때만 공용 스피너와 같은 270° 호)
 export function createBookmarkletScript(
     appOrigin: string,
@@ -252,12 +252,12 @@ export function createBookmarkletScript(
             overlay.id=overlayId;
             Object.assign(overlay.style,{
                 position:"fixed",top:"${space[16]}px",right:"${space[16]}px",zIndex:"2147483647",
-                width:"334px",maxWidth:"calc(100vw - 32px)",padding:"${space[24]}px",boxSizing:"border-box",border:"${stroke.default}px solid #323232",
-                borderRadius:"${radius.large}px",background:"#222222",color:"#DBDBDB",
-                font:'${typeSize[14]}px/${role.lineHeightUi}px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 24%)",
+                width:"334px",maxWidth:"calc(100vw - 32px)",padding:"${space[24]}px",boxSizing:"border-box",border:"0",
+                borderRadius:"${radius.large}px",background:"#1d2025",color:"#dcdee3",
+                font:'${typeSize[14]}px/${role.lineHeightUi}px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 4px 16px #000000cc",
                 display:"flex",flexDirection:"column",gap:"${space[16]}px",maxHeight:"calc(100dvh - 32px)",overflowY:"auto"
             });
-            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:${stroke.strong}px solid #FFFFFF;outline-offset:0}#noslog-sync-overlay .noslog-sync-primary{background:#DBDBDB;color:#111111}#noslog-sync-overlay .noslog-sync-secondary{background:#2C2C2C;color:#DBDBDB}#noslog-sync-overlay .noslog-sync-primary:is(:focus-visible,:active){background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:is(:focus-visible,:active){background:#323232;color:#F2F2F2}@media(hover:hover){#noslog-sync-overlay .noslog-sync-primary:hover{background:#F2F2F2}#noslog-sync-overlay .noslog-sync-secondary:hover{background:#323232;color:#F2F2F2}}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}</style><strong id="noslog-sync-title" style="font-size:${typeSize[16]}px;line-height:${lineHeight[22]}px;font-weight:${role.weightStrong};color:#F2F2F2"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:${space[8]}px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:${stroke.strong}px;background:#323232"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:${space[8]}px;width:100%"></div>';
+            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:${stroke.strong}px solid #f3f4f5;outline-offset:0}#noslog-sync-overlay .noslog-sync-primary{background:#f3f4f5;color:#16171b}#noslog-sync-overlay .noslog-sync-secondary{background:#2b2e35;color:#dcdee3}#noslog-sync-overlay .noslog-sync-primary:is(:focus-visible,:active){background:#dcdee3}#noslog-sync-overlay .noslog-sync-secondary:is(:focus-visible,:active){background:#393d46;color:#f3f4f5}@media(hover:hover){#noslog-sync-overlay .noslog-sync-primary:hover{background:#dcdee3}#noslog-sync-overlay .noslog-sync-secondary:hover{background:#393d46;color:#f3f4f5}}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}</style><strong id="noslog-sync-title" style="font-size:${typeSize[16]}px;line-height:${lineHeight[22]}px;font-weight:${role.weightStrong};color:#f3f4f5"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:${space[8]}px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:${stroke.strong}px;background:#393d46"><div id="noslog-sync-progress" style="height:100%;width:0;background:#f3f4f5"></div></div><div id="noslog-sync-actions" style="display:none;gap:${space[8]}px;width:100%"></div>';
             document.body.appendChild(overlay);
 
             overlay.querySelector("#noslog-sync-title").textContent=copy.title;
@@ -270,9 +270,9 @@ export function createBookmarkletScript(
             const setStatus=(message,state="busy")=>{
                 status.textContent=message;
                 overlay.dataset.state=state;
-                status.style.color=state==="failure"?"#FC432E":"#DBDBDB";
+                status.style.color=state==="failure"?"#ff6e60":"#dcdee3";
                 statusRow.firstElementChild.style.display=state==="busy"?"flex":"none";
-                Object.assign(marker.style,{width:"${space[16]}px",height:"${space[16]}px",borderRadius:"50%",border:"${stroke.strong}px solid #DBDBDB",borderLeftColor:"transparent",animation:state==="busy"?"noslog-sync-spin 800ms linear infinite":"none"});
+                Object.assign(marker.style,{width:"${space[16]}px",height:"${space[16]}px",borderRadius:"50%",border:"${stroke.strong}px solid #dcdee3",borderLeftColor:"transparent",animation:state==="busy"?"noslog-sync-spin 800ms linear infinite":"none"});
                 track.style.display=state==="busy"?"block":"none";
             };
             setStatus(copy.preparing);

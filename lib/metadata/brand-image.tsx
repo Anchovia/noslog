@@ -15,12 +15,12 @@ import {
  * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens/colors.css 를 읽어 확인한다
  */
 export const BRAND_IMAGE_DARK_HEX = {
-    background: "#111111", // surface-canvas
-    surface: "#1b1b1b", // surface-surface
-    border: "#323232", // border-divider
-    primary: "#dbdbdb", // identity-mark (고양이 원)
-    text: "#dbdbdb", // content-default (이름 「NosLog」)
-    secondary: "#afafaf", // content-subdued
+    background: "#000000", // surface-canvas
+    surface: "#16171b", // surface-surface
+    border: "#ffffff0d", // border-divider
+    primary: "#f3f4f5", // identity-mark (고양이 원)
+    text: "#dcdee3", // content-default (이름 「NosLog」)
+    secondary: "#b0b3ba", // content-subdued
 } as const;
 
 const SOCIAL_IMAGE_FONT = "Pretendard JP";
