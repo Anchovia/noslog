@@ -7,7 +7,7 @@
 `nl-poll-section` = 제목 「투표」 + 「선택」 →12→
 
 - 만들기 전 = 「투표 만들기」 보조 버튼.
-- 만든 뒤 = 요약 카드(면 `surface/surface` · `radius/control` · 안쪽 12) — 질문 `nl-emphasis-label` · 오른쪽 「고치기 · 지우기」 고스트 M →4→ 「선택지 n개 · 한 개만 고름 · 마감」 `nl-metadata`. 표가 들어왔으면 그 아래 「N표」 `nl-metadata` 한 줄이 더 붙고 「지우기」 는 비활성이다.
+- 만든 뒤 = 요약 카드(면 `surface/surface` · `radius/control` · 안쪽 12) — 질문 `nl-emphasis-label` · 오른쪽 「고치기 · 지우기」 고스트 →4→ 「선택지 n개 · 한 개만 고름 · 마감」 `nl-metadata`. 표가 들어왔으면 그 아래 「N표」 `nl-metadata` 한 줄이 더 붙고 「지우기」 는 비활성이다.
 - 공개판이 있는 이벤트 글은 「투표 만들기」 · 「지우기」 가 비활성이다([기능 규칙 — 글 투표](../product-rules.md#글-투표)).
 
 ## 만들기 창
@@ -23,7 +23,7 @@
 
 `nl-poll` = 면 카드(`surface/surface` · `radius/control` · 안쪽 12 · 사이 12) 안에 질문 `nl-emphasis-label` → 마감 · 익명 `nl-metadata` → 고르는 줄 또는 결과 → 아래 줄 「N명 참여」 + 버튼.
 
-- 고르는 줄 = 경계 1px · `radius/control` · 컨트롤 높이. 고른 줄은 반전 면 `primary/default` · 글자 `primary/on-primary` + 600. 올림은 `interaction/row` 겹침만이다.
+- 고르는 줄 = 경계 1px · `radius/control` · 높이 40. 고른 줄은 반전 면 `primary/default` · 글자 `primary/on-primary` + 700. 올림은 `interaction/row` 겹침만이다.
 - 결과 = 라벨 + 오른쪽 퍼센트 →4→ 진행 막대([그래프](./charts.md#진행-막대)). 내 표는 ✓ + 밝은 채움.
 - 한 개만 고르는 투표는 누르면 바로 저장하고, 저장 상태는 「N명 참여」 줄 위 한 곳에 둔다([패턴 — 저장 방식](../patterns.md#저장-방식)). 여러 개는 「투표하기」 로 내고, 실패하면 같은 자리에 상태 메시지를 두며 다시 내기는 「투표하기」 가 맡는다.
 - 로그아웃 · 마감은 결과만(고르는 줄을 보여 주지 않는다). 표를 낸 사람에게는 「다시 고르기」.

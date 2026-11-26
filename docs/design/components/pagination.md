@@ -4,8 +4,8 @@
 
 ## 모양
 
-- 항목 = 컨트롤 높이 정사각 · `radius/control` · 글자 `content/default`. 올림 · 누름 · 키 포커스에 면 `interaction/row` · 글자 `content/strong`(Spectrum 2 ActionButton quiet). 비활성 항목은 면 없이 글자 `content/disabled`.
-- 지금 쪽 = 반전 면 `primary/default` + `primary/on-primary` 글자 + 600 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
+- 항목 = 32 정사각(xsmall) · 숫자 사이 6 · `radius/full` · 글자 14/20 · 400 · `content/default`. 줄 안쪽은 위아래 24 · 좌우 16. 올림 · 누름 · 키 포커스에 면 `interaction/row` · 글자 `content/strong`(Spectrum 2 ActionButton quiet). 비활성 항목은 면 없이 글자 `content/disabled`.
+- 지금 쪽 = 반전 면 `primary/default` + `primary/on-primary` 글자 + 700 · 선 없음(고른 칩과 같은 규칙). 지금 쪽은 올림 반응이 없다.
 
 ## 동작
 
@@ -15,6 +15,7 @@
 
 ## 바뀐 기록
 
+- [2026-11-26 공용 부품 4단계 — 크기 단계 · 역할 변수 · 모서리](../../decisions/2026-11-26-components-stage4.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-26 Geist 색 · 모서리 · 포커스 — 지금 쪽 색](../../decisions/2026-10-26-geist-color-radius.md)
 - [2026-10-25 체계 묶음 — 모서리](../../decisions/2026-10-25-design-system-cluster.md)

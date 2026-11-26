@@ -16,8 +16,8 @@
 ## 트리거
 
 - 「필터」 + 적용 그룹 수 배지([태그 — 개수 배지](./tag.md#개수-배지)).
-- 좁은 폭 목록 화면에서는 검색줄 오른쪽 아이콘 버튼 ☰ 컨트롤 높이 정사각(배지는 오른쪽 위 모서리에 걸친다, `nl-filter-icon-trigger`).
-- 트리거는 높이를 덮어쓰지 않고 버튼 크기(`size`)를 따른다.
+- 좁은 폭 목록 화면에서는 검색줄 오른쪽 아이콘 버튼 ☰ 32 정사각(배지는 오른쪽 위 모서리에 걸친다, `nl-filter-icon-trigger`).
+- 트리거는 높이를 덮어쓰지 않고 기본 컨트롤 32 이다.
 
 ## 그룹
 
@@ -28,21 +28,23 @@
 ## 칩
 
 - 짧은 열거는 창 · 팝오버에서 `FilterChips`.
-- 칩 = GitHub 필터 창 방식. `surface/control` 면 · 둘레 없음 · `radius/control` · M 높이. 글자는 [기초값 — 글자](../foundations.md#글자)의 필터 창 칩 글자다. 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`. 비활성 칩은 글자만 `content/disabled`.
+- 칩 = GitHub 필터 창 방식. `surface/control` 면 · 둘레 없음 · `radius/full` · 높이 32 · 좌우 안쪽 12. 글자는 [기초값 — 글자](../foundations.md#글자)의 필터 창 칩 글자다. 올림 · 누름 · 키 포커스에 면 `surface/control-hover` · 글자 `content/strong`. 비활성 칩은 글자만 `content/disabled`.
 - 정렬 메뉴 안 칩은 좌우 안쪽 8 인 촘촘한 변형이다. 공용 파일에 둔다.
-- 고른 칩 = 반전 면 `primary/default` + 글자 `primary/on-primary` + ✓. 올림 · 누름 · 키 포커스도 같은 면이다. 굵기 400 그대로(고를 때 폭이 늘지 않게). 안의 개수 · 색 글자도 칩 글자색으로.
+- 고른 칩 = 반전 면 `primary/default` + 글자 `primary/on-primary` + ✓. 올림 · 누름 · 키 포커스도 같은 면이다. 굵기 700. 안의 개수 · 색 글자도 칩 글자색으로.
 - 창 밖에서 늘 보이는 한 줄은 `row` — 줄바꿈 없이 가로 스크롤.
 - 주소가 곧 상태인 페이지 필터(공지 분류 · 이벤트 상태)는 같은 모양의 링크 칩 `FilterChipLinks`(고름 = `aria-current`).
-- 레일에서는 체크박스 목록 `SelectionList`. 줄 높이는 컨트롤 높이, 줄 사이는 0 이다. 줄에 올림 면을 깔지 않고, 올림 · 누름 · 키 포커스에 체크 상자 경계와 글자만 `content/strong` 이다(체크한 상자는 `primary/hover`). 체크 상자는 그룹 제목 선에 맞춘다.
+- 레일에서는 체크박스 목록 `SelectionList`. 줄 높이는 32(체크 줄), 줄 사이는 0 이다. 줄에 올림 면을 깔지 않고, 올림 · 누름 · 키 포커스에 체크 상자 경계와 글자만 `content/strong` 이다(체크한 상자는 `primary/hover`). 체크 상자는 그룹 제목 선에 맞춘다.
 - 난이도 · 분류 · 기록(S · FC · Pianist) 항목 글자는 그 색. 올리면 기본 글자색.
 
 ## 적용 조건
 
-- `AppliedTokens` 알약 = `surface/canvas` 면 + 1px `border/input` 선 · `radius/full` · M 높이. 글자 →4→ × 16. 올림 · 누름 · 키 포커스는 칩과 같다. 끝에 글자 버튼 「필터 모두 지우기」.
+- `AppliedTokens` 알약 = `surface/canvas` 면 + 1px `border/default` 선 · `radius/full` · 높이 32. 글자 →4→ × 16. 올림 · 누름 · 키 포커스는 칩과 같다. 끝에 글자 버튼 「필터 모두 지우기」.
 - 난이도 · 분류 · 기록 조건은 글자만 필터 칩과 같은 색, × 는 기본 글자색. 올리면 글자도 기본색. 레벨 · 미플레이 · 그 밖의 조건은 기본 글자색.
 
 ## 바뀐 기록
 
+- [2026-11-26 컨트롤 크기를 다섯 단계로](../../decisions/2026-11-26-control-size-five-steps.md)
+- [2026-11-26 공용 부품 4단계 — 크기 단계 · 역할 변수 · 모서리](../../decisions/2026-11-26-components-stage4.md)
 - [2026-10-29 필터 목록 · 고르기 창 · 고대비 · 악곡 카드 · 관리자 올림](../../decisions/2026-10-29-hover-remaining.md)
 - [2026-10-28 칩 모양 · 필터 창 글자](../../decisions/2026-10-28-typography-filter-dialog.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)

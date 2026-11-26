@@ -4,7 +4,7 @@
 
 ## 모양
 
-- 칸 = 값(`nl-entity-title` 조합 16/24 · 600) 위, 라벨(`nl-metadata` 흐림) 아래. 값 뒤 보조 단위(`unit`, 순위 「/ 1,234」 · 「판」)는 `nl-body-secondary` 흐림 · 사이 4 · 기준선 맞춤.
+- 칸 = 값(`nl-entity-title` 16/22 · 700) 위, 라벨(`nl-metadata` 흐림) 아래. 값 뒤 보조 단위(`unit`, 순위 「/ 1,234」 · 「판」)는 `nl-body-secondary` 흐림 · 사이 4 · 기준선 맞춤.
 - 칸 면 `surface/surface` · 칸 안쪽 위아래 12 · 좌우 8 · 칸 최소 64 · 칸 사이 1px `border/divider`(gap + divider 바탕이라 좁아서 줄바꿈해도 선이 맞음) · 상자 모서리 `radius/control`.
 - 큰 숫자(32) 대신 이것을 쓴다. 새 글자 단계를 만들지 않는다.
 - 넓은 폭 세로 목록 변형 `nl-stat-strip--wide-list` — 칸 = 컨트롤 높이 · 라벨 왼쪽 · 값 오른쪽 · 안쪽 12.
@@ -37,13 +37,14 @@
 
 `StatStrip footer` + `nl-action-group` — 수치 띠에 딸린 이동 링크 2–3개를 같은 상자 아래 칸에 둔다.
 
-- 칸 = 같은 폭 · 사이 1px 선(수치 띠와 같은 gap + divider) · 컨트롤 L 높이 · `surface/surface` 면.
+- 칸 = 같은 폭 · 사이 1px 선(수치 띠와 같은 gap + divider) · `--nl-control-height` 높이 · `surface/surface` 면.
 - 글자 `nl-emphasis-label` `content/default` + 끝 › 16 `content/subdued`(사이 4) — › 가 누를 곳 표시.
 - 올림 `interaction/row`.
 - 없는 동작도 칸은 두고 글자 · › 를 `content/disabled` 로 둔다. 반응은 없다.
 
 ## 바뀐 기록
 
+- [2026-11-26 공용 부품 4단계 — 크기 단계 · 역할 변수 · 모서리](../../decisions/2026-11-26-components-stage4.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)
 

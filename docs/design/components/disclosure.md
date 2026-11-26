@@ -9,8 +9,8 @@
 
 | 단계           | 요약 줄                                                                            | 내용까지 |
 | -------------- | ---------------------------------------------------------------------------------- | -------- |
-| 구역           | 48 · 제목은 자리대로(페이지 구역 `nl-section-title`, 상자 안 `nl-component-title`) | 16       |
-| 보조 `compact` | 컨트롤 높이 · `nl-control`                                                         | 8        |
+| 구역           | 40 · 제목은 자리대로(페이지 구역 `nl-section-title`, 상자 안 `nl-component-title`) | 16       |
+| 보조 `compact` | 32 · `nl-control`                                                                  | 8        |
 
 - 혼자 떠 있는 상자는 `card` 다. 누르지 않는 묶음 상자와 같은 secondary 카드([면 카드](./surface-card.md))이고, 요약 줄 좌우 안쪽 20 · 올림은 카드 전체 `interaction/row` 다.
 - 접히는 구역끼리도 다른 구역과 같이 `--nl-space-section` 으로 띄운다. 펼침 사이에 구분선을 넣지 않는다.
@@ -31,6 +31,8 @@
 
 ## 바뀐 기록
 
+- [2026-11-26 컨트롤 크기를 다섯 단계로](../../decisions/2026-11-26-control-size-five-steps.md)
+- [2026-11-26 공용 부품 4단계 — 크기 단계 · 역할 변수 · 모서리](../../decisions/2026-11-26-components-stage4.md)
 - [2026-10-27 부품 · 자리마다 쓰는 토큰을 Adobe 것으로 바꿈](../../decisions/2026-10-27-spectrum-components.md)
 - [2026-10-27 가이드 다시 대조](../../decisions/2026-10-27-guide-audit-2.md)
 - [2026-10-01 순위표 줄 링크 범위](../../decisions/archive/2026-09-10_2026-10-23.md#2026-10-01)
