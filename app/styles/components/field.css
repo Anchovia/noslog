@@ -1,7 +1,7 @@
 .noslog-ui .nl-field {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-field-label-gap);
     min-width: 0;
 }
 /* 폼 칸 사이 24(2026-10-25 체계 묶음) — 칸이 둘 이상 이어진 묶음은 화면 CSS 와 상관없이 세로 간격 24 */

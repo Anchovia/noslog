@@ -63,15 +63,13 @@ export const KeyboardSelection: Story = {
         await waitFor(() => expect(trigger).toHaveFocus());
     },
 };
-// 목록 행 = 컨트롤 높이 · 글자 14(본문 16 이 붙지 않는다)
+// 목록 행 = 높이 40 · 글자 14(본문 16 이 붙지 않는다)
 export const OptionRows: Story = {
     play: async ({ canvasElement }) => {
         within(canvasElement).getByRole("combobox", { name: "난이도" }).focus();
         await userEvent.keyboard("{ArrowDown}");
         const list = await screen.findByRole("listbox");
-        const height = window.matchMedia("(min-width: 1056px)").matches
-            ? "32px"
-            : "40px";
+        const height = "40px";
         for (const option of within(list).getAllByRole("option")) {
             const style = getComputedStyle(option);
             await expect(style.height).toBe(height);

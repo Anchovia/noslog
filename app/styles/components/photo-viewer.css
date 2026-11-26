@@ -3,7 +3,7 @@
 .noslog-ui .nl-photo-viewer {
     position: fixed;
     inset: 0;
-    z-index: var(--nl-layer-fullscreen);
+    z-index: var(--nl-window-layer);
     display: flex;
     flex-direction: column;
     background: var(--nl-surface-canvas);
@@ -23,8 +23,8 @@
     top: var(--nl-spacing-8);
     right: var(--nl-spacing-8);
     display: inline-flex;
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
+    width: var(--nl-control-height-large);
+    height: var(--nl-control-height-large);
     align-items: center;
     justify-content: center;
     border-radius: var(--nl-radius-small);
@@ -35,8 +35,8 @@
     position: absolute;
     top: 50%;
     display: inline-flex;
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
+    width: var(--nl-control-height-large);
+    height: var(--nl-control-height-large);
     align-items: center;
     justify-content: center;
     transform: translateY(-50%);
@@ -47,7 +47,7 @@
 /* 사진 위 닫기 · 넘김 = 미디어 위 버튼 — 올림 · 누름 · 키 포커스에 quiet 올림 면 */
 @media (hover: hover) {
     .noslog-ui :is(.nl-photo-viewer__close, .nl-photo-viewer__nav):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }
@@ -56,7 +56,7 @@
         :active,
         :focus-visible
     ) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-photo-viewer__nav--previous {
@@ -81,7 +81,7 @@
 .noslog-ui .nl-photo-viewer__thumbnails button {
     position: relative;
     display: block;
-    height: var(--nl-control-height);
+    height: var(--nl-control-height-medium);
     aspect-ratio: 4 / 3;
     border-radius: var(--nl-radius-small);
     overflow: hidden;

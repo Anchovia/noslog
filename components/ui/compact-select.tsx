@@ -31,7 +31,7 @@ export default function CompactSelect<Value extends string>({
     }[];
     disabled?: boolean;
     outlined?: boolean;
-    /** 결과 줄처럼 한 줄이 M 인 곳 — 높이만 M(--nl-control-height-compact), 글자 · 여백은 같다 */
+    /** 결과 줄처럼 한 단계 작은 곳 — 높이는 기본과 같은 32 */
     size?: "sm";
     id?: string;
     className?: string;

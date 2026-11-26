@@ -31,8 +31,8 @@
     height: var(--nl-spacing-32);
 }
 .noslog-ui .nl-avatar--medium {
-    width: var(--nl-control-height-large);
-    height: var(--nl-control-height-large);
+    width: var(--nl-control-height-medium);
+    height: var(--nl-control-height-medium);
 }
 .noslog-ui .nl-avatar--large {
     width: var(--nl-spacing-64);

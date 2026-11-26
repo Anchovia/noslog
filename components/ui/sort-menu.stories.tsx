@@ -64,15 +64,13 @@ export const Default: Story = {
         );
     },
 };
-// 메뉴 행 = 컨트롤 높이 · 글자 14, 판 둘레는 고대비에서도 남는 실제 border(안쪽을 그만큼 줄여 판 크기 그대로)
+// 메뉴 행 = 높이 40 · 글자 14, 판 둘레는 고대비에서도 남는 실제 border(안쪽을 그만큼 줄여 판 크기 그대로)
 const menuRowsMatchControls: Story["play"] = async ({ canvasElement }) => {
     await userEvent.click(
         within(canvasElement).getByRole("button", { name: "정렬: 최근 순" })
     );
     const items = await screen.findAllByRole("menuitemradio");
-    const height = window.matchMedia("(min-width: 1056px)").matches
-        ? "32px"
-        : "40px";
+    const height = "40px";
     for (const item of items) {
         const style = getComputedStyle(item);
         await expect(style.height).toBe(height);

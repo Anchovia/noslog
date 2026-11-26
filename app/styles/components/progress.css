@@ -4,7 +4,7 @@
 .noslog-ui .nl-progress {
     position: fixed;
     inset: 0 0 auto;
-    z-index: var(--nl-layer-progress);
+    z-index: var(--nl-attached-layer);
     height: var(--nl-stroke-strong);
     pointer-events: none;
 }

@@ -1,6 +1,6 @@
 /* 정보 창 줄 목록(2026-09-26 I1 — GitHub · GitLab · tldraw · Excalidraw 도움말 창)
-   소제목(metadata) →8→ 구분선 줄 목록. 줄 = 이름 칸(가장 긴 이름 폭으로 맞춤) · 값/설명 칸, 줄 높이 = 컨트롤 높이 ·
-   위아래 8 · 좌우 4(고르기 줄과 같음). --value = 값을 오른쪽 끝에 */
+   소제목(metadata) →8→ 구분선 줄 목록. 줄 = 이름 칸(가장 긴 이름 폭으로 맞춤) · 값/설명 칸, 줄 안 위아래 0 · 좌우 4 ·
+   줄 사이 12(목록 줄 규칙). --value = 값을 오른쪽 끝에 */
 .noslog-ui .nl-info-section {
     display: flex;
     flex-direction: column;
@@ -10,6 +10,7 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     column-gap: var(--nl-spacing-16);
+    row-gap: var(--nl-space-grid-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -20,8 +21,7 @@
     grid-template-columns: subgrid;
     align-items: baseline;
     align-content: center;
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    padding: var(--nl-list-row-padding-block) var(--nl-spacing-4);
 }
 .noslog-ui .nl-info-rows > :last-child {
     box-shadow: none;

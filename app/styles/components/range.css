@@ -1,4 +1,4 @@
-/* 범위 슬라이더 RangeSlider — 높이 24 · 트랙 4 track(양끝 12 안쪽) · 채운 점 20(누르는 자리 24) */
+/* 범위 슬라이더 RangeSlider — 높이 32 · 트랙 4 track(양끝 12 안쪽) · 채운 점 20(누르는 자리 24) */
 .noslog-ui .nl-range {
     --nl-range-accent: var(--nl-primary-default);
     display: flex;
@@ -15,7 +15,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: var(--nl-spacing-24);
+    height: var(--nl-control-height-small);
     width: 100%;
     touch-action: none;
     user-select: none;

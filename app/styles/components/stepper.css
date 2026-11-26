@@ -1,10 +1,10 @@
-/* 숫자 스테퍼 Stepper — 입력칸과 같은 면 · 2px 경계 · 모서리 · 높이, 버튼 = 선 안쪽 높이 정사각, 값 칸 최소 64 */
+/* 숫자 스테퍼 Stepper — 입력칸과 같은 면 · 1px 경계 · 모서리 · 높이, 버튼 = 선 안쪽 높이 정사각, 값 칸 최소 64 */
 .noslog-ui .nl-stepper {
     display: inline-flex;
     align-items: center;
     align-self: flex-start;
-    height: var(--nl-control-height);
-    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    height: var(--nl-control-height-medium);
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-control);
     background: transparent;
 }
@@ -12,19 +12,19 @@
 .noslog-ui .nl-stepper__button {
     display: grid;
     place-items: center;
-    width: calc(var(--nl-control-height) - var(--nl-stroke-strong) * 2);
+    width: calc(var(--nl-control-height-medium) - var(--nl-stroke-default) * 2);
     height: 100%;
-    border-radius: calc(var(--nl-radius-control) - var(--nl-stroke-strong));
+    border-radius: calc(var(--nl-radius-control) - var(--nl-stroke-default));
     color: var(--nl-content-default);
 }
 @media (hover: hover) {
     .noslog-ui .nl-stepper__button:not(:disabled):hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-stepper__button:not(:disabled):is(:active, :focus-visible) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 /* 비활성 = 글자 · 아이콘 gray-400(투명도 대신 색). 끝 값에 닿은 버튼도 같다 */

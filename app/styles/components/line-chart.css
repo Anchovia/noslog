@@ -158,8 +158,8 @@
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-8);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
+    background: var(--nl-floating-surface);
+    box-shadow: var(--nl-floating-shadow);
     position: absolute;
     width: max-content;
     max-width: 100%;

@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 export default function SearchField({
     leading,
     floating = false,
+    inline = false,
     clearLabel,
     busyLabel,
     busy = false,
@@ -19,6 +20,8 @@ export default function SearchField({
     leading?: ReactNode;
     /** 지도 위에 떠 있는 검색 — 떠 있는 창 경계 · 그림자(2026-10-21 전면 대조 ③) */
     floating?: boolean;
+    /** 같은 줄에 셀렉트와 놓일 때 — 혼자 놓일 때와 같은 40 */
+    inline?: boolean;
     /** 제어된 문자열. 입력 onChange는 네이티브 input 이벤트다. */
     value: string;
     /** 지우기 버튼의 번역된 접근성 이름. */
@@ -34,6 +37,7 @@ export default function SearchField({
             className={cn(
                 "nl-search",
                 floating && "nl-search--floating",
+                inline && "nl-search--inline",
                 className
             )}
             aria-busy={busy || undefined}

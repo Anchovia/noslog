@@ -26,13 +26,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-menu-item-gap);
     text-align: left;
     color: var(--nl-content-default);
 }
 @media (hover: hover) {
     .noslog-ui .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -41,7 +41,7 @@
     .noslog-ui
     .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):focus-visible,
 .noslog-ui .nl-sort-menu__item:not(:disabled, [aria-checked="true"]):active {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 /* 마우스로 연 메뉴는 첫 항목에 포커스 선을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/input-modality) */

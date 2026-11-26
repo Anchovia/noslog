@@ -1,8 +1,8 @@
 .noslog-ui .nl-dialog-overlay {
     position: fixed;
     inset: 0;
-    z-index: var(--nl-layer-overlay);
-    background: var(--nl-surface-scrim);
+    z-index: var(--nl-window-layer);
+    background: var(--nl-window-scrim);
 }
 /* 대화상자(GitHub · Primer 3칸 창) — 머리 · 본문 · 발. 면 · 모서리 · 그림자 없음은 아래 Spectrum 2 대화상자 규칙.
    크기 = small 440 · medium 600(기본) · large 768(읽기 폭), 화면 가장자리 16 은 늘 비운다. 672 미만 입력 칸이 있는 창은 아래에서 전체 화면 */
@@ -11,7 +11,7 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    z-index: var(--nl-layer-dialog);
+    z-index: var(--nl-window-layer);
     display: flex;
     flex-direction: column;
     width: min(var(--nl-dialog-width), calc(100vw - var(--nl-spacing-32)));
@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    min-height: calc(var(--nl-control-height-compact) + var(--nl-spacing-24));
+    min-height: calc(var(--nl-control-height-small) + var(--nl-spacing-24));
     padding: var(--nl-spacing-12) var(--nl-spacing-16) var(--nl-spacing-12)
         var(--nl-spacing-24);
 }
@@ -109,11 +109,11 @@
     .noslog-ui .nl-dialog__actions {
         gap: var(--nl-spacing-12);
     }
-    /* 컴팩트 아이콘 버튼(.nl-button--icon.nl-button--compact)보다 구체적이어야 크기가 이긴다 */
+    /* xsmall 아이콘 버튼(.nl-button--icon.nl-button--xsmall)보다 구체적이어야 크기가 이긴다 */
     .noslog-ui .nl-dialog:not(.nl-image-share) .nl-dialog__close {
-        width: var(--nl-control-height);
-        height: var(--nl-control-height);
-        min-height: var(--nl-control-height);
+        width: var(--nl-control-height-small);
+        height: var(--nl-control-height-small);
+        min-height: var(--nl-control-height-small);
         border-radius: var(--nl-radius-control);
     }
 }
@@ -231,9 +231,9 @@
             )
         )
         .nl-dialog__close {
-        width: var(--nl-control-height);
-        height: var(--nl-control-height);
-        min-height: var(--nl-control-height);
+        width: var(--nl-control-height-small);
+        height: var(--nl-control-height-small);
+        min-height: var(--nl-control-height-small);
     }
     .noslog-ui
         .nl-dialog:not(.nl-image-share, .nl-dialog--confirm):has(

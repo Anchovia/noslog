@@ -118,7 +118,7 @@ export const CloseButton: Story = {
     },
 };
 
-// 떠 있는 창(672 이상) 닫기 = 컨트롤 높이 정사각 · 모서리 radius/control. 컴팩트 아이콘 버튼 크기에 지지 않아야 한다
+// 떠 있는 창(672 이상) 닫기 = 32 정사각 · 모서리 radius/control. xsmall 아이콘 버튼 크기에 지지 않아야 한다
 function closeIsControlSquare(size: string): Story["play"] {
     return async ({ canvasElement }) => {
         await userEvent.click(
@@ -139,7 +139,7 @@ function closeIsControlSquare(size: string): Story["play"] {
 }
 export const CloseButtonFloating: Story = {
     ...contractStory(672),
-    play: closeIsControlSquare("40px"),
+    play: closeIsControlSquare("32px"),
 };
 export const CloseButtonFloatingWide: Story = {
     ...contractStory(1056),

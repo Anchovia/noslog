@@ -10,11 +10,11 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-chip-height);
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-canvas);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-applied__token[data-tone="normal"] {
@@ -72,12 +72,12 @@
     color: transparent;
 }
 .noslog-ui .nl-applied__token:is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-applied__token:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }

@@ -11,7 +11,7 @@ type IconButtonProps = Omit<
     /** 아이콘 하나. 기본 20(`nl-icon`), 가장자리 닫기처럼 정해 둔 곳만 24 */
     children: ReactNode;
     variant?: "ghost" | "secondary" | "primary";
-    /** 줄의 단계 — 기본 L(컨트롤 높이), M 줄(카드 안 · 폰 결과 줄 등)은 compact */
+    /** 줄의 단계 — 기본 · compact 모두 32 */
     size?: "default" | "compact";
 };
 

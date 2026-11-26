@@ -1,13 +1,14 @@
-/* 스위치 = Spectrum 2 — 트랙 26 × 16 · 2px 경계(고대비 모드에서도 보이게 실제 선), 손잡이 꺼짐 8 · 켜짐 10.
+/* 스위치 = Spectrum 2 — 트랙 34 × 24 · 2px 경계(고대비 모드에서도 보이게 실제 선), 손잡이 꺼짐 8 · 켜짐 10.
    꺼짐 면 gray-25 + 경계 gray-800 · 손잡이 gray-800, 켜짐 면 gray-800 · 손잡이 gray-25.
    ⑨ 손잡이는 자리 · 크기가 옮겨 가고, 바탕색은 손잡이보다 조금 늦게 바뀐다(당근 SEED 스위치) */
 .noslog-ui .nl-switch {
+    --nl-switch-height: var(--nl-spacing-24);
     position: relative;
     flex-shrink: 0;
     width: calc(
-        var(--nl-icon-small) + var(--nl-spacing-8) + var(--nl-spacing-2)
+        var(--nl-switch-height) + var(--nl-spacing-8) + var(--nl-spacing-2)
     );
-    height: var(--nl-icon-small);
+    height: var(--nl-switch-height);
     padding: 0;
     border: var(--nl-stroke-strong) solid transparent;
     border-radius: var(--nl-radius-full);
@@ -24,14 +25,14 @@
     position: absolute;
     top: calc(
         (
-                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                var(--nl-switch-height) - var(--nl-stroke-strong) * 2 -
                     var(--nl-spacing-8)
             ) /
             2
     );
     left: calc(
         (
-                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                var(--nl-switch-height) - var(--nl-stroke-strong) * 2 -
                     var(--nl-spacing-8)
             ) /
             2
@@ -53,7 +54,7 @@
 .noslog-ui .nl-switch[aria-checked="true"]::after {
     top: calc(
         (
-                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                var(--nl-switch-height) - var(--nl-stroke-strong) * 2 -
                     var(--nl-spacing-8) - var(--nl-spacing-2)
             ) /
             2
@@ -61,7 +62,7 @@
     left: calc(
         100% - var(--nl-spacing-8) - var(--nl-spacing-2) -
             (
-                var(--nl-icon-small) - var(--nl-stroke-strong) * 2 -
+                var(--nl-switch-height) - var(--nl-stroke-strong) * 2 -
                     var(--nl-spacing-8) - var(--nl-spacing-2)
             ) /
             2

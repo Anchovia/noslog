@@ -79,17 +79,13 @@ export const VariantsAndSizes: Story = {
     ),
 };
 
-// 좌우 안쪽은 제 높이 ÷ 2(경계 포함). 넓은 폭에서 줄의 컨트롤 높이(32)가 아니라 버튼 높이(40)를 따르는지 본다. 고스트만 12
+// 좌우 안쪽은 크기 단계 값(경계 포함) 14 — 모든 폭 같고 고스트도 같다
 const paddingFollowsOwnHeight: Story["play"] = async ({ canvasElement }) => {
     for (const button of within(canvasElement).getAllByRole("button")) {
         const style = getComputedStyle(button);
         const ink =
             parseFloat(style.paddingLeft) + parseFloat(style.borderLeftWidth);
-        await expect(ink).toBe(
-            button.classList.contains("nl-button--ghost")
-                ? 12
-                : parseFloat(style.height) / 2
-        );
+        await expect(ink).toBe(14);
         await expect(style.paddingRight).toBe(style.paddingLeft);
     }
 };

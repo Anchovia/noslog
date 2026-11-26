@@ -21,7 +21,6 @@
     --nl-space-paragraph: var(--nl-spacing-16);
     --nl-page-margin: var(--nl-spacing-16);
     --nl-space-header-title: var(--nl-spacing-32);
-    --nl-space-crumb-title: var(--nl-spacing-24);
     --nl-space-box-gap: var(--nl-spacing-16);
     --nl-space-grid-gap: var(--nl-spacing-12);
     --nl-box-padding: var(--nl-spacing-20);
@@ -33,13 +32,20 @@
     /* 좁은 그릇(2026-10-01) — 좁은 열 358(인증 · 미리보기 판) · 가운데 열 640(홈 검색 · 랭킹 · 설정 오른쪽 열) */
     --nl-container-narrow: 358px;
     --nl-container-compact: 640px;
-    /* 컨트롤 높이 세 단계(2026-10-25 105곳 집계 1위) — 기본: 버튼 · 입력 · 셀렉트 · 검색 · 메뉴 항목,
-       작게(compact): 칩 · 인라인 보조, 크게(large): size="lg" 버튼. 폰 값은 아래, 1056 이상은 미디어 쿼리 */
+    /* 컨트롤 높이 눈금 — 당근 SEED 크기 이름(xsmall · small · medium · large), 모든 폭 같은 값.
+       부품은 아래 역할 변수만 쓴다 */
+    --nl-control-height-xsmall: 32px;
+    --nl-control-height-small: 32px;
+    --nl-control-height-medium: 40px;
+    --nl-control-height-large: 48px;
+    --nl-control-padding-inline-small: 14px;
+    --nl-control-padding-inline-large: 20px;
+    /* 정한 눈금 밖에 남은 자리(고르기 슬롯 · 숫자 척도 · 사진 보기 단추 · 접기 요약 · 메뉴 판 밖 줄)의 높이.
+       이 둘만 폭에 따라 바뀐다(1056 이상 32 · 24) */
     --nl-control-height: 40px;
     --nl-control-height-compact: 32px;
-    --nl-control-height-large: 40px;
-    /* 뒤로 링크 누르는 높이 — 모든 폭 같은 값. 채보 뷰어 무대 폭 계산도 이 값을 뺀다 */
-    --nl-back-link-height: 44px;
+    /* 뒤로 링크 누르는 높이 — 모든 폭 같은 값 */
+    --nl-back-link-height: var(--nl-control-height-small);
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;
@@ -67,6 +73,65 @@ html:has(.noslog-ui) {
         /* 컨트롤 높이 — 데스크톱 집계 1위 */
         --nl-control-height: 32px;
         --nl-control-height-compact: 24px;
-        --nl-control-height-large: 40px;
     }
+}
+/* 부품 역할 변수(4단계) — 부품 CSS 는 눈금이 아니라 이 이름만 쓴다. 값은 눈금 · 간격 · 모서리 토큰을 가리킨다 */
+.noslog-ui {
+    --nl-button-height: var(--nl-control-height-small);
+    --nl-button-padding-inline: var(--nl-control-padding-inline-small);
+    --nl-button-gap: var(--nl-spacing-4);
+    --nl-button-radius: var(--nl-radius-control);
+    --nl-icon-button-size: var(--nl-control-height-small);
+    --nl-icon-button-icon: var(--nl-icon-small);
+    --nl-select-height: var(--nl-control-height-small);
+    --nl-select-padding: var(--nl-spacing-6)
+        var(--nl-control-padding-inline-small);
+    --nl-input-height: var(--nl-control-height-medium);
+    --nl-input-padding-inline: var(--nl-control-padding-inline-small);
+    --nl-search-height: var(--nl-control-height-medium);
+    /* 앞 · 뒤 안쪽(위아래는 높이로 맞춘다) */
+    --nl-search-padding-start: var(--nl-spacing-20);
+    --nl-search-padding-end: var(--nl-control-padding-inline-small);
+    --nl-search-gap: var(--nl-spacing-6);
+    --nl-chip-height: var(--nl-control-height-small);
+    --nl-chip-padding-inline: var(--nl-spacing-12);
+    --nl-tabs-height: var(--nl-control-height-small);
+    --nl-check-row-height: var(--nl-control-height-small);
+    --nl-check-box-size: var(--nl-icon-medium);
+    --nl-menu-item-padding: calc(
+            (var(--nl-control-height-medium) - var(--nl-type-line-height-ui)) /
+                2
+        )
+        var(--nl-spacing-16);
+    --nl-menu-item-gap: var(--nl-spacing-8);
+    --nl-pagination-item-size: var(--nl-control-height-xsmall);
+    --nl-pagination-gap: var(--nl-spacing-6);
+    --nl-segments-height: var(--nl-control-height-small);
+    --nl-segments-padding: var(--nl-spacing-0);
+    --nl-segments-gap: var(--nl-spacing-2);
+    --nl-segments-item-height: var(--nl-control-height-small);
+    --nl-segments-item-padding: var(--nl-spacing-0) var(--nl-spacing-12);
+    --nl-field-label-gap: var(--nl-spacing-8);
+    --nl-box-radius: var(--nl-radius-box);
+    --nl-box-shadow: var(--nl-card-shadow);
+    --nl-floating-surface: var(--nl-surface-elevated);
+    --nl-floating-shadow: var(--nl-overlay-shadow);
+    --nl-window-scrim: var(--nl-surface-scrim);
+    --nl-press-surface: var(--nl-surface-control-hover);
+    --nl-press-row: var(--nl-interaction-row);
+    --nl-press-inverse: var(--nl-primary-hover);
+    --nl-selected-surface: var(--nl-primary-default);
+    --nl-selected-content: var(--nl-primary-on-primary);
+    --nl-tab-indicator: var(--nl-stroke-strong);
+    --nl-nav-selected-surface: var(--nl-border-default);
+    --nl-nav-indicator-width: var(--nl-spacing-4);
+    --nl-nav-indicator-height: var(--nl-spacing-24);
+    --nl-list-row-padding-block: 0px;
+    --nl-list-row-prefix-gap: var(--nl-spacing-12);
+    --nl-list-row-text-gap: var(--nl-spacing-2);
+    --nl-settings-row-gap: var(--nl-spacing-2);
+    --nl-tag-height: 20px;
+    --nl-tag-surface: var(--nl-surface-tag);
+    --nl-tag-content: var(--nl-content-on-tag);
+    --nl-tag-radius: var(--nl-radius-small);
 }

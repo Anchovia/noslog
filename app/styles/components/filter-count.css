@@ -3,8 +3,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: var(--nl-icon-medium);
-    min-height: var(--nl-icon-medium);
+    min-width: var(--nl-spacing-24);
+    min-height: var(--nl-spacing-24);
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-control);
 }

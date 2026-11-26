@@ -10,9 +10,9 @@
     padding: var(--nl-spacing-16);
     border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
-    z-index: var(--nl-layer-popover);
+    background: var(--nl-floating-surface);
+    box-shadow: var(--nl-floating-shadow);
+    z-index: var(--nl-floating-layer);
 }
 /* 머리 줄 — 왼쪽 제목 · 오른쪽 초기화(전체 레이어 머리 줄과 같은 구성) */
 .noslog-ui .nl-filter-popover__head {

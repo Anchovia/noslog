@@ -115,8 +115,8 @@
         padding: 0;
     }
     .noslog-ui .nl-image-share .nl-dialog__close {
-        width: var(--nl-control-height);
-        height: var(--nl-control-height);
+        width: var(--nl-control-height-small);
+        height: var(--nl-control-height-small);
         margin: 0;
     }
     .noslog-ui .nl-image-share .nl-dialog__close svg {

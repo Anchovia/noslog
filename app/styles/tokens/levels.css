@@ -2,15 +2,8 @@
 .noslog-ui {
     /* 쌓임 층 — 전역 z-index 는 이 이름으로만. 부품 안쪽 쌓기는 calc(var(--nl-layer-above) + n). 같은 단계 안은 문서 순서 */
     --nl-layer-above: 1;
-    --nl-layer-sticky: 200;
-    --nl-layer-search-preview: 400;
-    --nl-layer-bottom-bar: 200;
-    --nl-layer-header: 200;
-    --nl-layer-progress: 200;
-    --nl-layer-popover: 400;
-    --nl-layer-overlay: 300;
-    --nl-layer-dialog: 300;
-    --nl-layer-select: 400;
-    --nl-layer-fullscreen: 300;
-    --nl-layer-fullscreen-dialog: 300;
+    /* 층 셋 — 붙은 것 200 · 창 300 · 떠 있는 것 400 */
+    --nl-attached-layer: 200;
+    --nl-window-layer: 300;
+    --nl-floating-layer: 400;
 }

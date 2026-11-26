@@ -13,7 +13,7 @@
 .noslog-ui .nl-info-trigger::before {
     content: "";
     position: absolute;
-    inset: calc((var(--nl-icon-small) - var(--nl-control-height)) / 2);
+    inset: calc((var(--nl-icon-small) - var(--nl-control-height-small)) / 2);
 }
 /* 올림 · 누름 · 키 포커스 — 아이콘 둘레 원 24 면(Spectrum 2 ContextualHelp). 면은 자리를 차지하지 않는다 */
 .noslog-ui .nl-info-trigger {
@@ -31,12 +31,12 @@
         color: var(--nl-content-strong);
     }
     .noslog-ui .nl-info-trigger:hover::after {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-info-trigger:is(:active, :focus-visible) {
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-info-trigger:is(:active, :focus-visible)::after {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }

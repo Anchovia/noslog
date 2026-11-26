@@ -2,9 +2,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-4);
     text-align: left;
     cursor: pointer;
+}
+/* 셀렉트 = small 36 · 안쪽 8 14 · 선 없음 · 끝까지 둥글게(입력칸 medium 40 · 12 와 다르다) */
+.noslog-ui .nl-input.nl-select {
+    min-height: var(--nl-select-height);
+    padding: var(--nl-select-padding);
+    border-width: 0;
+    border-radius: var(--nl-radius-full);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-ui);
 }
 .noslog-ui .nl-select > span {
     min-width: 0;

@@ -18,12 +18,12 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-action-menu__item:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-action-menu__item:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 /* 위험 항목은 올려도 글자 빨강 그대로 — 면만 바뀐다 */

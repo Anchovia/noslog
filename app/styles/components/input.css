@@ -1,29 +1,29 @@
-/* 입력 계열 포커스 = Spectrum 2 텍스트 필드 — 커서가 들어가면 테두리가 gray-900 으로 바뀌는 것 하나.
-   바깥 포커스 선은 겹쳐 그리지 않는다. 안의 입력이 포커스를 받는 상자도 같다. 오류 칸은 빨간 경계를 지킨다 */
-.noslog-ui .nl-input:not(.nl-select, [aria-invalid="true"]):focus {
-    border-color: var(--nl-content-strong);
-    outline: none;
+/* 입력 계열 포커스 = 둘레에 붙은 2px 포커스 링(바깥 간격 없음). 테두리 색은 바뀌지 않아 오류 칸은 포커스 중에도 빨간 경계를 지킨다.
+   안의 입력이 포커스를 받는 상자(단위 입력 · 검색칸)도 같은 링을 상자에 그린다 */
+.noslog-ui .nl-input:not(.nl-select):focus-visible {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: 0;
 }
-/* 입력칸 — 면 없음(바탕 그대로) · 2px 경계 border-input, 올려도 바뀌지 않는다 */
+/* 입력칸 — 면 없음(바탕 그대로) · 1px 경계 border-input, 올려도 바뀌지 않는다 */
 .noslog-ui .nl-input {
     width: 100%;
     min-width: 0;
-    min-height: var(--nl-control-height);
-    /* 글줄이 컨트롤 높이 가운데 — 위아래 여백 = (높이 − 글줄) / 2 − 선 */
+    min-height: var(--nl-input-height);
+    /* 글줄이 입력칸 높이 가운데 — 위아래 여백 = (높이 − 글줄) / 2 − 선, 왼쪽 안쪽 14 */
     padding: calc(
-            (var(--nl-control-height) - var(--nl-type-line-height-22)) / 2 -
-                var(--nl-stroke-strong)
+            (var(--nl-input-height) - var(--nl-type-line-height-22)) / 2 -
+                var(--nl-stroke-default)
         )
-        calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
-    border: var(--nl-stroke-strong) solid var(--nl-border-input);
-    border-radius: var(--nl-radius-control);
+        calc(var(--nl-input-padding-inline) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
     background: transparent;
     color: var(--nl-content-default);
     font-size: var(--nl-type-input-size);
     line-height: var(--nl-type-line-height-22);
     font-weight: var(--nl-type-weight-regular);
 }
-/* 단위 입력은 aria-invalid 가 안 입력에 붙으므로 겉 상자가 그것을 보고 같은 빨간 경계를 그린다 */
+/* 오류 칸 경계. 단위 입력은 aria-invalid 가 안 입력에 붙으므로 겉 상자가 그것을 보고 같은 빨간 경계를 그린다 */
 .noslog-ui .nl-input[aria-invalid="true"] {
     border-color: var(--nl-feedback-destructive);
 }
@@ -36,7 +36,8 @@
 }
 .noslog-ui textarea.nl-input {
     min-height: calc(var(--nl-spacing-48) * 2);
-    padding: calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
+    padding: calc(var(--nl-spacing-12) - var(--nl-stroke-default))
+        calc(var(--nl-input-padding-inline) - var(--nl-stroke-default));
     resize: vertical;
 }
 /* 셀렉트 트리거 = Spectrum 2 picker — 면 gray-100 · 경계 없음 · 올림 gray-200 + 오른쪽 꺾쇠 · 목록은 .nl-select-menu */
@@ -47,7 +48,7 @@
 @media (hover: hover) {
     .noslog-ui .nl-input.nl-select:not(:disabled):hover {
         border-color: transparent;
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }
@@ -59,6 +60,6 @@
         [aria-expanded="true"],
         [data-state="open"]
     ) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }

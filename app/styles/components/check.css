@@ -6,41 +6,37 @@
 /* 상자 ↔ 라벨 = Spectrum 2 text-to-control 10 */
 .noslog-ui .nl-check {
     display: flex;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-check-row-height);
     align-items: center;
     gap: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
     position: relative;
 }
 .noslog-ui .nl-check input {
     position: absolute;
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
+    width: var(--nl-check-box-size);
+    height: var(--nl-check-box-size);
     opacity: 0;
 }
-/* 체크박스 · 라디오 = Spectrum 2 — 2px 경계 gray-800 · 면 gray-25, 고른 면 gray-800.
+/* 체크박스 · 라디오 = Spectrum 2 — 1px 경계 gray-800 · 면 gray-25, 고른 면 gray-800.
    올림 · 누름 · 키 포커스 = 경계 · 고른 면 gray-900, 비활성 gray-400 */
 .noslog-ui .nl-check__box {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
+    width: var(--nl-check-box-size);
+    height: var(--nl-check-box-size);
     flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-small);
     background: transparent;
     /* ⑨ 고르면 바탕색이 바뀐다(당근 SEED 체크박스) */
     transition: background-color var(--nl-motion-duration-d3)
         var(--nl-ease-easing);
 }
-/* 체크는 Spectrum 2 처럼 상자보다 한 단계 작은 10. Lucide 모양 그대로 선만 3 */
+/* 체크는 상자보다 6 작게(상자 20 → 14). Lucide 모양 그대로 선만 3 */
 .noslog-ui .nl-check__box > svg {
-    width: calc(
-        var(--nl-icon-small) - var(--nl-spacing-4) - var(--nl-spacing-2)
-    );
-    height: calc(
-        var(--nl-icon-small) - var(--nl-spacing-4) - var(--nl-spacing-2)
-    );
+    width: calc(var(--nl-check-box-size) - var(--nl-spacing-6));
+    height: calc(var(--nl-check-box-size) - var(--nl-spacing-6));
     stroke-width: 3;
     visibility: hidden;
 }

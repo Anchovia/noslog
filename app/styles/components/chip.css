@@ -1,4 +1,4 @@
-/* 칩: 높이 = 작은 컨트롤 · 모서리 control */
+/* 칩: 높이 small 36 · 안쪽 12 · 모서리 full */
 .noslog-ui .nl-chips {
     display: flex;
     flex-wrap: wrap;
@@ -20,9 +20,9 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-compact);
-    padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    min-height: var(--nl-chip-height);
+    padding-inline: var(--nl-chip-padding-inline);
+    border-radius: var(--nl-radius-full);
     /* 칩 = 컨트롤 면 · 둘레 없음(GitHub 필터 창). 글자는 함께 붙인 클래스가 정한다:
        필터 창 · 레일 칩(FilterChips) nl-control 14/20, 목록 위 분류 칩 줄(FilterChipLinks) nl-body 16/22. 고르면 bold */
     background: var(--nl-surface-control);
@@ -30,27 +30,27 @@
 }
 /* 올림 · 키 포커스 · 누름 = 보조 버튼과 같은 면 gray-200 · 글자 gray-900 */
 .noslog-ui .nl-chip:not(:disabled):is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-chip:not(:disabled):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
     .noslog-ui
         .nl-chip:is([aria-pressed="true"], [aria-current="page"]):not(
             :disabled
         ):hover {
-        background: var(--nl-primary-hover);
-        color: var(--nl-primary-on-primary);
+        background: var(--nl-press-inverse);
+        color: var(--nl-selected-content);
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
    고른 칩 = 반전 면(primary) · 반전 면 위 글자 · bold */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
+    background: var(--nl-selected-surface);
+    color: var(--nl-selected-content);
     font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui
@@ -58,8 +58,8 @@
         :focus-visible,
         :active
     ) {
-    background: var(--nl-primary-hover);
-    color: var(--nl-primary-on-primary);
+    background: var(--nl-press-inverse);
+    color: var(--nl-selected-content);
 }
 /* 비활성 = 투명도 대신 글자색 gray-400 */
 .noslog-ui .nl-chip:disabled {
@@ -133,7 +133,7 @@
         [aria-current="page"]
     ) {
     background: var(--nl-score-goal-pianist);
-    color: var(--nl-primary-on-primary);
+    color: var(--nl-selected-content);
 }
 .noslog-ui .nl-chip__count {
     color: var(--nl-content-subdued);

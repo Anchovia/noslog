@@ -44,7 +44,7 @@
         flex-direction: row-reverse;
         align-items: center;
         justify-content: space-between;
-        min-height: var(--nl-control-height);
+        min-height: var(--nl-control-height-medium);
         padding: var(--nl-spacing-8) var(--nl-spacing-12);
         text-align: start;
     }

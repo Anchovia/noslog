@@ -1,0 +1,13 @@
+/* 떠 있는 판 · 붙은 막대 — 층 규칙의 공용 클래스.
+   떠 있는 판 = 면 #1d2025 · 떠 있는 그림자 하나 · 보더 없음(고대비는 투명 둘레로) · 쌓임 400.
+   붙은 막대 = 그 자리 면 · 그림자 없음 · 나눔은 구분선 · 쌓임 200 */
+.noslog-ui .nl-floating-panel {
+    border: var(--nl-stroke-default) solid transparent;
+    background: var(--nl-floating-surface);
+    box-shadow: var(--nl-floating-shadow);
+    z-index: var(--nl-floating-layer);
+}
+.noslog-ui .nl-attached-bar {
+    box-shadow: none;
+    z-index: var(--nl-attached-layer);
+}

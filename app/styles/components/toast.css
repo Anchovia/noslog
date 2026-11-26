@@ -8,15 +8,18 @@
     border-radius: var(--nl-radius-large);
     outline: var(--nl-stroke-default) solid transparent;
     outline-offset: calc(var(--nl-stroke-default) * -1);
-    background: var(--nl-surface-elevated);
+    background: var(--nl-floating-surface);
     color: var(--nl-content-default);
-    box-shadow: var(--nl-overlay-shadow);
+    box-shadow: var(--nl-floating-shadow);
 }
 .noslog-ui .nl-toast__content {
     min-width: 0;
 }
 /* ⑤ 토스트(sonner) — 나타날 때 .8 에서 커지며 페이드, 사라질 때 .8 로 줄며 페이드. 여러 장이 쌓이거나 펼쳐질 때 자리 옮김.
    라이브러리 기본(400 · 전체 높이만큼 이동)을 토큰으로 덮는다. 크기는 scale 속성으로(쌓임 transform 과 따로) */
+html:has(.noslog-ui) [data-sonner-toaster] {
+    z-index: var(--nl-floating-layer);
+}
 html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] {
     transition:
         transform var(--nl-motion-duration-d4) var(--nl-ease-easing),

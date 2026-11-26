@@ -80,6 +80,9 @@
 @import "./styles/components/line-chart.css";
 @import "./styles/components/chart-table.css";
 @import "./styles/components/country-marker.css";
+@import "./styles/components/floating-panel.css";
+@import "./styles/components/selected.css";
+@import "./styles/components/list-row.css";
 @import "./styles/tailwind-theme.css";
 @import "./styles/layout.css";
 @import "./styles/entity.css";

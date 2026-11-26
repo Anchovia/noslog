@@ -15,7 +15,7 @@
     align-items: center;
     gap: var(--nl-spacing-4);
     min-width: 0;
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-small);
     padding: 0 var(--nl-spacing-4) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-canvas);
@@ -31,8 +31,8 @@
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-pick-slot[data-active] {
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
+    background: var(--nl-selected-surface);
+    color: var(--nl-selected-content);
     box-shadow: none;
 }
 /* 누른 알약 안의 색 글자(난이도)는 기본 글자색으로 — 고른 칩 · 고른 세그먼트 칸과 같은 규칙 */
@@ -73,12 +73,12 @@
 /* × = 면 없는 누르는 것 — 올림 · 누름 · 키 포커스에 interaction/row 면 · 글자 content/strong */
 @media (hover: hover) {
     .noslog-ui .nl-pick-slot__remove:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-pick-slot__remove:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-pick-list {
@@ -93,7 +93,7 @@
     flex: none;
     align-items: center;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     color: var(--nl-content-default);
     text-align: left;
@@ -122,7 +122,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-pick-row:not([aria-disabled="true"]):hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-pick-row[aria-disabled="true"] {

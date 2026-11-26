@@ -1,0 +1,29 @@
+/* 목록 줄 · 설정 줄 — 줄 사이 선 없이 간격으로 나눈다.
+   목록 줄은 줄 안 위아래 0 · 앞 그림 → 글 12 · 제목 → 설명 2, 줄 사이는 상자 사이 12(부모가 gap 으로 준다).
+   설정 줄은 줄마다 면을 두고 줄 사이 틈 2 */
+.noslog-ui .nl-list-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-list-row-prefix-gap);
+    min-width: 0;
+    padding-block: var(--nl-list-row-padding-block);
+}
+.noslog-ui .nl-list-row__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-list-row-text-gap);
+    min-width: 0;
+}
+.noslog-ui .nl-settings-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-settings-row-gap);
+}
+.noslog-ui .nl-settings-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-list-row-prefix-gap);
+    min-width: 0;
+    padding: var(--nl-spacing-12) var(--nl-box-padding);
+    background: var(--nl-surface-surface);
+}

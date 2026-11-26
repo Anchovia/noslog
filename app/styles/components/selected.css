@@ -1,0 +1,35 @@
+/* 고른 상태 — 반전 면 · 탭 밑줄 · 사이드 메뉴 면 + 막대, 셋 중 하나만 쓴다(굵기만 쓰는 레일 · 목차는 700 만 준다) */
+.noslog-ui .nl-selected--inverse {
+    background: var(--nl-selected-surface);
+    color: var(--nl-selected-content);
+    font-weight: var(--nl-type-weight-bold);
+}
+.noslog-ui .nl-selected--underline {
+    position: relative;
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-bold);
+}
+.noslog-ui .nl-selected--underline::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--nl-tab-indicator);
+    background: var(--nl-content-default);
+}
+.noslog-ui .nl-selected--bar {
+    position: relative;
+    background: var(--nl-nav-selected-surface);
+    font-weight: var(--nl-type-weight-bold);
+}
+.noslog-ui .nl-selected--bar::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--nl-spacing-8) * -1);
+    top: 50%;
+    width: var(--nl-nav-indicator-width);
+    height: var(--nl-nav-indicator-height);
+    translate: 0 -50%;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-primary-default);
+}

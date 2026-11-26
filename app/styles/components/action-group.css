@@ -8,7 +8,7 @@
     display: inline-flex;
     flex: 1 1 0;
     min-width: 0;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-4);

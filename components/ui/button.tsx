@@ -3,13 +3,13 @@ import { type ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/cn";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
-// sm · md · lg = 작게 · 기본 · 크게. icon · icon-sm · icon-lg = 기본 · 작은 · 큰 높이 정사각 — 아이콘 버튼은 자기 줄의 단계
+// sm · md = 32 · lg = 혼자 놓인 주 버튼 48. icon · icon-sm · icon-lg = 32 정사각
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "icon-sm" | "icon-lg";
 
 interface ButtonProps extends ComponentPropsWithRef<"button"> {
     /** primary 기본. */
     variant?: ButtonVariant;
-    /** sm/icon-sm은 작게, lg/icon-lg는 크게, 그 밖은 기본. 네이티브 type 기본은 button이다. */
+    /** lg는 혼자 놓인 주 버튼(48), 그 밖은 32. 네이티브 type 기본은 button이다. */
     size?: ButtonSize | null;
 }
 
@@ -38,7 +38,7 @@ export function foundationButtonClass({
         `nl-button--${variant}`,
         (size === "icon" || size === "icon-sm" || size === "icon-lg") &&
             "nl-button--icon",
-        (size === "sm" || size === "icon-sm") && "nl-button--compact",
-        (size === "lg" || size === "icon-lg") && "nl-button--large"
+        (size === "sm" || size === "icon-sm") && "nl-button--xsmall",
+        size === "lg" && "nl-button--large"
     );
 }

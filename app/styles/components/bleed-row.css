@@ -16,14 +16,14 @@
 }
 @media (hover: hover) {
     .noslog-ui :is(a, button).nl-bleed-row:hover::before {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui :is(a, button).nl-bleed-row:focus-visible {
     outline: none;
 }
 .noslog-ui :is(a, button).nl-bleed-row:is(:active, :focus-visible)::before {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui :is(a, button).nl-bleed-row:focus-visible::before {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);

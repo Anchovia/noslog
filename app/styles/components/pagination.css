@@ -1,4 +1,4 @@
-/* 쪽 번호 — 칸 = 컨트롤 높이 정사각 */
+/* 쪽 번호 — 칸 = xsmall 32 정사각 · 숫자 사이 6 */
 .noslog-ui .nl-pagination {
     width: 100%;
     min-width: 0;
@@ -8,17 +8,17 @@
 .noslog-ui .nl-pagination__controls {
     display: flex;
     align-items: center;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-pagination-gap);
 }
 .noslog-ui .nl-pagination__item {
     display: flex;
     flex-shrink: 0;
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
+    width: var(--nl-pagination-item-size);
+    height: var(--nl-pagination-item-size);
     align-items: center;
     justify-content: center;
-    /* 따로 누르는 상자 — 높이는 컨트롤 높이, 모서리는 누르는 칸(field) */
-    border-radius: var(--nl-radius-control);
+    /* 따로 누르는 상자 — 높이 32, 끝까지 둥긂 */
+    border-radius: var(--nl-radius-full);
     color: var(--nl-content-default);
 }
 /* 올림 · 누름 · 키 포커스 = 면 없는 누르는 것 — interaction/row 면 · 글자 content/strong */
@@ -29,7 +29,7 @@
             [aria-disabled="true"],
             [aria-current="page"]
         ):hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -39,13 +39,13 @@
         [aria-disabled="true"],
         [aria-current="page"]
     ):is(:active, :focus-visible) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 /* 현재 쪽 = 고른 칩과 같은 반전 면 */
 .noslog-ui .nl-pagination__item[aria-current="page"] {
-    background: var(--nl-primary-default);
-    color: var(--nl-primary-on-primary);
+    background: var(--nl-selected-surface);
+    color: var(--nl-selected-content);
     font-weight: var(--nl-type-weight-bold);
 }
 .noslog-ui .nl-pagination__item:disabled,

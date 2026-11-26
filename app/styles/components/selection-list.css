@@ -17,16 +17,17 @@
 }
 .noslog-ui .nl-selection-list__option {
     display: flex;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-check-row-height);
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
     cursor: pointer;
     border-radius: var(--nl-radius-control);
 }
-/* 줄 면 없이 체크 상자 · 글자만 반응한다(Spectrum 2 CheckboxGroup) — 체크 상자는 그룹 제목 선에 그대로 */
+/* 올림 · 누름 · 키 포커스 = 면 없는 줄의 옅은 면 + 글자 · 체크 상자 선 */
 @media (hover: hover) {
     .noslog-ui .nl-selection-list__option:not([data-disabled="true"]):hover {
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
     .noslog-ui
@@ -46,6 +47,7 @@
         :active,
         :has(:focus-visible)
     ) {
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui

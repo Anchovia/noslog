@@ -5,9 +5,9 @@
     gap: var(--nl-space-group);
     min-width: 0;
     padding: calc(var(--nl-box-padding) - var(--nl-stroke-default));
-    /* 누르는 카드 = surface 면 · 놓인 것 그림자 · 모서리 large. 선 자리는 크기를 지키려 투명 */
+    /* 누르는 카드 = surface 면 · 놓인 것 그림자 · 모서리 box. 선 자리는 크기를 지키려 투명 */
     border: var(--nl-stroke-default) solid transparent;
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }

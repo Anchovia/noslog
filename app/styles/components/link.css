@@ -24,3 +24,21 @@
     font-weight: inherit;
     text-decoration: underline;
 }
+/* 글자 버튼 — 면 · 테두리 · 안쪽 없는 누르는 글자. 올림 · 누름은 면 없는 줄과 같은 옅은 면 */
+.noslog-ui .nl-text-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--nl-content-strong);
+    font-weight: var(--nl-type-weight-medium);
+    text-decoration: underline;
+    text-underline-offset: var(--nl-underline-offset);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-text-button:hover {
+        background: var(--nl-press-row);
+    }
+}
+.noslog-ui .nl-text-button:is(:active, :focus-visible) {
+    background: var(--nl-press-row);
+}

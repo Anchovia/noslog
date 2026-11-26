@@ -13,17 +13,17 @@
 .noslog-ui .nl-heading-row > .nl-heading-row__end {
     margin-left: auto;
 }
-/* 제목 줄 끝 동작(고스트 M — 「선택 해제」 · 「다시 시도」) — 제목 줄 높이(구역 제목 줄 높이)를 늘리지 않게 위아래로,
-   잉크가 오른쪽 선에 서게 버튼 좌우 안쪽 12 만큼 오른쪽으로 당긴다. 이동은 제목 링크 */
-.noslog-ui .nl-heading-row .nl-button--ghost.nl-button--compact:last-child {
+/* 제목 줄 끝 동작(고스트 xsmall — 「선택 해제」 · 「다시 시도」) — 제목 줄 높이(구역 제목 줄 높이)를 늘리지 않게 위아래로,
+   잉크가 오른쪽 선에 서게 버튼 좌우 안쪽(14) 만큼 오른쪽으로 당긴다. 이동은 제목 링크 */
+.noslog-ui .nl-heading-row .nl-button--ghost.nl-button--xsmall:last-child {
     margin-block: calc(
         (
-                var(--nl-control-height-compact) -
+                var(--nl-control-height-xsmall) -
                     var(--nl-type-section-title-line-height)
             ) /
             -2
     );
-    margin-inline-end: calc(var(--nl-spacing-12) * -1);
+    margin-inline-end: calc(var(--nl-button-padding-inline) * -1);
 }
 /* 제목 줄 오른쪽 링크 「평가하기 ›」 · 「로그인하고 투표하기 ›」 — 홈 「전체 공지 ›」 와 같은 구역 제목 링크
    (글자 control + 꺾쇠 16 · 간격 4 · 광학 −4). 누르는 영역은 위아래 12 넓힌다(글줄 + 24).

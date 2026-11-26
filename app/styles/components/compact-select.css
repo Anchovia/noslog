@@ -1,17 +1,17 @@
 .noslog-ui .nl-compact-select {
     display: inline-flex;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-select-height);
     align-items: center;
     gap: var(--nl-spacing-4);
-    /* 상자 없는 셀렉트 = Spectrum 2 ActionButton quiet — 좌우 12 */
-    padding: var(--nl-spacing-4) var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    /* 상자 없는 셀렉트도 셀렉트와 같은 small 36 · 안쪽 8 14 */
+    padding: var(--nl-select-padding);
+    border-radius: var(--nl-radius-full);
     flex-shrink: 0;
     white-space: nowrap;
 }
-/* M 크기(size="sm") — 한 줄이 M 인 결과 줄 등. 같은 줄 한 단계 규칙 */
+/* 한 단계 작게(size="sm") — 결과 줄 등. xsmall 32 */
 .noslog-ui .nl-compact-select--compact {
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     padding-block: 0;
 }
 .noslog-ui .nl-compact-select svg {
@@ -20,12 +20,12 @@
 }
 /* 상자 없는 셀렉트 = 면 없는 누르는 것 — 올림 · 키 포커스 · 누름 = interaction/row 면 · 글자 content/strong */
 .noslog-ui .nl-compact-select:not(:disabled):is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-compact-select:not(:disabled):hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -34,8 +34,6 @@
 }
 /* 상자 있는 CompactSelect = Spectrum 2 picker(면 gray-100 · 선 없음) */
 .noslog-ui .nl-compact-select--outlined {
-    gap: var(--nl-spacing-8);
-    padding-inline: var(--nl-spacing-12);
     background: var(--nl-surface-control);
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-ui);
@@ -45,7 +43,7 @@
     /* 올림 = Spectrum 2 picker 면 gray-200 · 글자 gray-900 */
     .noslog-ui
         .nl-compact-select.nl-compact-select--outlined:not(:disabled):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }

@@ -1,31 +1,32 @@
-.noslog-ui .nl-search:has(.nl-search__input:focus) {
-    border-color: var(--nl-content-strong);
-    outline: none;
+.noslog-ui .nl-search:has(.nl-search__input:focus-visible) {
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: 0;
 }
-/* 검색칸 = Spectrum 2 SearchField — 텍스트 필드와 같은 면 · 2px 경계에 끝이 원, 시작 쪽 안쪽 16 · 끝 쪽 12.
+/* 검색칸 = 선 없음 · 면 surface-search · 그림자 card-shadow · 끝이 원. 포커스는 포커스 링으로만 보인다.
    4px 안쪽 층(앞 범위 셀렉트 · 지우기)은 면만 M 정사각으로 그리고 잉크는 같은 선에 둔다.
-   높이는 모든 폭 크게(40) — 화면마다 덮어쓰지 않는다 */
+   높이 40 · 안쪽 앞 20 · 뒤 14 · 돋보기 사이 6 · 글자 세로 가운데. 혼자 놓여도 같은 줄에 놓여도 같다(`--inline` 도 40).
+   포커스 링은 둘레에 붙인다(바깥 간격 0) — 화면마다 덮어쓰지 않는다 */
 .noslog-ui .nl-search {
-    --nl-control-height: var(--nl-control-height-large);
     display: flex;
     align-items: center;
-    gap: var(--nl-spacing-8);
-    height: var(--nl-control-height);
+    gap: var(--nl-search-gap);
+    height: var(--nl-search-height);
     min-width: 0;
-    padding-inline: calc(var(--nl-spacing-16) - var(--nl-stroke-strong))
-        calc(var(--nl-spacing-12) - var(--nl-stroke-strong));
-    /* 입력칸과 같은 2px 실제 테두리(그림자로 그리지 않는다) */
-    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    padding-inline: var(--nl-search-padding-start) var(--nl-search-padding-end);
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-search);
     box-shadow: var(--nl-card-shadow);
+}
+/* 같은 줄에 놓여도 혼자 놓인 검색칸과 같은 40 */
+.noslog-ui .nl-search--inline {
+    --nl-search-height: var(--nl-control-height-medium);
 }
 /* 입력 아이콘(돋보기 · 지우기 ×)은 자리표시자와 같은 흐린 색 */
 .noslog-ui .nl-search > .nl-icon,
 .noslog-ui .nl-search__clear {
     color: var(--nl-content-tertiary);
 }
-/* 떠 있는 검색(지도 위)도 SearchField 라 경계 · 원 끝은 검색칸 그대로. 지도 위에 떠 있어 그림자만 떠 있는 창 규격 */
+/* 떠 있는 검색(지도 위)도 SearchField 라 원 끝 · 그림자(card-shadow)는 검색칸 그대로 */
 .noslog-ui .nl-search--floating {
     box-shadow: var(--nl-card-shadow);
 }
@@ -55,15 +56,15 @@
 }
 /* 앞 범위 셀렉트: 바깥 4 + 버튼 안쪽 8 = 라벨 12. 면은 4 에서 시작 */
 .noslog-ui .nl-search:has(> .nl-compact-select:first-child) {
-    padding-left: calc(var(--nl-spacing-4) - var(--nl-stroke-default));
+    padding-left: calc(var(--nl-spacing-4) + var(--nl-stroke-default));
 }
 /* 지우기: 면 = 검색창 높이 − 위아래 4 의 정사각 · 누르는 높이는 검색창 그대로.
    오른쪽 바깥 여백 = 12 − (면 − 아이콘 20) / 2 → 아이콘 오른쪽 끝이 12, 중심 22 = 셀렉트 꺾쇠와 같은 자리 */
 .noslog-ui .nl-search:has(> .nl-search__clear) {
     padding-right: calc(
-        var(--nl-spacing-12) - var(--nl-stroke-default) -
+        var(--nl-spacing-12) + var(--nl-stroke-default) -
             (
-                var(--nl-control-height) - var(--nl-spacing-4) * 2 -
+                var(--nl-search-height) - var(--nl-spacing-4) * 2 -
                     var(--nl-icon-medium)
             ) /
             2
@@ -71,8 +72,8 @@
 }
 .noslog-ui .nl-search__clear {
     display: flex;
-    width: calc(var(--nl-control-height) - var(--nl-spacing-4) * 2);
-    height: var(--nl-control-height);
+    width: calc(var(--nl-search-height) - var(--nl-spacing-4) * 2);
+    height: var(--nl-search-height);
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
@@ -105,7 +106,7 @@
 }
 /* 필드 안 버튼 = 면 없는 누르는 것 — 올림 · 키 포커스 · 누름 = interaction/row 면(안쪽 층) · 잉크 content/strong */
 .noslog-ui .nl-search__clear:is(:focus-visible, :active)::before {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 .noslog-ui .nl-search__clear:is(:focus-visible, :active) {
     background: transparent;
@@ -113,7 +114,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-search__clear:hover::before {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
     .noslog-ui .nl-search__clear:hover {
         background: transparent;

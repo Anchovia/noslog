@@ -51,6 +51,8 @@ export const TOKEN_VALUES = {
         control: 8,
         large: 10,
         overlay: 16,
+        box: 16,
+        field: 12,
         full: 9999,
     },
     stroke: {

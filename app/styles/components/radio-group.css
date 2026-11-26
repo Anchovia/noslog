@@ -19,30 +19,30 @@
 .noslog-ui .nl-radio-group legend {
     margin-bottom: var(--nl-spacing-12);
 }
-/* 창 안 폼의 라디오 묶음 = 제목이 칸 라벨 모양 · 라벨 → 선택지 4(FormField 와 같음) */
+/* 창 안 폼의 라디오 묶음 = 제목이 칸 라벨 모양 · 라벨 → 선택지 8(FormField 와 같음) */
 .noslog-ui .nl-radio-group--field legend {
-    margin-bottom: var(--nl-spacing-4);
+    margin-bottom: var(--nl-field-label-gap);
 }
 .noslog-ui .nl-radio-group__option {
     display: flex;
     align-items: center;
     gap: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-check-row-height);
     cursor: pointer;
 }
-/* 원 16(icon-small) · 2px 경계 gray-800(체크박스와 같음) · 줄 = 컨트롤 높이. 올림 색은 위 체크박스 규칙과 함께 */
+/* 원 20(체크박스 상자와 같음) · 1px 경계 gray-800 · 줄 32. 올림 색은 위 체크박스 규칙과 함께 */
 .noslog-ui .nl-radio-group__option input {
     appearance: none;
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
+    width: var(--nl-check-box-size);
+    height: var(--nl-check-box-size);
     flex-shrink: 0;
-    border: var(--nl-stroke-strong) solid var(--nl-border-input);
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-full);
     background: transparent;
 }
 /* 고르면 경계가 (높이 − 4) ÷ 2 = 6 으로 굵어진다 */
 .noslog-ui .nl-radio-group__option input:checked {
-    border-width: calc((var(--nl-icon-small) - var(--nl-spacing-4)) / 2);
+    border-width: calc((var(--nl-check-box-size) - var(--nl-spacing-4)) / 2);
     border-color: var(--nl-primary-default);
 }
 .noslog-ui .nl-radio-group:disabled,

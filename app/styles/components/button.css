@@ -1,17 +1,17 @@
-/* 주 · 보조 · 위험의 기본 크기 = 모든 폭 큰 컨트롤 높이(Spectrum 2 Button L). 고스트 · 아이콘 버튼은 아래에서 줄의 컨트롤 높이.
-   모서리는 모든 변형 control, 좌우 안쪽은 제 높이 ÷ 2 */
+/* 주 · 보조 · 위험 · 고스트의 기본 크기 = small 36(안쪽 14 · 글자와 아이콘 사이 4 · 모서리 control).
+   혼자 놓인 주 버튼만 `--large` 52(안쪽 20 · 사이 8 · 모서리 field). 높이로 맞추고 위아래 여백은 없다 */
 .noslog-ui .nl-button {
     display: inline-flex;
-    min-height: var(--nl-control-height-large);
+    min-height: var(--nl-button-height);
     align-items: center;
     justify-content: center;
-    gap: calc(var(--nl-spacing-4) + var(--nl-spacing-2));
+    gap: var(--nl-button-gap);
     padding-block: 0;
     padding-inline: calc(
-        var(--nl-control-height-large) / 2 - var(--nl-stroke-default)
+        var(--nl-button-padding-inline) - var(--nl-stroke-default)
     );
     border: var(--nl-stroke-default) solid transparent;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-button-radius);
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
     font-size: var(--nl-type-size-14);
@@ -23,12 +23,17 @@
    바쁨은 다시 누를 수 없어 올림 · 누름을 받지 않는다(Spectrum 2 pending) */
 @media (hover: hover) {
     .noslog-ui
-        .nl-button:not(:disabled, [data-locked], [aria-busy="true"]):hover {
+        .nl-button:not(
+            .nl-button--danger,
+            :disabled,
+            [data-locked],
+            [aria-busy="true"]
+        ):hover {
         background: var(--nl-primary-hover);
     }
 }
 .noslog-ui
-    .nl-button:not(:disabled, [data-locked]):is(
+    .nl-button:not(.nl-button--danger, :disabled, [data-locked]):is(
         :not([aria-busy="true"]):active,
         :focus-visible
     ) {
@@ -51,7 +56,7 @@
     scale: var(--nl-press-scale);
 }
 .noslog-ui
-    .nl-button--compact:not(
+    .nl-button--xsmall:not(
         :disabled,
         [data-locked],
         [aria-busy="true"],
@@ -59,22 +64,17 @@
     ):active {
     scale: var(--nl-press-scale-compact);
 }
-/* 고스트 · 아이콘 버튼(ActionButton)의 기본 크기 = 줄의 컨트롤 높이 */
-.noslog-ui :is(.nl-button--ghost, .nl-button--icon) {
-    min-height: var(--nl-control-height);
-}
-/* 크기 세 단계 sm · md · lg — 세로 패딩 없이 높이로만 맞추고(글줄이 가운데), sm · lg 좌우 안쪽은 제 높이 ÷ 2 */
-.noslog-ui .nl-button--compact {
-    min-height: var(--nl-control-height-compact);
-    padding-inline: calc(
-        var(--nl-control-height-compact) / 2 - var(--nl-stroke-default)
-    );
+/* 크기 단계 — xsmall(size="sm" · "icon-sm")은 32, large(size="lg")는 혼자 놓인 주 버튼 52.
+   높이 · 안쪽 · 사이 · 모서리 변수만 바꾸고 나머지 규칙은 그대로 둔다 */
+.noslog-ui .nl-button--xsmall {
+    --nl-button-height: var(--nl-control-height-xsmall);
+    --nl-icon-button-size: var(--nl-control-height-xsmall);
 }
 .noslog-ui .nl-button--large {
-    min-height: var(--nl-control-height-large);
-    padding-inline: calc(
-        var(--nl-control-height-large) / 2 - var(--nl-stroke-default)
-    );
+    --nl-button-height: var(--nl-control-height-large);
+    --nl-button-padding-inline: var(--nl-control-padding-inline-large);
+    --nl-button-gap: var(--nl-spacing-8);
+    --nl-button-radius: var(--nl-radius-field);
 }
 /* 보조 = Spectrum 2 secondary fill(gray-100), 고스트 = ActionButton quiet(면 없음 · 모서리 8 · 좌우 12 · medium) */
 .noslog-ui .nl-button--secondary {
@@ -82,7 +82,6 @@
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-button--ghost {
-    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
     background: transparent;
     color: var(--nl-content-strong);
     font-weight: var(--nl-type-weight-medium);
@@ -95,7 +94,7 @@
             [data-locked],
             [aria-busy="true"]
         ):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
     .noslog-ui
@@ -104,7 +103,7 @@
             [data-locked],
             [aria-busy="true"]
         ):hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -113,7 +112,7 @@
         :not([aria-busy="true"]):active,
         :focus-visible
     ) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 .noslog-ui
@@ -121,7 +120,7 @@
         :not([aria-busy="true"]):active,
         :focus-visible
     ) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-button--danger {
@@ -137,23 +136,17 @@
     ) {
     background: var(--nl-feedback-destructive-hover);
 }
+/* 아이콘 버튼 = small 36(xsmall 32) 정사각 · 아이콘 16 */
 .noslog-ui .nl-button--icon {
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
+    width: var(--nl-icon-button-size);
+    height: var(--nl-icon-button-size);
     padding: 0;
+    border-radius: var(--nl-radius-full);
     flex-shrink: 0;
 }
-/* 작은 줄의 아이콘 버튼 — 컴팩트 높이 정사각. 아이콘 버튼은 자기 줄의 단계 (2026-09-22) */
-.noslog-ui .nl-button--icon.nl-button--compact {
-    width: var(--nl-control-height-compact);
-    height: var(--nl-control-height-compact);
-    min-height: var(--nl-control-height-compact);
-}
-/* 큰 버튼 줄의 아이콘 버튼 — 옆 주 · 보조 버튼(모든 폭 크게)과 같은 높이 정사각 */
-.noslog-ui .nl-button--icon.nl-button--large {
-    width: var(--nl-control-height-large);
-    height: var(--nl-control-height-large);
-    min-height: var(--nl-control-height-large);
+.noslog-ui .nl-button--icon .nl-icon:not(.nl-icon--large) {
+    width: var(--nl-icon-button-icon);
+    height: var(--nl-icon-button-icon);
 }
 /* 로그인이 필요해 지금은 쓸 수 없는 액션 — 비활성과 같은 모습이지만 hover·탭을 받아 이유(title·안내)를 보여 준다.
    aria-disabled 는 busy 가 아닐 때만 비활성 모습이다: busy 버튼도 aria-disabled 를 쓰는데 busy 는 비활성처럼 보이면 안 된다 */

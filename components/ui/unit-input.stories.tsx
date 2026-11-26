@@ -50,9 +50,9 @@ export const Invalid: Story = {
         await userEvent.tab();
         await expect(field).toHaveFocus();
         await expect(getComputedStyle(box).borderTopColor).toBe(expected);
-        // 빨간 경계는 그대로 두고 키 포커스는 바깥 흰 선으로 보인다
+        // 빨간 경계는 그대로 두고 키 포커스는 둘레에 붙은 포커스 링으로 보인다
         await expect(getComputedStyle(box).outlineStyle).toBe("solid");
-        await expect(getComputedStyle(box).outlineOffset).toBe("2px");
+        await expect(getComputedStyle(box).outlineOffset).toBe("0px");
     },
 };
 export const Disabled: Story = { args: { disabled: true } };
