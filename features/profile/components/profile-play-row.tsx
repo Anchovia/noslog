@@ -82,7 +82,7 @@ export default function ProfilePlayRow({
                     <span className="nl-profile-play-row__grade">
                         <ScoreGrade rank={play.rank} />
                         {play.fullCombo ? (
-                            <span className="nl-full-combo nl-metadata">
+                            <span className="nl-full-combo nl-tag-label">
                                 {t("profile.fullComboShort")}
                             </span>
                         ) : null}
@@ -101,10 +101,7 @@ export default function ProfilePlayRow({
                     </span>
                 ) : null}
                 {play.newBest ? (
-                    <span
-                        className="nl-profile-play-row__new nl-tag nl-tag--status"
-                        data-tone="success"
-                    >
+                    <span className="nl-profile-play-row__new nl-tag">
                         {t("profile.newBest")}
                     </span>
                 ) : null}

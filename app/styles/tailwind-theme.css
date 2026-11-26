@@ -51,10 +51,10 @@
     --ring-width-nl-stroke: var(--nl-stroke-default);
     --ring-width-nl-stroke-strong: var(--nl-stroke-strong);
     --outline-width-nl-stroke: var(--nl-stroke-default);
-    --z-index-nl-sticky: var(--nl-layer-sticky);
-    --z-index-nl-header: var(--nl-layer-header);
-    --z-index-nl-popover: var(--nl-layer-popover);
-    --z-index-nl-fullscreen: var(--nl-layer-fullscreen);
+    --z-index-nl-sticky: var(--nl-attached-layer);
+    --z-index-nl-header: var(--nl-attached-layer);
+    --z-index-nl-popover: var(--nl-floating-layer);
+    --z-index-nl-fullscreen: var(--nl-window-layer);
     --shadow-nl-overlay: var(--nl-overlay-shadow);
     --transition-duration-nl-state: var(--nl-motion-duration-d3);
     --transition-duration-nl-move: var(--nl-motion-duration-d4);

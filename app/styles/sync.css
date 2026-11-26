@@ -141,14 +141,14 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-sync-media:hover::after {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
     .noslog-ui .nl-sync-media:hover img {
         scale: var(--nl-motion-scale-card-media);
     }
 }
 .noslog-ui .nl-sync-media:is(:active, :focus-visible)::after {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 .noslog-ui .nl-sync-media img {
     width: 100%;
@@ -173,11 +173,11 @@
     grid-template-columns: var(--nl-icon-large) minmax(0, 1fr);
     align-items: start;
     gap: var(--nl-spacing-16);
-    /* 누르지 않는 묶음 상자 = Spectrum 2 secondary 카드 — 면 surface · 둘레 없음 · 카드 그림자 · 모서리 large */
+    /* 누르지 않는 묶음 상자 = Spectrum 2 secondary 카드 — 면 surface · 둘레 없음 · 카드 그림자 · 모서리 box */
     padding: var(--nl-box-padding);
     background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-large);
-    box-shadow: var(--nl-card-shadow);
+    border-radius: var(--nl-box-radius);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-sync-step-heading {
     display: flex;

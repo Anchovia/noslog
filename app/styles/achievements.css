@@ -149,7 +149,7 @@
 }
 @media (hover: hover) {
     .noslog-ui button.nl-achievement-row__main:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-achievement-row__text {
@@ -252,17 +252,18 @@
     );
     gap: var(--nl-spacing-8);
 }
-/* 칸 = 칩과 같은 바탕 면 + 입력 경계 선, 고른 것 = 고른 칩과 같은 gray-100 면.
+/* 칸 = 칩과 같은 바탕 면 + 입력 경계 선, 고른 것 = 고른 칩과 같은 반전 면.
    3칸이 차면 나머지는 비활성 — 그림을 품은 칸이라 색 대신 투명도로 흐린다 */
 .noslog-ui .nl-achievement-picker__choice {
     background: var(--nl-surface-canvas);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
     color: var(--nl-content-default);
     cursor: pointer;
 }
 .noslog-ui .nl-achievement-picker__choice[aria-pressed="true"] {
-    background: var(--nl-surface-control);
+    background: var(--nl-selected-surface);
     box-shadow: none;
+    color: var(--nl-selected-content);
 }
 .noslog-ui .nl-achievement-picker__choice:disabled {
     box-shadow: none;
@@ -272,13 +273,30 @@
 /* 올림 · 키 포커스 · 누름 = 칩과 같은 면 gray-200 · 글자 gray-900 */
 .noslog-ui
     .nl-achievement-picker__choice:not(:disabled):is(:focus-visible, :active) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-achievement-picker__choice:not(:disabled):hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
         color: var(--nl-content-strong);
+    }
+}
+.noslog-ui
+    .nl-achievement-picker__choice[aria-pressed="true"]:not(:disabled):is(
+        :focus-visible,
+        :active
+    ) {
+    background-color: var(--nl-press-inverse);
+    color: var(--nl-selected-content);
+}
+@media (hover: hover) {
+    .noslog-ui
+        .nl-achievement-picker__choice[aria-pressed="true"]:not(
+            :disabled
+        ):hover {
+        background-color: var(--nl-press-inverse);
+        color: var(--nl-selected-content);
     }
 }
 
@@ -297,9 +315,7 @@
     width: 240px;
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-achievement-card {
     display: flex;

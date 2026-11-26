@@ -42,7 +42,7 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
 }
 .noslog-ui .nl-bingo-catalog__summary-row > .nl-segments {
     flex: none;
@@ -161,20 +161,13 @@
     flex-direction: column;
     gap: var(--nl-space-group);
 }
-/* 헤더 → 돌아가기 32 · 돌아가기 글자 → 내용 24 — 다른 상세 페이지 머리와 같게 */
+/* 머리 띠 → 정체성 32 — 다른 상세 페이지 머리와 같게 */
 .noslog-ui .nl-bingo-detail {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
     padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
     min-width: 0;
-}
-.noslog-ui .nl-bingo-detail > .nl-back-link {
-    margin-bottom: calc(
-        var(--nl-space-crumb-title) -
-            (var(--nl-back-link-height) - var(--nl-type-line-height-ui)) / 2 -
-            var(--nl-spacing-16)
-    );
 }
 /* 상세 배치 — Compact 는 소스 순서(정체성 → 요약 → 보드 → 제자리 상세 → 목록)를 구역 사이로 쌓고, Wide 는 보드 | 상세 두 열 */
 .noslog-ui .nl-bingo-detail__layout {
@@ -257,9 +250,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
-    z-index: var(--nl-layer-popover);
+    z-index: var(--nl-floating-layer);
 }
 .noslog-ui .nl-bingo-cell-detail {
     display: flex;
@@ -280,7 +271,9 @@
     display: inline-flex;
     margin-left: auto;
     /* 오른쪽 끝 닫기는 면 없는 아이콘 버튼 — 버튼 안 여백((컨트롤 − 아이콘 20) / 2)만큼 당겨 잉크를 패딩 16 에 맞춘다(A17) */
-    margin-right: calc((var(--nl-icon-medium) - var(--nl-control-height)) / 2);
+    margin-right: calc(
+        (var(--nl-icon-medium) - var(--nl-icon-button-size)) / 2
+    );
 }
 .noslog-ui .nl-bingo-cell-detail__actions {
     display: flex;
@@ -422,16 +415,16 @@
     background: none;
 }
 .noslog-ui .nl-bingo-position > .nl-bingo-mini > span {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 .noslog-ui .nl-bingo-position > .nl-bingo-mini > [data-completed="true"] {
     background: var(--nl-primary-default);
 }
-/* 넓은 화면 선택 칸 상세 — 미션 행과 같은 Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자), 안쪽은 칸 상세(16) 그대로 */
+/* 넓은 화면 선택 칸 상세 — 미션 행과 같은 Spectrum 2 secondary 카드(layer-1 면 · 모서리 box · emphasized 그림자), 안쪽은 칸 상세(16) 그대로 */
 .noslog-ui .nl-bingo-detail-panel {
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-bingo-detail-panel__hint {
     margin: 0;
@@ -452,10 +445,10 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    /* Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
-    border-radius: var(--nl-radius-large);
+    /* Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 box */
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 /* 미션 행은 눌러 칸을 고른다 — 고르지 않은 행만 한 단계 위 불투명 면(surface/elevated)으로 반응 */
 @media (hover: hover) {

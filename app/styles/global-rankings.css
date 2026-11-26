@@ -64,7 +64,7 @@
     margin: 0;
 }
 .noslog-ui .nl-player-row {
-    height: var(--nl-spacing-48);
+    height: var(--nl-control-height-medium);
 }
 .noslog-ui .nl-player-row__rank {
     white-space: nowrap;
@@ -129,7 +129,7 @@
 /* 올림 · 눌림 = 평소 면에 따라 한 단계. 투명 줄은 interaction/row, 줄무늬 줄은 surface/control, 내 줄은 surface/elevated */
 @media (hover: hover) {
     .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
     .noslog-ui .nl-player-row:nth-child(even):has(.nl-player-row__link:hover) {
         background: var(--nl-surface-control);
@@ -141,7 +141,7 @@
 }
 .noslog-ui
     .nl-player-row:has(.nl-player-row__link:is(:active, :focus-visible)) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 .noslog-ui
     .nl-player-row:nth-child(even):has(

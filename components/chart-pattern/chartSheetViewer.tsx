@@ -4,12 +4,12 @@ import { Info, Pencil, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
-import BackLink from "@/components/ui/back-link";
 import { useMemo, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
 import Avatar from "@/components/ui/avatar";
+import BackLink from "@/components/ui/back-link";
 import { foundationButtonClass } from "@/components/ui/button";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -43,7 +43,8 @@ interface ChartSheetViewerProps {
     level: number;
     revision: number | null;
     document: ChartDocument;
-    backHref: string;
+    /** 관리자 미리보기에서만 편집기로 돌아가는 링크로 쓴다. 공개 쪽 머리에는 돌아가기를 두지 않는다 */
+    backHref?: string;
     preview?: boolean;
     /** 출처 표기(2026-09-24 C2) — 공개 채보만. extracted = 영상 추출 버전에서 나온 채보 */
     source?: ChartSource;
@@ -363,7 +364,9 @@ export default function ChartSheetViewer({
             className="noslog-ui nl-chart-viewer nl-stack nl-stack--24"
             data-comment-entry={contribution ? "" : undefined}
         >
-            <BackLink href={backHref}>{t("chart.back")}</BackLink>
+            {preview && backHref ? (
+                <BackLink href={backHref}>{t("chart.back")}</BackLink>
+            ) : null}
             {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래.
                 보기 방식 세그먼트는 무대 바로 위에 늘 보이게(2026-09-26 V1 — 조작 줄 아이콘은 안 보여 되돌림) */}
             <div className="nl-stack nl-stack--12">
@@ -478,7 +481,7 @@ export default function ChartSheetViewer({
                         </p>
                         <button
                             type="button"
-                            className="nl-chart-viewer__more nl-metadata"
+                            className="nl-chart-viewer__more nl-text-button nl-control"
                             onClick={() => setInfoOpen(true)}
                         >
                             {t("chart.more")}

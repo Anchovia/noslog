@@ -15,7 +15,6 @@ import {
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
 import ActionButton from "@/components/ui/action-button";
-import BackLink from "@/components/ui/back-link";
 import Button from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
@@ -95,7 +94,6 @@ export default function BingoDetailPage({
     }, [state.selected]);
     return (
         <div className="nl-bingo-detail">
-            <BackLink href={href("/bingo")}>{t("bingo.title")}</BackLink>
             <div className="nl-bingo-detail__layout">
                 <header
                     className="nl-bingo-identity"
@@ -198,7 +196,7 @@ export default function BingoDetailPage({
                             <Popover.Portal>
                                 <div className="noslog-ui">
                                     <Popover.Content
-                                        className="nl-bingo-cell-popover"
+                                        className="nl-floating-panel nl-bingo-cell-popover"
                                         side="bottom"
                                         align="center"
                                         sideOffset={overlayPosition.sideOffset}

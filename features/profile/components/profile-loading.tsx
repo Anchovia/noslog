@@ -318,7 +318,7 @@ function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
                     ),
                 }))}
             />
-            <span className="nl-profile-disclosure nl-control">
+            <span className="nl-profile-disclosure nl-text-button nl-control">
                 {t("profile.showAllLevels")}
                 <ChevronDown aria-hidden />
             </span>
@@ -390,7 +390,7 @@ export function ProfileStatsTabSkeleton() {
                         <div key={index}>
                             <dt className="nl-full-combo-slot">
                                 {index === 4 ? (
-                                    <span className="nl-full-combo nl-metadata">
+                                    <span className="nl-full-combo nl-tag-label">
                                         {t("profile.fullComboShort")}
                                     </span>
                                 ) : (
@@ -407,7 +407,7 @@ export function ProfileStatsTabSkeleton() {
                         </div>
                     ))}
                 </dl>
-                <span className="nl-profile-disclosure nl-control">
+                <span className="nl-profile-disclosure nl-text-button nl-control">
                     {t("profile.showAllRanks")}
                     <ChevronDown aria-hidden />
                 </span>

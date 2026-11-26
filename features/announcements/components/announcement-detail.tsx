@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import PageContainer from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
 import type {
     PublicAnnouncement,
@@ -37,9 +36,6 @@ export default async function AnnouncementDetail({
     return (
         <PageContainer width="reading" className="nl-announcements">
             <article className="nl-announcements__detail">
-                <BackLink href={localizePath("/announcements", locale)}>
-                    {t("home.announcements")}
-                </BackLink>
                 {/* 목록 행과 같은 문법 — 분류·날짜 한 줄이 제목 위 */}
                 <header className="nl-announcements__heading">
                     <div className="nl-announcement-meta nl-metadata nl-muted">

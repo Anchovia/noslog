@@ -66,11 +66,11 @@
 .noslog-ui
     .nl-event-card:is(:active, :focus-visible)
     > .nl-event-banner::after {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 @media (hover: hover) {
     .noslog-ui .nl-event-card:hover > .nl-event-banner::after {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
 }
 /* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */

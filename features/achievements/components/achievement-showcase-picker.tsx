@@ -15,6 +15,7 @@ import {
 } from "@/features/achievements/achievement-definitions";
 import AchievementHex from "@/features/achievements/components/achievement-hex";
 import { useAchievementText } from "@/features/achievements/components/use-achievement-text";
+import { cn } from "@/lib/cn";
 
 function splitKeys(value: string) {
     return value.split(",").filter(Boolean);
@@ -219,7 +220,10 @@ export default function AchievementShowcasePicker({
                                 <button
                                     key={definition.key}
                                     type="button"
-                                    className="nl-achievement-picker__choice nl-focus-inset"
+                                    className={cn(
+                                        "nl-achievement-picker__choice nl-focus-inset",
+                                        picked && "nl-selected--inverse"
+                                    )}
                                     aria-pressed={picked}
                                     disabled={
                                         !picked &&

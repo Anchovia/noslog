@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 import IntentLink from "@/components/ui/intent-link";
 import PrivacyContents from "@/features/privacy/components/privacy-contents";
 import { PolicyBlock } from "@/features/privacy/components/privacy-page";
@@ -12,16 +10,13 @@ export default function TermsPage({
     locale,
     copy,
     period,
-    back,
 }: {
     locale: Locale;
     copy: TermsCopy;
     period?: string;
-    back?: ReactNode;
 }) {
     return (
         <div className="nl-privacy">
-            {back ? <div className="nl-privacy-back">{back}</div> : null}
             <header className="nl-privacy-identity">
                 <h1 className="nl-page-title">{copy.title}</h1>
                 <p className="nl-metadata nl-muted">{copy.dates}</p>

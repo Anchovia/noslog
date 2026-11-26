@@ -54,7 +54,7 @@ function FullComboMark({ fcType }: { fcType: number }) {
     return (
         <span className="nl-full-combo-slot">
             {hasFullComboLamp(fcType) ? (
-                <span className="nl-full-combo nl-metadata">FC</span>
+                <span className="nl-full-combo nl-tag-label">FC</span>
             ) : null}
         </span>
     );

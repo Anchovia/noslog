@@ -2,7 +2,6 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
 import FilterChipLinks from "@/components/ui/filter-chip-links";
 import IntentLink from "@/components/ui/intent-link";
@@ -33,9 +32,6 @@ export default async function EventBoard({
     const newPath = localizePath("/events/new", locale);
     return (
         <PageContainer width="reading" className="nl-events">
-            <BackLink href={localizePath("/", locale)}>
-                {t("common.home")}
-            </BackLink>
             {/* 로그아웃이면 제목 줄 끝 「로그인하고 글쓰기 ›」, 쓸 자격이 없으면 「글쓰기」 를 두지 않고 설명 문장도 두지 않는다 */}
             <PageHeading
                 title={t("news.title")}

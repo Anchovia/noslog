@@ -105,7 +105,7 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding: 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
@@ -117,7 +117,7 @@
     text-align: start;
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 :root[data-input="pointer"]
@@ -137,20 +137,32 @@
 :root[data-input="pointer"] .noslog-ui .nl-exam-select__option:focus-visible {
     outline: none;
 }
-/* 레일 줄 = Spectrum 2 메뉴 항목 — 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900, 고른 줄 = 셀렉트 목록 고른 줄과 같은 surface/control + 700 */
+/* 레일 줄 = 메뉴 항목 — 올림 · 키 포커스 · 누름 = 옅은 겹침 면 · 글자 strong, 고른 줄 = 셀렉트 목록 고른 줄과 같은 반전 면 + 700 */
 .noslog-ui .nl-exam-rail button:is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-exam-rail button:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
-.noslog-ui .nl-exam-rail [aria-current="true"] {
-    background: var(--nl-surface-control);
+/* 줄 기본 굵기(regular)가 공용 nl-selected--inverse 의 700 보다 선택자가 무거워 고른 줄 굵기만 다시 준다 */
+.noslog-ui .nl-exam-rail button[aria-current="true"] {
     font-weight: var(--nl-type-weight-bold);
+}
+.noslog-ui
+    .nl-exam-rail
+    button[aria-current="true"]:is(:focus-visible, :active) {
+    background: var(--nl-press-inverse);
+    color: var(--nl-selected-content);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-exam-rail button[aria-current="true"]:hover {
+        background: var(--nl-press-inverse);
+        color: var(--nl-selected-content);
+    }
 }
 .noslog-ui .nl-exam-rail {
     display: none;
@@ -171,7 +183,7 @@
     grid-template-columns: var(--nl-exam-jacket-size) minmax(0, 1fr) auto;
     align-items: center;
     column-gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     padding-inline-end: var(--nl-spacing-16);
 }
 .noslog-ui .nl-exam-passline__mark {
@@ -218,10 +230,10 @@
     padding-inline-end: var(--nl-spacing-16);
     width: 100%;
     min-height: var(--nl-exam-jacket-size);
-    /* 과제곡 = Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
-    border-radius: var(--nl-radius-large);
+    /* 과제곡 = Spectrum 2 secondary 카드 — layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 box */
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
     text-align: start;
 }
 /* 채보가 없어 누르지 않는 카드(div)는 올림 반응이 없다 */
@@ -237,7 +249,7 @@
     width: var(--nl-exam-jacket-size);
     height: var(--nl-exam-jacket-size);
     flex-shrink: 0;
-    border-radius: var(--nl-radius-large) 0 0 var(--nl-radius-large);
+    border-radius: var(--nl-box-radius) 0 0 var(--nl-box-radius);
 }
 .noslog-ui .nl-exam-stage__identity {
     flex: 1;
@@ -293,9 +305,9 @@
     gap: var(--nl-space-group);
     padding: var(--nl-box-padding);
     /* Spectrum 2 secondary 카드(누르지 않는 묶음) */
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
     min-width: 0;
 }
 .noslog-ui .nl-exam-practice__head {
@@ -426,8 +438,8 @@
         gap: var(--nl-spacing-4);
         /* 레일 판 = Spectrum 2 secondary 카드(누르지 않는 묶음), 안의 줄은 메뉴 항목 */
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-large);
-        box-shadow: var(--nl-card-shadow);
+        border-radius: var(--nl-box-radius);
+        box-shadow: var(--nl-box-shadow);
         padding: var(--nl-spacing-8);
     }
     .noslog-ui .nl-exams__personal {
@@ -454,8 +466,8 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-exam-proof {
         background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-large);
-        box-shadow: var(--nl-card-shadow);
+        border-radius: var(--nl-box-radius);
+        box-shadow: var(--nl-box-shadow);
         padding: var(--nl-box-padding);
     }
 }

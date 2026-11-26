@@ -84,7 +84,7 @@ export default function AchievementInfoBadge({
             plain
             ariaLabel={text.aria(achievementKey, tier)}
             content={card}
-            popoverClassName="nl-achievement-card-popover"
+            popoverClassName="nl-floating-panel nl-achievement-card-popover"
         >
             <AchievementHex
                 achievementKey={achievementKey}

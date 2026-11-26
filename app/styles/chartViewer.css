@@ -21,15 +21,15 @@
     gap: var(--nl-spacing-8);
     margin-inline-start: auto;
 }
-/* 정보 상자 = Spectrum 2 secondary 카드(누르지 않는 묶음) — layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 = 상자 안쪽, 줄 사이 8 */
+/* 정보 상자 = Spectrum 2 secondary 카드(누르지 않는 묶음) — layer-1 면 · 모서리 box · emphasized 그림자 · 안쪽 = 상자 안쪽, 줄 사이 8 */
 .noslog-ui .nl-chart-viewer__info {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
     padding: var(--nl-box-padding);
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-chart-viewer__info > p {
     margin: 0;
@@ -84,31 +84,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* 「더보기」 = 공용 글자 버튼(nl-text-button) — 모양은 공용 값, 여기서는 줄 안 자리만 */
 .noslog-ui .nl-chart-viewer__more {
     flex-shrink: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    /* 「더보기」 = 단독 링크(Spectrum 2 secondary 링크) — medium, 올림 · 키 포커스 = gray-900 + 밑줄 */
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-medium);
-    text-underline-offset: var(--nl-underline-offset);
     cursor: pointer;
-}
-.noslog-ui .nl-chart-viewer__more:focus-visible {
-    color: var(--nl-content-strong);
-    text-decoration: underline;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-viewer__more:hover {
-        color: var(--nl-content-strong);
-        text-decoration: underline;
-    }
 }
 /* 작성자 · 아이콘 동작 줄 = 컨트롤 높이 한 줄(접히지 않음) */
 .noslog-ui .nl-chart-viewer__byline-row--compact {
     flex-wrap: nowrap;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-icon-button-size);
 }
 .noslog-ui .nl-chart-viewer__byline-row--compact .nl-chart-viewer__byline {
     flex-wrap: nowrap;
@@ -207,7 +191,7 @@
 }
 
 /* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
-   빼는 높이 = 헤더 높이 + 위 여백 24 + 돌아가기 높이 + 간격 24 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
+   빼는 높이 = 헤더 높이 + 머리 띠 → 첫 내용 32 + 세그먼트(컨트롤 높이) + 간격 12 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
     display: flex;
     flex-direction: column;
@@ -215,9 +199,9 @@
         100%,
         calc(
             (
-                    100dvh - var(--nl-header-height) - var(--nl-spacing-24) -
-                        var(--nl-back-link-height) - var(--nl-spacing-24) -
-                        var(--nl-control-height) - var(--nl-spacing-12) -
+                    100dvh - var(--nl-header-height) -
+                        var(--nl-space-header-title) -
+                        var(--nl-segments-height) - var(--nl-spacing-12) -
                         var(--nl-spacing-16)
                 ) *
                 16 / 9
@@ -251,7 +235,7 @@
 .noslog-ui .nl-chart-stage__screen[data-fullscreen="fill"] {
     position: fixed;
     inset: 0;
-    z-index: var(--nl-layer-fullscreen);
+    z-index: var(--nl-window-layer);
     height: 100dvh;
 }
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
@@ -274,17 +258,15 @@
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    box-shadow: var(--nl-overlay-shadow);
-    z-index: var(--nl-layer-popover);
+    z-index: var(--nl-floating-layer);
 }
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__settings {
-    z-index: var(--nl-layer-fullscreen-dialog);
+    z-index: var(--nl-window-layer);
 }
 /* 설정 창 안 셀렉트 목록은 설정 창보다 위 — 전체화면이면 창이 전체화면 층이라 목록 층(select)으로는 창 아래에 깔린다 */
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-select-menu {
-    z-index: calc(var(--nl-layer-fullscreen-dialog) + var(--nl-layer-above));
+    z-index: calc(var(--nl-window-layer) + var(--nl-layer-above));
 }
 /* 조작 줄 — 인라인 · 전체화면 모두 무대 아래쪽에 겹친다.
    판 = 아래에서 위로 옅어지는 미디어 판(`surface/media-scrim` → 투명), 재생 막대 한 줄 → 버튼 줄(사이 4).
@@ -331,12 +313,12 @@
     width: auto;
     padding-inline: var(--nl-spacing-8);
 }
-/* 미디어 위 버튼 — 44(사진 넘김 버튼과 같은 규격, 2026-09-14 부품 결정 ①). 조작 줄 판이 어두우므로 버튼 판은 두지 않는다(2026-09-26) */
+/* 미디어 위 버튼 — 아이콘 버튼 크기. 조작 줄 판이 어두우므로 버튼 판은 두지 않는다(2026-09-26) */
 .noslog-ui .nl-chart-stage__media-button {
     display: inline-flex;
     flex-shrink: 0;
-    width: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
-    height: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
+    width: var(--nl-icon-button-size);
+    height: var(--nl-icon-button-size);
     align-items: center;
     justify-content: center;
     border: 0;
@@ -347,11 +329,11 @@
 }
 /* 영상 위 버튼 — 올림 · 키 포커스 · 누름 = 겹침(interaction/row) */
 .noslog-ui .nl-chart-stage__media-button:is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__media-button:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-chart-stage__host {
@@ -449,7 +431,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
 }
 .noslog-ui .nl-chart-stage__volume .nl-chart-stage__seek {
     width: calc(var(--nl-spacing-64) + var(--nl-spacing-32));
@@ -510,7 +492,7 @@
 .noslog-ui .nl-chart-strip[data-fullscreen="fill"] {
     position: fixed;
     inset: 0;
-    z-index: var(--nl-layer-fullscreen);
+    z-index: var(--nl-window-layer);
 }
 .noslog-ui
     .nl-chart-strip[data-fullscreen][data-layout]
@@ -617,7 +599,7 @@
     left: 0;
     right: 0;
     border: var(--nl-stroke-strong) solid var(--nl-border-input);
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     border-radius: var(--nl-radius-small);
     pointer-events: none;
 }
@@ -668,7 +650,7 @@
     white-space: nowrap;
 }
 .noslog-ui .nl-chart-comments__composer-row > .nl-chart-comments__time {
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-input-height);
 }
 /* 펼친 줄 — 세그먼트 칸은 균등 분할 그대로(제목 줄 필터 세그먼트와 같은 묶음 폭), 좁으면 버튼이 다음 줄 오른쪽으로 */
 .noslog-ui .nl-chart-comments__composer-actions {
@@ -688,7 +670,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-input-height);
 }
 @media (max-width: 1055px) {
     .noslog-ui .nl-chart-viewer__comment-entry {
@@ -711,10 +693,10 @@
             calc(
                 (
                         100dvh - var(--nl-header-height) -
-                            var(--nl-spacing-24) - var(--nl-back-link-height) -
-                            var(--nl-spacing-24) - var(--nl-control-height) -
-                            var(--nl-spacing-12) - var(--nl-control-height) -
-                            var(--nl-spacing-12) - var(--nl-spacing-16)
+                            var(--nl-space-header-title) -
+                            var(--nl-segments-height) - var(--nl-spacing-12) -
+                            var(--nl-input-height) - var(--nl-spacing-12) -
+                            var(--nl-spacing-16)
                     ) *
                     16 / 9
             )

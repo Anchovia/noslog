@@ -73,7 +73,7 @@ export default function ProfilePinned({
                                     <span className="nl-profile-play-row__grade">
                                         <ScoreGrade rank={play.rank} />
                                         {play.fullCombo ? (
-                                            <span className="nl-full-combo nl-metadata">
+                                            <span className="nl-full-combo nl-tag-label">
                                                 {t("profile.fullComboShort")}
                                             </span>
                                         ) : null}

@@ -154,7 +154,7 @@ export default function TierBrowserCard({
                 {/* 자켓 위에는 오른쪽 아래 난이도 판만 — 같은 구간에 한 곡의 여러 난이도가 있어도 구분되게.
                     등급 메달·FC 마크는 테두리와 점수 색이 대신한다 */}
                 <span
-                    className="nl-tier-card__difficulty nl-metadata"
+                    className="nl-tier-card__difficulty nl-tag-label"
                     data-difficulty={chart.difficulty.toLowerCase()}
                     aria-hidden
                 >

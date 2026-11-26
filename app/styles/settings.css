@@ -9,11 +9,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-settings__category:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-settings__category:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui .nl-settings__category > span {
     display: flex;
@@ -175,7 +175,6 @@
         align-items: start;
     }
     .noslog-ui .nl-settings__overview-heading,
-    .noslog-ui .nl-settings__back,
     .noslog-ui .nl-settings__category svg,
     .noslog-ui .nl-settings__category .nl-settings__summary {
         display: none;
@@ -187,7 +186,7 @@
         display: block;
     }
     .noslog-ui .nl-settings__category {
-        min-height: var(--nl-control-height);
+        min-height: var(--nl-control-height-large);
         padding: 0 var(--nl-spacing-16);
         border: 0;
         border-radius: var(--nl-radius-control);
@@ -197,6 +196,22 @@
     }
     .noslog-ui .nl-settings__category .nl-settings__name--wide {
         display: block;
+    }
+    /* 지금 분류 = 면 + 왼쪽 막대 4×24(막대는 줄 바깥 왼쪽 8), 글자 700 — 반전 면은 사이드 메뉴에 쓰지 않는다 */
+    .noslog-ui .nl-settings__category--current {
+        position: relative;
+        background: var(--nl-nav-selected-surface);
+    }
+    .noslog-ui .nl-settings__category--current::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: calc(var(--nl-spacing-8) * -1);
+        top: 50%;
+        width: var(--nl-nav-indicator-width);
+        height: var(--nl-nav-indicator-height);
+        translate: 0 -50%;
+        border-radius: var(--nl-radius-full);
+        background: var(--nl-primary-default);
     }
     .noslog-ui .nl-settings__save > .nl-button {
         align-self: flex-start;
@@ -226,15 +241,19 @@
     min-height: 0;
 }
 
-/* 설정 줄 목록(2026-10-01 A1 · B1 · C1 · D1 · E1) — Discord · Notion · Canva 식. 목록 위와 줄마다 아래 구분선,
-   줄 = 라벨(+설명) 왼쪽 · 조작부 오른쪽. 라벨은 control, 설명은 metadata subdued 한 가지로 */
+/* 설정 줄 목록 — 줄마다 면 + 줄 사이 틈 2(4단계 B2). 줄 = 라벨(+설명) 왼쪽 · 조작부 오른쪽.
+   라벨은 control, 설명은 metadata subdued 한 가지로. 바깥 모서리는 상자 16 으로 잘라 첫 · 끝 줄만 둥글다 */
 .noslog-ui .nl-settings__rows {
     display: flex;
     flex-direction: column;
+    gap: var(--nl-settings-row-gap);
     min-width: 0;
+    overflow: hidden;
+    border-radius: var(--nl-box-radius);
 }
 .noslog-ui .nl-settings__rows > * {
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    padding: var(--nl-spacing-12) var(--nl-box-padding);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-settings__rows .nl-field__label {
     color: var(--nl-content-default);
@@ -272,11 +291,11 @@
 }
 @media (hover: hover) {
     .noslog-ui :is(a, button).nl-settings__row:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-surface-elevated);
     }
 }
 .noslog-ui :is(a, button).nl-settings__row:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-surface-elevated);
 }
 /* 연결 계정 로고 — 원 40(아이콘 M 두 배, 홈 로고 원과 같은 값), 가운데 Discord 로고 20 */
 .noslog-ui .nl-settings__logo {

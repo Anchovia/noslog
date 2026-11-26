@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 
-import BackLink from "@/components/ui/back-link";
 import IntentLink from "@/components/ui/intent-link";
 import {
-    getPrivacyCopy,
     PRIVACY_PREVIOUS_VERSIONS,
     privacyHistoryCopy,
     privacyVersionPeriod,
@@ -24,9 +22,6 @@ export default async function PrivacyHistoryPage() {
     const copy = privacyHistoryCopy[locale];
     return (
         <div className="nl-privacy-history">
-            <BackLink href={localizePath("/privacy", locale)}>
-                {getPrivacyCopy(locale).title}
-            </BackLink>
             <h1 className="nl-page-title">{copy.title}</h1>
             {PRIVACY_PREVIOUS_VERSIONS.length > 0 ? (
                 <ul className="nl-privacy-history__list nl-body">

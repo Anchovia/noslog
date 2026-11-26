@@ -17,7 +17,7 @@ export function SaveBingoButton({ isSubmitting }: { isSubmitting: boolean }) {
             disabled={isSubmitting}
             className={cn(
                 foundationButtonClass(),
-                "sticky bottom-nl-12 z-nl-sticky shadow-nl-overlay"
+                "sticky bottom-nl-12 z-nl-sticky"
             )}
         >
             <Save className="nl-icon-small" aria-hidden />

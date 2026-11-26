@@ -142,7 +142,7 @@ export default function OfficialXPostArticle({
                     href={post.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="nl-control"
+                    className="nl-link nl-control"
                 >
                     {labels.postLink}
                     <ExternalLink aria-hidden />

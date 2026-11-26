@@ -162,10 +162,6 @@ export default async function PublicChartPatternPage({
                 initialTimeMs: parseTimeParam(t),
             }}
             document={document.data}
-            backHref={localizePath(
-                `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?tab=detail`,
-                locale
-            )}
         />
     );
 }

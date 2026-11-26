@@ -29,8 +29,8 @@
 /* 홈 머리 마크 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) — 크기 40 은 예전 N 원 그대로(큰 아바타와 같은 토큰) */
 .noslog-ui .nl-home-mark {
     display: flex;
-    width: var(--nl-control-height-large);
-    height: var(--nl-control-height-large);
+    width: var(--nl-control-height-medium);
+    height: var(--nl-control-height-medium);
 }
 /* 제목 → 설명 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-home-identity__copy {
@@ -55,7 +55,7 @@
     gap: var(--nl-spacing-8);
     /* 피드백 칸은 버튼이라 링크처럼 칸 폭을 저절로 채우지 않는다 */
     width: 100%;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-large);
     padding: var(--nl-spacing-12);
     /* 면은 바탕보다 한 단계(surface) · 글자 medium, 올림 면 gray-200 · 글자 gray-900 */
     border-radius: var(--nl-radius-control);
@@ -80,12 +80,12 @@
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-home-tile:is(:focus-visible, :active) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-home-tile:hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }
@@ -217,24 +217,11 @@
     display: flex;
     justify-content: flex-end;
 }
-/* 「게시물 보기」 = 단독 링크(Spectrum 2 secondary 링크, .nl-link 와 같은 값) */
+/* 「게시물 보기」 = 단독 링크(nl-link) — 글자 · 밑줄 값은 공용, 여기서는 줄 안 자리만 */
 .noslog-ui .nl-official-post__footer a {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-medium);
-    text-underline-offset: var(--nl-underline-offset);
-}
-.noslog-ui .nl-official-post__footer a:focus-visible {
-    color: var(--nl-content-strong);
-    text-decoration: underline;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-official-post__footer a:hover {
-        color: var(--nl-content-strong);
-        text-decoration: underline;
-    }
 }
 .noslog-ui .nl-official-post__footer svg {
     width: var(--nl-icon-small);
@@ -244,11 +231,8 @@
     position: absolute;
     top: calc(100% + var(--nl-spacing-8));
     inset-inline: 0;
-    z-index: var(--nl-layer-search-preview);
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
     /* ③ 떠 있는 메뉴와 같은 움직임 — 원점은 검색칸 쪽(위 가운데) */
     transform-origin: top center;
     transition:
@@ -276,7 +260,7 @@
 }
 .noslog-ui .nl-search-preview__all {
     display: flex;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     align-items: center;
     justify-content: center;
     /* Spectrum 2 메뉴 항목 — 모서리 medium · 글자 medium, 올림 = 면 gray-200 · 글자 gray-900 */
@@ -284,12 +268,12 @@
     font-weight: var(--nl-type-weight-medium);
 }
 .noslog-ui .nl-search-preview__all:active {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-search-preview__all:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -336,10 +320,10 @@
     max-width: 100%;
     aspect-ratio: 2.4 / 1;
     overflow: hidden;
-    /* 누르는 카드 — elevated 면 · 둘레 없음 · 놓인 것 그림자 · 모서리 large */
-    border-radius: var(--nl-radius-large);
+    /* 누르는 카드 — elevated 면 · 둘레 없음 · 놓인 것 그림자 · 모서리 box */
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-home-event img {
     object-fit: cover;
@@ -386,11 +370,11 @@
         var(--nl-ease-easing);
 }
 .noslog-ui .nl-home-event:is(:active, :focus-visible)::after {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 @media (hover: hover) {
     .noslog-ui .nl-home-event:hover::after {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
     .noslog-ui .nl-home-event:hover .nl-entity-title {
         text-decoration: underline;

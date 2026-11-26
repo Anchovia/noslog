@@ -276,11 +276,11 @@
 }
 @media (hover: hover) {
     .noslog-ui a.nl-dashboard__todo-item:hover::before {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui a.nl-dashboard__todo-item:is(:active, :focus-visible)::before {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui a.nl-dashboard__todo-item:focus-visible {
     outline: none;
@@ -368,14 +368,14 @@
         color: var(--nl-content-strong);
     }
     .noslog-ui a.nl-admin-row:hover::before {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui a.nl-admin-row:is(:active, :focus-visible) {
     color: var(--nl-content-strong);
 }
 .noslog-ui a.nl-admin-row:is(:active, :focus-visible)::before {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui a.nl-admin-row:focus-visible {
     outline: none;
@@ -431,12 +431,12 @@
 /* 관리자 네이티브 셀렉트(nl-input) — 올림 · 누름 · 키 포커스는 셀렉트 규칙대로 면 · 글자를 바꾼다 */
 @media (hover: hover) {
     .noslog-ui.nl-admin select.nl-input:not(:disabled):hover {
-        background: var(--nl-surface-control-hover);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui.nl-admin select.nl-input:not(:disabled):is(:active, :focus-visible) {
-    background: var(--nl-surface-control-hover);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 
@@ -457,12 +457,12 @@
 @media (hover: hover) {
     .noslog-ui .nl-admin-summary:hover::before,
     .noslog-ui details:has(> .nl-admin-card-summary:hover) {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-admin-summary:is(:active, :focus-visible)::before,
 .noslog-ui details:has(> .nl-admin-card-summary:is(:active, :focus-visible)) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui .nl-admin-summary:focus-visible {
     outline: none;
@@ -705,10 +705,10 @@
 }
 /* 전체 화면 에디터 위에서 여는 확인 창 — 에디터 층보다 위 */
 .noslog-ui:has(> .nl-editor-dialog) > .nl-dialog-overlay {
-    z-index: var(--nl-layer-fullscreen-dialog);
+    z-index: var(--nl-window-layer);
 }
 .noslog-ui .nl-dialog.nl-editor-dialog {
-    z-index: calc(var(--nl-layer-fullscreen-dialog) + var(--nl-layer-above));
+    z-index: calc(var(--nl-window-layer) + var(--nl-layer-above));
 }
 /* 시험 편집기 보상 이름 — 회색 줄 안 맨 입력, 글자는 입력칸과 같은 토큰 */
 .noslog-ui .nl-admin-reward__input {
@@ -739,7 +739,7 @@
 .noslog-ui .nl-admin-topbar {
     position: sticky;
     top: 0;
-    z-index: var(--nl-layer-sticky);
+    z-index: var(--nl-attached-layer);
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
@@ -824,7 +824,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-admin-sidebar__item:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-default);
     }
 }
@@ -862,7 +862,7 @@
     top: var(--nl-spacing-8);
     bottom: var(--nl-spacing-8);
     left: var(--nl-spacing-8);
-    z-index: var(--nl-layer-dialog);
+    z-index: var(--nl-window-layer);
     display: flex;
     flex-direction: column;
     width: min(var(--nl-admin-menu-width), calc(100vw - var(--nl-spacing-16)));
@@ -982,7 +982,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-admin-table tbody tr:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-admin-status {
@@ -1017,10 +1017,10 @@
     position: fixed;
     bottom: var(--nl-spacing-32);
     left: 50%;
-    z-index: var(--nl-layer-bottom-bar);
+    z-index: var(--nl-attached-layer);
     display: flex;
     align-items: center;
-    height: var(--nl-control-height-large);
+    height: var(--nl-control-height-medium);
     padding-inline: var(--nl-spacing-4);
     transform: translateX(-50%);
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
@@ -1139,7 +1139,7 @@
     top: var(--nl-spacing-8);
     right: var(--nl-spacing-8);
     bottom: var(--nl-spacing-8);
-    z-index: var(--nl-layer-dialog);
+    z-index: var(--nl-window-layer);
     display: flex;
     flex-direction: column;
     width: min(

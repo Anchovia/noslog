@@ -158,11 +158,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: var(--nl-type-line-height-ui);
-    padding: 0 var(--nl-spacing-4);
+    height: var(--nl-tag-height);
+    padding: 0 var(--nl-spacing-6);
     box-shadow: inset 0 0 0 var(--nl-stroke-default)
         var(--nl-achievement-full-combo);
-    border-radius: var(--nl-radius-small);
+    border-radius: var(--nl-tag-radius);
 }
 /* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
 .noslog-ui .nl-chart-leaderboard__empty {

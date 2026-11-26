@@ -138,13 +138,13 @@
 }
 
 /* 결과 카드 — 요약 줄(사진 64 · 이름/거리 · 기체 한 줄 · 영업 상태) 이 펼침 버튼, 아래로 펼침 칸 */
-/* 누르는 카드 = Spectrum 2 primary 카드 — elevated 면 · 둘레 없음 · emphasized 그림자 · 모서리 large */
+/* 누르는 카드 = Spectrum 2 primary 카드 — elevated 면 · 둘레 없음 · emphasized 그림자 · 모서리 box */
 .noslog-ui .nl-arcade-result {
     display: flex;
     flex-direction: column;
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
     overflow-wrap: anywhere;
 }
 @media (hover: hover) {
@@ -341,13 +341,13 @@
 /* 면(elevated)이 있는 버튼이라 올림 · 키 포커스 · 누름 = 한 단계 위 면 surface/control */
 .noslog-ui .nl-arcade-map__area:is(:focus-visible, :active),
 .noslog-ui .nl-arcade-map .nl-arcade-map__legend:is(:focus-visible, :active) {
-    background: var(--nl-surface-control);
+    background: var(--nl-press-surface);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-arcade-map__area:hover,
     .noslog-ui .nl-arcade-map .nl-arcade-map__legend:hover {
-        background: var(--nl-surface-control);
+        background: var(--nl-press-surface);
         color: var(--nl-content-strong);
     }
 }
@@ -355,18 +355,18 @@
     top: var(--nl-spacing-8);
     left: 50%;
     transform: translateX(-50%);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-button-height);
     border-radius: var(--nl-radius-large);
     padding-inline: var(--nl-spacing-12);
     /* 좌우 8 씩만 비운다 — 위 여백 8 · 범례 오른쪽 8 과 같은 값 */
     max-width: calc(100% - 2 * var(--nl-spacing-8));
     white-space: nowrap;
 }
-/* 범례 — 오른쪽 아래 둥근 물음표 버튼(44, 누르는 자리). 아래 시트가 지도 아래를 위 모서리만큼 덮으므로 바닥 컨트롤은 24 위에 둔다 */
+/* 범례 — 오른쪽 아래 둥근 물음표 버튼(아이콘 버튼 크기). 아래 시트가 지도 아래를 위 모서리만큼 덮으므로 바닥 컨트롤은 24 위에 둔다 */
 .noslog-ui .nl-arcade-map__legend {
     display: inline-flex;
-    width: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
-    height: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
+    width: var(--nl-icon-button-size);
+    height: var(--nl-icon-button-size);
     align-items: center;
     justify-content: center;
     bottom: var(--nl-spacing-24);
@@ -405,13 +405,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
-    z-index: var(--nl-layer-popover);
     max-width: min(280px, calc(100vw - var(--nl-spacing-32)));
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
     color: var(--nl-content-default);
-    box-shadow: var(--nl-overlay-shadow);
 }
 .noslog-ui.nl-arcade-map__legend-popover ul {
     display: flex;
@@ -421,8 +418,8 @@
 /* 마커 — 핀(오락실 하나) · 버블(범위 안 개수, 코로나 맵 언어). 타겟 44 · 핀 = 아이콘 강조 24(선택 40) */
 .noslog-ui .nl-arcade-marker {
     display: flex;
-    min-width: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
-    min-height: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
+    min-width: calc(var(--nl-control-height-xsmall) + var(--nl-spacing-12));
+    min-height: calc(var(--nl-control-height-xsmall) + var(--nl-spacing-12));
     align-items: center;
     justify-content: center;
     background: none;
@@ -474,8 +471,6 @@
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     /* 떠 있는 창 규격 — elevated 면 · 다크 둘레 1px · 그림자 · 모서리 large */
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -698,8 +693,6 @@
    구분선 섹션. 액션은 1056 미만 하단 고정 바, 1056+ 는 본문 | 레일(액션·선호·최근 확인) 2:1.
    ───────────────────────────────────────────────────────────────────────────── */
 .noslog-ui .nl-arcade-detail {
-    /* 돌아가기 → 본문(제목) = 경로 → 쪽 제목 */
-    gap: var(--nl-space-crumb-title);
     padding-bottom: var(--nl-page-bottom);
     overflow-wrap: anywhere;
 }
@@ -780,7 +773,7 @@
     color: var(--nl-content-subdued);
 }
 /* 기체 카드 — 번호·위치 | 상태 · 신선도 · 액션 2개가 한 덩어리. 누르지 않는 묶음이라 Spectrum 2 secondary 카드
-   (layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 large) · 안쪽 = 상자 안쪽 · 사이 8. 선 자리는 크기를 지키려 투명 */
+   (layer-1 면 · 둘레 없음 · emphasized 그림자 · 모서리 box) · 안쪽 = 상자 안쪽 · 사이 8. 선 자리는 크기를 지키려 투명 */
 .noslog-ui .nl-arcade-cabinets {
     display: flex;
     flex-direction: column;
@@ -792,9 +785,9 @@
     gap: var(--nl-spacing-8);
     padding: calc(var(--nl-box-padding) - var(--nl-stroke-default));
     border: var(--nl-stroke-default) solid transparent;
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 /* 두 열 — 왼쪽 이름(14 · ui 줄) 아래 위치 메모(12/16), 오른쪽 상태(14 · ui 줄) 아래 확인 시각(12/16). 첫 줄끼리 같은 줄 높이라 위 맞춤 = 글자선 맞춤 */
 .noslog-ui .nl-arcade-cabinet__row {
@@ -889,8 +882,8 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-12);
-    /* 목록 행 = 컨트롤 높이 */
-    min-height: var(--nl-control-height);
+    /* 목록 행 = 컨트롤 높이(medium 40) */
+    min-height: var(--nl-control-height-medium);
     min-width: 0;
 }
 .noslog-ui .nl-arcade-fact > svg {
@@ -901,7 +894,7 @@
     flex: 1;
     align-items: center;
     min-width: 0;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     text-align: start;
 }
 .noslog-ui .nl-arcade-fact__value {
@@ -911,11 +904,11 @@
 .noslog-ui .nl-arcade-fact__tail {
     display: grid;
     place-items: center;
-    width: var(--nl-control-height);
-    height: var(--nl-control-height);
+    width: var(--nl-control-height-medium);
+    height: var(--nl-control-height-medium);
     /* 칸 안 아이콘 잉크를 본문 오른쪽 선에 — (컨트롤 − 20) / 2 만큼 밖으로 */
     margin-inline-end: calc(
-        (var(--nl-control-height) - var(--nl-icon-medium)) / -2
+        (var(--nl-control-height-medium) - var(--nl-icon-medium)) / -2
     );
     flex-shrink: 0;
 }
@@ -930,7 +923,7 @@
     .nl-arcade-fact:has(
         > .nl-arcade-fact__action[aria-expanded]:is(:active, :focus-visible)
     ) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 /* 포커스 선도 넓힌 면 안쪽(−2)에 — 안의 버튼 상자에 그으면 넓힌 면과 어긋난다 */
 .noslog-ui .nl-arcade-fact__action[aria-expanded]:focus-visible {
@@ -946,7 +939,7 @@
 @media (hover: hover) {
     .noslog-ui
         .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-arcade-fact__link {
@@ -989,9 +982,9 @@
     flex-direction: column;
     gap: var(--nl-space-group);
     padding: var(--nl-box-padding);
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-arcade-detail__rail-only {
     display: none;
@@ -1068,8 +1061,8 @@
     position: absolute;
     top: 50%;
     display: inline-flex;
-    width: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
-    height: calc(var(--nl-spacing-32) + var(--nl-spacing-12));
+    width: var(--nl-control-height-large);
+    height: var(--nl-control-height-large);
     align-items: center;
     justify-content: center;
     transform: translateY(-50%);
@@ -1093,7 +1086,7 @@
     bottom: var(--nl-spacing-12);
     display: inline-flex;
     align-items: center;
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-small);
     color: var(--nl-content-on-media);
@@ -1177,7 +1170,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: var(--nl-layer-bottom-bar);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -1189,7 +1181,7 @@
 /* 바가 푸터를 가리지 않게 페이지 끝에 바 높이만큼 */
 .noslog-ui.nl-app:has(.nl-arcade-detail__bar) {
     padding-bottom: calc(
-        var(--nl-control-height) + var(--nl-spacing-12) * 2 +
+        var(--nl-button-height) + var(--nl-spacing-12) * 2 +
             env(safe-area-inset-bottom)
     );
 }
@@ -1198,11 +1190,11 @@
 @media (max-width: 1055px) {
     html:has(.noslog-ui .nl-arcade-detail__bar) [data-sonner-toaster] {
         --offset-bottom: calc(
-            var(--nl-control-height) + var(--nl-spacing-12) * 2 +
+            var(--nl-button-height) + var(--nl-spacing-12) * 2 +
                 var(--nl-spacing-16) + env(safe-area-inset-bottom)
         ) !important;
         --mobile-offset-bottom: calc(
-            var(--nl-control-height) + var(--nl-spacing-12) * 2 +
+            var(--nl-button-height) + var(--nl-spacing-12) * 2 +
                 var(--nl-spacing-16) + env(safe-area-inset-bottom)
         ) !important;
     }

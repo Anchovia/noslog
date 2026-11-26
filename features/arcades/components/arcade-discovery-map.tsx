@@ -242,7 +242,7 @@ export default function ArcadeDiscoveryMap({
                             // 올리면 묶음 안 이름 목록 — 다섯까지, 나머지는 개수로
                             const list = document.createElement("span");
                             list.className =
-                                "nl-arcade-marker__label nl-arcade-marker__label--hover nl-arcade-marker__label--list nl-metadata";
+                                "nl-floating-panel nl-arcade-marker__label nl-arcade-marker__label--hover nl-arcade-marker__label--list nl-metadata";
                             list.setAttribute("aria-hidden", "true");
                             for (const point of group.points.slice(
                                 0,
@@ -287,8 +287,8 @@ export default function ArcadeDiscoveryMap({
                             // 이름 판을 켜지 않은 지도는 올림 · 키 포커스 때만 띄운다
                             const label = document.createElement("span");
                             label.className = showLabels()
-                                ? "nl-arcade-marker__label nl-metadata"
-                                : "nl-arcade-marker__label nl-arcade-marker__label--hover nl-metadata";
+                                ? "nl-floating-panel nl-arcade-marker__label nl-metadata"
+                                : "nl-floating-panel nl-arcade-marker__label nl-arcade-marker__label--hover nl-metadata";
                             label.setAttribute("aria-hidden", "true");
                             label.textContent = arcade.name;
                             button.append(label);
@@ -672,7 +672,7 @@ export default function ArcadeDiscoveryMap({
                                 collisionPadding={
                                     overlayPosition.collisionPadding
                                 }
-                                className="noslog-ui nl-arcade-map__legend-popover"
+                                className="noslog-ui nl-floating-panel nl-arcade-map__legend-popover"
                             >
                                 <strong className="nl-emphasis-label">
                                     {t("arcades.legend")}

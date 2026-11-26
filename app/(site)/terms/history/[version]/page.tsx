@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import BackLink from "@/components/ui/back-link";
 import {
     privacyHistoryCopy,
     privacyVersionPeriod,
@@ -43,11 +42,6 @@ export default async function TermsVersionPage({ params }: Props) {
             locale={locale}
             copy={getTermsVersionCopy(version, locale)}
             period={history.period(privacyVersionPeriod(version, locale))}
-            back={
-                <BackLink href={localizePath("/terms/history", locale)}>
-                    {history.title}
-                </BackLink>
-            }
         />
     );
 }

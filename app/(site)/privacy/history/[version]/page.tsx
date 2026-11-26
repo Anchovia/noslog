@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import BackLink from "@/components/ui/back-link";
 import PrivacyPage from "@/features/privacy/components/privacy-page";
 import {
     getPrivacyVersion,
@@ -45,11 +44,6 @@ export default async function PrivacyVersionPage({ params }: Props) {
             isAuthenticated={!!session.id}
             copy={getPrivacyVersionCopy(version, locale)}
             period={history.period(privacyVersionPeriod(version, locale))}
-            back={
-                <BackLink href={localizePath("/privacy/history", locale)}>
-                    {history.title}
-                </BackLink>
-            }
         />
     );
 }

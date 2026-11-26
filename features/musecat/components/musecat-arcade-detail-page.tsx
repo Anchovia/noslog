@@ -24,7 +24,6 @@ import {
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
 import ActionButton from "@/components/ui/action-button";
-import BackLink from "@/components/ui/back-link";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import IconRow, { IconRows } from "@/components/ui/icon-row";
@@ -40,7 +39,6 @@ import ArcadeDiscoveryMap from "@/features/arcades/components/arcade-discovery-m
 import ArcadeHours from "@/features/arcades/components/arcade-hours";
 import ArcadePhotos from "@/features/arcades/components/arcade-photos";
 import LazyLocationMap from "@/features/arcades/components/lazy-location-map";
-import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { MusecatArcade } from "@/features/musecat/musecat-arcade";
 
 import {
@@ -106,7 +104,6 @@ export default function MusecatArcadeDetailPage({
     const { arcade } = data;
     const weeklyId = useId();
     const [mapFailed, setMapFailed] = useState(false);
-    const discoveryQuery = useArcadeSession((state) => state.discoveryQuery);
     const [now, setNow] = useState(() => new Date());
     const [weeklyOpen, setWeeklyOpen] = useState(false);
     const [prompt, setPrompt] = useState<MusecatAction | null>(null);
@@ -272,15 +269,8 @@ export default function MusecatArcadeDetailPage({
         <PageContainer className="nl-arcade-detail">
             <div className="nl-arcade-detail__layout">
                 <div className="nl-arcade-detail__main">
-                    {/* 머리 — 뒤로 → 이름 → 지역 · 게임 수 → 영업 상태 → 사진 줄(네이버 지도 장소 화면 순서, 사용자 2026-10-22) */}
+                    {/* 머리 — 이름 → 지역 · 게임 수 → 영업 상태 → 사진 줄(네이버 지도 장소 화면 순서, 사용자 2026-10-22) */}
                     <div className="nl-musecat-head">
-                        <BackLink
-                            href={href(
-                                `/gamecenter${discoveryQuery ? `?${discoveryQuery}` : ""}`
-                            )}
-                        >
-                            {t("arcades.title")}
-                        </BackLink>
                         {data.closed ? (
                             <span className="nl-musecat-status">
                                 <span
@@ -781,7 +771,9 @@ export default function MusecatArcadeDetailPage({
                     <div className="nl-arcade-detail__rail-box">{actions}</div>
                 </aside>
             </div>
-            <div className="nl-arcade-detail__bar">{actions}</div>
+            <div className="nl-attached-bar nl-arcade-detail__bar">
+                {actions}
+            </div>
 
             <MusecatConnectPrompt
                 open={prompt !== null}

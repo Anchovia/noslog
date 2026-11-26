@@ -402,7 +402,7 @@ export default function ExamEditor({
                     ) : null}
                 </div>
 
-                <div className="sticky bottom-0 z-nl-sticky border-t-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
+                <div className="nl-attached-bar sticky bottom-0 border-t-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
                     <button
                         type="submit"
                         disabled={isSubmitting || isDeleting}

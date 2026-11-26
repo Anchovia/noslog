@@ -221,7 +221,7 @@ export default function PatternEvaluationForm({
                 </div>
                 {disabled ? (
                     <div className="nl-pattern-lock__overlay">
-                        <div className="nl-pattern-lock__card">
+                        <div className="nl-floating-panel nl-pattern-lock__card">
                             <p className="nl-emphasis-label">
                                 {t(
                                     !accountId

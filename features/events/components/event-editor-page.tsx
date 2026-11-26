@@ -1,5 +1,4 @@
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import {
     eventDateInput,
@@ -7,7 +6,6 @@ import {
 } from "@/features/events/schemas/event-schema";
 import type { getOwnEvent } from "@/features/events/server/event-service";
 import { getPollInput } from "@/features/polls/server/poll-service";
-import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { SITE_URL } from "@/lib/metadata/site";
 
@@ -25,7 +23,7 @@ export default async function EventEditorPage({
     event: OwnEvent | null;
     eligible: boolean;
 }) {
-    const { locale, t } = await getServerI18n();
+    const { t } = await getServerI18n();
     const saved = event ? await getPollInput({ eventId: event.id }) : null;
     const poll = saved ? { input: saved.input, votes: saved.votes } : null;
     const status = event?.status as EventStatus | undefined;
@@ -50,9 +48,6 @@ export default async function EventEditorPage({
         (status === "changes_requested" || status === "rejected");
     return (
         <PageContainer width="reading" className="nl-events">
-            <BackLink href={localizePath("/events/mine", locale)}>
-                {t("events.mine")}
-            </BackLink>
             <PageHeading
                 title={event ? t("events.editor.edit") : t("events.editor.new")}
             />

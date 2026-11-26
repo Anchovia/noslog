@@ -93,7 +93,7 @@ export function ProfileRankDistribution({
                     >
                         <dt className="nl-full-combo-slot">
                             {row.rank === "FC" ? (
-                                <span className="nl-full-combo nl-metadata">
+                                <span className="nl-full-combo nl-tag-label">
                                     {t("profile.fullComboShort")}
                                 </span>
                             ) : (
@@ -123,7 +123,7 @@ export function ProfileRankDistribution({
             </dl>
             <button
                 type="button"
-                className="nl-profile-disclosure nl-control"
+                className="nl-profile-disclosure nl-text-button nl-control"
                 aria-expanded={expanded}
                 aria-controls="profile-rank-distribution"
                 onClick={() => setExpanded((value) => !value)}

@@ -2,7 +2,6 @@ import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import type { SettingsCategory } from "@/features/settings/schemas/settings-schema";
 import { settingsCategorySchema } from "@/features/settings/schemas/settings-schema";
 import { cn } from "@/lib/cn";
@@ -100,13 +99,6 @@ export default async function SettingsLayout({
                     </nav>
                 </div>
                 <div className="nl-settings__detail">
-                    <BackLink
-                        href={subpage ? `${root}?category=${current}` : root}
-                        plain
-                        className={subpage ? undefined : "nl-settings__back"}
-                    >
-                        {t(subpage ? titles[current] : "settings.overview")}
-                    </BackLink>
                     {subpage ? null : (
                         <PageHeading title={t(titles[current])} />
                     )}

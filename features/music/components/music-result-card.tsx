@@ -84,7 +84,7 @@ export default function MusicResultCard({
                 appearance="foundation"
             >
                 <span
-                    className="nl-jacket__category nl-metadata"
+                    className="nl-jacket__category nl-tag-label"
                     lang="en"
                     data-category={music.category_short}
                 >

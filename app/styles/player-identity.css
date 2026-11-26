@@ -10,13 +10,14 @@
     align-items: center;
     flex-shrink: 0;
     gap: var(--nl-spacing-4);
-    padding: var(--nl-spacing-4) var(--nl-spacing-8);
+    height: var(--nl-tag-height);
+    padding-inline: var(--nl-spacing-6);
     overflow: hidden;
     background: var(--nl-exam-badge-fill);
     color: var(--nl-content-subdued);
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-regular);
+    font-weight: var(--nl-type-weight-bold);
     white-space: nowrap;
 }
 .noslog-ui .nl-exam-badge::before,

@@ -24,8 +24,8 @@
     align-items: center;
     gap: var(--nl-spacing-4);
     min-width: 0;
-    min-height: var(--nl-control-height);
-    margin-block: calc((1lh - var(--nl-control-height)) / 2);
+    min-height: var(--nl-control-height-medium);
+    margin-block: calc((1lh - var(--nl-control-height-medium)) / 2);
     margin-inline-start: calc(var(--nl-spacing-8) * -1);
     padding-inline: var(--nl-spacing-8);
     border: 0;
@@ -48,14 +48,14 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-tier-switch:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
     .noslog-ui .nl-tier-switch:hover > svg {
         color: var(--nl-content-strong);
     }
 }
 .noslog-ui .nl-tier-switch:is(:focus-visible, :active, [data-state="open"]) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui
     .nl-tier-switch:is(:focus-visible, :active, [data-state="open"])
@@ -112,7 +112,7 @@
 /* 폰 결과 줄 = 악곡 목록과 같은 규칙 — 고스트 정렬은 안쪽 12 만큼 당겨 아이콘을 목록 왼쪽 선에 맞추고,
    좁은 폭에서는 정렬 라벨이 말줄임되며 보기 전환은 줄지 않는다 */
 .noslog-ui .nl-tier-scope {
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
 }
 .noslog-ui .nl-tier-scope > .nl-filter-trigger {
     flex: 0 1 auto;
@@ -154,7 +154,7 @@
 }
 /* 높이는 줄 수로 — 줄(컨트롤 높이)이 목록 끝에서 반만 보이지 않게 폰 8줄 · 넓은 폭 11줄 */
 .noslog-ui .nl-tier-band-options {
-    height: calc(var(--nl-control-height) * 8);
+    height: calc(var(--nl-control-height-medium) * 8);
     overflow-y: auto;
     overscroll-behavior: contain;
     background: var(--nl-surface-surface);
@@ -162,7 +162,7 @@
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-tier-band-options {
-        height: calc(var(--nl-control-height) * 11);
+        height: calc(var(--nl-control-height-medium) * 11);
     }
 }
 .noslog-ui .nl-tier-band-option {
@@ -179,11 +179,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-tier-band-option:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-tier-band-option:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui .nl-tier-band-option[data-range-start="true"] {
     background-color: var(--nl-surface-control);
@@ -203,12 +203,12 @@
 .noslog-ui .nl-tier-band__header {
     position: sticky;
     top: var(--nl-header-height);
-    z-index: var(--nl-layer-sticky);
+    z-index: var(--nl-attached-layer);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding-block: var(--nl-spacing-8);
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
@@ -301,8 +301,11 @@
     right: var(--nl-spacing-8);
     bottom: var(--nl-spacing-8);
     z-index: var(--nl-layer-above);
-    padding: var(--nl-spacing-2) var(--nl-spacing-4);
-    border-radius: var(--nl-radius-small);
+    display: flex;
+    align-items: center;
+    height: var(--nl-tag-height);
+    padding-inline: var(--nl-spacing-6);
+    border-radius: var(--nl-tag-radius);
     background: var(--nl-surface-surface);
     white-space: nowrap;
 }
@@ -372,7 +375,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-tier-card:hover .nl-tier-card__jacket::after {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
     }
     .noslog-ui .nl-tier-card:hover .nl-tier-card__jacket img {
         scale: var(--nl-motion-scale-card-media);
@@ -381,7 +384,7 @@
 .noslog-ui
     .nl-tier-card:is(:active, :focus-visible)
     .nl-tier-card__jacket::after {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 /* 375 미만(4열 카드 66)은 판 글자를 약칭 N · H · EX · R 로 — 악곡 상세 난이도 선택과 같은 규칙 */
 @media (max-width: 374px) {
@@ -521,7 +524,7 @@
    감싸는 칸에 page-title 글자 규격을 붙여 1lh 를 제목 줄 높이로 읽는다(안은 아이콘 버튼뿐) */
 .noslog-ui .nl-tier-more {
     display: flex;
-    margin-block: calc((1lh - var(--nl-control-height)) / 2);
+    margin-block: calc((1lh - var(--nl-icon-button-size)) / 2);
 }
 /* 내보내기 창 구간 고르기(2026-09-22 R2) — 「담기는 것」 줄 오른쪽 끝 「구간 고르기」, 펼치면 레일과 같은 구간 체크 목록 →8→ 선택 곡 수 */
 .noslog-ui .nl-tier-export__scope {

@@ -20,6 +20,7 @@ import { useFeedbackUnread } from "@/features/feedback/components/feedback-unrea
 import LazyFeedbackDialog, {
     preloadFeedbackDialog,
 } from "@/features/feedback/components/lazy-feedback-dialog";
+import { cn } from "@/lib/cn";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -263,7 +264,15 @@ export default function AppHeader({
                                               <IntentLink
                                                   key={destination}
                                                   href={href(destination)}
-                                                  className="nl-destination nl-control nl-focus-inset nl-forced-press"
+                                                  className={cn(
+                                                      "nl-destination nl-control nl-focus-inset nl-forced-press",
+                                                      isDestinationActive(
+                                                          pathname,
+                                                          chartScope,
+                                                          destination
+                                                      ) &&
+                                                          "nl-selected--inverse"
+                                                  )}
                                                   aria-current={
                                                       isDestinationActive(
                                                           pathname,
@@ -288,7 +297,12 @@ export default function AppHeader({
                                 )}
                                 <IntentLink
                                     href={href("/settings")}
-                                    className="nl-destination nl-control nl-focus-inset nl-forced-press"
+                                    className={cn(
+                                        "nl-destination nl-control nl-focus-inset nl-forced-press",
+                                        (pathname === "/settings" ||
+                                            pathname === "/profile/settings") &&
+                                            "nl-selected--inverse"
+                                    )}
                                     aria-current={
                                         pathname === "/settings" ||
                                         pathname === "/profile/settings"

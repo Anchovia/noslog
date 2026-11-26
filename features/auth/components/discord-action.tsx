@@ -19,6 +19,7 @@ export default function DiscordAction({ returnPath }: { returnPath: string }) {
             <ButtonLink
                 plain
                 variant="secondary"
+                size="lg"
                 className="nl-auth-discord"
                 href={`/discord/start?returnTo=${encodeURIComponent(returnPath)}`}
                 aria-disabled={pending || undefined}

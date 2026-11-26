@@ -28,22 +28,22 @@
     gap: var(--nl-spacing-8);
     padding-block: var(--nl-spacing-8);
 }
-/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 large · emphasized 그림자 · 안쪽 좌우 = 상자 안쪽) 안 선 목록. 줄 = 컨트롤 높이, 줄 사이 선 없음.
+/* 서열 투표 목록 — Spectrum 2 secondary 카드(layer-1 면 · 모서리 box · emphasized 그림자 · 안쪽 좌우 = 상자 안쪽) 안 선 목록. 줄 = 컨트롤 높이, 줄 사이 선 없음.
    여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
 .noslog-ui .nl-vote-list {
     display: flex;
     flex-direction: column;
     padding-inline: var(--nl-box-padding);
-    border-radius: var(--nl-radius-large);
+    border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-card-shadow);
+    box-shadow: var(--nl-box-shadow);
 }
 .noslog-ui .nl-vote-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     width: 100%;
     text-align: start;
 }
@@ -61,11 +61,11 @@
 }
 @media (hover: hover) {
     .noslog-ui button.nl-vote-row:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui button.nl-vote-row:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 .noslog-ui .nl-vote-list__body {
     display: flex;
@@ -136,8 +136,6 @@
     max-width: 280px;
     padding: var(--nl-box-padding);
     border-radius: var(--nl-radius-large);
-    background: var(--nl-surface-elevated);
-    box-shadow: var(--nl-overlay-shadow);
     text-align: center;
 }
 .noslog-ui .nl-pattern-lock__card > p {
@@ -153,7 +151,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding-block: var(--nl-spacing-4);
 }
 .noslog-ui .nl-pattern-axis > .nl-control {
@@ -226,10 +224,10 @@
 }
 .noslog-ui .nl-opinion-row__header > .nl-button--icon {
     margin: calc(
-            (var(--nl-control-height) - var(--nl-type-line-height-ui)) / -2
+            (var(--nl-icon-button-size) - var(--nl-type-line-height-ui)) / -2
         )
-        calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2)
-        calc((var(--nl-control-height) - var(--nl-type-line-height-ui)) / -2)
+        calc((var(--nl-icon-button-size) - var(--nl-icon-medium)) / -2)
+        calc((var(--nl-icon-button-size) - var(--nl-type-line-height-ui)) / -2)
         auto;
 }
 .noslog-ui .nl-opinion-row__body {
@@ -250,7 +248,7 @@
     padding-bottom: 0;
 }
 .noslog-ui .nl-opinion-composer > .nl-avatar {
-    margin-top: calc((var(--nl-control-height) - var(--nl-spacing-32)) / 2);
+    margin-top: calc((var(--nl-input-height) - var(--nl-spacing-32)) / 2);
 }
 .noslog-ui .nl-opinion-composer__body {
     display: flex;
@@ -258,12 +256,12 @@
     min-width: 0;
 }
 .noslog-ui textarea.nl-opinion-composer__input:not([data-expanded]) {
-    min-height: var(--nl-control-height);
-    height: var(--nl-control-height);
-    /* 한 줄일 때 글줄이 높이 가운데 — 입력칸과 같은 식(ui 줄 · 2px 선) */
+    min-height: var(--nl-input-height);
+    height: var(--nl-input-height);
+    /* 한 줄일 때 글줄이 높이 가운데 — 입력칸과 같은 식(ui 줄 · 1px 선) */
     padding-block: calc(
-        (var(--nl-control-height) - var(--nl-type-line-height-ui)) / 2 -
-            var(--nl-stroke-strong)
+        (var(--nl-input-height) - var(--nl-type-line-height-ui)) / 2 -
+            var(--nl-stroke-default)
     );
     overflow: hidden;
     resize: none;
@@ -304,7 +302,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     padding-inline: var(--nl-spacing-8);
     border: 0;
     border-radius: var(--nl-radius-control);
@@ -323,12 +321,12 @@
     font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-opinion-like:is(button, a):is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-opinion-like:is(button, a):hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -360,7 +358,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     margin-inline-start: calc(var(--nl-spacing-8) * -1);
     padding-inline: var(--nl-spacing-8);
     border: 0;
@@ -369,12 +367,12 @@
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-opinion-replies__toggle:is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-opinion-replies__toggle:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }

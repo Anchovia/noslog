@@ -13,6 +13,7 @@ import type {
     ExamDashboardItem,
     ExamMode,
 } from "@/features/exams/types/exam-dashboard";
+import { cn } from "@/lib/cn";
 
 export default function ExamNavigation({
     mode,
@@ -106,7 +107,10 @@ export default function ExamNavigation({
                     <button
                         type="button"
                         key={exam.id}
-                        className="nl-control"
+                        className={cn(
+                            "nl-control",
+                            exam.id === selected?.id && "nl-selected--inverse"
+                        )}
                         aria-current={
                             exam.id === selected?.id ? "true" : undefined
                         }

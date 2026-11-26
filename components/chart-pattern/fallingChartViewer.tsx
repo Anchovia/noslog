@@ -761,7 +761,7 @@ export default function FallingChartViewer({
                                         collisionPadding={
                                             overlayPosition.collisionPadding
                                         }
-                                        className="nl-chart-stage__settings"
+                                        className="nl-floating-panel nl-chart-stage__settings"
                                         onPointerDownOutside={(event) => {
                                             const target = event.detail
                                                 .originalEvent

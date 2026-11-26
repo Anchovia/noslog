@@ -91,7 +91,7 @@ export default function HomeSearch() {
             const gap = readTokenPixels(anchor!, "--nl-spacing-8");
             const inset = readTokenPixels(anchor!, "--nl-spacing-16");
             const row = readTokenPixels(anchor!, "--nl-spacing-64") + gap;
-            const handoff = readTokenPixels(anchor!, "--nl-control-height");
+            const handoff = readTokenPixels(anchor!, "--nl-search-height");
             const available =
                 bottom -
                 anchor!.getBoundingClientRect().bottom -
@@ -257,8 +257,8 @@ export default function HomeSearch() {
             <div
                 className={
                     loadingOnly
-                        ? "nl-search-preview nl-loading-delay"
-                        : "nl-search-preview"
+                        ? "nl-floating-panel nl-search-preview nl-loading-delay"
+                        : "nl-floating-panel nl-search-preview"
                 }
                 hidden={!showPopup}
                 aria-busy={pending || undefined}

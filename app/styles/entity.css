@@ -23,8 +23,11 @@
     position: absolute;
     right: var(--nl-spacing-4);
     bottom: var(--nl-spacing-4);
-    padding: var(--nl-spacing-2) var(--nl-spacing-4);
-    border-radius: var(--nl-radius-small);
+    display: flex;
+    align-items: center;
+    height: var(--nl-tag-height);
+    padding-inline: var(--nl-spacing-6);
+    border-radius: var(--nl-tag-radius);
     background: var(--nl-surface-surface);
     color: var(--nl-content-subdued);
 }

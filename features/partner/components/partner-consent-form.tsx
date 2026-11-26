@@ -26,6 +26,7 @@ function SubmitButtons({
         <div className="nl-auth-steps">
             <ActionButton
                 type="submit"
+                size="lg"
                 className="nl-auth-submit"
                 busy={pending}
                 busyLabel={t("partner.consent.approving")}

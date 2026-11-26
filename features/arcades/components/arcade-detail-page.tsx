@@ -26,7 +26,6 @@ import {
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
 import ActionButton from "@/components/ui/action-button";
-import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -39,7 +38,6 @@ import {
     daysAgo,
     formatArcadePrice,
 } from "@/features/arcades/arcade-discovery";
-import { useArcadeSession } from "@/features/arcades/hooks/use-arcade-session";
 import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
 import type { RecentCabinetCheck } from "@/features/arcades/server/cabinet-check-service";
 
@@ -74,7 +72,6 @@ export default function ArcadeDetailPage({
     const href = useLocalizedHref();
     const t = useTranslations();
     const hoursId = useId();
-    const discoveryQuery = useArcadeSession((state) => state.discoveryQuery);
     const [now, setNow] = useState(() => new Date());
     const [preferred, setPreferred] = useState(preferredArcadeId === arcade.id);
     const [checked, setChecked] = useState<number[]>(checkedCabinetIds);
@@ -230,13 +227,6 @@ export default function ArcadeDetailPage({
 
     return (
         <PageContainer className="nl-arcade-detail">
-            <BackLink
-                href={href(
-                    `/gamecenter${discoveryQuery ? `?${discoveryQuery}` : ""}`
-                )}
-            >
-                {t("arcades.title")}
-            </BackLink>
             <div className="nl-arcade-detail__layout">
                 <div className="nl-arcade-detail__main">
                     <ArcadePhotos photos={arcade.photos} />
@@ -546,7 +536,9 @@ export default function ArcadeDetailPage({
                 </aside>
             </div>
             {/* 1056 미만 — 화면 아래 고정 바 */}
-            <div className="nl-arcade-detail__bar">{actions}</div>
+            <div className="nl-attached-bar nl-arcade-detail__bar">
+                {actions}
+            </div>
         </PageContainer>
     );
 }

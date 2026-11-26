@@ -44,7 +44,7 @@ export default function SortableTierChart({
                 "relative size-nl-48 shrink-0 cursor-grab touch-none overflow-hidden rounded-nl-control border-nl-stroke-strong bg-nl-surface bg-cover bg-center active:cursor-grabbing",
                 getTierDifficultyBorder(entry.chart.difficulty),
                 selected && "bg-nl-primary",
-                isDragging && "opacity-0"
+                isDragging && "opacity-(--nl-disabled-opacity)"
             )}
             {...attributes}
             {...listeners}

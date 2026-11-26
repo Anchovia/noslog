@@ -488,6 +488,7 @@ export default function OnboardingFormView({
                 <div className="nl-auth-steps">
                     <ActionButton
                         type="submit"
+                        size="lg"
                         busy={step === 2 && isSubmitting}
                         busyLabel={t("onboarding.setting")}
                         className="nl-auth-submit"

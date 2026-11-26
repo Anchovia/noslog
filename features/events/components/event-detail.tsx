@@ -1,5 +1,4 @@
 import PageContainer from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import AnnouncementBody from "@/features/announcements/components/announcement-body";
@@ -36,9 +35,6 @@ export default async function EventDetail({
     return (
         <PageContainer width="reading" className="nl-events">
             <article className="nl-events__detail">
-                <BackLink href={localizePath("/events", locale)}>
-                    {t("events.title")}
-                </BackLink>
                 {own?.editing ? (
                     <StatusMessage
                         severity="info"

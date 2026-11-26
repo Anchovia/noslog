@@ -227,7 +227,7 @@ export function createBookmarkletScript(
         locale === "en"
             ? TOKEN_VALUES.typeRole.latin
             : TOKEN_VALUES.typeRole.cjk;
-    // 남의 사이트 위 창이라 폭 단계를 따르지 않고 폰 컨트롤 높이(--nl-control-height 1055 이하 40)를 쓴다
+    // 남의 사이트 위 창이라 폭 단계를 따르지 않고 컨트롤 높이 medium(--nl-control-height-medium 40)을 쓴다
     const controlHeight = space[32] + space[8];
     const receiveUrlString = receiveUrl.toString();
     const resultUrl = new URL(

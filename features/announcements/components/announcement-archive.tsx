@@ -1,5 +1,4 @@
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import FilterChipLinks from "@/components/ui/filter-chip-links";
 import type {
     AnnouncementCategory,
@@ -35,9 +34,6 @@ export default async function AnnouncementArchive({
         t(`announcements.category.${item.category}`);
     return (
         <PageContainer width="reading" className="nl-announcements">
-            <BackLink href={localizePath("/", locale)}>
-                {t("common.home")}
-            </BackLink>
             <PageHeading title={t("news.title")} />
             <NewsTabs current="announcements" />
             {/* 분류 필터 — 태그를 누르게 하지 않고 목록 위에 따로 (2026-09-18 B1) */}

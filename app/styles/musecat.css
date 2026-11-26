@@ -9,10 +9,7 @@
 .noslog-ui .nl-musecat-head {
     gap: var(--nl-spacing-8);
 }
-/* 뒤로 → 이름 = 경로 → 쪽 제목(다른 상세 화면과 같음) · 머리 글줄 끝 → 사진 줄 16(설명 끝 → 첫 내용) */
-.noslog-ui .nl-musecat-head > .nl-back-link {
-    margin-bottom: calc(var(--nl-space-crumb-title) - var(--nl-spacing-8));
-}
+/* 머리 글줄 끝 → 사진 줄 16(설명 끝 → 첫 내용) */
 .noslog-ui .nl-musecat-head > .nl-arcade-photos {
     margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-8));
 }
@@ -56,7 +53,7 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-12);
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding-block: var(--nl-spacing-4);
     color: inherit;
     text-decoration: none;
@@ -168,7 +165,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
     margin-top: var(--nl-spacing-8);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-default);
@@ -176,12 +173,12 @@
 }
 /* Spectrum 2 ActionButton quiet — 평소 면 없음, 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
 .noslog-ui .nl-musecat-game__toggle:is(:focus-visible, :active) {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 @media (hover: hover) {
     .noslog-ui .nl-musecat-game__toggle:hover {
-        background: var(--nl-interaction-row);
+        background: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -208,16 +205,16 @@
     text-decoration: none;
 }
 .noslog-ui .nl-musecat-result[data-selected] {
-    background: var(--nl-interaction-row);
+    background: var(--nl-press-row);
 }
 /* 폭이 꽉 찬 목록 줄 올림 = 제 면 위에 interaction/row 겹침, 누름 · 키 포커스도 같다 */
 @media (hover: hover) {
     .noslog-ui .nl-musecat-result:hover {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
     }
 }
 .noslog-ui .nl-musecat-result:is(:active, :focus-visible) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
 }
 /* 같은 뜻의 다시 불러오기(쪽 · 나라 · 지역 · 기준 위치) — 이전 줄을 흐린 글자로 둔다 */
 .noslog-ui
@@ -313,7 +310,7 @@
 /* 요금 열 머리 — 지우기 버튼 칸만큼 끝을 비워 아래 줄과 열을 맞춘다 */
 .noslog-ui .nl-musecat-price-row--head::after {
     content: "";
-    width: var(--nl-control-height);
+    width: var(--nl-icon-button-size);
 }
 /* 뮤즈캣 오락실 목록(검색칸 자리 안 2, 2026-10-21) — 오락실 찾기의 지도 + 아래 시트 틀(nl-arcades)을 그대로 쓰고 두 곳만 다르다.
    ① 1056 미만: 검색이 지도 위에 떠 있다(위 12 · 좌우 화면 여백, 공용 SearchField floating). 「이 지역에서 검색」 은 검색 아래로 내린다 */
@@ -350,7 +347,7 @@
     /* 시트를 다 올려도 검색은 맨 위에 남는다(구글 지도 · Bing) — 시트는 검색 아래(위 12 + 검색 높이 + 12)까지만 올라온다 */
     .noslog-ui .nl-musecat-arcades[data-sheet-layout] .nl-arcades__catalog {
         top: calc(
-            var(--nl-spacing-12) + var(--nl-control-height) +
+            var(--nl-spacing-12) + var(--nl-search-height) +
                 var(--nl-spacing-12)
         );
     }
@@ -362,7 +359,7 @@
 }
 .noslog-ui .nl-musecat-arcades .nl-arcade-map__area {
     top: calc(
-        var(--nl-spacing-12) + var(--nl-control-height) + var(--nl-spacing-8)
+        var(--nl-spacing-12) + var(--nl-search-height) + var(--nl-spacing-8)
     );
 }
 /* ② 1056 이상(2026-10-21 전면 대조 ④ — Google 지도 · 네이버 지도 웹): 지도가 헤더 아래 화면을 좌우 끝까지 채우고(모서리 0),

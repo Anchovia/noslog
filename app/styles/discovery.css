@@ -8,7 +8,7 @@
 .noslog-ui .nl-full-dialog {
     position: fixed;
     inset: 0;
-    z-index: var(--nl-layer-dialog);
+    z-index: var(--nl-window-layer);
     display: flex;
     flex-direction: column;
     height: 100dvh;
@@ -96,7 +96,7 @@
     margin-bottom: calc(var(--nl-space-group) - var(--nl-space-section));
 }
 .noslog-ui .nl-discovery__summary-row--compact {
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-xsmall);
 }
 /* 좁은 폭(320 · en)에서는 정렬 라벨이 말줄임되고 보기 전환은 줄지 않는다 */
 /* 고스트 정렬은 줄 첫 자식 — 올림 면 안쪽 12 만큼 왼쪽으로 당겨 아이콘 잉크를 목록 왼쪽 선에 맞춘다(아이콘 버튼과 같은 규칙) */
@@ -177,15 +177,15 @@
     align-items: center;
     text-align: center;
 }
-/* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 높이 24 · 카드 위 판(surface/control) · 모서리 4 · 난이도 글자색 */
+/* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 꼬리표 꼴(높이 20 · 모서리 4) · 카드 위 판(surface/control) · 난이도 글자색 */
 .noslog-ui .nl-chart-chip {
     display: inline-flex;
     flex-shrink: 0;
     gap: var(--nl-spacing-4);
     align-items: center;
-    height: var(--nl-spacing-24);
-    padding-inline: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-small);
+    height: var(--nl-tag-height);
+    padding-inline: var(--nl-spacing-6);
+    border-radius: var(--nl-tag-radius);
     background: var(--nl-surface-control);
     white-space: nowrap;
 }

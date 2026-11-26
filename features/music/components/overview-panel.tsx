@@ -265,7 +265,7 @@ export default function OverviewPanel({ data }: { data: MusicDetailProps }) {
                         </div>
                         {!strengths ? (
                             <div className="nl-pattern-lock__overlay">
-                                <div className="nl-pattern-lock__card">
+                                <div className="nl-floating-panel nl-pattern-lock__card">
                                     <p className="nl-emphasis-label">
                                         {t("pattern.computedNone")}
                                     </p>

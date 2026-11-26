@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
-import BackLink from "@/components/ui/back-link";
 import { announcementDate } from "@/features/announcements/components/announcement-row";
 import type { EventStatus } from "@/features/events/schemas/event-schema";
 import type { getMyEvents } from "@/features/events/server/event-service";
@@ -19,9 +18,6 @@ export default async function MyEvents({
     const { locale, t } = await getServerI18n();
     return (
         <PageContainer width="reading" className="nl-events nl-announcements">
-            <BackLink href={localizePath("/events", locale)}>
-                {t("events.title")}
-            </BackLink>
             <PageHeading title={t("events.mine")} />
             {events.length ? (
                 <ul>

@@ -15,14 +15,6 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-/* 뒤로 링크 글자 → 머리 24 — 링크 칸(44)이 글줄보다 높아 남는 아래 몫을 글 간격 24 에서 뺀다 */
-.noslog-ui :is(.nl-announcements__detail, .nl-events__detail) > .nl-back-link {
-    margin-bottom: calc(
-        var(--nl-space-crumb-title) -
-            (var(--nl-back-link-height) - var(--nl-type-line-height-ui)) / 2 -
-            var(--nl-spacing-24)
-    );
-}
 /* 상세 머리 — 분류·날짜 줄 8 제목 */
 .noslog-ui .nl-announcements__heading {
     display: flex;
@@ -303,8 +295,8 @@
 .noslog-ui .nl-privacy-table td {
     padding: calc(
             (
-                    var(--nl-control-height) - var(--nl-type-line-height-ui) -
-                        var(--nl-stroke-default)
+                    var(--nl-control-height-medium) -
+                        var(--nl-type-line-height-ui) - var(--nl-stroke-default)
                 ) /
                 2
         )
@@ -406,7 +398,7 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
     width: 100%;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-medium);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border: var(--nl-stroke-default) solid var(--nl-border-divider);
     border-radius: var(--nl-radius-control);
@@ -416,7 +408,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-poll__option:hover:not(:disabled, [aria-pressed="true"]) {
-        background-color: var(--nl-interaction-row);
+        background-color: var(--nl-press-row);
         color: var(--nl-content-strong);
     }
 }
@@ -425,7 +417,7 @@
         :disabled,
         [aria-pressed="true"]
     ) {
-    background-color: var(--nl-interaction-row);
+    background-color: var(--nl-press-row);
     color: var(--nl-content-strong);
 }
 .noslog-ui .nl-poll__option[aria-pressed="true"] {
