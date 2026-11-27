@@ -4,7 +4,7 @@
 
 ## 구성
 
-페이지는 읽기 폭 768 에 가운데 정렬이다(`PageContainer width="reading"`).
+페이지는 읽기 폭 768 에 가운데 정렬이다(`PageContainer width="reading"`). 1056 미만에서는 목차 없이 내용만 한 열로 쌓는다.
 
 ### 로그인했을 때
 
