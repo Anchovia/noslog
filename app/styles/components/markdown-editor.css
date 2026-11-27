@@ -1,20 +1,10 @@
-.noslog-ui
-    .nl-markdown-editor:not([data-invalid]):has(
-        .nl-markdown-editor__input:focus
-    ) {
-    border-color: var(--nl-content-strong);
-    outline: none;
-}
-.noslog-ui
-    .nl-markdown-editor[data-invalid]:has(
-        .nl-markdown-editor__input:focus-visible
-    ) {
+.noslog-ui .nl-markdown-editor:has(.nl-markdown-editor__input:focus-visible) {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
-    outline-offset: var(--nl-stroke-strong);
+    outline-offset: 0;
 }
 /* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로.
    상자 = 입력칸 경계 · 모서리 · 면 입력 면. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
-   입력 = 본문 글자 · 안쪽 8/12(입력칸 글자 자리) · 처음 8줄 · 글 따라 늘어남. 포커스는 상자 경계가 바뀐다 */
+   입력 = 본문 글자 · 안쪽 8/12(입력칸 글자 자리) · 처음 8줄 · 글 따라 늘어남. 포커스는 상자 둘레에 붙은 링이 그려진다(경계 색은 그대로) */
 .noslog-ui .nl-markdown-editor {
     min-width: 0;
     overflow: hidden;

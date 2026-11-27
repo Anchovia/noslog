@@ -98,8 +98,8 @@ export const Invalid: Story = {
         )!;
         input.focus();
         await expect(input).toHaveFocus();
-        // 빨간 경계는 그대로 두고 포커스는 바깥 흰 선으로 보인다
+        // 빨간 경계는 그대로 두고 포커스는 둘레에 붙은 흰 링으로 보인다
         await expect(getComputedStyle(editor).outlineStyle).toBe("solid");
-        await expect(getComputedStyle(editor).outlineOffset).toBe("2px");
+        await expect(getComputedStyle(editor).outlineOffset).toBe("0px");
     },
 };
