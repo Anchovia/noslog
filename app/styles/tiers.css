@@ -248,6 +248,12 @@
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
     pointer-events: none;
 }
+/* 그림 없는 재킷은 재킷 자체에 같은 선이 있어, 틀 선을 끄지 않으면 두 겹이 된다 */
+.noslog-ui
+    .nl-jacket[data-empty="true"]
+    .nl-tier-card__outline:not([data-achievement]) {
+    box-shadow: none;
+}
 /* 그 표의 기준 색(2026-09-14) — S 표 = JUST 노랑 · 990k 표 = 노랑과 ◆JUST 분홍 사이 살구 · Pianist 표 = ◆JUST 분홍.
    테두리와 점수 색이 같이 쓴다 */
 .noslog-ui .nl-tier-card[data-goal="s"] {
