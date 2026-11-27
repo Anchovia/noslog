@@ -29,6 +29,7 @@ export default function TierHistory({
     const dates = [...new Set(events.map((event) => date(event.effectiveAt)))];
     return (
         <Disclosure
+            row
             heading="section"
             title={t("community.history")}
             meta={`${t("community.latestChange")} ${date(history[0].effectiveAt)}`}
@@ -41,6 +42,7 @@ export default function TierHistory({
                             key={day}
                             compact
                             card
+                            row
                             title={day}
                             className="nl-tier-history__day"
                         >

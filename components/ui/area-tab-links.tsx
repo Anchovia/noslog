@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 
 import IntentLink from "@/components/ui/intent-link";
+import { cn } from "@/lib/cn";
 import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 
 /**
@@ -13,8 +14,11 @@ import useTabIndicator from "@/lib/hooks/use-tab-indicator";
 export default function AreaTabLinks({
     label,
     options,
+    fit = false,
 }: {
     label: string;
+    /** 1056 이상에서 항목을 글자 폭으로(프로필 머리 한 줄). 기본은 줄 폭 균등 */
+    fit?: boolean;
     options: readonly {
         key: string;
         label: ReactNode;
@@ -39,7 +43,11 @@ export default function AreaTabLinks({
             list.scrollLeft = right - list.clientWidth;
     }, [selected]);
     return (
-        <nav ref={row} aria-label={label} className="nl-tabs nl-tabs--primary">
+        <nav
+            ref={row}
+            aria-label={label}
+            className={cn("nl-tabs nl-tabs--primary", fit && "nl-tabs--fit")}
+        >
             {options.map((option) => (
                 <IntentLink
                     key={option.key}

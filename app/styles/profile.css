@@ -16,13 +16,20 @@
         "avatar identity"
         "meta meta"
         "mode mode"
-        "headline headline";
+        "headline headline"
+        "tabs tabs";
     align-items: center;
     gap: var(--nl-spacing-8) var(--nl-spacing-16);
     min-width: 0;
 }
 .noslog-ui .nl-profile-identity__avatar {
     grid-area: avatar;
+}
+/* 구역 탭 — 머리 아래 끝 →구역 사이→ 탭(1056 미만) / 1056 이상은 머리 아래 줄에서 모드 칸과 한 줄 */
+.noslog-ui .nl-profile-identity__tabs {
+    grid-area: tabs;
+    min-width: 0;
+    margin-top: calc(var(--nl-space-section) - var(--nl-spacing-8));
 }
 .noslog-ui .nl-profile-identity__name-stack {
     grid-area: identity;
@@ -142,16 +149,16 @@
 }
 .noslog-ui .nl-profile-headline__rank {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
     padding: var(--nl-spacing-8) var(--nl-spacing-16);
 }
 .noslog-ui .nl-profile-headline__grade > dd,
 .noslog-ui .nl-profile-headline__rank > dd {
     white-space: nowrap;
 }
-/* 아주 좁은 머리(칸 340 미만 — 폰 320): 공식 Grd 가 윗줄 전체, 세계 · 국가 순위는 아랫줄 두 칸(라벨 위 · 순위 아래) */
+/* 아주 좁은 머리(칸 340 미만 — 폰 320): 공식 Grd 가 윗줄 전체, 세계 · 국가 순위는 아랫줄 두 칸 */
 @container profile-identity (max-width: 339px) {
     .noslog-ui .nl-profile-headline__cells {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -160,11 +167,6 @@
     .noslog-ui .nl-profile-headline__grade {
         grid-row: auto;
         grid-column: 1 / -1;
-    }
-    .noslog-ui .nl-profile-headline__rank {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
     }
 }
 .noslog-ui .nl-profile-headline__rank > dt {
@@ -191,7 +193,8 @@
         grid-template-areas:
             "avatar identity mode"
             "meta meta meta"
-            "headline headline headline";
+            "headline headline headline"
+            "tabs tabs tabs";
     }
     .noslog-ui .nl-profile-identity__mode {
         width: calc(var(--nl-spacing-64) * 3 + var(--nl-spacing-8));
@@ -209,20 +212,32 @@
             var(--nl-spacing-64) + var(--nl-spacing-32) + var(--nl-spacing-12)
         );
         grid-template-areas:
-            "avatar identity mode"
-            "avatar meta headline";
+            "avatar identity headline"
+            "avatar meta headline"
+            "tabs tabs mode";
     }
+    /* 머리 아래 줄 — 탭(글자 폭)은 왼쪽에서 시작하고 모드 칸은 오른쪽 끝(계정 아이콘 자리는 비워 둔다) */
     .noslog-ui .nl-profile-identity__mode {
-        width: calc(var(--nl-spacing-48) * 5);
+        width: fit-content;
         justify-self: end;
+        align-self: center;
+        /* 탭과 같은 위 여백 — 둘이 같은 줄에서 세로 가운데가 맞는다 */
+        margin-top: calc(var(--nl-space-section) - var(--nl-spacing-8));
+    }
+    .noslog-ui .nl-profile-identity__mode .nl-segments__item {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+    .noslog-ui .nl-profile-identity__tabs {
+        align-self: center;
     }
     .noslog-ui .nl-profile-identity__meta {
         align-self: start;
     }
     .noslog-ui .nl-profile-headline {
         justify-self: end;
-        /* 1056 이상은 수치 상자가 모드 아래 오른쪽 — 모드 →12→ 수치(줄 사이 8 + 4) */
-        margin-top: var(--nl-spacing-4);
+        align-self: start;
+        margin-top: 0;
     }
 }
 .noslog-ui .nl-profile-identity__recovery {
@@ -270,8 +285,8 @@
     /* 위 = 머리 띠 → 첫 요소 · 아래 = 쪽 아래 끝 */
     padding-block: var(--nl-space-header-title) var(--nl-page-bottom);
 }
-/* 머리 →구역 사이→ 탭 →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
-.noslog-ui .nl-profile > .nl-tabs + * {
+/* 머리(탭 포함) →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
+.noslog-ui .nl-profile > .nl-profile-identity + * {
     margin-top: calc(var(--nl-spacing-24) - var(--nl-space-section));
 }
 /* 개요 탭 — 구역 사이 = 구역 간격 토큰(모든 폭 40). 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
@@ -604,12 +619,10 @@
 }
 .noslog-ui .nl-profile-list-actions {
     display: flex;
+    justify-content: center;
     gap: var(--nl-spacing-8);
     /* 그리드 행이 늘려 준 남는 높이를 위로 흡수해 「더 보기」 가 옆 구역과 같은 바닥선에 놓인다 */
     margin-top: auto;
-}
-.noslog-ui .nl-profile-list-actions > * {
-    flex: 1;
 }
 .noslog-ui
     .nl-profile-plays__content[aria-busy="true"]

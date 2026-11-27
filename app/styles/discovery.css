@@ -115,7 +115,7 @@
 }
 .noslog-ui .nl-discovery__rail {
     display: flex;
-    width: calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4);
+    width: var(--nl-sidebar-width);
     flex-shrink: 0;
     flex-direction: column;
     gap: var(--nl-space-box-gap);
@@ -165,6 +165,102 @@
 }
 .noslog-ui .nl-discovery__items--grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* 목록 보기 줄 = 줄무늬 · 줄 사이 0 · 줄 위 1px 선 · 자켓 56(랭킹 줄과 같은 줄무늬 칸) */
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    ) {
+    gap: var(--nl-spacing-0);
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    .nl-music-card--list {
+    box-sizing: border-box;
+    min-height: calc(
+        var(--nl-spacing-64) + var(--nl-spacing-12) - var(--nl-stroke-default)
+    );
+    padding-left: var(--nl-spacing-12);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    > div:nth-child(even)
+    .nl-music-card--list {
+    background: var(--nl-surface-elevated);
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    .nl-music-card--list
+    .nl-music-card__body {
+    padding-block: var(--nl-spacing-0);
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    .nl-music-card--list
+    > .nl-jacket {
+    width: calc(var(--nl-spacing-48) + var(--nl-spacing-8));
+    height: calc(var(--nl-spacing-48) + var(--nl-spacing-8));
+    border-radius: var(--nl-radius-small);
+}
+/* 올림 · 눌림 = 투명 줄은 interaction/row, 줄무늬 줄은 surface/control(랭킹 줄과 같다) */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-discovery__items:not(
+            .nl-discovery__items--grid,
+            .nl-discovery__items--chart
+        )
+        a.nl-music-card--list:not([aria-disabled="true"]):hover {
+        background: var(--nl-press-row);
+    }
+    .noslog-ui
+        .nl-discovery__items:not(
+            .nl-discovery__items--grid,
+            .nl-discovery__items--chart
+        )
+        > div:nth-child(even)
+        a.nl-music-card--list:not([aria-disabled="true"]):hover {
+        background: var(--nl-surface-control);
+    }
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    a.nl-music-card--list:not([aria-disabled="true"]):is(
+        :active,
+        :focus-visible
+    ) {
+    background: var(--nl-press-row);
+}
+.noslog-ui
+    .nl-discovery__items:not(
+        .nl-discovery__items--grid,
+        .nl-discovery__items--chart
+    )
+    > div:nth-child(even)
+    a.nl-music-card--list:not([aria-disabled="true"]):is(
+        :active,
+        :focus-visible
+    ) {
+    background: var(--nl-surface-control);
 }
 .noslog-ui .nl-discovery__items--chart > div {
     display: grid;

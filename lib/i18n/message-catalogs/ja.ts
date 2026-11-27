@@ -268,6 +268,7 @@ export const jaMessages = {
     "common.unnamedUser": "名前のないユーザー",
     "common.profileImage": "{name}のプロフィール画像",
     "common.jacket": "{title}のジャケット",
+    "common.sectionLink": "{title}へのリンク",
     "common.notifications": "通知",
     "common.notFoundTitle": "ページが見つかりません。",
     "terms.metaDescription":

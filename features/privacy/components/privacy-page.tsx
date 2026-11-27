@@ -1,3 +1,5 @@
+import { Link2 } from "lucide-react";
+
 import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import PrivacyContents from "@/features/privacy/components/privacy-contents";
@@ -6,6 +8,34 @@ import type { PrivacyCopy } from "@/features/privacy/schemas/privacy-copy-schema
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 import { localizePath } from "@/lib/i18n/routing";
+
+/** 절 제목 + 뒤 앵커(올릴 때 · 키보드 초점에만 보임) — 처리방침 · 약관 공용 */
+export function SectionHeading({
+    id,
+    title,
+    linkLabel,
+}: {
+    id: string;
+    title: string;
+    linkLabel: string;
+}) {
+    return (
+        <h2
+            className="nl-section-title nl-section-heading"
+            id={id}
+            tabIndex={-1}
+        >
+            {title}
+            <a
+                className="nl-section-heading__anchor"
+                href={`#${id}`}
+                aria-label={linkLabel}
+            >
+                <Link2 aria-hidden />
+            </a>
+        </h2>
+    );
+}
 
 export function PolicyBlock({
     block,
@@ -144,13 +174,13 @@ export default function PrivacyPage({
                         className="nl-privacy-section"
                         aria-labelledby={`privacy-${section.id}`}
                     >
-                        <h2
-                            className="nl-section-title"
+                        <SectionHeading
                             id={`privacy-${section.id}`}
-                            tabIndex={-1}
-                        >
-                            {section.title}
-                        </h2>
+                            title={section.title}
+                            linkLabel={t("common.sectionLink", {
+                                title: section.title,
+                            })}
+                        />
                         {section.blocks.map((block, index) => (
                             <PolicyBlock
                                 key={index}

@@ -75,6 +75,15 @@ export default async function ProfileShell({ id }: { id: number }) {
     return (
         <>
             <ProfileIdentity
+                tabs={
+                    <ProfileTabs
+                        userId={id}
+                        scoresHidden={scoresHidden}
+                        activityHidden={
+                            !isOwner && profileData.user.hide_play_activity
+                        }
+                    />
+                }
                 user={user}
                 isOwner={isOwner}
                 sync={sync}
@@ -88,11 +97,6 @@ export default async function ProfileShell({ id }: { id: number }) {
                         ["failed", "partial"].includes(syncState.status)
                     )
                 }
-            />
-            <ProfileTabs
-                userId={id}
-                scoresHidden={scoresHidden}
-                activityHidden={!isOwner && profileData.user.hide_play_activity}
             />
         </>
     );

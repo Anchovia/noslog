@@ -125,7 +125,7 @@ export default function SyncPage({
         />
     ) : null;
     const help = (
-        <Disclosure title={t("sync.help")} heading="section">
+        <Disclosure row title={t("sync.help")} heading="section">
             <div className="nl-sync-zone">
                 <p className="nl-body-secondary nl-muted">
                     {t("sync.security")}

@@ -40,6 +40,7 @@ export default function ProfileTabs({
     );
     return (
         <AreaTabLinks
+            fit
             label={t("profile.tabs.label")}
             options={PROFILE_TABS.filter(
                 (tab) =>

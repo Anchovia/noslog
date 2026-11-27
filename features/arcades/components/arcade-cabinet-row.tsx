@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, Wrench } from "lucide-react";
 import { useState, useTransition } from "react";
 
 import { confirmCabinetRunning } from "@/app/(site)/gamecenter/actions";
@@ -193,6 +194,7 @@ export default function ArcadeCabinetRow({
             <div className="nl-arcade-cabinet__actions">
                 {isAuthenticated ? (
                     <ActionButton
+                        variant="secondary"
                         size="sm"
                         busy={busy}
                         busyLabel={t("arcades.confirmRunning")}
@@ -201,6 +203,7 @@ export default function ArcadeCabinetRow({
                         aria-pressed={checkedByMe}
                         onClick={confirm}
                     >
+                        <Check className="nl-icon-small" aria-hidden />
                         {t(
                             checkedByMe
                                 ? "arcades.confirmedRunning"
@@ -211,6 +214,7 @@ export default function ArcadeCabinetRow({
                 ) : (
                     // 로그아웃 — 비활성처럼 어둡게(data-locked) · hover 에 이유(title). 진짜 disabled 는 hover 를 막아 title 이 안 뜬다
                     <Button
+                        variant="secondary"
                         size="sm"
                         data-locked=""
                         aria-disabled="true"
@@ -218,6 +222,7 @@ export default function ArcadeCabinetRow({
                         title={t("arcades.loginToUse")}
                         onClick={() => setLoginHint(true)}
                     >
+                        <Check className="nl-icon-small" aria-hidden />
                         {t("arcades.confirmRunning")}
                         {checkCount}
                     </Button>
@@ -228,6 +233,7 @@ export default function ArcadeCabinetRow({
                     initialCabinetId={cabinet.id}
                     initialReportType="unavailable"
                     triggerLabel={t("arcades.reportBroken")}
+                    triggerIcon={Wrench}
                     triggerSuffix={
                         cabinet.openReports ? (
                             <span className="nl-metric-value nl-arcade-cabinet__count">

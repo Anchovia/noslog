@@ -65,3 +65,29 @@
 .noslog-ui .nl-heading-link svg.lucide-chevron-right {
     margin-inline: calc(var(--nl-spacing-4) * -1);
 }
+/* 절 제목 뒤 앵커 — 제목에 올리거나 앵커에 키 포커스가 갈 때만 보인다(움직임 없이 바로). 아이콘 16 · 제목과 간격 8 */
+.noslog-ui .nl-section-heading__anchor {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-start: var(--nl-spacing-8);
+    vertical-align: middle;
+    color: var(--nl-content-subdued);
+    opacity: 0;
+}
+.noslog-ui .nl-section-heading__anchor svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-section-heading:hover .nl-section-heading__anchor {
+        opacity: 1;
+    }
+}
+.noslog-ui .nl-section-heading__anchor:focus-visible {
+    opacity: 1;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-section-heading__anchor:hover {
+        color: var(--nl-content-strong);
+    }
+}

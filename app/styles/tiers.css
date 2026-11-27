@@ -128,7 +128,7 @@
 }
 .noslog-ui .nl-tier-rail {
     display: flex;
-    width: calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4);
+    width: var(--nl-sidebar-width);
     flex: none;
     flex-direction: column;
     /* 필터 그룹 사이 16 — 그룹 padding 16 과 합쳐 선 위아래가 같다(악곡 레일과 같은 값) */

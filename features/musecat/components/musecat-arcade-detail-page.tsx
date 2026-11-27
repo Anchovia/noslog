@@ -11,6 +11,7 @@ import {
     MapPin,
     Pencil,
     Phone,
+    Play,
 } from "lucide-react";
 import { useEffect, useId, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -382,6 +383,7 @@ export default function MusecatArcadeDetailPage({
                                             <Button
                                                 variant="ghost"
                                                 size="icon-sm"
+                                                className="nl-musecat-weekly-toggle"
                                                 aria-label={t(
                                                     "musecat.hours.weekly"
                                                 )}
@@ -393,8 +395,8 @@ export default function MusecatArcadeDetailPage({
                                                     )
                                                 }
                                             >
-                                                <ChevronDown
-                                                    className="nl-icon nl-disclosure__chevron"
+                                                <Play
+                                                    className="nl-icon-small nl-disclosure__chevron"
                                                     aria-hidden
                                                 />
                                             </Button>
@@ -535,7 +537,7 @@ export default function MusecatArcadeDetailPage({
                                                 />
                                             ))}
                                     </ul>
-                                    {/* 4개 뒤 폭 가득 「게임 더보기 (n)」(다이닝코드 · Airbnb · ev.or.kr — 남은 수를 버튼에) */}
+                                    {/* 4개 뒤 가운데 보조 버튼 「게임 더보기 (n)」(남은 수를 버튼에) */}
                                     {!allGames && games.length > GAMES_SHOWN ? (
                                         <Button
                                             variant="secondary"

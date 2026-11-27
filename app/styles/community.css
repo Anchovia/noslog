@@ -53,17 +53,6 @@
     gap: var(--nl-spacing-8);
     white-space: nowrap;
 }
-.noslog-ui button.nl-vote-row {
-    margin-inline: calc(var(--nl-spacing-12) * -1);
-    padding-inline: var(--nl-spacing-12);
-    width: calc(100% + var(--nl-spacing-24));
-    border-radius: var(--nl-radius-control);
-}
-@media (hover: hover) {
-    .noslog-ui button.nl-vote-row:hover {
-        background-color: var(--nl-press-row);
-    }
-}
 .noslog-ui button.nl-vote-row:is(:active, :focus-visible) {
     background-color: var(--nl-press-row);
 }

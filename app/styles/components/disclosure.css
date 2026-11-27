@@ -1,6 +1,7 @@
-/* 펼침 — 화살표는 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0.
+/* 펼침 두 갈래. 구역 제목(기본) = 화살표 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0 · 면 없음.
    구역 = 요약 줄 40 · 내용까지 16 / 보조(--compact) = 32 · control · 내용까지 8.
-   면: 흐름 속 펼침은 면 없이(펼침 사이 구분선 없음) / 혼자 떠 있는 상자는 --card(Spectrum 2 secondary 카드 — layer-1 면 · 모서리 box · emphasized 그림자).
+   혼자 떠 있는 상자(--card)는 layer-1 면 · 모서리 box · emphasized 그림자.
+   줄(--row · `nl-disclosure-row`) = 왼쪽 ▶ · 1px 테두리 상자 · 아래 「줄 갈래」.
    올림 = 줄 전체에 interaction/row — 면 없는 줄은 좌우 12 를 넓혀 칠하고 글자 선은 그대로 둔다. */
 .noslog-ui .nl-disclosure {
     min-width: 0;
@@ -70,6 +71,47 @@
     padding-inline: var(--nl-box-padding);
     padding-bottom: var(--nl-box-padding);
 }
+/* 줄 갈래 — 왼쪽 ▶ · 1px 테두리 상자(border/divider · radius/control) · 높이 40(compact 32) · 안쪽 좌우 16 · 화살표와 글자 사이 8.
+   `Disclosure row` 의 요약과 목록 한 줄을 여는 줄(`nl-disclosure-row`)이 같은 모양이다 */
+.noslog-ui .nl-disclosure--row > summary,
+.noslog-ui .nl-disclosure-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height-medium);
+    margin-inline: 0;
+    padding-inline: var(--nl-spacing-16);
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-control);
+    cursor: pointer;
+}
+.noslog-ui .nl-disclosure--row.nl-disclosure--compact > summary {
+    min-height: var(--nl-control-height-small);
+}
+.noslog-ui .nl-disclosure--row.nl-disclosure--card {
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-control);
+    background: none;
+    box-shadow: none;
+}
+.noslog-ui .nl-disclosure--row.nl-disclosure--card > summary {
+    border: 0;
+}
+.noslog-ui .nl-disclosure--row.nl-disclosure--card > .nl-disclosure__body {
+    padding-inline: var(--nl-spacing-16);
+    padding-bottom: var(--nl-spacing-16);
+}
+.noslog-ui .nl-disclosure-row:active {
+    background-color: var(--nl-press-row);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-disclosure-row:hover {
+        background-color: var(--nl-press-row);
+    }
+    .noslog-ui .nl-disclosure--row.nl-disclosure--card:has(> summary:hover) {
+        background-color: var(--nl-press-row);
+    }
+}
 /* ⑦ 구역 펼침 — 내용 높이 · 불투명도가 함께 바뀐다(당근 SEED 아코디언). 높이를 auto 까지 옮기는 기능이 없는 브라우저는 곧바로 펼친다.
    펼침 부품 밖에서 화살표로 여닫는 줄도 같다: raw details 는 내용 칸, hidden 으로 여닫는 판은 nl-disclosure-panel */
 .noslog-ui :is(.nl-disclosure, details:has(> summary .nl-disclosure__chevron)),
@@ -134,4 +176,21 @@
 .noslog-ui details[open] > summary .nl-disclosure__chevron,
 .noslog-ui [aria-expanded="true"] .nl-disclosure__chevron {
     transform: rotate(180deg);
+}
+/* 줄 갈래의 ▶ — 줄 맨 앞(order) · 채움 · 열리면 90° 돌아 ▼ */
+.noslog-ui .nl-disclosure--row > summary .nl-disclosure__chevron,
+.noslog-ui .nl-disclosure-row .nl-disclosure__chevron,
+.noslog-ui .nl-arcade-result__summary .nl-disclosure__chevron {
+    order: -1;
+    flex-shrink: 0;
+    fill: currentColor;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-disclosure--row[open] > summary .nl-disclosure__chevron,
+.noslog-ui details[open] > summary.nl-disclosure-row .nl-disclosure__chevron,
+.noslog-ui .nl-disclosure-row[aria-expanded="true"] .nl-disclosure__chevron,
+.noslog-ui
+    .nl-arcade-result__summary[aria-expanded="true"]
+    .nl-disclosure__chevron {
+    transform: rotate(90deg);
 }

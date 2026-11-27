@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ExternalLink, Play } from "lucide-react";
 import { useId, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -253,13 +253,13 @@ export default function MusecatGameCard({
             ) : null}
             <button
                 type="button"
-                className="nl-musecat-game__toggle nl-control nl-focus-inset"
+                className="nl-musecat-game__toggle nl-disclosure-row nl-control nl-focus-inset"
                 aria-expanded={open}
                 aria-controls={detailsId}
                 onClick={() => setOpen((value) => !value)}
             >
                 {t(open ? "musecat.game.hide" : "musecat.game.details")}
-                <ChevronDown
+                <Play
                     className="nl-icon-small nl-disclosure__chevron"
                     aria-hidden
                 />

@@ -29,6 +29,8 @@
     --nl-grid-gutter-wide: 16px;
     --nl-container-page: 1200px;
     --nl-container-reading: 768px;
+    /* 사이드바 · 왼쪽 레일 폭 — 설정 · 처리방침 · 악곡 목록 · 서열표 · 검정이 한 값(관리자 216 · 오락실 패널 390 은 따로) */
+    --nl-sidebar-width: 272px;
     /* 좁은 그릇(2026-10-01) — 좁은 열 358(인증 · 미리보기 판) · 가운데 열 640(홈 검색 · 랭킹 · 설정 오른쪽 열) */
     --nl-container-narrow: 358px;
     --nl-container-compact: 640px;

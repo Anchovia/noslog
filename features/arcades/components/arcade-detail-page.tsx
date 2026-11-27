@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    ChevronDown,
     Clock,
     Coins,
     Copy,
@@ -11,6 +10,7 @@ import {
     Info,
     MapPin,
     Phone,
+    Play,
 } from "lucide-react";
 import { useEffect, useId, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -276,7 +276,7 @@ export default function ArcadeDetailPage({
                                 {hasHours ? (
                                     <button
                                         type="button"
-                                        className="nl-arcade-fact__action nl-body"
+                                        className="nl-arcade-fact__action nl-disclosure-row nl-body"
                                         aria-expanded={hoursOpen}
                                         aria-controls={hoursId}
                                         onClick={() =>
@@ -302,12 +302,10 @@ export default function ArcadeDetailPage({
                                                 </span>
                                             ) : null}
                                         </span>
-                                        <span className="nl-arcade-fact__tail">
-                                            <ChevronDown
-                                                className="nl-icon nl-disclosure__chevron"
-                                                aria-hidden
-                                            />
-                                        </span>
+                                        <Play
+                                            className="nl-icon-small nl-disclosure__chevron"
+                                            aria-hidden
+                                        />
                                     </button>
                                 ) : (
                                     <span className="nl-arcade-fact__value nl-body nl-muted">

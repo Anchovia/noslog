@@ -93,15 +93,17 @@ export default async function EventBoard({
                                     sizes="(min-width: 672px) 376px, 100vw"
                                     priority={index < 2}
                                 />
-                                <span className="nl-entity-title">
-                                    {event.title}
-                                </span>
-                                <span className="nl-metadata nl-muted">
-                                    {eventPeriod(
-                                        event.startsAt,
-                                        event.endsAt,
-                                        locale
-                                    )}
+                                <span className="nl-event-card__caption">
+                                    <span className="nl-entity-title">
+                                        {event.title}
+                                    </span>
+                                    <span className="nl-body-secondary nl-muted">
+                                        {eventPeriod(
+                                            event.startsAt,
+                                            event.endsAt,
+                                            locale
+                                        )}
+                                    </span>
                                 </span>
                             </Link>
                         </li>

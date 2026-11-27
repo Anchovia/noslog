@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { Play } from "lucide-react";
 import Image from "next/image";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
@@ -87,12 +87,16 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
         <li>
             <details>
                 <summary
-                    className="nl-recent-play nl-control nl-focus-inset nl-forced-press"
+                    className="nl-recent-play nl-disclosure-row nl-control nl-focus-inset nl-forced-press"
                     aria-label={t("music.recent.detailLabel", {
                         date,
                         score: count(play.score),
                     })}
                 >
+                    <Play
+                        className="nl-icon-small nl-disclosure__chevron"
+                        aria-hidden
+                    />
                     <time className="nl-muted">{date}</time>
                     <span className="nl-recent-play__score">
                         {rank ? (
@@ -112,10 +116,6 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
                         <span className="nl-metric-value">
                             {count(play.score)}
                         </span>
-                        <ChevronDown
-                            className="nl-icon nl-disclosure__chevron"
-                            aria-hidden
-                        />
                     </span>
                 </summary>
                 <dl className="nl-recent-play__details nl-facts nl-control">

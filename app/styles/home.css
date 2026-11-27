@@ -1,5 +1,6 @@
 .noslog-ui .nl-home {
     --nl-home-search-width: var(--nl-container-compact);
+    --nl-home-hero-width: var(--nl-container-reading);
     gap: var(--nl-space-section);
 }
 /* 검색 · 타일은 「어디로 갈지 찾기」 한 묶음이라 구역 사이(40)보다 좁은 16 */
@@ -14,6 +15,7 @@
     margin-inline: auto;
 }
 .noslog-ui .nl-home-hero {
+    max-width: var(--nl-home-hero-width);
     container: home-hero / inline-size;
     display: flex;
     flex-direction: column;
@@ -294,9 +296,7 @@
         padding: var(--nl-box-padding);
     }
 }
-/* 진행 중인 이벤트 — 큰 배너 카드(2.4 : 1 · 카드 모서리) 위에 제목 · 기간. 카드 사이 12.
-   글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 해
-   경계가 딱딱하게 서지 않는다. 흐림은 두지 않는다 */
+/* 진행 중인 이벤트 — 이벤트 카드(events.css `nl-event-card`) 세로 한 열, 카드 사이 12 */
 .noslog-ui .nl-home-events__list {
     display: flex;
     flex-direction: column;
@@ -312,72 +312,4 @@
 }
 .noslog-ui .nl-home-events__empty p {
     margin: 0;
-}
-.noslog-ui .nl-home-event {
-    position: relative;
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: 2.4 / 1;
-    overflow: hidden;
-    /* 누르는 카드 — elevated 면 · 둘레 없음 · 놓인 것 그림자 · 모서리 box */
-    border-radius: var(--nl-box-radius);
-    background: var(--nl-surface-surface);
-    box-shadow: var(--nl-box-shadow);
-}
-.noslog-ui .nl-home-event img {
-    object-fit: cover;
-    transition: scale var(--nl-motion-duration-d6) var(--nl-ease-card-media);
-}
-/* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */
-@media (hover: hover) {
-    .noslog-ui .nl-home-event:hover img {
-        scale: var(--nl-motion-scale-card-media);
-    }
-}
-.noslog-ui .nl-home-event__caption {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    padding: var(--nl-spacing-32) var(--nl-spacing-12) var(--nl-spacing-12);
-    color: var(--nl-content-on-media);
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        var(--nl-surface-media-scrim) var(--nl-spacing-32)
-    );
-}
-.noslog-ui .nl-home-event__caption > * {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-/* 제목 클래스의 기본 글자색 대신 미디어 위 흰 글자 */
-.noslog-ui .nl-home-event__caption > .nl-entity-title {
-    color: var(--nl-content-on-media);
-}
-/* 누르는 카드 올림 · 누름 · 키 포커스 = 겹침(interaction/row), 그림자 없음 */
-.noslog-ui .nl-home-event::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: transparent;
-    pointer-events: none;
-    transition: background-color var(--nl-motion-duration-d3)
-        var(--nl-ease-easing);
-}
-.noslog-ui .nl-home-event:is(:active, :focus-visible)::after {
-    background: var(--nl-press-row);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-home-event:hover::after {
-        background: var(--nl-press-row);
-    }
-    .noslog-ui .nl-home-event:hover .nl-entity-title {
-        text-decoration: underline;
-        text-underline-position: under;
-    }
 }

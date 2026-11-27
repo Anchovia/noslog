@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, MapPin } from "lucide-react";
+import { MapPin, Play } from "lucide-react";
 import Image from "next/image";
 import { useId, useState } from "react";
 
@@ -205,8 +205,8 @@ export default function ArcadeResultCard({
                 onClick={() => onToggle(arcade.id)}
             >
                 {summary}
-                <ChevronDown
-                    className="nl-icon nl-arcade-result__chevron nl-disclosure__chevron"
+                <Play
+                    className="nl-icon-small nl-arcade-result__chevron nl-disclosure__chevron"
                     aria-hidden
                 />
             </button>

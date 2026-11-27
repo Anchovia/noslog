@@ -2,6 +2,7 @@
 
 import { Globe, Lock, MapPin, Settings } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
+import type { ReactNode } from "react";
 import { useState } from "react";
 
 import {
@@ -71,6 +72,7 @@ export default function ProfileIdentity({
     showSyncAction = false,
     achievements,
     header,
+    tabs,
 }: {
     user: ProfileUser;
     isOwner: boolean;
@@ -83,6 +85,8 @@ export default function ProfileIdentity({
     achievements?: AchievementSummary | null;
     /** 모드별 레이팅. 점수 비공개면 null */
     header: ProfileHeaderContext | null;
+    /** 구역 탭 — 1056 이상에서 머리 아래 줄(탭 + 모드)에 놓인다 */
+    tabs?: ReactNode;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
@@ -463,6 +467,9 @@ export default function ProfileIdentity({
                             </p>
                         )}
                     </div>
+                ) : null}
+                {tabs ? (
+                    <div className="nl-profile-identity__tabs">{tabs}</div>
                 ) : null}
             </div>
             {showSyncAction ? (

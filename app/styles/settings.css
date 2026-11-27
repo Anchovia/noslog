@@ -169,7 +169,7 @@
     .noslog-ui .nl-settings__layout {
         display: grid;
         grid-template-columns:
-            calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
+            var(--nl-sidebar-width)
             minmax(0, var(--nl-container-reading));
         gap: var(--nl-space-column);
         align-items: start;

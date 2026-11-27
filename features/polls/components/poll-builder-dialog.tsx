@@ -420,7 +420,7 @@ export default function PollBuilderDialog({
                     />
                 </FormField>
 
-                <Disclosure compact title={labels.advanced}>
+                <Disclosure compact row title={labels.advanced}>
                     <FormField
                         id={`${id}-closes`}
                         label={labels.closesAt}

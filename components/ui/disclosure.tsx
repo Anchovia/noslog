@@ -1,9 +1,9 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Play } from "lucide-react";
 import type { ComponentProps, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/cn";
 
-/** 펼침 — 구역(요약 줄 48) · 보조(`compact`, 컨트롤 높이) 두 단계. 화살표는 줄 끝. 규칙은 app/styles/components/disclosure.css */
+/** 펼침 — 구역(요약 줄 40) · 보조(`compact`, 컨트롤 높이) 두 단계. 갈래는 구역 제목(화살표 줄 끝)과 `row`(왼쪽 ▶ · 1px 테두리 상자). 규칙은 app/styles/components/disclosure.css */
 export default function Disclosure({
     title,
     children,
@@ -11,6 +11,7 @@ export default function Disclosure({
     heading = "component",
     compact = false,
     card = false,
+    row = false,
     meta,
     titleId,
     titleRef,
@@ -21,6 +22,8 @@ export default function Disclosure({
     compact?: boolean;
     /** 혼자 떠 있는 상자 — 카드 면 위에 둔다 */
     card?: boolean;
+    /** 줄 갈래 — 왼쪽 ▶ · 1px 테두리 상자. 기본은 구역 제목(화살표 줄 끝) */
+    row?: boolean;
     meta?: ReactNode;
     /** 구역 이름표(aria-labelledby) · 저장 뒤 포커스를 돌려줄 제목 */
     titleId?: string;
@@ -32,6 +35,7 @@ export default function Disclosure({
                 "nl-disclosure",
                 compact && "nl-disclosure--compact",
                 card && "nl-disclosure--card",
+                row && "nl-disclosure--row",
                 className
             )}
             {...props}
@@ -55,10 +59,17 @@ export default function Disclosure({
                 {meta ? (
                     <span className="nl-metadata nl-muted">{meta}</span>
                 ) : null}
-                <ChevronDown
-                    className="nl-icon nl-disclosure__chevron"
-                    aria-hidden
-                />
+                {row ? (
+                    <Play
+                        className="nl-icon-small nl-disclosure__chevron"
+                        aria-hidden
+                    />
+                ) : (
+                    <ChevronDown
+                        className="nl-icon nl-disclosure__chevron"
+                        aria-hidden
+                    />
+                )}
             </summary>
             <div className="nl-disclosure__body">{children}</div>
         </details>

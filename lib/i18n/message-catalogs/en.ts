@@ -269,6 +269,7 @@ export const enMessages = {
     "common.unnamedUser": "Unnamed user",
     "common.profileImage": "{name}'s profile image",
     "common.jacket": "{title} jacket",
+    "common.sectionLink": "Link to {title}",
     "common.notifications": "Notifications",
     "common.notFoundTitle": "Page Not Found",
     "terms.metaDescription":

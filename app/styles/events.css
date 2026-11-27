@@ -23,38 +23,37 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-/* 카드 = 면 없음 · 배너 →12→ 제목 →4→ 기간 */
+/* 이벤트 카드 한 부품(홈 · 목록) = 면 elevated · 놓인 것 그림자 · 모서리 large. 배너 → 그림 아래 칸(높이 77 · 위 1px 선 · 가운데 · 제목 →4→ 기간) */
 .noslog-ui .nl-event-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
     min-width: 0;
-    overflow-wrap: anywhere;
-}
-.noslog-ui .nl-event-card > .nl-event-banner {
-    margin-bottom: var(--nl-spacing-8);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-event-card:hover .nl-entity-title {
-        text-decoration: underline;
-        text-underline-position: under;
-    }
-}
-.noslog-ui .nl-event-card:focus-visible {
-    border-radius: var(--nl-radius-control);
-}
-/* 대표 이미지 2.4 : 1 — 모서리 large · 둘레 없음, 카드를 올리면 겹침(interaction/row) + 안쪽 그림 확대.
-   없으면 같은 비율의 elevated 면(홈 이벤트 카드와 같은 면) */
-.noslog-ui .nl-event-banner {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: 2.4 / 1;
     overflow: hidden;
+    overflow-wrap: anywhere;
     border-radius: var(--nl-radius-large);
     background: var(--nl-surface-elevated);
+    box-shadow: var(--nl-card-shadow);
 }
-.noslog-ui .nl-event-banner::after {
+.noslog-ui .nl-event-card__caption {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-4);
+    min-height: calc(
+        var(--nl-spacing-64) + var(--nl-spacing-12) + var(--nl-stroke-default)
+    );
+    padding-inline: var(--nl-spacing-12);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+    text-align: center;
+}
+.noslog-ui .nl-event-card__caption > * {
+    max-width: 100%;
+}
+/* 누르는 카드 올림 · 누름 · 키 포커스 = 겹침(interaction/row), 그림자 없음 */
+.noslog-ui .nl-event-card::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -63,15 +62,31 @@
     transition: background-color var(--nl-motion-duration-d3)
         var(--nl-ease-easing);
 }
-.noslog-ui
-    .nl-event-card:is(:active, :focus-visible)
-    > .nl-event-banner::after {
+.noslog-ui .nl-event-card:is(:active, :focus-visible)::after {
     background: var(--nl-press-row);
 }
 @media (hover: hover) {
-    .noslog-ui .nl-event-card:hover > .nl-event-banner::after {
+    .noslog-ui .nl-event-card:hover::after {
         background: var(--nl-press-row);
     }
+    .noslog-ui .nl-event-card:hover .nl-entity-title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
+}
+.noslog-ui .nl-event-card > .nl-event-banner {
+    border-radius: 0;
+    background: var(--nl-surface-control);
+}
+/* 대표 이미지 2.4 : 1 — 모서리 large · 둘레 없음. 없으면 같은 비율의 elevated 면(카드 안에서는 surface/control) */
+.noslog-ui .nl-event-banner {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.4 / 1;
+    overflow: hidden;
+    border-radius: var(--nl-radius-large);
+    background: var(--nl-surface-elevated);
 }
 /* ⑰ 카드 그림 올림 — 카드 틀은 그대로, 안쪽 그림만 커진다 */
 @media (hover: hover) {

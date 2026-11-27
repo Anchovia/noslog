@@ -409,18 +409,6 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height-medium);
-    padding: 0 var(--nl-spacing-12);
-    /* 펼침 올림 규칙 — 줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로 */
-    margin-inline: calc(var(--nl-spacing-12) * -1);
-    border-radius: var(--nl-radius-control);
-    list-style: none;
-    cursor: pointer;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-recent-play:hover {
-        background-color: var(--nl-press-row);
-    }
 }
 .noslog-ui .nl-recent-play::-webkit-details-marker {
     display: none;

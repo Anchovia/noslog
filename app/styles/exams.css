@@ -411,7 +411,7 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-exams {
         grid-template-columns:
-            calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
+            var(--nl-sidebar-width)
             minmax(0, 1fr);
         grid-template-rows: auto 1fr;
         column-gap: var(--nl-space-column);

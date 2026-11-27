@@ -35,6 +35,16 @@
     min-height: var(--nl-control-height-medium);
     padding-inline: var(--nl-spacing-8);
 }
+/* 1단 탭 글자 폭 변형 `--fit` — 1056 이상에서 항목이 줄 폭을 나누지 않고 글자 폭 + 좌우 안쪽 8 만 차지한다(프로필 머리 한 줄).
+   줄 아래 선은 두지 않고 고른 표시선만 남는다. 1056 미만은 기본 균등 그대로 */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-tabs--primary.nl-tabs--fit {
+        box-shadow: none;
+    }
+    .noslog-ui .nl-tabs--primary.nl-tabs--fit .nl-tabs__item {
+        flex: 0 0 auto;
+    }
+}
 /* 지표 전환 MetricSwitch = 2단 밑줄 탭의 촘촘한 변형 — 좁은 칸 여백 12(랭킹 지표 줄이 396 이상이면 16) · 짧은 라벨 전환 */
 .noslog-ui .nl-tabs .nl-metric-switch__item {
     padding-inline: var(--nl-spacing-12);

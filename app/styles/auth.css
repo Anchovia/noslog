@@ -13,7 +13,7 @@
     padding-inline: var(--nl-page-margin);
 }
 .noslog-ui.nl-auth--onboarding .nl-auth-main {
-    padding-block: var(--nl-spacing-48) var(--nl-spacing-24);
+    padding-block: var(--nl-space-header-title) var(--nl-spacing-24);
 }
 .noslog-ui .nl-auth-column {
     width: 100%;

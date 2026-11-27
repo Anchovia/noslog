@@ -22,7 +22,8 @@
     width: 100%;
     max-width: var(--nl-container-page);
     margin-inline: auto;
-    padding: var(--nl-spacing-64) var(--nl-page-margin);
+    padding: var(--nl-space-header-title) var(--nl-page-margin)
+        var(--nl-spacing-64);
 }
 .noslog-ui .nl-recovery-minimal__content {
     display: flex;

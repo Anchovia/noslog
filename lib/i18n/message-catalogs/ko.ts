@@ -267,6 +267,7 @@ export const koMessages = {
     "common.unnamedUser": "이름 없는 유저",
     "common.profileImage": "{name} 프로필 이미지",
     "common.jacket": "{title} 자켓",
+    "common.sectionLink": "{title} 절 링크",
     "common.notifications": "알림",
     "common.notFoundTitle": "페이지를 찾을 수 없습니다.",
     "terms.metaDescription":

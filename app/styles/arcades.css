@@ -144,7 +144,10 @@
     flex-direction: column;
     border-radius: var(--nl-box-radius);
     background: var(--nl-surface-surface);
-    box-shadow: var(--nl-box-shadow);
+    /* 둘레 1px 은 안쪽 그림자로 — 카드 크기가 늘지 않는다 */
+    box-shadow:
+        var(--nl-box-shadow),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
     overflow-wrap: anywhere;
 }
 @media (hover: hover) {
@@ -855,6 +858,7 @@
     padding-top: var(--nl-spacing-8);
     border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
+/* 한 줄에 같은 폭 둘 — 보조 버튼 32 둘(가동 확인 · 고장 신고) */
 .noslog-ui .nl-arcade-cabinet__actions {
     display: flex;
     gap: var(--nl-spacing-8);
@@ -863,8 +867,7 @@
     flex: 1 1 0;
     min-width: 0;
 }
-/* 버튼 글자 오른쪽 건수(확인한 사람 · 신고) — 버튼 글자 색을 그대로 따른다.
-   흰 「가동 확인」 위 회색(#afafaf)은 대비 1.9:1 이라 못 쓰고, 「고장 신고」 는 빨간 글자 옆 회색이 어색하다(사용자 지적) */
+/* 버튼 글자 오른쪽 건수(확인한 사람 · 신고) — 버튼 글자 색을 그대로 따른다 */
 .noslog-ui .nl-arcade-cabinet__count {
     color: inherit;
 }
@@ -911,36 +914,6 @@
         (var(--nl-control-height-medium) - var(--nl-icon-medium)) / -2
     );
     flex-shrink: 0;
-}
-/* 영업시간 펼침 줄 — 펼침 올림 규칙(줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로) */
-.noslog-ui .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]) {
-    margin-inline: calc(var(--nl-spacing-12) * -1);
-    padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
-}
-/* 줄 올림 = Spectrum 2 표 줄(gray-900 7%), 누름 · 키 포커스도 같은 면 */
-.noslog-ui
-    .nl-arcade-fact:has(
-        > .nl-arcade-fact__action[aria-expanded]:is(:active, :focus-visible)
-    ) {
-    background-color: var(--nl-press-row);
-}
-/* 포커스 선도 넓힌 면 안쪽(−2)에 — 안의 버튼 상자에 그으면 넓힌 면과 어긋난다 */
-.noslog-ui .nl-arcade-fact__action[aria-expanded]:focus-visible {
-    outline: none;
-}
-.noslog-ui
-    .nl-arcade-fact:has(
-        > .nl-arcade-fact__action[aria-expanded]:focus-visible
-    ) {
-    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
-    outline-offset: calc(var(--nl-stroke-strong) * -1);
-}
-@media (hover: hover) {
-    .noslog-ui
-        .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
-        background-color: var(--nl-press-row);
-    }
 }
 .noslog-ui .nl-arcade-fact__link {
     display: inline-flex;

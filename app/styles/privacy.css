@@ -7,11 +7,12 @@
     margin-inline: auto;
     overflow-wrap: anywhere;
 }
-/* 제목 → 메타 글줄 8 · 제목 묶음 → 다음 내용은 격자 간격(구역 사이) 그대로 */
+/* 제목 → 메타 글줄 8 · 제목 묶음 → 다음 내용 24(격자 간격 구역 사이 40 에서 당긴다) */
 .noslog-ui .nl-privacy-identity {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
+    margin-bottom: calc(var(--nl-space-column) - var(--nl-space-section));
 }
 .noslog-ui .nl-privacy-summary {
     display: flex;
@@ -110,9 +111,7 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-privacy {
         max-width: none;
-        grid-template-columns: minmax(0, 1fr) calc(
-                (100% - 3 * var(--nl-grid-gutter-wide)) / 4
-            );
+        grid-template-columns: minmax(0, 1fr) var(--nl-sidebar-width);
         column-gap: var(--nl-space-column);
     }
     .noslog-ui .nl-privacy-identity,
@@ -193,7 +192,7 @@
         overflow: visible;
     }
     .noslog-ui .nl-privacy-table :is(th, td) {
-        border-bottom-color: black;
+        border-color: black;
         white-space: normal;
     }
     .noslog-ui .nl-privacy-table tr {

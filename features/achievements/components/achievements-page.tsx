@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Grid3x3, List } from "lucide-react";
+import { Grid3x3, List, Play } from "lucide-react";
 import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
@@ -83,7 +83,7 @@ function AchievementRow({
         <li className="nl-achievement-row" data-earned={tier > 0}>
             <button
                 type="button"
-                className="nl-achievement-row__main nl-focus-inset"
+                className="nl-achievement-row__main nl-disclosure-row nl-focus-inset"
                 aria-expanded={open}
                 aria-controls={detailId}
                 onClick={() => setOpen((value) => !value)}
@@ -130,8 +130,8 @@ function AchievementRow({
                         />
                     ) : null}
                 </span>
-                <ChevronDown
-                    className="nl-icon nl-disclosure__chevron"
+                <Play
+                    className="nl-icon-small nl-disclosure__chevron"
                     aria-hidden
                 />
             </button>

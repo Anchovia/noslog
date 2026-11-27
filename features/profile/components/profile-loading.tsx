@@ -8,6 +8,7 @@ import {
     Globe,
     Grid3x3,
     List,
+    Play,
 } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
@@ -144,27 +145,32 @@ export function ProfileHeaderSkeleton() {
                             ))}
                         </dl>
                     </div>
+                    <div className="nl-profile-identity__tabs">
+                        <nav
+                            className="nl-tabs nl-tabs--primary nl-tabs--fit"
+                            aria-hidden="true"
+                        >
+                            {(
+                                [
+                                    "overview",
+                                    "records",
+                                    "stats",
+                                    "achievements",
+                                    "activity",
+                                ] as const
+                            ).map((key, index) => (
+                                <span
+                                    key={key}
+                                    className="nl-tabs__item nl-control"
+                                    aria-current={index ? undefined : "page"}
+                                >
+                                    {t(`profile.tabs.${key}`)}
+                                </span>
+                            ))}
+                        </nav>
+                    </div>
                 </div>
             </section>
-            <nav className="nl-tabs nl-tabs--primary" aria-hidden="true">
-                {(
-                    [
-                        "overview",
-                        "records",
-                        "stats",
-                        "achievements",
-                        "activity",
-                    ] as const
-                ).map((key, index) => (
-                    <span
-                        key={key}
-                        className="nl-tabs__item nl-control"
-                        aria-current={index ? undefined : "page"}
-                    >
-                        {t(`profile.tabs.${key}`)}
-                    </span>
-                ))}
-            </nav>
         </>
     );
 }
@@ -547,7 +553,7 @@ export function ProfileAchievementsTabSkeleton() {
             <ul className="nl-achievement-list" aria-hidden="true">
                 {[0, 1, 2, 3, 4].map((index) => (
                     <li key={index} className="nl-achievement-row">
-                        <div className="nl-achievement-row__main nl-focus-inset">
+                        <div className="nl-achievement-row__main nl-disclosure-row nl-focus-inset">
                             <span
                                 className="nl-achievement-hex nl-skeleton"
                                 data-size="row"
@@ -564,7 +570,10 @@ export function ProfileAchievementsTabSkeleton() {
                                     width="l"
                                 />
                             </div>
-                            <ChevronDown className="nl-icon" aria-hidden />
+                            <Play
+                                className="nl-icon-small nl-disclosure__chevron"
+                                aria-hidden
+                            />
                         </div>
                     </li>
                 ))}

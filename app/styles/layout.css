@@ -280,7 +280,7 @@ html:has(.noslog-ui .nl-header) {
     flex-direction: column;
     align-items: center;
     gap: var(--nl-spacing-16);
-    padding: var(--nl-spacing-16) var(--nl-page-margin);
+    padding: var(--nl-spacing-24) var(--nl-page-margin);
 }
 .noslog-ui .nl-footer__links {
     display: flex;

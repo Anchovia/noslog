@@ -1,14 +1,15 @@
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
 
 import IntentLink from "@/components/ui/intent-link";
-import { eventPeriod } from "@/features/events/components/event-parts";
+import {
+    EventBanner,
+    eventPeriod,
+} from "@/features/events/components/event-parts";
 import type { getHomeLiveEvents } from "@/features/events/server/event-service";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 
-// 홈 「진행 중인 이벤트」 — 공지사항 바로 아래, 늘 보인다(이벤트로 가는 길). 큰 배너 카드 위에 제목 · 기간을 얹는다.
-// 글자 아래는 어두운 층(media-scrim)만 — 위쪽이 투명에서 번져 경계가 딱딱하게 보이지 않는다
+// 홈 「진행 중인 이벤트」 — 공지사항 바로 아래, 늘 보인다(이벤트로 가는 길). 이벤트 목록과 같은 카드(배너 아래 제목 · 기간 칸)
 export default async function HomeEvents({
     events: live,
 }: {
@@ -43,22 +44,18 @@ export default async function HomeEvents({
                                     `/events/${event.id}`,
                                     locale
                                 )}
-                                className="nl-home-event"
+                                className="nl-event-card"
                             >
-                                {event.bannerUrl ? (
-                                    <Image
-                                        src={event.bannerUrl}
-                                        alt=""
-                                        fill
-                                        sizes="(min-width: 672px) 640px, 100vw"
-                                        priority={index === 0}
-                                    />
-                                ) : null}
-                                <span className="nl-home-event__caption">
+                                <EventBanner
+                                    src={event.bannerUrl}
+                                    sizes="(min-width: 672px) 640px, 100vw"
+                                    priority={index === 0}
+                                />
+                                <span className="nl-event-card__caption">
                                     <span className="nl-entity-title">
                                         {event.title}
                                     </span>
-                                    <span className="nl-metadata">
+                                    <span className="nl-body-secondary nl-muted">
                                         {eventPeriod(
                                             event.startsAt,
                                             event.endsAt,

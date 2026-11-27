@@ -135,22 +135,11 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     min-width: 0;
-    margin-inline: calc(var(--nl-spacing-12) * -1);
-    padding: var(--nl-spacing-4) var(--nl-spacing-12);
-    border: 0;
-    border-radius: var(--nl-radius-control);
+    padding-block: var(--nl-spacing-4);
     background: none;
     color: inherit;
     font: inherit;
     text-align: start;
-}
-.noslog-ui button.nl-achievement-row__main {
-    cursor: pointer;
-}
-@media (hover: hover) {
-    .noslog-ui button.nl-achievement-row__main:hover {
-        background-color: var(--nl-press-row);
-    }
 }
 .noslog-ui .nl-achievement-row__text {
     display: flex;

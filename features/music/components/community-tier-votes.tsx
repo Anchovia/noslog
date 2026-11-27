@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { Fragment, useId, useState } from "react";
@@ -96,8 +96,18 @@ export default function CommunityTierVotes({
                                               ),
                                       }
                                     : {})}
-                                className="nl-vote-row"
+                                className={
+                                    expandable
+                                        ? "nl-vote-row nl-disclosure-row"
+                                        : "nl-vote-row"
+                                }
                             >
+                                {expandable ? (
+                                    <Play
+                                        className="nl-icon-small nl-disclosure__chevron"
+                                        aria-hidden
+                                    />
+                                ) : null}
                                 <span className="nl-control nl-muted" lang="en">
                                     {scopeLabel(scope)}
                                 </span>
@@ -132,12 +142,6 @@ export default function CommunityTierVotes({
                                             </span>
                                         </>
                                     )}
-                                    {expandable ? (
-                                        <ChevronDown
-                                            className="nl-icon nl-disclosure__chevron"
-                                            aria-hidden
-                                        />
-                                    ) : null}
                                 </span>
                             </Row>
                             {expandable ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageSquare } from "lucide-react";
+import { type LucideIcon, MessageSquare } from "lucide-react";
 import {
     type BaseSyntheticEvent,
     type ReactNode,
@@ -54,6 +54,7 @@ export default function ArcadeReportDialog({
     initialCabinetId = null,
     initialReportType = "other",
     triggerLabel,
+    triggerIcon: TriggerIcon = MessageSquare,
     triggerAriaLabel,
     triggerSuffix,
     iconOnly = false,
@@ -64,6 +65,7 @@ export default function ArcadeReportDialog({
     initialCabinetId?: number | null;
     initialReportType?: (typeof ARCADE_REPORT_TYPES)[number];
     triggerLabel?: string;
+    triggerIcon?: LucideIcon;
     triggerAriaLabel?: string;
     /** 글자 오른쪽에 붙는 것 — 기체 카드 「고장 신고」 의 신고 건수 */
     triggerSuffix?: ReactNode;
@@ -157,10 +159,7 @@ export default function ArcadeReportDialog({
         </Button>
     ) : (
         <Button variant="secondary" size="sm" aria-label={triggerAriaLabel}>
-            {/* 기본 트리거는 말풍선 16 + 글자 · 기체 카드 「고장 신고」 는 글자만 */}
-            {triggerLabel ? null : (
-                <MessageSquare className="nl-icon-small" aria-hidden />
-            )}
+            <TriggerIcon className="nl-icon-small" aria-hidden />
             {title}
             {triggerSuffix}
         </Button>

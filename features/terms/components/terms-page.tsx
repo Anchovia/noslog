@@ -1,7 +1,11 @@
 import IntentLink from "@/components/ui/intent-link";
 import PrivacyContents from "@/features/privacy/components/privacy-contents";
-import { PolicyBlock } from "@/features/privacy/components/privacy-page";
+import {
+    PolicyBlock,
+    SectionHeading,
+} from "@/features/privacy/components/privacy-page";
 import type { TermsCopy } from "@/features/terms/schemas/terms-copy-schema";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 import { localizePath } from "@/lib/i18n/routing";
 
@@ -15,6 +19,7 @@ export default function TermsPage({
     copy: TermsCopy;
     period?: string;
 }) {
+    const t = createTranslator(getMessages(locale));
     return (
         <div className="nl-privacy">
             <header className="nl-privacy-identity">
@@ -36,13 +41,13 @@ export default function TermsPage({
                         className="nl-privacy-section"
                         aria-labelledby={`terms-${section.id}`}
                     >
-                        <h2
-                            className="nl-section-title"
+                        <SectionHeading
                             id={`terms-${section.id}`}
-                            tabIndex={-1}
-                        >
-                            {section.title}
-                        </h2>
+                            title={section.title}
+                            linkLabel={t("common.sectionLink", {
+                                title: section.title,
+                            })}
+                        />
                         {section.blocks.map((block, index) => (
                             <PolicyBlock
                                 key={index}

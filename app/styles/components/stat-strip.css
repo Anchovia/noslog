@@ -1,4 +1,4 @@
-/* 수치 띠 StatStrip — 값 nl-entity-title--numeric 16/22 · 700 고정폭(큰 수치 2단계) 위, 라벨 nl-caption 12/16 subdued 아래. 상자 모서리 control · 칸 면 surface · 칸 안쪽 12/8.
+/* 수치 띠 StatStrip — 라벨 nl-caption 12/16 subdued 위, 값 nl-entity-title--numeric 16/22 · 700 고정폭(큰 수치 2단계) 아래. 상자 모서리 control · 칸 면 surface · 칸 안쪽 12/8.
    칸 사이 1px 선은 gap 1 + divider 바탕 — 좁아서 줄이 바뀌어도 선이 맞는다. 칸 최소 64, 값 없는 칸은 만들지 않는다 */
 .noslog-ui .nl-stat-strip {
     display: flex;
@@ -41,7 +41,7 @@
     }
     .noslog-ui .nl-stat-strip--wide-list .nl-stat-strip__cell {
         flex: none;
-        flex-direction: row-reverse;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
         min-height: var(--nl-control-height-medium);

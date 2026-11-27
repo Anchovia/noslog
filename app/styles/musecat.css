@@ -86,6 +86,11 @@
 .noslog-ui .nl-musecat-notice-link {
     margin-bottom: var(--nl-spacing-8);
 }
+/* 영업시간 요일표 단추 = 줄 토글 상자(1px divider · 모서리 control) */
+.noslog-ui .nl-musecat-weekly-toggle {
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-control);
+}
 /* 정보 줄 안 — 요일별 영업시간은 보조 줄 자리에서 펼친다 · 별명은 한 줄 아래 */
 .noslog-ui .nl-musecat-weekly {
     display: flex;
@@ -161,29 +166,15 @@
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-musecat-game__toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--nl-spacing-4);
-    min-height: var(--nl-control-height-xsmall);
+    width: 100%;
     margin-top: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-medium);
 }
-/* Spectrum 2 ActionButton quiet — 평소 면 없음, 올림 · 키 포커스 · 누름 = 면 gray-200 · 글자 gray-900 */
-.noslog-ui .nl-musecat-game__toggle:is(:focus-visible, :active) {
-    background: var(--nl-press-row);
-    color: var(--nl-content-strong);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-musecat-game__toggle:hover {
-        background: var(--nl-press-row);
-        color: var(--nl-content-strong);
-    }
-}
 .noslog-ui .nl-musecat-games__more {
-    width: 100%;
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
 }
 /* 고장 한 건 — 정도 →4→ 내용 →4→ 메타 */
 .noslog-ui .nl-musecat-flag {

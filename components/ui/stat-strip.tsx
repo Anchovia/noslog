@@ -18,7 +18,7 @@ export interface StatStripItem {
 }
 
 /**
- * 수치 띠 — 핵심 숫자 몇 개를 한 줄에. 값 16/22 · 700 위, 라벨 metadata 아래, 칸 사이 1px divider.
+ * 수치 띠 — 핵심 숫자 몇 개를 한 줄에. 라벨 caption 위, 값 16/22 · 700 아래, 칸 사이 1px divider.
  * 칸 면 surface · 상자 모서리 control · 칸 안쪽 위아래 12 · 좌우 8. 최대 5칸, 넘치면 줄바꿈. 악곡 상세 머리 · 내 기록 요약
  */
 export default function StatStrip({
@@ -52,6 +52,7 @@ export default function StatStrip({
         >
             {visible.map((item) => (
                 <div key={item.key} className="nl-stat-strip__cell">
+                    <dt className="nl-caption nl-muted">{item.label}</dt>
                     <dd
                         className="nl-stat-strip__value nl-entity-title nl-entity-title--numeric"
                         data-tone={item.tone}
@@ -64,7 +65,6 @@ export default function StatStrip({
                             </span>
                         ) : null}
                     </dd>
-                    <dt className="nl-caption nl-muted">{item.label}</dt>
                 </div>
             ))}
         </dl>
@@ -97,13 +97,13 @@ export function StatStripSkeleton({
         <dl className={cn("nl-stat-strip", className)} aria-hidden="true">
             {labels.map((label, index) => (
                 <div key={index} className="nl-stat-strip__cell">
+                    <dt className="nl-caption nl-muted">{label}</dt>
                     <dd className="nl-stat-strip__value nl-entity-title nl-entity-title--numeric">
                         <SkeletonText
                             className="nl-stat-strip__value"
                             sample="000,000"
                         />
                     </dd>
-                    <dt className="nl-caption nl-muted">{label}</dt>
                 </div>
             ))}
         </dl>
