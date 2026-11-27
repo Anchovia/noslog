@@ -5,13 +5,13 @@
 ## 체크박스
 
 - 줄 높이 32 · 상자 20 · `radius/small` · 면 없음(바탕 그대로) · 테두리 `--nl-stroke-default`(1) `border/input` · 체크 표시는 SEED checkmark medium. 체크하면 `primary/default` 면 · 테두리 + `on-primary` 체크. 상자 ↔ 라벨 10. 라벨은 14/20 · 400 이고 체크해도 400 이다.
-- 올림 · 누름 · 키 포커스에 테두리가 `content/strong`, 체크한 상자는 면이 `primary/hover` 다. 비활성은 경계 · 체크한 면 · 라벨 글자가 `content/disabled` 다.
+- 올림 · 누름에 몸통(경계 · 면)이 평소 그대로고, 키 포커스는 [공용 포커스](../foundations.md#포커스) 겉 링만 붙는다. 비활성은 경계 · 체크한 면 · 라벨 글자가 `content/disabled` 다.
 - 저장 버튼이 있는 폼의 켜기 · 끄기에 쓴다. 보이는 라벨 필수.
 
 ## 라디오
 
 - 줄 높이 32 · 원 20 · 면 없음 · 테두리 1 `border/input`(체크박스와 같음). 고르면 `primary/default` 테두리가 6 으로 굵어진다(Spectrum 2). 원 ↔ 라벨 10.
-- 올림 · 누름 · 키 포커스에 테두리가 `content/strong` 이다(고른 6 링도). 비활성은 테두리 · 라벨 글자가 `content/disabled` 다. 규칙은 `app/styles/components/radio-group.css` 에 있다.
+- 올림 · 누름에 몸통(경계 · 고른 6 링)이 평소 그대로고, 키 포커스는 [공용 포커스](../foundations.md#포커스) 겉 링만 붙는다. 비활성은 테두리 · 라벨 글자가 `content/disabled` 다. 규칙은 `app/styles/components/radio-group.css` 에 있다.
 - 라디오 줄 = 높이 32 · 줄 사이 0.
 - 선택지가 적고 늘지 않을 곳은 라디오(신고 사유 4개), 늘어날 곳은 셀렉트.
 - 묶음 오류는 묶음 아래 한 줄(`FormField` 오류와 같은 모양).
@@ -29,7 +29,7 @@
 - 누르는 즉시 적용되는 켜고 끄기에만. 저장 버튼이 있는 폼 안은 체크박스.
 - 트랙 높이 24(폭 26 은 지금 값) · 모서리 원(Spectrum 2). 둘레는 2 실제 선이라 고대비 모드에서도 남는다.
 - 꺼짐 = `switch-track-off` 트랙 · 손잡이 8 `switch-thumb`. 켜짐 = `primary/default` 트랙 · 손잡이 10 `on-primary`. 손잡이는 선 안쪽 상자 가운데(꺼짐 안쪽 2 · 켜짐 안쪽 1)다.
-- 올림 · 누름 · 키 포커스에 꺼짐은 둘레 · 손잡이가 `content/strong`, 켜짐은 트랙이 `primary/hover` 다.
+- 올림 · 누름에 몸통(둘레 · 트랙 · 손잡이)이 평소 그대로고, 키 포커스는 [공용 포커스](../foundations.md#포커스) 겉 링만 붙는다.
 - 비활성은 꺼짐 둘레 · 손잡이, 켜짐 트랙이 `content/disabled` 다.
 - 손잡이 · 바탕색 움직임은 [기초값 — 움직임 ⑨](../foundations.md#움직임).
 - 라벨은 `<label htmlFor>` 로 이어 줄 글자를 눌러도 켜고 끈다.
@@ -55,6 +55,7 @@
 
 ## 바뀐 기록
 
+- [2026-11-27 체크박스 · 라디오 · 스위치 올림 · 누름](../../decisions/2026-11-27-check-radio-switch-states.md)
 - [2026-11-26 부품 선을 당근 기준으로](../../decisions/2026-11-26-component-lines-daangn.md)
 - [2026-11-26 컨트롤 크기를 다섯 단계로](../../decisions/2026-11-26-control-size-five-steps.md)
 - [2026-11-26 공용 부품 4단계 — 크기 단계 · 역할 변수 · 모서리](../../decisions/2026-11-26-components-stage4.md)
