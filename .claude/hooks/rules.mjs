@@ -259,6 +259,22 @@ export function findSelf(metas, cliSessionId) {
     return metas.find((meta) => meta.cliSessionId === cliSessionId) ?? null;
 }
 
+/** 이 세션이 띄운 하위 세션과 그 아래 층(spawnedFrom.sessionId 사슬)의 세션 id. */
+export function descendantSessionIds(metas, sessionId) {
+    const found = new Set();
+    const queue = [sessionId];
+    while (queue.length) {
+        const parent = queue.shift();
+        for (const meta of metas) {
+            if (meta.spawnedFrom?.sessionId !== parent) continue;
+            if (!meta.sessionId || found.has(meta.sessionId)) continue;
+            found.add(meta.sessionId);
+            queue.push(meta.sessionId);
+        }
+    }
+    return [...found];
+}
+
 /** 기록 파일에서 부른 세션의 모델. 마지막 assistant 메시지, 없으면 시작 때 넣는 model 항목. */
 export function transcriptModel(entries) {
     const last = entries.findLast(isAssistant);

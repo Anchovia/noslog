@@ -12,10 +12,12 @@ import {
     hangulRatio,
     isMachinePrompt,
     judgeCallerLayer,
+    descendantSessionIds,
     judgeReviewGate,
     judgeSendMessage,
     judgeSessionBrief,
     parseReviewRecords,
+    readNotes,
     transcriptModel,
     findSelf,
     loadSessionMetas,
@@ -767,6 +769,41 @@ describe("검수 기록 Stop 게이트", () => {
                 stopHookActive: true,
             })
         ).toBeNull();
+    });
+});
+
+describe("검수 기록 폴더 고르기", () => {
+    const metas = [
+        { sessionId: "local_a" },
+        { sessionId: "local_b", spawnedFrom: { sessionId: "local_a" } },
+        { sessionId: "local_c", spawnedFrom: { sessionId: "local_b" } },
+        { sessionId: "local_d", spawnedFrom: { sessionId: "local_x" } },
+    ];
+    it("자손 세션 id 를 사슬로 모은다", () => {
+        expect(descendantSessionIds(metas, "local_a").sort()).toEqual([
+            "local_b",
+            "local_c",
+        ]);
+        expect(descendantSessionIds(metas, "local_c")).toEqual([]);
+    });
+    it("손자 폴더의 검수 기록은 통과하고 없는 version 은 막는다", () => {
+        const dir = mkdtempSync(join(tmpdir(), "notes-"));
+        mkdirSync(join(dir, "local_c"));
+        writeFileSync(
+            join(dir, "local_c", "REVIEW.md"),
+            "review: SLUG version=v1 검수=local_r 쓴=local_w\n"
+        );
+        const records = parseReviewRecords(
+            readNotes(
+                descendantSessionIds(metas, "local_a").map((id) =>
+                    join(dir, id)
+                )
+            )
+        );
+        expect(
+            records.some((r) => r.target === "SLUG" && r.version === "v1")
+        ).toBe(true);
+        expect(records.some((r) => r.version === "v2")).toBe(false);
     });
 });
 
