@@ -71,40 +71,6 @@
     height: calc(var(--nl-spacing-8) + var(--nl-spacing-2));
     background: var(--nl-primary-on-primary);
 }
-/* 올림 · 누름 · 키 포커스 = 꺼짐 경계 · 손잡이 gray-900, 켜짐 면 gray-900 */
-@media (hover: hover) {
-    .noslog-ui .nl-switch:not(:disabled):hover {
-        border-color: var(--nl-content-strong);
-    }
-    .noslog-ui .nl-switch:not(:disabled):hover::after {
-        background: var(--nl-content-strong);
-    }
-    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover {
-        border-color: transparent;
-        background: var(--nl-primary-hover);
-    }
-    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover::after {
-        background: var(--nl-primary-on-primary);
-    }
-}
-.noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible) {
-    border-color: var(--nl-content-strong);
-}
-.noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible)::after {
-    background: var(--nl-content-strong);
-}
-.noslog-ui
-    .nl-switch[aria-checked="true"]:not(:disabled):is(:active, :focus-visible) {
-    border-color: transparent;
-    background: var(--nl-primary-hover);
-}
-.noslog-ui
-    .nl-switch[aria-checked="true"]:not(:disabled):is(
-        :active,
-        :focus-visible
-    )::after {
-    background: var(--nl-primary-on-primary);
-}
 .noslog-ui .nl-switch:disabled {
     border-color: var(--nl-content-disabled);
 }
@@ -119,35 +85,23 @@
     background: var(--nl-primary-on-primary);
 }
 @media (forced-colors: active) {
-    /* 스위치 · 고른 세그먼트 칸은 면 색으로 상태를 보여 시스템 색을 직접 준다(누름 · 포커스 색보다 앞서게) */
+    /* 스위치는 면 색으로 상태를 보여 시스템 색을 직접 준다 */
     .noslog-ui .nl-switch,
     .noslog-ui .nl-switch::after {
         forced-color-adjust: none;
     }
-    .noslog-ui .nl-switch,
-    .noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible) {
+    .noslog-ui .nl-switch {
         border-color: ButtonText;
         background: Canvas;
     }
-    .noslog-ui .nl-switch::after,
-    .noslog-ui .nl-switch:not(:disabled):is(:active, :focus-visible)::after {
+    .noslog-ui .nl-switch::after {
         background: ButtonText;
     }
-    .noslog-ui .nl-switch[aria-checked="true"],
-    .noslog-ui
-        .nl-switch[aria-checked="true"]:not(:disabled):is(
-            :active,
-            :focus-visible
-        ) {
+    .noslog-ui .nl-switch[aria-checked="true"] {
         border-color: Highlight;
         background: Highlight;
     }
-    .noslog-ui .nl-switch[aria-checked="true"]::after,
-    .noslog-ui
-        .nl-switch[aria-checked="true"]:not(:disabled):is(
-            :active,
-            :focus-visible
-        )::after {
+    .noslog-ui .nl-switch[aria-checked="true"]::after {
         background: HighlightText;
     }
     .noslog-ui .nl-switch:disabled,
@@ -162,22 +116,5 @@
     }
     .noslog-ui .nl-switch[aria-checked="true"]:disabled::after {
         background: Canvas;
-    }
-}
-/* 고대비 모드의 올림 — 위 시스템 색을 올림 색보다 앞세운다 */
-@media (forced-colors: active) and (hover: hover) {
-    .noslog-ui .nl-switch:not(:disabled):hover {
-        border-color: ButtonText;
-        background: Canvas;
-    }
-    .noslog-ui .nl-switch:not(:disabled):hover::after {
-        background: ButtonText;
-    }
-    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover {
-        border-color: Highlight;
-        background: Highlight;
-    }
-    .noslog-ui .nl-switch[aria-checked="true"]:not(:disabled):hover::after {
-        background: HighlightText;
     }
 }

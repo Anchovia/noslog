@@ -24,22 +24,11 @@
     cursor: pointer;
     border-radius: var(--nl-radius-control);
 }
-/* 올림 · 누름 · 키 포커스 = 면 없는 줄의 옅은 면 + 글자 · 체크 상자 선 */
+/* 올림 · 누름 · 키 포커스 = 면 없는 줄의 옅은 면 + 글자. 체크 상자는 그대로 */
 @media (hover: hover) {
     .noslog-ui .nl-selection-list__option:not([data-disabled="true"]):hover {
         background: var(--nl-press-row);
         color: var(--nl-content-strong);
-    }
-    .noslog-ui
-        .nl-selection-list__option:not([data-disabled="true"]):hover
-        .nl-check__box {
-        border-color: var(--nl-content-strong);
-    }
-    .noslog-ui
-        .nl-selection-list__option:not([data-disabled="true"]):hover
-        input:checked
-        ~ .nl-check__box {
-        background: var(--nl-primary-hover);
     }
 }
 .noslog-ui
@@ -49,14 +38,6 @@
     ) {
     background: var(--nl-press-row);
     color: var(--nl-content-strong);
-}
-.noslog-ui
-    .nl-selection-list__option:not([data-disabled="true"]):is(
-        :active,
-        :has(:focus-visible)
-    )
-    .nl-check__box {
-    border-color: var(--nl-content-strong);
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
     outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);

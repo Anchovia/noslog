@@ -18,7 +18,7 @@
     opacity: 0;
 }
 /* 체크박스 · 라디오 = Spectrum 2 — 1px 경계 gray-800 · 면 gray-25, 고른 면 gray-800.
-   올림 · 누름 · 키 포커스 = 경계 · 고른 면 gray-900, 비활성 gray-400 */
+   올림 · 누름 · 키 포커스에도 몸통은 그대로, 비활성 gray-400 */
 .noslog-ui .nl-check__box {
     display: flex;
     align-items: center;
@@ -47,28 +47,6 @@
 }
 .noslog-ui .nl-check input:checked + .nl-check__box > svg {
     visibility: visible;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-check:not(:has(input:disabled)):hover .nl-check__box {
-        border-color: var(--nl-border-input);
-    }
-    .noslog-ui
-        .nl-check:not(:has(input:disabled)):hover
-        input:checked
-        + .nl-check__box {
-        background: var(--nl-primary-hover);
-    }
-}
-.noslog-ui .nl-check:not(:has(input:disabled)):active .nl-check__box,
-.noslog-ui .nl-check input:focus-visible + .nl-check__box {
-    border-color: var(--nl-border-input);
-}
-.noslog-ui
-    .nl-check:not(:has(input:disabled)):active
-    input:checked
-    + .nl-check__box,
-.noslog-ui .nl-check input:checked:focus-visible + .nl-check__box {
-    background: var(--nl-primary-hover);
 }
 .noslog-ui .nl-check:has(input:disabled) {
     color: var(--nl-content-disabled);
