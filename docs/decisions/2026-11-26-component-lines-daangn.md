@@ -33,5 +33,6 @@
 ## 바뀌는 곳
 
 - 문서: `docs/design/foundations.md`(색 표 `border/default` · `border/input` · 선 표 · 선 규칙 · 지도 위 검색칸), `components/field.md` · `form-controls.md` · `filter.md`, `pages/achievements.md`
-- 코드: `app/styles/components/{search,input,stepper,file-row,check,radio-group,applied,scale-picker}.css` · `app/styles/community.css`(의견 입력칸 안쪽 보정) · `app/styles/achievements.css`
-- 손대지 않음: 관리자 화면, 공지 편집기 · 채보 에디터 화면 파일(공용 부품을 따라 바뀜), 서열 자켓 선 겹침 · 선 부품 목록의 그림 틀(판 밖 기록)
+- 코드: `app/styles/components/{search,input,stepper,file-row,check,radio-group,applied,scale-picker}.css` · `app/styles/community.css`(의견 입력칸 안쪽 보정) · `app/styles/achievements.css` · `app/styles/components/markdown-editor.css`(포커스 링 통일)
+- 후속(2026-11-27): 그림 없는 자켓의 서열 틀 선을 꺼 어디서나 한 겹(`app/styles/tiers.css`), 선 부품 목록에 그림 틀 추가([기초값 — 선](../design/foundations.md#선)), 함께 바뀐 문서 `pages/tiers.md`(자켓 윤곽을 「그림 틀」 로 맞추고 선 절 링크) · `components/markdown-editor.md`(상자 2px 는 이 부품만의 규칙), 라디오 고른 경계 코드를 가이드 6 에 맞춤(`app/styles/components/radio-group.css`, 가이드 [form-controls](../design/components/form-controls.md) 원 20 · 고리 6)
+- 손대지 않음: 관리자 화면, 공지 편집기 · 채보 에디터 화면 파일(공용 부품을 따라 바뀜)

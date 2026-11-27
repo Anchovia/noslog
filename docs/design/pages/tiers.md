@@ -65,7 +65,7 @@
 | 672 이상 | auto-fill 최소 약 111(`111.333px`) · 사이 12 |
 
 카드는 자켓 1:1 + 오른쪽 아래 난이도 판이다. 375 미만은 난이도 약칭 N · H · EX · R 을 쓴다.
-자켓에는 늘 `--nl-stroke-default` `border/divider` 윤곽을 긋는다.
+자켓에는 늘 `--nl-stroke-default` `border/divider` 그림 틀을 긋는다([기초값 — 선](../foundations.md#선)).
 로그인하면 아래에 점수(달성하면 목표 색)를 두고 달성 테두리(`--nl-stroke-strong`)를 긋는다. 테두리 색은 점수 목표 색 `--nl-score-goal-*` 이다.
 달성하고 풀 콤보면 테두리가 왼쪽 위 `achievement/full-combo` 에서 오른쪽 아래 목표 색으로 바뀐다(가운데 절반에서 전환). Pianist 는 풀 콤보여도 목표 색 하나이고, 달성하지 못한 풀 콤보는 달성 테두리가 없다.
 로그인하면 목표 미달성 곡(미플레이 포함)은 자켓 그림만 흑백(`grayscale`)이다. 판 · 띠 · 점수 글자 · 누름 반응은 그대로라 disabled 가 아니다. 목록 행 자켓도 같다.
